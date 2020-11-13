@@ -1,0 +1,39 @@
+#!/bin/bash
+
+i="\n\e[5m"
+f="\e[25m\n"
+
+if [ -f ~/lighthouse/README.md ]; then
+
+  echo -e "${i}JA COMPILOU LIGHT${f}"
+
+else
+
+  echo -e "${i}VAI COMPILAR PRYSM${f}"
+  if [ -f /etc/apt/trusted.gpg.d/bazel.gpg ]; then
+    echo -e "${i}repositorio bazel ok${f}"
+  else
+    echo -e "${i}instalar repositorio bazel${f}"
+    sudo apt install -y libtinfo5 libssl-dev libgmp-dev cmake git curl gnupg
+    cd ~
+    curl -fsSL https://bazel.build/bazel-release.pub.gpg | gpg --dearmor > bazel.gpg
+    sudo mv bazel.gpg /etc/apt/trusted.gpg.d
+    echo "deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.8"|sudo tee /etc/apt/sources.list.d/bazel.list
+    sudo apt update
+  fi
+  sudo apt install -y bazel
+  sudo apt update && sudo apt full-upgrade
+  if [ -f ~/prysm/README.md ]; then
+    cd ~/prysm
+    git pull origin master
+  else
+    cd ~
+    sudo rm -rf prysm
+    git clone https://github.com/prysmaticlabs/prysm
+  fi
+  cd ~/prysm
+  bazel build //beacon-chain:beacon-chain
+  bazel build //validator:validator
+  echo -e "${i}$(ntptime|grep -i ntp_|tr '[:lower:]' '[:upper:]')${f}"
+
+fi

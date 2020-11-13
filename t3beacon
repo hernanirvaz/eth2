@@ -1,0 +1,93 @@
+#!/bin/bash
+
+i="\n\e[5m"
+f="\e[25m\n"
+
+meeu="$(whoami)"
+user="eth2"
+
+if [ -x  ~/.cargo/bin/lighthouse ]; then
+
+  blkc="--testnet medalla"
+  wllt="/var/lib/lighthouse"
+  golb="$wllt/beacon"
+
+  echo -e "${i}LIGHT: CONFIGURE BEACON${f}"
+  if [ -f /etc/systemd/system/validator.service ]; then [ "$(sudo systemctl status validator|grep -i inactive)" ] || sudo systemctl stop validator;fi
+  if [ -f /etc/systemd/system/beacon.service ];    then [ "$(sudo systemctl status beacon   |grep -i inactive)" ] || sudo systemctl stop beacon;fi
+  cd ~
+  sudo mkdir -p $golb
+  if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
+  sudo chown -R $user:$user $golb
+  sudo cp ~/.cargo/bin/lighthouse /usr/local/bin
+  sudo cat <<-EOF > beacon.service
+  [Unit]
+  Description=Lighthouse Beacon Node
+  Wants=network-online.target
+  After=network-online.target
+
+  [Service]
+  Type=simple
+  User=$user
+  Group=$user
+  Restart=always
+  RestartSec=5
+  ExecStart=/usr/local/bin/lighthouse $blkc --datadir $wllt bn --staking --eth1-endpoint $E2LE --metrics
+
+  [Install]
+  WantedBy=multi-user.target
+EOF
+  sudo mv beacon.service /etc/systemd/system/beacon.service
+  sudo ufw allow 9000 comment 'Lighthouse'
+  sudo ufw reload
+  sudo systemctl daemon-reload
+  sudo systemctl start beacon
+  sudo systemctl enable beacon
+  sudo journalctl -f -u beacon.service
+
+elif [ -x ~/prysm/bazel-bin/beacon-chain/beacon-chain_/beacon-chain ]; then
+
+  blkc="--medalla"
+  blkc=""
+  wllt="/var/lib/prysm"
+  golb="$wllt/beacon"
+
+  echo -e "${i}PRYSM: CONFIGURE BEACON${f}"
+  if [ -f /etc/systemd/system/validator.service ]; then [ "$(sudo systemctl status validator|grep -i inactive)" ] || sudo systemctl stop validator;fi
+  if [ -f /etc/systemd/system/beacon.service ];    then [ "$(sudo systemctl status beacon   |grep -i inactive)" ] || sudo systemctl stop beacon;fi
+  cd ~
+  sudo mkdir -p $golb
+  if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
+  sudo chown -R $user:$user $wllt
+  sudo cp ~/prysm/bazel-bin/beacon-chain/beacon-chain_/beacon-chain /usr/local/bin
+  sudo cat <<-EOF > beacon.service
+  [Unit]
+  Description=Prysm Beaconchain
+  Wants=network-online.target
+  After=network-online.target
+
+  [Service]
+  Type=simple
+  User=$user
+  Group=$user
+  Restart=always
+  RestartSec=5
+  ExecStart=/usr/local/bin/beacon-chain $blkc --p2p-host-ip=$E2PN --datadir=$golb --http-web3provider=$E2PE --accept-terms-of-use
+
+  [Install]
+  WantedBy=multi-user.target
+EOF
+  sudo mv beacon.service /etc/systemd/system/beacon.service
+  sudo ufw allow 13000/tcp comment 'Prysm'
+  sudo ufw allow 12000/udp comment 'Prysm'
+  sudo ufw reload
+  sudo systemctl daemon-reload
+  sudo systemctl start beacon
+  sudo systemctl enable beacon
+  sudo journalctl -f -u beacon.service
+
+else
+
+  echo -e "${i}NAO EXISTEM BEACONS COMPILADOS PARA INSTALAR${f}"
+
+fi

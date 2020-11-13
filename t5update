@@ -1,0 +1,45 @@
+#!/bin/bash
+
+i="\n\e[5m"
+f="\e[25m\n"
+
+echo -e "${i}FULL-UPGRADE${f}"
+sudo apt update && sudo apt full-upgrade
+echo -e "${i}DIST-UPGRADE${f}"
+sudo apt dist-upgrade && sudo apt autoremove
+
+if [ -x /usr/local/bin/lighthouse ]; then
+
+  echo -e "${i}RUST-UPDATE${f}"
+  rustup update
+  echo -e "${i}LIGHT: UPDATE${f}"
+  if [ -f /etc/systemd/system/validator.service ]; then [ "$(sudo systemctl status validator|grep -i inactive)" ] || sudo systemctl stop validator;fi
+  if [ -f /etc/systemd/system/beacon.service ];    then [ "$(sudo systemctl status beacon   |grep -i inactive)" ] || sudo systemctl stop beacon;fi
+  cd ~/lighthouse
+  git pull origin master
+  make
+  echo -e "\n$E2LH\n"
+  sudo mv /usr/local/bin/lighthouse /usr/local/bin/lighthouse.save;cp ~/.cargo/bin/lighthouse /usr/local/bin
+  [ -f /etc/systemd/system/beacon.service ] && sudo systemctl start beacon
+  [ -f /etc/systemd/system/validator.service ] && sudo systemctl start validator
+
+elif [ -x /usr/local/bin/beacon-chain ]; then
+
+  echo -e "${i}PRYSM: UPDATE${f}"
+  if [ -f /etc/systemd/system/validator.service ]; then [ "$(sudo systemctl status validator|grep -i inactive)" ] || sudo systemctl stop validator;fi
+  if [ -f /etc/systemd/system/beacon.service ];    then [ "$(sudo systemctl status beacon   |grep -i inactive)" ] || sudo systemctl stop beacon;fi
+  cd ~/prysm
+  git pull origin master
+  bazel build //beacon-chain:beacon-chain
+  bazel build //validator:validator
+  echo -e "${i}PRYSM: $E2PH${f}"
+  sudo mv /usr/local/bin/beacon-chain /usr/local/bin/beacon-chain.save;cp ~/prysm/bazel-bin/beacon-chain/beacon-chain_/beacon-chain /usr/local/bin
+  sudo mv /usr/local/bin/validator /usr/local/bin/validator.save;cp ~/prysm/bazel-bin/validator/validator_/validator /usr/local/bin
+  [ -f /etc/systemd/system/beacon.service ] && sudo systemctl start beacon
+  [ -f /etc/systemd/system/validator.service ] && sudo systemctl start validator
+
+else
+
+  echo -e "${i}NAO EXISTEM NODES TO UPDATE${f}"
+
+fi

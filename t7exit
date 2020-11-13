@@ -1,0 +1,47 @@
+#!/bin/bash
+
+i="\n\e[5m"
+f="\e[25m\n"
+
+meeu="$(whoami)"
+user="eth2"
+
+echo -e "${i}WARNING: WARNING: THIS IS AN IRREVERSIBLE OPERATION${f}"
+echo -e "${i}WARNING: WITHDRAWING STAKED ETH WILL NOT BE POSSIBLE UNTIL ETH1/ETH2 MERGE${f}"
+echo -e "${i}Exit my validator${f}"
+if [ -x /usr/local/bin/lighthouse ]; then
+
+  blkc="--testnet medalla"
+  wllt="/var/lib/lighthouse"
+  golb="$wllt/validators"
+
+  echo -e "${i}LIGHT: EXIT VALIDATORS${f}"
+  if [ -f $golb/validator_definitions.yml ]; then
+    echo -e "${i}LIGHT: STOREKEY($E2LK) WALLETKEY($E2LW)${f}"
+    for kst in $(ls $golb/*.json)
+    do echo lighthouse $blkc --datadir $wllt account validator exit --keystore $kst
+    done
+  else
+    echo -e "${i}\nLIGHT: CHAVES AINDA NAO FORAM IMPORTADAS${F}"
+  fi
+
+  echo -e "${i}LIGTH: CONFIGURE VALIDATOR${f}"
+
+elif [ -x /usr/local/bin/validator ]; then
+
+  blkc="--medalla"
+  wllt="/var/lib/prysm"
+  golb="$wllt/validator"
+
+  echo -e "${i}PRYSM: EXIT VALIDATORS${f}"
+  if [ -f $golb/password.txt ]; then
+    echo -e "${i}PRYSM: STOREKEY($E2PK) WALLETKEY($E2PW)${f}"
+    cd ~/prysm
+    echo bazel run //validator:validator -- accounts voluntary-exit
+  else
+    echo -e "${i}\nPRYSM: CHAVES AINDA NAO FORAM IMPORTADAS${F}"
+  fi
+
+else
+  echo -e "${i}NAO EXISTEM VALIDATORS TO EXIT${f}"
+fi
