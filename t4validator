@@ -9,26 +9,28 @@ user="eth2"
 if [ -x /usr/local/bin/lighthouse ]; then
 
   blkc="--testnet medalla"
-  wllt="/var/lib/lighthouse"
-  golb="$wllt/validators"
+  dtdi="/var/lib/lighthouse"
+  becn="$dtdi/beacon"
+  vldt="$dtdi/validators"
 
-  echo -e "${i}LIGHT: CREATE VALIDATOR WALLET${f}"
   if [ -f /etc/systemd/system/validator.service ]; then [ "$(sudo systemctl status validator|grep -i inactive)" ] || sudo systemctl stop validator;fi
   if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
   cd ~
-  if [ -f $golb/validator_definitions.yml ]; then
-    echo -e "${i}\nLIGHT: CHAVES JA FORAM IMPORTADAS${F}"
+  if [ -f $vld/validator_definitions.yml ]; then
+    echo -e "${i}\nCHAVES JA FORAM IMPORTADAS${F}"
   else
-    sudo mkdir -p $golb
-    sudo chown -R $user:$user $golb
-    echo -e "${i}LIGHT: STOREKEY($E2LK) WALLETKEY($E2LW)${f}"
-    lighthouse $blkc --datadir $wllt account validator import --directory ~/eth2.0-deposit-cli/validator_keys
+    echo -e "${i}CREATE VALIDATOR WALLET${f}"
+    sudo mkdir -p $vldt
+    sudo chown -R $meeu:$meeu $dtdi
+    echo -e "STORE($K)"
+    lighthouse $blkc --datadir $dtdi account validator import --directory $D
+    sudo chown -R $user:$user $dtdi
   fi
 
-  echo -e "${i}LIGTH: CONFIGURE VALIDATOR${f}"
+  echo -e "${i}CONFIGURE VALIDATOR${f}"
   cd ~
-  sudo mkdir -p $golb
-  sudo chown -R $user:$user $golb
+  sudo mkdir -p $vldt
+  sudo chown -R $user:$user $vldt
   sudo cat <<-EOF > validator.service
   [Unit]
   Description=Lighthouse Validator
@@ -41,57 +43,7 @@ if [ -x /usr/local/bin/lighthouse ]; then
   Group=$user
   Restart=always
   RestartSec=5
-  ExecStart=/usr/local/bin/lighthouse $blkc --datadir $wllt vc
-
-  [Install]
-  WantedBy=multi-user.target
-EOF
-  sudo mv validator.service /etc/systemd/system/validator.service
-  sudo systemctl daemon-reload
-  sudo systemctl start validator
-  sudo systemctl enable validator
-  sudo journalctl -f -u validator.service
-
-elif [ -x ~/prysm/bazel-bin/validator/validator_/validator ]; then
-
-  blkc="--medalla"
-  wllt="/var/lib/prysm"
-  golb="$wllt/validator"
-
-  echo -e "${i}PRYSM: CREATE VALIDATOR WALLET${f}"
-  if [ -f /etc/systemd/system/validator.service ]; then [ "$(sudo systemctl status validator|grep -i inactive)" ] || sudo systemctl stop validator;fi
-  cd ~
-  if [ -f $golb/password.txt ]; then
-    echo -e "${i}\nPRYSM: CHAVES JA FORAM IMPORTADAS${F}"
-  else
-    sudo mkdir -p $golb
-    sudo chown -R $meeu:$meeu $golb
-    echo -e "${i}PRYSM: STOREKEY($E2LK) WALLETKEY($E2LW)${f}"
-    cd ~/prysm
-    bazel run //validator:validator -- accounts import --keys-dir=$HOME/eth2.0-deposit-cli/validator_keys --accept-terms-of-use $blkc
-    bazel run //validator:validator -- accounts list $blkc --wallet-dir $golb --accept-terms-of-use
-    echo $E2PW > $golb/password.txt
-    sudo chmod go-rw $golb/password.txt
-  fi
-
-  echo -e "${i}PRYSM: CONFIGURE VALIDATOR${f}"
-  cd ~
-  if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
-  sudo chown -R $user:$user $golb
-  sudo cp ~/prysm/bazel-bin/validator/validator_/validator /usr/local/bin
-  sudo cat <<-EOF > validator.service
-  [Unit]
-  Description=Validator
-  Wants=network-online.target
-  After=network-online.target
-
-  [Service]
-  Type=simple
-  User=$user
-  Group=$user
-  Restart=always
-  RestartSec=5
-  ExecStart=/usr/local/bin/validator $blkc --datadir $golb --wallet-dir $golb --wallet-password-file $golb/password.txt --accept-terms-of-use
+  ExecStart=/usr/local/bin/lighthouse $blkc --datadir $dtdi vc
 
   [Install]
   WantedBy=multi-user.target
@@ -103,5 +55,7 @@ EOF
   sudo journalctl -f -u validator.service
 
 else
-  echo -e "${i}NAO EXISTEM VALIDATORS${f}"
+
+  echo -e "${i}NAO EXISTE BEACON INSTALADO - DEVE COMECAR POR AI${f}"
+  
 fi

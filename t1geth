@@ -3,15 +3,20 @@
 i="\n\e[5m"
 f="\e[25m\n"
 
+echo -e "${i}CRIA ALIAS${f}"
+
+# beacon external/internal eth1
 bn="beacon.service"
 bs="/etc/systemd/system/$bn"
 ee="https:\S* "
 ei="http:\S*8545 "
 sr="http://127.0.0.1:8545"
-echo -e "${i}CRIA ALIAS${f}"
-[ "$E2LE" ] && sr=$E2LE
-[ "$E2PE" ] && sr=$E2PE
-c1="cp $bs $bn.save;if grep -q \"$ee\" $bn.save;then sed -e \"s%$ee%http://127.0.0.1:8545 %\" $bn.save > $bs;else sed -e \"s%$ei%$sr %\" $bn.save > $bs;fi"
+c1="sudo systemctl stop beacon"
+c1="$c1;cp $bs $bn.save"
+c1="$c1;if grep -q \"$ee\" $bn.save;then sed -e \"s%$ee%http://127.0.0.1:8545 %\" $bn.save > $bs;else sed -e \"s%$ei%$E %\" $bn.save > $bs;fi"
+c1="$c1;sudo systemctl daemon-reload"
+c1="$c1;sudo systemctl start beacon"
+# ajuda
 c2="echo -e \""
 c2="$c2\nus\tupdate system"
 c2="$c2\ndr\tdaemon-reload"
@@ -23,10 +28,16 @@ c2="$c2\njj\tjournal total"
 c2="$c2\njg\tjournal geth"
 c2="$c2\njb\tjournal beacon"
 c2="$c2\njv\tjournal validator"
+c2="$c2\njf\tjournal grafana"
+c2="$c2\njn\tjournal node"
+c2="$c2\njp\tjournal prometheus"
 c2="$c2\n"
 c2="$c2\nga\tgeth arranca"
 c2="$c2\nva\tvalidator arranca"
 c2="$c2\nba\tbeacon arranca"
+c2="$c2\ngr\tgeth restart"
+c2="$c2\nvr\tvalidator restart"
+c2="$c2\nbr\tbeacon restart"
 c2="$c2\nbx\tbeacon external/internal eth1"
 c2="$c2\nta\ttudo arranca"
 c2="$c2\nte\ttudo enable"
@@ -38,9 +49,40 @@ c2="$c2\nvpr\tvalidator para"
 c2="$c2\ntpr\ttudo para"
 c2="$c2\ntds\ttudo disable"
 c2="$c2\n\""
+# arranca tudo
+c3="sudo systemctl daemon-reload"
+c3="$c3;sudo systemctl start geth"
+c3="$c3;sudo systemctl start beacon"
+c3="$c3;sudo systemctl start validator"
+c3="$c3;sudo systemctl start prometheus"
+c3="$c3;sudo systemctl start node"
+c3="$c3;sudo systemctl start grafana-server"
+# enable tudo
+c4="sudo systemctl daemon-reload"
+c4="$c4;sudo systemctl enable geth"
+c4="$c4;sudo systemctl enable beacon"
+c4="$c4;sudo systemctl enable validator"
+c4="$c4;sudo systemctl enable prometheus"
+c4="$c4;sudo systemctl enable node"
+c4="$c4;sudo systemctl enable grafana-server"
+# para tudo
+c5="sudo systemctl stop grafana-server"
+c5="$c5;sudo systemctl stop node"
+c5="$c5;sudo systemctl stop prometheus"
+c5="$c5;sudo systemctl stop validator"
+c5="$c5;sudo systemctl stop beacon"
+c5="$c5;sudo systemctl stop geth"
+# disable tudo
+c6="sudo systemctl disable grafana-server"
+c6="$c6;sudo systemctl disable node"
+c6="$c6;sudo systemctl disable prometheus"
+c6="$c6;sudo systemctl disable validator"
+c6="$c6;sudo systemctl disable beacon"
+c6="$c6;sudo systemctl disable geth"
+
 cat <<-EOF > ~/.bash_aliases
 alias ajuda='$c2'
-alias us='echo -e "${i}FULL-UPGRADE${f}";sudo apt update && sudo apt full-upgrade;echo -e "${i}DIST-UPGRADE${f}";sudo apt dist-upgrade && sudo apt autoremove
+alias us='echo -e "${i}FULL-UPGRADE${f}";sudo apt update && sudo apt full-upgrade;echo -e "${i}DIST-UPGRADE${f}";sudo apt dist-upgrade && sudo apt autoremove'
 alias dr='sudo systemctl daemon-reload'
 
 alias fs='sudo ufw status numbered'
@@ -50,20 +92,26 @@ alias jj='sudo journalctl -f'
 alias jg='sudo journalctl -f -u geth.service'
 alias jb='sudo journalctl -f -u beacon.service'
 alias jv='sudo journalctl -f -u validator.service'
+alias jf='sudo journalctl -f -u grafana-server.service'
+alias jn='sudo journalctl -f -u node.service'
+alias jp='sudo journalctl -f -u prometheus.service'
 
 alias ga='sudo systemctl daemon-reload;sudo systemctl start geth'
 alias va='sudo systemctl daemon-reload;sudo systemctl start validator'
 alias ba='sudo systemctl daemon-reload;sudo systemctl start beacon'
-alias bx='sudo systemctl stop beacon;$c1;sudo systemctl daemon-reload;sudo systemctl start beacon'
-alias ta='sudo systemctl daemon-reload;sudo systemctl start geth;sudo systemctl start beacon;sudo systemctl start validator;sudo systemctl start prometheus;sudo systemctl start node;sudo systemctl start grafana-server'
-alias te='sudo systemctl daemon-reload;sudo systemctl enable geth;sudo systemctl enable beacon;sudo systemctl enable validator;sudo systemctl enable prometheus;sudo systemctl enable node;sudo systemctl enable grafana-server'
+alias gr='sudo systemctl daemon-reload;sudo systemctl restart geth'
+alias vr='sudo systemctl daemon-reload;sudo systemctl restart validator'
+alias br='sudo systemctl daemon-reload;sudo systemctl restart beacon'
+alias bx='$c1'
+alias ta='$c3'
+alias te='$c4'
 
 alias fpr='sudo ufw disable'
 alias gpr='sudo systemctl stop geth'
 alias bpr='sudo systemctl stop beacon'
 alias vpr='sudo systemctl stop validator'
-alias tpr='sudo systemctl stop grafana-server;sudo systemctl stop node;sudo systemctl stop prometheus;sudo systemctl stop validator;sudo systemctl stop beacon;sudo systemctl stop geth'
-alias tds='sudo systemctl disable grafana-server;sudo systemctl disable node;sudo systemctl disable prometheus;sudo systemctl disable validator;sudo systemctl disable beacon;sudo systemctl disable geth'
+alias tpr='$c5'
+alias tds='$c6'
 EOF
 
 if [ "$(sudo ufw status|grep -i inactive)" ]; then
@@ -152,8 +200,7 @@ elif [ -f ~/eth2.0-deposit-cli/README.md ]; then
   echo -e "${i}GERAR CHAVES${f}"
   cd ~/eth2.0-deposit-cli
   echo -e "${i}PARA GERAR $numv NOVAS CHAVES${f}"
-  [ "$E2LK" ] && echo $E2LK
-  [ "$E2PK" ] && echo $E2PK
+  echo -e "STORE($K)"
   echo -e "${i}PARA GERAR $numv NOVAS CHAVES${f}"
   ./deposit.sh new-mnemonic --num_validators $numv --mnemonic_language $ling --chain $blkc
 
