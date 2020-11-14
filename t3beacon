@@ -20,6 +20,8 @@ if [ -x  ~/.cargo/bin/lighthouse ]; then
   if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
   sudo chown -R $user:$user $golb
   sudo cp ~/.cargo/bin/lighthouse /usr/local/bin
+  eth1=$E2LE
+  [ "$E2PE" ] && eth1=$E2PE
   sudo cat <<-EOF > beacon.service
   [Unit]
   Description=Lighthouse Beacon Node
@@ -32,7 +34,7 @@ if [ -x  ~/.cargo/bin/lighthouse ]; then
   Group=$user
   Restart=always
   RestartSec=5
-  ExecStart=/usr/local/bin/lighthouse $blkc --datadir $wllt bn --staking --eth1-endpoint $E2LE --metrics
+  ExecStart=/usr/local/bin/lighthouse $blkc --datadir $wllt bn --staking --eth1-endpoint $eth1 --metrics
 
   [Install]
   WantedBy=multi-user.target

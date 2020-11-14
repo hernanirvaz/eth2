@@ -12,34 +12,64 @@ echo -e "${i}CRIA ALIAS${f}"
 [ "$E2LE" ] && sr=$E2LE
 [ "$E2PE" ] && sr=$E2PE
 c1="cp $bs $bn.save;if grep -q \"$ee\" $bn.save;then sed -e \"s%$ee%http://127.0.0.1:8545 %\" $bn.save > $bs;else sed -e \"s%$ei%$sr %\" $bn.save > $bs;fi"
+c2="echo -e \""
+c2="$c2\nus\tupdate system"
+c2="$c2\ndr\tdaemon-reload"
+c2="$c2\n"
+c2="$c2\nfs\tfirewall status"
+c2="$c2\nfa\tfirewall arranca"
+c2="$c2\n"
+c2="$c2\njj\tjournal total"
+c2="$c2\njg\tjournal geth"
+c2="$c2\njb\tjournal beacon"
+c2="$c2\njv\tjournal validator"
+c2="$c2\n"
+c2="$c2\nga\tgeth arranca"
+c2="$c2\nva\tvalidator arranca"
+c2="$c2\nba\tbeacon arranca"
+c2="$c2\nbx\tbeacon external/internal eth1"
+c2="$c2\nta\ttudo arranca"
+c2="$c2\nte\ttudo enable"
+c2="$c2\n"
+c2="$c2\nfpr\tfirewall para"
+c2="$c2\ngpr\tgeth para"
+c2="$c2\nbpr\tbeacon para"
+c2="$c2\nvpr\tvalidator para"
+c2="$c2\ntpr\ttudo para"
+c2="$c2\ntds\ttudo disable"
+c2="$c2\n\""
 cat <<-EOF > ~/.bash_aliases
-alias us='sudo apt update && sudo apt full-upgrade;sudo apt dist-upgrade && sudo apt autoremove'
-alias sr='sudo systemctl daemon-reload'
+alias ajuda='$c2'
+alias us='echo -e "${i}FULL-UPGRADE${f}";sudo apt update && sudo apt full-upgrade;echo -e "${i}DIST-UPGRADE${f}";sudo apt dist-upgrade && sudo apt autoremove
+alias dr='sudo systemctl daemon-reload'
 
 alias fs='sudo ufw status numbered'
-alias fd='sudo ufw disable'
-alias fe='sudo ufw enable'
+alias fa='sudo ufw enable'
 
 alias jj='sudo journalctl -f'
 alias jg='sudo journalctl -f -u geth.service'
 alias jb='sudo journalctl -f -u beacon.service'
 alias jv='sudo journalctl -f -u validator.service'
 
-alias gp='sudo systemctl stop geth'
 alias ga='sudo systemctl daemon-reload;sudo systemctl start geth'
-alias bp='sudo systemctl stop beacon'
+alias va='sudo systemctl daemon-reload;sudo systemctl start validator'
 alias ba='sudo systemctl daemon-reload;sudo systemctl start beacon'
 alias bx='sudo systemctl stop beacon;$c1;sudo systemctl daemon-reload;sudo systemctl start beacon'
-alias vp='sudo systemctl stop validator'
-alias va='sudo systemctl daemon-reload;sudo systemctl start validator'
-
-alias tp='sudo systemctl stop grafana-server;sudo systemctl stop node;sudo systemctl stop prometheus;sudo systemctl stop validator;sudo systemctl stop beacon;sudo systemctl stop geth'
 alias ta='sudo systemctl daemon-reload;sudo systemctl start geth;sudo systemctl start beacon;sudo systemctl start validator;sudo systemctl start prometheus;sudo systemctl start node;sudo systemctl start grafana-server'
-alias td='sudo systemctl disable grafana-server;sudo systemctl disable node;sudo systemctl disable prometheus;sudo systemctl disable validator;sudo systemctl disable beacon;sudo systemctl disable geth'
+alias te='sudo systemctl daemon-reload;sudo systemctl enable geth;sudo systemctl enable beacon;sudo systemctl enable validator;sudo systemctl enable prometheus;sudo systemctl enable node;sudo systemctl enable grafana-server'
+
+alias fpr='sudo ufw disable'
+alias gpr='sudo systemctl stop geth'
+alias bpr='sudo systemctl stop beacon'
+alias vpr='sudo systemctl stop validator'
+alias tpr='sudo systemctl stop grafana-server;sudo systemctl stop node;sudo systemctl stop prometheus;sudo systemctl stop validator;sudo systemctl stop beacon;sudo systemctl stop geth'
+alias tds='sudo systemctl disable grafana-server;sudo systemctl disable node;sudo systemctl disable prometheus;sudo systemctl disable validator;sudo systemctl disable beacon;sudo systemctl disable geth'
 EOF
 
 if [ "$(sudo ufw status|grep -i inactive)" ]; then
   echo -e "${i}FIREWALL${f}"
+  sudo ufw deny out 32766 comment 'unknown'
+  sudo ufw deny in 32766 comment 'unknown'
   sudo ufw deny 22/tcp comment 'Acesso remoto (old)'
   sudo ufw deny 30303 comment 'eth1 peers'
   sudo ufw deny 13000/tcp comment 'Prysm'
