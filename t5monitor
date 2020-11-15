@@ -118,6 +118,8 @@ sudo apt update
 apt-cache policy grafana
 sudo apt install -y grafana
 sudo ufw allow 3000/tcp comment 'Grafana'
+# ONLY FOR DIRECT ACESS TO PROMETHEUS - GRAFANA USES DATASOURCE WITH localhost
+# sudo ufw deny 9090/tcp comment 'Prometheus'
 sudo ufw reload
 
 sudo systemctl daemon-reload

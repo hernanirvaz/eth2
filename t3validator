@@ -19,11 +19,11 @@ if [ -x /usr/local/bin/lighthouse ]; then
   if [ -f $vld/validator_definitions.yml ]; then
     echo -e "${i}\nCHAVES JA FORAM IMPORTADAS${F}"
   else
-    echo -e "${i}CREATE VALIDATOR WALLET${f}"
+    echo -e "${i}IMPORT VALIDATOR WALLET${f}"
     sudo mkdir -p $vldt
     sudo chown -R $meeu:$meeu $dtdi
-    echo -e "STORE($K)"
-    lighthouse $blkc --datadir $dtdi account validator import --directory $D
+    echo -e "STORE($K)\n"
+    lighthouse $blkc --datadir $dtdi account validator import --directory $HOME/$D
     sudo chown -R $user:$user $dtdi
   fi
 

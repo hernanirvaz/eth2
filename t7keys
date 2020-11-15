@@ -6,8 +6,8 @@ f="\e[25m\n"
 if [ "$(uname -n)" = "hrv-zen" ]; then
 
   numv=10
-  blkc="mainnet"
   blkc="medalla"
+  blkc="mainnet"
   ling="spanish"
   if [ -d ~/validator_keys ] && [ "$(ls -A ~/validator_keys)" ]; then
 
@@ -17,11 +17,13 @@ if [ "$(uname -n)" = "hrv-zen" ]; then
 
     echo -e "${i}CHAVES JA FORAM GERADAS"
     echo -e "ARQUIVAR OFF-LINE${f}"
+    sudo cp -R ~/eth2.0-deposit-cli/validator_keys /media/eth
+    cp -R ~/eth2.0-deposit-cli/validator_keys ~
 
   elif [ -f ~/eth2.0-deposit-cli/README.md ]; then
 
-    echo -e "${i}GERAR CHAVES${f}"
     cd ~/eth2.0-deposit-cli
+    echo -e "${i}GERAR CHAVES $blkc${f}"
     echo -e "${i}PARA GERAR $numv NOVAS CHAVES${f}"
     echo -e "STORE($K)"
     echo -e "${i}PARA GERAR $numv NOVAS CHAVES${f}"

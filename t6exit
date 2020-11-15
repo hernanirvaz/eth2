@@ -14,7 +14,6 @@ if [ -x /usr/local/bin/lighthouse ]; then
   blkc="--testnet medalla"
   wllt="/var/lib/lighthouse"
   golb="$wllt/validators"
-
   echo -e "${i}EXIT VALIDATORS${f}"
   if [ -f $golb/validator_definitions.yml ]; then
     echo -e "${i}STORE($K) WALLET($W)${f}"
@@ -24,9 +23,10 @@ if [ -x /usr/local/bin/lighthouse ]; then
   else
     echo -e "${i}\nCHAVES AINDA NAO FORAM IMPORTADAS${f}"
   fi
-
   echo -e "${i}LIGTH: CONFIGURE VALIDATOR${f}"
 
 else
+
   echo -e "${i}NAO EXISTEM VALIDATORS TO EXIT${f}"
+
 fi

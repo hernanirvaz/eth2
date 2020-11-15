@@ -117,12 +117,8 @@ EOF
 if [ "$(sudo ufw status|grep -i inactive)" ]; then
 
   echo -e "${i}FIREWALL${f}"
-  sudo ufw deny out 32766 comment 'unknown'
-  sudo ufw deny in 32766 comment 'unknown'
   sudo ufw deny 22/tcp comment 'Acesso remoto (old)'
   sudo ufw deny 30303 comment 'eth1 peers'
-  sudo ufw deny 13000/tcp comment 'Prysm'
-  sudo ufw deny 12000/udp comment 'Prysm'
   sudo ufw deny 9000 comment 'Lighthouse'
   sudo ufw deny 9090/tcp comment 'Prometheus'
   sudo ufw deny 3000/tcp comment 'Grafana'

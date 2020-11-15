@@ -37,7 +37,7 @@ if [ -x  ~/.cargo/bin/lighthouse ]; then
   becn="$dtdi/beacon"
   vldt="$dtdi/validators"
 
-  echo -e "${i}CONFIGURE BEACON${f}"
+  echo -e "${i}CONFIGURE BEACON${f} $H"
   if [ -f /etc/systemd/system/validator.service ]; then [ "$(sudo systemctl status validator|grep -i inactive)" ] || sudo systemctl stop validator;fi
   if [ -f /etc/systemd/system/beacon.service ];    then [ "$(sudo systemctl status beacon   |grep -i inactive)" ] || sudo systemctl stop beacon;fi
   cd ~
