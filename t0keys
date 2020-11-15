@@ -1,0 +1,48 @@
+#!/bin/bash
+
+i="\n\e[5m"
+f="\e[25m\n"
+
+if [ "$(uname -n)" = "hrv-zen" ]; then
+
+  numv=10
+  blkc="mainnet"
+  blkc="medalla"
+  ling="spanish"
+  if [ -d ~/validator_keys ] && [ "$(ls -A ~/validator_keys)" ]; then
+
+    echo -e "${i}CHAVES ESTAO PRONTAS${f}"
+
+  elif [ -d ~/eth2.0-deposit-cli/validator_keys ] && [ "$(ls -A ~/eth2.0-deposit-cli/validator_keys)" ]; then
+
+    echo -e "${i}CHAVES JA FORAM GERADAS"
+    echo -e "ARQUIVAR OFF-LINE${f}"
+
+  elif [ -f ~/eth2.0-deposit-cli/README.md ]; then
+
+    echo -e "${i}GERAR CHAVES${f}"
+    cd ~/eth2.0-deposit-cli
+    echo -e "${i}PARA GERAR $numv NOVAS CHAVES${f}"
+    echo -e "STORE($K)"
+    echo -e "${i}PARA GERAR $numv NOVAS CHAVES${f}"
+    # if keystores lost to recover keys use ./deposit.sh existing-mnemonic
+    ./deposit.sh new-mnemonic --num_validators $numv --mnemonic_language $ling --chain $blkc
+
+  else
+
+    echo -e "${i}INSTALAR SCRIPT CHAVES${f}"
+    sudo apt install -y python3-pip python3-testresources
+    sudo apt install -y git
+    cd ~
+    git clone https://github.com/ethereum/eth2.0-deposit-cli.git
+    cd ~/eth2.0-deposit-cli
+    sudo ./deposit.sh install
+    echo -e "${i}PARA GERAR $numv CHAVES EXECUTAR DE NOVO${f}"
+
+  fi
+
+else
+
+  echo -e "${i}TEM DE ESTAR HOME${f}"
+
+fi
