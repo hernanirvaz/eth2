@@ -3,75 +3,73 @@
 i="\n\e[5m"
 f="\e[25m\n"
 
-meeu="$(whoami)"
 user="eth2"
-blkc="--medalla"
-plib="/var/lib/prometheus"
 petc="/etc/prometheus"
-verp="2.22.1" # prometheus
-vern="1.0.1"  # node_exporter
 
-echo -e "${i}CONFIGURE PROMETHEUS${f}"
+if [ -f $petc/prometheus.yml ]; then
 
-if [ -f /etc/systemd/system/grafana-server.service ]; then [ "$(sudo systemctl status grafana-server|grep -i inactive)" ] || sudo systemctl stop grafana-server;fi
-if [ -f /etc/systemd/system/prometheus.service ]; then [ "$(sudo systemctl status prometheus|grep -i inactive)" ] || sudo systemctl stop prometheus;fi
-if [ -f /etc/systemd/system/prometheus-node-exporter.service ]; then [ "$(sudo systemctl status prometheus-node-exporter|grep -i inactive)" ] || sudo systemctl stop prometheus-node-exporter;fi
+  echo -e "${i}PROMETHEUS JA INSTALADO${f}"
 
-cd ~
-if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
-sudo mkdir -p $petc
-sudo mkdir -p $plib
-sudo chown -R $user:$user $petc
-sudo chown -R $user:$user $plib
+else
 
-sudo apt install -y prometheus prometheus-node-exporter
-sudo cat <<-EOF > prometheus.yml
-  global:
-    scrape_interval:     15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
-    evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
-    # scrape_timeout is set to the global default (10s).
-  # Alertmanager configuration
-  alerting:
-    alertmanagers:
-    - static_configs:
-      - targets:
-        # - alertmanager:9093
-  # Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
-  rule_files:
-    # - "first_rules.yml"
-    # - "second_rules.yml"
-  # A scrape configuration containing exactly one endpoint to scrape:
-  # Here it's Prometheus itself.
-  scrape_configs:
-    - job_name: 'nodes'
-      metrics_path: /metrics
-      static_configs:
-        - targets: ['localhost:5054']
-    - job_name: 'node_exporter'
-      static_configs:
-        - targets: ['localhost:9100']
+  if [ -f /etc/systemd/system/grafana-server.service ]; then [ "$(sudo systemctl status grafana-server|grep -i inactive)" ] || sudo systemctl stop grafana-server;fi
+  if [ -f /etc/systemd/system/prometheus.service ]; then [ "$(sudo systemctl status prometheus|grep -i inactive)" ] || sudo systemctl stop prometheus;fi
+  if [ -f /etc/systemd/system/prometheus-node-exporter.service ]; then [ "$(sudo systemctl status prometheus-node-exporter|grep -i inactive)" ] || sudo systemctl stop prometheus-node-exporter;fi
+
+  echo -e "${i}CONFIGURE PROMETHEUS${f}"
+
+  cd ~
+  if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
+
+  sudo apt install -y prometheus prometheus-node-exporter
+  sudo cat <<-EOF > prometheus.yml
+    global:
+      scrape_interval:     15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+      evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
+      # scrape_timeout is set to the global default (10s).
+    # Alertmanager configuration
+    alerting:
+      alertmanagers:
+      - static_configs:
+        - targets:
+          # - alertmanager:9093
+    # Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+    rule_files:
+      # - "first_rules.yml"
+      # - "second_rules.yml"
+    # A scrape configuration containing exactly one endpoint to scrape:
+    # Here it's Prometheus itself.
+    scrape_configs:
+      - job_name: 'nodes'
+        metrics_path: /metrics
+        static_configs:
+          - targets: ['localhost:5054']
+      - job_name: 'node_exporter'
+        static_configs:
+          - targets: ['localhost:9100']
 EOF
-sudo mv prometheus.yml $petc/prometheus.yml
-sudo chown $user:$user $petc/prometheus.yml
+  sudo mv prometheus.yml $petc/prometheus.yml
+  sudo chown $user:$user $petc/prometheus.yml
 
-echo -e "${i}CONFIGURE GRAFANA${f}"
+  echo -e "${i}CONFIGURE GRAFANA${f}"
 
-wget -q -O - https://packages.grafana.com/gpg.key | sudo apt-key add -
-sudo add-apt-repository -y "deb https://packages.grafana.com/oss/deb stable main"
-sudo apt update -y
-sudo apt install -y grafana
-sudo ufw allow 3000/tcp comment 'Grafana'
-# ONLY FOR DIRECT ACESS TO PROMETHEUS - GRAFANA USES DATASOURCE WITH localhost
-# sudo ufw deny 9090/tcp comment 'Prometheus'
-sudo ufw reload
+  wget -q -O - https://packages.grafana.com/gpg.key | sudo apt-key add -
+  sudo add-apt-repository -y "deb https://packages.grafana.com/oss/deb stable main"
+  sudo apt update -y
+  sudo apt install -y grafana
+  sudo ufw allow 3000/tcp comment 'Grafana'
+  # ONLY FOR DIRECT ACESS TO PROMETHEUS - GRAFANA USES DATASOURCE WITH localhost
+  # sudo ufw deny 9090/tcp comment 'Prometheus'
+  sudo ufw reload
+  sudo systemctl daemon-reload
+  sudo systemctl enable prometheus.service
+  sudo systemctl enable prometheus-node-exporter.service
+  sudo systemctl enable grafana-server.service
+  sudo systemctl start prometheus.service
+  sudo systemctl start prometheus-node-exporter.service
+  sudo systemctl start grafana-server.service
 
-sudo systemctl daemon-reload
-sudo systemctl enable prometheus.service
-sudo systemctl enable prometheus-node-exporter.service
-sudo systemctl enable grafana-server.service
-sudo systemctl start prometheus.service
-sudo systemctl start prometheus-node-exporter.service
-sudo systemctl start grafana-server.service
+fi
 
 echo -e "\nConfigure Grafana Login admin:admin http://$(uname -n):3000 & Change password\n"
 echo -e "Import some dashboards from the dashboards directory in https://github.com/sigp/lighthouse-metrics"
