@@ -8,12 +8,12 @@ user="eth2"
 
 echo -e "${i}VAI COMPILAR LIGHT${f}"
 if [ -x ~/.cargo/bin/rustup ]; then
-  echo -e "${i}update rust${f}"
+  echo -e "${i}UPDATE RUST${f}"
   source ~/.cargo/env
   rustup update
 else
+  echo -e "${i}INSTALL RUST${f}"
   sudo apt install -y git gcc g++ make cmake pkg-config libssl-dev
-  echo -e "${i}install rust${f}"
   cd ~
   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 fi
@@ -32,12 +32,12 @@ echo -e "${i}$(ntptime|grep -i ntp_|tr '[:lower:]' '[:upper:]')${f}"
 
 if [ -x  ~/.cargo/bin/lighthouse ]; then
 
-  blkc="--testnet medalla"
+  blkc="";[ $B = 'medalla' ] && blkc="--testnet medalla"
   dtdi="/var/lib/lighthouse"
   becn="$dtdi/beacon"
   vldt="$dtdi/validators"
 
-  echo -e "${i}CONFIGURE BEACON${f} $H"
+  echo -e "CONFIGURE BEACON $H"
   if [ -f /etc/systemd/system/validator.service ]; then [ "$(sudo systemctl status validator|grep -i inactive)" ] || sudo systemctl stop validator;fi
   if [ -f /etc/systemd/system/beacon.service ];    then [ "$(sudo systemctl status beacon   |grep -i inactive)" ] || sudo systemctl stop beacon;fi
   cd ~
@@ -47,27 +47,27 @@ if [ -x  ~/.cargo/bin/lighthouse ]; then
   sudo cp ~/.cargo/bin/lighthouse /usr/local/bin
   sudo cat <<-EOF > beacon.service
   [Unit]
-  Description=Lighthouse Beacon Node
+  Description=eth2 beacon service
   Wants=network-online.target
   After=network-online.target
 
   [Service]
-  Type=simple
   User=$user
   Group=$user
   Restart=always
-  RestartSec=5
+  RestartSec=10
   ExecStart=/usr/local/bin/lighthouse $blkc --datadir $dtdi bn --staking --eth1-endpoint $E --metrics
 
   [Install]
   WantedBy=multi-user.target
 EOF
   sudo mv beacon.service /etc/systemd/system/beacon.service
+  sudo chmod 644 /etc/systemd/system/beacon.service
   sudo ufw allow 9000 comment 'Lighthouse'
   sudo ufw reload
   sudo systemctl daemon-reload
-  sudo systemctl start beacon
   sudo systemctl enable beacon
+  sudo systemctl start beacon
   sudo journalctl -f -u beacon.service
 
 else

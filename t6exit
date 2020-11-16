@@ -11,7 +11,7 @@ echo -e "${i}WARNING: WITHDRAWING STAKED ETH WILL NOT BE POSSIBLE UNTIL ETH1/ETH
 echo -e "${i}Exit my validator${f}"
 if [ -x /usr/local/bin/lighthouse ]; then
 
-  blkc="--testnet medalla"
+  blkc="";[ $B = 'medalla' ] && blkc="--testnet medalla"
   wllt="/var/lib/lighthouse"
   golb="$wllt/validators"
   echo -e "${i}EXIT VALIDATORS${f}"

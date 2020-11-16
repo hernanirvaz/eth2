@@ -4,28 +4,36 @@ i="\n\e[5m"
 f="\e[25m\n"
 
 echo -e "${i}FULL-UPGRADE${f}"
-sudo apt update && sudo apt full-upgrade
-echo -e "${i}DIST-UPGRADE${f}"
-sudo apt dist-upgrade && sudo apt autoremove
+sudo apt update -y && sudo apt full-upgrade -y && sudo apt dist-upgrade -y
+sudo apt autoremove
+sudo apt autoclean
 
-if [ -x /usr/local/bin/lighthouse ]; then
+# Enable automatic updates so you don't have to manually install them.
+# sudo apt install unattended-upgrades
+# sudo dpkg-reconfigure -plow unattended-upgrades
 
-  echo -e "${i}RUST UPDATE${f}"
-  rustup update
-  echo -e "${i}LIGHTHOUSE UPDATE${f}"
-  if [ -f /etc/systemd/system/validator.service ]; then [ "$(sudo systemctl status validator|grep -i inactive)" ] || sudo systemctl stop validator;fi
-  if [ -f /etc/systemd/system/beacon.service ];    then [ "$(sudo systemctl status beacon   |grep -i inactive)" ] || sudo systemctl stop beacon;fi
-  cd ~/lighthouse
-  git pull origin master
-  make
-  echo -e "\n$H\n"
-  sudo mv /usr/local/bin/lighthouse /usr/local/bin/lighthouse.save
-  sudo cp ~/.cargo/bin/lighthouse /usr/local/bin
-  [ -f /etc/systemd/system/beacon.service ] && sudo systemctl start beacon
-  [ -f /etc/systemd/system/validator.service ] && sudo systemctl start validator
+if [ ! "$1" ]; then
 
-else
+  if [ -f ~/.rustup/settings.toml ]; then
 
-  echo -e "${i}NAO EXISTE BEACON INSTALADO - DEVE COMECAR POR AI${f}"
+    echo -e "${i}RUST UPDATE${f}"
+    rustup update
+
+  fi
+  if [ -x /usr/local/bin/lighthouse ]; then
+
+    echo -e "${i}LIGHTHOUSE UPDATE${f}"
+    if [ -f /etc/systemd/system/validator.service ]; then [ "$(sudo systemctl status validator|grep -i inactive)" ] || sudo systemctl stop validator;fi
+    if [ -f /etc/systemd/system/beacon.service ];    then [ "$(sudo systemctl status beacon   |grep -i inactive)" ] || sudo systemctl stop beacon;fi
+    cd ~/lighthouse
+    git pull
+    make
+    echo -e "\n$H\n"
+    sudo mv /usr/local/bin/lighthouse /usr/local/bin/lighthouse.save
+    sudo cp ~/.cargo/bin/lighthouse /usr/local/bin
+    [ -f /etc/systemd/system/beacon.service ] && sudo systemctl reload-or-restart beacon-chain
+    [ -f /etc/systemd/system/validator.service ] && sudo systemctl reload-or-restart validator
+
+  fi
 
 fi

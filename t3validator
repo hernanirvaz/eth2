@@ -8,7 +8,7 @@ user="eth2"
 
 if [ -x /usr/local/bin/lighthouse ]; then
 
-  blkc="--testnet medalla"
+  blkc="";[ $B = 'medalla' ] && blkc="--testnet medalla"
   dtdi="/var/lib/lighthouse"
   becn="$dtdi/beacon"
   vldt="$dtdi/validators"
@@ -33,25 +33,25 @@ if [ -x /usr/local/bin/lighthouse ]; then
   sudo chown -R $user:$user $vldt
   sudo cat <<-EOF > validator.service
   [Unit]
-  Description=Lighthouse Validator
+  Description=eth2 validator service
   Wants=network-online.target
   After=network-online.target
 
   [Service]
-  Type=simple
   User=$user
   Group=$user
   Restart=always
-  RestartSec=5
+  RestartSec=10
   ExecStart=/usr/local/bin/lighthouse $blkc --datadir $dtdi vc
 
   [Install]
   WantedBy=multi-user.target
 EOF
   sudo mv validator.service /etc/systemd/system/validator.service
+  sudo chmod 644 /etc/systemd/system/validator.service
   sudo systemctl daemon-reload
-  sudo systemctl start validator
   sudo systemctl enable validator
+  sudo systemctl start validator
   sudo journalctl -f -u validator.service
 
 else

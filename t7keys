@@ -6,8 +6,6 @@ f="\e[25m\n"
 if [ "$(uname -n)" = "hrv-zen" ]; then
 
   numv=10
-  blkc="medalla"
-  blkc="mainnet"
   ling="spanish"
   if [ -d ~/validator_keys ] && [ "$(ls -A ~/validator_keys)" ]; then
 
@@ -23,12 +21,12 @@ if [ "$(uname -n)" = "hrv-zen" ]; then
   elif [ -f ~/eth2.0-deposit-cli/README.md ]; then
 
     cd ~/eth2.0-deposit-cli
-    echo -e "${i}GERAR CHAVES $blkc${f}"
+    echo -e "${i}GERAR CHAVES $B${f}"
     echo -e "${i}PARA GERAR $numv NOVAS CHAVES${f}"
     echo -e "STORE($K)"
     echo -e "${i}PARA GERAR $numv NOVAS CHAVES${f}"
     # if keystores lost to recover keys use ./deposit.sh existing-mnemonic
-    ./deposit.sh new-mnemonic --num_validators $numv --mnemonic_language $ling --chain $blkc
+    ./deposit.sh new-mnemonic --num_validators $numv --mnemonic_language $ling --chain $B
 
   else
 
