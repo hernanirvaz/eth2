@@ -31,8 +31,7 @@ if [ "$(uname -n)" = "hrv-zen" ]; then
   else
 
     echo -e "${i}INSTALAR SCRIPT CHAVES${f}"
-    sudo apt install -y python3-pip python3-testresources
-    sudo apt install -y git
+    sudo apt install -y python3-pip python3-testresources git
     cd ~
     git clone https://github.com/ethereum/eth2.0-deposit-cli.git
     cd ~/eth2.0-deposit-cli

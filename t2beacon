@@ -6,25 +6,27 @@ f="\e[25m\n"
 meeu="$(whoami)"
 user="eth2"
 
-echo -e "${i}VAI COMPILAR LIGHT${f}"
 if [ -x ~/.cargo/bin/rustup ]; then
   echo -e "${i}UPDATE RUST${f}"
   source ~/.cargo/env
   rustup update
 else
-  echo -e "${i}INSTALL RUST${f}"
+  echo -e "${i}INSTALAR DEPENDENCIAS RUST${f}"
   sudo apt install -y git gcc g++ make cmake pkg-config libssl-dev
+
+  echo -e "${i}INSTALL RUST${f}"
   cd ~
   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 fi
 if [ -f ~/lighthouse/README.md ]; then
   cd ~/lighthouse
-  git pull origin master
+  git pull
 else
   sudo rm -rf ~/lighthouse
   cd ~
   git clone https://github.com/sigp/lighthouse.git
 fi 
+echo -e "${i}VAI COMPILAR LIGHT${f}"
 source ~/.cargo/env
 cd ~/lighthouse
 make
