@@ -5,6 +5,12 @@ f="\e[25m\n"
 
 meeu="$(whoami)"
 user="eth2"
+ethg="eth-geth"
+ethb="eth-beacon"
+ethv="eth-validator"
+ethp="prometheus"
+ethn="prometheus-node-exporter"
+ethf="grafana-server"
 
 if [ -x /usr/local/bin/lighthouse ]; then
 
@@ -13,25 +19,29 @@ if [ -x /usr/local/bin/lighthouse ]; then
   becn="$dtdi/beacon"
   vldt="$dtdi/validators"
 
-  if [ -f /etc/systemd/system/validator.service ]; then [ "$(sudo systemctl status validator|grep -i inactive)" ] || sudo systemctl stop validator;fi
+  t6cmd vpr
   if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
   cd ~
   if [ -f $vld/validator_definitions.yml ]; then
     echo -e "${i}\nCHAVES JA FORAM IMPORTADAS${F}"
   else
-    echo -e "${i}IMPORT VALIDATOR WALLET${f}"
-    sudo mkdir -p $vldt
-    sudo chown -R $meeu:$meeu $dtdi
-    echo -e "STORE($K)\n"
-    lighthouse $blkc --datadir $dtdi account validator import --directory $HOME/$D
-    sudo chown -R $user:$user $dtdi
+    if [ -d $HOME/$D ] && [ "$(ls -A $HOME/$D)" ]; then
+      echo -e "${i}IMPORT VALIDATOR KEYS${f}"
+      sudo mkdir -p $vldt
+      sudo chown -R $meeu:$meeu $dtdi
+      echo -e "STORE($K)\n"
+      lighthouse $blkc --datadir $dtdi account validator import --directory $HOME/$D
+      sudo chown -R $user:$user $dtdi
+    else
+      echo -e "${i}NAO EXISTE KEYS PARA IMPORTAR ($HOME/$D)${f}"
+    fi
   fi
 
   echo -e "${i}CONFIGURE VALIDATOR${f}"
   cd ~
   sudo mkdir -p $vldt
   sudo chown -R $user:$user $vldt
-  sudo cat <<-EOF > validator.service
+  cat <<-EOF > $ethv.service
   [Unit]
   Description=eth2 validator service
   Wants=network-online.target
@@ -47,12 +57,11 @@ if [ -x /usr/local/bin/lighthouse ]; then
   [Install]
   WantedBy=multi-user.target
 EOF
-  sudo mv validator.service /etc/systemd/system/validator.service
-  sudo chmod 644 /etc/systemd/system/validator.service
-  sudo systemctl daemon-reload
-  sudo systemctl enable validator
-  sudo systemctl start validator
-  sudo journalctl -f -u validator.service
+  sudo mv $ethv.service /etc/systemd/system/$ethv.service
+  sudo chmod 644 /etc/systemd/system/$ethv.service
+  t6cmd ve
+  t6cmd va
+  sudo journalctl -f -u $ethv.service
 
 else
 

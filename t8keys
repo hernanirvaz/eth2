@@ -7,7 +7,7 @@ if [ "$(uname -n)" = "hrv-zen" ]; then
 
   numv=10
   ling="spanish"
-  if [ -d ~/validator_keys ] && [ "$(ls -A ~/validator_keys)" ]; then
+  if [ -d ~/$D ] && [ "$(ls -A ~/$D)" ]; then
 
     echo -e "${i}CHAVES ESTAO PRONTAS${f}"
 

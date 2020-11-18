@@ -5,16 +5,23 @@ f="\e[25m\n"
 
 user="eth2"
 petc="/etc/prometheus"
+ethg="eth-geth"
+ethb="eth-beacon"
+ethv="eth-validator"
+ethp="prometheus"
+ethn="prometheus-node-exporter"
+ethf="grafana-server"
 
 if [ -f $petc/prometheus.yml ]; then
 
   echo -e "${i}PROMETHEUS JA INSTALADO${f}"
+  sudo systemctl reload-or-restart $ethp
+  sudo systemctl reload-or-restart $ethn
+  sudo systemctl reload-or-restart grafana-server
 
 else
 
-  if [ -f /etc/systemd/system/grafana-server.service ]; then [ "$(sudo systemctl status grafana-server|grep -i inactive)" ] || sudo systemctl stop grafana-server;fi
-  if [ -f /etc/systemd/system/prometheus.service ]; then [ "$(sudo systemctl status prometheus|grep -i inactive)" ] || sudo systemctl stop prometheus;fi
-  if [ -f /etc/systemd/system/prometheus-node-exporter.service ]; then [ "$(sudo systemctl status prometheus-node-exporter|grep -i inactive)" ] || sudo systemctl stop prometheus-node-exporter;fi
+  t6cmd mpr
 
   echo -e "${i}CONFIGURE PROMETHEUS${f}"
 
@@ -22,31 +29,23 @@ else
   if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
 
   sudo apt install -y prometheus prometheus-node-exporter
-  sudo cat <<-EOF > prometheus.yml
-    global:
-      scrape_interval:     15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
-      evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
-      # scrape_timeout is set to the global default (10s).
-    # Alertmanager configuration
-    alerting:
-      alertmanagers:
-      - static_configs:
-        - targets:
-          # - alertmanager:9093
-    # Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
-    rule_files:
-      # - "first_rules.yml"
-      # - "second_rules.yml"
-    # A scrape configuration containing exactly one endpoint to scrape:
-    # Here it's Prometheus itself.
-    scrape_configs:
-      - job_name: 'nodes'
-        metrics_path: /metrics
-        static_configs:
-          - targets: ['localhost:5054']
-      - job_name: 'node_exporter'
-        static_configs:
-          - targets: ['localhost:9100']
+  cat <<-EOF > prometheus.yml
+  global:
+    scrape_interval:     15s # By default, scrape targets every 15 seconds.
+    # Attach these labels to any time series or alerts when communicating with
+    # external systems (federation, remote storage, Alertmanager).
+    external_labels:
+      monitor: 'codelab-monitor'
+  # A scrape configuration containing exactly one endpoint to scrape:
+  # Here it's Prometheus itself.
+  scrape_configs:
+     - job_name: 'node_exporter'
+       static_configs:
+         - targets: ['localhost:9100']
+     - job_name: 'nodes'
+       metrics_path: /metrics
+       static_configs:
+         - targets: ['localhost:5054']
 EOF
   sudo mv prometheus.yml $petc/prometheus.yml
   sudo chown $user:$user $petc/prometheus.yml
@@ -59,15 +58,10 @@ EOF
   sudo apt install -y grafana
   sudo ufw allow 3000/tcp comment 'Grafana'
   # ONLY FOR DIRECT ACESS TO PROMETHEUS - GRAFANA USES DATASOURCE WITH localhost
-  # sudo ufw deny 9090/tcp comment 'Prometheus'
+  sudo ufw allow 9090/tcp comment 'Prometheus'
   sudo ufw reload
-  sudo systemctl daemon-reload
-  sudo systemctl enable prometheus.service
-  sudo systemctl enable prometheus-node-exporter.service
-  sudo systemctl enable grafana-server.service
-  sudo systemctl start prometheus.service
-  sudo systemctl start prometheus-node-exporter.service
-  sudo systemctl start grafana-server.service
+  t6cmd me
+  t6cmd ma
 
 fi
 

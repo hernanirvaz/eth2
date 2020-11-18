@@ -5,6 +5,12 @@ f="\e[25m\n"
 
 meeu="$(whoami)"
 user="eth2"
+ethg="eth-geth"
+ethb="eth-beacon"
+ethv="eth-validator"
+ethp="prometheus"
+ethn="prometheus-node-exporter"
+ethf="grafana-server"
 
 if [ -x ~/.cargo/bin/rustup ]; then
   echo -e "${i}UPDATE RUST${f}"
@@ -40,14 +46,14 @@ if [ -x  ~/.cargo/bin/lighthouse ]; then
   vldt="$dtdi/validators"
 
   echo -e "CONFIGURE BEACON $H"
-  if [ -f /etc/systemd/system/validator.service ]; then [ "$(sudo systemctl status validator|grep -i inactive)" ] || sudo systemctl stop validator;fi
-  if [ -f /etc/systemd/system/beacon.service ];    then [ "$(sudo systemctl status beacon   |grep -i inactive)" ] || sudo systemctl stop beacon;fi
+  t6cmd vpr
+  t6cmd bpr
   cd ~
   sudo mkdir -p $becn
   if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
   sudo chown -R $user:$user $dtdi
   sudo cp ~/.cargo/bin/lighthouse /usr/local/bin
-  sudo cat <<-EOF > beacon.service
+  cat <<-EOF > $ethb.service
   [Unit]
   Description=eth2 beacon service
   Wants=network-online.target
@@ -63,14 +69,13 @@ if [ -x  ~/.cargo/bin/lighthouse ]; then
   [Install]
   WantedBy=multi-user.target
 EOF
-  sudo mv beacon.service /etc/systemd/system/beacon.service
-  sudo chmod 644 /etc/systemd/system/beacon.service
+  sudo mv $ethb.service /etc/systemd/system/$ethb.service
+  sudo chmod 644 /etc/systemd/system/$ethb.service
   sudo ufw allow 9000 comment 'Lighthouse'
   sudo ufw reload
-  sudo systemctl daemon-reload
-  sudo systemctl enable beacon
-  sudo systemctl start beacon
-  sudo journalctl -f -u beacon.service
+  t6cmd be
+  t6cmd ba
+  sudo journalctl -f -u $ethb.service
 
 else
 
