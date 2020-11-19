@@ -20,7 +20,6 @@ c2="$c2\nfs\tsudo ufw status numbered"
 c2="$c2\nfa\tsudo ufw enable"
 c2="$c2\nfpr\tsudo ufw disable"
 c2="$c2\n\""
-
 cat <<-EOF > ~/.bash_aliases
 alias ajuda='$c2'
 alias vp='ss -tulpn'
@@ -61,24 +60,22 @@ fi
 
 
 if [ -f /etc/systemd/system/$ethg.service ]; then
-  echo -e "${i}GETH NODE JA INSTALADO${f}"
+  echo -e "${i}GETH JA INSTALADO${f}"
 else
+  t4update linux
   if [ "$(uname -n)" = "vmi469069.contaboserver.net" ]; then
-    echo -e "${i}GETH NODE NAO PODE SER INSTALADO AQUI${f}"
+    echo -e "GETH NAO DEVE SER INSTALADO ${i}$(uname -n)${f}"
   else
-
+    echo -e "${i}INSTALAR GETH${f}"
     user="eth1"
-    blkc="--mainnet"
-    node=''
-    if [ $B = 'medalla' ]; then
+    if [ "$B" = "mainnet" ]; then
+      blkc="--mainnet"
+      node=''
+    else
       blkc="--goerli"
       node='--bootnodes "enode://a1e8102e7beb94207c8608d7e2615579cf34200c15e24fd797b178f42d05d2e9d9a89c73577d1f9f4070360df20a14014c242674f7731421b188f0bf4618480a@176.144.82.166:30303,enode://46add44b9f13965f7b9875ac6b85f016f341012d84f975377573800a863526f4da19ae2c620ec73d11591fa9510e992ecc03ad0751f53cc02f7c7ed6d55c7291@94.237.54.114:30313,enode://6010c16d5776036f0f96a526aa17e302b91b0c955b9edbbcde924d7e35e9b0646333b192dc1c18cf4c217ed4ba76632548a62daf6536d661637efa437c6d62d8@54.198.42.106:30303,enode://290955521ff90413b3d6a842e830f9a9ab468fd27058534ed410cef816beb57ec5d965f8fd74a5ac52c43c6277a6a47add4eff06b4f4bfdf1d597006b8b5b764@83.162.151.227:30303,enode://9d8eeb510d16515a9f8c3f542047d3cec3d4d19a2d2d3881fca1cabaabc99aad4b30e9339815f0fb57ee1b6c0bd54abf2033006145713c6f2b91ddb285a55757@78.46.136.255:30303,enode://a12c8f94d85b96c73fa9efdbbe1f7625907c3cdffac1f37eb50f995bce93f48a81200e8292e87660230c9390d712bf9c59deee4b69ef4c81017ac2f6562307e5@94.236.246.163:30303,enode://5eb99255b9e267d7bcaa95620218de6fdbcead7a61059796ec7bcd05451e0e9ab2511f7cfe5cd7e3e4d76b15b45367406a7dda2c720e9ea58161776df33704ee@104.163.209.53:30303,enode://2c3cc8872f6dabd0c80ae12a09d33ff957b2e5eae008166e36d64f16902b6d7adaf1303ea1e0c3d9305ca3716fae69c0eb59abf198b751b43faa01a008ff9d26@86.218.77.141:30303,enode://215813e4cbeea8c8a4241095cfa364b0e22996ef7aa44902a60a24569221376f2ec7980c7e8e7960bc395c2182c5d7e8762b1596863a8826c0b38785a11d3e38@49.12.106.203:30303,enode://ea35efec88e7c8f34a120b17b7358e4d2fcb6ca052bfd5a5c61ab5284a782224f32cb1c9e1768c8fe4b0e19c9fd610ff7b3b79f95cd9f7bf4b1a68eb39bf5909@5.252.226.187:30303,enode://27eb8bb162ee019410618b1b7430b3b3e13eb59e04fb148a01e0d7b9ca5b2808d9a3504623ad687c622ae2c7c63054b50abae5e9688822bdeefe6163525f611e@54.225.105.43:30303,enode://a61215641fb8714a373c80edbfa0ea8878243193f57c96eeb44d0bc019ef295abd4e044fd619bfc4c59731a73fb79afe84e9ab6da0c743ceb479cbb6d263fa91@3.11.147.67:30303,enode://f4471165eb8219564c1432d39ebee3ade2e70ebdbb1ea681260b2558eacfc7ca9c88b71f57571ddddf756790dc6db805a3645e43aa41ea52b258a61610201a76@89.142.71.16:30303,enode://10d35746b4fe0624efbaa08afb7ece9e30793484c3c682e069e921d74eb8eb7146fbd927d2ce278c384278c1bdeabb316e11c9881fa3c64638f1375360880591@47.90.59.177:30303,enode://6c8e48bcf1f2194b6625bcc066afe62593f0f78e1fc355698459733dcc562500396c7484e25d7cc80a796db186947436c9b3518c2f998dfe0d0c59284b08a3c2@144.76.236.199:40303,enode://a33926b9ace21b30ecba325d05fad62144cb2f0d825f7c184b669cb41b3802c95e9878fff8a9cbc79317a67cfde6a07eeb47d3fda1b779d0dbca02a45205ea23@203.192.211.202:30303"'
     fi
     golb="/var/lib/goethereum"
-
-    t4update linux
-
-    echo -e "${i}INSTALL GETH NODE${f}"
 
     sudo apt install -y software-properties-common
     sudo add-apt-repository -y ppa:ethereum/ethereum
@@ -107,10 +104,9 @@ EOF
     sudo chmod 644 /etc/systemd/system/$ethg.service
     sudo ufw allow 30303 comment 'eth1 peers'
     sudo ufw reload
-    t6cmd ge
-    t6cmd ga
-
+    t6 ge
+    t6 ga
   fi
 fi
 
-echo -e "FAZER LOGOUT PODE TER NOVOS ALIAS"
+echo -e "FAZER SERMPRE${i}sudo reboot${f}AFTER FULL-UPGRADE"

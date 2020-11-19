@@ -5,28 +5,33 @@ f="\e[25m\n"
 
 if [ "$(uname -n)" = "hrv-zen" ]; then
 
-  numv=10
-  ling="spanish"
+  cli="eth2.0-deposit-cli/validator_keys"
+  cs1="/media/eth/cs1/validator_keys"
+  cs2="/media/eth/cs2/validator_keys"
+  lng="spanish"
+  if [ "$B" = "mainnet" ];then nmv=10;else nmv=2;fi 
+
   if [ -d ~/$D ] && [ "$(ls -A ~/$D)" ]; then
 
     echo -e "${i}CHAVES ESTAO PRONTAS${f}"
 
-  elif [ -d ~/eth2.0-deposit-cli/validator_keys ] && [ "$(ls -A ~/eth2.0-deposit-cli/validator_keys)" ]; then
+  elif [ -d ~/$cli ] && [ "$(ls -A ~/$cli)" ]; then
 
-    echo -e "${i}CHAVES JA FORAM GERADAS"
-    echo -e "ARQUIVAR OFF-LINE${f}"
-    sudo cp -R ~/eth2.0-deposit-cli/validator_keys /media/eth
-    cp -R ~/eth2.0-deposit-cli/validator_keys ~
+    echo -e "${i}CHAVES JA FORAM GERADAS $cli"
+    if  [ -d $cs1 ]; then echo -e "ARQUIVO OFFLINE $cs1 JA EXISTE";else cp -R ~/$cli $cs1;fi
+    if  [ -d $cs2 ]; then echo -e "ARQUIVO OFFLINE $cs2 JA EXISTE";else cp -R ~/$cli $cs2;fi
+    cp -R ~/$cli ~
+    echo -e "CHAVES FORAM ARQUIVADAS - VERIFICAR AQUIVO OFFLINE${f}"
 
   elif [ -f ~/eth2.0-deposit-cli/README.md ]; then
 
     cd ~/eth2.0-deposit-cli
     echo -e "${i}GERAR CHAVES $B${f}"
-    echo -e "${i}PARA GERAR $numv NOVAS CHAVES${f}"
+    echo -e "${i}PARA GERAR $nmv NOVAS CHAVES${f}"
     echo -e "STORE($K)"
-    echo -e "${i}PARA GERAR $numv NOVAS CHAVES${f}"
+    echo -e "${i}PARA GERAR $nmv NOVAS CHAVES${f}"
     # if keystores lost to recover keys use ./deposit.sh existing-mnemonic
-    ./deposit.sh new-mnemonic --num_validators $numv --mnemonic_language $ling --chain $B
+    ./deposit.sh new-mnemonic --num_validators $nmv --mnemonic_language $lng --chain $B
 
   else
 
@@ -36,7 +41,7 @@ if [ "$(uname -n)" = "hrv-zen" ]; then
     git clone https://github.com/ethereum/eth2.0-deposit-cli.git
     cd ~/eth2.0-deposit-cli
     sudo ./deposit.sh install
-    echo -e "${i}PARA GERAR $numv CHAVES EXECUTAR DE NOVO${f}"
+    echo -e "${i}PARA GERAR $nmv CHAVES EXECUTAR DE NOVO${f}"
 
   fi
 

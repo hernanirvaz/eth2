@@ -12,8 +12,14 @@ ethf="grafana-server"
 pate='eth-*'
 patm='prometheus* grafana*'
 
+dtdi="/var/lib/lighthouse"
+becn="$dtdi/beacon"
+vldt="$dtdi/validators"
+
 # beacon external/internal eth1
 if [ "$1" = "bx" ] && [ -f /etc/systemd/system/$ethg.service ] && [ -f /etc/systemd/system/$ethb.service ]; then
+  echo -e "${i}TROCA BEACON EXTERNAL/INTERNAL ETH1${f}"
+  [ "$(systemctl status $ethv 2>/dev/null|grep -i loaded)" ] && sudo systemctl stop $ethv
   [ "$(systemctl status $ethb 2>/dev/null|grep -i loaded)" ] && sudo systemctl stop $ethb
   cp /etc/systemd/system/$ethb.service $ethb.save
   if grep -q "https:\S* " $ethb.save; then
@@ -23,96 +29,42 @@ if [ "$1" = "bx" ] && [ -f /etc/systemd/system/$ethg.service ] && [ -f /etc/syst
   fi
   sudo systemctl daemon-reload
   [ "$(systemctl status $ethb 2>/dev/null|grep -i inactive)" ] && sudo systemctl start $ethb
+  [ "$(systemctl status $ethv 2>/dev/null|grep -i inactive)" ] && sudo systemctl start $ethv
   rm $ethb.save
 fi
-
-if [ -z "$1" ]; then
-c1="\nta\tarranca $ethg $ethb $ethv $ethp $ethn $ethf"
-c1="$c1\nea\tarranca $ethg $ethb $ethv"
-c1="$c1\nma\tarranca $ethp $ethn $ethf"
-c1="$c1\nga\tarranca $ethg"
-c1="$c1\nba\tarranca $ethb"
-c1="$c1\nva\tarranca $ethv"
-c1="$c1\npa\tarranca $ethp"
-c1="$c1\nna\tarranca $ethn"
-c1="$c1\nfa\tarranca $ethf"
-c1="$c1\n"
-c1="$c1\ntpr\tpara $ethg $ethb $ethv $ethp $ethn $ethf"
-c1="$c1\nepr\tpara $ethg $ethb $ethv"
-c1="$c1\nmpr\tpara $ethp $ethn $ethf"
-c1="$c1\ngpr\tpara $ethg"
-c1="$c1\nbpr\tpara $ethb"
-c1="$c1\nvpr\tpara $ethv"
-c1="$c1\nppr\tpara $ethp"
-c1="$c1\nnpr\tpara $ethn"
-c1="$c1\nfpr\tpara $ethf"
-c1="$c1\n"
-c1="$c1\nte\tenable $ethg $ethb $ethv $ethp $ethn $ethf"
-c1="$c1\nee\tenable $ethg $ethb $ethv"
-c1="$c1\nme\tenable $ethp $ethn $ethf"
-c1="$c1\nge\tenable $ethg"
-c1="$c1\nbe\tenable $ethb"
-c1="$c1\nve\tenable $ethv"
-c1="$c1\npe\tenable $ethp"
-c1="$c1\nne\tenable $ethn"
-c1="$c1\nfe\tenable $ethf"
-c1="$c1\n"
-c1="$c1\ntds\tdisable $ethg $ethb $ethv $ethp $ethn $ethf"
-c1="$c1\neds\tdisable $ethg $ethb $ethv"
-c1="$c1\nmds\tdisable $ethp $ethn $ethf"
-c1="$c1\ngds\tdisable $ethg"
-c1="$c1\nbds\tdisable $ethb"
-c1="$c1\nvds\tdisable $ethv"
-c1="$c1\npds\tdisable $ethp"
-c1="$c1\nnds\tdisable $ethn"
-c1="$c1\nfds\tdisable $ethf"
-c1="$c1\n"
-c1="$c1\njj\tjournal system"
-c1="$c1\ntj\tjournal $ethg $ethb $ethv $ethp $ethn $ethf"
-c1="$c1\nej\tjournal $ethg $ethb $ethv"
-c1="$c1\nmj\tjournal $ethp $ethn $ethf"
-c1="$c1\ngj\tjournal $ethg"
-c1="$c1\nbj\tjournal $ethb"
-c1="$c1\nvj\tjournal $ethv"
-c1="$c1\npj\tjournal $ethp"
-c1="$c1\nnj\tjournal $ethn"
-c1="$c1\nfj\tjournal $ethf"
-c1="$c1\n"
-c1="$c1\ntl\tlista servicos"
-c1="$c1\nbx\tbeacon external/internal eth1"
-echo -e "$c1"
-fi
+# lista servicos
+if [ "$1" = "ll" ]; then sudo systemctl list-units $pate $patm;fi
+# outros journal system/lighthouse
+if [ "$1" = "jj" ];then sudo journalctl --no-hostname --no-full -f;fi
+if [ "$1" = "lj" ];then sudo journalctl --no-hostname --no-full -f -u eth-[bv]*;fi
 
 # journal
-if [ "$1" = "jj" ];then journalctl --no-hostname --no-full -f;fi
-if [ "$1" = "tj" ];then journalctl --no-hostname --no-full -f -u $pate $patm;fi
-if [ "$1" = "ej" ];then journalctl --no-hostname --no-full -f -u $pate;fi
-if [ "$1" = "mj" ];then journalctl --no-hostname --no-full -f -u $patm;fi
-if [ "$1" = "gj" ];then journalctl --no-hostname --no-full -f -u $ethg;fi
-if [ "$1" = "bj" ];then journalctl --no-hostname --no-full -f -u $ethb;fi
-if [ "$1" = "vj" ];then journalctl --no-hostname --no-full -f -u $ethv;fi
-if [ "$1" = "pj" ];then journalctl --no-hostname --no-full -f -u $ethp;fi
-if [ "$1" = "nj" ];then journalctl --no-hostname --no-full -f -u $ethn;fi
-if [ "$1" = "fj" ];then journalctl --no-hostname --no-full -f -u $ethf;fi
+if [ "$1" = "tj" ];then sudo journalctl --no-hostname --no-full -f -u $pate $patm;fi
+if [ "$1" = "ej" ];then sudo journalctl --no-hostname --no-full -f -u $pate;fi
+if [ "$1" = "mj" ];then sudo journalctl --no-hostname --no-full -f -u $patm;fi
+if [ "$1" = "gj" ];then sudo journalctl --no-hostname --no-full -f -u $ethg;fi
+if [ "$1" = "bj" ];then sudo journalctl --no-hostname --no-full -f -u $ethb;fi
+if [ "$1" = "vj" ];then sudo journalctl --no-hostname --no-full -f -u $ethv;fi
+if [ "$1" = "pj" ];then sudo journalctl --no-hostname --no-full -f -u $ethp;fi
+if [ "$1" = "nj" ];then sudo journalctl --no-hostname --no-full -f -u $ethn;fi
+if [ "$1" = "fj" ];then sudo journalctl --no-hostname --no-full -f -u $ethf;fi
 
-# arranca tudo
+# arranca
 if [ "$1" = "ta" ]; then
   sudo systemctl daemon-reload
   [ "$(systemctl status $ethg 2>/dev/null|grep -i inactive)" ] && sudo systemctl start $ethg
   [ "$(systemctl status $ethb 2>/dev/null|grep -i inactive)" ] && sudo systemctl start $ethb
-  [ "$(systemctl status $ethv 2>/dev/null|grep -i inactive)" ] && sudo systemctl start $ethv
+  [ "$(systemctl status $ethv 2>/dev/null|grep -i inactive)" ] && [ -f $vldt/validator_definitions.yml ] && sudo systemctl start $ethv
   [ "$(systemctl status $ethp 2>/dev/null|grep -i inactive)" ] && sudo systemctl start $ethp
   [ "$(systemctl status $ethn 2>/dev/null|grep -i inactive)" ] && sudo systemctl start $ethn
   [ "$(systemctl status $ethf 2>/dev/null|grep -i inactive)" ] && sudo systemctl start $ethf
 fi
-# arranca ethereum
 if [ "$1" = "ea" ]; then
   sudo systemctl daemon-reload
   [ "$(systemctl status $ethg 2>/dev/null|grep -i inactive)" ] && sudo systemctl start $ethg
   [ "$(systemctl status $ethb 2>/dev/null|grep -i inactive)" ] && sudo systemctl start $ethb
-  [ "$(systemctl status $ethv 2>/dev/null|grep -i inactive)" ] && sudo systemctl start $ethv
+  [ "$(systemctl status $ethv 2>/dev/null|grep -i inactive)" ] && [ -f $vldt/validator_definitions.yml ] && sudo systemctl start $ethv
 fi
-# arranca monitor
 if [ "$1" = "ma" ]; then
   sudo systemctl daemon-reload
   [ "$(systemctl status $ethp 2>/dev/null|grep -i inactive)" ] && sudo systemctl start $ethp
@@ -121,12 +73,41 @@ if [ "$1" = "ma" ]; then
 fi
 if [ "$1" = "ga" ];then sudo systemctl daemon-reload;[ "$(systemctl status $ethg 2>/dev/null|grep -i inactive)" ] && sudo systemctl start $ethg;fi
 if [ "$1" = "ba" ];then sudo systemctl daemon-reload;[ "$(systemctl status $ethb 2>/dev/null|grep -i inactive)" ] && sudo systemctl start $ethb;fi
-if [ "$1" = "va" ];then sudo systemctl daemon-reload;[ "$(systemctl status $ethv 2>/dev/null|grep -i inactive)" ] && sudo systemctl start $ethv;fi
+if [ "$1" = "va" ];then sudo systemctl daemon-reload;[ "$(systemctl status $ethv 2>/dev/null|grep -i inactive)" ] && [ -f $vldt/validator_definitions.yml ] && sudo systemctl start $ethv;fi
 if [ "$1" = "pa" ];then sudo systemctl daemon-reload;[ "$(systemctl status $ethp 2>/dev/null|grep -i inactive)" ] && sudo systemctl start $ethp;fi
 if [ "$1" = "na" ];then sudo systemctl daemon-reload;[ "$(systemctl status $ethn 2>/dev/null|grep -i inactive)" ] && sudo systemctl start $ethn;fi
 if [ "$1" = "fa" ];then sudo systemctl daemon-reload;[ "$(systemctl status $ethf 2>/dev/null|grep -i inactive)" ] && sudo systemctl start $ethf;fi
 
-# para tudo
+# enable
+if [ "$1" = "te" ]; then
+  sudo systemctl daemon-reload
+  sudo systemctl enable $ethg
+  sudo systemctl enable $ethb
+  [ -f $vldt/validator_definitions.yml ] && sudo systemctl enable $ethv
+  sudo systemctl enable $ethp
+  sudo systemctl enable $ethn
+  sudo systemctl enable $ethf
+fi
+if [ "$1" = "ee" ]; then
+  sudo systemctl daemon-reload
+  sudo systemctl enable $ethg
+  sudo systemctl enable $ethb
+  [ -f $vldt/validator_definitions.yml ] && sudo systemctl enable $ethv
+fi
+if [ "$1" = "me" ]; then
+  sudo systemctl daemon-reload
+  sudo systemctl enable $ethp
+  sudo systemctl enable $ethn
+  sudo systemctl enable $ethf
+fi
+if [ "$1" = "ge" ];then sudo systemctl daemon-reload;sudo systemctl enable $ethg;fi
+if [ "$1" = "be" ];then sudo systemctl daemon-reload;sudo systemctl enable $ethb;fi
+if [ "$1" = "ve" ];then sudo systemctl daemon-reload;[ -f $vldt/validator_definitions.yml ] && sudo systemctl enable $ethv;fi
+if [ "$1" = "pe" ];then sudo systemctl daemon-reload;sudo systemctl enable $ethp;fi
+if [ "$1" = "ne" ];then sudo systemctl daemon-reload;sudo systemctl enable $ethn;fi
+if [ "$1" = "fe" ];then sudo systemctl daemon-reload;sudo systemctl enable $ethf;fi
+
+# para
 if [ "$1" = "tpr" ]; then
   [ "$(systemctl status $ethf 2>/dev/null|grep -i loaded)" ] && sudo systemctl stop $ethf
   [ "$(systemctl status $ethn 2>/dev/null|grep -i loaded)" ] && sudo systemctl stop $ethn
@@ -135,13 +116,11 @@ if [ "$1" = "tpr" ]; then
   [ "$(systemctl status $ethb 2>/dev/null|grep -i loaded)" ] && sudo systemctl stop $ethb
   [ "$(systemctl status $ethg 2>/dev/null|grep -i loaded)" ] && sudo systemctl stop $ethg
 fi
-# para ethereum
 if [ "$1" = "epr" ]; then
   [ "$(systemctl status $ethv 2>/dev/null|grep -i loaded)" ] && sudo systemctl stop $ethv
   [ "$(systemctl status $ethb 2>/dev/null|grep -i loaded)" ] && sudo systemctl stop $ethb
   [ "$(systemctl status $ethg 2>/dev/null|grep -i loaded)" ] && sudo systemctl stop $ethg
 fi
-# para monitor
 if [ "$1" = "mpr" ]; then
   [ "$(systemctl status $ethf 2>/dev/null|grep -i loaded)" ] && sudo systemctl stop $ethf
   [ "$(systemctl status $ethn 2>/dev/null|grep -i loaded)" ] && sudo systemctl stop $ethn
@@ -154,38 +133,7 @@ if [ "$1" = "vpr" ];then [ "$(systemctl status $ethv 2>/dev/null|grep -i loaded)
 if [ "$1" = "bpr" ];then [ "$(systemctl status $ethb 2>/dev/null|grep -i loaded)" ] && sudo systemctl stop $ethb;fi
 if [ "$1" = "gpr" ];then [ "$(systemctl status $ethg 2>/dev/null|grep -i loaded)" ] && sudo systemctl stop $ethg;fi
 
-# enable tudo
-if [ "$1" = "te" ]; then
-  sudo systemctl daemon-reload
-  sudo systemctl enable $ethg
-  sudo systemctl enable $ethb
-  sudo systemctl enable $ethv
-  sudo systemctl enable $ethp
-  sudo systemctl enable $ethn
-  sudo systemctl enable $ethf
-fi
-# enable ethereum
-if [ "$1" = "ee" ]; then
-  sudo systemctl daemon-reload
-  sudo systemctl enable $ethg
-  sudo systemctl enable $ethb
-  sudo systemctl enable $ethv
-fi
-# enable monitor
-if [ "$1" = "me" ]; then
-  sudo systemctl daemon-reload
-  sudo systemctl enable $ethp
-  sudo systemctl enable $ethn
-  sudo systemctl enable $ethf
-fi
-if [ "$1" = "ge" ];then sudo systemctl daemon-reload;sudo systemctl enable $ethg;fi
-if [ "$1" = "be" ];then sudo systemctl daemon-reload;sudo systemctl enable $ethb;fi
-if [ "$1" = "ve" ];then sudo systemctl daemon-reload;sudo systemctl enable $ethv;fi
-if [ "$1" = "pe" ];then sudo systemctl daemon-reload;sudo systemctl enable $ethp;fi
-if [ "$1" = "ne" ];then sudo systemctl daemon-reload;sudo systemctl enable $ethn;fi
-if [ "$1" = "fe" ];then sudo systemctl daemon-reload;sudo systemctl enable $ethf;fi
-
-# disable tudo
+# disable
 if [ "$1" = "tds" ]; then
   [ "$(systemctl status $ethf 2>/dev/null|grep -i loaded)" ] && sudo systemctl disable $ethf
   [ "$(systemctl status $ethn 2>/dev/null|grep -i loaded)" ] && sudo systemctl disable $ethn
@@ -194,13 +142,11 @@ if [ "$1" = "tds" ]; then
   [ "$(systemctl status $ethb 2>/dev/null|grep -i loaded)" ] && sudo systemctl disable $ethb
   [ "$(systemctl status $ethg 2>/dev/null|grep -i loaded)" ] && sudo systemctl disable $ethg
 fi
-# disable ethereum
 if [ "$1" = "eds" ]; then
   [ "$(systemctl status $ethv 2>/dev/null|grep -i loaded)" ] && sudo systemctl disable $ethv
   [ "$(systemctl status $ethb 2>/dev/null|grep -i loaded)" ] && sudo systemctl disable $ethb
   [ "$(systemctl status $ethg 2>/dev/null|grep -i loaded)" ] && sudo systemctl disable $ethg
 fi
-# disable monitor
 if [ "$1" = "mds" ]; then
   [ "$(systemctl status $ethf 2>/dev/null|grep -i loaded)" ] && sudo systemctl disable $ethf
   [ "$(systemctl status $ethn 2>/dev/null|grep -i loaded)" ] && sudo systemctl disable $ethn
@@ -213,5 +159,30 @@ if [ "$1" = "vds" ];then [ "$(systemctl status $ethv 2>/dev/null|grep -i loaded)
 if [ "$1" = "bds" ];then [ "$(systemctl status $ethb 2>/dev/null|grep -i loaded)" ] && sudo systemctl disable $ethb;fi
 if [ "$1" = "gds" ];then [ "$(systemctl status $ethg 2>/dev/null|grep -i loaded)" ] && sudo systemctl disable $ethg;fi
 
-if [ "$1" = "tl" ]; then systemctl list-units $pate $patm;fi
+if [ -z "$1" ]; then
+  c1="\nprimeira letra"
+  c1="$c1\nt\t$ethg $ethb $ethv $ethp $ethn $ethf"
+  c1="$c1\ne\t$ethg $ethb $ethv"
+  c1="$c1\nm\t$ethp $ethn $ethf"
+  c1="$c1\ng\t$ethg"
+  c1="$c1\nb\t$ethb"
+  c1="$c1\nv\t$ethv"
+  c1="$c1\np\t$ethp"
+  c1="$c1\nn\t$ethn"
+  c1="$c1\nf\t$ethf"
+  c1="$c1\n"
+  c1="$c1\nsegunda letra"
+  c1="$c1\na\tarranca"
+  c1="$c1\ne\tenable"
+  c1="$c1\nj\tjournal"
+  c1="$c1\npr\tpara"
+  c1="$c1\nds\tdisable"
+  c1="$c1\n"
+  c1="$c1\noutros"
+  c1="$c1\njj\tjournal system"
+  c1="$c1\nll\tlista servicos"
+  c1="$c1\nlj\tjournal $ethb $ethv"
+  c1="$c1\nbx\tbeacon external/internal eth1"
+  echo -e "$c1"
+fi
 

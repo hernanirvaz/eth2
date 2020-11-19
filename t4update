@@ -21,22 +21,19 @@ if [ "$1" = "linux" ] || [ -z "$1" ]; then
 fi
 
 if [ "$1" = "eth" ] || [ -z "$1" ]; then
-
   if [ -f ~/.rustup/settings.toml ]; then
     echo -e "${i}RUST UPDATE${f}"
     rustup update
   fi
   if [ -x /usr/local/bin/lighthouse ]; then
     echo -e "${i}LIGHTHOUSE UPDATE${f}"
-    t6cmd tpr
+    t6 tpr
     cd ~/lighthouse
     git pull
     make
     echo -e "\n$H\n"
     sudo mv /usr/local/bin/lighthouse /usr/local/bin/lighthouse.save
     sudo cp ~/.cargo/bin/lighthouse /usr/local/bin
-    t6cmd ta
-
+    t6 ta
   fi
-
 fi

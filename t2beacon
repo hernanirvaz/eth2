@@ -40,14 +40,18 @@ echo -e "${i}$(ntptime|grep -i ntp_|tr '[:lower:]' '[:upper:]')${f}"
 
 if [ -x  ~/.cargo/bin/lighthouse ]; then
 
-  blkc="";[ $B = 'medalla' ] && blkc="--testnet medalla"
+  if [ "$B" = "mainnet" ]; then
+    blkc=""
+  else
+    blkc="--testnet $B"
+  fi
   dtdi="/var/lib/lighthouse"
   becn="$dtdi/beacon"
   vldt="$dtdi/validators"
 
-  echo -e "CONFIGURE BEACON $H"
-  t6cmd vpr
-  t6cmd bpr
+  echo -e "\n$H: CONFIGURE BEACON\n"
+  t6 vpr
+  t6 bpr
   cd ~
   sudo mkdir -p $becn
   if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
@@ -73,9 +77,9 @@ EOF
   sudo chmod 644 /etc/systemd/system/$ethb.service
   sudo ufw allow 9000 comment 'Lighthouse'
   sudo ufw reload
-  t6cmd be
-  t6cmd ba
-  sudo journalctl -f -u $ethb.service
+  t6 be
+  t6 ba
+  t6 bj
 
 else
 

@@ -14,12 +14,16 @@ ethf="grafana-server"
 
 if [ -x /usr/local/bin/lighthouse ]; then
 
-  blkc="";[ $B = 'medalla' ] && blkc="--testnet medalla"
+  if [ "$B" = "mainnet" ]; then
+    blkc=""
+  else
+    blkc="--testnet $B"
+  fi
   dtdi="/var/lib/lighthouse"
   becn="$dtdi/beacon"
   vldt="$dtdi/validators"
 
-  t6cmd vpr
+  t6 vpr
   if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
   cd ~
   if [ -f $vld/validator_definitions.yml ]; then
@@ -59,9 +63,9 @@ if [ -x /usr/local/bin/lighthouse ]; then
 EOF
   sudo mv $ethv.service /etc/systemd/system/$ethv.service
   sudo chmod 644 /etc/systemd/system/$ethv.service
-  t6cmd ve
-  t6cmd va
-  sudo journalctl -f -u $ethv.service
+  t6 ve
+  t6 va
+  t6 vj
 
 else
 
