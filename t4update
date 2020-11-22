@@ -12,7 +12,8 @@ ethf="grafana-server"
 
 if [ "$1" = "linux" ] || [ -z "$1" ]; then
   echo -e "${i}FULL-UPGRADE${f}"
-  sudo apt update -y && sudo apt full-upgrade -y && sudo apt dist-upgrade -y
+  echo $H|sudo -S apt update -y 2>/dev/null
+  sudo apt full-upgrade -y && sudo apt dist-upgrade -y
   sudo apt autoremove
   sudo apt autoclean
   # Enable automatic updates so you don't have to manually install them.
@@ -32,7 +33,7 @@ if [ "$1" = "eth" ] || [ -z "$1" ]; then
     git pull
     make
     echo -e "\n$H\n"
-    sudo mv /usr/local/bin/lighthouse /usr/local/bin/lighthouse.save
+    echo $H|sudo -S mv /usr/local/bin/lighthouse /usr/local/bin/lighthouse.save 2>/dev/null
     sudo cp ~/.cargo/bin/lighthouse /usr/local/bin
     t6 ta
   fi

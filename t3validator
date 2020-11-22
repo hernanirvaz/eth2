@@ -24,14 +24,13 @@ if [ -x /usr/local/bin/lighthouse ]; then
   vldt="$dtdi/validators"
 
   t6 vpr
-  if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
   cd ~
-  if [ -f $vld/validator_definitions.yml ]; then
+  if [ -f $vldt/validator_definitions.yml ]; then
     echo -e "${i}\nCHAVES JA FORAM IMPORTADAS${F}"
   else
     if [ -d $HOME/$D ] && [ "$(ls -A $HOME/$D)" ]; then
       echo -e "${i}IMPORT VALIDATOR KEYS${f}"
-      sudo mkdir -p $vldt
+      echo $H|sudo -S mkdir -p $dtdi 2>/dev/null
       sudo chown -R $meeu:$meeu $dtdi
       echo -e "STORE($K)\n"
       lighthouse $blkc --datadir $dtdi account validator import --directory $HOME/$D
@@ -43,7 +42,7 @@ if [ -x /usr/local/bin/lighthouse ]; then
 
   echo -e "${i}CONFIGURE VALIDATOR${f}"
   cd ~
-  sudo mkdir -p $vldt
+  echo $H|sudo -S mkdir -p $vldt 2>/dev/null
   sudo chown -R $user:$user $vldt
   cat <<-EOF > $ethv.service
   [Unit]

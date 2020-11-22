@@ -10,154 +10,120 @@ ethp="prometheus"
 ethn="prometheus-node-exporter"
 ethf="grafana-server"
 pate='eth-*'
-patm='prometheus* grafana*'
+patp='prometheus*'
+patf='grafana*'
 
 dtdi="/var/lib/lighthouse"
 becn="$dtdi/beacon"
 vldt="$dtdi/validators"
 
+function uu { echo -e "${i}$1${f}";echo $H|sudo -S $1 2>/dev/null; }
+function jb { uu "journalctl --no-hostname --no-full -f $1"; }
+function dr { uu "systemctl daemon-reload"; }
+
+function ge { uu "systemctl enable $ethg";uu "ufw allow 30303 comment eth1";uu "ufw reload"; }
+function be { uu "systemctl enable $ethb";uu "ufw allow  9000 comment eth2";uu "ufw reload"; }
+function ve { [ -f $vldt/validator_definitions.yml ] && { uu "systemctl enable $ethv"; } }
+function pe { uu "systemctl enable $ethp"; }
+function ne { uu "systemctl enable $ethn"; }
+function fe { uu "systemctl enable $ethf";uu "ufw allow 3000/tcp comment grafana";uu "ufw reload"; }
+
+function ga { [ "$(systemctl status $ethg 2>/dev/null|grep -i inactive)" ] && { uu "systemctl start $ethg"; } }
+function ba { [ "$(systemctl status $ethb 2>/dev/null|grep -i inactive)" ] && { uu "systemctl start $ethb"; } }
+function va { [ "$(systemctl status $ethv 2>/dev/null|grep -i inactive)" ] && [ -f $vldt/validator_definitions.yml ] && { uu "systemctl start $ethv"; } }
+function pa { [ "$(systemctl status $ethp 2>/dev/null|grep -i inactive)" ] && { uu "systemctl start $ethp"; } }
+function na { [ "$(systemctl status $ethn 2>/dev/null|grep -i inactive)" ] && { uu "systemctl start $ethn"; } }
+function fa { [ "$(systemctl status $ethf 2>/dev/null|grep -i inactive)" ] && { uu "systemctl start $ethf"; } }
+
+function gp { [ "$(systemctl status $ethg 2>/dev/null|grep -i loaded)" ] && { uu "systemctl stop $ethg"; } }
+function bp { [ "$(systemctl status $ethb 2>/dev/null|grep -i loaded)" ] && { uu "systemctl stop $ethb"; } }
+function vp { [ "$(systemctl status $ethv 2>/dev/null|grep -i loaded)" ] && { uu "systemctl stop $ethv"; } }
+function pp { [ "$(systemctl status $ethp 2>/dev/null|grep -i loaded)" ] && { uu "systemctl stop $ethp"; } }
+function np { [ "$(systemctl status $ethn 2>/dev/null|grep -i loaded)" ] && { uu "systemctl stop $ethn"; } }
+function fp { [ "$(systemctl status $ethf 2>/dev/null|grep -i loaded)" ] && { uu "systemctl stop $ethf"; } }
+
+function gd { [ "$(systemctl status $ethg 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethg";uu "ufw deny 30303 comment eth1";uu "ufw reload"; } }
+function bd { [ "$(systemctl status $ethb 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethb";uu "ufw deny  9000 comment eth2";uu "ufw reload"; } }
+function vd { [ "$(systemctl status $ethv 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethv"; } }
+function pd { [ "$(systemctl status $ethp 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethp"; } }
+function nd { [ "$(systemctl status $ethn 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethn"; } }
+function fd { [ "$(systemctl status $ethf 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethf";uu "ufw deny 3000/tcp comment grafana";uu "ufw reload"; } }
+
 # beacon external/internal eth1
 if [ "$1" = "bx" ] && [ -f /etc/systemd/system/$ethg.service ] && [ -f /etc/systemd/system/$ethb.service ]; then
   echo -e "${i}TROCA BEACON EXTERNAL/INTERNAL ETH1${f}"
-  [ "$(systemctl status $ethv 2>/dev/null|grep -i loaded)" ] && sudo systemctl stop $ethv
-  [ "$(systemctl status $ethb 2>/dev/null|grep -i loaded)" ] && sudo systemctl stop $ethb
+  [ "$(systemctl status $ethv 2>/dev/null|grep -i loaded)" ] && uu "systemctl stop $ethv"
+  [ "$(systemctl status $ethb 2>/dev/null|grep -i loaded)" ] && uu "systemctl stop $ethb"
   cp /etc/systemd/system/$ethb.service $ethb.save
   if grep -q "https:\S* " $ethb.save; then
     sed -e "s%https:\S* %http://127.0.0.1:8545 %" $ethb.save > /etc/systemd/system/$ethb.service
   else
     sed -e "s%http:\S*8545 %$E %" $ethb.save > /etc/systemd/system/$ethb.service
   fi
-  sudo systemctl daemon-reload
-  [ "$(systemctl status $ethb 2>/dev/null|grep -i inactive)" ] && sudo systemctl start $ethb
-  [ "$(systemctl status $ethv 2>/dev/null|grep -i inactive)" ] && sudo systemctl start $ethv
+  dr
+  [ "$(systemctl status $ethb 2>/dev/null|grep -i inactive)" ] && uu "systemctl start $ethb"
+  [ "$(systemctl status $ethv 2>/dev/null|grep -i inactive)" ] && uu "systemctl start $ethv"
   rm $ethb.save
 fi
 # lista servicos
-if [ "$1" = "ll" ]; then sudo systemctl list-units $pate $patm;fi
+[ "$1" = "ll" ] && { uu "systemctl list-units $pate $patp $patf"; }
 # outros journal system/lighthouse
-if [ "$1" = "jj" ];then sudo journalctl --no-hostname --no-full -f;fi
-if [ "$1" = "lj" ];then sudo journalctl --no-hostname --no-full -f -u eth-[bv]*;fi
+[ "$1" = "jj" ] && { jb; }
+[ "$1" = "lj" ] && { jb "-u eth-[bv]*"; }
+[ "$1" = "ws" ] && { uu "ufw status numbered"; }
+[ "$1" = "wa" ] && if [ "$(echo $H|sudo -S ufw status 2>/dev/null|grep -i inactive)" ];then echo -e "${i}ARRANCA FIREWALL${f}";sudo ufw enable; else echo -e "${i}FIREWALL JA ACTIVE${f}";fi
+[ "$1" = "wpr" ] && { uu "ufw disable"; }
 
 # journal
-if [ "$1" = "tj" ];then sudo journalctl --no-hostname --no-full -f -u $pate $patm;fi
-if [ "$1" = "ej" ];then sudo journalctl --no-hostname --no-full -f -u $pate;fi
-if [ "$1" = "mj" ];then sudo journalctl --no-hostname --no-full -f -u $patm;fi
-if [ "$1" = "gj" ];then sudo journalctl --no-hostname --no-full -f -u $ethg;fi
-if [ "$1" = "bj" ];then sudo journalctl --no-hostname --no-full -f -u $ethb;fi
-if [ "$1" = "vj" ];then sudo journalctl --no-hostname --no-full -f -u $ethv;fi
-if [ "$1" = "pj" ];then sudo journalctl --no-hostname --no-full -f -u $ethp;fi
-if [ "$1" = "nj" ];then sudo journalctl --no-hostname --no-full -f -u $ethn;fi
-if [ "$1" = "fj" ];then sudo journalctl --no-hostname --no-full -f -u $ethf;fi
-
+[ "$1" = "tj" ] && { jb "-u $pate -u $patp -u $patf"; }
+[ "$1" = "ej" ] && { jb "-u $pate"; }
+[ "$1" = "mj" ] && { jb "-u $patp -u $patf"; }
+[ "$1" = "gj" ] && { jb "-u $ethg"; }
+[ "$1" = "bj" ] && { jb "-u $ethb"; }
+[ "$1" = "vj" ] && { jb "-u $ethv"; }
+[ "$1" = "pj" ] && { jb "-u $ethp"; }
+[ "$1" = "nj" ] && { jb "-u $ethn"; }
+[ "$1" = "fj" ] && { jb "-u $ethf"; }
 # arranca
-if [ "$1" = "ta" ]; then
-  sudo systemctl daemon-reload
-  [ "$(systemctl status $ethg 2>/dev/null|grep -i inactive)" ] && sudo systemctl start $ethg
-  [ "$(systemctl status $ethb 2>/dev/null|grep -i inactive)" ] && sudo systemctl start $ethb
-  [ "$(systemctl status $ethv 2>/dev/null|grep -i inactive)" ] && [ -f $vldt/validator_definitions.yml ] && sudo systemctl start $ethv
-  [ "$(systemctl status $ethp 2>/dev/null|grep -i inactive)" ] && sudo systemctl start $ethp
-  [ "$(systemctl status $ethn 2>/dev/null|grep -i inactive)" ] && sudo systemctl start $ethn
-  [ "$(systemctl status $ethf 2>/dev/null|grep -i inactive)" ] && sudo systemctl start $ethf
-fi
-if [ "$1" = "ea" ]; then
-  sudo systemctl daemon-reload
-  [ "$(systemctl status $ethg 2>/dev/null|grep -i inactive)" ] && sudo systemctl start $ethg
-  [ "$(systemctl status $ethb 2>/dev/null|grep -i inactive)" ] && sudo systemctl start $ethb
-  [ "$(systemctl status $ethv 2>/dev/null|grep -i inactive)" ] && [ -f $vldt/validator_definitions.yml ] && sudo systemctl start $ethv
-fi
-if [ "$1" = "ma" ]; then
-  sudo systemctl daemon-reload
-  [ "$(systemctl status $ethp 2>/dev/null|grep -i inactive)" ] && sudo systemctl start $ethp
-  [ "$(systemctl status $ethn 2>/dev/null|grep -i inactive)" ] && sudo systemctl start $ethn
-  [ "$(systemctl status $ethf 2>/dev/null|grep -i inactive)" ] && sudo systemctl start $ethf
-fi
-if [ "$1" = "ga" ];then sudo systemctl daemon-reload;[ "$(systemctl status $ethg 2>/dev/null|grep -i inactive)" ] && sudo systemctl start $ethg;fi
-if [ "$1" = "ba" ];then sudo systemctl daemon-reload;[ "$(systemctl status $ethb 2>/dev/null|grep -i inactive)" ] && sudo systemctl start $ethb;fi
-if [ "$1" = "va" ];then sudo systemctl daemon-reload;[ "$(systemctl status $ethv 2>/dev/null|grep -i inactive)" ] && [ -f $vldt/validator_definitions.yml ] && sudo systemctl start $ethv;fi
-if [ "$1" = "pa" ];then sudo systemctl daemon-reload;[ "$(systemctl status $ethp 2>/dev/null|grep -i inactive)" ] && sudo systemctl start $ethp;fi
-if [ "$1" = "na" ];then sudo systemctl daemon-reload;[ "$(systemctl status $ethn 2>/dev/null|grep -i inactive)" ] && sudo systemctl start $ethn;fi
-if [ "$1" = "fa" ];then sudo systemctl daemon-reload;[ "$(systemctl status $ethf 2>/dev/null|grep -i inactive)" ] && sudo systemctl start $ethf;fi
-
+[ "$1" = "ta" ] && { dr;ga;ba;va;pa;na;fa; }
+[ "$1" = "ea" ] && { dr;ga;ba;va; }
+[ "$1" = "ma" ] && { dr;pa;na;fa; }
+[ "$1" = "ga" ] && { dr;ga; }
+[ "$1" = "ba" ] && { dr;ba; }
+[ "$1" = "va" ] && { dr;va; }
+[ "$1" = "pa" ] && { dr;pa; }
+[ "$1" = "na" ] && { dr;na; }
+[ "$1" = "fa" ] && { dr;fa; }
 # enable
-if [ "$1" = "te" ]; then
-  sudo systemctl daemon-reload
-  sudo systemctl enable $ethg
-  sudo systemctl enable $ethb
-  [ -f $vldt/validator_definitions.yml ] && sudo systemctl enable $ethv
-  sudo systemctl enable $ethp
-  sudo systemctl enable $ethn
-  sudo systemctl enable $ethf
-fi
-if [ "$1" = "ee" ]; then
-  sudo systemctl daemon-reload
-  sudo systemctl enable $ethg
-  sudo systemctl enable $ethb
-  [ -f $vldt/validator_definitions.yml ] && sudo systemctl enable $ethv
-fi
-if [ "$1" = "me" ]; then
-  sudo systemctl daemon-reload
-  sudo systemctl enable $ethp
-  sudo systemctl enable $ethn
-  sudo systemctl enable $ethf
-fi
-if [ "$1" = "ge" ];then sudo systemctl daemon-reload;sudo systemctl enable $ethg;fi
-if [ "$1" = "be" ];then sudo systemctl daemon-reload;sudo systemctl enable $ethb;fi
-if [ "$1" = "ve" ];then sudo systemctl daemon-reload;[ -f $vldt/validator_definitions.yml ] && sudo systemctl enable $ethv;fi
-if [ "$1" = "pe" ];then sudo systemctl daemon-reload;sudo systemctl enable $ethp;fi
-if [ "$1" = "ne" ];then sudo systemctl daemon-reload;sudo systemctl enable $ethn;fi
-if [ "$1" = "fe" ];then sudo systemctl daemon-reload;sudo systemctl enable $ethf;fi
-
+[ "$1" = "te" ] && { dr;ge;be;ve;pe;ne;fe; }
+[ "$1" = "ee" ] && { dr;ge;be;ve; }
+[ "$1" = "me" ] && { dr;pe;ne;fe; }
+[ "$1" = "ge" ] && { dr;ge; }
+[ "$1" = "be" ] && { dr;be; }
+[ "$1" = "ve" ] && { dr;ve; }
+[ "$1" = "pe" ] && { dr;pe; }
+[ "$1" = "ne" ] && { dr;ne; }
+[ "$1" = "fe" ] && { dr;fe; }
 # para
-if [ "$1" = "tpr" ]; then
-  [ "$(systemctl status $ethf 2>/dev/null|grep -i loaded)" ] && sudo systemctl stop $ethf
-  [ "$(systemctl status $ethn 2>/dev/null|grep -i loaded)" ] && sudo systemctl stop $ethn
-  [ "$(systemctl status $ethp 2>/dev/null|grep -i loaded)" ] && sudo systemctl stop $ethp
-  [ "$(systemctl status $ethv 2>/dev/null|grep -i loaded)" ] && sudo systemctl stop $ethv
-  [ "$(systemctl status $ethb 2>/dev/null|grep -i loaded)" ] && sudo systemctl stop $ethb
-  [ "$(systemctl status $ethg 2>/dev/null|grep -i loaded)" ] && sudo systemctl stop $ethg
-fi
-if [ "$1" = "epr" ]; then
-  [ "$(systemctl status $ethv 2>/dev/null|grep -i loaded)" ] && sudo systemctl stop $ethv
-  [ "$(systemctl status $ethb 2>/dev/null|grep -i loaded)" ] && sudo systemctl stop $ethb
-  [ "$(systemctl status $ethg 2>/dev/null|grep -i loaded)" ] && sudo systemctl stop $ethg
-fi
-if [ "$1" = "mpr" ]; then
-  [ "$(systemctl status $ethf 2>/dev/null|grep -i loaded)" ] && sudo systemctl stop $ethf
-  [ "$(systemctl status $ethn 2>/dev/null|grep -i loaded)" ] && sudo systemctl stop $ethn
-  [ "$(systemctl status $ethp 2>/dev/null|grep -i loaded)" ] && sudo systemctl stop $ethp
-fi
-if [ "$1" = "fpr" ];then [ "$(systemctl status $ethf 2>/dev/null|grep -i loaded)" ] && sudo systemctl stop $ethf;fi
-if [ "$1" = "npr" ];then [ "$(systemctl status $ethn 2>/dev/null|grep -i loaded)" ] && sudo systemctl stop $ethn;fi
-if [ "$1" = "ppr" ];then [ "$(systemctl status $ethp 2>/dev/null|grep -i loaded)" ] && sudo systemctl stop $ethp;fi
-if [ "$1" = "vpr" ];then [ "$(systemctl status $ethv 2>/dev/null|grep -i loaded)" ] && sudo systemctl stop $ethv;fi
-if [ "$1" = "bpr" ];then [ "$(systemctl status $ethb 2>/dev/null|grep -i loaded)" ] && sudo systemctl stop $ethb;fi
-if [ "$1" = "gpr" ];then [ "$(systemctl status $ethg 2>/dev/null|grep -i loaded)" ] && sudo systemctl stop $ethg;fi
-
+[ "$1" = "tpr" ] && { fp;np;pp;vp;bp;gp; }
+[ "$1" = "epr" ] && { vp;bp;gp; }
+[ "$1" = "mpr" ] && { fp;np;pp; }
+[ "$1" = "fpr" ] && { fp; }
+[ "$1" = "npr" ] && { np; }
+[ "$1" = "ppr" ] && { pp; }
+[ "$1" = "vpr" ] && { vp; }
+[ "$1" = "bpr" ] && { bp; }
+[ "$1" = "gpr" ] && { gp; }
 # disable
-if [ "$1" = "tds" ]; then
-  [ "$(systemctl status $ethf 2>/dev/null|grep -i loaded)" ] && sudo systemctl disable $ethf
-  [ "$(systemctl status $ethn 2>/dev/null|grep -i loaded)" ] && sudo systemctl disable $ethn
-  [ "$(systemctl status $ethp 2>/dev/null|grep -i loaded)" ] && sudo systemctl disable $ethp
-  [ "$(systemctl status $ethv 2>/dev/null|grep -i loaded)" ] && sudo systemctl disable $ethv
-  [ "$(systemctl status $ethb 2>/dev/null|grep -i loaded)" ] && sudo systemctl disable $ethb
-  [ "$(systemctl status $ethg 2>/dev/null|grep -i loaded)" ] && sudo systemctl disable $ethg
-fi
-if [ "$1" = "eds" ]; then
-  [ "$(systemctl status $ethv 2>/dev/null|grep -i loaded)" ] && sudo systemctl disable $ethv
-  [ "$(systemctl status $ethb 2>/dev/null|grep -i loaded)" ] && sudo systemctl disable $ethb
-  [ "$(systemctl status $ethg 2>/dev/null|grep -i loaded)" ] && sudo systemctl disable $ethg
-fi
-if [ "$1" = "mds" ]; then
-  [ "$(systemctl status $ethf 2>/dev/null|grep -i loaded)" ] && sudo systemctl disable $ethf
-  [ "$(systemctl status $ethn 2>/dev/null|grep -i loaded)" ] && sudo systemctl disable $ethn
-  [ "$(systemctl status $ethp 2>/dev/null|grep -i loaded)" ] && sudo systemctl disable $ethp
-fi
-if [ "$1" = "fds" ];then [ "$(systemctl status $ethf 2>/dev/null|grep -i loaded)" ] && sudo systemctl disable $ethf;fi
-if [ "$1" = "nds" ];then [ "$(systemctl status $ethn 2>/dev/null|grep -i loaded)" ] && sudo systemctl disable $ethn;fi
-if [ "$1" = "pds" ];then [ "$(systemctl status $ethp 2>/dev/null|grep -i loaded)" ] && sudo systemctl disable $ethp;fi
-if [ "$1" = "vds" ];then [ "$(systemctl status $ethv 2>/dev/null|grep -i loaded)" ] && sudo systemctl disable $ethv;fi
-if [ "$1" = "bds" ];then [ "$(systemctl status $ethb 2>/dev/null|grep -i loaded)" ] && sudo systemctl disable $ethb;fi
-if [ "$1" = "gds" ];then [ "$(systemctl status $ethg 2>/dev/null|grep -i loaded)" ] && sudo systemctl disable $ethg;fi
+[ "$1" = "tds" ] && { fd;nd;pd;vd;bd;gd; }
+[ "$1" = "eds" ] && { vd;bd;gd; }
+[ "$1" = "mds" ] && { fd;nd;pd; }
+[ "$1" = "fds" ] && { fd; }
+[ "$1" = "nds" ] && { nd; }
+[ "$1" = "pds" ] && { pd; }
+[ "$1" = "vds" ] && { vd; }
+[ "$1" = "bds" ] && { bd; }
+[ "$1" = "gds" ] && { gd; }
 
 if [ -z "$1" ]; then
   c1="\nprimeira letra"
@@ -183,6 +149,8 @@ if [ -z "$1" ]; then
   c1="$c1\nll\tlista servicos"
   c1="$c1\nlj\tjournal $ethb $ethv"
   c1="$c1\nbx\tbeacon external/internal eth1"
-  echo -e "$c1"
+  c1="$c1\nws\tfirewall status"
+  c1="$c1\nwa\tfirewall arranca"
+  c1="$c1\nwpr\tfirewall para"
+  echo -e "\n$c1\n"
 fi
-

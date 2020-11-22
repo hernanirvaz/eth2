@@ -18,7 +18,7 @@ if [ -x ~/.cargo/bin/rustup ]; then
   rustup update
 else
   echo -e "${i}INSTALAR DEPENDENCIAS RUST${f}"
-  sudo apt install -y git gcc g++ make cmake pkg-config libssl-dev
+  echo $H|sudo -S apt install -y git gcc g++ make cmake pkg-config libssl-dev 2>/dev/null
 
   echo -e "${i}INSTALL RUST${f}"
   cd ~
@@ -28,7 +28,7 @@ if [ -f ~/lighthouse/README.md ]; then
   cd ~/lighthouse
   git pull
 else
-  sudo rm -rf ~/lighthouse
+  echo $H|sudo -S rm -rf ~/lighthouse 2>/dev/null
   cd ~
   git clone https://github.com/sigp/lighthouse.git
 fi 
@@ -42,18 +42,19 @@ if [ -x  ~/.cargo/bin/lighthouse ]; then
 
   if [ "$B" = "mainnet" ]; then
     blkc=""
+    endp="http://127.0.0.1:8545"
   else
     blkc="--testnet $B"
+    endp="$E"
   fi
   dtdi="/var/lib/lighthouse"
   becn="$dtdi/beacon"
   vldt="$dtdi/validators"
-
   echo -e "\n$H: CONFIGURE BEACON\n"
+  echo $H|sudo -S mkdir -p $becn 2>/dev/null
   t6 vpr
   t6 bpr
   cd ~
-  sudo mkdir -p $becn
   if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
   sudo chown -R $user:$user $dtdi
   sudo cp ~/.cargo/bin/lighthouse /usr/local/bin
@@ -68,15 +69,13 @@ if [ -x  ~/.cargo/bin/lighthouse ]; then
   Group=$user
   Restart=always
   RestartSec=10
-  ExecStart=/usr/local/bin/lighthouse $blkc --datadir $dtdi bn --staking --eth1-endpoint $E --metrics
+  ExecStart=/usr/local/bin/lighthouse $blkc --datadir $dtdi bn --staking --eth1-endpoint $endp --metrics
 
   [Install]
   WantedBy=multi-user.target
 EOF
   sudo mv $ethb.service /etc/systemd/system/$ethb.service
   sudo chmod 644 /etc/systemd/system/$ethb.service
-  sudo ufw allow 9000 comment 'Lighthouse'
-  sudo ufw reload
   t6 be
   t6 ba
   t6 bj
