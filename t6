@@ -17,23 +17,40 @@ dtdi="/var/lib/lighthouse"
 becn="$dtdi/beacon"
 vldt="$dtdi/validators"
 
+# home-old 87.196.199.110
+# home-new 89.181.65.217
+bnip="207.180.214.8"
+bnip="89.181.65.217"
+vcip="164.68.107.45"
+
+# open/close api/metrics ports com IPs
+function bo { uu "ufw allow 9000 comment eth2";uu "ufw delete deny 5052       ";uu "ufw allow from $vcip to any port 5052 comment bnapi"; }
+function bc { uu "ufw deny  9000 comment eth2";uu "ufw deny 5052 comment bnapi";uu "ufw delete allow from $vcip to any port 5052"; }
+function vo { uu "ufw delete deny 5064           ";uu "ufw allow from 207.180.214.8 to any port 5064 comment vcmetrics";uu "ufw allow from 89.181.65.217 to any port 5064 comment vcmetrics"; }
+function vc { uu "ufw deny 5064 comment vcmetrics";uu "ufw delete allow from 207.180.214.8 to any port 5064";uu "ufw delete allow from 89.181.65.217 to any port 5064"; }
+# open/close api/metrics ports sem IPs
+# function bo { uu "ufw allow 9000 comment eth2";uu "ufw allow 5052 comment bnapi"; }
+# function bc { uu "ufw deny  9000 comment eth2";uu "ufw deny 5052 comment bnapi"; }
+# function vo { uu "ufw allow 5064 comment vcmetrics"; }
+# function vc { uu "ufw deny 5064 comment vcmetrics"; }
 function uu { echo -e "${i}$1${f}";echo $H|sudo -S $1 2>/dev/null; }
+function ut { echo -e "${i}$1${f}";echo $H|sudo -S $1|tail 2>/dev/null; }
 function jb { uu "journalctl --no-hostname --no-full -f $1"; }
 function dr { uu "systemctl daemon-reload"; }
 
-function ge { uu "systemctl enable $ethg";uu "ufw allow 30303 comment eth1";uu "ufw reload"; }
-function be { uu "systemctl enable $ethb";uu "ufw allow  9000 comment eth2";uu "ufw reload"; }
-function ve { [ -f $vldt/validator_definitions.yml ] && { uu "systemctl enable $ethv"; } }
+function ge { uu "ufw allow 30303 comment eth1";uu "ufw reload";uu "systemctl enable $ethg"; }
+function be { bo;uu "ufw reload";uu "systemctl enable $ethb"; }
+function ve { [ -f $vldt/validator_definitions.yml ] && { vo;uu "ufw reload";uu "systemctl enable $ethv"; } }
 function pe { uu "systemctl enable $ethp"; }
 function ne { uu "systemctl enable $ethn"; }
-function fe { uu "systemctl enable $ethf";uu "ufw allow 3000/tcp comment grafana";uu "ufw reload"; }
+function fe { uu "ufw allow 3000/tcp comment grafana";uu "ufw reload";uu "systemctl enable $ethf"; }
 
-function ga { [ "$(systemctl status $ethg 2>/dev/null|grep -i inactive)" ] && { uu "systemctl start $ethg"; } }
-function ba { [ "$(systemctl status $ethb 2>/dev/null|grep -i inactive)" ] && { uu "systemctl start $ethb"; } }
-function va { [ "$(systemctl status $ethv 2>/dev/null|grep -i inactive)" ] && [ -f $vldt/validator_definitions.yml ] && { uu "systemctl start $ethv"; } }
-function pa { [ "$(systemctl status $ethp 2>/dev/null|grep -i inactive)" ] && { uu "systemctl start $ethp"; } }
-function na { [ "$(systemctl status $ethn 2>/dev/null|grep -i inactive)" ] && { uu "systemctl start $ethn"; } }
-function fa { [ "$(systemctl status $ethf 2>/dev/null|grep -i inactive)" ] && { uu "systemctl start $ethf"; } }
+function ga { [ "$(systemctl status $ethg 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $ethg"; } }
+function ba { [ "$(systemctl status $ethb 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $ethb"; } }
+function va { [ "$(systemctl status $ethv 2>/dev/null|grep -i 'inactive\|failed')" ] && [ -f $vldt/validator_definitions.yml ] && { uu "systemctl start $ethv"; } }
+function pa { [ "$(systemctl status $ethp 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $ethp"; } }
+function na { [ "$(systemctl status $ethn 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $ethn"; } }
+function fa { [ "$(systemctl status $ethf 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $ethf"; } }
 
 function gp { [ "$(systemctl status $ethg 2>/dev/null|grep -i loaded)" ] && { uu "systemctl stop $ethg"; } }
 function bp { [ "$(systemctl status $ethb 2>/dev/null|grep -i loaded)" ] && { uu "systemctl stop $ethb"; } }
@@ -43,13 +60,13 @@ function np { [ "$(systemctl status $ethn 2>/dev/null|grep -i loaded)" ] && { uu
 function fp { [ "$(systemctl status $ethf 2>/dev/null|grep -i loaded)" ] && { uu "systemctl stop $ethf"; } }
 
 function gd { [ "$(systemctl status $ethg 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethg";uu "ufw deny 30303 comment eth1";uu "ufw reload"; } }
-function bd { [ "$(systemctl status $ethb 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethb";uu "ufw deny  9000 comment eth2";uu "ufw reload"; } }
-function vd { [ "$(systemctl status $ethv 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethv"; } }
+function bd { [ "$(systemctl status $ethb 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethb";bc;uu "ufw reload"; } }
+function vd { [ "$(systemctl status $ethv 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethv";vc;uu "ufw reload"; } }
 function pd { [ "$(systemctl status $ethp 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethp"; } }
 function nd { [ "$(systemctl status $ethn 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethn"; } }
 function fd { [ "$(systemctl status $ethf 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethf";uu "ufw deny 3000/tcp comment grafana";uu "ufw reload"; } }
 
-# beacon external/internal eth1
+# beacon geth external/internal eth1
 if [ "$1" = "bx" ] && [ -f /etc/systemd/system/$ethg.service ] && [ -f /etc/systemd/system/$ethb.service ]; then
   echo -e "${i}TROCA BEACON EXTERNAL/INTERNAL ETH1${f}"
   [ "$(systemctl status $ethv 2>/dev/null|grep -i loaded)" ] && uu "systemctl stop $ethv"
@@ -67,9 +84,14 @@ if [ "$1" = "bx" ] && [ -f /etc/systemd/system/$ethg.service ] && [ -f /etc/syst
 fi
 # lista servicos
 [ "$1" = "ll" ] && { uu "systemctl list-units $pate $patp $patf"; }
+# lista portas
+[ "$1" = "lp" ] && { netstat -tulpn; }
+# peers/records
+[ "$1" = "np" ] && { ut "grep -i peercount /var/log/syslog";ut "grep -i peers: /var/log/syslog"; }
+[ "$1" = "nr" ] && { ut "grep -i record /var/log/syslog"; }
 # outros journal system/lighthouse
 [ "$1" = "jj" ] && { jb; }
-[ "$1" = "lj" ] && { jb "-u eth-[bv]*"; }
+[ "$1" = "lj" ] && { echo $H|sudo -S grep 'ERROR\|WARN' /var/log/syslog 2>/dev/null; }
 [ "$1" = "ws" ] && { uu "ufw status numbered"; }
 [ "$1" = "wa" ] && if [ "$(echo $H|sudo -S ufw status 2>/dev/null|grep -i inactive)" ];then echo -e "${i}ARRANCA FIREWALL${f}";sudo ufw enable; else echo -e "${i}FIREWALL JA ACTIVE${f}";fi
 [ "$1" = "wpr" ] && { uu "ufw disable"; }
@@ -147,7 +169,10 @@ if [ -z "$1" ]; then
   c1="$c1\noutros"
   c1="$c1\njj\tjournal system"
   c1="$c1\nll\tlista servicos"
-  c1="$c1\nlj\tjournal $ethb $ethv"
+  c1="$c1\nlp\tlista portas"
+  c1="$c1\nlj\tlista journal ERROR|WARN"
+  c1="$c1\nnp\tnode peers"
+  c1="$c1\nnr\tnode record"
   c1="$c1\nbx\tbeacon external/internal eth1"
   c1="$c1\nws\tfirewall status"
   c1="$c1\nwa\tfirewall arranca"

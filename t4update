@@ -9,6 +9,8 @@ ethv="eth-validator"
 ethp="prometheus"
 ethn="prometheus-node-exporter"
 ethf="grafana-server"
+vers="stable"
+vers="v1.0.3"
 
 if [ "$1" = "linux" ] || [ -z "$1" ]; then
   echo -e "${i}FULL-UPGRADE${f}"
@@ -28,13 +30,30 @@ if [ "$1" = "eth" ] || [ -z "$1" ]; then
   fi
   if [ -x /usr/local/bin/lighthouse ]; then
     echo -e "${i}LIGHTHOUSE UPDATE${f}"
-    t6 tpr
-    cd ~/lighthouse
-    git pull
+    if [ -f ~/lighthouse/README.md ]; then
+      cd ~/lighthouse
+      make clean
+      # not sure if needed
+      # cargo clean
+      git fetch
+      git checkout ${vers}
+    else
+      cd ~
+      echo $H|sudo -S rm -rf ~/lighthouse 2>/dev/null
+      git clone https://github.com/sigp/lighthouse.git
+      cd ~/lighthouse
+      git checkout ${vers}
+    fi 
     make
-    echo -e "\n$H\n"
-    echo $H|sudo -S mv /usr/local/bin/lighthouse /usr/local/bin/lighthouse.save 2>/dev/null
-    sudo cp ~/.cargo/bin/lighthouse /usr/local/bin
-    t6 ta
+    if [ $? -eq 0  ] && [ -x  ~/.cargo/bin/lighthouse ]; then
+      echo $H|sudo -S mv /usr/local/bin/lighthouse /usr/local/bin/lighthouse.save 2>/dev/null
+      t6 vpr
+      t6 bpr
+      sudo cp ~/.cargo/bin/lighthouse /usr/local/bin
+      t6 ba
+      t6 va
+    else
+      echo -e "${i}NAO EXISTE LIGHTHOUSE COMPILADO PARA INSTALAR${f}"
+    fi
   fi
 fi

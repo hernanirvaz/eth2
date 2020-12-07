@@ -4,70 +4,81 @@ i="\n\e[5m"
 f="\e[25m\n"
 
 meeu="$(whoami)"
-user="eth2"
+user="eth3"
 ethg="eth-geth"
 ethb="eth-beacon"
 ethv="eth-validator"
 ethp="prometheus"
 ethn="prometheus-node-exporter"
 ethf="grafana-server"
+# tipo instalacao; "duas" => N(geth,beacon) A(validator), "" => N(geth,beacon,validator)
+tipo="duas"
+# home-old 87.196.199.110
+# home-new 89.181.65.217
+bnip="207.180.214.8"
+bnip="89.181.65.217"
+vcip="164.68.107.45"
 
-if [ -x /usr/local/bin/lighthouse ]; then
-
-  if [ "$B" = "mainnet" ]; then
-    blkc=""
-  else
-    blkc="--testnet $B"
-  fi
-  dtdi="/var/lib/lighthouse"
-  becn="$dtdi/beacon"
-  vldt="$dtdi/validators"
-
-  t6 vpr
-  cd ~
-  if [ -f $vldt/validator_definitions.yml ]; then
-    echo -e "${i}\nCHAVES JA FORAM IMPORTADAS${F}"
-  else
-    if [ -d $HOME/$D ] && [ "$(ls -A $HOME/$D)" ]; then
+if [ "$tipo" ] && [ "$(curl -s v4.ident.me)" = "207.180.214.8" ]; then
+  echo -e "${i}VALIDATOR NAO DEVE SER INSTALADO - AQUI FICA GETH & BEACON${f}"
+else
+  if [ -x /usr/local/bin/lighthouse ]; then
+    if [ "$tipo" ]; then
+      vlcl="--beacon-node http://$bnip:5052 --metrics-address $vcip"
+    else
+      vlcl="--beacon-node http://127.0.0.1:5052 --metrics-address 127.0.0.1"
+    fi
+    if [ "$B" = "mainnet" ]; then
+      blkc=""
+    else
+      blkc="--testnet $B"
+    fi
+    dtdi="/var/lib/lighthouse"
+    vldt="$dtdi/validators"
+    cd ~
+    if [ ! -f $vldt/validator_definitions.yml ] && [ -d $HOME/$D ] && [ "$(ls -A $HOME/$D)" ]; then
+      t6 vpr
       echo -e "${i}IMPORT VALIDATOR KEYS${f}"
       echo $H|sudo -S mkdir -p $dtdi 2>/dev/null
+      if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
       sudo chown -R $meeu:$meeu $dtdi
       echo -e "STORE($K)\n"
       lighthouse $blkc --datadir $dtdi account validator import --directory $HOME/$D
-      sudo chown -R $user:$user $dtdi
-    else
-      echo -e "${i}NAO EXISTE KEYS PARA IMPORTAR ($HOME/$D)${f}"
+      if id eth2 &>/dev/null;then sudo chown -R eth2:eth2 $dtdi;else sudo chown -R $user:$user $dtdi;fi
     fi
+    if [ -f $vldt/validator_definitions.yml ]; then
+      t6 vpr
+      echo -e "${i}CONFIGURE VALIDATOR${f}"
+      cd ~
+      echo $H|sudo -S mkdir -p $vldt 2>/dev/null
+      if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
+      sudo chown -R $user:$user $vldt
+      cat <<-EOF > $ethv.service
+			[Unit]
+			Description=eth2 validator service
+			Wants=network-online.target
+			After=network-online.target
+		
+			[Service]
+			User=$user
+			Group=$user
+			Restart=always
+			RestartSec=10
+			ExecStart=/usr/local/bin/lighthouse $blkc --datadir $dtdi vc $vlcl --metrics
+			ExecStopPost=/home/eth/eth2/t8mail VALISTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
+		
+			[Install]
+			WantedBy=multi-user.target
+			EOF
+      sudo mv $ethv.service /etc/systemd/system/$ethv.service
+      sudo chmod 644 /etc/systemd/system/$ethv.service
+      t6 ve
+      t6 va
+      t6 vj
+    else
+      echo -e "${i}\nCHAVES NAO FORAM IMPORTADAS ($HOME/$D) - SEM CHAVES NAO POSSO INSTALAR VALIDADOR${f}"
+    fi
+  else
+    echo -e "${i}NAO EXISTE BINARIO LIGHT - DEVE EXECUTAR t2beacon PARA COMPILAR${f}"
   fi
-
-  echo -e "${i}CONFIGURE VALIDATOR${f}"
-  cd ~
-  echo $H|sudo -S mkdir -p $vldt 2>/dev/null
-  sudo chown -R $user:$user $vldt
-  cat <<-EOF > $ethv.service
-  [Unit]
-  Description=eth2 validator service
-  Wants=network-online.target
-  After=network-online.target
-
-  [Service]
-  User=$user
-  Group=$user
-  Restart=always
-  RestartSec=10
-  ExecStart=/usr/local/bin/lighthouse $blkc --datadir $dtdi vc
-
-  [Install]
-  WantedBy=multi-user.target
-EOF
-  sudo mv $ethv.service /etc/systemd/system/$ethv.service
-  sudo chmod 644 /etc/systemd/system/$ethv.service
-  t6 ve
-  t6 va
-  t6 vj
-
-else
-
-  echo -e "${i}NAO EXISTE BEACON INSTALADO - DEVE COMECAR POR AI${f}"
-  
 fi

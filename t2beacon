@@ -11,6 +11,14 @@ ethv="eth-validator"
 ethp="prometheus"
 ethn="prometheus-node-exporter"
 ethf="grafana-server"
+vers="stable"
+# tipo instalacao; "duas" => N(geth,beacon) A(validator), "" => N(geth,beacon,validator)
+tipo="duas"
+# home-old 87.196.199.110
+# home-new 89.181.65.217
+bnip="207.180.214.8"
+bnip="89.181.65.217"
+vcip="164.68.107.45"
 
 if [ -x ~/.cargo/bin/rustup ]; then
   echo -e "${i}UPDATE RUST${f}"
@@ -19,69 +27,82 @@ if [ -x ~/.cargo/bin/rustup ]; then
 else
   echo -e "${i}INSTALAR DEPENDENCIAS RUST${f}"
   echo $H|sudo -S apt install -y git gcc g++ make cmake pkg-config libssl-dev 2>/dev/null
-
   echo -e "${i}INSTALL RUST${f}"
   cd ~
   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 fi
 if [ -f ~/lighthouse/README.md ]; then
   cd ~/lighthouse
-  git pull
+  make clean
+  cargo clean
+  git fetch
+  git checkout ${vers}
 else
-  echo $H|sudo -S rm -rf ~/lighthouse 2>/dev/null
   cd ~
+  echo $H|sudo -S rm -rf ~/lighthouse 2>/dev/null
   git clone https://github.com/sigp/lighthouse.git
+  cd ~/lighthouse
+  git checkout ${vers}
 fi 
 echo -e "${i}VAI COMPILAR LIGHT${f}"
 source ~/.cargo/env
-cd ~/lighthouse
 make
+[ $? -eq 0  ] && [ -x  ~/.cargo/bin/lighthouse ] && echo $H|sudo -S cp ~/.cargo/bin/lighthouse /usr/local/bin 2>/dev/null
 echo -e "${i}$(ntptime|grep -i ntp_|tr '[:lower:]' '[:upper:]')${f}"
 
-if [ -x  ~/.cargo/bin/lighthouse ]; then
-
-  if [ "$B" = "mainnet" ]; then
-    blkc=""
-    endp="http://127.0.0.1:8545"
-  else
-    blkc="--testnet $B"
-    endp="$E"
-  fi
-  dtdi="/var/lib/lighthouse"
-  becn="$dtdi/beacon"
-  vldt="$dtdi/validators"
-  echo -e "\n$H: CONFIGURE BEACON\n"
-  echo $H|sudo -S mkdir -p $becn 2>/dev/null
-  t6 vpr
-  t6 bpr
-  cd ~
-  if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
-  sudo chown -R $user:$user $dtdi
-  sudo cp ~/.cargo/bin/lighthouse /usr/local/bin
-  cat <<-EOF > $ethb.service
-  [Unit]
-  Description=eth2 beacon service
-  Wants=network-online.target
-  After=network-online.target
-
-  [Service]
-  User=$user
-  Group=$user
-  Restart=always
-  RestartSec=10
-  ExecStart=/usr/local/bin/lighthouse $blkc --datadir $dtdi bn --staking --eth1-endpoint $endp --metrics
-
-  [Install]
-  WantedBy=multi-user.target
-EOF
-  sudo mv $ethb.service /etc/systemd/system/$ethb.service
-  sudo chmod 644 /etc/systemd/system/$ethb.service
-  t6 be
-  t6 ba
-  t6 bj
-
+if [ "$tipo" ] && [ "$(curl -s v4.ident.me)" != "$bnip" ]; then
+  echo -e "${i}BEACON NAO DEVE SER INSTALADO - AQUI FICA SO VALIDATOR${f}"
 else
-
-  echo -e "${i}NAO EXISTE BEACON COMPILADO PARA INSTALAR${f}"
-
+  if [ -x /usr/local/bin/lighthouse ]; then
+    # slots per restore point
+    sprp=2048 # Yearly Disk Usage   6.4GB default
+    sprp=1024 # Yearly Disk Usage  12.8GB
+    sprp=512  # Yearly Disk Usage  25.6GB
+    sprp=256  # Yearly Disk Usage  51.2GB
+    sprp=128  # Yearly Disk Usage 102.4GB
+    # how many peers it should try to find and maintain
+    trpr=50 # default
+    trpr=30 # less bandwidth/load for gossip
+    if [ "$tipo" ];then bcnd="--http-address 207.180.214.8";else bcnd="--http-address 127.0.0.1";fi
+    if [ "$B" = "mainnet" ]; then
+      blkc=""
+      endp="http://127.0.0.1:8545,$E"
+    else
+      blkc="--testnet $B"
+      endp="$E"
+    fi
+    dtdi="/var/lib/lighthouse"
+    becn="$dtdi/beacon"
+    echo -e "${i}CONFIGURE BEACON${f}"
+    echo $H|sudo -S mkdir -p $becn 2>/dev/null
+    t6 vpr
+    t6 bpr
+    cd ~
+    if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
+    sudo chown -R $user:$user $dtdi
+    cat <<-EOF > $ethb.service
+		[Unit]
+		Description=eth2 beacon service
+		Wants=network-online.target
+		After=network-online.target
+		
+		[Service]
+		User=$user
+		Group=$user
+		Restart=always
+		RestartSec=10
+		ExecStart=/usr/local/bin/lighthouse $blkc --datadir $dtdi bn --slots-per-restore-point $sprp --target-peers $trpr $bcnd --staking --eth1-endpoints $endp --metrics
+		ExecStopPost=/home/eth/eth2/t8mail BEACSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
+		
+		[Install]
+		WantedBy=multi-user.target
+		EOF
+    sudo mv $ethb.service /etc/systemd/system/$ethb.service
+    sudo chmod 644 /etc/systemd/system/$ethb.service
+    t6 be
+    t6 ba
+    t6 bj
+  else
+    echo -e "${i}NAO EXISTE BEACON COMPILADO PARA INSTALAR${f}"
+  fi
 fi

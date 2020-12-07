@@ -1,0 +1,10 @@
+#!/bin/bash
+
+function ft { cd /home/eth/lighthouse;/usr/bin/git fetch --tags &>/dev/null;t=$(/usr/bin/git rev-list --tags --max-count=1);v=$(/usr/bin/git describe --tags $t); }
+
+[ "$1" = "GETHSTP" ] && { echo -e "Subject: GETH STOPPED\n\nSERVICE_RESULT=$2\nEXIT_CODE=$3\nEXIT_STATUS=$4\n"|/usr/sbin/ssmtp hernanilr@gmail.com; }
+[ "$1" = "BEACSTP" ] && { echo -e "Subject: BEACON STOPPED\n\nSERVICE_RESULT=$2\nEXIT_CODE=$3\nEXIT_STATUS=$4\n"|/usr/sbin/ssmtp hernanilr@gmail.com; }
+[ "$1" = "VALISTP" ] && { echo -e "Subject: VALIDATOR STOPPED\n\nSERVICE_RESULT=$2\nEXIT_CODE=$3\nEXIT_STATUS=$4\n"|/usr/sbin/ssmtp hernanilr@gmail.com; }
+[ "$1" = "BEACCHK" ] && { [ "$(nmap 207.180.214.8 --open -Pn -p 5052|grep open)" ] || echo -e "Subject: VPS 207.180.214.8 STOPPED\n\n"|/usr/sbin/ssmtp hernanilr@gmail.com; }
+[ "$1" = "VALICHK" ] && { [ "$(nmap 164.68.107.45 --open -Pn -p 5064|grep open)" ] || echo -e "Subject: VPS 164.68.107.45 STOPPED\n\n"|/usr/sbin/ssmtp hernanilr@gmail.com; }
+[ "$1" = "VERSCHK" ] && { ft;[ "$v" = "$2" ] || echo -e "Subject: NEW $v IS OUT\n\n"|/usr/sbin/ssmtp hernanilr@gmail.com; }

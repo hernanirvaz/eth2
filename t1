@@ -9,12 +9,24 @@ ethv="eth-validator"
 ethp="prometheus"
 ethn="prometheus-node-exporter"
 ethf="grafana-server"
+# tipo instalacao; "duas" => N(geth,beacon) A(validator), "" => N(geth,beacon,validator)
+tipo="duas"
+# home-old 87.196.199.110
+# home-new 89.181.65.217
+bnip="207.180.214.8"
+bnip="89.181.65.217"
+vcip="164.68.107.45"
+
+# cria link para tarefas
+[ -x ~/eth2/t ] || ln -s ~/eth2/t6 ~/eth2/t
 
 if [ "$(echo $H|sudo -S ufw status 2>/dev/null|grep -i inactive)" ]; then
   echo -e "${i}INIT FIREWALL${f}"
   sudo ufw deny 22/tcp comment oldssh
   sudo ufw deny 30303 comment eth1
   sudo ufw deny 9000 comment eth2
+  sudo ufw deny 5052 comment bnapi
+  sudo ufw deny 5064 comment vcmetrics
   sudo ufw deny 9090/tcp comment prometheus
   sudo ufw deny 3000/tcp comment grafana
   sudo ufw allow 2020/tcp comment newssh
@@ -26,19 +38,19 @@ if [ "$(echo $H|sudo -S ufw status 2>/dev/null|grep -i inactive)" ]; then
   sudo chkrootkit  -q
   echo -e "${i}TIMEKEEPING (NTP)${f}"
   sudo apt install -y ntp
-  sudo timedatectl set-ntp no
+  sudo timedatectl set-ntp off
   timedatectl
   ntpq -p
 else
   echo -e "${i}FIREWALL $(echo $H|sudo -S ufw status 2>/dev/null|grep -i status|tr '[:lower:]' '[:upper:]')${f}"
 fi 
 
-if [ -f /etc/systemd/system/$ethg.service ]; then
-  echo -e "${i}GETH JA INSTALADO${f}"
+t4update linux
+if [ "$tipo" ] && [ "$(curl -s v4.ident.me)" != "$bnip" ]; then
+  echo -e "${i}GETH NAO DEVE SER INSTALADO AQUI - DEVE FAZER REBOOT${f}"
 else
-  t4update linux
-  if [ "$(df -t ext4|grep -e '  */ *$'|sed -e 's%  *% %'|cut -d ' ' -f 4)" -lt 210000000 ]; then
-    echo -e "${i}GETH NAO DEVE SER INSTALADO - NAO TEM ESPACO SUFICIENTE${f}"
+  if [ -f /etc/systemd/system/$ethg.service ]; then
+    echo -e "${i}GETH JA INSTALADO${f}"
   else
     echo -e "${i}INSTALAR GETH${f}"
     user="eth1"
@@ -58,21 +70,22 @@ else
     sudo useradd --no-create-home --shell /bin/false $user
     sudo chown -R $user:$user $golb
     cat <<-EOF > $ethg.service
-    [Unit]
-    Description=eth1 geth service
-    Wants=network-online.target
-    After=network-online.target
-
-    [Service]
-    User=$user
-    Group=$user
-    Restart=always
-    RestartSec=10
-    ExecStart=/usr/bin/geth $blkc --http --datadir $golb $node
-
-    [Install]
-    WantedBy=multi-user.target
-EOF
+		[Unit]
+		Description=eth1 geth service
+		Wants=network-online.target
+		After=network-online.target
+		
+		[Service]
+		User=$user
+		Group=$user
+		Restart=always
+		RestartSec=10
+		ExecStart=/usr/bin/geth $blkc --http --datadir $golb $node
+		ExecStopPost=/home/eth/eth2/t8mail GETHSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
+		
+		[Install]
+		WantedBy=multi-user.target
+		EOF
     sudo mv $ethg.service /etc/systemd/system/$ethg.service
     sudo chmod 644 /etc/systemd/system/$ethg.service
     t6 ge
@@ -80,7 +93,3 @@ EOF
     t6 gj
   fi
 fi
-
-# cria link para tarefas
-[ -x ~/eth2/t ] || ln -s ~/eth2/t6 ~/eth2/t
-
