@@ -1,10 +1,6 @@
 #!/bin/bash
 
-i="\n\e[5m"
-f="\e[25m\n"
-
-meeu="$(whoami)"
-user="eth2"
+source ~/eth2/t0
 
 echo -e "${i}WARNING: WARNING: THIS IS AN IRREVERSIBLE OPERATION${f}"
 echo -e "${i}WARNING: WITHDRAWING STAKED ETH WILL NOT BE POSSIBLE UNTIL ETH1/ETH2 MERGE${f}"
@@ -16,13 +12,11 @@ if [ -x /usr/local/bin/lighthouse ]; then
   else
     blkc="--testnet $B"
   fi
-  wllt="/var/lib/lighthouse"
-  golb="$wllt/validators"
   echo -e "${i}EXIT VALIDATORS${f}"
-  if [ -f $golb/validator_definitions.yml ]; then
+  if [ -f $vldt/validator_definitions.yml ]; then
     echo -e "${i}STORE($K) WALLET($W)${f}"
-    for kst in $(ls $golb/*.json)
-    do echo lighthouse $blkc --datadir $wllt account validator exit --keystore $kst
+    for kst in $(ls $vldt/*.json)
+    do echo lighthouse $blkc --datadir $dtdi account validator exit --keystore $kst
     done
   else
     echo -e "${i}\nCHAVES AINDA NAO FORAM IMPORTADAS${f}"

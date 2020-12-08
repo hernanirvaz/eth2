@@ -1,38 +1,16 @@
 #!/bin/bash
 
-i="\n\e[5m"
-f="\e[25m\n"
+source ~/eth2/t0
 
-ethg="eth-geth"
-ethb="eth-beacon"
-ethv="eth-validator"
-ethp="prometheus"
-ethn="prometheus-node-exporter"
-ethf="grafana-server"
 pate='eth-*'
 patp='prometheus*'
 patf='grafana*'
 
-dtdi="/var/lib/lighthouse"
-becn="$dtdi/beacon"
-vldt="$dtdi/validators"
-
-# home-old 87.196.199.110
-# home-new 89.181.65.217
-bnip="207.180.214.8"
-bnip="89.181.65.217"
-vcip="164.68.107.45"
-
 # open/close api/metrics ports com IPs
 function bo { uu "ufw allow 9000 comment eth2";uu "ufw delete deny 5052       ";uu "ufw allow from $vcip to any port 5052 comment bnapi"; }
 function bc { uu "ufw deny  9000 comment eth2";uu "ufw deny 5052 comment bnapi";uu "ufw delete allow from $vcip to any port 5052"; }
-function vo { uu "ufw delete deny 5064           ";uu "ufw allow from 207.180.214.8 to any port 5064 comment vcmetrics";uu "ufw allow from 89.181.65.217 to any port 5064 comment vcmetrics"; }
-function vc { uu "ufw deny 5064 comment vcmetrics";uu "ufw delete allow from 207.180.214.8 to any port 5064";uu "ufw delete allow from 89.181.65.217 to any port 5064"; }
-# open/close api/metrics ports sem IPs
-# function bo { uu "ufw allow 9000 comment eth2";uu "ufw allow 5052 comment bnapi"; }
-# function bc { uu "ufw deny  9000 comment eth2";uu "ufw deny 5052 comment bnapi"; }
-# function vo { uu "ufw allow 5064 comment vcmetrics"; }
-# function vc { uu "ufw deny 5064 comment vcmetrics"; }
+function vo { uu "ufw delete deny 5064           ";uu "ufw allow from $bnip to any port 5064 comment vcmet";uu "ufw allow from $bnhm to any port 5064 comment vcmet"; }
+function vc { uu "ufw deny 5064 comment vcmetrics";uu "ufw delete allow from $bnip to any port 5064";uu "ufw delete allow from $bnhm to any port 5064"; }
 function uu { echo -e "${i}$1${f}";echo $H|sudo -S $1 2>/dev/null; }
 function ut { echo -e "${i}$1${f}";echo $H|sudo -S $1|tail 2>/dev/null; }
 function jb { uu "journalctl --no-hostname --no-full -f $1"; }

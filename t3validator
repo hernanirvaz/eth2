@@ -1,25 +1,10 @@
 #!/bin/bash
 
-i="\n\e[5m"
-f="\e[25m\n"
+source ~/eth2/t0
 
-meeu="$(whoami)"
 user="eth3"
-ethg="eth-geth"
-ethb="eth-beacon"
-ethv="eth-validator"
-ethp="prometheus"
-ethn="prometheus-node-exporter"
-ethf="grafana-server"
-# tipo instalacao; "duas" => N(geth,beacon) A(validator), "" => N(geth,beacon,validator)
-tipo="duas"
-# home-old 87.196.199.110
-# home-new 89.181.65.217
-bnip="207.180.214.8"
-bnip="89.181.65.217"
-vcip="164.68.107.45"
 
-if [ "$tipo" ] && [ "$(curl -s v4.ident.me)" = "207.180.214.8" ]; then
+if [ "$tipo" ] && [ "$(curl -s v4.ident.me)" = "$bnip" ]; then
   echo -e "${i}VALIDATOR NAO DEVE SER INSTALADO - AQUI FICA GETH & BEACON${f}"
 else
   if [ -x /usr/local/bin/lighthouse ]; then
@@ -33,18 +18,17 @@ else
     else
       blkc="--testnet $B"
     fi
-    dtdi="/var/lib/lighthouse"
-    vldt="$dtdi/validators"
     cd ~
     if [ ! -f $vldt/validator_definitions.yml ] && [ -d $HOME/$D ] && [ "$(ls -A $HOME/$D)" ]; then
       t6 vpr
       echo -e "${i}IMPORT VALIDATOR KEYS${f}"
       echo $H|sudo -S mkdir -p $dtdi 2>/dev/null
       if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
-      sudo chown -R $meeu:$meeu $dtdi
+      sudo chown $meeu:$meeu $dtdi
       echo -e "STORE($K)\n"
       lighthouse $blkc --datadir $dtdi account validator import --directory $HOME/$D
-      if id eth2 &>/dev/null;then sudo chown -R eth2:eth2 $dtdi;else sudo chown -R $user:$user $dtdi;fi
+      sudo chown root:root $dtdi
+      sudo chown -R $user:$user $vldt
     fi
     if [ -f $vldt/validator_definitions.yml ]; then
       t6 vpr
@@ -53,6 +37,7 @@ else
       echo $H|sudo -S mkdir -p $vldt 2>/dev/null
       if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
       sudo chown -R $user:$user $vldt
+      sudo chmod 700 $vldt
       cat <<-EOF > $ethv.service
 			[Unit]
 			Description=eth2 validator service

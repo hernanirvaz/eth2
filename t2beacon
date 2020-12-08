@@ -1,24 +1,8 @@
 #!/bin/bash
 
-i="\n\e[5m"
-f="\e[25m\n"
+source ~/eth2/t0
 
-meeu="$(whoami)"
 user="eth2"
-ethg="eth-geth"
-ethb="eth-beacon"
-ethv="eth-validator"
-ethp="prometheus"
-ethn="prometheus-node-exporter"
-ethf="grafana-server"
-vers="stable"
-# tipo instalacao; "duas" => N(geth,beacon) A(validator), "" => N(geth,beacon,validator)
-tipo="duas"
-# home-old 87.196.199.110
-# home-new 89.181.65.217
-bnip="207.180.214.8"
-bnip="89.181.65.217"
-vcip="164.68.107.45"
 
 if [ -x ~/.cargo/bin/rustup ]; then
   echo -e "${i}UPDATE RUST${f}"
@@ -48,21 +32,22 @@ echo -e "${i}VAI COMPILAR LIGHT${f}"
 source ~/.cargo/env
 make
 [ $? -eq 0  ] && [ -x  ~/.cargo/bin/lighthouse ] && echo $H|sudo -S cp ~/.cargo/bin/lighthouse /usr/local/bin 2>/dev/null
-echo -e "${i}$(ntptime|grep -i ntp_|tr '[:lower:]' '[:upper:]')${f}"
+
+echo -e "${i}$(timedatectl)${f}"
 
 if [ "$tipo" ] && [ "$(curl -s v4.ident.me)" != "$bnip" ]; then
   echo -e "${i}BEACON NAO DEVE SER INSTALADO - AQUI FICA SO VALIDATOR${f}"
 else
   if [ -x /usr/local/bin/lighthouse ]; then
-    # slots per restore point
+    # slots per restore point after init can't be changed
     sprp=2048 # Yearly Disk Usage   6.4GB default
     sprp=1024 # Yearly Disk Usage  12.8GB
     sprp=512  # Yearly Disk Usage  25.6GB
     sprp=256  # Yearly Disk Usage  51.2GB
     sprp=128  # Yearly Disk Usage 102.4GB
     # how many peers it should try to find and maintain
-    trpr=50 # default
-    trpr=30 # less bandwidth/load for gossip
+    tarp=50 # default
+    tarp=30 # less bandwidth/load for gossip
     if [ "$tipo" ];then bcnd="--http-address 207.180.214.8";else bcnd="--http-address 127.0.0.1";fi
     if [ "$B" = "mainnet" ]; then
       blkc=""
@@ -71,10 +56,9 @@ else
       blkc="--testnet $B"
       endp="$E"
     fi
-    dtdi="/var/lib/lighthouse"
-    becn="$dtdi/beacon"
     echo -e "${i}CONFIGURE BEACON${f}"
     echo $H|sudo -S mkdir -p $becn 2>/dev/null
+    sudo chmod 700 $becn
     t6 vpr
     t6 bpr
     cd ~
@@ -91,7 +75,7 @@ else
 		Group=$user
 		Restart=always
 		RestartSec=10
-		ExecStart=/usr/local/bin/lighthouse $blkc --datadir $dtdi bn --slots-per-restore-point $sprp --target-peers $trpr $bcnd --staking --eth1-endpoints $endp --metrics
+		ExecStart=/usr/local/bin/lighthouse $blkc --datadir $dtdi bn --slots-per-restore-point $sprp --target-peers $tarp $bcnd --staking --eth1-endpoints $endp --metrics
 		ExecStopPost=/home/eth/eth2/t8mail BEACSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 		
 		[Install]
