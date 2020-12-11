@@ -10,7 +10,6 @@ patf='grafana*'
 function bo { uu "ufw allow 9000 comment eth2";uu "ufw delete deny 5052       ";uu "ufw allow from $vcip to any port 5052 comment bnapi"; }
 function bc { uu "ufw deny  9000 comment eth2";uu "ufw deny 5052 comment bnapi";uu "ufw delete allow from $vcip to any port 5052"; }
 function vo { uu "ufw delete deny 5064           ";uu "ufw allow from $bnip to any port 5064 comment vcmet";uu "ufw allow from $bnhm to any port 5064 comment vcmet"; }
-function vc { uu "ufw deny 5064 comment vcmetrics";uu "ufw delete allow from $bnip to any port 5064";uu "ufw delete allow from $bnhm to any port 5064"; }
 function uu { echo -e "${i}$1${f}";echo $H|sudo -S $1 2>/dev/null; }
 function ut { echo -e "${i}$1${f}";echo $H|sudo -S $1|tail 2>/dev/null; }
 function jb { uu "journalctl --no-hostname --no-full -f $1"; }

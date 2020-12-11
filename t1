@@ -15,12 +15,11 @@ ethf="grafana-server"
 vers="stable"
 vers="v1.0.3"
 
-# home0 87.196.199.110
-# home1 89.181.65.217
-# home2 83.132.8.1
-bnhm="89.180.106.51"
+cuip="$(curl -s v4.ident.me)"
+bnhm="89.180.80.105"
 bnip="207.180.214.8"
 vcip="164.68.107.45"
+[ "$cuip" != "$bnip" ] && [ "$cuip" != "$vcip" ] && bnhm=$cuip
 
 # data is going here
 dtdi="/var/lib/lighthouse"

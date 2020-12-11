@@ -9,7 +9,6 @@ function ft { cd /home/eth/lighthouse;/usr/bin/git fetch --tags &>/dev/null;t=$(
 [ "$1" = "BEACSTP" ] && { echo -e "Subject: BEAC STOPPED ON $(/usr/bin/uname -n)\n\nSERVICE_RESULT=$2\nEXIT_CODE=$3\nEXIT_STATUS=$4\n"|/usr/sbin/ssmtp hernanilr@gmail.com; }
 [ "$1" = "VALISTP" ] && { echo -e "Subject: VALI STOPPED ON $(/usr/bin/uname -n)\n\nSERVICE_RESULT=$2\nEXIT_CODE=$3\nEXIT_STATUS=$4\n"|/usr/sbin/ssmtp hernanilr@gmail.com; }
 [ "$1" = "BEACCHK" ] && { [ "$(nmap $bnip --open -Pn -p 5052|grep open)" ] || echo -e "Subject: BNAPI $bnip STOPPED\n\n"|/usr/sbin/ssmtp hernanilr@gmail.com; }
-[ "$1" = "BNHMCHK" ] && { [ "$(nmap $bnhm --open -Pn -p 5052|grep open)" ] || echo -e "Subject: BNAPI $bnhm STOPPED\n\n"|/usr/sbin/ssmtp hernanilr@gmail.com; }
 [ "$1" = "VALICHK" ] && { [ "$(nmap $vcip --open -Pn -p 5064|grep open)" ] || echo -e "Subject: VCMET $vcip STOPPED\n\n"|/usr/sbin/ssmtp hernanilr@gmail.com; }
 [ "$1" = "VERSCHK" ] && { ft;[ "$v" = "$2" ] || echo -e "Subject: NEW $v IS OUT\n\n"|/usr/sbin/ssmtp hernanilr@gmail.com; }
 [ "$1" = "UPDTCHK" ] && { nu;[ "$u" -gt 0 ] && echo -e "Subject: $u UPDATES ON $(/usr/bin/uname -n)\n\n$(/usr/bin/apt list --upgradable 2>/dev/null)"|/usr/sbin/ssmtp hernanilr@gmail.com; }

@@ -4,7 +4,7 @@ source ~/eth2/t1
 
 petc="/etc/prometheus"
 
-if [ "$(curl -s v4.ident.me)" = "$vcip" ]; then
+if [ "$cuip" = "$vcip" ]; then
   echo -e "${i}MONITOR NAO DEVE SER INSTALADO - DEVE FICAR ONDE FICA O BEACON${f}"
 else
   if [ -f $petc/prometheus.yml ]; then

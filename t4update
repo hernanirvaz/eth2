@@ -15,7 +15,7 @@ if [ "$1" = "linux" ] || [ "$1" = "reboot" ] || [ -z "$1" ]; then
 fi
 
 if [ -x /usr/local/bin/lighthouse ] && ([ "$1" = "eth" ] || [ -z "$1" ]); then
-  if [ "$(curl -s v4.ident.me)" = "$vcip" ]; then
+  if [ "$cuip" = "$vcip" ]; then
     if [ -x  ~/lighthouse ]; then
       t6 vpr
       t6 bpr

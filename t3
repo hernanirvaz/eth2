@@ -2,7 +2,7 @@
 
 source ~/eth2/t1
 
-if [ "$(curl -s v4.ident.me)" = "$vcip" ]; then
+if [ "$cuip" = "$vcip" ]; then
   if [ -x ~/lighthouse ]; then
     echo $H|sudo -S mv ~/lighthouse /usr/local/bin 2>/dev/null
   fi

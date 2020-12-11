@@ -42,7 +42,7 @@ sudo apt install python3-pip -y
 sudo pip3 install speedtest-cli
 speedtest-cli
 
-if [ "$(curl -s v4.ident.me)" = "$vcip" ]; then
+if [ "$cuip" = "$vcip" ]; then
   echo -e "${i}GETH NAO DEVE SER INSTALADO AQUI - DEVE FAZER REBOOT${f}"
 else
   if [ -f /etc/systemd/system/$ethg.service ]; then
