@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ~/eth2/t0
+source ~/eth2/t1
 
 if [ "$(uname -n)" = "hrv-zen" ]; then
   cli="eth2.0-deposit-cli/validator_keys"

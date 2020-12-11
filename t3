@@ -1,0 +1,149 @@
+#!/bin/bash
+
+source ~/eth2/t1
+
+if [ "$(curl -s v4.ident.me)" = "$vcip" ]; then
+  if [ -x ~/lighthouse ]; then
+    echo $H|sudo -S mv ~/lighthouse /usr/local/bin 2>/dev/null
+  fi
+  if [ -x /usr/local/bin/lighthouse ]; then
+    user="eth3"
+    if [ "$bnip" != "$vcip" ];then vlcl="--beacon-node http://$bnip:5052 --metrics-address $vcip";else vlcl="--beacon-node http://127.0.0.1:5052 --metrics-address 127.0.0.1";fi
+    if [ "$B" = "mainnet" ]; then
+      blkc=""
+    else
+      blkc="--testnet $B"
+    fi
+    cd ~
+    if [ ! -f $vldt/validator_definitions.yml ] && [ -d $HOME/$D ] && [ "$(ls -A $HOME/$D)" ]; then
+      t6 vpr
+      echo -e "${i}IMPORT VALIDATOR KEYS${f}"
+      echo $H|sudo -S mkdir -p $dtdi 2>/dev/null
+      if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
+      sudo chown $meeu:$meeu $dtdi
+      echo -e "STORE($K)\n"
+      lighthouse $blkc --datadir $dtdi account validator import --directory $HOME/$D
+      sudo chown root:root $dtdi
+      sudo chown -R $user:$user $vldt
+    fi
+    if [ -f $vldt/validator_definitions.yml ]; then
+      t6 vpr
+      echo -e "${i}CONFIGURE VALIDATOR${f}"
+      cd ~
+      echo $H|sudo -S mkdir -p $vldt 2>/dev/null
+      if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
+      sudo chown -R $user:$user $vldt
+      sudo chmod 700 $vldt
+      cat <<-EOF > $ethv.service
+			[Unit]
+			Description=eth2 validator service
+			Wants=network-online.target
+			After=network-online.target
+		
+			[Service]
+			User=$user
+			Group=$user
+			Restart=always
+			RestartSec=10
+			ExecStart=/usr/local/bin/lighthouse $blkc --datadir $dtdi vc $vlcl --metrics
+			ExecStopPost=/home/eth/eth2/t8mail VALISTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
+		
+			[Install]
+			WantedBy=multi-user.target
+			EOF
+      sudo mv $ethv.service /etc/systemd/system/$ethv.service
+      sudo chmod 644 /etc/systemd/system/$ethv.service
+      t6 ve
+      t6 va
+      t6 vj
+    else
+      echo -e "${i}\nCHAVES NAO FORAM IMPORTADAS ($HOME/$D) - SEM CHAVES NAO POSSO INSTALAR VALIDADOR${f}"
+    fi
+  else
+    echo -e "${i}NAO EXISTE BINARIO LIGHT PARA INSTALAR${f}"
+  fi
+else
+  if [ -x ~/.cargo/bin/rustup ]; then
+    echo -e "${i}UPDATE RUST${f}"
+    source ~/.cargo/env
+    rustup update
+  else
+    echo -e "${i}INSTALAR DEPENDENCIAS RUST${f}"
+    echo $H|sudo -S apt install -y git gcc g++ make cmake pkg-config libssl-dev 2>/dev/null
+    echo -e "${i}INSTALL RUST${f}"
+    cd ~
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+  fi
+  if [ -f ~/lighthouse/README.md ]; then
+    cd ~/lighthouse
+    make clean
+    cargo clean
+    git fetch
+    git checkout ${vers}
+  else
+    cd ~
+    echo $H|sudo -S rm -rf ~/lighthouse 2>/dev/null
+    git clone https://github.com/sigp/lighthouse.git
+    cd ~/lighthouse
+    git checkout ${vers}
+  fi 
+  echo -e "${i}VAI COMPILAR LIGHT${f}"
+  source ~/.cargo/env
+  make
+  if [ $? -eq 0  ] && [ -x  ~/.cargo/bin/lighthouse ]; then
+    echo $H|sudo -S cp ~/.cargo/bin/lighthouse /usr/local/bin 2>/dev/null
+    [ "$bnip" != "$vcip" ] && scp -P 2020 ~/.cargo/bin/lighthouse $vcip:~
+  fi 
+  if [ -x /usr/local/bin/lighthouse ]; then
+    user="eth2"
+    # slots per restore point after init can't be changed
+    sprp=2048 # Yearly Disk Usage   6.4GB default
+    sprp=1024 # Yearly Disk Usage  12.8GB
+    sprp=512  # Yearly Disk Usage  25.6GB
+    sprp=256  # Yearly Disk Usage  51.2GB
+    sprp=128  # Yearly Disk Usage 102.4GB
+    # how many peers it should try to find and maintain
+    tarp=50 # default
+    tarp=30 # less bandwidth/load for gossip
+    if [ "$bnip" != "$vcip" ];then bcnd="--http-address 207.180.214.8";else bcnd="--http-address 127.0.0.1";fi
+    if [ "$B" = "mainnet" ]; then
+      blkc=""
+      endp="http://127.0.0.1:8545,$E"
+    else
+      blkc="--testnet $B"
+      endp="$E"
+    fi
+    echo -e "${i}CONFIGURE BEACON${f}"
+    echo $H|sudo -S mkdir -p $becn 2>/dev/null
+    sudo chmod 700 $becn
+    t6 vpr
+    t6 bpr
+    cd ~
+    if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
+    sudo chown -R $user:$user $dtdi
+    cat <<-EOF > $ethb.service
+		[Unit]
+		Description=eth2 beacon service
+		Wants=network-online.target
+		After=network-online.target
+		
+		[Service]
+		User=$user
+		Group=$user
+		Restart=always
+		RestartSec=10
+		ExecStart=/usr/local/bin/lighthouse $blkc --datadir $dtdi bn --slots-per-restore-point $sprp --target-peers $tarp $bcnd --staking --eth1-endpoints $endp --metrics
+		ExecStopPost=/home/eth/eth2/t8mail BEACSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
+		
+		[Install]
+		WantedBy=multi-user.target
+		EOF
+    sudo mv $ethb.service /etc/systemd/system/$ethb.service
+    sudo chmod 644 /etc/systemd/system/$ethb.service
+    t6 be
+    t6 ba
+    t6 bj
+  else
+    echo -e "${i}NAO EXISTE BINARIO LIGHT PARA INSTALAR${f}"
+  fi
+fi

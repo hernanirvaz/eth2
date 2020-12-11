@@ -1,16 +1,16 @@
 #!/bin/bash
 
-source ~/eth2/t0
+source ~/eth2/t1
 
 petc="/etc/prometheus"
 
-if [ "$tipo" ] && [ "$(curl -s v4.ident.me)" != "$bnip" ]; then
+if [ "$(curl -s v4.ident.me)" = "$vcip" ]; then
   echo -e "${i}MONITOR NAO DEVE SER INSTALADO - DEVE FICAR ONDE FICA O BEACON${f}"
 else
   if [ -f $petc/prometheus.yml ]; then
     echo -e "${i}PROMETHEUS JA INSTALADO${f}"
   else
-    if [ "$tipo" ];then vlcl="$vcip";else vlcl="127.0.0.1";fi
+    if [ "$bnip" != "$vcip" ];then vlcl="$vcip";else vlcl="127.0.0.1";fi
     echo -e "${i}CONFIGURE PROMETHEUS${f}"
     echo $H|sudo -S apt install -y prometheus prometheus-node-exporter 2>/dev/null
     t6 mpr

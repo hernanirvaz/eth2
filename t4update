@@ -1,29 +1,37 @@
 #!/bin/bash
 
-source ~/eth2/t0
+source ~/eth2/t1
 
-if [ "$1" = "linux" ] || [ -z "$1" ]; then
+if [ "$1" = "linux" ] || [ "$1" = "reboot" ] || [ -z "$1" ]; then
   echo -e "${i}FULL-UPGRADE${f}"
   echo $H|sudo -S apt update -y 2>/dev/null
-  t6 vpr
-  t6 bpr
   t6 gpr
   sudo apt full-upgrade -y && sudo apt dist-upgrade -y
   sudo apt autoremove
   sudo apt autoclean
   if [ "$1" = "linux" ]; then
     t6 ga
-    t6 ba
-    t6 va
   fi
 fi
 
-if [ "$1" = "eth" ] || [ -z "$1" ]; then
-  if [ -f ~/.rustup/settings.toml ]; then
-    echo -e "${i}RUST UPDATE${f}"
-    rustup update
-  fi
-  if [ -x /usr/local/bin/lighthouse ]; then
+if [ -x /usr/local/bin/lighthouse ] && ([ "$1" = "eth" ] || [ -z "$1" ]); then
+  if [ "$(curl -s v4.ident.me)" = "$vcip" ]; then
+    if [ -x  ~/lighthouse ]; then
+      t6 vpr
+      t6 bpr
+      echo $H|sudo -S mv /usr/local/bin/lighthouse /usr/local/bin/lighthouse.save 2>/dev/null
+      sudo mv ~/lighthouse /usr/local/bin
+      t6 ga
+      t6 ba
+      t6 va
+    else
+      echo -e "${i}NAO EXISTE LIGHTHOUSE COMPILADO PARA INSTALAR${f}"
+    fi
+  else
+    if [ -f ~/.rustup/settings.toml ]; then
+      echo -e "${i}RUST UPDATE${f}"
+      rustup update
+    fi
     echo -e "${i}LIGHTHOUSE UPDATE${f}"
     if [ -f ~/lighthouse/README.md ]; then
       cd ~/lighthouse
@@ -41,15 +49,17 @@ if [ "$1" = "eth" ] || [ -z "$1" ]; then
     fi 
     make
     if [ $? -eq 0  ] && [ -x  ~/.cargo/bin/lighthouse ]; then
-      echo $H|sudo -S mv /usr/local/bin/lighthouse /usr/local/bin/lighthouse.save 2>/dev/null
       t6 vpr
       t6 bpr
+      echo $H|sudo -S mv /usr/local/bin/lighthouse /usr/local/bin/lighthouse.save 2>/dev/null
       sudo cp ~/.cargo/bin/lighthouse /usr/local/bin
       t6 ga
       t6 ba
       t6 va
+      [ "$bnip" != "$vcip" ] && scp -P 2020 ~/.cargo/bin/lighthouse $vcip:~
     else
       echo -e "${i}NAO EXISTE LIGHTHOUSE COMPILADO PARA INSTALAR${f}"
     fi
   fi
+  echo $H|sudo -S chmod 755 /usr/local/bin/lighthouse 2>/dev/null
 fi

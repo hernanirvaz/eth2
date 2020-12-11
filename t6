@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ~/eth2/t0
+source ~/eth2/t1
 
 pate='eth-*'
 patp='prometheus*'
