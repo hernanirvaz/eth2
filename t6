@@ -7,11 +7,14 @@ patp='prometheus*'
 patf='grafana*'
 
 # open/close api/metrics ports com IPs
-function bo { uu "ufw allow 9000 comment eth2";uu "ufw delete deny 5052       ";uu "ufw allow from $vcip to any port 5052 comment bnapi"; }
-function bc { uu "ufw deny  9000 comment eth2";uu "ufw deny 5052 comment bnapi";uu "ufw delete allow from $vcip to any port 5052"; }
-function vo { uu "ufw delete deny 5064           ";uu "ufw allow from $bnip to any port 5064 comment vcmet";uu "ufw allow from $bnhm to any port 5064 comment vcmet"; }
+function bo { uu 'ufw allow 9000 comment eth2'    ;uu 'ufw delete deny 5052'                               ;uu "ufw allow from $vcip to any port 5052 comment bnapi"; }
+function bc { uu 'ufw deny  9000 comment eth2'    ;uu 'ufw deny 5052 comment bnapi'                        ;uu "ufw delete allow from $vcip to any port 5052"; }
+function vo { uu 'ufw delete deny 5064           ';uu "ufw allow from $bnip to any port 5064 comment vcmet";uu "ufw allow from $bnhm to any port 5064 comment vcmet"; }
+function vc { uu 'ufw deny 5064 comment vcmetrics';uu "ufw delete allow from $bnip to any port 5064"       ;uu "ufw delete allow from $bnhm to any port 5064"; }
 function uu { echo -e "${i}$1${f}";echo $H|sudo -S $1 2>/dev/null; }
-function ut { echo -e "${i}$1${f}";echo $H|sudo -S $1|tail 2>/dev/null; }
+function ut { echo -e "${i}$1${f}";echo $H|sudo -S $1 2>/dev/null|tail; }
+function un { echo $H|sudo -S $1 1>/dev/null 2>&1; }
+function up { echo $H|sudo -S $1 2>/dev/null; }
 function jb { uu "journalctl --no-hostname --no-full -f $1"; }
 function dr { uu "systemctl daemon-reload"; }
 
@@ -43,6 +46,11 @@ function pd { [ "$(systemctl status $ethp 2>/dev/null|grep -i loaded)" ] && { uu
 function nd { [ "$(systemctl status $ethn 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethn"; } }
 function fd { [ "$(systemctl status $ethf 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethf";uu "ufw deny 3000/tcp comment grafana";uu "ufw reload"; } }
 
+# para tratar home ip change
+function vv { bnhr=$(up 'ufw show listening'|grep vcmet|grep -v $bnip|sed -e 's%.*\(allow.*\)comment.*%\1%');bnhc=$(echo $bnhr|cut -d' ' -f3); }
+function vu { vv;if [ "$bnhc" != "$bnhm" ];then un "ufw delete $bnhr";un "ufw allow from $bnhm to any port 5064 comment vcmet";un 'ufw reload';up 'ufw status numbered';fi; }
+function vh { cp ~/eth2/t1 ~/eth2/t1.save;sed -e "s%bnhm=.*%bnhm='$cuip'%" ~/eth2/t1.save>~/eth2/t1;scp -qP 2020 ~/eth2/t1 $vcip:~/eth2;ssh -p 2020 $vcip "export H=$H;/home/eth/eth2/t6 wv"; }
+
 # beacon geth external/internal eth1
 if [ "$1" = "bx" ] && [ -f /etc/systemd/system/$ethg.service ] && [ -f /etc/systemd/system/$ethb.service ]; then
   echo -e "${i}TROCA BEACON EXTERNAL/INTERNAL ETH1${f}"
@@ -71,6 +79,8 @@ fi
 [ "$1" = "lj" ] && { echo $H|sudo -S grep 'ERROR\|WARN' /var/log/syslog 2>/dev/null; }
 [ "$1" = "ws" ] && { uu "ufw status numbered"; }
 [ "$1" = "wa" ] && if [ "$(echo $H|sudo -S ufw status 2>/dev/null|grep -i inactive)" ];then echo -e "${i}ARRANCA FIREWALL${f}";sudo ufw enable; else echo -e "${i}FIREWALL JA ACTIVE${f}";fi
+[ "$1" = "wv" ] && [ "$cuip" = "$vcip" ] && vu
+[ "$1" = "hm" ] && [ "$cuip" != "$bnip" ] && [ "$cuip" != "$vcip" ] && [ "$cuip" != "$bnhm" ] && vh
 [ "$1" = "wpr" ] && { uu "ufw disable"; }
 
 # journal
@@ -151,6 +161,8 @@ if [ -z "$1" ]; then
   c1="$c1\nnp\tnode peers"
   c1="$c1\nnr\tnode record"
   c1="$c1\nbx\tbeacon external/internal eth1"
+  c1="$c1\nwv\tfirewall validator"
+  c1="$c1\nhm\thome ip check"
   c1="$c1\nws\tfirewall status"
   c1="$c1\nwa\tfirewall arranca"
   c1="$c1\nwpr\tfirewall para"

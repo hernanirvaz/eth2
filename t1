@@ -4,22 +4,24 @@ i="\n\e[5m"
 f="\e[25m\n"
 
 meeu="$(whoami)"
-ethg="eth-geth"
-ethb="eth-beacon"
-ethv="eth-validator"
-ethp="prometheus"
-ethn="prometheus-node-exporter"
-ethf="grafana-server"
+cuip="$(curl -s v4.ident.me)"
+
+# active system services
+ethg='eth-geth'
+ethb='eth-beacon'
+ethv='eth-validator'
+ethp='prometheus'
+ethn='prometheus-node-exporter'
+ethf='grafana-server'
 
 # lighthouse version
-vers="stable"
-vers="v1.0.3"
+vers='stable'
+vers='v1.0.3'
 
-cuip="$(curl -s v4.ident.me)"
-bnhm="89.180.80.105"
-bnip="207.180.214.8"
-vcip="164.68.107.45"
-[ "$cuip" != "$bnip" ] && [ "$cuip" != "$vcip" ] && bnhm=$cuip
+# active nodes
+bnhm='89.180.80.105'
+bnip='207.180.214.8'
+vcip='164.68.107.45'
 
 # data is going here
 dtdi="/var/lib/lighthouse"

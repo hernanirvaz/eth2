@@ -9,9 +9,8 @@ if [ "$1" = "linux" ] || [ "$1" = "reboot" ] || [ -z "$1" ]; then
   sudo apt full-upgrade -y && sudo apt dist-upgrade -y
   sudo apt autoremove
   sudo apt autoclean
-  if [ "$1" = "linux" ]; then
-    t6 ga
-  fi
+  [ "$1" = "linux" ] && t6 ga
+  [ "$1" = "reboot" ] && sudo reboot
 fi
 
 if [ -x /usr/local/bin/lighthouse ] && ([ "$1" = "eth" ] || [ -z "$1" ]); then
