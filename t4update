@@ -9,13 +9,13 @@ if [ "$1" = "linux" ] || [ "$1" = "reboot" ] || [ -z "$1" ]; then
   sudo apt full-upgrade -y && sudo apt dist-upgrade -y
   sudo apt autoremove
   sudo apt autoclean
-  [ "$1" = "linux" ] && t6 ga
-  [ "$1" = "reboot" ] && sudo reboot
+  [ "$1" = "linux"  ] && { t6 hs;t6 ga; }
+  [ "$1" = "reboot" ] && { t6 hs;sudo reboot; }
 fi
 
 if [ -x /usr/local/bin/lighthouse ] && ([ "$1" = "eth" ] || [ -z "$1" ]); then
   if [ "$cuip" = "$vcip" ]; then
-    if [ -x  ~/lighthouse ]; then
+    if [ -x ~/lighthouse ]; then
       t6 vpr
       t6 bpr
       echo $H|sudo -S mv /usr/local/bin/lighthouse /usr/local/bin/lighthouse.save 2>/dev/null

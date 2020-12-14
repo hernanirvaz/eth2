@@ -3,6 +3,8 @@
 i="\n\e[5m"
 f="\e[25m\n"
 
+p0='/home/eth/eth2'
+
 meeu="$(whoami)"
 cuip="$(curl -s v4.ident.me)"
 
@@ -16,7 +18,7 @@ ethf='grafana-server'
 
 # lighthouse version
 vers='stable'
-vers='v1.0.3'
+vers='v1.0.4'
 
 # active nodes
 bnhm='89.180.80.105'

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ~/eth2/t1
+source /home/eth/eth2/t1
 
 pate='eth-*'
 patp='prometheus*'
@@ -20,14 +20,14 @@ function dr { uu "systemctl daemon-reload"; }
 
 function ge { uu "ufw allow 30303 comment eth1";uu "ufw reload";uu "systemctl enable $ethg"; }
 function be { bo;uu "ufw reload";uu "systemctl enable $ethb"; }
-function ve { [ -f $vldt/validator_definitions.yml ] && { vo;uu "ufw reload";uu "systemctl enable $ethv"; } }
+function ve { vo;uu "ufw reload";uu "systemctl enable $ethv"; }
 function pe { uu "systemctl enable $ethp"; }
 function ne { uu "systemctl enable $ethn"; }
 function fe { uu "ufw allow 3000/tcp comment grafana";uu "ufw reload";uu "systemctl enable $ethf"; }
 
 function ga { [ "$(systemctl status $ethg 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $ethg"; } }
 function ba { [ "$(systemctl status $ethb 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $ethb"; } }
-function va { [ "$(systemctl status $ethv 2>/dev/null|grep -i 'inactive\|failed')" ] && [ -f $vldt/validator_definitions.yml ] && { uu "systemctl start $ethv"; } }
+function va { [ "$(systemctl status $ethv 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $ethv"; } }
 function pa { [ "$(systemctl status $ethp 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $ethp"; } }
 function na { [ "$(systemctl status $ethn 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $ethn"; } }
 function fa { [ "$(systemctl status $ethf 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $ethf"; } }
@@ -47,9 +47,29 @@ function nd { [ "$(systemctl status $ethn 2>/dev/null|grep -i loaded)" ] && { uu
 function fd { [ "$(systemctl status $ethf 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethf";uu "ufw deny 3000/tcp comment grafana";uu "ufw reload"; } }
 
 # para tratar home ip change
-function vv { bnhr=$(up 'ufw show listening'|grep vcmet|grep -v $bnip|sed -e 's%.*\(allow.*\)comment.*%\1%');bnhc=$(echo $bnhr|cut -d' ' -f3); }
-function vu { vv;if [ "$bnhc" != "$bnhm" ];then un "ufw delete $bnhr";un "ufw allow from $bnhm to any port 5064 comment vcmet";un 'ufw reload';up 'ufw status numbered';fi; }
-function vh { cp ~/eth2/t1 ~/eth2/t1.save;sed -e "s%bnhm=.*%bnhm='$cuip'%" ~/eth2/t1.save>~/eth2/t1;scp -qP 2020 ~/eth2/t1 $vcip:~/eth2;ssh -p 2020 $vcip "export H=$H;/home/eth/eth2/t6 wv"; }
+function vu {
+  bnhr=$(up 'ufw show listening'|grep vcmet|grep -v $bnip|sed -e 's%.*\(allow.*\)comment.*%\1%')
+  bnhc=$(echo $bnhr|cut -d' ' -f3)
+  if [ "$bnhc" != "$bnhm" ];then
+    un "ufw delete $bnhr"
+    un "ufw allow from $bnhm to any port 5064 comment vcmet"
+    un 'ufw reload'
+    up 'ufw status numbered'
+  fi
+}
+function hs {
+  cp $p0/t1 $p0/t1.save
+  if [ "$cuip" != "$bnip" ] && [ "$cuip" != "$vcip" ] && [ "$cuip" != "$bnhm" ]; then
+    sed -e "s%cuip=.*%cuip='$vcip'%;s%bnhm=.*%bnhm='$cuip'%" $p0/t1.save>$p0/t1
+    scp -qP 2020 $p0/t1 $vcip:$p0
+    sed -e "s%cuip=.*%cuip='$cuip'%;s%bnhm=.*%bnhm='$cuip'%" $p0/t1.save>$p0/t1
+    ssh -p 2020 $vcip "export H=$H;$p0/t6 wv"
+  else
+    sed -e "s%cuip=.*%cuip='$cuip'%" $p0/t1.save>$p0/t1
+  fi
+}
+[ "$1" = "wv" ] && [ "$cuip" = "$vcip" ] && vu
+[ "$1" = "hs" ] && [ "$(grep 'cuip *= *"\$' $p0/t1)" ] && hs
 
 # beacon geth external/internal eth1
 if [ "$1" = "bx" ] && [ -f /etc/systemd/system/$ethg.service ] && [ -f /etc/systemd/system/$ethb.service ]; then
@@ -79,8 +99,6 @@ fi
 [ "$1" = "lj" ] && { echo $H|sudo -S grep 'ERROR\|WARN' /var/log/syslog 2>/dev/null; }
 [ "$1" = "ws" ] && { uu "ufw status numbered"; }
 [ "$1" = "wa" ] && if [ "$(echo $H|sudo -S ufw status 2>/dev/null|grep -i inactive)" ];then echo -e "${i}ARRANCA FIREWALL${f}";sudo ufw enable; else echo -e "${i}FIREWALL JA ACTIVE${f}";fi
-[ "$1" = "wv" ] && [ "$cuip" = "$vcip" ] && vu
-[ "$1" = "hm" ] && [ "$cuip" != "$bnip" ] && [ "$cuip" != "$vcip" ] && [ "$cuip" != "$bnhm" ] && vh
 [ "$1" = "wpr" ] && { uu "ufw disable"; }
 
 # journal
@@ -162,7 +180,7 @@ if [ -z "$1" ]; then
   c1="$c1\nnr\tnode record"
   c1="$c1\nbx\tbeacon external/internal eth1"
   c1="$c1\nwv\tfirewall validator"
-  c1="$c1\nhm\thome ip check"
+  c1="$c1\nhs\thome ip set"
   c1="$c1\nws\tfirewall status"
   c1="$c1\nwa\tfirewall arranca"
   c1="$c1\nwpr\tfirewall para"

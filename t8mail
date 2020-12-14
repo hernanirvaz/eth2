@@ -1,9 +1,9 @@
 #!/bin/bash
 
-source ~/eth2/t1
+source /home/eth/eth2/t1
 
 function nu { u=$(grep '^[0-9][0-9]*  *updates' /var/lib/update-notifier/updates-available|cut -d' ' -f1); }
-function ft { cd ~/lighthouse;git fetch --tags &>/dev/null;t=$(git rev-list --tags --max-count=1);v=$(git describe --tags $t); }
+function ft { cd /home/eth/lighthouse;git fetch --tags &>/dev/null;t=$(git rev-list --tags --max-count=1);v=$(git describe --tags $t); }
 
 [ "$1" = "GETHSTP" ] && { echo -e "Subject: GETH STOPPED ON $(uname -n)\n\nSERVICE_RESULT=$2\nEXIT_CODE=$3\nEXIT_STATUS=$4\n"|ssmtp hernanilr@gmail.com; }
 [ "$1" = "BEACSTP" ] && { echo -e "Subject: BEAC STOPPED ON $(uname -n)\n\nSERVICE_RESULT=$2\nEXIT_CODE=$3\nEXIT_STATUS=$4\n"|ssmtp hernanilr@gmail.com; }

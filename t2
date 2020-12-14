@@ -80,7 +80,7 @@ else
 		Group=$user
 		Restart=always
 		RestartSec=10
-    Environment=H=$H
+		Environment="H=$H"
 		ExecStart=/usr/bin/geth $blkc --http --datadir $golb --cache $cach --maxpeers $maxp $node
 		ExecStartPost=/home/eth/eth2/t6 hm
 		ExecStopPost=/home/eth/eth2/t8mail GETHSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
