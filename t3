@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ~/eth2/t1
+source /home/eth/eth2/t1
 
 if [ "$cuip" = "$vcip" ]; then
   if [ -x ~/lighthouse ]; then

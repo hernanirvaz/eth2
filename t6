@@ -2,10 +2,6 @@
 
 source /home/eth/eth2/t1
 
-pate='eth-*'
-patp='prometheus*'
-patf='grafana*'
-
 # open/close api/metrics ports com IPs
 function bo { uu 'ufw allow 9000 comment eth2'    ;uu 'ufw delete deny 5052'                               ;uu "ufw allow from $vcip to any port 5052 comment bnapi"; }
 function bc { uu 'ufw deny  9000 comment eth2'    ;uu 'ufw deny 5052 comment bnapi'                        ;uu "ufw delete allow from $vcip to any port 5052"; }
@@ -61,7 +57,7 @@ function hs {
   cp $p0/t1 $p0/t1.save
   if [ "$cuip" != "$bnip" ] && [ "$cuip" != "$vcip" ] && [ "$cuip" != "$bnhm" ]; then
     sed -e "s%cuip=.*%cuip='$vcip'%;s%bnhm=.*%bnhm='$cuip'%" $p0/t1.save>$p0/t1
-    scp -qP 2020 $p0/t1 $vcip:$p0
+    scp -P 2020 $p0/t1 $vcip:$p0
     sed -e "s%cuip=.*%cuip='$cuip'%;s%bnhm=.*%bnhm='$cuip'%" $p0/t1.save>$p0/t1
     ssh -p 2020 $vcip "export H=$H;$p0/t6 wv"
   else

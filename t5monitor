@@ -1,13 +1,11 @@
 #!/bin/bash
 
-source ~/eth2/t1
-
-petc="/etc/prometheus"
+source /home/eth/eth2/t1
 
 if [ "$cuip" = "$vcip" ]; then
   echo -e "${i}MONITOR NAO DEVE SER INSTALADO - DEVE FICAR ONDE FICA O BEACON${f}"
 else
-  if [ -f $petc/prometheus.yml ]; then
+  if [ -f $p1/prometheus.yml ]; then
     echo -e "${i}PROMETHEUS JA INSTALADO${f}"
   else
     if [ "$bnip" != "$vcip" ];then vlcl="$vcip";else vlcl="127.0.0.1";fi
@@ -38,7 +36,7 @@ else
 		    static_configs:
 		      - targets: ['$vlcl:5064']
 		EOF
-    sudo mv prometheus.yml $petc/prometheus.yml
+    sudo mv prometheus.yml $p1/prometheus.yml
     echo -e "${i}CONFIGURE GRAFANA${f}"
     wget -q -O - https://packages.grafana.com/gpg.key | sudo apt-key add -
     sudo add-apt-repository -y "deb https://packages.grafana.com/oss/deb stable main"

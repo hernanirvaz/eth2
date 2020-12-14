@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ~/eth2/t1
+source /home/eth/eth2/t1
 
 # cria link para tarefas
 [ -x ~/eth2/t ] || ln -s ~/eth2/t6 ~/eth2/t

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ~/eth2/t1
+source /home/eth/eth2/t1
 
 if [ "$1" = "linux" ] || [ "$1" = "reboot" ] || [ -z "$1" ]; then
   echo -e "${i}FULL-UPGRADE${f}"
@@ -38,7 +38,8 @@ if [ -x /usr/local/bin/lighthouse ] && ([ "$1" = "eth" ] || [ -z "$1" ]); then
       # not sure if needed
       # cargo clean
       git fetch
-      git checkout ${vers}
+      t=$(git rev-list --tags --max-count=1)
+      git checkout $(git describe --tags $t)
     else
       cd ~
       echo $H|sudo -S rm -rf ~/lighthouse 2>/dev/null
@@ -61,4 +62,10 @@ if [ -x /usr/local/bin/lighthouse ] && ([ "$1" = "eth" ] || [ -z "$1" ]); then
     fi
   fi
   echo $H|sudo -S chmod 755 /usr/local/bin/lighthouse 2>/dev/null
+  vern="$vers"
+  [ -x /usr/local/bin/lighthouse ] && vern="$(/usr/local/bin/lighthouse --version|grep -i lighthouse|sed -e 's%.*\(v[0-9]*.[0-9]*.[0-9]*\).*%\1%')"
+  if [ "$vers" != "$vern" ]; then
+    cp $p0/t1 $p0/t1.save
+    sed -e "s%vers=.*%vers='$vern'%" $p0/t1.save>$p0/t1
+  fi
 fi

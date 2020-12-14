@@ -4,6 +4,7 @@ i="\n\e[5m"
 f="\e[25m\n"
 
 p0='/home/eth/eth2'
+p1='/etc/prometheus'
 
 meeu="$(whoami)"
 cuip="$(curl -s v4.ident.me)"
@@ -15,13 +16,15 @@ ethv='eth-validator'
 ethp='prometheus'
 ethn='prometheus-node-exporter'
 ethf='grafana-server'
+pate='eth-*'
+patp='prometheus*'
+patf='grafana*'
 
 # lighthouse version
-vers='stable'
 vers='v1.0.4'
 
 # active nodes
-bnhm='89.180.80.105'
+bnhm='62.169.113.173'
 bnip='207.180.214.8'
 vcip='164.68.107.45'
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ~/eth2/t1
+source /home/eth/eth2/t1
 
 echo -e "${i}WARNING: WARNING: THIS IS AN IRREVERSIBLE OPERATION${f}"
 echo -e "${i}WARNING: WITHDRAWING STAKED ETH WILL NOT BE POSSIBLE UNTIL ETH1/ETH2 MERGE${f}"
