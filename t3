@@ -12,7 +12,7 @@ if [ "$cuip" = "$vcip" ]; then
     if [ "$B" = "mainnet" ]; then
       blkc=""
     else
-      blkc="--testnet $B"
+      blkc=" --testnet $B"
     fi
     cd ~
     if [ ! -f $vldt/validator_definitions.yml ] && [ -d $HOME/$D ] && [ "$(ls -A $HOME/$D)" ]; then
@@ -20,11 +20,10 @@ if [ "$cuip" = "$vcip" ]; then
       echo -e "${i}IMPORT VALIDATOR KEYS${f}"
       echo $H|sudo -S mkdir -p $dtdi 2>/dev/null
       if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
-      sudo chown $meeu:$meeu $dtdi
       echo -e "STORE($K)\n"
-      lighthouse $blkc --datadir $dtdi account validator import --directory $HOME/$D
-      sudo chown root:root $dtdi
+      lighthouse$blkc --datadir $dtdi account validator import --directory $HOME/$D
       sudo chown -R $user:$user $vldt
+      sudo chmod 700 $vldt
     fi
     if [ -f $vldt/validator_definitions.yml ]; then
       t6 vpr
@@ -45,7 +44,7 @@ if [ "$cuip" = "$vcip" ]; then
 			Group=$user
 			Restart=always
 			RestartSec=10
-			ExecStart=/usr/local/bin/lighthouse $blkc --datadir $dtdi vc $vlcl --metrics
+			ExecStart=/usr/local/bin/lighthouse$blkc --datadir $dtdi vc $vlcl --metrics
 			ExecStopPost=/home/eth/eth2/t8mail VALISTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 		
 			[Install]
@@ -99,9 +98,9 @@ else
     # slots per restore point after init can't be changed
     sprp=2048 # Yearly Disk Usage   6.4GB default
     sprp=1024 # Yearly Disk Usage  12.8GB
-    sprp=512  # Yearly Disk Usage  25.6GB
     sprp=256  # Yearly Disk Usage  51.2GB
     sprp=128  # Yearly Disk Usage 102.4GB
+    sprp=512  # Yearly Disk Usage  25.6GB
     # how many peers it should try to find and maintain
     tarp=50 # default
     tarp=30 # less bandwidth/load for gossip
@@ -110,7 +109,7 @@ else
       blkc=""
       endp="http://127.0.0.1:8545,$E"
     else
-      blkc="--testnet $B"
+      blkc=" --testnet $B"
       endp="$E"
     fi
     echo -e "${i}CONFIGURE BEACON${f}"
@@ -120,7 +119,7 @@ else
     t6 bpr
     cd ~
     if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
-    sudo chown -R $user:$user $dtdi
+    sudo chown -R $user:$user $becn
     cat <<-EOF > $ethb.service
 		[Unit]
 		Description=eth2 beacon service
@@ -132,7 +131,7 @@ else
 		Group=$user
 		Restart=always
 		RestartSec=10
-		ExecStart=/usr/local/bin/lighthouse $blkc --datadir $dtdi bn --slots-per-restore-point $sprp --target-peers $tarp $bcnd --staking --eth1-endpoints $endp --metrics
+		ExecStart=/usr/local/bin/lighthouse$blkc --datadir $dtdi bn --slots-per-restore-point $sprp --target-peers $tarp $bcnd --staking --eth1-endpoints $endp --metrics
 		ExecStopPost=/home/eth/eth2/t8mail BEACSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 		
 		[Install]

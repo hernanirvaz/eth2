@@ -64,6 +64,18 @@ if [ "$1" = "hs" ] && [ "$(grep 'cuip *= *"\$' $p0/t1)" ]; then
     sed -e "s%cuip=.*%cuip='$cuip'%" $p0/t1.save>$p0/t1
   fi
 fi
+if [ "$1" = "gs" ]; then 
+  so=$(echo eth.syncing|geth attach http://127.0.0.1:8545)
+  if [ "$(echo $so|grep -i false)" ]; then
+    echo -e "GETH SYNCING DONE"
+  else
+    cb=$(echo $so|sed -Ee 's%.*currentBlock: *([0-9]+).*%\1%i')
+    hb=$(echo $so|sed -Ee 's%.*highestBlock: *([0-9]+).*%\1%i')
+    ks=$(echo $so|sed -Ee 's%.*knownStates: *([0-9]+).*%\1%i')
+    ps=$(echo $so|sed -Ee 's%.*pulledStates: *([0-9]+).*%\1%i')
+    echo -e "GETH SYNCING:\tBlocks:\t$(( hb-cb ))\tStates:\t$(( ks-ps ))"
+  fi
+fi
 
 # lista servicos
 [ "$1" = "ll" ] && { uu "systemctl list-units $pate $patp $patf"; }
@@ -156,8 +168,9 @@ if [ -z "$1" ]; then
   c1="$c1\nlj\tlista journal ERROR|WARN"
   c1="$c1\nnp\tnode peers"
   c1="$c1\nnr\tnode record"
-  c1="$c1\nwv\tfirewall validator"
+  c1="$c1\ngs\tgeth syncing"
   c1="$c1\nhs\thome ip set"
+  c1="$c1\nwv\tfirewall validator"
   c1="$c1\nws\tfirewall status"
   c1="$c1\nwa\tfirewall arranca"
   c1="$c1\nwpr\tfirewall para"
