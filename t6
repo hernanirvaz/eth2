@@ -65,15 +65,15 @@ if [ "$1" = "hs" ] && [ "$(grep 'cuip *= *"\$' $p0/t1)" ]; then
   fi
 fi
 if [ "$1" = "gs" ]; then 
-  so=$(echo eth.syncing|geth attach http://127.0.0.1:8545)
-  if [ "$(echo $so|grep -i false)" ]; then
+  o=$(echo eth.syncing|geth attach http://127.0.0.1:8545)
+  if [ "$(echo $o|grep -i false)" ]; then
     echo -e "GETH SYNCING DONE"
   else
-    cb=$(echo $so|sed -Ee 's%.*currentBlock: *([0-9]+).*%\1%i')
-    hb=$(echo $so|sed -Ee 's%.*highestBlock: *([0-9]+).*%\1%i')
-    ks=$(echo $so|sed -Ee 's%.*knownStates: *([0-9]+).*%\1%i')
-    ps=$(echo $so|sed -Ee 's%.*pulledStates: *([0-9]+).*%\1%i')
-    echo -e "GETH SYNCING:\tBlocks:\t$(( hb-cb ))\tStates:\t$(( ks-ps ))"
+    h=$(echo $o|sed -Ee 's%.*highestBlock: *([0-9]+).*%\1%i')
+    c=$(echo $o|sed -Ee 's%.*currentBlock: *([0-9]+).*%\1%i')
+    k=$(echo $o|sed -Ee 's%.*knownStates: *([0-9]+).*%\1%i')
+    p=$(echo $o|sed -Ee 's%.*pulledStates: *([0-9]+).*%\1%i')
+    echo -e "GETH SYNCING:\tBlocks:\t$((h-c))\tStates:\t$((k-p))"
   fi
 fi
 

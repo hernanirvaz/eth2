@@ -8,17 +8,18 @@ function nv {
   git fetch --tags &>/dev/null
   t=$(git rev-list --tags --max-count=1)
   n=$(git describe --tags $t)
-  c=$(/usr/local/bin/lighthouse --version|grep -i lighthouse|sed -Ee 's%.*(v[0-9]+\.[0-9]+\.[0-9]+).*%\1%')
+  v=$(/usr/local/bin/lighthouse --version|grep -i lighthouse|sed -Ee 's%.*(v[0-9]+\.[0-9]+\.[0-9]+).*%\1%')
 }
 function gs {
-  so=$(echo eth.syncing|geth attach http://127.0.0.1:8545)
-  if [ "$(echo $so|grep -i false)" ]; then
-    cb=0;hb=0;ks=0;ps=0
+  o=$(echo eth.syncing|geth attach http://127.0.0.1:8545)
+  if [ "$(echo $o|grep -i false)" ]; then
+    m="GETH SYNCING DONE"
   else
-    cb=$(echo $so|sed -Ee 's%.*currentBlock: *([0-9]+).*%\1%i')
-    hb=$(echo $so|sed -Ee 's%.*highestBlock: *([0-9]+).*%\1%i')
-    ks=$(echo $so|sed -Ee 's%.*knownStates: *([0-9]+).*%\1%i')
-    ps=$(echo $so|sed -Ee 's%.*pulledStates: *([0-9]+).*%\1%i')
+    h=$(echo $o|sed -Ee 's%.*highestBlock: *([0-9]+).*%\1%i')
+    c=$(echo $o|sed -Ee 's%.*currentBlock: *([0-9]+).*%\1%i')
+    k=$(echo $o|sed -Ee 's%.*knownStates: *([0-9]+).*%\1%i')
+    p=$(echo $o|sed -Ee 's%.*pulledStates: *([0-9]+).*%\1%i')
+    m="GETH SYNCING:\tBlocks:\t$((h-c))\tStates:\t$((k-p))"
   fi
 }
 
@@ -27,7 +28,7 @@ function gs {
 [ "$1" = "VALISTP" ] && { echo -e "Subject: VALI STOPPED ON $(uname -n)\n\nSERVICE_RESULT=$2\nEXIT_CODE=$3\nEXIT_STATUS=$4\n"|ssmtp hernanilr@gmail.com; }
 [ "$1" = "BEACCHK" ] && { [ "$(nmap $bnip --open -Pn -p 5052|grep open)" ] || echo -e "Subject: BNAPI $bnip STOPPED\n\n"|ssmtp hernanilr@gmail.com; }
 [ "$1" = "VALICHK" ] && { [ "$(nmap $vcip --open -Pn -p 5064|grep open)" ] || echo -e "Subject: VCMET $vcip STOPPED\n\n"|ssmtp hernanilr@gmail.com; }
-[ "$1" = "VERSCHK" ] && { nv;[ "$n" = "$c" ] || echo -e "Subject: OLD $c NEW $n IS OUT\n\n"|ssmtp hernanilr@gmail.com; }
+[ "$1" = "VERSCHK" ] && { nv;[ "$n" = "$v" ] || echo -e "Subject: OLD $v NEW $n IS OUT\n\n"|ssmtp hernanilr@gmail.com; }
 [ "$1" = "UPDTCHK" ] && { nu;[ "$u" -gt 0 ] && echo -e "Subject: $u UPDATES ON $(uname -n)\n\n$(apt list --upgradable 2>/dev/null)"|ssmtp hernanilr@gmail.com; }
 [ "$1" = "SPEDCHK" ] && { echo -e "Subject: SPEEDTEST ON $(uname -n)\n\n$(speedtest)"|ssmtp hernanilr@gmail.com; }
-[ "$1" = "SYNCCHK" ] && { gs;echo -e "Subject: SYNCING ON $(uname -n)\n\nGETH SYNCING:\tBlocks:\t$(( hb-cb ))\tStates:\t$(( ks-ps ))"|ssmtp hernanilr@gmail.com; }
+[ "$1" = "SYNCCHK" ] && { gs;echo -e "Subject: SYNCING ON $(uname -n)\n\n$m"|ssmtp hernanilr@gmail.com; }
