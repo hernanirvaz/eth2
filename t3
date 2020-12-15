@@ -78,15 +78,15 @@ else
     cd ~/lighthouse
     make clean
     cargo clean
-    git fetch
-    git checkout ${vers}
   else
     cd ~
     echo $H|sudo -S rm -rf ~/lighthouse 2>/dev/null
     git clone https://github.com/sigp/lighthouse.git
     cd ~/lighthouse
-    git checkout ${vers}
   fi 
+  git fetch
+  t=$(git rev-list --tags --max-count=1)
+  git checkout $(git describe --tags $t)
   echo -e "${i}VAI COMPILAR LIGHT${f}"
   source ~/.cargo/env
   make

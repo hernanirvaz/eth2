@@ -35,18 +35,21 @@ if [ -x /usr/local/bin/lighthouse ] && ([ "$1" = "eth" ] || [ -z "$1" ]); then
     if [ -f ~/lighthouse/README.md ]; then
       cd ~/lighthouse
       make clean
-      # not sure if needed
-      # cargo clean
-      git fetch
-      t=$(git rev-list --tags --max-count=1)
-      git checkout $(git describe --tags $t)
+      cargo clean
     else
       cd ~
       echo $H|sudo -S rm -rf ~/lighthouse 2>/dev/null
       git clone https://github.com/sigp/lighthouse.git
       cd ~/lighthouse
-      git checkout ${vers}
     fi 
+    git fetch
+    if [ "$(echo \"$2\"|egrep 'v[0-9]+\.[0-9]+\.[0-9]+')" ]; then
+      v=$2
+    else
+      t=$(git rev-list --tags --max-count=1)
+      v=$(git describe --tags $t)
+    fi
+    git checkout $v
     make
     if [ $? -eq 0  ] && [ -x  ~/.cargo/bin/lighthouse ]; then
       t6 vpr
@@ -62,10 +65,4 @@ if [ -x /usr/local/bin/lighthouse ] && ([ "$1" = "eth" ] || [ -z "$1" ]); then
     fi
   fi
   echo $H|sudo -S chmod 755 /usr/local/bin/lighthouse 2>/dev/null
-  vern="$vers"
-  [ -x /usr/local/bin/lighthouse ] && vern="$(/usr/local/bin/lighthouse --version|grep -i lighthouse|sed -e 's%.*\(v[0-9]*.[0-9]*.[0-9]*\).*%\1%')"
-  if [ "$vers" != "$vern" ]; then
-    cp $p0/t1 $p0/t1.save
-    sed -e "s%vers=.*%vers='$vern'%" $p0/t1.save>$p0/t1
-  fi
 fi

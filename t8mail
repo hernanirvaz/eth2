@@ -2,14 +2,20 @@
 
 source /home/eth/eth2/t1
 
-function nu { u=$(grep '^[0-9][0-9]*  *updates' /var/lib/update-notifier/updates-available|cut -d' ' -f1); }
-function nv { cd /home/eth/lighthouse;git fetch --tags &>/dev/null;t=$(git rev-list --tags --max-count=1);v=$(git describe --tags $t); }
+function nu { u=$(egrep '^[0-9]+  *updates' /var/lib/update-notifier/updates-available|cut -d' ' -f1); }
+function nv {
+  cd /home/eth/lighthouse
+  git fetch --tags &>/dev/null
+  t=$(git rev-list --tags --max-count=1)
+  n=$(git describe --tags $t)
+  c=$(/usr/local/bin/lighthouse --version|grep -i lighthouse|sed -Ee 's%.*(v[0-9]+\.[0-9]+\.[0-9]+).*%\1%')
+}
 
 [ "$1" = "GETHSTP" ] && { echo -e "Subject: GETH STOPPED ON $(uname -n)\n\nSERVICE_RESULT=$2\nEXIT_CODE=$3\nEXIT_STATUS=$4\n"|ssmtp hernanilr@gmail.com; }
 [ "$1" = "BEACSTP" ] && { echo -e "Subject: BEAC STOPPED ON $(uname -n)\n\nSERVICE_RESULT=$2\nEXIT_CODE=$3\nEXIT_STATUS=$4\n"|ssmtp hernanilr@gmail.com; }
 [ "$1" = "VALISTP" ] && { echo -e "Subject: VALI STOPPED ON $(uname -n)\n\nSERVICE_RESULT=$2\nEXIT_CODE=$3\nEXIT_STATUS=$4\n"|ssmtp hernanilr@gmail.com; }
 [ "$1" = "BEACCHK" ] && { [ "$(nmap $bnip --open -Pn -p 5052|grep open)" ] || echo -e "Subject: BNAPI $bnip STOPPED\n\n"|ssmtp hernanilr@gmail.com; }
 [ "$1" = "VALICHK" ] && { [ "$(nmap $vcip --open -Pn -p 5064|grep open)" ] || echo -e "Subject: VCMET $vcip STOPPED\n\n"|ssmtp hernanilr@gmail.com; }
-[ "$1" = "VERSCHK" ] && { nv;[ "$v" = "$vers" ] || echo -e "Subject: NEW $v IS OUT\n\n"|ssmtp hernanilr@gmail.com; }
+[ "$1" = "VERSCHK" ] && { nv;[ "$n" = "$c" ] || echo -e "Subject: OLD $c NEW $n IS OUT\n\n"|ssmtp hernanilr@gmail.com; }
 [ "$1" = "UPDTCHK" ] && { nu;[ "$u" -gt 0 ] && echo -e "Subject: $u UPDATES ON $(uname -n)\n\n$(apt list --upgradable 2>/dev/null)"|ssmtp hernanilr@gmail.com; }
 [ "$1" = "SPEDCHK" ] && { echo -e "Subject: SPEEDTEST ON $(uname -n)\n\n$(speedtest)"|ssmtp hernanilr@gmail.com; }

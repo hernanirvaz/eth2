@@ -43,7 +43,7 @@ function nd { [ "$(systemctl status $ethn 2>/dev/null|grep -i loaded)" ] && { uu
 function fd { [ "$(systemctl status $ethf 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethf";uu "ufw deny 3000/tcp comment grafana";uu "ufw reload"; } }
 
 # para tratar home ip change
-function vu {
+if [ "$1" = "wv" ] && [ "$cuip" = "$vcip" ]; then
   bnhr=$(up 'ufw show listening'|grep vcmet|grep -v $bnip|sed -e 's%.*\(allow.*\)comment.*%\1%')
   bnhc=$(echo $bnhr|cut -d' ' -f3)
   if [ "$bnhc" != "$bnhm" ];then
@@ -52,8 +52,8 @@ function vu {
     un 'ufw reload'
     up 'ufw status numbered'
   fi
-}
-function hs {
+fi
+if [ "$1" = "hs" ] && [ "$(grep 'cuip *= *"\$' $p0/t1)" ]; then
   cp $p0/t1 $p0/t1.save
   if [ "$cuip" != "$bnip" ] && [ "$cuip" != "$vcip" ] && [ "$cuip" != "$bnhm" ]; then
     sed -e "s%cuip=.*%cuip='$vcip'%;s%bnhm=.*%bnhm='$cuip'%" $p0/t1.save>$p0/t1
@@ -63,26 +63,8 @@ function hs {
   else
     sed -e "s%cuip=.*%cuip='$cuip'%" $p0/t1.save>$p0/t1
   fi
-}
-[ "$1" = "wv" ] && [ "$cuip" = "$vcip" ] && vu
-[ "$1" = "hs" ] && [ "$(grep 'cuip *= *"\$' $p0/t1)" ] && hs
-
-# beacon geth external/internal eth1
-if [ "$1" = "bx" ] && [ -f /etc/systemd/system/$ethg.service ] && [ -f /etc/systemd/system/$ethb.service ]; then
-  echo -e "${i}TROCA BEACON EXTERNAL/INTERNAL ETH1${f}"
-  [ "$(systemctl status $ethv 2>/dev/null|grep -i loaded)" ] && uu "systemctl stop $ethv"
-  [ "$(systemctl status $ethb 2>/dev/null|grep -i loaded)" ] && uu "systemctl stop $ethb"
-  cp /etc/systemd/system/$ethb.service $ethb.save
-  if grep -q "https:\S* " $ethb.save; then
-    sed -e "s%https:\S* %http://127.0.0.1:8545 %" $ethb.save > /etc/systemd/system/$ethb.service
-  else
-    sed -e "s%http:\S*8545 %$E %" $ethb.save > /etc/systemd/system/$ethb.service
-  fi
-  dr
-  [ "$(systemctl status $ethb 2>/dev/null|grep -i inactive)" ] && uu "systemctl start $ethb"
-  [ "$(systemctl status $ethv 2>/dev/null|grep -i inactive)" ] && uu "systemctl start $ethv"
-  rm $ethb.save
 fi
+
 # lista servicos
 [ "$1" = "ll" ] && { uu "systemctl list-units $pate $patp $patf"; }
 # lista portas
@@ -174,7 +156,6 @@ if [ -z "$1" ]; then
   c1="$c1\nlj\tlista journal ERROR|WARN"
   c1="$c1\nnp\tnode peers"
   c1="$c1\nnr\tnode record"
-  c1="$c1\nbx\tbeacon external/internal eth1"
   c1="$c1\nwv\tfirewall validator"
   c1="$c1\nhs\thome ip set"
   c1="$c1\nws\tfirewall status"

@@ -20,9 +20,6 @@ pate='eth-*'
 patp='prometheus*'
 patf='grafana*'
 
-# lighthouse version
-vers='v1.0.4'
-
 # active nodes
 bnhm='62.169.113.173'
 bnip='207.180.214.8'
