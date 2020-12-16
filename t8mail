@@ -19,7 +19,7 @@ function gs {
     c=$(echo $o|sed -Ee 's%.*currentBlock: *([0-9]+).*%\1%i')
     k=$(echo $o|sed -Ee 's%.*knownStates: *([0-9]+).*%\1%i')
     p=$(echo $o|sed -Ee 's%.*pulledStates: *([0-9]+).*%\1%i')
-    m="GETH SYNCING:\tBlocks:\t$((h-c))\tStates:\t$((k-p))"
+    m="Blocks: $c ($((h-c))); States: $p ($((k-p)))"
   fi
 }
 
