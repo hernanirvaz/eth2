@@ -2,25 +2,13 @@
 
 source /home/eth/eth2/t1
 
-function nu { u=$(egrep '^[0-9]+  *updates' /var/lib/update-notifier/updates-available|cut -d' ' -f1); }
+function nu { u=$(egrep '^[0-9]+  *update' /var/lib/update-notifier/updates-available|cut -d' ' -f1); }
 function nv {
   cd /home/eth/lighthouse
   git fetch --tags &>/dev/null
   t=$(git rev-list --tags --max-count=1)
   n=$(git describe --tags $t)
   v=$(/usr/local/bin/lighthouse --version|grep -i lighthouse|sed -Ee 's%.*(v[0-9]+\.[0-9]+\.[0-9]+).*%\1%')
-}
-function gs {
-  o=$(echo eth.syncing|geth attach http://127.0.0.1:8545)
-  if [ "$(echo $o|grep -i false)" ]; then
-    m="GETH SYNCING DONE"
-  else
-    h=$(echo $o|sed -Ee 's%.*highestBlock: *([0-9]+).*%\1%i')
-    c=$(echo $o|sed -Ee 's%.*currentBlock: *([0-9]+).*%\1%i')
-    k=$(echo $o|sed -Ee 's%.*knownStates: *([0-9]+).*%\1%i')
-    p=$(echo $o|sed -Ee 's%.*pulledStates: *([0-9]+).*%\1%i')
-    m="Blocks: $c ($((h-c))); States: $p ($((k-p)))"
-  fi
 }
 
 [ "$1" = "GETHSTP" ] && { echo -e "Subject: GETH STOPPED ON $(uname -n)\n\nSERVICE_RESULT=$2\nEXIT_CODE=$3\nEXIT_STATUS=$4\n"|ssmtp hernanilr@gmail.com; }
@@ -31,4 +19,4 @@ function gs {
 [ "$1" = "VERSCHK" ] && { nv;[ "$n" = "$v" ] || echo -e "Subject: OLD $v NEW $n IS OUT\n\n"|ssmtp hernanilr@gmail.com; }
 [ "$1" = "UPDTCHK" ] && { nu;[ "$u" -gt 0 ] && echo -e "Subject: $u UPDATES ON $(uname -n)\n\n$(apt list --upgradable 2>/dev/null)"|ssmtp hernanilr@gmail.com; }
 [ "$1" = "SPEDCHK" ] && { echo -e "Subject: SPEEDTEST ON $(uname -n)\n\n$(speedtest)"|ssmtp hernanilr@gmail.com; }
-[ "$1" = "SYNCCHK" ] && { gs;echo -e "Subject: SYNCING ON $(uname -n)\n\n$m"|ssmtp hernanilr@gmail.com; }
+[ "$1" = "SYNCCHK" ] && { echo -e "Subject: SYNCING ON $(uname -n)\n\n$(/home/eth/eth2/t6 gs)"|ssmtp hernanilr@gmail.com; }
