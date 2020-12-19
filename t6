@@ -46,6 +46,12 @@ function gs {
   if [ "$(echo $o|grep -i false)" ]; then
     m="GETH SYNCING DONE"
   else
+    gz
+    if [ "$cuip" = "$bnhm" ]; then
+      x=$(ssh -p 2020 $bnip "export H=$H;$p0/t6 gz")
+    else
+      x=$z
+    fi
     h=$(echo $o|sed -Ee 's%.*highestBlock: *([0-9]+).*%\1%i')
     c=$(echo $o|sed -Ee 's%.*currentBlock: *([0-9]+).*%\1%i')
     k=$(echo $o|sed -Ee 's%.*knownStates: *([0-9]+).*%\1%i')
@@ -54,9 +60,10 @@ function gs {
     d=$(echo $H|sudo -S grep -i 'Imported new block headers' /var/log/syslog 2>/dev/null|tail -1|cut -d= -f4|cut -d' ' -f1)
     i=$(echo $H|sudo -S grep -i 'Imported new state entries' /var/log/syslog 2>/dev/null|head -1|cut -d= -f4|cut -d' ' -f1)
     t=$(echo $H|sudo -S grep -i 'Imported new state entries' /var/log/syslog 2>/dev/null|tail -1|cut -d= -f4|cut -d' ' -f1)
-    m="GETH SYNCING\nBlocks: $c ($((h-c))) States: $p ($((k-p)))\nBlocks today: ($((d-b))) States today: ($((t-i)))"
+    m="GETH SYNCING\nBlocks: $c ($((h-c))) States: $p ($((k-p)))\nBlocks today: ($((d-b))) States today: ($((t-i)))\nFalta: $(((x-z)/1024))M"
   fi
 }
+function gz { z=0;[ -d /var/lib/goethereum ] && z=$(echo $H|sudo -S du -s /var/lib/goethereum 2>/dev/null|cut -f1); }
 
 # para tratar home ip change
 if [ "$1" = "wv" ] && [ "$cuip" = "$vcip" ]; then
@@ -92,6 +99,7 @@ fi
 [ "$1" = "jj" ] && { jb; }
 [ "$1" = "lj" ] && { echo $H|sudo -S grep 'ERROR\|WARN' /var/log/syslog 2>/dev/null; }
 [ "$1" = "gs" ] && { gs;echo -e $m; }
+[ "$1" = "gz" ] && { gz;echo -e $z; }
 [ "$1" = "ws" ] && { uu "ufw status numbered"; }
 [ "$1" = "wa" ] && if [ "$(echo $H|sudo -S ufw status 2>/dev/null|grep -i inactive)" ];then echo -e "${i}ARRANCA FIREWALL${f}";sudo ufw enable; else echo -e "${i}FIREWALL JA ACTIVE${f}";fi
 [ "$1" = "wpr" ] && { uu "ufw disable"; }
@@ -174,6 +182,7 @@ if [ -z "$1" ]; then
   c1="$c1\nnp\tnode peers"
   c1="$c1\nnr\tnode record"
   c1="$c1\ngs\tgeth syncing"
+  c1="$c1\ngz\tgeth size"
   c1="$c1\nhs\thome ip set"
   c1="$c1\nwv\tfirewall validator"
   c1="$c1\nws\tfirewall status"
