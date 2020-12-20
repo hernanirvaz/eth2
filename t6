@@ -60,7 +60,7 @@ function gs {
     d=$(echo $H|sudo -S grep -i 'Imported new block headers' /var/log/syslog 2>/dev/null|tail -1|cut -d= -f4|cut -d' ' -f1)
     i=$(echo $H|sudo -S grep -i 'Imported new state entries' /var/log/syslog 2>/dev/null|head -1|cut -d= -f4|cut -d' ' -f1)
     t=$(echo $H|sudo -S grep -i 'Imported new state entries' /var/log/syslog 2>/dev/null|tail -1|cut -d= -f4|cut -d' ' -f1)
-    m="GETH SYNCING\nBlocks: $c ($((h-c))) States: $p ($((k-p)))\nBlocks today: ($((d-b))) States today: ($((t-i)))\nFalta: $(((x-z)/1024))M"
+    m="GETH SYNCING\nBlocks api: $h ($((h-c)))\tStates api: $k ($((k-p)))\nBlocks log: $d ($((d-b)))\tStates log: $t ($((t-i)))\nFiles size: $((z/1024))M ($(((x-z)/1024))M)"
   fi
 }
 function gz { z=0;[ -d /var/lib/goethereum ] && z=$(echo $H|sudo -S du -s /var/lib/goethereum 2>/dev/null|cut -f1); }

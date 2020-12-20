@@ -21,7 +21,7 @@ patp='prometheus*'
 patf='grafana*'
 
 # active nodes
-bnhm='193.126.172.208'
+bnhm='87.196.197.104'
 bnip='207.180.214.8'
 vcip='164.68.107.45'
 
