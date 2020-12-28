@@ -42,8 +42,9 @@ function pd { [ "$(systemctl status $ethp 2>/dev/null|grep -i loaded)" ] && { uu
 function nd { [ "$(systemctl status $ethn 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethn"; } }
 function fd { [ "$(systemctl status $ethf 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethf";uu "ufw deny 3000/tcp comment grafana";uu "ufw reload"; } }
 function gs {
-  o=$(echo eth.syncing|geth attach http://127.0.0.1:8545)
-  if [ "$(echo $o|grep -i false)" ]; then
+  o1=$(echo eth.syncing  |geth attach http://127.0.0.1:8545)
+  o2=$(echo net.peerCount|geth attach http://127.0.0.1:8545)
+  if [ "$(echo $o1|grep -i false)" ]; then
     m="GETH SYNCING DONE"
   else
     gz
@@ -52,15 +53,16 @@ function gs {
     else
       x=$z
     fi
-    h=$(echo $o|sed -Ee 's%.*highestBlock: *([0-9]+).*%\1%i')
-    c=$(echo $o|sed -Ee 's%.*currentBlock: *([0-9]+).*%\1%i')
-    k=$(echo $o|sed -Ee 's%.*knownStates: *([0-9]+).*%\1%i')
-    p=$(echo $o|sed -Ee 's%.*pulledStates: *([0-9]+).*%\1%i')
+    h=$(echo $o1|sed -Ee 's%.*highestBlock: *([0-9]+).*%\1%i')
+    c=$(echo $o1|sed -Ee 's%.*currentBlock: *([0-9]+).*%\1%i')
+    k=$(echo $o1|sed -Ee 's%.*knownStates: *([0-9]+).*%\1%i')
+    p=$(echo $o1|sed -Ee 's%.*pulledStates: *([0-9]+).*%\1%i')
+    n=$(echo $o2|sed -Ee 's%.*> *([0-9]+).*%\1%i')
     b=$(echo $H|sudo -S grep -i 'Imported new block headers' /var/log/syslog 2>/dev/null|head -1|cut -d= -f4|cut -d' ' -f1)
     d=$(echo $H|sudo -S grep -i 'Imported new block headers' /var/log/syslog 2>/dev/null|tail -1|cut -d= -f4|cut -d' ' -f1)
     i=$(echo $H|sudo -S grep -i 'Imported new state entries' /var/log/syslog 2>/dev/null|head -1|cut -d= -f4|cut -d' ' -f1)
     t=$(echo $H|sudo -S grep -i 'Imported new state entries' /var/log/syslog 2>/dev/null|tail -1|cut -d= -f4|cut -d' ' -f1)
-    m="GETH SYNCING\nBlocks api: $h ($((h-c)))\tStates api: $k ($((k-p)))\nBlocks log: $d ($((d-b)))\tStates log: $t ($((t-i)))\nFiles size: $((z/1024))M ($(((x-z)/1024))M)"
+    m="GETH SYNCING - PEERCOUNT: $n\nBlocks api: $h ($((h-c)))\tStates api: $k ($((k-p)))\nBlocks log: $d ($((d-b)))\tStates log: $t ($((t-i)))\nFiles size: $((z/1024))M ($(((x-z)/1024))M)"
   fi
 }
 function gz { z=0;[ -d /var/lib/goethereum ] && z=$(echo $H|sudo -S du -s /var/lib/goethereum 2>/dev/null|cut -f1); }

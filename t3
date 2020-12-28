@@ -8,7 +8,7 @@ if [ "$cuip" = "$vcip" ]; then
   fi
   if [ -x /usr/local/bin/lighthouse ]; then
     user="eth3"
-    if [ "$bnip" != "$vcip" ];then vlcl="--beacon-node http://$bnip:5052 --metrics-address $vcip";else vlcl="--beacon-node http://127.0.0.1:5052 --metrics-address 127.0.0.1";fi
+    if [ "$bnip" != "$vcip" ];then vlcl="--beacon-nodes http://$bnip:5052 --metrics-address $vcip";else vlcl="--beacon-nodes http://127.0.0.1:5052 --metrics-address 127.0.0.1";fi
     if [ "$B" = "mainnet" ]; then
       blkc=""
     else
@@ -96,11 +96,11 @@ else
   if [ -x /usr/local/bin/lighthouse ]; then
     user="eth2"
     # slots per restore point after init can't be changed
-    sprp=2048 # Yearly Disk Usage   6.4GB default
     sprp=1024 # Yearly Disk Usage  12.8GB
+    sprp=512  # Yearly Disk Usage  25.6GB
     sprp=256  # Yearly Disk Usage  51.2GB
     sprp=128  # Yearly Disk Usage 102.4GB
-    sprp=512  # Yearly Disk Usage  25.6GB
+    sprp=2048 # Yearly Disk Usage   6.4GB default use disk space for slasher (256GB) -> more income
     # how many peers it should try to find and maintain
     tarp=50 # default
     tarp=30 # less bandwidth/load for gossip
@@ -131,7 +131,7 @@ else
 		Group=$user
 		Restart=always
 		RestartSec=10
-		ExecStart=/usr/local/bin/lighthouse$blkc --datadir $dtdi bn --slots-per-restore-point $sprp --target-peers $tarp $bcnd --staking --eth1-endpoints $endp --metrics
+		ExecStart=/usr/local/bin/lighthouse$blkc --datadir $dtdi bn --slasher --slots-per-restore-point $sprp --target-peers $tarp $bcnd --staking --eth1-endpoints $endp --metrics
 		ExecStopPost=/home/eth/eth2/t8mail BEACSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 		
 		[Install]
