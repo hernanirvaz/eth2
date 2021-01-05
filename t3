@@ -3,7 +3,7 @@
 source /home/eth/eth2/t1
 
 if [ "$cuip" = "$vcip" ]; then
-  if [ -x ~/lighthouse ]; then
+  if [ "$bnip" != "$vcip" ] && [ -x ~/lighthouse ]; then
     echo $H|sudo -S mv ~/lighthouse /usr/local/bin 2>/dev/null
   fi
   if [ -x /usr/local/bin/lighthouse ]; then
@@ -15,17 +15,22 @@ if [ "$cuip" = "$vcip" ]; then
       blkc=" --testnet $B"
     fi
     cd ~
-    if [ ! -f $vldt/validator_definitions.yml ] && [ -d $HOME/$D ] && [ "$(ls -A $HOME/$D)" ]; then
+    if [ ! -d $dtdi ] && [ -d $HOME/$D ] && [ "$(ls -A $HOME/$D)" ]; then
       t6 vpr
       echo -e "${i}IMPORT VALIDATOR KEYS${f}"
       echo $H|sudo -S mkdir -p $dtdi 2>/dev/null
+      sudo chown $meeu:$meeu $dtdi
+      # IMPORTANTE LOCK VALIDATOR CLIENTE
+      touch $dtdi/vc_lock
       if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
       echo -e "STORE($K)\n"
       lighthouse$blkc --datadir $dtdi account validator import --directory $HOME/$D
       sudo chown -R $user:$user $vldt
       sudo chmod 700 $vldt
     fi
-    if [ -f $vldt/validator_definitions.yml ]; then
+    if [ -f $dtdi/vc_lock ]; then
+      echo -e "${i}\nVALIDATOR LOCKED ($dtdi/vc_lock) COPIAR $vldt/slashing_protection.sqlite* PARA INSTALAR VALIDADOR${f}"
+    else
       t6 vpr
       echo -e "${i}CONFIGURE VALIDATOR${f}"
       cd ~
@@ -55,13 +60,12 @@ if [ "$cuip" = "$vcip" ]; then
       t6 ve
       t6 va
       t6 vj
-    else
-      echo -e "${i}\nCHAVES NAO FORAM IMPORTADAS ($HOME/$D) - SEM CHAVES NAO POSSO INSTALAR VALIDADOR${f}"
     fi
   else
     echo -e "${i}NAO EXISTE BINARIO LIGHT PARA INSTALAR${f}"
   fi
-else
+fi
+if [ "$cuip" = "$bnip" ]; then
   if [ -x ~/.cargo/bin/rustup ]; then
     echo -e "${i}UPDATE RUST${f}"
     source ~/.cargo/env
@@ -115,11 +119,14 @@ else
     echo -e "${i}CONFIGURE BEACON${f}"
     echo $H|sudo -S mkdir -p $becn 2>/dev/null
     sudo chmod 700 $becn
+    # IMPORTANTE LOCK VALIDATOR CLIENTE
+    sudo chown $meeu:$meeu $dtdi
+    touch $dtdi/vc_lock
     t6 vpr
     t6 bpr
     cd ~
     if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
-    sudo chown -R $user:$user $becn
+    sudo chown $user:$user $becn
     cat <<-EOF > $ethb.service
 		[Unit]
 		Description=eth2 beacon service

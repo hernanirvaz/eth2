@@ -2,11 +2,14 @@
 
 source /home/eth/eth2/t1
 
+# get synced geth chaindata to an unsynced geth 400GB
+# rsync -hrtpe 'ssh -p 2020' --compress-level=9 --progress --stats 207.180.214.8:/home/eth/eth2 ./teste
+
 # open/close api/metrics ports com IPs
 function bo { uu 'ufw allow 9000 comment eth2'    ;uu 'ufw delete deny 5052'                               ;uu "ufw allow from $vcip to any port 5052 comment bnapi"; }
 function bc { uu 'ufw deny  9000 comment eth2'    ;uu 'ufw deny 5052 comment bnapi'                        ;uu "ufw delete allow from $vcip to any port 5052"; }
-function vo { uu 'ufw delete deny 5064           ';uu "ufw allow from $bnip to any port 5064 comment vcmet";uu "ufw allow from $bnhm to any port 5064 comment vcmet"; }
-function vc { uu 'ufw deny 5064 comment vcmetrics';uu "ufw delete allow from $bnip to any port 5064"       ;uu "ufw delete allow from $bnhm to any port 5064"; }
+function vo { uu 'ufw delete deny 5064           ';uu "ufw allow from $bnip to any port 5064 comment vcmet";uu "ufw allow from $zotc to any port 5064 comment vcmet"; }
+function vc { uu 'ufw deny 5064 comment vcmetrics';uu "ufw delete allow from $bnip to any port 5064"       ;uu "ufw delete allow from $zotc to any port 5064"; }
 function uu { echo -e "${i}$1${f}";echo $H|sudo -S $1 2>/dev/null; }
 function ut { echo -e "${i}$1${f}";echo $H|sudo -S $1 2>/dev/null|tail; }
 function un { echo $H|sudo -S $1 1>/dev/null 2>&1; }
@@ -42,48 +45,53 @@ function pd { [ "$(systemctl status $ethp 2>/dev/null|grep -i loaded)" ] && { uu
 function nd { [ "$(systemctl status $ethn 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethn"; } }
 function fd { [ "$(systemctl status $ethf 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethf";uu "ufw deny 3000/tcp comment grafana";uu "ufw reload"; } }
 function gs {
-  o1=$(echo eth.syncing  |geth attach http://127.0.0.1:8545)
-  o2=$(echo net.peerCount|geth attach http://127.0.0.1:8545)
-  if [ "$(echo $o1|grep -i false)" ]; then
-    m="GETH SYNCING DONE"
-  else
-    gz
-    if [ "$cuip" = "$bnhm" ]; then
-      x=$(ssh -p 2020 $bnip "export H=$H;$p0/t6 gz")
+  if [ -d /var/lib/goethereum ]; then
+    g0
+    g1
+    g2
+    if [ "$(echo $g1|grep -i false)" ]; then
+      m="GETH SYNCING DONE - PEERCOUNT $g2"
     else
-      x=$z
+      if [ "$cuip" = "$zotc" ]; then
+        r0=$(ssh -p 2020 $bnip "export H=$H;$p0/t6 g0")
+      else
+        r0=$g0
+      fi
+      h=$(echo $g1|sed -Ee 's%.*highestBlock: *([0-9]+).*%\1%i')
+      c=$(echo $g1|sed -Ee 's%.*currentBlock: *([0-9]+).*%\1%i')
+      k=$(echo $g1|sed -Ee 's%.*knownStates: *([0-9]+).*%\1%i')
+      p=$(echo $g1|sed -Ee 's%.*pulledStates: *([0-9]+).*%\1%i')
+      b=$(echo $H|sudo -S grep -i 'Imported new block headers' /var/log/syslog 2>/dev/null|head -1|cut -d= -f4|cut -d' ' -f1)
+      d=$(echo $H|sudo -S grep -i 'Imported new block headers' /var/log/syslog 2>/dev/null|tail -1|cut -d= -f4|cut -d' ' -f1)
+      i=$(echo $H|sudo -S grep -i 'Imported new state entries' /var/log/syslog 2>/dev/null|head -1|cut -d= -f4|cut -d' ' -f1)
+      t=$(echo $H|sudo -S grep -i 'Imported new state entries' /var/log/syslog 2>/dev/null|tail -1|cut -d= -f4|cut -d' ' -f1)
+      m="GETH SYNCING - PEERCOUNT: $g2\nBlocks api: $h ($((h-c)))\tStates api: $k ($((k-p)))\nBlocks log: $d ($((d-b)))\tStates log: $t ($((t-i)))\nFiles size: $(($r0/1000))M ($(((r0-g0)/1000))M)"
     fi
-    h=$(echo $o1|sed -Ee 's%.*highestBlock: *([0-9]+).*%\1%i')
-    c=$(echo $o1|sed -Ee 's%.*currentBlock: *([0-9]+).*%\1%i')
-    k=$(echo $o1|sed -Ee 's%.*knownStates: *([0-9]+).*%\1%i')
-    p=$(echo $o1|sed -Ee 's%.*pulledStates: *([0-9]+).*%\1%i')
-    n=$(echo $o2|sed -Ee 's%.*> *([0-9]+).*%\1%i')
-    b=$(echo $H|sudo -S grep -i 'Imported new block headers' /var/log/syslog 2>/dev/null|head -1|cut -d= -f4|cut -d' ' -f1)
-    d=$(echo $H|sudo -S grep -i 'Imported new block headers' /var/log/syslog 2>/dev/null|tail -1|cut -d= -f4|cut -d' ' -f1)
-    i=$(echo $H|sudo -S grep -i 'Imported new state entries' /var/log/syslog 2>/dev/null|head -1|cut -d= -f4|cut -d' ' -f1)
-    t=$(echo $H|sudo -S grep -i 'Imported new state entries' /var/log/syslog 2>/dev/null|tail -1|cut -d= -f4|cut -d' ' -f1)
-    m="GETH SYNCING - PEERCOUNT: $n\nBlocks api: $h ($((h-c)))\tStates api: $k ($((k-p)))\nBlocks log: $d ($((d-b)))\tStates log: $t ($((t-i)))\nFiles size: $((z/1024))M ($(((x-z)/1024))M)"
+  else
+    m="NO GETH HERE ($cuip)"
   fi
 }
-function gz { z=0;[ -d /var/lib/goethereum ] && z=$(echo $H|sudo -S du -s /var/lib/goethereum 2>/dev/null|cut -f1); }
+function g0 { g0=0;[ -d /var/lib/goethereum ] && g0=$(echo $H|sudo -S du -s /var/lib/goethereum 2>/dev/null|cut -f1); }
+function g1 { g1=0;[ -d /var/lib/goethereum ] && g1=$(geth attach http://127.0.0.1:8545 --exec eth.syncing); }
+function g2 { g2=0;[ -d /var/lib/goethereum ] && g2=$(geth attach http://127.0.0.1:8545 --exec net.peerCount); }
 
 # para tratar home ip change
 if [ "$1" = "wv" ] && [ "$cuip" = "$vcip" ]; then
   bnhr=$(up 'ufw show listening'|grep vcmet|grep -v $bnip|sed -e 's%.*\(allow.*\)comment.*%\1%')
   bnhc=$(echo $bnhr|cut -d' ' -f3)
-  if [ "$bnhc" != "$bnhm" ];then
+  if [ "$bnhc" != "$zotc" ];then
     un "ufw delete $bnhr"
-    un "ufw allow from $bnhm to any port 5064 comment vcmet"
+    un "ufw allow from $zotc to any port 5064 comment vcmet"
     un 'ufw reload'
     up 'ufw status numbered'
   fi
 fi
 if [ "$1" = "hs" ] && [ "$(grep 'cuip *= *"\$' $p0/t1)" ]; then
   cp $p0/t1 $p0/t1.save
-  if [ "$cuip" != "$bnip" ] && [ "$cuip" != "$vcip" ] && [ "$cuip" != "$bnhm" ]; then
-    sed -e "s%cuip=.*%cuip='$vcip'%;s%bnhm=.*%bnhm='$cuip'%" $p0/t1.save>$p0/t1
+  if [ "$cuip" != "$bnip" ] && [ "$cuip" != "$vcip" ] && [ "$cuip" != "$zotc" ]; then
+    sed -e "s%cuip=.*%cuip='$vcip'%;s%zotc=.*%zotc='$cuip'%" $p0/t1.save>$p0/t1
     scp -P 2020 $p0/t1 $vcip:$p0
-    sed -e "s%cuip=.*%cuip='$cuip'%;s%bnhm=.*%bnhm='$cuip'%" $p0/t1.save>$p0/t1
+    sed -e "s%cuip=.*%cuip='$cuip'%;s%zotc=.*%zotc='$cuip'%" $p0/t1.save>$p0/t1
     ssh -p 2020 $vcip "export H=$H;$p0/t6 wv"
   else
     sed -e "s%cuip=.*%cuip='$cuip'%" $p0/t1.save>$p0/t1
@@ -101,7 +109,7 @@ fi
 [ "$1" = "jj" ] && { jb; }
 [ "$1" = "lj" ] && { echo $H|sudo -S grep 'ERROR\|WARN' /var/log/syslog 2>/dev/null; }
 [ "$1" = "gs" ] && { gs;echo -e $m; }
-[ "$1" = "gz" ] && { gz;echo -e $z; }
+[ "$1" = "g0" ] && { g0;echo -e $g0; }
 [ "$1" = "ws" ] && { uu "ufw status numbered"; }
 [ "$1" = "wa" ] && if [ "$(echo $H|sudo -S ufw status 2>/dev/null|grep -i inactive)" ];then echo -e "${i}ARRANCA FIREWALL${f}";sudo ufw enable; else echo -e "${i}FIREWALL JA ACTIVE${f}";fi
 [ "$1" = "wpr" ] && { uu "ufw disable"; }
@@ -184,7 +192,6 @@ if [ -z "$1" ]; then
   c1="$c1\nnp\tnode peers"
   c1="$c1\nnr\tnode record"
   c1="$c1\ngs\tgeth syncing"
-  c1="$c1\ngz\tgeth size"
   c1="$c1\nhs\thome ip set"
   c1="$c1\nwv\tfirewall validator"
   c1="$c1\nws\tfirewall status"

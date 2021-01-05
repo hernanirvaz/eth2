@@ -21,9 +21,11 @@ patp='prometheus*'
 patf='grafana*'
 
 # active nodes
-bnhm='87.196.197.104'
-bnip='207.180.214.8'
-vcip='164.68.107.45'
+zotc='89.180.92.233'
+vpsl='207.180.214.8'
+vpss='164.68.107.45'
+bnip=$vpsl
+vcip=$vpss
 
 # data is going here
 dtdi="/var/lib/lighthouse"
