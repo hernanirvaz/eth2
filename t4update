@@ -2,27 +2,24 @@
 
 source /home/eth/eth2/t1
 
-if [ "$1" = "linux" ] || [ "$1" = "reboot" ] || [ -z "$1" ]; then
+if [ "$1" = "linux" ] || [ "$1" = "reboot" ]; then
   echo -e "${i}FULL-UPGRADE${f}"
   echo $H|sudo -S apt update -y 2>/dev/null
-  t6 gpr
+  [ "$1" = "reboot" ] && { t6 gpr; }
   sudo apt full-upgrade -y && sudo apt dist-upgrade -y
-  sudo apt autoremove
+  sudo apt autoremove -y
   sudo apt autoclean
-  [ "$1" = "linux"  ] && { t6 hs;t6 ga; }
-  [ "$1" = "reboot" ] && { t6 hs;sudo reboot; }
+  [ "$1" = "linux"  ] && { t6 ga; }
+  [ "$1" = "reboot" ] && { sudo reboot; }
 fi
 
-if [ -x /usr/local/bin/lighthouse ] && ([ "$1" = "eth" ] || [ -z "$1" ]); then
-  if [ "$cuip" = "$vcip" ]; then
+if [ "$1" = "eth" ] && [ -x /usr/local/bin/lighthouse ]; then
+  if [ "$cuip" != "$vpsl" ]; then
     if [ -x ~/lighthouse ]; then
       t6 vpr
       t6 bpr
       echo $H|sudo -S mv /usr/local/bin/lighthouse /usr/local/bin/lighthouse.save 2>/dev/null
       sudo mv ~/lighthouse /usr/local/bin
-      t6 ga
-      t6 ba
-      t6 va
     else
       echo -e "${i}NAO EXISTE LIGHTHOUSE COMPILADO PARA INSTALAR${f}"
     fi
@@ -31,7 +28,7 @@ if [ -x /usr/local/bin/lighthouse ] && ([ "$1" = "eth" ] || [ -z "$1" ]); then
       echo -e "${i}RUST UPDATE${f}"
       rustup update
     fi
-    echo -e "${i}LIGHTHOUSE UPDATE${f}"
+    echo -e "${i}LIGHTHOUSE COMPILE${f}"
     if [ -f ~/lighthouse/README.md ]; then
       cd ~/lighthouse
       make clean
@@ -55,14 +52,16 @@ if [ -x /usr/local/bin/lighthouse ] && ([ "$1" = "eth" ] || [ -z "$1" ]); then
       t6 vpr
       t6 bpr
       echo $H|sudo -S mv /usr/local/bin/lighthouse /usr/local/bin/lighthouse.save 2>/dev/null
-      sudo cp ~/.cargo/bin/lighthouse /usr/local/bin
-      t6 ga
-      t6 ba
-      t6 va
-      [ "$bnip" != "$vcip" ] && scp -P 2020 ~/.cargo/bin/lighthouse $vcip:~
+      echo $H|sudo -S cp ~/.cargo/bin/lighthouse /usr/local/bin 2>/dev/null
+      if [ "$bnip" != "$vcip" ]; then
+        scp -P 2020 ~/.cargo/bin/lighthouse $vcip:~
+        scp -P 2020 ~/.cargo/bin/lighthouse $vpsm:~
+      fi
     else
       echo -e "${i}NAO EXISTE LIGHTHOUSE COMPILADO PARA INSTALAR${f}"
     fi
   fi
   echo $H|sudo -S chmod 755 /usr/local/bin/lighthouse 2>/dev/null
+  t6 ba
+  t6 va
 fi

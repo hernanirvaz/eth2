@@ -6,10 +6,15 @@ source /home/eth/eth2/t1
 # rsync -hrtpe 'ssh -p 2020' --compress-level=9 --progress --stats 207.180.214.8:/home/eth/eth2 ./teste
 
 # open/close api/metrics ports com IPs
-function bo { uu 'ufw allow 9000 comment eth2'    ;uu 'ufw delete deny 5052'                               ;uu "ufw allow from $vcip to any port 5052 comment bnapi"; }
-function bc { uu 'ufw deny  9000 comment eth2'    ;uu 'ufw deny 5052 comment bnapi'                        ;uu "ufw delete allow from $vcip to any port 5052"; }
-function vo { uu 'ufw delete deny 5064           ';uu "ufw allow from $bnip to any port 5064 comment vcmet";uu "ufw allow from $zotc to any port 5064 comment vcmet"; }
-function vc { uu 'ufw deny 5064 comment vcmetrics';uu "ufw delete allow from $bnip to any port 5064"       ;uu "ufw delete allow from $zotc to any port 5064"; }
+function gop { uu 'ufw allow 30303 comment eth1';uu 'ufw delete deny 8545';uu "ufw allow from $vpsm to any port 8545 comment geapi";uu "ufw allow from $vpsl to any port 8545 comment geapi"; }
+function gcl { uu 'ufw deny  30303 comment eth1';uu 'ufw deny 8545 comment geapi';uu "ufw delete allow from $vpsm to any port 8545";uu "ufw delete allow from $vpsl to any port 8545"; }
+function bop { uu 'ufw allow 9000 comment eth2' ;uu 'ufw delete deny 5052'                               ;uu "ufw allow from $vcip to any port 5052 comment bnapi"; }
+function bcl { uu 'ufw deny  9000 comment eth2' ;uu 'ufw deny 5052 comment bnapi'                        ;uu "ufw delete allow from $vcip to any port 5052"; }
+function vop { uu 'ufw delete deny 5064'        ;uu "ufw allow from $bnip to any port 5064 comment vcmet";uu "ufw allow from $zotc to any port 5064 comment vcmet"; }
+function vcl { uu 'ufw deny 5064 comment vcmet' ;uu "ufw delete allow from $bnip to any port 5064"       ;uu "ufw delete allow from $zotc to any port 5064"; }
+function fop { uu 'ufw allow 3000/tcp comment grafana'; }
+function fcl { uu 'ufw deny  3000/tcp comment grafana'; }
+
 function uu { echo -e "${i}$1${f}";echo $H|sudo -S $1 2>/dev/null; }
 function ut { echo -e "${i}$1${f}";echo $H|sudo -S $1 2>/dev/null|tail; }
 function un { echo $H|sudo -S $1 1>/dev/null 2>&1; }
@@ -17,12 +22,12 @@ function up { echo $H|sudo -S $1 2>/dev/null; }
 function jb { uu "journalctl --no-hostname --no-full -f $1"; }
 function dr { uu "systemctl daemon-reload"; }
 
-function ge { uu "ufw allow 30303 comment eth1";uu "ufw reload";uu "systemctl enable $ethg"; }
-function be { bo;uu "ufw reload";uu "systemctl enable $ethb"; }
-function ve { vo;uu "ufw reload";uu "systemctl enable $ethv"; }
+function ge { gop;uu 'ufw reload';uu "systemctl enable $ethg"; }
+function be { bop;uu 'ufw reload';uu "systemctl enable $ethb"; }
+function ve { vop;uu 'ufw reload';uu "systemctl enable $ethv"; }
 function pe { uu "systemctl enable $ethp"; }
 function ne { uu "systemctl enable $ethn"; }
-function fe { uu "ufw allow 3000/tcp comment grafana";uu "ufw reload";uu "systemctl enable $ethf"; }
+function fe { fop;uu 'ufw reload';uu "systemctl enable $ethf"; }
 
 function ga { [ "$(systemctl status $ethg 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $ethg"; } }
 function ba { [ "$(systemctl status $ethb 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $ethb"; } }
@@ -38,12 +43,12 @@ function pp { [ "$(systemctl status $ethp 2>/dev/null|grep -i loaded)" ] && { uu
 function np { [ "$(systemctl status $ethn 2>/dev/null|grep -i loaded)" ] && { uu "systemctl stop $ethn"; } }
 function fp { [ "$(systemctl status $ethf 2>/dev/null|grep -i loaded)" ] && { uu "systemctl stop $ethf"; } }
 
-function gd { [ "$(systemctl status $ethg 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethg";uu "ufw deny 30303 comment eth1";uu "ufw reload"; } }
-function bd { [ "$(systemctl status $ethb 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethb";bc;uu "ufw reload"; } }
-function vd { [ "$(systemctl status $ethv 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethv";vc;uu "ufw reload"; } }
+function gd { [ "$(systemctl status $ethg 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethg";gcl;uu 'ufw reload'; } }
+function bd { [ "$(systemctl status $ethb 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethb";bcl;uu 'ufw reload'; } }
+function vd { [ "$(systemctl status $ethv 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethv";vcl;uu 'ufw reload'; } }
 function pd { [ "$(systemctl status $ethp 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethp"; } }
 function nd { [ "$(systemctl status $ethn 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethn"; } }
-function fd { [ "$(systemctl status $ethf 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethf";uu "ufw deny 3000/tcp comment grafana";uu "ufw reload"; } }
+function fd { [ "$(systemctl status $ethf 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethf";fcl;uu 'ufw reload'; } }
 function gs {
   if [ -d /var/lib/goethereum ]; then
     g0
@@ -72,8 +77,8 @@ function gs {
   fi
 }
 function g0 { g0=0;[ -d /var/lib/goethereum ] && g0=$(echo $H|sudo -S du -s /var/lib/goethereum 2>/dev/null|cut -f1); }
-function g1 { g1=0;[ -d /var/lib/goethereum ] && g1=$(geth attach http://127.0.0.1:8545 --exec eth.syncing); }
-function g2 { g2=0;[ -d /var/lib/goethereum ] && g2=$(geth attach http://127.0.0.1:8545 --exec net.peerCount); }
+function g1 { g1=0;[ -d /var/lib/goethereum ] && g1=$(geth attach http://207.180.214.8:8545 --exec eth.syncing); }
+function g2 { g2=0;[ -d /var/lib/goethereum ] && g2=$(geth attach http://207.180.214.8:8545 --exec net.peerCount); }
 
 # para tratar home ip change
 if [ "$1" = "wv" ] && [ "$cuip" = "$vcip" ]; then

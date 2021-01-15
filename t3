@@ -2,10 +2,11 @@
 
 source /home/eth/eth2/t1
 
+if [ "$bnip" != "$vcip" ] && [ -x ~/lighthouse ]; then
+  echo $H|sudo -S mv ~/lighthouse /usr/local/bin 2>/dev/null
+fi
+
 if [ "$cuip" = "$vcip" ]; then
-  if [ "$bnip" != "$vcip" ] && [ -x ~/lighthouse ]; then
-    echo $H|sudo -S mv ~/lighthouse /usr/local/bin 2>/dev/null
-  fi
   if [ -x /usr/local/bin/lighthouse ]; then
     user="eth3"
     if [ "$bnip" != "$vcip" ];then vlcl="--beacon-nodes http://$bnip:5052 --metrics-address $vcip";else vlcl="--beacon-nodes http://127.0.0.1:5052 --metrics-address 127.0.0.1";fi
@@ -65,7 +66,8 @@ if [ "$cuip" = "$vcip" ]; then
     echo -e "${i}NAO EXISTE BINARIO LIGHT PARA INSTALAR${f}"
   fi
 fi
-if [ "$cuip" = "$bnip" ]; then
+
+if [ "$cuip" = "$vpsl" ]; then
   if [ -x ~/.cargo/bin/rustup ]; then
     echo -e "${i}UPDATE RUST${f}"
     source ~/.cargo/env
@@ -95,8 +97,14 @@ if [ "$cuip" = "$bnip" ]; then
   make
   if [ $? -eq 0  ] && [ -x  ~/.cargo/bin/lighthouse ]; then
     echo $H|sudo -S cp ~/.cargo/bin/lighthouse /usr/local/bin 2>/dev/null
-    [ "$bnip" != "$vcip" ] && scp -P 2020 ~/.cargo/bin/lighthouse $vcip:~
+    if [ "$bnip" != "$vcip" ]; then
+      scp -P 2020 ~/.cargo/bin/lighthouse $vcip:~
+      scp -P 2020 ~/.cargo/bin/lighthouse $vpsm:~
+    fi
   fi 
+fi 
+
+if [ "$cuip" = "$bnip" ]; then
   if [ -x /usr/local/bin/lighthouse ]; then
     user="eth2"
     # slots per restore point after init can't be changed
@@ -111,7 +119,7 @@ if [ "$cuip" = "$bnip" ]; then
     if [ "$bnip" != "$vcip" ];then bcnd="--http-address $bnip";else bcnd="--http-address 127.0.0.1";fi
     if [ "$B" = "mainnet" ]; then
       blkc=""
-      endp="http://127.0.0.1:8545,$E"
+      endp="http://$vpsl:8545,$E"
     else
       blkc=" --testnet $B"
       endp="$E"
@@ -138,7 +146,7 @@ if [ "$cuip" = "$bnip" ]; then
 		Group=$user
 		Restart=always
 		RestartSec=10
-		ExecStart=/usr/local/bin/lighthouse$blkc --datadir $dtdi bn --slasher --slots-per-restore-point $sprp --target-peers $tarp $bcnd --staking --eth1-endpoints $endp --metrics
+		ExecStart=/usr/local/bin/lighthouse$blkc --datadir $dtdi bn --slasher --slots-per-restore-point $sprp --target-peers $tarp $bcnd --staking --eth1-endpoints $endp
 		ExecStopPost=/home/eth/eth2/t8mail BEACSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 		
 		[Install]

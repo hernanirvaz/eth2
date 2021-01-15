@@ -9,22 +9,30 @@ p1='/etc/prometheus'
 meeu="$(whoami)"
 cuip="$(curl -s v4.ident.me)"
 
-# active system services
+# eth-geth.service                        eth1 geth service
 ethg='eth-geth'
+# eth-beacon.service                      eth2 beacon service
 ethb='eth-beacon'
+# eth-validator.service                   eth2 validator service
 ethv='eth-validator'
+# prometheus.service                      Monitoring system and time series database
 ethp='prometheus'
+# prometheus-node-exporter.service        Prometheus exporter for machine metrics
+# prometheus-node-exporter-apt.timer      Run apt metrics collection every 15 minutes
+# prometheus-node-exporter-smartmon.timer Run smart metrics collection every 15 minutes
 ethn='prometheus-node-exporter'
+# grafana-server.service                  Grafana instance
 ethf='grafana-server'
 pate='eth-*'
 patp='prometheus*'
 patf='grafana*'
 
 # active nodes
-zotc='89.180.92.233'
+zotc='62.169.120.111'
 vpsl='207.180.214.8'
+vpsm='173.249.42.190'
 vpss='164.68.107.45'
-bnip=$vpsl
+bnip=$vpsm
 vcip=$vpss
 
 # data is going here

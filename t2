@@ -12,6 +12,7 @@ if [ "$(echo $H|sudo -S ufw status 2>/dev/null|grep -i inactive)" ]; then
   sudo ufw deny 22/tcp comment oldssh
   sudo ufw deny 30303 comment eth1
   sudo ufw deny 9000 comment eth2
+  sudo ufw deny 8545 comment geapi
   sudo ufw deny 5052 comment bnapi
   sudo ufw deny 5064 comment vcmet
   sudo ufw deny 9090/tcp comment prometheus
@@ -42,7 +43,7 @@ sudo apt install python3-pip -y
 sudo pip3 install speedtest-cli
 speedtest-cli
 
-if [ "$bnip" != "$vcip" ] && [ "$cuip" = "$vcip" ]; then
+if [ "$bnip" != "$vcip" ] && ([ "$cuip" = "$vcip" ] || [ "$cuip" = "$vpsm" ]); then
   echo -e "${i}GETH NAO DEVE SER INSTALADO AQUI - DEVE FAZER REBOOT${f}"
 else
   if [ -f /etc/systemd/system/$ethg.service ]; then

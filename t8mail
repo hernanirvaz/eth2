@@ -2,7 +2,7 @@
 
 source /home/eth/eth2/t1
 
-function nu { u=$(egrep '^[0-9]+  *update' /var/lib/update-notifier/updates-available|cut -d' ' -f1); }
+function nu { u=0;[ -f /var/lib/update-notifier/updates-available ] && u=$(egrep '^[0-9]+  *update' /var/lib/update-notifier/updates-available|cut -d' ' -f1); }
 function nv {
   cd /home/eth/lighthouse
   git fetch --tags &>/dev/null
