@@ -93,7 +93,7 @@ if [ "$1" = "wv" ] && [ "$cuip" = "$vcip" ]; then
 fi
 if [ "$1" = "hs" ] && [ "$(grep 'cuip *= *"\$' $p0/t1)" ]; then
   cp $p0/t1 $p0/t1.save
-  if [ "$cuip" != "$bnip" ] && [ "$cuip" != "$vcip" ] && [ "$cuip" != "$zotc" ]; then
+  if [ "$cuip" != "$vpsl" ] && [ "$cuip" != "$vpsm" ] && [ "$cuip" != "$vpss" ] && [ "$cuip" != "$zotc" ]; then
     sed -e "s%cuip=.*%cuip='$vcip'%;s%zotc=.*%zotc='$cuip'%" $p0/t1.save>$p0/t1
     scp -P 2020 $p0/t1 $vcip:$p0
     sed -e "s%cuip=.*%cuip='$cuip'%;s%zotc=.*%zotc='$cuip'%" $p0/t1.save>$p0/t1
