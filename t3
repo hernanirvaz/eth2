@@ -6,106 +6,8 @@ if [ "$bnip" != "$vcip" ] && [ -x ~/lighthouse ]; then
   echo $H|sudo -S mv ~/lighthouse /usr/local/bin 2>/dev/null
 fi
 
-if [ "$cuip" = "$vcip" ]; then
-  if [ -x /usr/local/bin/lighthouse ]; then
-    user="eth3"
-    if [ "$bnip" != "$vcip" ];then vlcl="--beacon-nodes http://$bnip:5052 --metrics-address $vcip";else vlcl="--beacon-nodes http://127.0.0.1:5052 --metrics-address 127.0.0.1";fi
-    if [ "$B" = "mainnet" ]; then
-      blkc=""
-    else
-      blkc=" --testnet $B"
-    fi
-    cd ~
-    if [ ! -d $dtdi ] && [ -d $HOME/$D ] && [ "$(ls -A $HOME/$D)" ]; then
-      t6 vpr
-      echo -e "${i}IMPORT VALIDATOR KEYS${f}"
-      echo $H|sudo -S mkdir -p $dtdi 2>/dev/null
-      sudo chown $meeu:$meeu $dtdi
-      # IMPORTANTE LOCK VALIDATOR CLIENTE
-      touch $dtdi/vc_lock
-      if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
-      echo -e "STORE($K)\n"
-      lighthouse$blkc --datadir $dtdi account validator import --directory $HOME/$D
-      sudo chown -R $user:$user $vldt
-      sudo chmod 700 $vldt
-    fi
-    if [ -f $dtdi/vc_lock ]; then
-      echo -e "${i}\nVALIDATOR LOCKED ($dtdi/vc_lock) COPIAR $vldt/slashing_protection.sqlite* PARA INSTALAR VALIDADOR${f}"
-    else
-      t6 vpr
-      echo -e "${i}CONFIGURE VALIDATOR${f}"
-      cd ~
-      echo $H|sudo -S mkdir -p $vldt 2>/dev/null
-      if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
-      sudo chown -R $user:$user $vldt
-      sudo chmod 700 $vldt
-      cat <<-EOF > $ethv.service
-			[Unit]
-			Description=eth2 validator service
-			Wants=network-online.target
-			After=network-online.target
-		
-			[Service]
-			User=$user
-			Group=$user
-			Restart=always
-			RestartSec=10
-			ExecStart=/usr/local/bin/lighthouse$blkc --datadir $dtdi vc $vlcl --metrics
-			ExecStopPost=/home/eth/eth2/t8mail VALISTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
-		
-			[Install]
-			WantedBy=multi-user.target
-			EOF
-      sudo mv $ethv.service /etc/systemd/system/$ethv.service
-      sudo chmod 644 /etc/systemd/system/$ethv.service
-      t6 ve
-      t6 va
-      t6 vj
-    fi
-  else
-    echo -e "${i}NAO EXISTE BINARIO LIGHT PARA INSTALAR${f}"
-  fi
-fi
-
-if [ "$cuip" = "$vpsl" ]; then
-  if [ -x ~/.cargo/bin/rustup ]; then
-    echo -e "${i}UPDATE RUST${f}"
-    source ~/.cargo/env
-    rustup update
-  else
-    echo -e "${i}INSTALAR DEPENDENCIAS RUST${f}"
-    echo $H|sudo -S apt install -y git gcc g++ make cmake pkg-config libssl-dev 2>/dev/null
-    echo -e "${i}INSTALL RUST${f}"
-    cd ~
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-  fi
-  if [ -f ~/lighthouse/README.md ]; then
-    cd ~/lighthouse
-    make clean
-    cargo clean
-  else
-    cd ~
-    echo $H|sudo -S rm -rf ~/lighthouse 2>/dev/null
-    git clone https://github.com/sigp/lighthouse.git
-    cd ~/lighthouse
-  fi 
-  git fetch
-  t=$(git rev-list --tags --max-count=1)
-  git checkout $(git describe --tags $t)
-  echo -e "${i}VAI COMPILAR LIGHT${f}"
-  source ~/.cargo/env
-  make
-  if [ $? -eq 0  ] && [ -x  ~/.cargo/bin/lighthouse ]; then
-    echo $H|sudo -S cp ~/.cargo/bin/lighthouse /usr/local/bin 2>/dev/null
-    if [ "$bnip" != "$vcip" ]; then
-      scp -P 2020 ~/.cargo/bin/lighthouse $vcip:~
-      scp -P 2020 ~/.cargo/bin/lighthouse $vpsm:~
-    fi
-  fi 
-fi 
-
-if [ "$cuip" = "$bnip" ]; then
-  if [ -x /usr/local/bin/lighthouse ]; then
+if [ -x /usr/local/bin/lighthouse ]; then
+  if [ "$cuip" = "$bnip" ]; then
     user="eth2"
     # slots per restore point after init can't be changed
     sprp=1024 # Yearly Disk Usage  12.8GB
@@ -127,8 +29,8 @@ if [ "$cuip" = "$bnip" ]; then
     echo -e "${i}CONFIGURE BEACON${f}"
     echo $H|sudo -S mkdir -p $becn 2>/dev/null
     sudo chmod 700 $becn
-    # IMPORTANTE LOCK VALIDATOR CLIENTE
     sudo chown $meeu:$meeu $dtdi
+    # IMPORTANTE LOCK VALIDATOR CLIENTE
     touch $dtdi/vc_lock
     t6 vpr
     t6 bpr
@@ -157,6 +59,114 @@ if [ "$cuip" = "$bnip" ]; then
     t6 be
     t6 ba
     t6 bj
+  fi
+  if [ "$cuip" = "$vcip" ]; then
+    user="eth3"
+    if [ "$bnip" != "$vcip" ];then vlcl="--beacon-nodes http://$bnip:5052 --metrics-address $vcip";else vlcl="--beacon-nodes http://127.0.0.1:5052 --metrics-address 127.0.0.1";fi
+    if [ "$B" = "mainnet" ]; then
+      blkc=""
+    else
+      blkc=" --testnet $B"
+    fi
+    cd ~
+    if [ ! -f $dtdi/vc_keys ] && [ -d $HOME/$D ] && [ "$(ls -A $HOME/$D)" ]; then
+      echo -e "${i}IMPORT VALIDATOR KEYS & INIT SLASH PROTECTION${f}"
+      echo $H|sudo -S mkdir -p $dtdi 2>/dev/null
+      sudo chown $meeu:$meeu $dtdi
+      if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
+      touch $dtdi/vc_keys
+      echo -e "STORE($K)\n"
+      lighthouse$blkc --datadir $dtdi account validator import --directory $HOME/$D
+    fi
+    if [ ! -f $dtdi/vc_lock ] && [ -f $dtdi/vc_keys ]; then
+      echo -e "${i}BLOQUEAR VALIDATOR EXECUTE${f}"
+      echo -e "sudo chmod 777 $vldt"
+      echo -e "sudo chmod 666 $vldt/slashing_protection.sqlite*"
+      echo -e "t6 vpr;t6 vds"
+      echo -e "touch $dtdi/vc_lock"
+      echo -e "touch $dtdi/vc_old"
+    fi
+    if [ ! -f $dtdi/vc_old ] && [ -f $dtdi/vc_lock ] && [ -f $dtdi/vc_keys ]; then
+      echo -e "${i}COPIAR $vldt/slashing_protection.sqlite*${f}"
+      echo $H|sudo -S mkdir -p $vldt 2>/dev/null
+      sudo chown -R $meeu:$meeu $vldt
+      scp -P 2020 $vpss:$vldt/slashing_protection.sqlite* $vldt
+      if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
+      sudo chown -R $user:$user $vldt
+      sudo chmod 600 $vldt/slashing_protection.sqlite*
+      sudo chmod 700 $vldt
+    fi
+    if [ ! -f /etc/systemd/system/$ethv.service ] && [ ! -f $dtdi/vc_lock ] && [ -f $dtdi/vc_keys ]; then
+      t6 vpr
+      echo -e "${i}CONFIGURE VALIDATOR${f}"
+      echo $H|sudo -S mkdir -p $vldt 2>/dev/null
+      if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
+      sudo chown -R $user:$user $vldt
+      sudo chmod 700 $vldt
+      cat <<-EOF > $ethv.service
+			[Unit]
+			Description=eth2 validator service
+			Wants=network-online.target
+			After=network-online.target
+			
+			[Service]
+			User=$user
+			Group=$user
+			Restart=always
+			RestartSec=10
+			ExecStart=/usr/local/bin/lighthouse$blkc --datadir $dtdi vc $vlcl --metrics
+			ExecStopPost=/home/eth/eth2/t8mail VALISTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
+			
+			[Install]
+			WantedBy=multi-user.target
+			EOF
+      sudo mv $ethv.service /etc/systemd/system/$ethv.service
+      sudo chmod 644 /etc/systemd/system/$ethv.service
+      t6 ve
+      t6 va
+      t6 vj
+    else
+      echo -e "${i}VALIDATOR JA CONFIGURADO OR LOCKED ($dtdi/vc_lock)${f}"
+    fi
+  fi
+else
+  if [ "$cuip" = "$vpsl" ]; then
+    if [ -x ~/.cargo/bin/rustup ]; then
+      echo -e "${i}UPDATE RUST${f}"
+      source ~/.cargo/env
+      rustup update
+    else
+      echo -e "${i}INSTALAR DEPENDENCIAS RUST${f}"
+      echo $H|sudo -S apt install -y git gcc g++ make cmake pkg-config libssl-dev 2>/dev/null
+      echo -e "${i}INSTALL RUST${f}"
+      cd ~
+      curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+    fi
+    if [ -f ~/lighthouse/README.md ]; then
+      cd ~/lighthouse
+      make clean
+      cargo clean
+    else
+      cd ~
+      echo $H|sudo -S rm -rf ~/lighthouse 2>/dev/null
+      git clone https://github.com/sigp/lighthouse.git
+      cd ~/lighthouse
+    fi
+    git fetch
+    t=$(git rev-list --tags --max-count=1)
+    git checkout $(git describe --tags $t)
+    echo -e "${i}VAI COMPILAR LIGHT${f}"
+    source ~/.cargo/env
+    make
+    if [ $? -eq 0  ] && [ -x  ~/.cargo/bin/lighthouse ]; then
+      echo $H|sudo -S cp ~/.cargo/bin/lighthouse /usr/local/bin 2>/dev/null
+      if [ "$bnip" != "$vcip" ]; then
+        scp -P 2020 ~/.cargo/bin/lighthouse $vcip:~
+        scp -P 2020 ~/.cargo/bin/lighthouse $vpsm:~
+      fi
+    else
+      echo -e "${i}NAO EXISTE LIGHT COMPILADO PARA INSTALAR${f}"
+    fi
   else
     echo -e "${i}NAO EXISTE BINARIO LIGHT PARA INSTALAR${f}"
   fi

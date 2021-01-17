@@ -28,7 +28,7 @@ patp='prometheus*'
 patf='grafana*'
 
 # active nodes
-zotc='62.169.120.111'
+zotc='89.180.41.70'
 vpsl='207.180.214.8'
 vpsm='173.249.42.190'
 vpss='164.68.107.45'

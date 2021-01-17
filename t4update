@@ -14,21 +14,11 @@ if [ "$1" = "linux" ] || [ "$1" = "reboot" ]; then
 fi
 
 if [ "$1" = "eth" ] && [ -x /usr/local/bin/lighthouse ]; then
-  if [ "$cuip" != "$vpsl" ]; then
-    if [ -x ~/lighthouse ]; then
-      t6 vpr
-      t6 bpr
-      echo $H|sudo -S mv /usr/local/bin/lighthouse /usr/local/bin/lighthouse.save 2>/dev/null
-      sudo mv ~/lighthouse /usr/local/bin
-    else
-      echo -e "${i}NAO EXISTE LIGHTHOUSE COMPILADO PARA INSTALAR${f}"
-    fi
-  else
-    if [ -f ~/.rustup/settings.toml ]; then
-      echo -e "${i}RUST UPDATE${f}"
+  if [ "$cuip" = "$vpsl" ]; then
+    if [ -x ~/.cargo/bin/rustup ]; then
+      echo -e "${i}UPDATE RUST${f}"
       rustup update
     fi
-    echo -e "${i}LIGHTHOUSE COMPILE${f}"
     if [ -f ~/lighthouse/README.md ]; then
       cd ~/lighthouse
       make clean
@@ -47,6 +37,7 @@ if [ "$1" = "eth" ] && [ -x /usr/local/bin/lighthouse ]; then
       v=$(git describe --tags $t)
     fi
     git checkout $v
+    echo -e "${i}VAI COMPILAR LIGHT${f}"
     make
     if [ $? -eq 0  ] && [ -x  ~/.cargo/bin/lighthouse ]; then
       t6 vpr
@@ -58,7 +49,16 @@ if [ "$1" = "eth" ] && [ -x /usr/local/bin/lighthouse ]; then
         scp -P 2020 ~/.cargo/bin/lighthouse $vpsm:~
       fi
     else
-      echo -e "${i}NAO EXISTE LIGHTHOUSE COMPILADO PARA INSTALAR${f}"
+      echo -e "${i}NAO EXISTE LIGHT COMPILADO PARA INSTALAR${f}"
+    fi
+  else
+    if [ -x ~/lighthouse ]; then
+      t6 vpr
+      t6 bpr
+      echo $H|sudo -S mv /usr/local/bin/lighthouse /usr/local/bin/lighthouse.save 2>/dev/null
+      sudo mv ~/lighthouse /usr/local/bin
+    else
+      echo -e "${i}NAO EXISTE LIGHT COMPILADO PARA INSTALAR${f}"
     fi
   fi
   echo $H|sudo -S chmod 755 /usr/local/bin/lighthouse 2>/dev/null

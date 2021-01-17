@@ -24,14 +24,14 @@ function dr { uu "systemctl daemon-reload"; }
 
 function ge { gop;uu 'ufw reload';uu "systemctl enable $ethg"; }
 function be { bop;uu 'ufw reload';uu "systemctl enable $ethb"; }
-function ve { vop;uu 'ufw reload';uu "systemctl enable $ethv"; }
+function ve { [ ! -f $dtdi/vc_lock ] && { vop;uu 'ufw reload';uu "systemctl enable $ethv"; } }
 function pe { uu "systemctl enable $ethp"; }
 function ne { uu "systemctl enable $ethn"; }
 function fe { fop;uu 'ufw reload';uu "systemctl enable $ethf"; }
 
 function ga { [ "$(systemctl status $ethg 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $ethg"; } }
 function ba { [ "$(systemctl status $ethb 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $ethb"; } }
-function va { [ "$(systemctl status $ethv 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $ethv"; } }
+function va { [ "$(systemctl status $ethv 2>/dev/null|grep -i 'inactive\|failed')" ] && [ ! -f $dtdi/vc_lock ] && { uu "systemctl start $ethv"; } }
 function pa { [ "$(systemctl status $ethp 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $ethp"; } }
 function na { [ "$(systemctl status $ethn 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $ethn"; } }
 function fa { [ "$(systemctl status $ethf 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $ethf"; } }
