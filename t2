@@ -88,7 +88,7 @@ else
 		Group=$user
 		Restart=always
 		RestartSec=10
-		ExecStart=/usr/bin/geth$blkc --http --datadir $golb --cache $cach --maxpeers $maxp$node
+		ExecStart=/usr/bin/geth$blkc --http --http.addr $zot1 --datadir $golb --cache $cach --maxpeers $maxp$node
 		ExecStopPost=/home/eth/eth2/t8mail GETHSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 		
 		[Install]
