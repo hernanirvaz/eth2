@@ -40,22 +40,22 @@ if [ "$1" = "eth" ] && [ -x /usr/local/bin/lighthouse ]; then
     echo -e "${i}VAI COMPILAR LIGHT${f}"
     make
     if [ $? -eq 0  ] && [ -x  ~/.cargo/bin/lighthouse ]; then
-      t6 vpr
-      t6 bpr
-      echo $H|sudo -S mv /usr/local/bin/lighthouse /usr/local/bin/lighthouse.save 2>/dev/null
-      echo $H|sudo -S cp ~/.cargo/bin/lighthouse /usr/local/bin 2>/dev/null
+      echo $H|sudo -S cp /usr/local/bin/lighthouse /usr/local/bin/lighthouse.save 2>/dev/null
       if [ "$bnip" != "$vcip" ]; then
         scp -P 2020 ~/.cargo/bin/lighthouse $vcip:~
         scp -P 2020 ~/.cargo/bin/lighthouse $vpsm:~
       fi
+      echo $H|sudo -S cp ~/.cargo/bin/lighthouse /usr/local/bin 2>/dev/null
+      t6 vpr
+      t6 bpr
     else
       echo -e "${i}NAO EXISTE LIGHT COMPILADO PARA INSTALAR${f}"
     fi
   else
     if [ -x ~/lighthouse ]; then
+      echo $H|sudo -S cp /usr/local/bin/lighthouse /usr/local/bin/lighthouse.save 2>/dev/null
       t6 vpr
       t6 bpr
-      echo $H|sudo -S mv /usr/local/bin/lighthouse /usr/local/bin/lighthouse.save 2>/dev/null
       sudo mv ~/lighthouse /usr/local/bin
     else
       echo -e "${i}NAO EXISTE LIGHT COMPILADO PARA INSTALAR${f}"
