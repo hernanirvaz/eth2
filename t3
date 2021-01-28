@@ -2,7 +2,7 @@
 
 source /home/eth/eth2/t1
 
-if [ "$bnip" != "$vcip" ] && [ -x ~/lighthouse ]; then
+if [ "$bnip" != "$vcip" ] && [ -x ~/lighthouse ] && [ ! -d ~/lighthouse ]; then
   echo $H|sudo -S mv ~/lighthouse /usr/local/bin 2>/dev/null
 fi
 
@@ -18,10 +18,10 @@ if [ -x /usr/local/bin/lighthouse ]; then
     # how many peers it should try to find and maintain
     tarp=50 # default
     tarp=30 # less bandwidth/load for gossip
-    if [ "$bnip" != "$vcip" ];then bcnd="--http-address $bnip";else bcnd="--http-address 127.0.0.1";fi
+    if [ "$bnip" != "$vcip" ];then bcnd="--http-address 0.0.0.0";else bcnd="--http-address 127.0.0.1";fi
     if [ "$B" = "mainnet" ]; then
       blkc=""
-      endp="http://$vpsl:8545,$E"
+      endp="http://$zot1:8545,http://$vpsl:8545,$E"
     else
       blkc=" --testnet $B"
       endp="$E"
@@ -130,7 +130,7 @@ if [ -x /usr/local/bin/lighthouse ]; then
     fi
   fi
 else
-  if [ "$cuip" = "$vpsl" ]; then
+  if [ "$cuip" = "$zote" ]; then
     if [ -x ~/.cargo/bin/rustup ]; then
       echo -e "${i}UPDATE RUST${f}"
       source ~/.cargo/env
@@ -158,12 +158,12 @@ else
     echo -e "${i}VAI COMPILAR LIGHT${f}"
     source ~/.cargo/env
     make
-    if [ $? -eq 0  ] && [ -x  ~/.cargo/bin/lighthouse ]; then
+    if [ $? -eq 0  ] && [ -x ~/.cargo/bin/lighthouse ]; then
       echo $H|sudo -S cp ~/.cargo/bin/lighthouse /usr/local/bin 2>/dev/null
-      if [ "$bnip" != "$vcip" ]; then
-        scp -P 2020 ~/.cargo/bin/lighthouse $vcip:~
-        scp -P 2020 ~/.cargo/bin/lighthouse $vpsm:~
-      fi
+      # if [ "$bnip" != "$vcip" ]; then
+      #   scp -P 2020 ~/.cargo/bin/lighthouse $vcip:~
+      #   scp -P 2020 ~/.cargo/bin/lighthouse $vpsm:~
+      # fi
     else
       echo -e "${i}NAO EXISTE LIGHT COMPILADO PARA INSTALAR${f}"
     fi

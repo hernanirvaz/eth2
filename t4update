@@ -4,8 +4,8 @@ source /home/eth/eth2/t1
 
 if [ "$1" = "linux" ] || [ "$1" = "reboot" ]; then
   echo -e "${i}FULL-UPGRADE${f}"
-  echo $H|sudo -S apt update -y 2>/dev/null
   [ "$1" = "reboot" ] && { t6 gpr; }
+  echo $H|sudo -S apt update -y 2>/dev/null
   sudo apt full-upgrade -y && sudo apt dist-upgrade -y
   sudo apt autoremove -y
   sudo apt autoclean

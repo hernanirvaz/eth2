@@ -16,7 +16,7 @@ function fop { uu 'ufw allow 3000/tcp comment grafana'; }
 function fcl { uu 'ufw deny  3000/tcp comment grafana'; }
 
 function uu { echo -e "${i}$1${f}";echo $H|sudo -S $1 2>/dev/null; }
-function ut { echo -e "${i}$1${f}";echo $H|sudo -S $1 2>/dev/null|tail; }
+function ut { echo -e "${i}$1${f}";echo $H|sudo -S $1 2>/dev/null|tail -n $2; }
 function un { echo $H|sudo -S $1 1>/dev/null 2>&1; }
 function up { echo $H|sudo -S $1 2>/dev/null; }
 function jb { uu "journalctl --no-hostname --no-full -f $1"; }
@@ -109,8 +109,8 @@ fi
 # lista portas
 [ "$1" = "lp" ] && { netstat -tulpn; }
 # peers/records
-[ "$1" = "np" ] && { ut "grep -i peercount /var/log/syslog";ut "grep -i peers: /var/log/syslog"; }
-[ "$1" = "nr" ] && { ut "grep -i record /var/log/syslog"; }
+[ "$1" = "np" ] && { ut "grep -i peercount /var/log/syslog" "${2:-30}";ut "grep -i peers: /var/log/syslog" "${2:-30}"; }
+[ "$1" = "nr" ] && { ut "grep -i record /var/log/syslog" "${2:-70}"; }
 # outros journal system/lighthouse
 [ "$1" = "jj" ] && { jb; }
 [ "$1" = "lj" ] && { echo $H|sudo -S grep 'ERROR\|WARN' /var/log/syslog 2>/dev/null; }

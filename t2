@@ -10,6 +10,8 @@ if [ "$(echo $H|sudo -S ufw status 2>/dev/null|grep -i inactive)" ]; then
   sudo ufw default deny incoming
   sudo ufw default allow outgoing
   sudo ufw deny 22/tcp comment oldssh
+  sudo ufw allow 53/tcp comment dns
+  sudo ufw allow 43/tcp comment whois
   sudo ufw deny 30303 comment eth1
   sudo ufw deny 9000 comment eth2
   sudo ufw deny 8545 comment geapi
