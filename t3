@@ -56,11 +56,11 @@ if [ -x /usr/local/bin/lighthouse ]; then
 		EOF
     sudo mv $ethb.service /etc/systemd/system/$ethb.service
     sudo chmod 644 /etc/systemd/system/$ethb.service
-    t6 be
-    t6 ba
-    t6 bj
+    #t6 be
+    #t6 ba
+    #t6 bj
   fi
-  if [ "$cuip" = "$vcip" ]; then
+  if [ "$cuip" = "n$vcip" ]; then
     user="eth3"
     if [ "$bnip" != "$vcip" ];then vlcl="--beacon-nodes http://$bnip:5052 --metrics-address $vcip";else vlcl="--beacon-nodes http://127.0.0.1:5052 --metrics-address 127.0.0.1";fi
     if [ "$B" = "mainnet" ]; then
@@ -130,7 +130,7 @@ if [ -x /usr/local/bin/lighthouse ]; then
     fi
   fi
 else
-  if [ "$cuip" = "$zote" ]; then
+  if [ "$cuip" = "$zot1" ]; then
     if [ -x ~/.cargo/bin/rustup ]; then
       echo -e "${i}UPDATE RUST${f}"
       source ~/.cargo/env

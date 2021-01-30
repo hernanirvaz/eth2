@@ -28,7 +28,8 @@ patp='prometheus*'
 patf='grafana*'
 
 # active nodes
-zote='87.196.224.246'
+zoe1='83.132.37.53'
+zoe2='193.126.128.176'
 zot1='192.168.8.25'
 zot2='192.168.8.28'
 zot3='192.168.8.31'
