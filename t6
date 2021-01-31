@@ -115,7 +115,7 @@ fi
 [ "$1" = "nr" ] && { ut "grep -i record /var/log/syslog" "${2:-70}"; }
 # outros journal system/lighthouse
 [ "$1" = "jj" ] && { jb; }
-[ "$1" = "lj" ] && { echo $H|sudo -S grep 'ERROR\|WARN' /var/log/syslog 2>/dev/null; }
+[ "$1" = "lj" ] && { echo $H|sudo -S grep -i 'lighthouse\|geth' /var/log/syslog 2>/dev/null | grep -iv 'info'; }
 [ "$1" = "gs" ] && { gs;echo -e $m; }
 [ "$1" = "g0" ] && { g0;echo -e $g0; }
 [ "$1" = "ws" ] && { uu "ufw status numbered"; }
