@@ -14,7 +14,7 @@ if [ "$1" = "linux" ] || [ "$1" = "reboot" ]; then
 fi
 
 if [ "$1" = "eth" ] && [ -x /usr/local/bin/lighthouse ]; then
-  if [ "$cuip" = "$vpsl" ]; then
+  if [ "$cunm" = "$zon1" ] || [ "$cunm" = "$vpnl" ]; then
     if [ -x ~/.cargo/bin/rustup ]; then
       echo -e "${i}UPDATE RUST${f}"
       rustup update

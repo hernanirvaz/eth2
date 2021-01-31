@@ -2,12 +2,12 @@
 
 source /home/eth/eth2/t1
 
-if [ "$bnip" != "$vcip" ] && [ -x ~/lighthouse ] && [ ! -d ~/lighthouse ]; then
+if [ -x ~/lighthouse ] && [ ! -d ~/lighthouse ]; then
   echo $H|sudo -S mv ~/lighthouse /usr/local/bin 2>/dev/null
 fi
 
 if [ -x /usr/local/bin/lighthouse ]; then
-  if [ "$cuip" = "$bnip" ]; then
+  if [ "$cunm" = "$bnnm" ]; then
     user="eth2"
     # slots per restore point after init can't be changed
     sprp=1024 # Yearly Disk Usage  12.8GB
@@ -60,7 +60,7 @@ if [ -x /usr/local/bin/lighthouse ]; then
     #t6 ba
     #t6 bj
   fi
-  if [ "$cuip" = "n$vcip" ]; then
+  if [ "$cunm" = "$vcnm" ]; then
     user="eth3"
     if [ "$bnip" != "$vcip" ];then vlcl="--beacon-nodes http://$bnip:5052 --metrics-address $vcip";else vlcl="--beacon-nodes http://127.0.0.1:5052 --metrics-address 127.0.0.1";fi
     if [ "$B" = "mainnet" ]; then
@@ -130,7 +130,7 @@ if [ -x /usr/local/bin/lighthouse ]; then
     fi
   fi
 else
-  if [ "$cuip" = "$zot1" ]; then
+  if [ "$cunm" = "$zon1" ] || [ "$cunm" = "$vpnl" ]; then
     if [ -x ~/.cargo/bin/rustup ]; then
       echo -e "${i}UPDATE RUST${f}"
       source ~/.cargo/env
@@ -168,6 +168,6 @@ else
       echo -e "${i}NAO EXISTE LIGHT COMPILADO PARA INSTALAR${f}"
     fi
   else
-    echo -e "${i}NAO EXISTE BINARIO LIGHT PARA INSTALAR${f}"
+    echo -e "${i}RUST NAO DEVE SER INSTALADO AQUI${f}"
   fi
 fi

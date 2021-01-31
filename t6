@@ -54,16 +54,16 @@ function g0 { g0=0;[ -d /var/lib/goethereum ] && g0=$(echo $H|sudo -S du -s /var
 function g1 { g1=0;[ -d /var/lib/goethereum ] && g1=$(geth attach $geapi --exec eth.syncing); }
 function g2 { g2=0;[ -d /var/lib/goethereum ] && g2=$(geth attach $geapi --exec net.peerCount); }
 function gs {
-  if [ -d /var/lib/goethereum ] && ([ "$cuip" = "$vpsl" ] || [ "$cuip" = "$zoe1" ]); then
+  if [ -d /var/lib/goethereum ] && ([ "$cunm" = "$vpnl" ] || [ "$cunm" = "$zon1" ]); then
     geapi="http://$zot1:8545"
-    [ "$cuip" = "$vpsl" ] && geapi="http://$vpsl:8545"
+    [ "$cunm" = "$vpnl" ] && geapi="http://$vpsl:8545"
     g0
     g1
     g2
     if [ "$(echo $g1|grep -i false)" ]; then
       m="GETH SYNCING DONE - PEERCOUNT $g2"
     else
-      if [ "$cuip" = "$zoe1" ]; then
+      if [ "$cunm" = "$zon1" ]; then
         r0=$(ssh -p 2020 $vpsl "export H=$H;$p0/t6 g0")
       else
         r0=$g0
@@ -79,12 +79,16 @@ function gs {
       m="GETH SYNCING - PEERCOUNT: $g2\nBlocks api: $h ($((h-c)))\tStates api: $k ($((k-p)))\nBlocks log: $d ($((d-b)))\tStates log: $t ($((t-i)))\nFiles size: $(($r0/1000))M ($(((r0-g0)/1000))M)"
     fi
   else
-    m="NO GETH HERE ($cuip)"
+    m="NO GETH HERE ($cunm)"
   fi
 }
 
-# para tratar home ip change
-if [ "$1" = "wv" ] && [ "$cuip" = "$vcip" ]; then
+# DEPRECATED
+if [ "$1" = "hs" ] && [ "$(grep 'cuip *= *"\$' $p0/t1)" ]; then
+  cp $p0/t1 $p0/t1.save
+  sed -e "s%cuip=.*%cuip='$cuip'%" $p0/t1.save>$p0/t1
+fi
+if [ "$1" = "wv" ] && [ "$cunm" = "$vcnm" ]; then
   bnhr=$(up 'ufw show listening'|grep vcmet|grep -v $bnip|sed -e 's%.*\(allow.*\)comment.*%\1%')
   bnhc=$(echo $bnhr|cut -d' ' -f3)
   if [ "$bnhc" != "$zot1" ];then
@@ -92,17 +96,6 @@ if [ "$1" = "wv" ] && [ "$cuip" = "$vcip" ]; then
     un "ufw allow from $zot1 to any port 5064 comment vcmet"
     un 'ufw reload'
     up 'ufw status numbered'
-  fi
-fi
-if [ "$1" = "hs" ] && [ "$(grep 'cuip *= *"\$' $p0/t1)" ]; then
-  cp $p0/t1 $p0/t1.save
-  if [ "$cuip" != "$vpsl" ] && [ "$cuip" != "$vpsm" ] && [ "$cuip" != "$vpss" ] && [ "$cuip" != "$zot1" ]; then
-    sed -e "s%cuip=.*%cuip='$vcip'%;s%zot1=.*%zot1='$cuip'%" $p0/t1.save>$p0/t1
-    scp -P 2020 $p0/t1 $vcip:$p0
-    sed -e "s%cuip=.*%cuip='$cuip'%;s%zot1=.*%zot1='$cuip'%" $p0/t1.save>$p0/t1
-    ssh -p 2020 $vcip "export H=$H;$p0/t6 wv"
-  else
-    sed -e "s%cuip=.*%cuip='$cuip'%" $p0/t1.save>$p0/t1
   fi
 fi
 
@@ -200,8 +193,6 @@ if [ -z "$1" ]; then
   c1="$c1\nnp\tnode peers"
   c1="$c1\nnr\tnode record"
   c1="$c1\ngs\tgeth syncing"
-  c1="$c1\nhs\thome ip set"
-  c1="$c1\nwv\tfirewall validator"
   c1="$c1\nws\tfirewall status"
   c1="$c1\nwa\tfirewall arranca"
   c1="$c1\nwpr\tfirewall para"

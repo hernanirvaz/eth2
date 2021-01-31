@@ -2,7 +2,7 @@
 
 source /home/eth/eth2/t1
 
-if [ "$cuip" = "$vcip" ]; then
+if [ "$cunm" = "$vcnm" ]; then
   echo -e "${i}MONITOR NAO DEVE SER INSTALADO - DEVE FICAR ONDE FICA O BEACON${f}"
 else
   if [ -f $p1/prometheus.yml ]; then

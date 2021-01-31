@@ -50,7 +50,7 @@ sudo chmod 644 /etc/apt/apt.conf.d/*
 sudo chmod 755 /etc/update-motd.d/*
 sudo pip3 install speedtest-cli
 
-if [ "$bnip" != "$vcip" ] && ([ "$cuip" = "$vcip" ] || [ "$cuip" = "$vpsm" ]); then
+if [ "$cunm" != "$vpnl" ] && [ "$cunm" != "$zon1" ]; then
   echo -e "${i}GETH NAO DEVE SER INSTALADO AQUI - DEVE FAZER REBOOT${f}"
 else
   if [ -f /etc/systemd/system/$ethg.service ]; then
