@@ -34,7 +34,7 @@ fi
 
 t4update linux
 # Install unattended upgrades & system info & update-notifier & internet speed test
-sudo apt install unattended-upgrades apt-listchanges landscape-common update-notifier-common python3-pip -y
+sudo apt install unattended-upgrades apt-listchanges landscape-common update-notifier-common python3-pip net-tools -y
 # Turn on unattended security updates, run
 sudo dpkg-reconfigure -plow unattended-upgrades
 sed -e 's%^ */* *Unattended-Upgrade::Mail .*$%Unattended-Upgrade::Mail "hernanilr@gmail.com";%i' /etc/apt/apt.conf.d/50unattended-upgrades > ~/t5-upg.save
