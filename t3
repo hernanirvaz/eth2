@@ -18,7 +18,7 @@ if [ -x /usr/local/bin/lighthouse ]; then
     # how many peers it should try to find and maintain
     tarp=50 # default
     tarp=30 # less bandwidth/load for gossip
-    if [ "$bnip" != "$vcip" ];then bcnd="--http-address 0.0.0.0";else bcnd="--http-address 127.0.0.1";fi
+    if [ "$bnnm" != "$vcnm" ];then bcnd="--http-address 0.0.0.0";else bcnd="--http-address 127.0.0.1";fi
     if [ "$B" = "mainnet" ]; then
       blkc=""
       endp="http://$zot1:8545,http://$vpsl:8545,$E"
@@ -48,7 +48,7 @@ if [ -x /usr/local/bin/lighthouse ]; then
 		Group=$user
 		Restart=always
 		RestartSec=10
-		ExecStart=/usr/local/bin/lighthouse$blkc --datadir $dtdi bn --slasher --slots-per-restore-point $sprp --target-peers $tarp $bcnd --staking --eth1-endpoints $endp
+		ExecStart=/usr/local/bin/lighthouse$blkc --datadir $dtdi bn --slasher --slots-per-restore-point $sprp --target-peers $tarp $bcnd --staking --validator-monitor-auto --eth1-endpoints $endp
 		ExecStopPost=/home/eth/eth2/t8mail BEACSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 		
 		[Install]

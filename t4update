@@ -2,18 +2,22 @@
 
 source /home/eth/eth2/t1
 
-if [ "$1" = "linux" ] || [ "$1" = "reboot" ]; then
+# linux  NO GETH STOP | NO GETH START | NO REBOOT
+# reboot    GETH STOP | NO GETH START |    REBOOT
+# geth      GETH STOP |    GETH START | NO REBOOT
+if [ "$1" = "linux" ] || [ "$1" = "reboot" ] || [ "$1" = "geth" ]; then
   echo -e "${i}FULL-UPGRADE${f}"
-  [ "$1" = "reboot" ] && { t6 gpr; }
   echo $H|sudo -S apt update -y 2>/dev/null
+  if [ "$1" = "reboot" ] || [ "$1" = "geth" ]; then t6 gpr; fi
   sudo apt full-upgrade -y && sudo apt dist-upgrade -y
+  [ "$1" = "geth"   ] && { t6 ga; }
   sudo apt autoremove -y
   sudo apt autoclean
-  [ "$1" = "linux"  ] && { t6 ga; }
   [ "$1" = "reboot" ] && { sudo reboot; }
 fi
 
-if [ "$1" = "eth" ] && [ -x /usr/local/bin/lighthouse ]; then
+# eth2 update
+if [ "$1" = "eth2" ] && [ -x /usr/local/bin/lighthouse ]; then
   if [ "$cunm" = "$zon1" ] || [ "$cunm" = "$vpnl" ]; then
     if [ -x ~/.cargo/bin/rustup ]; then
       echo -e "${i}UPDATE RUST${f}"
