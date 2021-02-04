@@ -109,6 +109,7 @@ fi
 # outros journal system/lighthouse
 [ "$1" = "el" ] && { echo $H|sudo -S grep -i 'lighthouse\|geth' /var/log/syslog 2>/dev/null | grep -iv 'info'; }
 [ "$1" = "sl" ] && { echo $H|sudo -S grep -i 'error' /var/log/syslog 2>/dev/null | grep -iv 'lighthouse\|geth'; }
+[ "$1" = "bl" ] && { echo $H|sudo -S grep 'Block from API\|Successfully published block' /var/log/syslog 2>/dev/null; }
 [ "$1" = "gs" ] && { gs;echo -e $m; }
 [ "$1" = "g0" ] && { g0;echo -e $g0; }
 [ "$1" = "ws" ] && { uu "ufw status numbered"; }
@@ -190,6 +191,7 @@ if [ -z "$1" ]; then
   c1="$c1\nsj\tsystem journal"
   c1="$c1\nsl\tlista system journal ERROR"
   c1="$c1\nel\tlista $ethg $ethb $ethv !INFO"
+  c1="$c1\nbl\tlista block proposals"
   c1="$c1\nll\tlista servicos"
   c1="$c1\nlp\tlista portas"
   c1="$c1\nnp\tnode peers"
