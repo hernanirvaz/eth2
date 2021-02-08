@@ -64,7 +64,7 @@ function gs {
       m="GETH SYNCING DONE - PEERCOUNT $g2"
     else
       if [ "$cunm" = "$zon1" ]; then
-        r0=$(ssh -p 2020 $vpsl "export H=$H;$p0/t6 g0")
+        r0=$(ssh vpsl "export H=$H;$p0/t6 g0")
       else
         r0=$g0
       fi

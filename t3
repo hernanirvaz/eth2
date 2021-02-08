@@ -17,7 +17,7 @@ if [ -x /usr/local/bin/lighthouse ]; then
     sprp=2048 # Yearly Disk Usage   6.4GB default use disk space for slasher (256GB) -> more income
     # how many peers it should try to find and maintain
     tarp=50 # default
-    tarp=30 # less bandwidth/load for gossip
+    tarp=40 # less bandwidth/load for gossip - too low (<25) and block proposals start getting orphaned or even missed
     if [ "$bnnm" != "$vcnm" ];then bcnd="--http-address 0.0.0.0";else bcnd="--http-address 127.0.0.1";fi
     if [ "$B" = "mainnet" ]; then
       blkc=""
