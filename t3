@@ -48,7 +48,7 @@ if [ -x /usr/local/bin/lighthouse ]; then
 		Group=$user
 		Restart=always
 		RestartSec=10
-		ExecStart=/usr/local/bin/lighthouse$blkc --datadir $dtdi bn --slasher --slots-per-restore-point $sprp --target-peers $tarp $bcnd --staking --validator-monitor-auto --eth1-endpoints $endp
+		ExecStart=/usr/local/bin/lighthouse$blkc --datadir $dtdi bn --slasher --slots-per-restore-point $sprp --target-peers $tarp $bcnd --staking --eth1-endpoints $endp
 		ExecStopPost=/home/eth/eth2/t8mail BEACSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 		
 		[Install]

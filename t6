@@ -84,11 +84,11 @@ function gs {
 }
 
 # DEPRECATED
-if [ "$1" = "hs" ] && [ "$(grep 'cuip *= *"\$' $p0/t1)" ]; then
+if [ "$1" = "zozhs" ] && [ "$(grep 'cuip *= *"\$' $p0/t1)" ]; then
   cp $p0/t1 $p0/t1.save
   sed -e "s%cuip=.*%cuip='$cuip'%" $p0/t1.save>$p0/t1
 fi
-if [ "$1" = "wv" ] && [ "$cunm" = "$vcnm" ]; then
+if [ "$1" = "zozwv" ] && [ "$cunm" = "$vcnm" ]; then
   bnhr=$(up 'ufw show listening'|grep vcmet|grep -v $bnip|sed -e 's%.*\(allow.*\)comment.*%\1%')
   bnhc=$(echo $bnhr|cut -d' ' -f3)
   if [ "$bnhc" != "$zot1" ];then
@@ -107,9 +107,10 @@ fi
 [ "$1" = "np" ] && { ut "grep -i peercount /var/log/syslog" "${2:-30}";ut "grep -i peers: /var/log/syslog" "${2:-30}"; }
 [ "$1" = "nr" ] && { ut "grep -i record /var/log/syslog" "${2:-70}"; }
 # outros journal system/lighthouse
-[ "$1" = "el" ] && { echo $H|sudo -S grep -i 'lighthouse\|geth' /var/log/syslog 2>/dev/null | grep -iv 'info'; }
-[ "$1" = "sl" ] && { echo $H|sudo -S grep -i 'error' /var/log/syslog 2>/dev/null | grep -iv 'lighthouse\|geth'; }
-[ "$1" = "bl" ] && { echo $H|sudo -S grep 'Block from API\|Successfully published block' /var/log/syslog 2>/dev/null; }
+[ "$1" = "el" ] && { echo $H|sudo -S grep -i 'lighthouse\|geth' /var/log/syslog 2>/dev/null | grep -v ' INFO '; }
+[ "$1" = "sl" ] && { echo $H|sudo -S grep -i 'error' /var/log/syslog 2>/dev/null | grep -v 'lighthouse\|geth'; }
+[ "$1" = "bl" ] && { echo $H|sudo -S grep -i 'Successfully published block\|Block from API' /var/log/syslog 2>/dev/null; }
+[ "$1" = "al" ] && { a=$(echo $H|sudo -S grep -i 'Successfully published attestation\|aggregated attestation' /var/log/syslog 2>/dev/null|wc -l);echo "attestations: ${a:-0}"; }
 [ "$1" = "gs" ] && { gs;echo -e $m; }
 [ "$1" = "g0" ] && { g0;echo -e $g0; }
 [ "$1" = "ws" ] && { uu "ufw status numbered"; }
@@ -192,6 +193,7 @@ if [ -z "$1" ]; then
   c1="$c1\nsl\tlista system journal ERROR"
   c1="$c1\nel\tlista $ethg $ethb $ethv !INFO"
   c1="$c1\nbl\tlista block proposals"
+  c1="$c1\nal\tlista attestations"
   c1="$c1\nll\tlista servicos"
   c1="$c1\nlp\tlista portas"
   c1="$c1\nnp\tnode peers"
