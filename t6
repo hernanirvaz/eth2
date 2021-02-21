@@ -6,14 +6,23 @@ source /home/eth/eth2/t1
 # rsync -hrtpe 'ssh -p 2020' --compress-level=9 --progress --stats 207.180.214.8:/home/eth/eth2 ./teste
 
 # open/close api/metrics ports com IPs
-function gop { uu 'ufw allow 30303 comment eth1';uu 'ufw delete deny 8545';uu "ufw allow from $vpsm to any port 8545 comment geapi";uu "ufw allow from $vpsl to any port 8545 comment geapi"; }
-function gcl { uu 'ufw deny  30303 comment eth1';uu 'ufw deny 8545 comment geapi';uu "ufw delete allow from $vpsm to any port 8545";uu "ufw delete allow from $vpsl to any port 8545"; }
-function bop { uu 'ufw allow 9000 comment eth2' ;uu 'ufw delete deny 5052'                               ;uu "ufw allow from $vcip to any port 5052 comment bnapi"; }
-function bcl { uu 'ufw deny  9000 comment eth2' ;uu 'ufw deny 5052 comment bnapi'                        ;uu "ufw delete allow from $vcip to any port 5052"; }
-function vop { uu 'ufw delete deny 5064'        ;uu "ufw allow from $bnip to any port 5064 comment vcmet";uu "ufw allow from $zot1 to any port 5064 comment vcmet"; }
-function vcl { uu 'ufw deny 5064 comment vcmet' ;uu "ufw delete allow from $bnip to any port 5064"       ;uu "ufw delete allow from $zot1 to any port 5064"; }
+function goa { if [ "$cust" = "hrv" ];then uu "ufw        allow from $zip2 $1";uu "ufw        allow from $zip3 $1";else uu "ufw        allow from $vip1 $1";uu "ufw        allow from $vip2 $1";fi; }
+function gca { if [ "$cust" = "hrv" ];then uu "ufw delete allow from $zip2 $1";uu "ufw delete allow from $zip3 $1";else uu "ufw delete allow from $vip1 $1";uu "ufw delete allow from $vip2 $1";fi; }
+function gop { uu 'ufw allow 30303 comment eth1';uu 'ufw delete deny 8545              ';goa "to any port 8545 comment geapi"; }
+function gcl { uu 'ufw deny  30303 comment eth1';uu 'ufw        deny 8545 comment geapi';gca "to any port 8545"; }
+
+function boa { if [ "$cust" = "hrv" ];then uu "ufw        allow from $zip3 $1";else uu "ufw        allow from $vip3 $1";fi; }
+function bca { if [ "$cust" = "hrv" ];then uu "ufw delete allow from $zip3 $1";else uu "ufw delete allow from $vip3 $1";fi; }
+function bop { uu 'ufw allow 9000 comment eth2';uu 'ufw delete deny 5052              ';boa 'to any port 5052 comment bnapi'; }
+function bcl { uu 'ufw deny  9000 comment eth2';uu 'ufw        deny 5052 comment bnapi';bca 'to any port 5052'; }
+
+function voa { if [ "$cust" = "hrv" ];then uu "ufw        allow from $zip1 $1";else uu "ufw        allow from $vip1 $1";fi; }
+function vca { if [ "$cust" = "hrv" ];then uu "ufw delete allow from $zip1 $1";else uu "ufw delete allow from $vip1 $1";fi; }
+function vop { uu 'ufw delete deny 5064'        ;voa 'to any port 5064 comment vcmet'; }
+function vcl { uu 'ufw deny 5064 comment vcmet' ;vca 'to any port 5064'; }
+
 function fop { uu 'ufw allow 3000/tcp comment grafana'; }
-function fcl { uu 'ufw deny  3000/tcp comment grafana'; }
+function fcl { uu 'ufw deny  3000/tcp'; }
 
 function uu { echo -e "${i}$1${f}";echo $H|sudo -S $1 2>/dev/null; }
 function ut { echo -e "${i}$1${f}";echo $H|sudo -S $1 2>/dev/null|tail -n $2; }
@@ -54,17 +63,16 @@ function g0 { g0=0;[ -d /var/lib/goethereum ] && g0=$(echo $H|sudo -S du -s /var
 function g1 { g1=0;[ -d /var/lib/goethereum ] && g1=$(geth attach $geapi --exec eth.syncing); }
 function g2 { g2=0;[ -d /var/lib/goethereum ] && g2=$(geth attach $geapi --exec net.peerCount); }
 function gs {
-  if [ -d /var/lib/goethereum ] && ([ "$cunm" = "$vpnl" ] || [ "$cunm" = "$zon1" ]); then
-    geapi="http://$zot1:8545"
-    [ "$cunm" = "$vpnl" ] && geapi="http://$vpsl:8545"
+  if [ -d /var/lib/goethereum ] && ([ "$cunm" = "$vnm1" ] || [ "$cunm" = "$znm1" ]); then
+    if [ "$cunm" = "$znm1" ];then geapi="http://$zip1:8545";else geapi="http://$vip1:8545";fi
     g0
     g1
     g2
     if [ "$(echo $g1|grep -i false)" ]; then
       m="GETH SYNCING DONE - PEERCOUNT $g2"
     else
-      if [ "$cunm" = "$zon1" ]; then
-        r0=$(ssh vpsl "export H=$H;$p0/t6 g0")
+      if [ "$cunm" = "$znm1" ]; then
+        r0=$(ssh vip1 "export H=$H;$p0/t6 g0")
       else
         r0=$g0
       fi
@@ -82,22 +90,7 @@ function gs {
     m="NO GETH HERE ($cunm)"
   fi
 }
-
-# DEPRECATED
-if [ "$1" = "zozhs" ] && [ "$(grep 'cuip *= *"\$' $p0/t1)" ]; then
-  cp $p0/t1 $p0/t1.save
-  sed -e "s%cuip=.*%cuip='$cuip'%" $p0/t1.save>$p0/t1
-fi
-if [ "$1" = "zozwv" ] && [ "$cunm" = "$vcnm" ]; then
-  bnhr=$(up 'ufw show listening'|grep vcmet|grep -v $bnip|sed -e 's%.*\(allow.*\)comment.*%\1%')
-  bnhc=$(echo $bnhr|cut -d' ' -f3)
-  if [ "$bnhc" != "$zot1" ];then
-    un "ufw delete $bnhr"
-    un "ufw allow from $zot1 to any port 5064 comment vcmet"
-    un 'ufw reload'
-    up 'ufw status numbered'
-  fi
-fi
+function g2 { g2=0;[ -d /var/lib/goethereum ] && g2=$(geth attach $geapi --exec net.peerCount); }
 
 # lista servicos
 [ "$1" = "ll" ] && { uu "systemctl list-units $pate $patp $patf"; }
@@ -138,6 +131,13 @@ fi
 [ "$1" = "pa" ] && { dr;pa; }
 [ "$1" = "na" ] && { dr;na; }
 [ "$1" = "fa" ] && { dr;fa; }
+# para & arranca & journal
+[ "$1" = "gaj" ] && { dr;ga;jb "-u $ethg"; }
+[ "$1" = "baj" ] && { dr;ba;jb "-u $ethb"; }
+[ "$1" = "vaj" ] && { dr;va;jb "-u $ethv"; }
+[ "$1" = "grs" ] && { gp;dr;ga;jb "-u $ethg"; }
+[ "$1" = "brs" ] && { bp;dr;ba;jb "-u $ethb"; }
+[ "$1" = "vrs" ] && { vp;dr;va;jb "-u $ethv"; }
 # enable
 [ "$1" = "te" ] && { dr;ge;be;ve;pe;ne;fe; }
 [ "$1" = "ee" ] && { dr;ge;be;ve; }
@@ -183,10 +183,12 @@ if [ -z "$1" ]; then
   c1="$c1\n"
   c1="$c1\nsegunda letra"
   c1="$c1\na\tarranca"
+  c1="$c1\naj\tarranca & journal"
   c1="$c1\ne\tenable"
   c1="$c1\nj\tjournal"
   c1="$c1\npr\tpara"
   c1="$c1\nds\tdisable"
+  c1="$c1\nrs\tpara & arranca & journal - restart"
   c1="$c1\n"
   c1="$c1\noutros"
   c1="$c1\nsj\tsystem journal"

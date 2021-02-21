@@ -17,8 +17,8 @@ if [ "$1" = "linux" ] || [ "$1" = "reboot" ] || [ "$1" = "geth" ]; then
 fi
 
 # eth2 update
-if [ "$1" = "eth2" ] && [ -x /usr/local/bin/lighthouse ]; then
-  if [ "$cunm" = "$zon1" ] || [ "$cunm" = "$vpnl" ]; then
+if [ "$1" = "eth2" ]; then
+  if [ "$cunm" = "$znm1" ] || [ "$cunm" = "$vnm1" ]; then
     if [ -x ~/.cargo/bin/rustup ]; then
       echo -e "${i}UPDATE RUST${f}"
       rustup update
@@ -43,15 +43,21 @@ if [ "$1" = "eth2" ] && [ -x /usr/local/bin/lighthouse ]; then
     git checkout $v
     echo -e "${i}VAI COMPILAR LIGHT${f}"
     make
-    if [ $? -eq 0  ] && [ -x  ~/.cargo/bin/lighthouse ]; then
-      echo $H|sudo -S cp /usr/local/bin/lighthouse /usr/local/bin/lighthouse.save 2>/dev/null
-      if [ "$bnip" != "$vcip" ]; then
-        scp -P 2020 ~/.cargo/bin/lighthouse $vcip:~
-        scp -P 2020 ~/.cargo/bin/lighthouse $vpsm:~
+    if [ $? -eq 0  ] && [ -x ~/.cargo/bin/lighthouse ]; then
+      if [ "$cunm" = "$znm1" ]; then
+        scp ~/.cargo/bin/lighthouse ztc2:~
+        scp ~/.cargo/bin/lighthouse ztc3:~
       fi
-      echo $H|sudo -S cp ~/.cargo/bin/lighthouse /usr/local/bin 2>/dev/null
-      t6 vpr
-      t6 bpr
+      if [ "$cunm" = "$vnm1" ]; then
+        scp ~/.cargo/bin/lighthouse vpsm:~
+        scp ~/.cargo/bin/lighthouse vpss:~
+      fi
+      if [ -x /usr/local/bin/lighthouse ]; then
+        echo $H|sudo -S cp /usr/local/bin/lighthouse /usr/local/bin/lighthouse.save 2>/dev/null
+        t6 vpr
+        t6 bpr
+        echo $H|sudo -S cp ~/.cargo/bin/lighthouse /usr/local/bin 2>/dev/null
+      fi
     else
       echo -e "${i}NAO EXISTE LIGHT COMPILADO PARA INSTALAR${f}"
     fi
@@ -68,4 +74,5 @@ if [ "$1" = "eth2" ] && [ -x /usr/local/bin/lighthouse ]; then
   echo $H|sudo -S chmod 755 /usr/local/bin/lighthouse 2>/dev/null
   t6 ba
   t6 va
+  echo -e "${i}NOVO LIGHT INSTALADO - PODE/DEVE VERIFICAR${f}"
 fi

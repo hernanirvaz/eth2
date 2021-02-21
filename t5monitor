@@ -2,13 +2,12 @@
 
 source /home/eth/eth2/t1
 
-if [ "$cunm" = "$vcnm" ]; then
-  echo -e "${i}MONITOR NAO DEVE SER INSTALADO - DEVE FICAR ONDE FICA O BEACON${f}"
+if [ "$cunm" != "$znm3" ] && [ "$cunm" != "$vnm2" ]; then
+  echo -e "${i}MONITOR NAO DEVE SER INSTALADO - DEVE FICAR ONDE FICA O MAIN BEACON${f}"
 else
   if [ -f $p1/prometheus.yml ]; then
     echo -e "${i}PROMETHEUS JA INSTALADO${f}"
   else
-    if [ "$bnip" != "$vcip" ];then vlcl="$vcip";else vlcl="127.0.0.1";fi
     echo -e "${i}CONFIGURE PROMETHEUS${f}"
     echo $H|sudo -S apt install -y prometheus prometheus-node-exporter 2>/dev/null
     t6 mpr
@@ -34,7 +33,7 @@ else
 		  - job_name: 'validators'
 		    metrics_path: /metrics
 		    static_configs:
-		      - targets: ['$vlcl:5064']
+		      - targets: ['$vip3:5064', 'localhost:5064']
 		EOF
     sudo mv prometheus.yml $p1/prometheus.yml
     echo -e "${i}CONFIGURE GRAFANA${f}"

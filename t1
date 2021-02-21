@@ -8,6 +8,7 @@ p1='/etc/prometheus'
 
 meeu="$(whoami)"
 cunm="$(uname -n)"
+cust="$(uname -n|cut -c1-3)"
 
 # eth-geth.service                        eth1 geth service
 ethg='eth-geth'
@@ -27,22 +28,18 @@ pate='eth-*'
 patp='prometheus*'
 patf='grafana*'
 
-zot1='192.168.8.25'
-zot2='192.168.8.28'
-zot3='192.168.8.31'
-zon1='hrv-zotac1'
-zon2='hrv-zotac2'
-zon3='hrv-zotac3'
-vpsl='207.180.214.8'
-vpsm='173.249.42.190'
-vpss='164.68.107.45'
-vpnl='vmi471826.contaboserver.net'
-vpnm='vmi506976.contaboserver.net'
-vpns='vmi469069.contaboserver.net'
-bnip=$vpsl
-bnnm=$vpnl
-vcip=$vpss
-vcnm=$vpns
+zip1='192.168.8.25'
+zip2='192.168.8.28'
+zip3='192.168.8.31'
+znm1='hrv-zotac1'
+znm2='hrv-zotac2'
+znm3='hrv-zotac3'
+vip1='207.180.214.8'
+vip2='173.249.42.190'
+vip3='164.68.107.45'
+vnm1='vmi471826.contaboserver.net'
+vnm2='vmi506976.contaboserver.net'
+vnm3='vmi469069.contaboserver.net'
 
 # data is going here
 dtdi="/var/lib/lighthouse"

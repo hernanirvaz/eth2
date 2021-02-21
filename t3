@@ -4,10 +4,11 @@ source /home/eth/eth2/t1
 
 if [ -x ~/lighthouse ] && [ ! -d ~/lighthouse ]; then
   echo $H|sudo -S mv ~/lighthouse /usr/local/bin 2>/dev/null
+  echo $H|sudo -S chmod 755 /usr/local/bin/lighthouse 2>/dev/null
 fi
 
 if [ -x /usr/local/bin/lighthouse ]; then
-  if [ "$cunm" = "$bnnm" ]; then
+  if [ "$cunm" != "$znm1" ] && [ "$cunm" != "$vnm3" ]; then
     user="eth2"
     # slots per restore point after init can't be changed
     sprp=1024 # Yearly Disk Usage  12.8GB
@@ -17,11 +18,14 @@ if [ -x /usr/local/bin/lighthouse ]; then
     sprp=2048 # Yearly Disk Usage   6.4GB default use disk space for slasher (256GB) -> more income
     # how many peers it should try to find and maintain
     tarp=50 # default
-    tarp=40 # less bandwidth/load for gossip - too low (<25) and block proposals start getting orphaned or even missed
-    if [ "$bnnm" != "$vcnm" ];then bcnd="--http-address 0.0.0.0";else bcnd="--http-address 127.0.0.1";fi
+    tarp=25 # less bandwidth/load for gossip - too low (<25) and block proposals start getting orphaned or even missed
+    bcnd="--http-address 127.0.0.1"
+    [ "$cunm" = "$znm2" ] && bcnd="--http-address $zip2"
+    [ "$cunm" = "$vnm1" ] && bcnd="--http-address $vip1"
+    [ "$cunm" = "$vnm2" ] && bcnd="--http-address $vip2"
     if [ "$B" = "mainnet" ]; then
       blkc=""
-      endp="http://$zot1:8545,http://$vpsl:8545,$E"
+      endp="http://$zip1:8545,$E"
     else
       blkc=" --testnet $B"
       endp="$E"
@@ -37,6 +41,7 @@ if [ -x /usr/local/bin/lighthouse ]; then
     cd ~
     if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
     sudo chown $user:$user $becn
+    # bn --slasher --target-peers $tarp $bcnd --staking --validator-monitor-auto --eth1-endpoints $endp --subscribe-all-subnets --import-all-attestations
     cat <<-EOF > $ethb.service
 		[Unit]
 		Description=eth2 beacon service
@@ -48,7 +53,7 @@ if [ -x /usr/local/bin/lighthouse ]; then
 		Group=$user
 		Restart=always
 		RestartSec=10
-		ExecStart=/usr/local/bin/lighthouse$blkc --datadir $dtdi bn --slasher --slots-per-restore-point $sprp --target-peers $tarp $bcnd --staking --eth1-endpoints $endp
+		ExecStart=/usr/local/bin/lighthouse$blkc --datadir $dtdi bn --target-peers $tarp $bcnd --staking --eth1-endpoints $endp --subscribe-all-subnets --import-all-attestations
 		ExecStopPost=/home/eth/eth2/t8mail BEACSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 		
 		[Install]
@@ -60,9 +65,13 @@ if [ -x /usr/local/bin/lighthouse ]; then
     #t6 ba
     #t6 bj
   fi
-  if [ "$cunm" = "$vcnm" ]; then
+  if [ "$cunm" = "$znm3" ] || [ "$cunm" = "$vnm3" ]; then
     user="eth3"
-    if [ "$bnip" != "$vcip" ];then vlcl="--beacon-nodes http://$bnip:5052 --metrics-address $vcip";else vlcl="--beacon-nodes http://127.0.0.1:5052 --metrics-address 127.0.0.1";fi
+    if [ "$cunm" = "$znm3" ]; then
+      vlcl="--beacon-nodes http://127.0.0.1:5052,http://$zip2:5052"
+    else
+      vlcl="--beacon-nodes http://$vip2:5052,http://$vip1:5052"
+    fi
     if [ "$B" = "mainnet" ]; then
       blkc=""
     else
@@ -90,7 +99,7 @@ if [ -x /usr/local/bin/lighthouse ]; then
       echo -e "${i}COPIAR $vldt/slashing_protection.sqlite*${f}"
       echo $H|sudo -S mkdir -p $vldt 2>/dev/null
       sudo chown -R $meeu:$meeu $vldt
-      scp -P 2020 $vpss:$vldt/slashing_protection.sqlite* $vldt
+      scp $vip3:$vldt/slashing_protection.sqlite* $vldt
       if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
       sudo chown -R $user:$user $vldt
       sudo chmod 600 $vldt/slashing_protection.sqlite*
@@ -122,15 +131,15 @@ if [ -x /usr/local/bin/lighthouse ]; then
 			EOF
       sudo mv $ethv.service /etc/systemd/system/$ethv.service
       sudo chmod 644 /etc/systemd/system/$ethv.service
-      t6 ve
-      t6 va
-      t6 vj
+      #t6 ve
+      #t6 va
+      #t6 vj
     else
       echo -e "${i}VALIDATOR JA CONFIGURADO OR LOCKED ($dtdi/vc_lock)${f}"
     fi
   fi
 else
-  if [ "$cunm" = "$zon1" ] || [ "$cunm" = "$vpnl" ]; then
+  if [ "$cunm" = "$znm1" ] || [ "$cunm" = "$vnm1" ]; then
     if [ -x ~/.cargo/bin/rustup ]; then
       echo -e "${i}UPDATE RUST${f}"
       source ~/.cargo/env
@@ -155,15 +164,25 @@ else
     git fetch
     t=$(git rev-list --tags --max-count=1)
     git checkout $(git describe --tags $t)
-    echo -e "${i}VAI COMPILAR LIGHT${f}"
     source ~/.cargo/env
+    echo -e "${i}VAI COMPILAR LIGHT${f}"
     make
     if [ $? -eq 0  ] && [ -x ~/.cargo/bin/lighthouse ]; then
+      if [ "$cunm" = "$znm1" ]; then
+        scp ~/.cargo/bin/lighthouse ztc2:~
+        scp ~/.cargo/bin/lighthouse ztc3:~
+      fi
+      if [ "$cunm" = "$vnm1" ]; then
+        scp ~/.cargo/bin/lighthouse vpsm:~
+        scp ~/.cargo/bin/lighthouse vpss:~
+      fi
+      if [ -x /usr/local/bin/lighthouse ]; then
+        echo $H|sudo -S cp /usr/local/bin/lighthouse /usr/local/bin/lighthouse.save 2>/dev/null
+        t6 vpr
+        t6 bpr
+      fi
       echo $H|sudo -S cp ~/.cargo/bin/lighthouse /usr/local/bin 2>/dev/null
-      # if [ "$bnip" != "$vcip" ]; then
-      #   scp -P 2020 ~/.cargo/bin/lighthouse $vcip:~
-      #   scp -P 2020 ~/.cargo/bin/lighthouse $vpsm:~
-      # fi
+      echo $H|sudo -S chmod 755 /usr/local/bin/lighthouse 2>/dev/null
     else
       echo -e "${i}NAO EXISTE LIGHT COMPILADO PARA INSTALAR${f}"
     fi

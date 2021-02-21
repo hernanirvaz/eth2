@@ -37,20 +37,26 @@ t4update linux
 sudo apt install unattended-upgrades apt-listchanges landscape-common update-notifier-common python3-pip net-tools -y
 # Turn on unattended security updates, run
 sudo dpkg-reconfigure -plow unattended-upgrades
+sed -e 's%^ *ENABLED=.*$%ENABLED=0%i' /etc/default/motd-news > ~/motd-new.save
 sed -e 's%^ */* *Unattended-Upgrade::Mail .*$%Unattended-Upgrade::Mail "hernanilr@gmail.com";%i' /etc/apt/apt.conf.d/50unattended-upgrades > ~/t5-upg.save
 sed -e 's%^ *printf%# printf%i' /etc/update-motd.d/00-header > ~/t0-hea.save
 sed -e 's%^ *printf%# printf%i' /etc/update-motd.d/10-help-text > ~/t1-hel.save
 echo 'printf "Welcome to %s %s (%s %s %s)\n" "$(uname -n|cut -d. -f1)" "$DISTRIB_DESCRIPTION" "$(uname -o)" "$(uname -r)" "$(uname -m)"' >> ~/t0-hea.save
+sudo mv ~/motd-new.save /etc/default/motd-news
 sudo mv ~/t0-hea.save /etc/update-motd.d/00-header
 sudo mv ~/t1-hel.save /etc/update-motd.d/10-help-text
 sudo mv ~/t5-upg.save /etc/apt/apt.conf.d/50unattended-upgrades
+sudo chown root:root /etc/default/motd-news
 sudo chown root:root /etc/apt/apt.conf.d/*
 sudo chown root:root /etc/update-motd.d/*
+sudo chmod 644 /etc/default/motd-news
 sudo chmod 644 /etc/apt/apt.conf.d/*
 sudo chmod 755 /etc/update-motd.d/*
+# nao executa - nao acho ser necessario
+sudo chmod -x /etc/update-motd.d/97-overlayroot
 sudo pip3 install speedtest-cli
 
-if [ "$cunm" != "$vpnl" ] && [ "$cunm" != "$zon1" ]; then
+if [ "$cunm" != "$znm1" ] && [ "$cunm" != "$vnm1" ]; then
   echo -e "${i}GETH NAO DEVE SER INSTALADO AQUI - DEVE FAZER REBOOT${f}"
 else
   if [ -f /etc/systemd/system/$ethg.service ]; then
@@ -90,7 +96,7 @@ else
 		Group=$user
 		Restart=always
 		RestartSec=10
-		ExecStart=/usr/bin/geth$blkc --http --http.addr $zot1 --datadir $golb --cache $cach --maxpeers $maxp$node
+		ExecStart=/usr/bin/geth$blkc --http --http.addr $zip1 --datadir $golb --cache $cach --maxpeers $maxp$node
 		ExecStopPost=/home/eth/eth2/t8mail GETHSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 		
 		[Install]
