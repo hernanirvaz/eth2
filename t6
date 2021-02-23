@@ -5,24 +5,30 @@ source /home/eth/eth2/t1
 # get synced geth chaindata to an unsynced geth 400GB
 # rsync -hrtpe 'ssh -p 2020' --compress-level=9 --progress --stats 207.180.214.8:/home/eth/eth2 ./teste
 
-# open/close api/metrics ports com IPs
+# plexmediaserver.service
+function xoa { uu "ufw allow        from 192.168.8.4 $1";uu "ufw allow        from 192.168.8.5 $1";uu "ufw allow        from 192.168.8.6 $1"; }
+function xca { uu "ufw delete allow from 192.168.8.4 $1";uu "ufw delete allow from 192.168.8.5 $1";uu "ufw delete allow from 192.168.8.6 $1"; }
+function xop { uu 'ufw delete deny 32400             ';xoa 'to any port 32400 comment plex'; }
+function xcl { uu 'ufw        deny 32400 comment plex';xca 'to any port 32400             '; }
+function xe { xop;uu 'ufw reload';uu "systemctl enable $plex"; }
+function xa { [ "$(systemctl status $plex 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $plex"; } }
+function xp { [ "$(systemctl status $plex 2>/dev/null|grep -i loaded)" ] && { uu "systemctl stop $plex"; } }
+function xd { [ "$(systemctl status $plex 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $plex";xcl;uu 'ufw reload'; } }
+
 function goa { if [ "$cust" = "hrv" ];then uu "ufw        allow from $zip2 $1";uu "ufw        allow from $zip3 $1";else uu "ufw        allow from $vip1 $1";uu "ufw        allow from $vip2 $1";fi; }
 function gca { if [ "$cust" = "hrv" ];then uu "ufw delete allow from $zip2 $1";uu "ufw delete allow from $zip3 $1";else uu "ufw delete allow from $vip1 $1";uu "ufw delete allow from $vip2 $1";fi; }
-function gop { uu 'ufw allow 30303 comment eth1';uu 'ufw delete deny 8545              ';goa "to any port 8545 comment geapi"; }
-function gcl { uu 'ufw deny  30303 comment eth1';uu 'ufw        deny 8545 comment geapi';gca "to any port 8545"; }
-
+function gop { uu 'ufw allow 30303 comment eth1';uu 'ufw delete deny 8545              ';goa 'to any port 8545 comment geapi'; }
+function gcl { uu 'ufw deny  30303 comment eth1';uu 'ufw        deny 8545 comment geapi';gca 'to any port 8545              '; }
 function boa { if [ "$cust" = "hrv" ];then uu "ufw        allow from $zip3 $1";else uu "ufw        allow from $vip3 $1";fi; }
 function bca { if [ "$cust" = "hrv" ];then uu "ufw delete allow from $zip3 $1";else uu "ufw delete allow from $vip3 $1";fi; }
 function bop { uu 'ufw allow 9000 comment eth2';uu 'ufw delete deny 5052              ';boa 'to any port 5052 comment bnapi'; }
-function bcl { uu 'ufw deny  9000 comment eth2';uu 'ufw        deny 5052 comment bnapi';bca 'to any port 5052'; }
-
+function bcl { uu 'ufw deny  9000 comment eth2';uu 'ufw        deny 5052 comment bnapi';bca 'to any port 5052              '; }
 function voa { if [ "$cust" = "hrv" ];then uu "ufw        allow from $zip1 $1";else uu "ufw        allow from $vip1 $1";fi; }
 function vca { if [ "$cust" = "hrv" ];then uu "ufw delete allow from $zip1 $1";else uu "ufw delete allow from $vip1 $1";fi; }
-function vop { uu 'ufw delete deny 5064'        ;voa 'to any port 5064 comment vcmet'; }
-function vcl { uu 'ufw deny 5064 comment vcmet' ;vca 'to any port 5064'; }
-
+function vop { uu 'ufw delete deny 5064              ';voa 'to any port 5064 comment vcmet'; }
+function vcl { uu 'ufw        deny 5064 comment vcmet';vca 'to any port 5064              '; }
 function fop { uu 'ufw allow 3000/tcp comment grafana'; }
-function fcl { uu 'ufw deny  3000/tcp'; }
+function fcl { uu 'ufw deny  3000/tcp                '; }
 
 function uu { echo -e "${i}$1${f}";echo $H|sudo -S $1 2>/dev/null; }
 function ut { echo -e "${i}$1${f}";echo $H|sudo -S $1 2>/dev/null|tail -n $2; }
@@ -34,8 +40,8 @@ function dr { uu "systemctl daemon-reload"; }
 function ge { gop;uu 'ufw reload';uu "systemctl enable $ethg"; }
 function be { bop;uu 'ufw reload';uu "systemctl enable $ethb"; }
 function ve { [ ! -f $dtdi/vc_lock ] && { vop;uu 'ufw reload';uu "systemctl enable $ethv"; } }
-function pe { uu "systemctl enable $ethp"; }
-function ne { uu "systemctl enable $ethn"; }
+function pe { uu 'ufw reload';uu "systemctl enable $ethp"; }
+function ne { uu 'ufw reload';uu "systemctl enable $ethn"; }
 function fe { fop;uu 'ufw reload';uu "systemctl enable $ethf"; }
 
 function ga { [ "$(systemctl status $ethg 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $ethg"; } }
@@ -72,7 +78,7 @@ function gs {
       m="GETH SYNCING DONE - PEERCOUNT $g2"
     else
       if [ "$cunm" = "$znm1" ]; then
-        r0=$(ssh vip1 "export H=$H;$p0/t6 g0")
+        r0=$(ssh vpsl "export H=$H;$p0/t6 g0")
       else
         r0=$g0
       fi
@@ -90,15 +96,35 @@ function gs {
     m="NO GETH HERE ($cunm)"
   fi
 }
-function g2 { g2=0;[ -d /var/lib/goethereum ] && g2=$(geth attach $geapi --exec net.peerCount); }
+
+function cr {
+  if [ "$cunm" = "$znm1" ] || [ "$cunm" = "$znm2" ] || [ "$cunm" = "$znm3" ]; then
+    if [ "$(ip route show|grep 'default via'|cut -d' ' -f3)" = "192.168.8.1" ];then
+      echo -e "${i}CHANGE ROUTE 192.168.8.3${f}"
+      sed -e 's%via:.*%via: 192.168.8.3%' /etc/netplan/00-installer-config.yaml > ~/00-installer-config.save
+    else
+      echo -e "${i}CHANGE ROUTE 192.168.8.1${f}"
+      sed -e 's%via:.*%via: 192.168.8.1%' /etc/netplan/00-installer-config.yaml > ~/00-installer-config.save
+    fi
+    echo $H|sudo -S mv ~/00-installer-config.save /etc/netplan/00-installer-config.yaml 2>/dev/null
+    sudo chown root:root /etc/netplan/00-installer-config.yaml 
+    sudo chmod 644 /etc/netplan/00-installer-config.yaml 
+    sudo netplan apply
+  fi
+}
+function nn {
+  if [ "$cunm" = "$znm1" ];then geapi="http://$zip1:8545";else geapi="http://$vip1:8545";fi;g2
+  g3=$(echo $H|sudo -S grep -i peers: /var/log/syslog 2>/dev/null|tail -n 1|sed -e 's%,% %g;s%  *% %g'|cut -d' ' -f22)
+  echo -e "${i}PEERS: GETH ${g2:-0}, BEACON ${g3:-0}${f}"
+}
+[ "$1" = "cr" ] && { cr; }
+[ "$1" = "np" ] && { nn; }
+[ "$1" = "nr" ] && { ut "grep -i record /var/log/syslog" "${2:-30}"; }
 
 # lista servicos
 [ "$1" = "ll" ] && { uu "systemctl list-units $pate $patp $patf"; }
 # lista portas
 [ "$1" = "lp" ] && { netstat -tulpn; }
-# peers/records
-[ "$1" = "np" ] && { ut "grep -i peercount /var/log/syslog" "${2:-30}";ut "grep -i peers: /var/log/syslog" "${2:-30}"; }
-[ "$1" = "nr" ] && { ut "grep -i record /var/log/syslog" "${2:-70}"; }
 # outros journal system/lighthouse
 [ "$1" = "el" ] && { echo $H|sudo -S grep -i 'lighthouse\|geth' /var/log/syslog 2>/dev/null | grep -v ' INFO '; }
 [ "$1" = "sl" ] && { echo $H|sudo -S grep -i 'error' /var/log/syslog 2>/dev/null | grep -v 'lighthouse\|geth'; }
@@ -131,6 +157,7 @@ function g2 { g2=0;[ -d /var/lib/goethereum ] && g2=$(geth attach $geapi --exec 
 [ "$1" = "pa" ] && { dr;pa; }
 [ "$1" = "na" ] && { dr;na; }
 [ "$1" = "fa" ] && { dr;fa; }
+[ "$1" = "xa" ] && { dr;xa; }
 # para & arranca & journal
 [ "$1" = "gaj" ] && { dr;ga;jb "-u $ethg"; }
 [ "$1" = "baj" ] && { dr;ba;jb "-u $ethb"; }
@@ -139,15 +166,16 @@ function g2 { g2=0;[ -d /var/lib/goethereum ] && g2=$(geth attach $geapi --exec 
 [ "$1" = "brs" ] && { bp;dr;ba;jb "-u $ethb"; }
 [ "$1" = "vrs" ] && { vp;dr;va;jb "-u $ethv"; }
 # enable
-[ "$1" = "te" ] && { dr;ge;be;ve;pe;ne;fe; }
-[ "$1" = "ee" ] && { dr;ge;be;ve; }
-[ "$1" = "me" ] && { dr;pe;ne;fe; }
-[ "$1" = "ge" ] && { dr;ge; }
-[ "$1" = "be" ] && { dr;be; }
-[ "$1" = "ve" ] && { dr;ve; }
-[ "$1" = "pe" ] && { dr;pe; }
-[ "$1" = "ne" ] && { dr;ne; }
-[ "$1" = "fe" ] && { dr;fe; }
+[ "$1" = "te" ] && { ge;be;ve;pe;ne;fe; }
+[ "$1" = "ee" ] && { ge;be;ve; }
+[ "$1" = "me" ] && { pe;ne;fe; }
+[ "$1" = "ge" ] && { ge; }
+[ "$1" = "be" ] && { be; }
+[ "$1" = "ve" ] && { ve; }
+[ "$1" = "pe" ] && { pe; }
+[ "$1" = "ne" ] && { ne; }
+[ "$1" = "fe" ] && { fe; }
+[ "$1" = "xe" ] && { xe; }
 # para
 [ "$1" = "tpr" ] && { fp;np;pp;vp;bp;gp; }
 [ "$1" = "epr" ] && { vp;bp;gp; }
@@ -158,6 +186,7 @@ function g2 { g2=0;[ -d /var/lib/goethereum ] && g2=$(geth attach $geapi --exec 
 [ "$1" = "vpr" ] && { vp; }
 [ "$1" = "bpr" ] && { bp; }
 [ "$1" = "gpr" ] && { gp; }
+[ "$1" = "xpr" ] && { xp; }
 # disable
 [ "$1" = "tds" ] && { fd;nd;pd;vd;bd;gd; }
 [ "$1" = "eds" ] && { vd;bd;gd; }
@@ -168,6 +197,7 @@ function g2 { g2=0;[ -d /var/lib/goethereum ] && g2=$(geth attach $geapi --exec 
 [ "$1" = "vds" ] && { vd; }
 [ "$1" = "bds" ] && { bd; }
 [ "$1" = "gds" ] && { gd; }
+[ "$1" = "xds" ] && { xd; }
 
 if [ -z "$1" ]; then
   c1="\nprimeira letra"
@@ -180,6 +210,7 @@ if [ -z "$1" ]; then
   c1="$c1\np\t$ethp"
   c1="$c1\nn\t$ethn"
   c1="$c1\nf\t$ethf"
+  c1="$c1\nx\t$plex"
   c1="$c1\n"
   c1="$c1\nsegunda letra"
   c1="$c1\na\tarranca"
@@ -204,5 +235,6 @@ if [ -z "$1" ]; then
   c1="$c1\nws\tfirewall status"
   c1="$c1\nwa\tfirewall arranca"
   c1="$c1\nwpr\tfirewall para"
+  c1="$c1\ncr\tchange route"
   echo -e "\n$c1\n"
 fi

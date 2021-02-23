@@ -45,17 +45,17 @@ if [ "$1" = "eth2" ]; then
     make
     if [ $? -eq 0  ] && [ -x ~/.cargo/bin/lighthouse ]; then
       if [ "$cunm" = "$znm1" ]; then
-        scp ~/.cargo/bin/lighthouse ztc2:~
-        scp ~/.cargo/bin/lighthouse ztc3:~
+        scp ~/.cargo/bin/lighthouse $zip2:~
+        scp ~/.cargo/bin/lighthouse $zip3:~
       fi
       if [ "$cunm" = "$vnm1" ]; then
-        scp ~/.cargo/bin/lighthouse vpsm:~
-        scp ~/.cargo/bin/lighthouse vpss:~
+        scp ~/.cargo/bin/lighthouse $vip2:~
+        scp ~/.cargo/bin/lighthouse $vip3:~
       fi
       if [ -x /usr/local/bin/lighthouse ]; then
         echo $H|sudo -S cp /usr/local/bin/lighthouse /usr/local/bin/lighthouse.save 2>/dev/null
-        t6 vpr
-        t6 bpr
+        if [ "$cunm"  = "$znm3" ] || [ "$cunm"  = "$vnm3" ];then t6 vpr;fi
+        if [ "$cunm" != "$znm1" ] && [ "$cunm" != "$vnm3" ];then t6 bpr;fi
         echo $H|sudo -S cp ~/.cargo/bin/lighthouse /usr/local/bin 2>/dev/null
       fi
     else
@@ -64,15 +64,15 @@ if [ "$1" = "eth2" ]; then
   else
     if [ -x ~/lighthouse ]; then
       echo $H|sudo -S cp /usr/local/bin/lighthouse /usr/local/bin/lighthouse.save 2>/dev/null
-      t6 vpr
-      t6 bpr
+      if [ "$cunm"  = "$znm3" ] || [ "$cunm"  = "$vnm3" ];then t6 vpr;fi
+      if [ "$cunm" != "$znm1" ] && [ "$cunm" != "$vnm3" ];then t6 bpr;fi
       sudo mv ~/lighthouse /usr/local/bin
     else
       echo -e "${i}NAO EXISTE LIGHT COMPILADO PARA INSTALAR${f}"
     fi
   fi
   echo $H|sudo -S chmod 755 /usr/local/bin/lighthouse 2>/dev/null
-  t6 ba
-  t6 va
+  if [ "$cunm" != "$znm1" ] && [ "$cunm" != "$vnm3" ];then t6 ba;fi
+  if [ "$cunm"  = "$znm3" ] || [ "$cunm"  = "$vnm3" ];then t6 va;fi
   echo -e "${i}NOVO LIGHT INSTALADO - PODE/DEVE VERIFICAR${f}"
 fi
