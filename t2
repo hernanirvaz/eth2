@@ -14,6 +14,7 @@ if [ "$(echo $H|sudo -S ufw status 2>/dev/null|grep -i inactive)" ]; then
   # sudo ufw allow 43/tcp comment whois
   sudo ufw deny 30303 comment eth1
   sudo ufw deny 32400 comment plex
+  sudo ufw deny 51413 comment torrent
   sudo ufw deny 9000 comment eth2
   sudo ufw deny 8545 comment geapi
   sudo ufw deny 5052 comment bnapi

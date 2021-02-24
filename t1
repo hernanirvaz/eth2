@@ -27,8 +27,10 @@ ethf='grafana-server'
 pate='eth-*'
 patp='prometheus*'
 patf='grafana*'
-# plexmediaserver.service                 Plex Media Server
+# Plex Media Server
 plex='plexmediaserver'
+# Transmission BitTorrent Daemon
+trrt='transmission-daemon'
 
 zip1='192.168.8.25'
 zip2='192.168.8.28'
