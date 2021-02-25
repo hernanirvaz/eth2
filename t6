@@ -67,9 +67,9 @@ function pp { [ "$(systemctl status $ethp 2>/dev/null|grep -i loaded)" ] && { uu
 function np { [ "$(systemctl status $ethn 2>/dev/null|grep -i loaded)" ] && { uu "systemctl stop $ethn"; } }
 function fp { [ "$(systemctl status $ethf 2>/dev/null|grep -i loaded)" ] && { uu "systemctl stop $ethf"; } }
 
-function gd { [ "$(systemctl status $ethg 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethg";gcl;uu 'ufw reload'; } }
-function bd { [ "$(systemctl status $ethb 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethb";bcl;uu 'ufw reload'; } }
-function vd { [ "$(systemctl status $ethv 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethv";vcl;uu 'ufw reload'; } }
+function gd { uu "systemctl disable $ethg";gcl;uu 'ufw reload'; }
+function bd { uu "systemctl disable $ethb";bcl;uu 'ufw reload'; }
+function vd { uu "systemctl disable $ethv";vcl;uu 'ufw reload'; }
 function pd { [ "$(systemctl status $ethp 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethp"; } }
 function nd { [ "$(systemctl status $ethn 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethn"; } }
 function fd { [ "$(systemctl status $ethf 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethf";fcl;uu 'ufw reload'; } }
