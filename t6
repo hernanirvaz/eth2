@@ -135,8 +135,9 @@ function nn {
 # lista portas
 [ "$1" = "lp" ] && { netstat -tulpn; }
 # outros journal system/lighthouse
-[ "$1" = "el" ] && { echo $H|sudo -S grep -i 'lighthouse\|geth' /var/log/syslog 2>/dev/null | grep -v ' INFO '; }
-[ "$1" = "sl" ] && { echo $H|sudo -S grep -i 'error' /var/log/syslog 2>/dev/null | grep -v 'lighthouse\|geth'; }
+[ "$1" = "el" ] && { echo $H|sudo -S grep -i 'geth\|lighthouse'      /var/log/syslog 2>/dev/null|grep -v ' INFO '; }
+[ "$1" = "sl" ] && { echo $H|sudo -S grep -v 'geth\|lighthouse\|UFW' /var/log/syslog 2>/dev/null; }
+[ "$1" = "rl" ] && { echo $H|sudo -S grep -v 'geth\|lighthouse\|UFW' /var/log/syslog 2>/dev/null|grep -i 'error'; }
 [ "$1" = "bl" ] && { echo $H|sudo -S grep -i 'Successfully published block\|Block from API' /var/log/syslog 2>/dev/null; }
 [ "$1" = "al" ] && { a=$(echo $H|sudo -S grep -i 'Successfully published attestation\|aggregated attestation' /var/log/syslog 2>/dev/null|wc -l);echo "attestations: ${a:-0}"; }
 [ "$1" = "gs" ] && { gs;echo -e $m; }
@@ -239,7 +240,8 @@ if [ -z "$1" ]; then
   c1="$c1\n"
   c1="$c1\noutros"
   c1="$c1\nsj\tsystem journal"
-  c1="$c1\nsl\tlista system journal ERROR"
+  c1="$c1\nsl\tlista system journal TOTAL"
+  c1="$c1\nrl\tlista system journal ERROR"
   c1="$c1\nel\tlista $ethg $ethb $ethv !INFO"
   c1="$c1\nbl\tlista block proposals"
   c1="$c1\nal\tlista attestations"

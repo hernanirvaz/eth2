@@ -19,6 +19,8 @@ function si {
   [ "$cunm" = "$vnm3" ] && p=$vip2
 }
 
+# AVG  ping -c 20 -q 207.180.214.8|grep avg|cut -d/ -f5
+# UNIT ping -c 20 -q 207.180.214.8|grep avg|cut -d/ -f7|cut -d' ' -f2
 [ "$1" = "GETHSTP" ] && { echo -e "Subject: GETH STOPPED ON $(uname -n)\n\nSERVICE_RESULT=$2\nEXIT_CODE=$3\nEXIT_STATUS=$4\n"|ssmtp hernanilr@gmail.com; }
 [ "$1" = "BEACSTP" ] && { echo -e "Subject: BEAC STOPPED ON $(uname -n)\n\nSERVICE_RESULT=$2\nEXIT_CODE=$3\nEXIT_STATUS=$4\n"|ssmtp hernanilr@gmail.com; }
 [ "$1" = "VALISTP" ] && { echo -e "Subject: VALI STOPPED ON $(uname -n)\n\nSERVICE_RESULT=$2\nEXIT_CODE=$3\nEXIT_STATUS=$4\n"|ssmtp hernanilr@gmail.com; }

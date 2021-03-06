@@ -29,6 +29,14 @@ if [ "$(echo $H|sudo -S ufw status 2>/dev/null|grep -i inactive)" ]; then
   sudo chkrootkit  -q
   echo -e "${i}TIMEKEEPING (NTP)${f}"
   sudo timedatectl set-ntp on
+  if [ "$cust" = "hrv" ];then
+    sudo timedatectl set-timezone Europe/Lisbon
+    sed -e 's%^ *#NTP=.*$%NTP=time.cloudflare.com%i' /etc/systemd/timesyncd.conf > ~/timesyncd.save
+    sudo mv ~/timesyncd.save /etc/systemd/timesyncd.conf
+    sudo chown root:root /etc/systemd/timesyncd.conf
+    sudo chmod 644 /etc/systemd/timesyncd.conf
+    sudo systemctl restart systemd-timesyncd
+  fi
   timedatectl
 else
   echo -e "${i}FIREWALL $(echo $H|sudo -S ufw status 2>/dev/null|grep -i status|tr '[:lower:]' '[:upper:]')${f}"
