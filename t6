@@ -5,44 +5,35 @@ source /home/eth/eth2/t1
 # get synced geth chaindata to an unsynced geth 400GB
 # rsync -hrtpe 'ssh -p 2020' --compress-level=9 --progress --stats 207.180.214.8:/home/eth/eth2 ./teste
 
-# Plex Media Server
-function xoa { uu "ufw allow        from 192.168.8.4 $1";uu "ufw allow        from 192.168.8.5 $1";uu "ufw allow        from 192.168.8.6 $1"; }
-function xca { uu "ufw delete allow from 192.168.8.4 $1";uu "ufw delete allow from 192.168.8.5 $1";uu "ufw delete allow from 192.168.8.6 $1"; }
-function xop { uu 'ufw delete deny 32400             ';xoa 'to any port 32400 comment plex'; }
-function xcl { uu 'ufw        deny 32400 comment plex';xca 'to any port 32400             '; }
+# Plex Media Server & Transmission BitTorrent Daemon
+function rxw { uu "ufw$2 allow from 192.168.8.4 $1";uu "ufw$2 allow from 192.168.8.5 $1";uu "ufw$2 allow from 192.168.8.6 $1"; }
+function xop { uu 'ufw delete deny 32400             ';rxw 'to any port 32400 comment plex'; }
+function xcl { uu 'ufw        deny 32400 comment plex';rxw 'to any port 32400 '   ' delete'; }
 function xe { xop;uu 'ufw reload';uu "systemctl enable $plex"; }
 function xa { [ "$(systemctl status $plex 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $plex"; } }
 function xp { [ "$(systemctl status $plex 2>/dev/null|grep -i loaded)" ] && { uu "systemctl stop $plex"; } }
 function xd { uu "systemctl disable $plex";xcl;uu 'ufw reload'; }
-# Transmission BitTorrent Daemon
-function roa { uu "ufw allow        from 192.168.8.4 $1";uu "ufw allow        from 192.168.8.5 $1";uu "ufw allow        from 192.168.8.6 $1"; }
-function rca { uu "ufw delete allow from 192.168.8.4 $1";uu "ufw delete allow from 192.168.8.5 $1";uu "ufw delete allow from 192.168.8.6 $1"; }
-function rop { uu 'ufw allow 51413 comment torrent';roa 'to any port 9091 comment torrent'; }
-function rcl { uu 'ufw deny  51413 comment torrent';rca 'to any port 9091                '; }
+function rop { uu 'ufw allow 51413 comment torrent';rxw 'to any port 9091 comment torrent'; }
+function rcl { uu 'ufw deny  51413 comment torrent';rxw 'to any port 9091'       ' delete'; }
 function re { rop;uu 'ufw reload';uu "systemctl enable $trrt"; }
 function ra { [ "$(systemctl status $trrt 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $trrt"; } }
 function rp { [ "$(systemctl status $trrt 2>/dev/null|grep -i loaded)" ] && { uu "systemctl stop $trrt"; } }
 function rd { uu "systemctl disable $trrt";rcl;uu 'ufw reload'; }
 
-function goa { if [ "$cust" = "hrv" ];then uu "ufw        allow from $zip2 $1";uu "ufw        allow from $zip3 $1";else uu "ufw        allow from $vip1 $1";uu "ufw        allow from $vip2 $1";fi; }
-function gca { if [ "$cust" = "hrv" ];then uu "ufw delete allow from $zip2 $1";uu "ufw delete allow from $zip3 $1";else uu "ufw delete allow from $vip1 $1";uu "ufw delete allow from $vip2 $1";fi; }
-function gop { uu 'ufw allow 30303 comment eth1';uu 'ufw delete deny 8545              ';goa 'to any port 8545 comment geapi'; }
-function gcl { uu 'ufw deny  30303 comment eth1';uu 'ufw        deny 8545 comment geapi';gca 'to any port 8545              '; }
-function boa { if [ "$cust" = "hrv" ];then uu "ufw        allow from $zip3 $1";else uu "ufw        allow from $vip3 $1";fi; }
-function bca { if [ "$cust" = "hrv" ];then uu "ufw delete allow from $zip3 $1";else uu "ufw delete allow from $vip3 $1";fi; }
-function bop { uu 'ufw allow 9000 comment eth2';uu 'ufw delete deny 5052              ';boa 'to any port 5052 comment bnapi'; }
-function bcl { uu 'ufw deny  9000 comment eth2';uu 'ufw        deny 5052 comment bnapi';bca 'to any port 5052              '; }
-function voa { if [ "$cust" = "hrv" ];then uu "ufw        allow from $zip1 $1";else uu "ufw        allow from $vip1 $1";fi; }
-function vca { if [ "$cust" = "hrv" ];then uu "ufw delete allow from $zip1 $1";else uu "ufw delete allow from $vip1 $1";fi; }
-function vop { uu 'ufw delete deny 5064              ';voa 'to any port 5064 comment vcmet'; }
-function vcl { uu 'ufw        deny 5064 comment vcmet';vca 'to any port 5064              '; }
+function gfw { if [ "$cust" = "hrv" ];then uu "ufw$2 allow from $zip2 $1";uu "ufw$2 allow from $zip3 $1";else uu "ufw$2 allow from $vip1 $1";uu "ufw$2 allow from $vip3 $1";fi; }
+function gop { uu 'ufw allow 30303 comment eth1';uu 'ufw delete deny 8545              ';gfw 'to any port 8545 comment geapi'; }
+function gcl { uu 'ufw deny  30303 comment eth1';uu 'ufw        deny 8545 comment geapi';gfw 'to any port 8545'     ' delete'; }
+function bfw { if [ "$cust" = "hrv" ];then uu "ufw$2 allow from $zip3 $1";else uu "ufw$2 allow from $vip3 $1";fi; }
+function bop { uu 'ufw allow 9000 comment eth2';uu 'ufw delete deny 5052              ';bfw 'to any port 5052 comment bnapi'; }
+function bcl { uu 'ufw deny  9000 comment eth2';uu 'ufw        deny 5052 comment bnapi';bfw 'to any port 5052'     ' delete'; }
+function vfw { if [ "$cust" = "hrv" ];then uu "ufw$2 allow from $zip1 $1";else uu "ufw$2 allow from $vip1 $1";fi; }
+function vop { uu 'ufw delete deny 5064              ';vfw 'to any port 5064 comment vcmet'; }
+function vcl { uu 'ufw        deny 5064 comment vcmet';vfw 'to any port 5064'     ' delete'; }
 function fop { uu 'ufw allow 3000/tcp comment grafana'; }
 function fcl { uu 'ufw deny  3000/tcp                '; }
 
 function uu { echo -e "${i}$1${f}";echo $H|sudo -S $1 2>/dev/null; }
 function ut { echo -e "${i}$1${f}";echo $H|sudo -S $1 2>/dev/null|tail -n $2; }
-function un { echo $H|sudo -S $1 1>/dev/null 2>&1; }
-function up { echo $H|sudo -S $1 2>/dev/null; }
 function jb { uu "journalctl --no-hostname --no-full -f $1"; }
 function dr { uu "systemctl daemon-reload"; }
 
