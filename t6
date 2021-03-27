@@ -126,7 +126,7 @@ function nn {
 # lista portas
 [ "$1" = "lp" ] && { netstat -tulpn; }
 # outros journal system/lighthouse
-[ "$1" = "el" ] && { echo $H|sudo -S grep -i 'geth\|lighthouse'      /var/log/syslog 2>/dev/null|grep -v ' INFO '; }
+[ "$1" = "el" ] && { echo $H|sudo -S grep -i 'geth\|lighthouse'      /var/log/syslog 2>/dev/null|grep -v ' INFO '|sort -k 9; }
 [ "$1" = "sl" ] && { echo $H|sudo -S grep -v 'geth\|lighthouse\|UFW' /var/log/syslog 2>/dev/null; }
 [ "$1" = "rl" ] && { echo $H|sudo -S grep -v 'geth\|lighthouse\|UFW' /var/log/syslog 2>/dev/null|grep -i 'error'; }
 [ "$1" = "bl" ] && { echo $H|sudo -S grep -i 'Successfully published block\|Block from API' /var/log/syslog 2>/dev/null; }
