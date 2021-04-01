@@ -139,6 +139,7 @@ function nn {
 
 # journal
 [ "$1" = "sj" ] && { jb; }
+[ "$1" = "dj" ] && { jb '-u named'; }
 [ "$1" = "tj" ] && { jb "-u $pate -u $patp -u $patf"; }
 [ "$1" = "ej" ] && { jb "-u $pate"; }
 [ "$1" = "mj" ] && { jb "-u $patp -u $patf"; }
@@ -231,6 +232,7 @@ if [ -z "$1" ]; then
   c1="$c1\n"
   c1="$c1\noutros"
   c1="$c1\nsj\tsystem journal"
+  c1="$c1\ndj\tdns journal"
   c1="$c1\nsl\tlista system journal TOTAL"
   c1="$c1\nrl\tlista system journal ERROR"
   c1="$c1\nel\tlista $ethg $ethb $ethv !INFO"
