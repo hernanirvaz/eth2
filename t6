@@ -6,7 +6,7 @@ source /home/eth/eth2/t1
 # rsync -hrtpe 'ssh -p 2020' --compress-level=9 --progress --stats 207.180.214.8:/home/eth/eth2 ./teste
 
 # Plex Media Server & Transmission BitTorrent Daemon
-function rxw { uu "ufw$2 allow from 192.168.8.4 $1";uu "ufw$2 allow from 192.168.8.5 $1";uu "ufw$2 allow from 192.168.8.6 $1"; }
+function rxw { uu "ufw$2 allow from 192.168.8.0/24 $1"; }
 function xop { uu 'ufw delete deny 32400             ';rxw 'to any port 32400 comment plex'; }
 function xcl { uu 'ufw        deny 32400 comment plex';rxw 'to any port 32400 '   ' delete'; }
 function xe { xop;uu 'ufw reload';uu "systemctl enable $plex"; }
