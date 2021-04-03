@@ -100,20 +100,24 @@ function gs {
 function cr {
   if [ "$cunm" = "$znm1" ] || [ "$cunm" = "$znm2" ] || [ "$cunm" = "$znm3" ]; then
     if [ "$(ip route show|grep 'default via'|cut -d' ' -f3)" = "192.168.8.1" ];then m=3; else m=1;fi
-    echo -e "${i}CHANGE ROUTE & DNS FORWARDER 192.168.8.${m}${f}"
+    h=''
     if [ "$cunm" != "$znm3" ]; then
+      h='& DNS FORWARDER '
       sed -e "s%forwarders .*%forwarders { 192.168.8.$m; };%" /etc/bind/named.conf.options > ~/named.save
       echo $H|sudo -S mv ~/named.save /etc/bind/named.conf.options 2>/dev/null
       sudo chown root:root /etc/bind/named.conf.options 
       sudo chmod 644 /etc/bind/named.conf.options
-      sudo systemctl restart named
     fi
+    echo -e "${i}CHANGE ROUTE ${h}192.168.8.${m}${f}"
     sed -e "s%via:.*%via: 192.168.8.$m%" /etc/netplan/00-installer-config.yaml > ~/00-installer-config.save
     echo $H|sudo -S mv ~/00-installer-config.save /etc/netplan/00-installer-config.yaml 2>/dev/null
     sudo chown root:root /etc/netplan/00-installer-config.yaml 
     sudo chmod 644 /etc/netplan/00-installer-config.yaml 
+    [ "$cunm" != "$znm3" ] && sudo systemctl stop named
+    sudo systemctl stop systemd-resolved
     sudo netplan apply
-    sudo systemctl restart systemd-resolved
+    [ "$cunm" != "$znm3" ] && sudo systemctl start named
+    sudo systemctl start systemd-resolved
   fi
 }
 function nn {
