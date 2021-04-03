@@ -99,17 +99,21 @@ function gs {
 
 function cr {
   if [ "$cunm" = "$znm1" ] || [ "$cunm" = "$znm2" ] || [ "$cunm" = "$znm3" ]; then
-    if [ "$(ip route show|grep 'default via'|cut -d' ' -f3)" = "192.168.8.1" ];then
-      echo -e "${i}CHANGE ROUTE 192.168.8.3${f}"
-      sed -e 's%via:.*%via: 192.168.8.3%' /etc/netplan/00-installer-config.yaml > ~/00-installer-config.save
-    else
-      echo -e "${i}CHANGE ROUTE 192.168.8.1${f}"
-      sed -e 's%via:.*%via: 192.168.8.1%' /etc/netplan/00-installer-config.yaml > ~/00-installer-config.save
+    if [ "$(ip route show|grep 'default via'|cut -d' ' -f3)" = "192.168.8.1" ];then m=3; else m=1;fi
+    echo -e "${i}CHANGE ROUTE & DNS FORWARDER 192.168.8.${m}${f}"
+    if [ "$cunm" != "$znm3" ]; then
+      sed -e "s%forwarders .*%forwarders { 192.168.8.$m; };%" /etc/bind/named.conf.options > ~/named.save
+      echo $H|sudo -S mv ~/named.save /etc/bind/named.conf.options 2>/dev/null
+      sudo chown root:root /etc/bind/named.conf.options 
+      sudo chmod 644 /etc/bind/named.conf.options
+      sudo systemctl restart named
     fi
+    sed -e "s%via:.*%via: 192.168.8.$m%" /etc/netplan/00-installer-config.yaml > ~/00-installer-config.save
     echo $H|sudo -S mv ~/00-installer-config.save /etc/netplan/00-installer-config.yaml 2>/dev/null
     sudo chown root:root /etc/netplan/00-installer-config.yaml 
     sudo chmod 644 /etc/netplan/00-installer-config.yaml 
     sudo netplan apply
+    sudo systemctl restart systemd-resolved
   fi
 }
 function nn {
