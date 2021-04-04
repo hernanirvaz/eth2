@@ -23,8 +23,8 @@ if [ "$(echo $H|sudo -S ufw status 2>/dev/null|grep -i inactive)" ]; then
   sudo ufw default deny incoming
   sudo ufw default allow outgoing
   sudo ufw deny 22/tcp comment oldssh
+  sudo ufw deny 53 comment dns
   # sudo ufw allow 43/tcp comment whois
-  # sudo ufw allow 53 comment dns
   # sudo ufw allow 123 comment ntp
   sudo ufw deny 30303 comment eth1
   sudo ufw deny 32400 comment plex
@@ -36,8 +36,6 @@ if [ "$(echo $H|sudo -S ufw status 2>/dev/null|grep -i inactive)" ]; then
   sudo ufw deny 9090/tcp comment prometheus
   sudo ufw deny 3000/tcp comment grafana
   sudo ufw allow 2020/tcp comment newssh
-  sudo ufw allow from 192.168.8.0/24 to any port 123 proto udp comment ntp
-  sudo ufw allow from 192.168.8.0/24 to any port  53           comment dns
   sudo ufw enable
   sudo ufw status numbered
   echo -e "${i}ROOTKIT SCANNER${f}"

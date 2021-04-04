@@ -2,10 +2,7 @@
 
 source /home/eth/eth2/t1
 
-# get synced geth chaindata to an unsynced geth 400GB
-# rsync -hrtpe 'ssh -p 2020' --compress-level=9 --progress --stats 207.180.214.8:/home/eth/eth2 ./teste
-
-# Plex Media Server & Transmission BitTorrent Daemon
+# Plex Media Server
 function rxw { uu "ufw$2 allow from 192.168.8.0/24 $1"; }
 function xop { uu 'ufw delete deny 32400             ';rxw 'to any port 32400 comment plex'; }
 function xcl { uu 'ufw        deny 32400 comment plex';rxw 'to any port 32400 '   ' delete'; }
@@ -13,12 +10,20 @@ function xe { xop;uu 'ufw reload';uu "systemctl enable $plex"; }
 function xa { [ "$(systemctl status $plex 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $plex"; } }
 function xp { [ "$(systemctl status $plex 2>/dev/null|grep -i loaded)" ] && { uu "systemctl stop $plex"; } }
 function xd { uu "systemctl disable $plex";xcl;uu 'ufw reload'; }
+# Transmission BitTorrent Daemon
 function rop { uu 'ufw allow 51413 comment torrent';rxw 'to any port 9091 comment torrent'; }
 function rcl { uu 'ufw deny  51413 comment torrent';rxw 'to any port 9091'       ' delete'; }
 function re { rop;uu 'ufw reload';uu "systemctl enable $trrt"; }
 function ra { [ "$(systemctl status $trrt 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $trrt"; } }
 function rp { [ "$(systemctl status $trrt 2>/dev/null|grep -i loaded)" ] && { uu "systemctl stop $trrt"; } }
 function rd { uu "systemctl disable $trrt";rcl;uu 'ufw reload'; }
+# Bind9
+function sop { uu 'ufw delete deny 53            ';rxw 'to any port 53 comment dns'; }
+function scl { uu 'ufw        deny 53 comment dns';rxw 'to any port 53 '  ' delete'; }
+function se { sop;uu 'ufw reload';uu "systemctl enable $dnsd"; }
+function sa { [ "$(systemctl status $dnsd 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $dnsd"; } }
+function sp { [ "$(systemctl status $dnsd 2>/dev/null|grep -i loaded)" ] && { uu "systemctl stop $dnsd"; } }
+function sd { uu "systemctl disable $dnsd";scl;uu 'ufw reload'; }
 
 function gfw { if [ "$cust" = "hrv" ];then uu "ufw$2 allow from $zip2 $1";uu "ufw$2 allow from $zip3 $1";else uu "ufw$2 allow from $vip1 $1";uu "ufw$2 allow from $vip3 $1";fi; }
 function gop { uu 'ufw allow 30303 comment eth1';uu 'ufw delete deny 8545              ';gfw 'to any port 8545 comment geapi'; }
@@ -35,7 +40,7 @@ function fcl { uu 'ufw deny  3000/tcp                '; }
 function uu { echo -e "${i}$1${f}";echo $H|sudo -S $1 2>/dev/null; }
 function ut { echo -e "${i}$1${f}";echo $H|sudo -S $1 2>/dev/null|tail -n $2; }
 function jb { uu "journalctl --no-hostname --no-full -f $1"; }
-function dr { uu "systemctl daemon-reload"; }
+function dr { echo $H|sudo -S systemctl daemon-reload 2>/dev/null; }
 
 function ge { gop;uu 'ufw reload';uu "systemctl enable $ethg"; }
 function be { bop;uu 'ufw reload';uu "systemctl enable $ethb"; }
@@ -122,20 +127,24 @@ function cf {
   fi
 }
 function sr { echo -e "ROUTE\t\t$(ip route show|grep 'default via'|cut -d' ' -f3)"; }
-function sf { echo -e "FORWARDER\t$(grep 'forwarders {' /etc/bind/named.conf.options 2>/dev/null|cut -d' ' -f3)\nDNS\t\t$(resolvectl|grep 'Current DNS Server'|cut -d' ' -f6)"; }
+function sf {
+  echo -e "FORWARDER\t$(grep 'forwarders {' /etc/bind/named.conf.options 2>/dev/null|cut -d' ' -f3)"
+  echo -e "DNS\t\t$(resolvectl|grep 'Current DNS'|cut -d' ' -f6)"
+  echo -e "enp1s0\t\t$(resolvectl dns|grep 'enp1s0'|cut -d' ' -f4-6)"
+}
 function nn {
   if [ "$cunm" = "$znm1" ];then geapi="http://$zip1:8545";else geapi="http://$vip1:8545";fi;g2
   g3=$(echo $H|sudo -S grep -i peers: /var/log/syslog 2>/dev/null|tail -n 1|sed -e 's%,% %g;s%  *% %g'|cut -d' ' -f22)
   echo -e "${i}PEERS: GETH ${g2:-0}, BEACON ${g3:-0}${f}"
 }
-[ "$1" = "cr" ] && { cr; }
-[ "$1" = "cf" ] && { cf; }
+[ "$1" = "cr"  ] && { cr; }
+[ "$1" = "cf"  ] && { cf; }
 [ "$1" = "crf" ] && { cr;cf; }
-[ "$1" = "sr" ] && { sr; }
-[ "$1" = "sf" ] && { sf; }
+[ "$1" = "sr"  ] && { sr; }
+[ "$1" = "sf"  ] && { sf; }
 [ "$1" = "srf" ] && { sr;sf; }
-[ "$1" = "np" ] && { nn; }
-[ "$1" = "nr" ] && { ut "grep -i record /var/log/syslog" "${2:-30}"; }
+[ "$1" = "np"  ] && { nn; }
+[ "$1" = "nr"  ] && { ut "grep -i record /var/log/syslog" "${2:-30}"; }
 
 # lista servicos
 [ "$1" = "ll" ] && { uu "systemctl list-units $pate $patp $patf"; }
@@ -154,8 +163,7 @@ function nn {
 [ "$1" = "wpr" ] && { uu "ufw disable"; }
 
 # journal
-[ "$1" = "sj" ] && { jb; }
-[ "$1" = "dj" ] && { jb '-u named'; }
+[ "$1" = "yj" ] && { jb; }
 [ "$1" = "tj" ] && { jb "-u $pate -u $patp -u $patf"; }
 [ "$1" = "ej" ] && { jb "-u $pate"; }
 [ "$1" = "mj" ] && { jb "-u $patp -u $patf"; }
@@ -167,6 +175,7 @@ function nn {
 [ "$1" = "fj" ] && { jb "-u $ethf"; }
 [ "$1" = "xj" ] && { jb "-u $plex"; }
 [ "$1" = "rj" ] && { jb "-u $trrt"; }
+[ "$1" = "sj" ] && { jb "-u $dnsd"; }
 # arranca
 [ "$1" = "ta" ] && { dr;ga;ba;va;pa;na;fa; }
 [ "$1" = "ea" ] && { dr;ga;ba;va; }
@@ -179,16 +188,20 @@ function nn {
 [ "$1" = "fa" ] && { dr;fa; }
 [ "$1" = "xa" ] && { dr;xa; }
 [ "$1" = "ra" ] && { dr;ra; }
+[ "$1" = "sa" ] && { dr;sa; }
 # para & arranca & journal
 [ "$1" = "gaj" ] && { dr;ga;jb "-u $ethg"; }
 [ "$1" = "baj" ] && { dr;ba;jb "-u $ethb"; }
 [ "$1" = "vaj" ] && { dr;va;jb "-u $ethv"; }
+[ "$1" = "saj" ] && { dr;sa;jb "-u $dnsd"; }
 [ "$1" = "grs" ] && { gp;dr;ga;jb "-u $ethg"; }
 [ "$1" = "brs" ] && { bp;dr;ba;jb "-u $ethb"; }
 [ "$1" = "vrs" ] && { vp;dr;va;jb "-u $ethv"; }
+[ "$1" = "srs" ] && { sp;dr;sa;jb "-u $dnsd"; }
 [ "$1" = "gpd" ] && { gp;gd; }
 [ "$1" = "bpd" ] && { bp;bd; }
 [ "$1" = "vpd" ] && { vp;vd; }
+[ "$1" = "spd" ] && { sp;sd; }
 # enable
 [ "$1" = "te" ] && { ge;be;ve;pe;ne;fe; }
 [ "$1" = "ee" ] && { ge;be;ve; }
@@ -201,6 +214,7 @@ function nn {
 [ "$1" = "fe" ] && { fe; }
 [ "$1" = "xe" ] && { xe; }
 [ "$1" = "re" ] && { re; }
+[ "$1" = "se" ] && { se; }
 # para
 [ "$1" = "tpr" ] && { fp;np;pp;vp;bp;gp; }
 [ "$1" = "epr" ] && { vp;bp;gp; }
@@ -213,6 +227,7 @@ function nn {
 [ "$1" = "gpr" ] && { gp; }
 [ "$1" = "xpr" ] && { xp; }
 [ "$1" = "rpr" ] && { rp; }
+[ "$1" = "spr" ] && { sp; }
 # disable
 [ "$1" = "tds" ] && { fd;nd;pd;vd;bd;gd; }
 [ "$1" = "eds" ] && { vd;bd;gd; }
@@ -225,6 +240,7 @@ function nn {
 [ "$1" = "gds" ] && { gd; }
 [ "$1" = "xds" ] && { xd; }
 [ "$1" = "rds" ] && { rd; }
+[ "$1" = "sds" ] && { sd; }
 
 if [ -z "$1" ]; then
   c1="\nprimeira letra"
@@ -239,6 +255,7 @@ if [ -z "$1" ]; then
   c1="$c1\nf\t$ethf"
   c1="$c1\nx\t$plex"
   c1="$c1\nr\t$trrt"
+  c1="$c1\ns\t$dnsd"
   c1="$c1\n"
   c1="$c1\nsegunda letra"
   c1="$c1\na\tarranca"
@@ -250,8 +267,7 @@ if [ -z "$1" ]; then
   c1="$c1\nrs\tpara & arranca & journal - restart"
   c1="$c1\n"
   c1="$c1\noutros"
-  c1="$c1\nsj\tsystem journal"
-  c1="$c1\ndj\tdns journal"
+  c1="$c1\nyj\tsystem journal"
   c1="$c1\nsl\tlista system journal TOTAL"
   c1="$c1\nrl\tlista system journal ERROR"
   c1="$c1\nel\tlista $ethg $ethb $ethv !INFO"

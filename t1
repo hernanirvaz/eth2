@@ -31,6 +31,8 @@ patf='grafana*'
 plex='plexmediaserver'
 # Transmission BitTorrent Daemon
 trrt='transmission-daemon'
+# Bind9
+dnsd='named'
 
 zip1='192.168.8.25'
 zip2='192.168.8.28'
