@@ -100,32 +100,40 @@ function gs {
 function cr {
   if [ "$cunm" = "$znm1" ] || [ "$cunm" = "$znm2" ] || [ "$cunm" = "$znm3" ]; then
     if [ "$(ip route show|grep 'default via'|cut -d' ' -f3)" = "192.168.8.1" ];then m=3; else m=1;fi
-    h=''
-    if [ "$cunm" != "$znm3" ]; then
-      h='& DNS FORWARDER '
-      sed -e "s%forwarders .*%forwarders { 192.168.8.$m; };%" /etc/bind/named.conf.options > ~/named.save
-      echo $H|sudo -S mv ~/named.save /etc/bind/named.conf.options 2>/dev/null
-      sudo chown root:root /etc/bind/named.conf.options 
-      sudo chmod 644 /etc/bind/named.conf.options
-    fi
-    echo -e "${i}CHANGE ROUTE ${h}192.168.8.${m}${f}"
+    echo -e "${i}CHANGE ROUTE 192.168.8.${m}${f}"
     sed -e "s%via:.*%via: 192.168.8.$m%" /etc/netplan/00-installer-config.yaml > ~/00-installer-config.save
     echo $H|sudo -S mv ~/00-installer-config.save /etc/netplan/00-installer-config.yaml 2>/dev/null
     sudo chown root:root /etc/netplan/00-installer-config.yaml 
     sudo chmod 644 /etc/netplan/00-installer-config.yaml 
-    [ "$cunm" != "$znm3" ] && sudo systemctl stop named
-    sudo systemctl stop systemd-resolved
     sudo netplan apply
-    [ "$cunm" != "$znm3" ] && sudo systemctl start named
-    sudo systemctl start systemd-resolved
+    sudo systemctl restart systemd-resolved
   fi
 }
+function cf {
+  if [ "$cunm" = "$znm1" ] || [ "$cunm" = "$znm2" ]; then
+    if [ "$(grep 'forwarders {' /etc/bind/named.conf.options |cut -d' ' -f3)" = "192.168.8.1;" ];then m=3; else m=1;fi
+    echo -e "${i}CHANGE FORWARDER 192.168.8.${m}${f}"
+    sed -e "s%forwarders .*%forwarders { 192.168.8.$m; };%" /etc/bind/named.conf.options > ~/named.save
+    echo $H|sudo -S mv ~/named.save /etc/bind/named.conf.options 2>/dev/null
+    sudo chown root:root /etc/bind/named.conf.options 
+    sudo chmod 644 /etc/bind/named.conf.options
+    sudo systemctl stop  named;sudo systemctl stop  systemd-resolved
+    sudo systemctl start named;sudo systemctl start systemd-resolved
+  fi
+}
+function sr { echo -e "ROUTE\t\t$(ip route show|grep 'default via'|cut -d' ' -f3)"; }
+function sf { echo -e "FORWARDER\t$(grep 'forwarders {' /etc/bind/named.conf.options 2>/dev/null|cut -d' ' -f3)\nDNS\t\t$(resolvectl|grep 'Current DNS Server'|cut -d' ' -f6)"; }
 function nn {
   if [ "$cunm" = "$znm1" ];then geapi="http://$zip1:8545";else geapi="http://$vip1:8545";fi;g2
   g3=$(echo $H|sudo -S grep -i peers: /var/log/syslog 2>/dev/null|tail -n 1|sed -e 's%,% %g;s%  *% %g'|cut -d' ' -f22)
   echo -e "${i}PEERS: GETH ${g2:-0}, BEACON ${g3:-0}${f}"
 }
 [ "$1" = "cr" ] && { cr; }
+[ "$1" = "cf" ] && { cf; }
+[ "$1" = "crf" ] && { cr;cf; }
+[ "$1" = "sr" ] && { sr; }
+[ "$1" = "sf" ] && { sf; }
+[ "$1" = "srf" ] && { sr;sf; }
 [ "$1" = "np" ] && { nn; }
 [ "$1" = "nr" ] && { ut "grep -i record /var/log/syslog" "${2:-30}"; }
 
@@ -178,6 +186,9 @@ function nn {
 [ "$1" = "grs" ] && { gp;dr;ga;jb "-u $ethg"; }
 [ "$1" = "brs" ] && { bp;dr;ba;jb "-u $ethb"; }
 [ "$1" = "vrs" ] && { vp;dr;va;jb "-u $ethv"; }
+[ "$1" = "gpd" ] && { gp;gd; }
+[ "$1" = "bpd" ] && { bp;bd; }
+[ "$1" = "vpd" ] && { vp;vd; }
 # enable
 [ "$1" = "te" ] && { ge;be;ve;pe;ne;fe; }
 [ "$1" = "ee" ] && { ge;be;ve; }
@@ -255,5 +266,10 @@ if [ -z "$1" ]; then
   c1="$c1\nwa\tfirewall arranca"
   c1="$c1\nwpr\tfirewall para"
   c1="$c1\ncr\tchange route"
+  c1="$c1\ncf\tchange forwarders"
+  c1="$c1\ncrf\tchange route & forwarders"
+  c1="$c1\nsr\tshow route"
+  c1="$c1\nsf\tshow forwarders"
+  c1="$c1\nsrf\tshow route & forwarders"
   echo -e "\n$c1\n"
 fi
