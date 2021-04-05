@@ -163,9 +163,7 @@ function nn {
 
 # journal
 [ "$1" = "yj" ] && { jb; }
-[ "$1" = "tj" ] && { jb "-u $pate -u $patp -u $patf"; }
 [ "$1" = "ej" ] && { jb "-u $pate"; }
-[ "$1" = "mj" ] && { jb "-u $patp -u $patf"; }
 [ "$1" = "gj" ] && { jb "-u $ethg"; }
 [ "$1" = "bj" ] && { jb "-u $ethb"; }
 [ "$1" = "vj" ] && { jb "-u $ethv"; }
@@ -176,9 +174,6 @@ function nn {
 [ "$1" = "rj" ] && { jb "-u $trrt"; }
 [ "$1" = "sj" ] && { jb "-u $dnsd"; }
 # arranca
-[ "$1" = "ta" ] && { dr;ga;ba;va;pa;na;fa; }
-[ "$1" = "ea" ] && { dr;ga;ba;va; }
-[ "$1" = "ma" ] && { dr;pa;na;fa; }
 [ "$1" = "ga" ] && { dr;ga; }
 [ "$1" = "ba" ] && { dr;ba; }
 [ "$1" = "va" ] && { dr;va; }
@@ -212,9 +207,6 @@ function nn {
 [ "$1" = "rea" ] && { re;ra; }
 [ "$1" = "sea" ] && { se;sa;jb "-u $dnsd"; }
 # enable
-[ "$1" = "te" ] && { ge;be;ve;pe;ne;fe; }
-[ "$1" = "ee" ] && { ge;be;ve; }
-[ "$1" = "me" ] && { pe;ne;fe; }
 [ "$1" = "ge" ] && { ge; }
 [ "$1" = "be" ] && { be; }
 [ "$1" = "ve" ] && { ve; }
@@ -225,9 +217,6 @@ function nn {
 [ "$1" = "re" ] && { re; }
 [ "$1" = "se" ] && { se; }
 # para
-[ "$1" = "tpr" ] && { fp;np;pp;vp;bp;gp; }
-[ "$1" = "epr" ] && { vp;bp;gp; }
-[ "$1" = "mpr" ] && { fp;np;pp; }
 [ "$1" = "fpr" ] && { fp; }
 [ "$1" = "npr" ] && { np; }
 [ "$1" = "ppr" ] && { pp; }
@@ -238,9 +227,6 @@ function nn {
 [ "$1" = "rpr" ] && { rp; }
 [ "$1" = "spr" ] && { sp; }
 # disable
-[ "$1" = "tds" ] && { fd;nd;pd;vd;bd;gd; }
-[ "$1" = "eds" ] && { vd;bd;gd; }
-[ "$1" = "mds" ] && { fd;nd;pd; }
 [ "$1" = "fds" ] && { fd; }
 [ "$1" = "nds" ] && { nd; }
 [ "$1" = "pds" ] && { pd; }
@@ -253,9 +239,7 @@ function nn {
 
 if [ -z "$1" ]; then
   c1="\nprimeira letra"
-  c1="$c1\nt\t$ethg $ethb $ethv $ethp $ethn $ethf"
   c1="$c1\ne\t$ethg $ethb $ethv"
-  c1="$c1\nm\t$ethp $ethn $ethf"
   c1="$c1\ng\t$ethg"
   c1="$c1\nb\t$ethb"
   c1="$c1\nv\t$ethv"
