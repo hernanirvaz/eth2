@@ -128,9 +128,10 @@ function cf {
 }
 function sr { echo -e "ROUTE\t\t$(ip route show|grep 'default via'|cut -d' ' -f3)"; }
 function sf {
-  echo -e "FORWARDER\t$(grep 'forwarders {' /etc/bind/named.conf.options 2>/dev/null|cut -d' ' -f3)"
+  m="$(netstat -i|grep -v '^lo\|Iface\|Kernel'|cut -d' ' -f1)"
+  [ -f /etc/bind/named.conf.options ] && echo -e "FORWARDER\t$(grep 'forwarders {' /etc/bind/named.conf.options 2>/dev/null|cut -d' ' -f3)"
   echo -e "DNS\t\t$(resolvectl|grep 'Current DNS'|cut -d' ' -f6)"
-  echo -e "enp1s0\t\t$(resolvectl dns|grep 'enp1s0'|cut -d' ' -f4-6)"
+  echo -e "$m\t\t$(resolvectl dns|grep $m|cut -d' ' -f4-6)"
 }
 function nn {
   if [ "$cunm" = "$znm1" ];then geapi="http://$zip1:8545";else geapi="http://$vip1:8545";fi;g2
@@ -140,9 +141,7 @@ function nn {
 [ "$1" = "cr"  ] && { cr; }
 [ "$1" = "cf"  ] && { cf; }
 [ "$1" = "crf" ] && { cr;cf; }
-[ "$1" = "sr"  ] && { sr; }
-[ "$1" = "sf"  ] && { sf; }
-[ "$1" = "srf" ] && { sr;sf; }
+[ "$1" = "sr"  ] && { sr;sf; }
 [ "$1" = "np"  ] && { nn; }
 [ "$1" = "nr"  ] && { ut "grep -i record /var/log/syslog" "${2:-30}"; }
 
@@ -194,14 +193,24 @@ function nn {
 [ "$1" = "baj" ] && { dr;ba;jb "-u $ethb"; }
 [ "$1" = "vaj" ] && { dr;va;jb "-u $ethv"; }
 [ "$1" = "saj" ] && { dr;sa;jb "-u $dnsd"; }
-[ "$1" = "grs" ] && { gp;dr;ga;jb "-u $ethg"; }
-[ "$1" = "brs" ] && { bp;dr;ba;jb "-u $ethb"; }
-[ "$1" = "vrs" ] && { vp;dr;va;jb "-u $ethv"; }
-[ "$1" = "srs" ] && { sp;dr;sa;jb "-u $dnsd"; }
+[ "$1" = "gpa" ] && { gp;ga;jb "-u $ethg"; }
+[ "$1" = "bpa" ] && { bp;ba;jb "-u $ethb"; }
+[ "$1" = "vpa" ] && { vp;va;jb "-u $ethv"; }
+[ "$1" = "xpa" ] && { xp;xa; }
+[ "$1" = "rpa" ] && { rp;ra; }
+[ "$1" = "spa" ] && { sp;sa;jb "-u $dnsd"; }
 [ "$1" = "gpd" ] && { gp;gd; }
 [ "$1" = "bpd" ] && { bp;bd; }
 [ "$1" = "vpd" ] && { vp;vd; }
+[ "$1" = "xpd" ] && { xp;xd; }
+[ "$1" = "rpd" ] && { rp;rd; }
 [ "$1" = "spd" ] && { sp;sd; }
+[ "$1" = "gea" ] && { ge;ga;jb "-u $ethg"; }
+[ "$1" = "bea" ] && { be;ba;jb "-u $ethb"; }
+[ "$1" = "vea" ] && { ve;va;jb "-u $ethv"; }
+[ "$1" = "xea" ] && { xe;xa; }
+[ "$1" = "rea" ] && { re;ra; }
+[ "$1" = "sea" ] && { se;sa;jb "-u $dnsd"; }
 # enable
 [ "$1" = "te" ] && { ge;be;ve;pe;ne;fe; }
 [ "$1" = "ee" ] && { ge;be;ve; }
@@ -259,12 +268,14 @@ if [ -z "$1" ]; then
   c1="$c1\n"
   c1="$c1\nsegunda letra"
   c1="$c1\na\tarranca"
-  c1="$c1\naj\tarranca & journal"
+  c1="$c1\naj\tarranca\t& journal"
   c1="$c1\ne\tenable"
   c1="$c1\nj\tjournal"
   c1="$c1\npr\tpara"
   c1="$c1\nds\tdisable"
-  c1="$c1\nrs\tpara & arranca & journal - restart"
+  c1="$c1\npd\tpara\t& disable"
+  c1="$c1\npa\tpara\t& arranca\t& journal"
+  c1="$c1\nea\tenable\t& arranca\t& journal"
   c1="$c1\n"
   c1="$c1\noutros"
   c1="$c1\nyj\tsystem journal"
@@ -284,8 +295,6 @@ if [ -z "$1" ]; then
   c1="$c1\ncr\tchange route"
   c1="$c1\ncf\tchange forwarders"
   c1="$c1\ncrf\tchange route & forwarders"
-  c1="$c1\nsr\tshow route"
-  c1="$c1\nsf\tshow forwarders"
-  c1="$c1\nsrf\tshow route & forwarders"
+  c1="$c1\nsr\tshow route & forwarders"
   echo -e "\n$c1\n"
 fi
