@@ -102,16 +102,17 @@ function gs {
   fi
 }
 
+function rq { echo -e "\nresolvectl query ${1:-pt.archive.ubuntu.com}";resolvectl query "${1:-pt.archive.ubuntu.com}"; }
+function rs { echo -e "${i}RESET NETPLAN & SYSTEMD-RESOLVED${f}";echo $H|sudo -S netplan apply 2>/dev/null;sudo systemctl restart systemd-resolved; }
 function cr {
   if [ "$cunm" = "$znm1" ] || [ "$cunm" = "$znm2" ] || [ "$cunm" = "$znm3" ]; then
     if [ "$(ip route show|grep 'default via'|cut -d' ' -f3)" = "192.168.8.1" ];then m=3; else m=1;fi
-    echo -e "${i}CHANGE ROUTE 192.168.8.${m}${f}"
+    echo -e "${i}CHANGE ROUTE 192.168.8.${m}"
     sed -e "s%via:.*%via: 192.168.8.$m%" /etc/netplan/00-installer-config.yaml > ~/00-installer-config.save
     echo $H|sudo -S mv ~/00-installer-config.save /etc/netplan/00-installer-config.yaml 2>/dev/null
     sudo chown root:root /etc/netplan/00-installer-config.yaml 
     sudo chmod 644 /etc/netplan/00-installer-config.yaml 
-    sudo netplan apply
-    sudo systemctl restart systemd-resolved
+    rs
   fi
 }
 function cf {
@@ -138,6 +139,8 @@ function nn {
   g3=$(echo $H|sudo -S grep -i peers: /var/log/syslog 2>/dev/null|tail -n 1|sed -e 's%,% %g;s%  *% %g'|cut -d' ' -f22)
   echo -e "${i}PEERS: GETH ${g2:-0}, BEACON ${g3:-0}${f}"
 }
+[ "$1" = "rs"  ] && { rs; }
+[ "$1" = "rq"  ] && { rq $2; }
 [ "$1" = "cr"  ] && { cr; }
 [ "$1" = "cf"  ] && { cf; }
 [ "$1" = "crf" ] && { cr;cf; }
@@ -280,5 +283,7 @@ if [ -z "$1" ]; then
   c1="$c1\ncf\tchange forwarders"
   c1="$c1\ncrf\tchange route & forwarders"
   c1="$c1\nsr\tshow route & forwarders"
+  c1="$c1\nrs\treset netplan & systemd-resolved"
+  c1="$c1\nrq\tdns query"
   echo -e "\n$c1\n"
 fi
