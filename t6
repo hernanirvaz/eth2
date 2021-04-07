@@ -115,6 +115,7 @@ function cr {
     rs
   fi
 }
+function ds { echo -e "${i}RESET DNS & SYSTEMD-RESOLVED${f}";sp;sudo systemctl stop  systemd-resolved;sa;sudo systemctl start systemd-resolved; }
 function cf {
   if [ "$cunm" = "$znm1" ] || [ "$cunm" = "$znm2" ]; then
     if [ "$(grep 'forwarders {' /etc/bind/named.conf.options |cut -d' ' -f3)" = "192.168.8.1;" ];then m=3; else m=1;fi
@@ -123,14 +124,13 @@ function cf {
     echo $H|sudo -S mv ~/named.save /etc/bind/named.conf.options 2>/dev/null
     sudo chown root:root /etc/bind/named.conf.options 
     sudo chmod 644 /etc/bind/named.conf.options
-    sudo systemctl stop  named;sudo systemctl stop  systemd-resolved
-    sudo systemctl start named;sudo systemctl start systemd-resolved
+    ds
   fi
 }
 function sr { echo -e "ROUTE\t\t$(ip route show|grep 'default via'|cut -d' ' -f3)"; }
 function sf {
   m="$(netstat -i|grep -v '^lo\|Iface\|Kernel'|cut -d' ' -f1)"
-  [ -f /etc/bind/named.conf.options ] && echo -e "FORWARDER\t$(grep 'forwarders {' /etc/bind/named.conf.options 2>/dev/null|cut -d' ' -f3)"
+  # [ -f /etc/bind/named.conf.options ] && echo -e "FORWARDER\t$(grep 'forwarders {' /etc/bind/named.conf.options 2>/dev/null|cut -d' ' -f3)"
   echo -e "DNS\t\t$(resolvectl|grep 'Current DNS'|cut -d' ' -f6)"
   echo -e "$m\t\t$(resolvectl dns|grep $m|cut -d' ' -f4-6)"
 }
@@ -140,6 +140,7 @@ function nn {
   echo -e "${i}PEERS: GETH ${g2:-0}, BEACON ${g3:-0}${f}"
 }
 [ "$1" = "rs"  ] && { rs; }
+[ "$1" = "ds"  ] && { ds; }
 [ "$1" = "rq"  ] && { rq $2; }
 [ "$1" = "cr"  ] && { cr; }
 [ "$1" = "cf"  ] && { cf; }
@@ -153,8 +154,8 @@ function nn {
 # lista portas
 [ "$1" = "lp" ] && { netstat -tulpn; }
 # outros journal system/lighthouse
-[ "$1" = "el" ] && { echo $H|sudo -S grep -i 'geth\|lighthouse'      /var/log/syslog 2>/dev/null|grep -v ' INFO '|sort -k 9; }
-[ "$1" = "sl" ] && { echo $H|sudo -S grep -v 'geth\|lighthouse\|UFW' /var/log/syslog 2>/dev/null; }
+[ "$1" = "el" ] && { echo $H|sudo -S grep -i 'geth\|lighthouse'      /var/log/syslog 2>/dev/null|grep -v ' INFO '|if [ "$2" ];then sort -k 9;else tee;fi; }
+[ "$1" = "sl" ] && { echo $H|sudo -S grep -v 'geth\|lighthouse\|UFW' /var/log/syslog 2>/dev/null|if [ "$2" ];then grep -v named;else tee;fi; }
 [ "$1" = "rl" ] && { echo $H|sudo -S grep -v 'geth\|lighthouse\|UFW' /var/log/syslog 2>/dev/null|grep -i 'error'; }
 [ "$1" = "bl" ] && { echo $H|sudo -S grep -i 'Successfully published block\|Block from API' /var/log/syslog 2>/dev/null; }
 [ "$1" = "al" ] && { a=$(echo $H|sudo -S grep -i 'Successfully published attestation\|aggregated attestation' /var/log/syslog 2>/dev/null|wc -l);echo "attestations: ${a:-0}"; }
@@ -266,9 +267,9 @@ if [ -z "$1" ]; then
   c1="$c1\n"
   c1="$c1\noutros"
   c1="$c1\nyj\tsystem journal"
-  c1="$c1\nsl\tlista system journal TOTAL"
+  c1="$c1\nsl [sn]\tlista system journal TOTAL named=[sn]"
   c1="$c1\nrl\tlista system journal ERROR"
-  c1="$c1\nel\tlista $ethg $ethb $ethv !INFO"
+  c1="$c1\nel [sn]\tlista $ethg $ethb $ethv !INFO sort=[sn]"
   c1="$c1\nbl\tlista block proposals"
   c1="$c1\nal\tlista attestations"
   c1="$c1\nll\tlista servicos"
@@ -283,7 +284,8 @@ if [ -z "$1" ]; then
   c1="$c1\ncf\tchange forwarders"
   c1="$c1\ncrf\tchange route & forwarders"
   c1="$c1\nsr\tshow route & forwarders"
-  c1="$c1\nrs\treset netplan & systemd-resolved"
+  c1="$c1\nrs\treset netplan\t& systemd-resolved"
+  c1="$c1\nds\treset dns\t& systemd-resolved"
   c1="$c1\nrq\tdns query"
   echo -e "\n$c1\n"
 fi
