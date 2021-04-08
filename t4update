@@ -7,12 +7,12 @@ source /home/eth/eth2/t1
 # geth      GETH STOP |    GETH START | NO REBOOT
 if [ "$1" = "linux" ] || [ "$1" = "reboot" ] || [ "$1" = "geth" ]; then
   echo -e "${i}FULL-UPGRADE${f}"
-  echo $H|sudo -S apt update -y 2>/dev/null
   if [ "$1" = "reboot" ] || [ "$1" = "geth" ]; then t6 gpr; fi
+  echo $H|sudo -S apt update -y 2>/dev/null
   sudo apt full-upgrade -y && sudo apt dist-upgrade -y
-  [ "$1" = "geth"   ] && { t6 ga; }
   sudo apt autoremove -y
   sudo apt autoclean
+  [ "$1" = "geth"   ] && { t6 gaj; }
   [ "$1" = "reboot" ] && { sudo reboot; }
 fi
 
