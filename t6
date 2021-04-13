@@ -186,9 +186,9 @@ function nn {
 [ "$1" = "baj" ] && { dr;ba;jb "-u $ethb"; }
 [ "$1" = "vaj" ] && { dr;va;jb "-u $ethv"; }
 [ "$1" = "saj" ] && { dr;sa;jb "-u $dnsd"; }
-[ "$1" = "gpa" ] && { gp;ga;jb "-u $ethg"; }
-[ "$1" = "bpa" ] && { bp;ba;jb "-u $ethb"; }
-[ "$1" = "vpa" ] && { vp;va;jb "-u $ethv"; }
+[ "$1" = "gpa" ] && { gp;dr;ga;jb "-u $ethg"; }
+[ "$1" = "bpa" ] && { bp;dr;ba;jb "-u $ethb"; }
+[ "$1" = "vpa" ] && { vp;dr;va;jb "-u $ethv"; }
 [ "$1" = "xpa" ] && { xp;xa; }
 [ "$1" = "rpa" ] && { rp;ra; }
 [ "$1" = "spa" ] && { sp;sa;jb "-u $dnsd"; }
@@ -198,9 +198,9 @@ function nn {
 [ "$1" = "xpd" ] && { xp;xd; }
 [ "$1" = "rpd" ] && { rp;rd; }
 [ "$1" = "spd" ] && { sp;sd; }
-[ "$1" = "gea" ] && { ge;ga;jb "-u $ethg"; }
-[ "$1" = "bea" ] && { be;ba;jb "-u $ethb"; }
-[ "$1" = "vea" ] && { ve;va;jb "-u $ethv"; }
+[ "$1" = "gea" ] && { ge;dr;ga;jb "-u $ethg"; }
+[ "$1" = "bea" ] && { be;dr;ba;jb "-u $ethb"; }
+[ "$1" = "vea" ] && { ve;dr;va;jb "-u $ethv"; }
 [ "$1" = "xea" ] && { xe;xa; }
 [ "$1" = "rea" ] && { re;ra; }
 [ "$1" = "sea" ] && { se;sa;jb "-u $dnsd"; }
