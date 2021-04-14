@@ -50,7 +50,7 @@ if [ "$1" = "eth2" ]; then
         scp ~/.cargo/bin/lighthouse $zip3:~
       fi
       if [ "$cunm" = "$vnm1" ]; then
-        scp ~/.cargo/bin/lighthouse $vip2:~
+        #scp ~/.cargo/bin/lighthouse $vip2:~
         scp ~/.cargo/bin/lighthouse $vip3:~
       fi
       if [ -x /usr/local/bin/lighthouse ]; then
@@ -73,7 +73,7 @@ if [ "$1" = "eth2" ]; then
     fi
   fi
   echo $H|sudo -S chmod 755 /usr/local/bin/lighthouse 2>/dev/null
-  if [ "$cunm" != "$znm1" ] && [ "$cunm" != "$vnm1" ];then t6 ba;fi
-  if [ "$cunm"  = "$znm3" ] || [ "$cunm"  = "$vnm3" ];then t6 va;fi
+  #if [ "$cunm" != "n$znm1" ] && [ "$cunm" != "$vnm1" ];then t6 ba;fi
+  #if [ "$cunm"  = "n$znm3" ] || [ "$cunm"  = "$vnm3" ];then t6 va;fi
   echo -e "${i}NOVO LIGHT INSTALADO - PODE/DEVE VERIFICAR${f}"
 fi

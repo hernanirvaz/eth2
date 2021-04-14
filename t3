@@ -8,7 +8,7 @@ if [ -x ~/lighthouse ] && [ ! -d ~/lighthouse ]; then
 fi
 
 if [ -x /usr/local/bin/lighthouse ]; then
-  if [ "$cunm" != "$znm1" ] && [ "$cunm" != "sim$vnm3" ]; then
+  if [ ! -f /etc/systemd/system/$ethb.service ] && [ "$cunm" != "$znm1" ] && [ "$cunm" != "$vnm3" ]; then
     user="eth2"
     # slots per restore point after init can't be changed
     sprp=1024 # Yearly Disk Usage  12.8GB
@@ -65,7 +65,7 @@ if [ -x /usr/local/bin/lighthouse ]; then
     #t6 ba
     #t6 bj
   fi
-  if [ "$cunm" = "$znm3" ] || [ "$cunm" = "nao$vnm3" ]; then
+  if [ "$cunm" = "$znm3" ] || [ "$cunm" = "$vnm3" ]; then
     user="eth3"
     if [ "$cunm" = "$znm3" ]; then
       vlcl="--beacon-nodes http://127.0.0.1:5052,http://$zip2:5052"
@@ -93,9 +93,9 @@ if [ -x /usr/local/bin/lighthouse ]; then
       echo -e "sudo chmod 666 $vldt/slashing_protection.sqlite*"
       echo -e "t6 vpr;t6 vds"
       echo -e "touch $dtdi/vc_lock"
-      echo -e "touch $dtdi/vc_old"
+      echo -e "touch $dtdi/vc_slash"
     fi
-    if [ ! -f $dtdi/vc_old ] && [ -f $dtdi/vc_lock ] && [ -f $dtdi/vc_keys ]; then
+    if [ ! -f $dtdi/vc_slash ] && [ -f $dtdi/vc_lock ] && [ -f $dtdi/vc_keys ]; then
       echo -e "${i}COPIAR $vldt/slashing_protection.sqlite*${f}"
       echo $H|sudo -S mkdir -p $vldt 2>/dev/null
       sudo chown -R $meeu:$meeu $vldt
