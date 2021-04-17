@@ -25,7 +25,10 @@ function si {
 [ "$1" = "BEACSTP" ] && { echo -e "Subject: BEAC STOPPED ON $(uname -n)\n\nSERVICE_RESULT=$2\nEXIT_CODE=$3\nEXIT_STATUS=$4\n"|ssmtp hernanilr@gmail.com; }
 [ "$1" = "VALISTP" ] && { echo -e "Subject: VALI STOPPED ON $(uname -n)\n\nSERVICE_RESULT=$2\nEXIT_CODE=$3\nEXIT_STATUS=$4\n"|ssmtp hernanilr@gmail.com; }
 [ "$1" = "BEACCHK" ] && { si;[ "$(nmap $p --open -Pn -p 5052|grep open)" ] || echo -e "Subject: BNAPI $p STOPPED\n\n"|ssmtp hernanilr@gmail.com; }
-[ "$1" = "VERSCHK" ] && { nv;[ "$n" = "$v" ] || echo -e "Subject: OLD $v NEW $n IS OUT\n\n"|ssmtp hernanilr@gmail.com; }
-[ "$1" = "UPDTCHK" ] && { nu;[ "$u" -gt 0 ] && echo -e "Subject: $u UPDATES ON $(uname -n)\n\n$(apt list --upgradable 2>/dev/null)"|ssmtp hernanilr@gmail.com; }
+[ "$1" = "VERSCHK" ] && { nv;[ "$n" = "$v"   ] || echo -e "Subject: OLD $v NEW $n IS OUT\n\n"|ssmtp hernanilr@gmail.com; }
+[ "$1" = "UPDTCHK" ] && { nu;[ "$u" -gt 0    ] && echo -e "Subject: $u UPDATES ON $(uname -n)\n\n$(apt list --upgradable 2>/dev/null)"|ssmtp hernanilr@gmail.com; }
 [ "$1" = "SPEDCHK" ] && { echo -e "Subject: SPEEDTEST ON $(uname -n)\n\n$(speedtest)"|ssmtp hernanilr@gmail.com; }
-[ "$1" = "SYNCCHK" ] && { echo -e "Subject: SYNCING ON $(uname -n)\n\n$(/home/eth/eth2/t6 gs)"|ssmtp hernanilr@gmail.com; }
+[ "$1" = "SYNCCHK" ] && { echo -e "Subject: SYNCING ON $(uname -n)\n\n$(t6 gs)"|ssmtp hernanilr@gmail.com; }
+
+[ "$1" = "BNDLCHK" ] && { m=$(t6 bk);[ "$(echo "$m"|tail -1|cut -f 3)" -ge 2000 ] && echo -e "Subject: $m"|ssmtp hernanilr@gmail.com; }
+[ "$1" = "GETHCHK" ] && { m=$(t6 gk);[ "$m" != "GETH OK"                        ] && echo -e "Subject: $m"|ssmtp hernanilr@gmail.com; }

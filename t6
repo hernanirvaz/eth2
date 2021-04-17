@@ -62,7 +62,7 @@ function np { [ "$(systemctl status $ethn 2>/dev/null|grep -i loaded)" ] && { uu
 function fp { [ "$(systemctl status $ethf 2>/dev/null|grep -i loaded)" ] && { uu "systemctl stop $ethf"; } }
 function gd { uu "systemctl disable $ethg";gcl;uu 'ufw reload'; }
 function bd { uu "systemctl disable $ethb";bcl;uu 'ufw reload'; }
-function vd { uu "systemctl disable $ethv";vcl;uu 'ufw reload'; }
+function vd { uu "systemctl disable $ethv";vcl;uu 'ufw reload';touch $dtdi/vc_lock; }
 function pd { [ "$(systemctl status $ethp 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethp"; } }
 function nd { [ "$(systemctl status $ethn 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethn"; } }
 function fd { [ "$(systemctl status $ethf 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethf";fcl;uu 'ufw reload'; } }
@@ -130,7 +130,27 @@ function sf {
 function nn {
   if [ "$cunm" = "$znm1" ];then geapi="http://$zip1:8545";else geapi="http://$vip1:8545";fi;g2
   g3=$(echo $H|sudo -S grep -i peers: /var/log/syslog 2>/dev/null|tail -n 1|sed -e 's%,% %g;s%  *% %g'|cut -d' ' -f22)
-  echo -e "${i}PEERS: GETH ${g2:-0}, BEACON ${g3:-0}${f}"
+  m="PEERS: GETH ${g2:-0}, BEACON ${g3:-0}"
+}
+function gk {
+  t=0;n=0;v=0
+  if [ "$(systemctl status $ethg 2>/dev/null|grep -i running)" ]; then
+    [ "$(date|cut -d' ' -f4|cut -d: -f1)" -eq 0 ] && rm /home/eth/$ethg.count
+    [ -f /home/eth/$ethg.count ] && t=$(cat /home/eth/$ethg.count)
+    n=$(echo $H|sudo -S grep -i 'new chain segment' /var/log/syslog 2>/dev/null|wc -l)
+  fi
+}
+function bk {
+  t=0;n=0;v=0
+  for v in $(echo $H|sudo -S grep -i 'gossip' /var/log/syslog 2>/dev/null|sed -e 's%,% %g;s%  *% %g'|cut -d' ' -f23)
+  do n=$(($n+1));t=$(($t+$v))
+  done
+  v=$(($t/$n))
+  t=$(echo $H|sudo -S grep -i 'incorrect head'      /var/log/syslog 2>/dev/null|wc -l)
+  n=$(echo $H|sudo -S grep -i 'incorrect target'    /var/log/syslog 2>/dev/null|wc -l)
+  z=$(echo $H|sudo -S grep -i 'attestation missing' /var/log/syslog 2>/dev/null|wc -l)
+  x=$(echo $H|sudo -S grep -i 'disconnecting peer'  /var/log/syslog 2>/dev/null|wc -l)
+  
 }
 
 [ "$1" = "rs"  ] && { rs; }
@@ -140,8 +160,8 @@ function nn {
 [ "$1" = "cf"  ] && { cf; }
 [ "$1" = "crf" ] && { cr;cf; }
 [ "$1" = "sr"  ] && { sr;sf; }
-[ "$1" = "np"  ] && { nn; }
-[ "$1" = "nr"  ] && { ut "grep -i record /var/log/syslog" "${2:-30}"; }
+[ "$1" = "bk"  ] && { bk;nn;echo -e "BEAC $(uname -n)\n\nINCORRECT HEADS\t\t$t\nINCORRECT TARGETS\t$n\nATTESTATIONS MISSING\t$z\nDISCONNECTING PEERS\t$x\nBEACON NODES\t\t${g3:-0}\nAVG DELAYS\t\t$v"; }
+[ "$1" = "gk"  ] && { gk;if [ "$n" -ge "$t" ];then echo $n > /home/eth/$ethg.count;echo -e "GETH OK";else echo -e "GETH BLOCKED $(uname -n)\n\n$(t6 gs)";fi; }
 
 # lista servicos
 [ "$1" = "ll" ] && { uu "systemctl list-units $pate $patp $patf"; }
@@ -153,6 +173,8 @@ function nn {
 [ "$1" = "rl" ] && { echo $H|sudo -S grep -v 'geth\|lighthouse\|UFW' /var/log/syslog 2>/dev/null|grep -i 'error'; }
 [ "$1" = "bl" ] && { echo $H|sudo -S grep -i 'Successfully published block\|Block from API' /var/log/syslog 2>/dev/null; }
 [ "$1" = "al" ] && { a=$(echo $H|sudo -S grep -i 'Successfully published attestation\|aggregated attestation' /var/log/syslog 2>/dev/null|wc -l);echo "attestations: ${a:-0}"; }
+[ "$1" = "nr" ] && { ut "grep -i record /var/log/syslog" "${2:-30}"; }
+[ "$1" = "np" ] && { nn;echo -e $m; }
 [ "$1" = "gs" ] && { gs;echo -e $m; }
 [ "$1" = "g0" ] && { g0;echo -e $g0; }
 [ "$1" = "ws" ] && { uu "ufw status numbered"; }

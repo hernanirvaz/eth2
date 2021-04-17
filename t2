@@ -48,34 +48,39 @@ fi
 
 echo -e "${i}LINUX SYSTEM CONFIGS${f}"
 sudo timedatectl set-ntp on
-sudo timedatectl set-timezone Europe/Lisbon
-sed -e 's%^ *#NTP=.*$%NTP="ntp02.oal.ul.pt ntp04.oal.ul.pt time.google.com time.cloudflare.com time.facebook.com"%i' /etc/systemd/timesyncd.conf > ~/timesyncd.save
-sed -e 's%^ *ENABLED=.*$%ENABLED=0%i' /etc/default/motd-news > ~/motd-new.save
+if [ "$cust" = "hrv" ]; then
+  sudo timedatectl set-timezone Europe/Lisbon
+  sed -e 's%^ *#NTP=.*$%NTP="ntp02.oal.ul.pt ntp04.oal.ul.pt time.google.com time.cloudflare.com time.facebook.com"%i' /etc/systemd/timesyncd.conf > ~/timesyncd.save
+  sed -e 's%^ *ENABLED=.*$%ENABLED=0%i' /etc/default/motd-news > ~/motd-new.save
+  sed -e 's%-wait-online *$%-wait-online --ignore=enp2s0 --ignore=wlo1%i' /lib/systemd/system/systemd-networkd-wait-online.service > ~/snwo.save
+  sed -e 's%^.*UseDNS *=.*$%UseDNS=false%i' /etc/systemd/networkd.conf > ~/ntwd.save;echo 'UseDNS=false' >> ~/ntwd.save
+  sudo mv ~/motd-new.save /etc/default/motd-news
+  sudo mv ~/snwo.save /lib/systemd/system/systemd-networkd-wait-online.service
+  sudo mv ~/ntwd.save /etc/systemd/networkd.conf
+  sudo chown root:root /etc/default/motd-news
+  sudo chown root:root /lib/systemd/system/systemd-networkd-wait-online.service
+  sudo chown root:root /etc/systemd/networkd.conf
+  sudo chmod 644 /etc/default/motd-news
+  sudo chmod 644 /lib/systemd/system/systemd-networkd-wait-online.service
+  sudo chmod 644 /etc/systemd/networkd.conf
+else
+  sudo timedatectl set-timezone Europe/Berlin
+  sed -e 's%^ *#NTP=.*$%NTP="time.google.com time.cloudflare.com time.facebook.com"%i' /etc/systemd/timesyncd.conf > ~/timesyncd.save
+fi
 sed -e 's%^ */* *Unattended-Upgrade::Mail .*$%Unattended-Upgrade::Mail "hernanilr@gmail.com";%i' /etc/apt/apt.conf.d/50unattended-upgrades > ~/t5-upg.save
 sed -e 's%^ *printf%# printf%i' /etc/update-motd.d/00-header > ~/t0-hea.save
 sed -e 's%^ *printf%# printf%i' /etc/update-motd.d/10-help-text > ~/t1-hel.save
-sed -e 's%-wait-online *$%-wait-online --ignore=enp2s0 --ignore=wlo1%i' /lib/systemd/system/systemd-networkd-wait-online.service > ~/snwo.save
-sed -e 's%^.*UseDNS *=.*$%UseDNS=false%i' /etc/systemd/networkd.conf > ~/ntwd.save;echo 'UseDNS=false' >> ~/ntwd.save
 echo 'printf "Welcome to %s %s (%s %s %s)\n" "$(uname -n|cut -d. -f1)" "$DISTRIB_DESCRIPTION" "$(uname -o)" "$(uname -r)" "$(uname -m)"' >> ~/t0-hea.save
 sudo mv ~/timesyncd.save /etc/systemd/timesyncd.conf
-sudo mv ~/motd-new.save /etc/default/motd-news
 sudo mv ~/t0-hea.save /etc/update-motd.d/00-header
 sudo mv ~/t1-hel.save /etc/update-motd.d/10-help-text
 sudo mv ~/t5-upg.save /etc/apt/apt.conf.d/50unattended-upgrades
-sudo mv ~/snwo.save /lib/systemd/system/systemd-networkd-wait-online.service
-sudo mv ~/ntwd.save /etc/systemd/networkd.conf
 sudo chown root:root /etc/systemd/timesyncd.conf
-sudo chown root:root /etc/default/motd-news
 sudo chown root:root /etc/apt/apt.conf.d/*
 sudo chown root:root /etc/update-motd.d/*
-sudo chown root:root /lib/systemd/system/systemd-networkd-wait-online.service
-sudo chown root:root /etc/systemd/networkd.conf
 sudo chmod 644 /etc/systemd/timesyncd.conf
-sudo chmod 644 /etc/default/motd-news
 sudo chmod 644 /etc/apt/apt.conf.d/*
 sudo chmod 755 /etc/update-motd.d/*
-sudo chmod 644 /lib/systemd/system/systemd-networkd-wait-online.service
-sudo chmod 644 /etc/systemd/networkd.conf
 # nao executa - nao acho ser necessario
 sudo chmod -x /etc/update-motd.d/97-overlayroot
 sudo netplan apply
