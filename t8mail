@@ -30,5 +30,5 @@ function si {
 [ "$1" = "SPEDCHK" ] && { echo -e "Subject: SPEEDTEST ON $(uname -n)\n\n$(speedtest)"|ssmtp hernanilr@gmail.com; }
 [ "$1" = "SYNCCHK" ] && { echo -e "Subject: SYNCING ON $(uname -n)\n\n$(t6 gs)"|ssmtp hernanilr@gmail.com; }
 
-[ "$1" = "BNDLCHK" ] && { m=$(t6 bk);[ "$(echo "$m"|tail -1|cut -f 3)" -ge 2000 ] && echo -e "Subject: $m"|ssmtp hernanilr@gmail.com; }
-[ "$1" = "GETHCHK" ] && { m=$(t6 gk);[ "$m" != "GETH OK"                        ] && echo -e "Subject: $m"|ssmtp hernanilr@gmail.com; }
+[ "$1" = "BNDLCHK" ] && { [ "$(t6 bl|cut -d' ' -f25)" -ge 2000 ] && echo -e "Subject: $(t6 bk)"|ssmtp hernanilr@gmail.com; }
+[ "$1" = "GETHCHK" ] && { [ "$(t6 gl|cut -d' ' -f2 )" != "OK"  ] && echo -e "Subject: $(t6 gl)"|ssmtp hernanilr@gmail.com; }

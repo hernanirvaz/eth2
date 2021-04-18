@@ -67,11 +67,11 @@ function pd { [ "$(systemctl status $ethp 2>/dev/null|grep -i loaded)" ] && { uu
 function nd { [ "$(systemctl status $ethn 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethn"; } }
 function fd { [ "$(systemctl status $ethf 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethf";fcl;uu 'ufw reload'; } }
 function g0 { g0=0;[ -d /var/lib/goethereum ] && g0=$(echo $H|sudo -S du -s /var/lib/goethereum 2>/dev/null|cut -f1); }
-function g1 { g1=0;[ -d /var/lib/goethereum ] && g1=$(geth attach $geapi --exec eth.syncing); }
-function g2 { g2=0;[ -d /var/lib/goethereum ] && g2=$(geth attach $geapi --exec net.peerCount); }
+function g1 { g1=0;[ -d /var/lib/goethereum ] && { if [ "$cunm" = "$znm1" ];then g="http://$zip1:8545";else g="http://$vip1:8545";fi;g1=$(geth attach $g --exec eth.syncing); }; }
+function g2 { g2=0;[ -d /var/lib/goethereum ] && { if [ "$cunm" = "$znm1" ];then g="http://$zip1:8545";else g="http://$vip1:8545";fi;g2=$(geth attach $g --exec net.peerCount); }; }
+function g3 { g3=$(echo $H|sudo -S grep -i peers: /var/log/syslog 2>/dev/null|tail -n 1|sed -e 's%,% %g;s%  *% %g'|cut -d' ' -f22); }
 function gs {
   if [ -d /var/lib/goethereum ] && ([ "$cunm" = "$vnm1" ] || [ "$cunm" = "$znm1" ]); then
-    if [ "$cunm" = "$znm1" ];then geapi="http://$zip1:8545";else geapi="http://$vip1:8545";fi
     g0;g1;g2
     if [ "$(echo $g1|grep -i false)" ]; then
       m="GETH SYNCING DONE - PEERCOUNT $g2"
@@ -109,17 +109,17 @@ function cr {
   fi
 }
 function ds { echo -e "${i}RESET DNS & SYSTEMD-RESOLVED${f}";sp;sudo systemctl stop  systemd-resolved;sa;sudo systemctl start systemd-resolved; }
-function cf {
-  if [ "$cunm" = "$znm1" ] || [ "$cunm" = "$znm2" ]; then
-    if [ "$(grep 'forwarders {' /etc/bind/named.conf.options |cut -d' ' -f3)" = "192.168.8.1;" ];then m=3; else m=1;fi
-    echo -e "${i}CHANGE FORWARDER 192.168.8.${m}${f}"
-    sed -e "s%forwarders .*%forwarders { 192.168.8.$m; };%" /etc/bind/named.conf.options > ~/named.save
-    echo $H|sudo -S mv ~/named.save /etc/bind/named.conf.options 2>/dev/null
-    sudo chown root:root /etc/bind/named.conf.options 
-    sudo chmod 644 /etc/bind/named.conf.options
-    ds
-  fi
-}
+#function cf {
+#  if [ "$cunm" = "$znm1" ] || [ "$cunm" = "$znm2" ]; then
+#    if [ "$(grep 'forwarders {' /etc/bind/named.conf.options |cut -d' ' -f3)" = "192.168.8.1;" ];then m=3; else m=1;fi
+#    echo -e "${i}CHANGE FORWARDER 192.168.8.${m}${f}"
+#    sed -e "s%forwarders .*%forwarders { 192.168.8.$m; };%" /etc/bind/named.conf.options > ~/named.save
+#    echo $H|sudo -S mv ~/named.save /etc/bind/named.conf.options 2>/dev/null
+#    sudo chown root:root /etc/bind/named.conf.options 
+#    sudo chmod 644 /etc/bind/named.conf.options
+#    ds
+#  fi
+#}
 function sr { echo -e "ROUTE\t\t$(ip route show|grep 'default via'|cut -d' ' -f3)"; }
 function sf {
   m="$(netstat -i|grep -v '^lo\|Iface\|Kernel'|cut -d' ' -f1)"
@@ -127,56 +127,53 @@ function sf {
   echo -e "DNS\t\t$(resolvectl|grep 'Current DNS'|cut -d' ' -f6)"
   echo -e "$m\t\t$(resolvectl dns|grep $m|cut -d' ' -f4-6)"
 }
-function nn {
-  if [ "$cunm" = "$znm1" ];then geapi="http://$zip1:8545";else geapi="http://$vip1:8545";fi;g2
-  g3=$(echo $H|sudo -S grep -i peers: /var/log/syslog 2>/dev/null|tail -n 1|sed -e 's%,% %g;s%  *% %g'|cut -d' ' -f22)
-  m="PEERS: GETH ${g2:-0}, BEACON ${g3:-0}"
-}
 function gk {
-  t=0;n=0;v=0
+  t=-1;n=0;v=0
   if [ "$(systemctl status $ethg 2>/dev/null|grep -i running)" ]; then
-    [ "$(date|cut -d' ' -f4|cut -d: -f1)" -eq 0 ] && rm /home/eth/$ethg.count
+    [ "$(date --rfc-3339=seconds|cut -d' ' -f2|cut -d: -f1)" -eq 0 ] && rm /home/eth/$ethg.count
     [ -f /home/eth/$ethg.count ] && t=$(cat /home/eth/$ethg.count)
     n=$(echo $H|sudo -S grep -i 'new chain segment' /var/log/syslog 2>/dev/null|wc -l)
   fi
 }
 function bk {
-  t=0;n=0;v=0
+  t=0;n=0;v=0;y=0;z=0;a=0;x=0;p=0
   for v in $(echo $H|sudo -S grep -i 'gossip' /var/log/syslog 2>/dev/null|sed -e 's%,% %g;s%  *% %g'|cut -d' ' -f23)
   do n=$(($n+1));t=$(($t+$v))
   done
-  v=$(($t/$n))
-  t=$(echo $H|sudo -S grep -i 'incorrect head'      /var/log/syslog 2>/dev/null|wc -l)
-  n=$(echo $H|sudo -S grep -i 'incorrect target'    /var/log/syslog 2>/dev/null|wc -l)
-  z=$(echo $H|sudo -S grep -i 'attestation missing' /var/log/syslog 2>/dev/null|wc -l)
-  x=$(echo $H|sudo -S grep -i 'disconnecting peer'  /var/log/syslog 2>/dev/null|wc -l)
-  
+  if [ "$n" -gt 0 ]; then
+    v=$(($t/$n))
+    t=$(echo $H|sudo -S grep -i 'incorrect head'      /var/log/syslog 2>/dev/null|wc -l)
+    y=$(echo $H|sudo -S grep -i 'incorrect target'    /var/log/syslog 2>/dev/null|wc -l)
+    z=$(echo $H|sudo -S grep -i 'attestation missing' /var/log/syslog 2>/dev/null|wc -l)
+    a=$(echo $H|sudo -S grep -i 'attestation success' /var/log/syslog 2>/dev/null|wc -l)
+    x=$(echo $H|sudo -S grep -i 'disconnecting peer'  /var/log/syslog 2>/dev/null|wc -l)
+    p=$(echo $H|sudo -S grep -i 'published block'     /var/log/syslog 2>/dev/null|wc -l)
+  fi
 }
 
 [ "$1" = "rs"  ] && { rs; }
 [ "$1" = "ds"  ] && { ds; }
 [ "$1" = "rq"  ] && { rq $2; }
 [ "$1" = "cr"  ] && { cr; }
-[ "$1" = "cf"  ] && { cf; }
-[ "$1" = "crf" ] && { cr;cf; }
+#[ "$1" = "cf"  ] && { cf; }
+#[ "$1" = "crf" ] && { cr;cf; }
 [ "$1" = "sr"  ] && { sr;sf; }
-[ "$1" = "bk"  ] && { bk;nn;echo -e "BEAC $(uname -n)\n\nINCORRECT HEADS\t\t$t\nINCORRECT TARGETS\t$n\nATTESTATIONS MISSING\t$z\nDISCONNECTING PEERS\t$x\nBEACON NODES\t\t${g3:-0}\nAVG DELAYS\t\t$v"; }
-[ "$1" = "gk"  ] && { gk;if [ "$n" -ge "$t" ];then echo $n > /home/eth/$ethg.count;echo -e "GETH OK";else echo -e "GETH BLOCKED $(uname -n)\n\n$(t6 gs)";fi; }
+[ "$1" = "gk"  ] && { gk;g2;if [ "$n" -gt "$t" ];then echo $n > /home/eth/$ethg.count;m="OK";else m="BLOCKED";fi;echo -e "GETH $m $(uname -n)\n\n$(date --rfc-3339=date)\nNODES\t${g2:-0}"; }
+[ "$1" = "gl"  ] && { gk;g2;if [ "$n" -gt "$t" ];then echo $n > /home/eth/$ethg.count;m="OK";else m="BLOCKED";fi;echo -e "GETH $m $(uname -n) $(date --rfc-3339=date) nodes: ${g2:-0}"; }
+[ "$1" = "bk"  ] && { bk;g3;echo -e "BEAC $(uname -n)\n\n$(date --rfc-3339=date)\nPUBLISHED BLOCKS\t$p\nATTESTATIONS SUCCESS\t$a\nATTESTATIONS EARINGS\t$(($a*31681*${2:-2000}/1000000000))€\nINCORRECT HEADS\t\t$t\nINCORRECT TARGETS\t$y\nPERCENT ERRORS\t\t$((($t+$y)*100/$a))%\nATTESTATIONS MISSING\t$z\nDISCONNECTING PEERS\t$x\nNODES\t\t\t${g3:-0}\nNUMBER GOSSIPS\t\t$n\nAVG DELAYS\t\t$v"; }
+[ "$1" = "bl"  ] && { bk;g3;echo -e "BEAC $(uname -n) $(date --rfc-3339=date) published_blocks: $p, attestations_success: $a, attestations_earings: $(($a*31681*${2:-2000}/1000000000))€, incorrect_heads: $t, incorrect_targets: $y, percent_errors: $((($t+$y)*100/$a))%, attestations_missing: $z, disconnecting_peers: $x, nodes: ${g3:-0}, number_gossips: $n, avg_delays: $v"; }
 
 # lista servicos
 [ "$1" = "ll" ] && { uu "systemctl list-units $pate $patp $patf"; }
 # lista portas
 [ "$1" = "lp" ] && { netstat -tulpn; }
 # outros journal system/lighthouse
-[ "$1" = "el" ] && { echo $H|sudo -S grep -i 'geth\|lighthouse'      /var/log/syslog 2>/dev/null|grep -v ' INFO '|if [ "$2" ];then sort -k 9;else tee;fi; }
-[ "$1" = "sl" ] && { echo $H|sudo -S grep -v 'geth\|lighthouse\|UFW' /var/log/syslog 2>/dev/null|if [ "$2" ];then grep -v named;else tee;fi; }
-[ "$1" = "rl" ] && { echo $H|sudo -S grep -v 'geth\|lighthouse\|UFW' /var/log/syslog 2>/dev/null|grep -i 'error'; }
-[ "$1" = "bl" ] && { echo $H|sudo -S grep -i 'Successfully published block\|Block from API' /var/log/syslog 2>/dev/null; }
-[ "$1" = "al" ] && { a=$(echo $H|sudo -S grep -i 'Successfully published attestation\|aggregated attestation' /var/log/syslog 2>/dev/null|wc -l);echo "attestations: ${a:-0}"; }
-[ "$1" = "nr" ] && { ut "grep -i record /var/log/syslog" "${2:-30}"; }
-[ "$1" = "np" ] && { nn;echo -e $m; }
+[ "$1" = "el" ] && { echo $H|sudo -S grep -i 'geth\|lighthouse'      /var/log/syslog 2>/dev/null|if [ "$2" ];then tee;else grep -v ' INFO ';fi; }
+[ "$1" = "sl" ] && { echo $H|sudo -S grep -v 'geth\|lighthouse\|UFW' /var/log/syslog 2>/dev/null|if [ "$2" ];then tee;else grep -i 'error' ;fi; }
+#[ "$1" = "bl" ] && { echo $H|sudo -S grep -i 'Successfully published block' /var/log/syslog 2>/dev/null; }
+#[ "$1" = "nr" ] && { ut "grep -i record /var/log/syslog" "${2:-30}"; }
+[ "$1" = "np" ] && { g2;g3;echo -e "PEERS: GETH ${g2:-0}, BEACON ${g3:-0}"; }
 [ "$1" = "gs" ] && { gs;echo -e $m; }
-[ "$1" = "g0" ] && { g0;echo -e $g0; }
 [ "$1" = "ws" ] && { uu "ufw status numbered"; }
 [ "$1" = "wa" ] && if [ "$(echo $H|sudo -S ufw status 2>/dev/null|grep -i inactive)" ];then echo -e "${i}ARRANCA FIREWALL${f}";sudo ufw enable; else echo -e "${i}FIREWALL JA ACTIVE${f}";fi
 [ "$1" = "wpr" ] && { uu "ufw disable"; }
@@ -280,26 +277,25 @@ if [ -z "$1" ]; then
   c1="$c1\npd\tpara\t& disable"
   c1="$c1\npa\tpara\t& arranca\t& journal"
   c1="$c1\nea\tenable\t& arranca\t& journal"
+  c1="$c1\nk\tcheck"
+  c1="$c1\nl\tlog"
   c1="$c1\n"
   c1="$c1\noutros"
   c1="$c1\nyj\tsystem journal"
-  c1="$c1\nsl [sn]\tlista system journal TOTAL named=[sn]"
-  c1="$c1\nrl\tlista system journal ERROR"
-  c1="$c1\nel [sn]\tlista $ethg $ethb $ethv !INFO sort=[sn]"
-  c1="$c1\nbl\tlista block proposals"
-  c1="$c1\nal\tlista attestations"
+  c1="$c1\nsl [s]\tlista system journal  s=TOTAL"
+  c1="$c1\nel [s]\tlista geth,lighthouse s=TOTAL"
   c1="$c1\nll\tlista servicos"
   c1="$c1\nlp\tlista portas"
   c1="$c1\nnp\tnode peers"
-  c1="$c1\nnr\tnode record"
+#  c1="$c1\nnr\tnode record"
   c1="$c1\ngs\tgeth syncing"
   c1="$c1\nws\tfirewall status"
   c1="$c1\nwa\tfirewall arranca"
   c1="$c1\nwpr\tfirewall para"
   c1="$c1\ncr\tchange route"
-  c1="$c1\ncf\tchange forwarders"
-  c1="$c1\ncrf\tchange route & forwarders"
-  c1="$c1\nsr\tshow route & forwarders"
+#  c1="$c1\ncf\tchange forwarders"
+#  c1="$c1\ncrf\tchange route & forwarders"
+  c1="$c1\nsr\tshow route & DNS"
   c1="$c1\nrs\treset netplan\t& systemd-resolved"
   c1="$c1\nds\treset dns\t& systemd-resolved"
   c1="$c1\nrq\tdns query"
