@@ -51,3 +51,10 @@ vnm3='vmi469069.contaboserver.net'
 dtdi="/var/lib/lighthouse"
 becn="$dtdi/beacon"
 vldt="$dtdi/validators"
+
+# eth2 penalties/rewards
+phed=16444
+ratt=31854
+rblk=3874973
+ptrg=$phed
+patt=$(($phed+$ptrg))

@@ -69,7 +69,10 @@ function fd { [ "$(systemctl status $ethf 2>/dev/null|grep -i loaded)" ] && { uu
 function g0 { g0=0;[ -d /var/lib/goethereum ] && g0=$(echo $H|sudo -S du -s /var/lib/goethereum 2>/dev/null|cut -f1); }
 function g1 { g1=0;[ -d /var/lib/goethereum ] && { if [ "$cunm" = "$znm1" ];then g="http://$zip1:8545";else g="http://$vip1:8545";fi;g1=$(geth attach $g --exec eth.syncing); }; }
 function g2 { g2=0;[ -d /var/lib/goethereum ] && { if [ "$cunm" = "$znm1" ];then g="http://$zip1:8545";else g="http://$vip1:8545";fi;g2=$(geth attach $g --exec net.peerCount); }; }
-function g3 { g3=$(echo $H|sudo -S grep -i peers: /var/log/syslog 2>/dev/null|tail -n 1|sed -e 's%,% %g;s%  *% %g'|cut -d' ' -f22); }
+function g3 {
+  d=$(echo $H|sudo -S grep -i peers: /var/log/syslog 2>/dev/null|tail -n 1|sed -e 's%,% %g;s%  *% %g')
+  if [ "$(echo $d|cut -d' ' -f22)" = "peers:" ];then g3=$(echo $d|cut -d' ' -f23);else g3=$(echo $d|cut -d' ' -f22);fi
+}
 function gs {
   if [ -d /var/lib/goethereum ] && ([ "$cunm" = "$vnm1" ] || [ "$cunm" = "$znm1" ]); then
     g0;g1;g2
@@ -130,8 +133,9 @@ function sf {
 function gk {
   t=-1;n=0;v=0
   if [ "$(systemctl status $ethg 2>/dev/null|grep -i running)" ]; then
-    [ "$(date --rfc-3339=seconds|cut -d' ' -f2|cut -d: -f1)" -eq 0 ] && rm /home/eth/$ethg.count
-    [ -f /home/eth/$ethg.count ] && t=$(cat /home/eth/$ethg.count)
+    g2
+    [ "$(date --rfc-3339=seconds|cut -d' ' -f2|cut -d: -f1)" -eq 0 ] && rm /home/eth/geth.count
+    [ -f /home/eth/geth.count ] && t=$(cat /home/eth/geth.count)
     n=$(echo $H|sudo -S grep -i 'new chain segment' /var/log/syslog 2>/dev/null|wc -l)
   fi
 }
@@ -141,13 +145,37 @@ function bk {
   do n=$(($n+1));t=$(($t+$v))
   done
   if [ "$n" -gt 0 ]; then
+    g3
     v=$(($t/$n))
-    t=$(echo $H|sudo -S grep -i 'incorrect head'      /var/log/syslog 2>/dev/null|wc -l)
-    y=$(echo $H|sudo -S grep -i 'incorrect target'    /var/log/syslog 2>/dev/null|wc -l)
-    z=$(echo $H|sudo -S grep -i 'attestation missing' /var/log/syslog 2>/dev/null|wc -l)
     a=$(echo $H|sudo -S grep -i 'attestation success' /var/log/syslog 2>/dev/null|wc -l)
-    x=$(echo $H|sudo -S grep -i 'disconnecting peer'  /var/log/syslog 2>/dev/null|wc -l)
+    t=$(echo $H|sudo -S grep -i 'lighthouse'          /var/log/syslog 2>/dev/null|grep -v ' INFO '|grep    ' WARN '|wc -l)
+    y=$(echo $H|sudo -S grep -i 'lighthouse'          /var/log/syslog 2>/dev/null|grep -v ' INFO '|grep -v ' WARN '|wc -l)
+    h=$(echo $H|sudo -S grep -i 'incorrect head'      /var/log/syslog 2>/dev/null|wc -l)
+    c=$(echo $H|sudo -S grep -i 'incorrect target'    /var/log/syslog 2>/dev/null|wc -l)
+    z=$(echo $H|sudo -S grep -i 'attestation missing' /var/log/syslog 2>/dev/null|wc -l)
     p=$(echo $H|sudo -S grep -i 'published block'     /var/log/syslog 2>/dev/null|wc -l)
+  fi
+  b="$(echo "scale=2;($p*$rblk+$a*$ratt+00000000)*${2:-2000}/1000000000"|bc)"
+  d="$(echo "scale=2;($h*$phed+$c*$ptrg+$z*$patt)*${2:-2000}/1000000000"|bc)"
+  m=""
+  if [ "${1:-k}" = "k" ]; then
+    m="$m\nREWARDS PENALTIES\t$b€ $d€"
+    m="$m\nPUBLISHED BLOCKS\t$p"
+    m="$m\nNUMBER GOSSIPS\t\t$n"
+    m="$m\nNUMBER ATTESTATIONS\t$a $(($a*100/$n))%"
+    m="$m\nWARN ERRO\t\t$t $y $((($t+$y)*100/$a))%"
+    m="$m\nHEAD TRGT MISS\t\t$h $c $z"
+    m="$m\nNODES\t\t\t${g3:-0}"
+    m="$m\nAVG GOSSIP DELAYS\t$v"
+  else
+    m="$m rewards_penalties: $b€ $d€,"
+    m="$m published_blocks: $p,"
+    m="$m number_gossips: $n,"
+    m="$m number_attestations: $a $(($a*100/$n))%,"
+    m="$m warn_erro: $t $y $((($t+$y)*100/$a))%,"
+    m="$m head_trgt_miss: $h $c $z,"
+    m="$m nodes: ${g3:-0},"
+    m="$m avg_gossip_delays: $v"
   fi
 }
 
@@ -158,10 +186,10 @@ function bk {
 #[ "$1" = "cf"  ] && { cf; }
 #[ "$1" = "crf" ] && { cr;cf; }
 [ "$1" = "sr"  ] && { sr;sf; }
-[ "$1" = "gk"  ] && { gk;g2;if [ "$n" -gt "$t" ];then echo $n > /home/eth/$ethg.count;m="OK";else m="BLOCKED";fi;echo -e "GETH $m $(uname -n)\n\n$(date --rfc-3339=date)\nNODES\t${g2:-0}"; }
-[ "$1" = "gl"  ] && { gk;g2;if [ "$n" -gt "$t" ];then echo $n > /home/eth/$ethg.count;m="OK";else m="BLOCKED";fi;echo -e "GETH $m $(uname -n) $(date --rfc-3339=date) nodes: ${g2:-0}"; }
-[ "$1" = "bk"  ] && { bk;g3;echo -e "BEAC $(uname -n)\n\n$(date --rfc-3339=date)\nPUBLISHED BLOCKS\t$p\nATTESTATIONS SUCCESS\t$a\nATTESTATIONS EARINGS\t$(($a*31681*${2:-2000}/1000000000))€\nINCORRECT HEADS\t\t$t\nINCORRECT TARGETS\t$y\nPERCENT ERRORS\t\t$((($t+$y)*100/$a))%\nATTESTATIONS MISSING\t$z\nDISCONNECTING PEERS\t$x\nNODES\t\t\t${g3:-0}\nNUMBER GOSSIPS\t\t$n\nAVG DELAYS\t\t$v"; }
-[ "$1" = "bl"  ] && { bk;g3;echo -e "BEAC $(uname -n) $(date --rfc-3339=date) published_blocks: $p, attestations_success: $a, attestations_earings: $(($a*31681*${2:-2000}/1000000000))€, incorrect_heads: $t, incorrect_targets: $y, percent_errors: $((($t+$y)*100/$a))%, attestations_missing: $z, disconnecting_peers: $x, nodes: ${g3:-0}, number_gossips: $n, avg_delays: $v"; }
+[ "$1" = "gk"  ] && { gk  ;if [ "$n" -gt "$t" ];then echo $n > /home/eth/geth.count;m="OK";else m="BLOCKED";fi;echo -e "GETH $m $(uname -n)\n\n$(date --rfc-3339=date)\nNODES\t${g2:-0}"; }
+[ "$1" = "gl"  ] && { gk  ;if [ "$n" -gt "$t" ];then echo $n > /home/eth/geth.count;m="OK";else m="BLOCKED";fi;echo -e "GETH $m $(uname -n) $(date --rfc-3339=date) nodes: ${g2:-0}"; }
+[ "$1" = "bk"  ] && { bk k;echo -e "BEAC $(uname -n)\n\n$(date --rfc-3339=date)$m"; }
+[ "$1" = "bl"  ] && { bk l;echo -e "BEAC $(uname -n) $(date --rfc-3339=date)$m"; }
 
 # lista servicos
 [ "$1" = "ll" ] && { uu "systemctl list-units $pate $patp $patf"; }
