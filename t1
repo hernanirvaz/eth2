@@ -53,8 +53,8 @@ becn="$dtdi/beacon"
 vldt="$dtdi/validators"
 
 # eth2 penalties/rewards
+patt=23531
 phed=16444
+ptrg=16444
 ratt=31854
 rblk=3874973
-ptrg=$phed
-patt=$(($phed+$ptrg))

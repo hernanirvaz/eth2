@@ -69,10 +69,7 @@ function fd { [ "$(systemctl status $ethf 2>/dev/null|grep -i loaded)" ] && { uu
 function g0 { g0=0;[ -d /var/lib/goethereum ] && g0=$(echo $H|sudo -S du -s /var/lib/goethereum 2>/dev/null|cut -f1); }
 function g1 { g1=0;[ -d /var/lib/goethereum ] && { if [ "$cunm" = "$znm1" ];then g="http://$zip1:8545";else g="http://$vip1:8545";fi;g1=$(geth attach $g --exec eth.syncing); }; }
 function g2 { g2=0;[ -d /var/lib/goethereum ] && { if [ "$cunm" = "$znm1" ];then g="http://$zip1:8545";else g="http://$vip1:8545";fi;g2=$(geth attach $g --exec net.peerCount); }; }
-function g3 {
-  d=$(echo $H|sudo -S grep -i peers: /var/log/syslog 2>/dev/null|tail -n 1|sed -e 's%,% %g;s%  *% %g')
-  if [ "$(echo $d|cut -d' ' -f22)" = "peers:" ];then g3=$(echo $d|cut -d' ' -f23);else g3=$(echo $d|cut -d' ' -f22);fi
-}
+function g3 { g3=$(echo $H|sudo -S grep -i peers: /var/log/syslog 2>/dev/null|tail -n 1|sed 's%.*peers: *\([0-9]*\).*%\1%'); }
 function gs {
   if [ -d /var/lib/goethereum ] && ([ "$cunm" = "$vnm1" ] || [ "$cunm" = "$znm1" ]); then
     g0;g1;g2
@@ -145,6 +142,7 @@ function bk {
   do n=$(($n+1));t=$(($t+$v))
   done
   if [ "$n" -gt 0 ]; then
+    reur=$(curl -sX GET "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=ETH&convert=EUR&CMC_PRO_API_KEY=3ae5f3df-bd71-489d-a9dd-b626995fba31"|sed 's%.*price.:\([0-9]*\.[0-9]*\).*%\1%')
     g3
     v=$(($t/$n))
     a=$(echo $H|sudo -S grep -i 'attestation success' /var/log/syslog 2>/dev/null|wc -l)
@@ -155,8 +153,8 @@ function bk {
     z=$(echo $H|sudo -S grep -i 'attestation missing' /var/log/syslog 2>/dev/null|wc -l)
     p=$(echo $H|sudo -S grep -i 'published block'     /var/log/syslog 2>/dev/null|wc -l)
   fi
-  b="$(echo "scale=2;($p*$rblk+$a*$ratt+00000000)*${2:-2000}/1000000000"|bc)"
-  d="$(echo "scale=2;($h*$phed+$c*$ptrg+$z*$patt)*${2:-2000}/1000000000"|bc)"
+  b="$(echo "scale=2;($p*$rblk+$a*$ratt+00000000)*${reur:-2000}/1000000000"|bc)"
+  d="$(echo "scale=2;($h*$phed+$c*$ptrg+$z*$patt)*${reur:-2000}/1000000000"|bc)"
   m=""
   if [ "${1:-k}" = "k" ]; then
     m="$m\nREWARDS PENALTIES\t$b€ $d€"
