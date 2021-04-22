@@ -52,9 +52,6 @@ dtdi="/var/lib/lighthouse"
 becn="$dtdi/beacon"
 vldt="$dtdi/validators"
 
-# eth2 penalties/rewards
-patt=23531
-phed=16444
-ptrg=16444
-ratt=31854
-rblk=3874973
+# eth2 penalties
+patt=23387
+pinc=16444

@@ -74,13 +74,8 @@ function gs {
   if [ -d /var/lib/goethereum ] && ([ "$cunm" = "$vnm1" ] || [ "$cunm" = "$znm1" ]); then
     g0;g1;g2
     if [ "$(echo $g1|grep -i false)" ]; then
-      m="GETH SYNCING DONE - PEERCOUNT $g2"
+      m="GETH SYNCED - PEERCOUNT $g2"
     else
-      if [ "$cunm" = "$znm1" ]; then
-        r0=$(ssh vpsl "export H=$H;$p0/t6 g0")
-      else
-        r0=$g0
-      fi
       h=$(echo $g1|sed -Ee 's%.*highestBlock: *([0-9]+).*%\1%i')
       c=$(echo $g1|sed -Ee 's%.*currentBlock: *([0-9]+).*%\1%i')
       k=$(echo $g1|sed -Ee 's%.*knownStates: *([0-9]+).*%\1%i')
@@ -89,7 +84,7 @@ function gs {
       d=$(echo $H|sudo -S grep -i 'Imported new block headers' /var/log/syslog 2>/dev/null|tail -1|cut -d= -f4|cut -d' ' -f1)
       i=$(echo $H|sudo -S grep -i 'Imported new state entries' /var/log/syslog 2>/dev/null|head -1|cut -d= -f4|cut -d' ' -f1)
       t=$(echo $H|sudo -S grep -i 'Imported new state entries' /var/log/syslog 2>/dev/null|tail -1|cut -d= -f4|cut -d' ' -f1)
-      m="GETH SYNCING - PEERCOUNT: $g2\nBlocks api: $h ($((h-c)))\tStates api: $k ($((k-p)))\nBlocks log: $d ($((d-b)))\tStates log: $t ($((t-i)))\nFiles size: $(($r0/1000))M ($(((r0-g0)/1000))M)"
+      m="GETH SYNCING - PEERCOUNT: $g2\nBlocks api: $h ($((h-c)))\tStates api: $k ($((k-p)))\nBlocks log: $d ($((d-b)))\tStates log: $t ($((t-i))))"
     fi
   else
     m="NO GETH HERE ($cunm)"
@@ -130,48 +125,52 @@ function sf {
 function gk {
   t=-1;n=0;v=0
   if [ "$(systemctl status $ethg 2>/dev/null|grep -i running)" ]; then
-    g2
+    g1;g2
     [ "$(date --rfc-3339=seconds|cut -d' ' -f2|cut -d: -f1)" -eq 0 ] && rm /home/eth/geth.count
     [ -f /home/eth/geth.count ] && t=$(cat /home/eth/geth.count)
+    if [ "$(echo $g1|grep -i false)" ];then m="SYNCED";else m="SYNCING";fi
     n=$(echo $H|sudo -S grep -i 'new chain segment' /var/log/syslog 2>/dev/null|wc -l)
   fi
 }
 function bk {
-  t=0;n=0;v=0;y=0;z=0;a=0;x=0;p=0
-  for v in $(echo $H|sudo -S grep -i 'gossip' /var/log/syslog 2>/dev/null|sed -e 's%,% %g;s%  *% %g'|cut -d' ' -f23)
+  t=0;n=0;v=0;y=0;z=0;a=1;x=0;p=0;b=0;d=0
+  for v in $(echo $H|sudo -S grep -i 'gossip' /var/log/syslog 2>/dev/null|sed 's%.*delay_ms: *\([0-9]*\).*%\1%')
   do n=$(($n+1));t=$(($t+$v))
   done
   if [ "$n" -gt 0 ]; then
-    reur=$(curl -sX GET "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=ETH&convert=EUR&CMC_PRO_API_KEY=3ae5f3df-bd71-489d-a9dd-b626995fba31"|sed 's%.*price.:\([0-9]*\.[0-9]*\).*%\1%')
     g3
     v=$(($t/$n))
     a=$(echo $H|sudo -S grep -i 'attestation success' /var/log/syslog 2>/dev/null|wc -l)
-    t=$(echo $H|sudo -S grep -i 'lighthouse'          /var/log/syslog 2>/dev/null|grep -v ' INFO '|grep    ' WARN '|wc -l)
-    y=$(echo $H|sudo -S grep -i 'lighthouse'          /var/log/syslog 2>/dev/null|grep -v ' INFO '|grep -v ' WARN '|wc -l)
-    h=$(echo $H|sudo -S grep -i 'incorrect head'      /var/log/syslog 2>/dev/null|wc -l)
-    c=$(echo $H|sudo -S grep -i 'incorrect target'    /var/log/syslog 2>/dev/null|wc -l)
+    t=$(echo $H|sudo -S grep -i 'lighthouse'          /var/log/syslog 2>/dev/null|grep -v ' INFO '|wc -l)
+    h=$(echo $H|sudo -S grep -i 'to an incorrect'     /var/log/syslog 2>/dev/null|wc -l)
     z=$(echo $H|sudo -S grep -i 'attestation missing' /var/log/syslog 2>/dev/null|wc -l)
     p=$(echo $H|sudo -S grep -i 'published block'     /var/log/syslog 2>/dev/null|wc -l)
+    if [ "$2" ]; then
+      e=$2
+      b=$(echo "scale=0;($p*3874973+$a*31854)*${e:-2000}/1000000000"|bc)
+    else
+      resolvectl query pro-api.coinmarketcap.com 2>/dev/null 1>&2
+      resolvectl query beaconcha.in              2>/dev/null 1>&2
+      e=$(curl -sX GET "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=ETH&convert=EUR&CMC_PRO_API_KEY=3ae5f3df-bd71-489d-a9dd-b626995fba31"|sed 's%.*price.:\([0-9]*\.[0-9]*\).*%\1%')
+      n=$(curl -sX GET "https://beaconcha.in/api/v1/validator/11766,11767,11770,11771,11772,11773,11774,11775,11776,11777,11778,11779,11780,11782,11783,11784,11786,11788/performance" -H "accept: application/json")
+      b=$(echo "$n"|python3 -c "$(echo -e "import sys, json\nt=0\nfor x in json.load(sys.stdin)['data']: t=t+x['performance1d']\nprint(t)")")
+      b=$(echo "scale=0;$b*${e:-2000}/1000000000"|bc)
+    fi
+    d=$(echo "scale=2;($h*$pinc+$z*$patt)*${e:-2000}/1000000000"|bc)
   fi
-  b="$(echo "scale=2;($p*$rblk+$a*$ratt+00000000)*${reur:-2000}/1000000000"|bc)"
-  d="$(echo "scale=2;($h*$phed+$c*$ptrg+$z*$patt)*${reur:-2000}/1000000000"|bc)"
   m=""
   if [ "${1:-k}" = "k" ]; then
-    m="$m\nREWARDS PENALTIES\t$b€ $d€"
-    m="$m\nPUBLISHED BLOCKS\t$p"
-    m="$m\nNUMBER GOSSIPS\t\t$n"
-    m="$m\nNUMBER ATTESTATIONS\t$a $(($a*100/$n))%"
-    m="$m\nWARN ERRO\t\t$t $y $((($t+$y)*100/$a))%"
-    m="$m\nHEAD TRGT MISS\t\t$h $c $z"
+    m="\n\nREWARDS PENALTIES\t$b€\t$d€"
+    m="$m\nATTESTATIONS BLOCKS\t$a $p"
+    m="$m\nINCORRECT MISSED\t$h $z"
+    m="$m\nERRORS\t\t\t$t\t$(($t*100/$a))%"
     m="$m\nNODES\t\t\t${g3:-0}"
     m="$m\nAVG GOSSIP DELAYS\t$v"
   else
     m="$m rewards_penalties: $b€ $d€,"
-    m="$m published_blocks: $p,"
-    m="$m number_gossips: $n,"
-    m="$m number_attestations: $a $(($a*100/$n))%,"
-    m="$m warn_erro: $t $y $((($t+$y)*100/$a))%,"
-    m="$m head_trgt_miss: $h $c $z,"
+    m="$m attestations_blocks: $a $p,"
+    m="$m incorrect_missed: $h $z,"
+    m="$m erros: $t $(($t*100/$a))%,"
     m="$m nodes: ${g3:-0},"
     m="$m avg_gossip_delays: $v"
   fi
@@ -184,10 +183,10 @@ function bk {
 #[ "$1" = "cf"  ] && { cf; }
 #[ "$1" = "crf" ] && { cr;cf; }
 [ "$1" = "sr"  ] && { sr;sf; }
-[ "$1" = "gk"  ] && { gk  ;if [ "$n" -gt "$t" ];then echo $n > /home/eth/geth.count;m="OK";else m="BLOCKED";fi;echo -e "GETH $m $(uname -n)\n\n$(date --rfc-3339=date)\nNODES\t${g2:-0}"; }
-[ "$1" = "gl"  ] && { gk  ;if [ "$n" -gt "$t" ];then echo $n > /home/eth/geth.count;m="OK";else m="BLOCKED";fi;echo -e "GETH $m $(uname -n) $(date --rfc-3339=date) nodes: ${g2:-0}"; }
-[ "$1" = "bk"  ] && { bk k;echo -e "BEAC $(uname -n)\n\n$(date --rfc-3339=date)$m"; }
-[ "$1" = "bl"  ] && { bk l;echo -e "BEAC $(uname -n) $(date --rfc-3339=date)$m"; }
+[ "$1" = "gk"  ] && { gk     ;if [ "$n" -gt "$t" ];then echo $n > /home/eth/geth.count;m="OK $m";else m="BLOCKED $m";fi;echo -e "GETH $m $(date --rfc-3339=date)\n\nNODES\t\t${g2:-0}\nSEGMENTS\t$n"; }
+[ "$1" = "gl"  ] && { gk     ;if [ "$n" -gt "$t" ];then echo $n > /home/eth/geth.count;m="OK $m";else m="BLOCKED $m";fi;echo -e "GETH $m $(date --rfc-3339=date) nodes: ${g2:-0}, segments: $n"; }
+[ "$1" = "bk"  ] && { bk k $2;echo -e "BEAC $(date --rfc-3339=date)$m"; }
+[ "$1" = "bl"  ] && { bk l $2;echo -e "BEAC $(date --rfc-3339=date)$m"; }
 
 # lista servicos
 [ "$1" = "ll" ] && { uu "systemctl list-units $pate $patp $patf"; }
@@ -232,6 +231,7 @@ function bk {
 [ "$1" = "vaj" ] && { dr;va;jb "-u $ethv"; }
 [ "$1" = "saj" ] && { dr;sa;jb "-u $dnsd"; }
 [ "$1" = "gpa" ] && { gp;dr;ga;jb "-u $ethg"; }
+[ "$1" = "gkr" ] && { [ "$(t6 gl|sed 's%GETH \([A-Z]*\) .*%\1%')" = "BLOCKED" ] && { gp;dr;sleep 50s;ga; }; }
 [ "$1" = "bpa" ] && { bp;dr;ba;jb "-u $ethb"; }
 [ "$1" = "vpa" ] && { vp;dr;va;jb "-u $ethv"; }
 [ "$1" = "xpa" ] && { xp;xa; }
@@ -282,48 +282,49 @@ function bk {
 
 if [ -z "$1" ]; then
   c1="\nprimeira letra"
-  c1="$c1\ne\t$ethg $ethb $ethv"
-  c1="$c1\ng\t$ethg"
-  c1="$c1\nb\t$ethb"
-  c1="$c1\nv\t$ethv"
-  c1="$c1\np\t$ethp"
-  c1="$c1\nn\t$ethn"
-  c1="$c1\nf\t$ethf"
-  c1="$c1\nx\t$plex"
-  c1="$c1\nr\t$trrt"
-  c1="$c1\ns\t$dnsd"
+  c1="$c1\ne\t\t$ethg $ethb $ethv"
+  c1="$c1\ng\t\t$ethg"
+  c1="$c1\nb\t\t$ethb"
+  c1="$c1\nv\t\t$ethv"
+  c1="$c1\np\t\t$ethp"
+  c1="$c1\nn\t\t$ethn"
+  c1="$c1\nf\t\t$ethf"
+  c1="$c1\nx\t\t$plex"
+  c1="$c1\nr\t\t$trrt"
+  c1="$c1\ns\t\t$dnsd"
   c1="$c1\n"
   c1="$c1\nsegunda letra"
-  c1="$c1\na\tarranca"
-  c1="$c1\naj\tarranca\t& journal"
-  c1="$c1\ne\tenable"
-  c1="$c1\nj\tjournal"
-  c1="$c1\npr\tpara"
-  c1="$c1\nds\tdisable"
-  c1="$c1\npd\tpara\t& disable"
-  c1="$c1\npa\tpara\t& arranca\t& journal"
-  c1="$c1\nea\tenable\t& arranca\t& journal"
-  c1="$c1\nk\tcheck"
-  c1="$c1\nl\tlog"
+  c1="$c1\na\t\tarranca"
+  c1="$c1\naj\t\tarranca\t& journal"
+  c1="$c1\ne\t\tenable"
+  c1="$c1\nj\t\tjournal"
+  c1="$c1\npr\t\tpara"
+  c1="$c1\nds\t\tdisable"
+  c1="$c1\npd\t\tpara\t& disable"
+  c1="$c1\npa\t\tpara\t& arranca\t& journal"
+  c1="$c1\nea\t\tenable\t& arranca\t& journal"
+  c1="$c1\nk [cambio]\tcheck"
+  c1="$c1\nl [cambio]\tlog"
   c1="$c1\n"
   c1="$c1\noutros"
-  c1="$c1\nyj\tsystem journal"
-  c1="$c1\nsl [s]\tlista system journal  s=TOTAL"
-  c1="$c1\nel [s]\tlista geth,lighthouse s=TOTAL"
-  c1="$c1\nll\tlista servicos"
-  c1="$c1\nlp\tlista portas"
-  c1="$c1\nnp\tnode peers"
-#  c1="$c1\nnr\tnode record"
-  c1="$c1\ngs\tgeth syncing"
-  c1="$c1\nws\tfirewall status"
-  c1="$c1\nwa\tfirewall arranca"
-  c1="$c1\nwpr\tfirewall para"
-  c1="$c1\ncr\tchange route"
-#  c1="$c1\ncf\tchange forwarders"
-#  c1="$c1\ncrf\tchange route & forwarders"
-  c1="$c1\nsr\tshow route & DNS"
-  c1="$c1\nrs\treset netplan\t& systemd-resolved"
-  c1="$c1\nds\treset dns\t& systemd-resolved"
-  c1="$c1\nrq\tdns query"
+  c1="$c1\nyj\t\tsystem journal"
+  c1="$c1\nsl [s]\t\tlista system journal  s=TOTAL"
+  c1="$c1\nel [s]\t\tlista geth,lighthouse s=TOTAL"
+  c1="$c1\nll\t\tlista servicos"
+  c1="$c1\nlp\t\tlista portas"
+  c1="$c1\nnp\t\tnode peers"
+#  c1="$c1\nnr\t\tnode record"
+  c1="$c1\ngs\t\tgeth syncing"
+  c1="$c1\ngkr\t\tgeth check/reset (if necessary)"
+  c1="$c1\nws\t\tfirewall status"
+  c1="$c1\nwa\t\tfirewall arranca"
+  c1="$c1\nwpr\t\tfirewall para"
+  c1="$c1\ncr\t\tchange route"
+#  c1="$c1\ncf\t\tchange forwarders"
+#  c1="$c1\ncrf\t\tchange route & forwarders"
+  c1="$c1\nsr\t\tshow route & DNS"
+  c1="$c1\nrs\t\treset netplan\t& systemd-resolved"
+  c1="$c1\nds\t\treset dns\t& systemd-resolved"
+  c1="$c1\nrq\t\tdns query"
   echo -e "\n$c1\n"
 fi
