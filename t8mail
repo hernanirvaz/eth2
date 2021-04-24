@@ -21,14 +21,14 @@ function si {
 
 # AVG  ping -c 20 -q 207.180.214.8|grep avg|cut -d/ -f5
 # UNIT ping -c 20 -q 207.180.214.8|grep avg|cut -d/ -f7|cut -d' ' -f2
-[ "$1" = "GETHSTP" ] && { echo -e "Subject: GETH STOPPED ON $(uname -n)\n\nSERVICE_RESULT=$2\nEXIT_CODE=$3\nEXIT_STATUS=$4\n"|ssmtp hernanilr@gmail.com; }
-[ "$1" = "BEACSTP" ] && { echo -e "Subject: BEAC STOPPED ON $(uname -n)\n\nSERVICE_RESULT=$2\nEXIT_CODE=$3\nEXIT_STATUS=$4\n"|ssmtp hernanilr@gmail.com; }
-[ "$1" = "VALISTP" ] && { echo -e "Subject: VALI STOPPED ON $(uname -n)\n\nSERVICE_RESULT=$2\nEXIT_CODE=$3\nEXIT_STATUS=$4\n"|ssmtp hernanilr@gmail.com; }
+[ "$1" = "GETHSTP" ] && { echo -e "Subject: GETH STOPPED $(uname -n) $(date --rfc-3339=seconds)\n\nSERVICE_RESULT=$2\nEXIT_CODE=$3\nEXIT_STATUS=$4\n"|ssmtp hernanilr@gmail.com; }
+[ "$1" = "BEACSTP" ] && { echo -e "Subject: BEAC STOPPED $(uname -n) $(date --rfc-3339=seconds)\n\nSERVICE_RESULT=$2\nEXIT_CODE=$3\nEXIT_STATUS=$4\n"|ssmtp hernanilr@gmail.com; }
+[ "$1" = "VALISTP" ] && { echo -e "Subject: VALI STOPPED $(uname -n) $(date --rfc-3339=seconds)\n\nSERVICE_RESULT=$2\nEXIT_CODE=$3\nEXIT_STATUS=$4\n"|ssmtp hernanilr@gmail.com; }
 [ "$1" = "BEACCHK" ] && { si;[ "$(nmap $p --open -Pn -p 5052|grep open)" ] || echo -e "Subject: BNAPI $p STOPPED\n\n"|ssmtp hernanilr@gmail.com; }
 [ "$1" = "VERSCHK" ] && { nv;[ "$n" = "$v"   ] || echo -e "Subject: OLD $v NEW $n IS OUT\n\n"|ssmtp hernanilr@gmail.com; }
 [ "$1" = "UPDTCHK" ] && { nu;[ "$u" -gt 0    ] && echo -e "Subject: $u UPDATES ON $(uname -n)\n\n$(apt list --upgradable 2>/dev/null)"|ssmtp hernanilr@gmail.com; }
 [ "$1" = "SPEDCHK" ] && { echo -e "Subject: SPEEDTEST ON $(uname -n)\n\n$(speedtest)"|ssmtp hernanilr@gmail.com; }
 [ "$1" = "SYNCCHK" ] && { echo -e "Subject: SYNCING ON $(uname -n)\n\n$(t6 gs)"|ssmtp hernanilr@gmail.com; }
 
-[ "$1" = "BNDLCHK" ] && { [ "$(t6 bl 2000|sed 's%.*avg_gossip_delays: *\([0-9]*\).*%\1%')" -ge 1000 ] && echo -e "Subject: $(t6 bk 2000)"|ssmtp hernanilr@gmail.com; }
-[ "$1" = "ETH1CHK" ] && { [ "$(t6 gl     |sed 's%GETH \([A-Z]*\) .*%\1%')"                  != "OK" ] && echo -e "Subject: $(t6 gl     )"|ssmtp hernanilr@gmail.com; }
+[ "$1" = "BNDLCHK" ] && { [ "$(t6 bl|sed 's%.*avg_delays: *\([0-9]*\).*%\1%')" -ge 1000 ] && echo -e "Subject: $(t6 bk)"|ssmtp hernanilr@gmail.com; }
+[ "$1" = "ETH1CHK" ] && { [ "$(t6 gl|sed 's%GETH \([A-Z]*\) .*%\1%')"           != "OK" ] && echo -e "Subject: $(t6 gk)"|ssmtp hernanilr@gmail.com; }

@@ -38,6 +38,7 @@ function fop { uu 'ufw allow 3000/tcp comment grafana'; }
 function fcl { uu 'ufw deny  3000/tcp                '; }
 
 function uu { echo -e "${i}$1${f}";echo $H|sudo -S $1 2>/dev/null; }
+function us { echo $H|sudo -S $1 2>/dev/null; }
 function ut { echo -e "${i}$1${f}";echo $H|sudo -S $1 2>/dev/null|tail -n $2; }
 function jb { uu "journalctl --no-hostname --no-full -f $1"; }
 function dr { echo $H|sudo -S systemctl daemon-reload 2>/dev/null; }
@@ -82,9 +83,9 @@ function gs {
       p=$(echo $g1|sed -Ee 's%.*pulledStates: *([0-9]+).*%\1%i')
       b=$(echo $H|sudo -S grep -i 'Imported new block headers' /var/log/syslog 2>/dev/null|head -1|cut -d= -f4|cut -d' ' -f1)
       d=$(echo $H|sudo -S grep -i 'Imported new block headers' /var/log/syslog 2>/dev/null|tail -1|cut -d= -f4|cut -d' ' -f1)
-      i=$(echo $H|sudo -S grep -i 'Imported new state entries' /var/log/syslog 2>/dev/null|head -1|cut -d= -f4|cut -d' ' -f1)
+      y=$(echo $H|sudo -S grep -i 'Imported new state entries' /var/log/syslog 2>/dev/null|head -1|cut -d= -f4|cut -d' ' -f1)
       t=$(echo $H|sudo -S grep -i 'Imported new state entries' /var/log/syslog 2>/dev/null|tail -1|cut -d= -f4|cut -d' ' -f1)
-      m="GETH SYNCING - PEERCOUNT: $g2\nBlocks api: $h ($((h-c)))\tStates api: $k ($((k-p)))\nBlocks log: $d ($((d-b)))\tStates log: $t ($((t-i))))"
+      m="GETH SYNCING - PEERCOUNT: $g2\nBlocks api: $h ($((h-c)))\tStates api: $k ($((k-p)))\nBlocks log: $d ($((d-b)))\tStates log: $t ($((t-y))))"
     fi
   else
     m="NO GETH HERE ($cunm)"
@@ -123,17 +124,32 @@ function sf {
   echo -e "$m\t\t$(resolvectl dns|grep $m|cut -d' ' -f4-6)"
 }
 function gk {
-  t=-1;n=0;v=0
+  t=-1;n=0;v=0;m=""
   if [ "$(systemctl status $ethg 2>/dev/null|grep -i running)" ]; then
     g1;g2
-    [ "$(date --rfc-3339=seconds|cut -d' ' -f2|cut -d: -f1)" -eq 0 ] && rm /home/eth/geth.count
-    [ -f /home/eth/geth.count ] && t=$(cat /home/eth/geth.count)
     if [ "$(echo $g1|grep -i false)" ];then m="SYNCED";else m="SYNCING";fi
+    m="$m $cunm $(date --rfc-3339=seconds)"
     n=$(echo $H|sudo -S grep -i 'new chain segment' /var/log/syslog 2>/dev/null|wc -l)
+    [ -f /home/eth/geth.count ] && t=$(cat /home/eth/geth.count)
+    [ "$t" -gt 4000 ] || [ "$(date --rfc-3339=seconds|cut -d' ' -f2|cut -d: -f1)" -eq 0 ] && { rm /home/eth/geth.count;t=-1; }
+    [ -f /home/eth/geth.count ] && t=$(cat /home/eth/geth.count)
   fi
+  if [ "$n" -gt "$t" ]; then
+    echo $n > /home/eth/geth.count
+    m="OK $m"
+  else
+    m="BLOCKED $m"
+  fi
+  resolvectl query smtp.gmail.com 2>/dev/null 1>&2
 }
 function bk {
-  t=0;n=0;v=0;y=0;z=0;a=1;x=0;p=0;b=0;d=0
+  
+  t=0;y=0;v=0;x=0
+  for v in $(echo $H|sudo -S grep -i 'inclusion_lag: [1-9][0-9]*' /var/log/syslog 2>/dev/null|sed 's%.*inclusion_lag: *\([0-9]*\).*%\1%')
+  do y=$(($y+1));t=$(($t+$v))
+  done
+  x=$(($t/$y))
+  t=0;n=0;v=0;z=0;a=1;p=0;b=0;d=0
   for v in $(echo $H|sudo -S grep -i 'gossip' /var/log/syslog 2>/dev/null|sed 's%.*delay_ms: *\([0-9]*\).*%\1%')
   do n=$(($n+1));t=$(($t+$v))
   done
@@ -146,15 +162,15 @@ function bk {
     z=$(echo $H|sudo -S grep -i 'attestation missing' /var/log/syslog 2>/dev/null|wc -l)
     p=$(echo $H|sudo -S grep -i 'published block'     /var/log/syslog 2>/dev/null|wc -l)
     if [ "$2" ]; then
-      e=$2
-      b=$(echo "scale=0;($p*3874973+$a*31854)*${e:-2000}/1000000000"|bc)
-    else
       resolvectl query pro-api.coinmarketcap.com 2>/dev/null 1>&2
       resolvectl query beaconcha.in              2>/dev/null 1>&2
       e=$(curl -sX GET "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=ETH&convert=EUR&CMC_PRO_API_KEY=3ae5f3df-bd71-489d-a9dd-b626995fba31"|sed 's%.*price.:\([0-9]*\.[0-9]*\).*%\1%')
       n=$(curl -sX GET "https://beaconcha.in/api/v1/validator/11766,11767,11770,11771,11772,11773,11774,11775,11776,11777,11778,11779,11780,11782,11783,11784,11786,11788/performance" -H "accept: application/json")
       b=$(echo "$n"|python3 -c "$(echo -e "import sys, json\nt=0\nfor x in json.load(sys.stdin)['data']: t=t+x['performance1d']\nprint(t)")")
       b=$(echo "scale=0;$b*${e:-2000}/1000000000"|bc)
+    else
+      e=2000
+      b=$(echo "scale=0;($p*3874973+$a*31854)*${e}/1000000000"|bc)
     fi
     d=$(echo "scale=2;($h*$pinc+$z*$patt)*${e:-2000}/1000000000"|bc)
   fi
@@ -165,15 +181,18 @@ function bk {
     m="$m\nINCORRECT MISSED\t$h $z"
     m="$m\nERRORS\t\t\t$t\t$(($t*100/$a))%"
     m="$m\nNODES\t\t\t${g3:-0}"
-    m="$m\nAVG GOSSIP DELAYS\t$v"
+    m="$m\nAVG LAGS\t\t$x"
+    m="$m\nAVG DELAYS\t\t$v"
   else
     m="$m rewards_penalties: $b€ $d€,"
     m="$m attestations_blocks: $a $p,"
     m="$m incorrect_missed: $h $z,"
     m="$m erros: $t $(($t*100/$a))%,"
     m="$m nodes: ${g3:-0},"
-    m="$m avg_gossip_delays: $v"
+    m="$m avg_lags: $x,"
+    m="$m avg_delays: $v"
   fi
+  resolvectl query smtp.gmail.com 2>/dev/null 1>&2
 }
 
 [ "$1" = "rs"  ] && { rs; }
@@ -183,10 +202,12 @@ function bk {
 #[ "$1" = "cf"  ] && { cf; }
 #[ "$1" = "crf" ] && { cr;cf; }
 [ "$1" = "sr"  ] && { sr;sf; }
-[ "$1" = "gk"  ] && { gk     ;if [ "$n" -gt "$t" ];then echo $n > /home/eth/geth.count;m="OK $m";else m="BLOCKED $m";fi;echo -e "GETH $m $(date --rfc-3339=date)\n\nNODES\t\t${g2:-0}\nSEGMENTS\t$n"; }
-[ "$1" = "gl"  ] && { gk     ;if [ "$n" -gt "$t" ];then echo $n > /home/eth/geth.count;m="OK $m";else m="BLOCKED $m";fi;echo -e "GETH $m $(date --rfc-3339=date) nodes: ${g2:-0}, segments: $n"; }
-[ "$1" = "bk"  ] && { bk k $2;echo -e "BEAC $(date --rfc-3339=date)$m"; }
-[ "$1" = "bl"  ] && { bk l $2;echo -e "BEAC $(date --rfc-3339=date)$m"; }
+[ "$1" = "gk"  ] && { gk     ;echo -e "GETH $m \n\nNODES\t\t${g2:-0}\nSEGMENTS\t$n"; }
+[ "$1" = "gl"  ] && { gk     ;echo -e "GETH $m nodes: ${g2:-0}, segments: $n"; }
+[ "$1" = "bk"  ] && { bk k $2;echo -e "BEAC $cunm $(date --rfc-3339=seconds)$m"; }
+[ "$1" = "bl"  ] && { bk l $2;echo -e "BEAC $cunm $(date --rfc-3339=seconds)$m"; }
+#[ "$1" = "gpc" ] && { [ "$(systemctl status $ethg 2>/dev/null|grep -i loaded)" ] && us "systemctl stop $ethg"; }
+#[ "$1" = "gac" ] && { [ "$(systemctl status $ethg 2>/dev/null|grep -i 'inactive\|failed')" ] && { us "systemctl start $ethg"; }; }
 
 # lista servicos
 [ "$1" = "ll" ] && { uu "systemctl list-units $pate $patp $patf"; }
@@ -231,7 +252,8 @@ function bk {
 [ "$1" = "vaj" ] && { dr;va;jb "-u $ethv"; }
 [ "$1" = "saj" ] && { dr;sa;jb "-u $dnsd"; }
 [ "$1" = "gpa" ] && { gp;dr;ga;jb "-u $ethg"; }
-[ "$1" = "gkr" ] && { [ "$(t6 gl|sed 's%GETH \([A-Z]*\) .*%\1%')" = "BLOCKED" ] && { gp;dr;sleep 50s;ga; }; }
+[ "$1" = "gkr" ] && { [ "$(t6 gl|sed 's%GETH \([A-Z]*\) .*%\1%')" != "OK" ] && { gp;sleep 50s;ga; }; }
+[ "$1" = "bkr" ] && { [ "$(t6 bl|sed 's%.*avg_delays: *\([0-9]*\).*%\1%')" -ge 1000 ] && [ "$(t6 bl|sed 's%.*avg_lags: *\([0-9]*\).*%\1%')" -ge 10 ] && { bp;ba; }; }
 [ "$1" = "bpa" ] && { bp;dr;ba;jb "-u $ethb"; }
 [ "$1" = "vpa" ] && { vp;dr;va;jb "-u $ethv"; }
 [ "$1" = "xpa" ] && { xp;xa; }
@@ -303,8 +325,8 @@ if [ -z "$1" ]; then
   c1="$c1\npd\t\tpara\t& disable"
   c1="$c1\npa\t\tpara\t& arranca\t& journal"
   c1="$c1\nea\t\tenable\t& arranca\t& journal"
-  c1="$c1\nk [cambio]\tcheck"
-  c1="$c1\nl [cambio]\tlog"
+  c1="$c1\nk [s]\tcheck s=curl"
+  c1="$c1\nl [s]\tlog   s=curl"
   c1="$c1\n"
   c1="$c1\noutros"
   c1="$c1\nyj\t\tsystem journal"
