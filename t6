@@ -131,25 +131,17 @@ function gk {
     m="$m $cunm $(date --rfc-3339=seconds)"
     n=$(echo $H|sudo -S grep -i 'new chain segment' /var/log/syslog 2>/dev/null|wc -l)
     [ -f /home/eth/geth.count ] && t=$(cat /home/eth/geth.count)
-    [ "$t" -gt 4000 ] || [ "$(date --rfc-3339=seconds|cut -d' ' -f2|cut -d: -f1)" -eq 0 ] && { rm /home/eth/geth.count;t=-1; }
-    [ -f /home/eth/geth.count ] && t=$(cat /home/eth/geth.count)
   fi
-  if [ "$n" -gt "$t" ]; then
-    echo $n > /home/eth/geth.count
-    m="OK $m"
-  else
-    m="BLOCKED $m"
-  fi
+  if [ "$n" -eq "$t" ]; then m="BLOCKED $m";else echo $n > /home/eth/geth.count;m="OK $m";fi
   resolvectl query smtp.gmail.com 2>/dev/null 1>&2
 }
 function bk {
-  
-  t=0;y=0;v=0;x=0
+  t=0;y=0;v=0;x=0;m=""
   for v in $(echo $H|sudo -S grep -i 'inclusion_lag: [1-9][0-9]*' /var/log/syslog 2>/dev/null|sed 's%.*inclusion_lag: *\([0-9]*\).*%\1%')
   do y=$(($y+1));t=$(($t+$v))
   done
-  x=$(($t/$y))
-  t=0;n=0;v=0;z=0;a=1;p=0;b=0;d=0
+  [ "$y" -gt 0 ] && x=$(($t/$y))
+  t=0;n=0;v=0;z=0;a=1;p=0;b=0;d=0;h=0
   for v in $(echo $H|sudo -S grep -i 'gossip' /var/log/syslog 2>/dev/null|sed 's%.*delay_ms: *\([0-9]*\).*%\1%')
   do n=$(($n+1));t=$(($t+$v))
   done
@@ -174,9 +166,11 @@ function bk {
     fi
     d=$(echo "scale=2;($h*$pinc+$z*$patt)*${e:-2000}/1000000000"|bc)
   fi
-  m=""
+  n=$(($v*3+$x*188+$t*1+$z*600+$h*200-$a*8))
+  if [ "${n:-0}" -ge 20000 ];then m="BLOCKED $n";else m="OK $n";fi
+  m="$m $cunm $(date --rfc-3339=seconds)"
   if [ "${1:-k}" = "k" ]; then
-    m="\n\nREWARDS PENALTIES\t$b€\t$d€"
+    m="$m\n\nREWARDS PENALTIES\t$b€\t$d€"
     m="$m\nATTESTATIONS BLOCKS\t$a $p"
     m="$m\nINCORRECT MISSED\t$h $z"
     m="$m\nERRORS\t\t\t$t\t$(($t*100/$a))%"
@@ -194,6 +188,15 @@ function bk {
   fi
   resolvectl query smtp.gmail.com 2>/dev/null 1>&2
 }
+function bs {
+  for l in $(echo $H|sudo -S grep -i 'lighthouse.*incorrect' /var/log/syslog 2>/dev/null|grep -v ' INFO '|sed 's%.*validator: *\([0-9]*\).*epoch: *\([0-9]*\).*%\1:\2%'|sort -u|tail -n $1);do
+    v=$(echo $l|cut -d: -f1)
+    e=$(echo $l|cut -d: -f2)
+    s=$(sudo grep -i "lighthouse.*attestation *validator: *$v.*epoch: *$e" /var/log/syslog|sed 's%.*slot: *\([0-9]*\).*%\1%'|sort -u)
+    echo -e "${i}VALIDATOR $v, EPOCH $e, SLOT $s${f}"
+    sudo grep "$v.*$e\|$s" /var/log/syslog
+  done
+}
 
 [ "$1" = "rs"  ] && { rs; }
 [ "$1" = "ds"  ] && { ds; }
@@ -204,10 +207,11 @@ function bk {
 [ "$1" = "sr"  ] && { sr;sf; }
 [ "$1" = "gk"  ] && { gk     ;echo -e "GETH $m \n\nNODES\t\t${g2:-0}\nSEGMENTS\t$n"; }
 [ "$1" = "gl"  ] && { gk     ;echo -e "GETH $m nodes: ${g2:-0}, segments: $n"; }
-[ "$1" = "bk"  ] && { bk k $2;echo -e "BEAC $cunm $(date --rfc-3339=seconds)$m"; }
-[ "$1" = "bl"  ] && { bk l $2;echo -e "BEAC $cunm $(date --rfc-3339=seconds)$m"; }
-#[ "$1" = "gpc" ] && { [ "$(systemctl status $ethg 2>/dev/null|grep -i loaded)" ] && us "systemctl stop $ethg"; }
-#[ "$1" = "gac" ] && { [ "$(systemctl status $ethg 2>/dev/null|grep -i 'inactive\|failed')" ] && { us "systemctl start $ethg"; }; }
+[ "$1" = "gkr" ] && { gk     ;[ "$(echo $m|sed 's%\([A-Z]*\) .*%\1%')" != "OK" ] && { gp;dr;sleep 50s;ga; }; }
+[ "$1" = "bk"  ] && { bk k $2;echo -e "BEAC $m"; }
+[ "$1" = "bl"  ] && { bk l $2;echo -e "BEAC $m"; }
+[ "$1" = "bs"  ] && { bs ${2:-1}; }
+[ "$1" = "bkr" ] && { bk k $2;[ "$(echo $m|sed 's%\([A-Z]*\) .*%\1%')" != "OK" ] && { bp;dr;ba; }; }
 
 # lista servicos
 [ "$1" = "ll" ] && { uu "systemctl list-units $pate $patp $patf"; }
@@ -252,8 +256,6 @@ function bk {
 [ "$1" = "vaj" ] && { dr;va;jb "-u $ethv"; }
 [ "$1" = "saj" ] && { dr;sa;jb "-u $dnsd"; }
 [ "$1" = "gpa" ] && { gp;dr;ga;jb "-u $ethg"; }
-[ "$1" = "gkr" ] && { [ "$(t6 gl|sed 's%GETH \([A-Z]*\) .*%\1%')" != "OK" ] && { gp;sleep 50s;ga; }; }
-[ "$1" = "bkr" ] && { [ "$(t6 bl|sed 's%.*avg_delays: *\([0-9]*\).*%\1%')" -ge 1000 ] && [ "$(t6 bl|sed 's%.*avg_lags: *\([0-9]*\).*%\1%')" -ge 10 ] && { bp;ba; }; }
 [ "$1" = "bpa" ] && { bp;dr;ba;jb "-u $ethb"; }
 [ "$1" = "vpa" ] && { vp;dr;va;jb "-u $ethv"; }
 [ "$1" = "xpa" ] && { xp;xa; }
@@ -325,13 +327,14 @@ if [ -z "$1" ]; then
   c1="$c1\npd\t\tpara\t& disable"
   c1="$c1\npa\t\tpara\t& arranca\t& journal"
   c1="$c1\nea\t\tenable\t& arranca\t& journal"
-  c1="$c1\nk [s]\tcheck s=curl"
-  c1="$c1\nl [s]\tlog   s=curl"
+  c1="$c1\nk [s]\t\tcheck s=curl"
+  c1="$c1\nl [s]\t\tlog   s=curl"
   c1="$c1\n"
   c1="$c1\noutros"
   c1="$c1\nyj\t\tsystem journal"
   c1="$c1\nsl [s]\t\tlista system journal  s=TOTAL"
   c1="$c1\nel [s]\t\tlista geth,lighthouse s=TOTAL"
+  c1="$c1\nbs [n]\t\tlista erros com custo n=max erros"
   c1="$c1\nll\t\tlista servicos"
   c1="$c1\nlp\t\tlista portas"
   c1="$c1\nnp\t\tnode peers"
