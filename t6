@@ -28,6 +28,9 @@ function sd { uu "systemctl disable $dnsd";scl;uu 'ufw reload'; }
 function gfw { if [ "$cust" = "hrv" ];then uu "ufw$2 allow from $zip2 $1";uu "ufw$2 allow from $zip3 $1";else uu "ufw$2 allow from $vip1 $1";uu "ufw$2 allow from $vip3 $1";fi; }
 function gop { uu 'ufw allow 30303 comment eth1';uu 'ufw delete deny 8545              ';gfw 'to any port 8545 comment geapi'; }
 function gcl { uu 'ufw deny  30303 comment eth1';uu 'ufw        deny 8545 comment geapi';gfw 'to any port 8545'     ' delete'; }
+function ofw { if [ "$cust" = "hrv" ];then uu "ufw$2 allow from $zip2 $1";uu "ufw$2 allow from $zip3 $1";else uu "ufw$2 allow from $vip1 $1";uu "ufw$2 allow from $vip3 $1";fi; }
+function oop { uu 'ufw allow 30303 comment eth1';uu 'ufw delete deny 8545              ';gfw 'to any port 8545 comment oeapi'; }
+function ocl { uu 'ufw deny  30303 comment eth1';uu 'ufw        deny 8545 comment oeapi';gfw 'to any port 8545'     ' delete'; }
 function bfw { if [ "$cust" = "hrv" ];then uu "ufw$2 allow from $zip3 $1";else uu "ufw$2 allow from $vip3 $1";fi; }
 function bop { uu 'ufw allow 9000 comment eth2';uu 'ufw delete deny 5052              ';bfw 'to any port 5052 comment bnapi'; }
 function bcl { uu 'ufw deny  9000 comment eth2';uu 'ufw        deny 5052 comment bnapi';bfw 'to any port 5052'     ' delete'; }
@@ -44,24 +47,28 @@ function jb { uu "journalctl --no-hostname --no-full -f $1"; }
 function dr { echo $H|sudo -S systemctl daemon-reload 2>/dev/null; }
 
 function ge { gop;uu 'ufw reload';uu "systemctl enable $ethg"; }
+function oe { oop;uu 'ufw reload';uu "systemctl enable $etho"; }
 function be { bop;uu 'ufw reload';uu "systemctl enable $ethb"; }
 function ve { [ ! -f $dtdi/vc_lock ] && { vop;uu 'ufw reload';uu "systemctl enable $ethv"; } }
 function pe { uu 'ufw reload';uu "systemctl enable $ethp"; }
 function ne { uu 'ufw reload';uu "systemctl enable $ethn"; }
 function fe { fop;uu 'ufw reload';uu "systemctl enable $ethf"; }
-function ga { [ "$(systemctl status $ethg 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $ethg"; } }
+function ga { [ "$(systemctl status $ethg 2>/dev/null|grep -i 'inactive\|failed')" ] && [ -d /var/lib/goethereum   ] && { uu "systemctl start $ethg"; } }
+function oa { [ "$(systemctl status $etho 2>/dev/null|grep -i 'inactive\|failed')" ] && [ -d /var/lib/openethereum ] && { uu "systemctl start $etho"; } }
 function ba { [ "$(systemctl status $ethb 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $ethb"; } }
 function va { [ "$(systemctl status $ethv 2>/dev/null|grep -i 'inactive\|failed')" ] && [ ! -f $dtdi/vc_lock ] && { uu "systemctl start $ethv"; } }
 function pa { [ "$(systemctl status $ethp 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $ethp"; } }
 function na { [ "$(systemctl status $ethn 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $ethn"; } }
 function fa { [ "$(systemctl status $ethf 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $ethf"; } }
 function gp { [ "$(systemctl status $ethg 2>/dev/null|grep -i loaded)" ] && { uu "systemctl stop $ethg"; } }
+function op { [ "$(systemctl status $etho 2>/dev/null|grep -i loaded)" ] && { uu "systemctl stop $etho"; } }
 function bp { [ "$(systemctl status $ethb 2>/dev/null|grep -i loaded)" ] && { uu "systemctl stop $ethb"; } }
 function vp { [ "$(systemctl status $ethv 2>/dev/null|grep -i loaded)" ] && { uu "systemctl stop $ethv"; } }
 function pp { [ "$(systemctl status $ethp 2>/dev/null|grep -i loaded)" ] && { uu "systemctl stop $ethp"; } }
 function np { [ "$(systemctl status $ethn 2>/dev/null|grep -i loaded)" ] && { uu "systemctl stop $ethn"; } }
 function fp { [ "$(systemctl status $ethf 2>/dev/null|grep -i loaded)" ] && { uu "systemctl stop $ethf"; } }
 function gd { uu "systemctl disable $ethg";gcl;uu 'ufw reload'; }
+function od { uu "systemctl disable $etho";ocl;uu 'ufw reload'; }
 function bd { uu "systemctl disable $ethb";bcl;uu 'ufw reload'; }
 function vd { uu "systemctl disable $ethv";vcl;uu 'ufw reload';touch $dtdi/vc_lock; }
 function pd { [ "$(systemctl status $ethp 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethp"; } }
@@ -130,10 +137,25 @@ function gk {
     if [ "$(echo $g1|grep -i false)" ];then m="SYNCED";else m="SYNCING";fi
     m="$m $cunm $(date --rfc-3339=seconds)"
     n=$(echo $H|sudo -S grep -i 'new chain segment' /var/log/syslog 2>/dev/null|wc -l)
-    [ -f /home/eth/geth.count ] && t=$(cat /home/eth/geth.count)
+    [ -f /home/eth/geth.log ] && t=$(tail -n 1 /home/eth/geth.log|sed 's%.*segments: \([0-9]*\).*%\1%')
   fi
-  if [ "$n" -eq "$t" ]; then m="BLOCKED $m";else echo $n > /home/eth/geth.count;m="OK $m";fi
-  resolvectl query smtp.gmail.com 2>/dev/null 1>&2
+  if [ "$n" -eq "$t" ]; then
+    m="BLOCKED $m"
+    resolvectl query smtp.gmail.com 2>/dev/null 1>&2
+  else
+    m="OK $m"
+  fi
+}
+function grs {
+  if [ $1 -ne 0 ]; then
+    cp /etc/systemd/system/$ethg.service ~/$ethg.save
+    g4=$(grep maxpeers ~/$ethg.save|sed 's%.*maxpeers \([0-9]*\).*%\1%')
+    g4=$(($g4+$1))
+    [ $g4 -ge 5 ] && [ $g4 -le 10 ] && sed "s%--maxpeers [0-9]*%--target-peers $g4%" ~/$ethg.save > /etc/systemd/system/$ethg.service
+  fi
+  gk
+  echo -e "RSGE $m nodes: ${g2:-0}, segments: $n" >> /home/eth/geth.log
+  gp;dr;sleep 50s;ga;
 }
 function bk {
   t=0;y=0;v=0;x=0;m=""
@@ -141,7 +163,7 @@ function bk {
   do y=$(($y+1));t=$(($t+$v))
   done
   [ "$y" -gt 0 ] && x=$(($t/$y))
-  t=0;n=0;v=0;z=0;a=1;p=0;b=0;d=0;h=0
+  t=0;n=0;v=0;z=0;a=1;p=0;b=0;d=0;h=0;r=0
   for v in $(echo $H|sudo -S grep -i 'gossip' /var/log/syslog 2>/dev/null|sed 's%.*delay_ms: *\([0-9]*\).*%\1%')
   do n=$(($n+1));t=$(($t+$v))
   done
@@ -149,31 +171,30 @@ function bk {
     g3
     v=$(($t/$n))
     a=$(echo $H|sudo -S grep -i 'attestation success' /var/log/syslog 2>/dev/null|wc -l)
-    t=$(echo $H|sudo -S grep -i 'lighthouse'          /var/log/syslog 2>/dev/null|grep -v ' INFO '|wc -l)
+    t=$(echo $H|sudo -S grep -i 'lighthouse'          /var/log/syslog 2>/dev/null|grep    ' INFO '|wc -l)
+    r=$(echo $H|sudo -S grep -i 'lighthouse'          /var/log/syslog 2>/dev/null|grep -v ' INFO '|wc -l)
     h=$(echo $H|sudo -S grep -i 'to an incorrect'     /var/log/syslog 2>/dev/null|wc -l)
     z=$(echo $H|sudo -S grep -i 'attestation missing' /var/log/syslog 2>/dev/null|wc -l)
     p=$(echo $H|sudo -S grep -i 'published block'     /var/log/syslog 2>/dev/null|wc -l)
     if [ "$2" ]; then
       resolvectl query pro-api.coinmarketcap.com 2>/dev/null 1>&2
-      resolvectl query beaconcha.in              2>/dev/null 1>&2
+      #resolvectl query beaconcha.in              2>/dev/null 1>&2
       e=$(curl -sX GET "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=ETH&convert=EUR&CMC_PRO_API_KEY=3ae5f3df-bd71-489d-a9dd-b626995fba31"|sed 's%.*price.:\([0-9]*\.[0-9]*\).*%\1%')
-      n=$(curl -sX GET "https://beaconcha.in/api/v1/validator/11766,11767,11770,11771,11772,11773,11774,11775,11776,11777,11778,11779,11780,11782,11783,11784,11786,11788/performance" -H "accept: application/json")
-      b=$(echo "$n"|python3 -c "$(echo -e "import sys, json\nt=0\nfor x in json.load(sys.stdin)['data']: t=t+x['performance1d']\nprint(t)")")
-      b=$(echo "scale=0;$b*${e:-2000}/1000000000"|bc)
+      #n=$(curl -sX GET "https://beaconcha.in/api/v1/validator/11766,11767,11770,11771,11772,11773,11774,11775,11776,11777,11778,11779,11780,11782,11783,11784,11786,11788/performance" -H "accept: application/json")
+      #b=$(echo "$n"|python3 -c "$(echo -e "import sys, json\nt=0\nfor x in json.load(sys.stdin)['data']: t=t+x['performance1d']\nprint(t)")")
+      #b=$(echo "scale=0;$b*$e/1000000000"|bc)
     else
-      e=2000
-      b=$(echo "scale=0;($p*3874973+$a*31854)*${e}/1000000000"|bc)
+      e=3000
     fi
-    d=$(echo "scale=2;($h*$pinc+$z*$patt)*${e:-2000}/1000000000"|bc)
+    b=$(echo "scale=0;($p*$rblk+$a*$ratt)*$e/1000000000"|bc)
+    d=$(echo "scale=2;($h*$pinc+$z*$patt)*$e/1000000000"|bc)
   fi
-  n=$(($v*3+$x*188+$t*1+$z*600+$h*200-$a*8))
-  if [ "${n:-0}" -ge 20000 ];then m="BLOCKED $n";else m="OK $n";fi
-  m="$m $cunm $(date --rfc-3339=seconds)"
+  m="$cunm $(date --rfc-3339=seconds)"
   if [ "${1:-k}" = "k" ]; then
     m="$m\n\nREWARDS PENALTIES\t$b€\t$d€"
     m="$m\nATTESTATIONS BLOCKS\t$a $p"
     m="$m\nINCORRECT MISSED\t$h $z"
-    m="$m\nERRORS\t\t\t$t\t$(($t*100/$a))%"
+    m="$m\nERRORS\t\t\t$r\t$t"
     m="$m\nNODES\t\t\t${g3:-0}"
     m="$m\nAVG LAGS\t\t$x"
     m="$m\nAVG DELAYS\t\t$v"
@@ -181,18 +202,46 @@ function bk {
     m="$m rewards_penalties: $b€ $d€,"
     m="$m attestations_blocks: $a $p,"
     m="$m incorrect_missed: $h $z,"
-    m="$m erros: $t $(($t*100/$a))%,"
+    m="$m erros: $r $t,"
     m="$m nodes: ${g3:-0},"
     m="$m avg_lags: $x,"
     m="$m avg_delays: $v"
   fi
-  resolvectl query smtp.gmail.com 2>/dev/null 1>&2
+  n=$(($x*$r/$t))
+  n=$(($x*($h+$z+$r)/($a+$p+$t)))
+  if [ "${n:-0}" -ge $lirs ] && [ -f home/eth/beacon.log ] && [ "$(tail -n $hors /home/eth/beacon.log|cut -d' ' -f1|sort -u)" = "BEAC" ]; then
+    m="BLOCKED $n $m"
+    resolvectl query smtp.gmail.com 2>/dev/null 1>&2
+  else
+    m="OK $n $m"
+  fi
+}
+function brs {
+  b0=$(systemctl status $ethb 2>/dev/null|grep PID|sed 's%.*PID: *\([0-9]*\).*%\1%')
+  b1=0
+  while [ $b1 -lt 200 ]; do
+    b2="$(echo $H|sudo -S grep "lighthouse.$b0" /var/log/syslog 2>/dev/null|grep ' INFO '|tail -n $pors|cut -d' ' -f10|sort -u)"
+    if [ "$(echo "$b2"|head -n 1)" = "New" ] && [ "$(echo "$b2"|tail -n 1)" = "Synced" ]; then
+      if [ $1 -ne 0 ]; then
+        cp /etc/systemd/system/$ethb.service ~/$ethb.save
+        b3=$(grep target-peers ~/$ethb.save|sed 's%.*target-peers \([0-9]*\).*%\1%')
+        b3=$(($b3+$1))
+        [ $b3 -ge 10 ] && [ $b3 -le 30 ] && sed "s%--target-peers [0-9]*%--target-peers $b3%" ~/$ethb.save > /etc/systemd/system/$ethb.service
+      fi
+      bk l
+      echo -e "RSBN $m" >> /home/eth/beacon.log
+      bp;dr;ba;
+      b1=200
+    fi
+    sleep 3s
+    b1=$(($b1+1))
+  done
 }
 function bs {
-  for l in $(echo $H|sudo -S grep -i 'lighthouse.*incorrect' /var/log/syslog 2>/dev/null|grep -v ' INFO '|sed 's%.*validator: *\([0-9]*\).*epoch: *\([0-9]*\).*%\1:\2%'|sort -u|tail -n $1);do
-    v=$(echo $l|cut -d: -f1)
-    e=$(echo $l|cut -d: -f2)
-    s=$(sudo grep -i "lighthouse.*attestation *validator: *$v.*epoch: *$e" /var/log/syslog|sed 's%.*slot: *\([0-9]*\).*%\1%'|sort -u)
+  for l in $(echo $H|sudo -S grep -i 'lighthouse.*incorrect' /var/log/syslog 2>/dev/null|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\) .*validator: \([0-9]*\).*epoch: \([0-9]*\).*%\1:\2:\3%'|sort -u|tail -n $1);do
+    v=$(echo $l|cut -d: -f4)
+    e=$(echo $l|cut -d: -f5)
+    s=$(sudo grep -i "lighthouse.*attestation.*$v.*slot.*$e" /var/log/syslog|sed 's%.*slot: \([0-9]*\).*%\1%'|sort -u)
     echo -e "${i}VALIDATOR $v, EPOCH $e, SLOT $s${f}"
     sudo grep "$v.*$e\|$s" /var/log/syslog
   done
@@ -207,19 +256,22 @@ function bs {
 [ "$1" = "sr"  ] && { sr;sf; }
 [ "$1" = "gk"  ] && { gk     ;echo -e "GETH $m \n\nNODES\t\t${g2:-0}\nSEGMENTS\t$n"; }
 [ "$1" = "gl"  ] && { gk     ;echo -e "GETH $m nodes: ${g2:-0}, segments: $n"; }
-[ "$1" = "gkr" ] && { gk     ;[ "$(echo $m|sed 's%\([A-Z]*\) .*%\1%')" != "OK" ] && { gp;dr;sleep 50s;ga; }; }
+[ "$1" = "gkr" ] && { gk     ;[ "$(echo $m|sed 's%\([A-Z]*\) .*%\1%')" != "OK" ] && grs ${2:-0}; }
+[ "$1" = "grs" ] && { grs ${2:-0}; }
 [ "$1" = "bk"  ] && { bk k $2;echo -e "BEAC $m"; }
 [ "$1" = "bl"  ] && { bk l $2;echo -e "BEAC $m"; }
-[ "$1" = "bs"  ] && { bs ${2:-1}; }
-[ "$1" = "bkr" ] && { bk k $2;[ "$(echo $m|sed 's%\([A-Z]*\) .*%\1%')" != "OK" ] && { bp;dr;ba; }; }
+[ "$1" = "bh"  ] && { tail -n ${2:-$hors} /home/eth/beacon.log;bk l;echo -e "BEAC $m"; }
+[ "$1" = "bkr" ] && { bk l   ;[ "$(echo $m|sed 's%\([A-Z]*\) .*%\1%')" != "OK" ] && brs ${2:-0}; }
+[ "$1" = "brs" ] && { brs ${2:-0}; }
+[ "$1" = "bs"  ] && { bs  ${2:-1}; }
 
 # lista servicos
 [ "$1" = "ll" ] && { uu "systemctl list-units $pate $patp $patf"; }
 # lista portas
 [ "$1" = "lp" ] && { netstat -tulpn; }
 # outros journal system/lighthouse
-[ "$1" = "el" ] && { echo $H|sudo -S grep -i 'geth\|lighthouse'      /var/log/syslog 2>/dev/null|if [ "$2" ];then tee;else grep -v ' INFO ';fi; }
-[ "$1" = "sl" ] && { echo $H|sudo -S grep -v 'geth\|lighthouse\|UFW' /var/log/syslog 2>/dev/null|if [ "$2" ];then tee;else grep -i 'error' ;fi; }
+[ "$1" = "el" ] && { echo $H|sudo -S grep -i 'openethereum\|geth\|lighthouse'      /var/log/syslog 2>/dev/null|if [ "$2" ];then grep -i "[a-z]* [0-9]* $2";else grep -v ' INFO ';fi; }
+[ "$1" = "sl" ] && { echo $H|sudo -S grep -v 'openethereum\|geth\|lighthouse\|UFW' /var/log/syslog 2>/dev/null|if [ "$2" ];then grep -i "[a-z]* [0-9]* $2";else grep -i 'error' ;fi; }
 #[ "$1" = "bl" ] && { echo $H|sudo -S grep -i 'Successfully published block' /var/log/syslog 2>/dev/null; }
 #[ "$1" = "nr" ] && { ut "grep -i record /var/log/syslog" "${2:-30}"; }
 [ "$1" = "np" ] && { g2;g3;echo -e "PEERS: GETH ${g2:-0}, BEACON ${g3:-0}"; }
@@ -232,6 +284,7 @@ function bs {
 [ "$1" = "yj" ] && { jb; }
 [ "$1" = "ej" ] && { jb "-u $pate"; }
 [ "$1" = "gj" ] && { jb "-u $ethg"; }
+[ "$1" = "oj" ] && { jb "-u $etho"; }
 [ "$1" = "bj" ] && { jb "-u $ethb"; }
 [ "$1" = "vj" ] && { jb "-u $ethv"; }
 [ "$1" = "pj" ] && { jb "-u $ethp"; }
@@ -242,6 +295,7 @@ function bs {
 [ "$1" = "sj" ] && { jb "-u $dnsd"; }
 # arranca
 [ "$1" = "ga" ] && { dr;ga; }
+[ "$1" = "oa" ] && { dr;oa; }
 [ "$1" = "ba" ] && { dr;ba; }
 [ "$1" = "va" ] && { dr;va; }
 [ "$1" = "pa" ] && { dr;pa; }
@@ -252,22 +306,26 @@ function bs {
 [ "$1" = "sa" ] && { dr;sa; }
 # para & arranca & journal
 [ "$1" = "gaj" ] && { dr;ga;jb "-u $ethg"; }
+[ "$1" = "oaj" ] && { dr;oa;jb "-u $etho"; }
 [ "$1" = "baj" ] && { dr;ba;jb "-u $ethb"; }
 [ "$1" = "vaj" ] && { dr;va;jb "-u $ethv"; }
 [ "$1" = "saj" ] && { dr;sa;jb "-u $dnsd"; }
 [ "$1" = "gpa" ] && { gp;dr;ga;jb "-u $ethg"; }
+[ "$1" = "opa" ] && { op;dr;oa;jb "-u $etho"; }
 [ "$1" = "bpa" ] && { bp;dr;ba;jb "-u $ethb"; }
 [ "$1" = "vpa" ] && { vp;dr;va;jb "-u $ethv"; }
 [ "$1" = "xpa" ] && { xp;xa; }
 [ "$1" = "rpa" ] && { rp;ra; }
 [ "$1" = "spa" ] && { sp;sa;jb "-u $dnsd"; }
 [ "$1" = "gpd" ] && { gp;gd; }
+[ "$1" = "opd" ] && { op;od; }
 [ "$1" = "bpd" ] && { bp;bd; }
 [ "$1" = "vpd" ] && { vp;vd; }
 [ "$1" = "xpd" ] && { xp;xd; }
 [ "$1" = "rpd" ] && { rp;rd; }
 [ "$1" = "spd" ] && { sp;sd; }
 [ "$1" = "gea" ] && { ge;dr;ga;jb "-u $ethg"; }
+[ "$1" = "oea" ] && { oe;dr;oa;jb "-u $etho"; }
 [ "$1" = "bea" ] && { be;dr;ba;jb "-u $ethb"; }
 [ "$1" = "vea" ] && { ve;dr;va;jb "-u $ethv"; }
 [ "$1" = "xea" ] && { xe;xa; }
@@ -275,6 +333,7 @@ function bs {
 [ "$1" = "sea" ] && { se;sa;jb "-u $dnsd"; }
 # enable
 [ "$1" = "ge" ] && { ge; }
+[ "$1" = "oe" ] && { oe; }
 [ "$1" = "be" ] && { be; }
 [ "$1" = "ve" ] && { ve; }
 [ "$1" = "pe" ] && { pe; }
@@ -290,6 +349,7 @@ function bs {
 [ "$1" = "vpr" ] && { vp; }
 [ "$1" = "bpr" ] && { bp; }
 [ "$1" = "gpr" ] && { gp; }
+[ "$1" = "opr" ] && { op; }
 [ "$1" = "xpr" ] && { xp; }
 [ "$1" = "rpr" ] && { rp; }
 [ "$1" = "spr" ] && { sp; }
@@ -300,6 +360,7 @@ function bs {
 [ "$1" = "vds" ] && { vd; }
 [ "$1" = "bds" ] && { bd; }
 [ "$1" = "gds" ] && { gd; }
+[ "$1" = "ods" ] && { od; }
 [ "$1" = "xds" ] && { xd; }
 [ "$1" = "rds" ] && { rd; }
 [ "$1" = "sds" ] && { sd; }
@@ -308,6 +369,7 @@ if [ -z "$1" ]; then
   c1="\nprimeira letra"
   c1="$c1\ne\t\t$ethg $ethb $ethv"
   c1="$c1\ng\t\t$ethg"
+  c1="$c1\no\t\t$etho"
   c1="$c1\nb\t\t$ethb"
   c1="$c1\nv\t\t$ethv"
   c1="$c1\np\t\t$ethp"

@@ -16,6 +16,38 @@ if [ "$1" = "linux" ] || [ "$1" = "reboot" ] || [ "$1" = "geth" ]; then
   [ "$1" = "reboot" ] && { sudo reboot; }
 fi
 
+# openethereum update
+if [ "$1" = "oeth" ] && [ -x ~/.cargo/bin/rustup ] && ([ "$cunm" = "$znm1" ] || [ "$cunm" = "$vnm1" ]); then
+  echo -e "${i}UPDATE RUST${f}"
+  rustup update
+  resolvectl query github.com
+  if [ -f ~/openethereum/README.md ]; then
+    cd ~/openethereum
+    make clean
+    cargo clean
+  else
+    cd ~
+    echo $H|sudo -S rm -rf ~/openethereum 2>/dev/null
+    git clone https://github.com/openethereum/openethereum
+    cd ~/openethereum
+  fi
+  git fetch
+  t=$(git rev-list --tags --max-count=1)
+  git checkout $(git describe --tags $t)
+  echo -e "${i}VAI COMPILAR OPENETHEREUM${f}"
+  cargo build --release --features final
+  if [ $? -eq 0  ] && [ -x ~/openethereum/target/release/openethereum ]; then
+    if [ -x /usr/local/bin/openethereum ]; then
+      echo $H|sudo -S cp /usr/local/bin/openethereum /usr/local/bin/openethereum.save 2>/dev/null
+    fi
+    echo $H|sudo -S cp ~/openethereum/target/release/openethereum /usr/local/bin 2>/dev/null
+    echo $H|sudo -S chmod 755 /usr/local/bin/openethereum 2>/dev/null
+    echo -e "${i}NOVO OPENETHEREUM INSTALADO - PODE/DEVE VERIFICAR${f}"
+  else
+    echo -e "${i}NAO EXISTE OPENETHEREUM COMPILADO PARA INSTALAR${f}"
+  fi
+fi
+
 # eth2 update
 if [ "$1" = "eth2" ]; then
   if [ "$cunm" = "$znm1" ] || [ "$cunm" = "$vnm1" ]; then

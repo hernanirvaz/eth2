@@ -146,10 +146,37 @@ else
       rustup update
     else
       echo -e "${i}INSTALAR DEPENDENCIAS RUST${f}"
-      echo $H|sudo -S apt install -y git gcc g++ make cmake pkg-config libssl-dev 2>/dev/null
+      echo $H|sudo -S apt install -y git gcc g++ make cmake pkg-config libssl-dev build-essential libudev-dev perl yasm 2>/dev/null
       echo -e "${i}INSTALL RUST${f}"
       cd ~
       curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+    fi
+    source ~/.cargo/env
+    # eth-oeth.service eth1 openeth service
+    if [ -f /etc/systemd/system/$etho.service ]; then
+      if [ -f ~/openethereum/README.md ]; then
+        cd ~/openethereum
+        make clean
+        cargo clean
+      else
+        cd ~
+        echo $H|sudo -S rm -rf ~/openethereum 2>/dev/null
+        git clone https://github.com/openethereum/openethereum
+        cd ~/openethereum
+      fi
+      git fetch
+      t=$(git rev-list --tags --max-count=1)
+      git checkout $(git describe --tags $t)
+      cargo build --release --features final
+      if [ $? -eq 0  ] && [ -x ~/openethereum/target/release/openethereum ]; then
+        if [ -x /usr/local/bin/openethereum ]; then
+          echo $H|sudo -S cp /usr/local/bin/openethereum /usr/local/bin/openethereum.save 2>/dev/null
+        fi
+        echo $H|sudo -S cp ~/openethereum/target/release/openethereum /usr/local/bin 2>/dev/null
+        echo $H|sudo -S chmod 755 /usr/local/bin/openethereum 2>/dev/null
+      else
+        echo -e "${i}NAO EXISTE OPENETHEREUM COMPILADO PARA INSTALAR${f}"
+      fi
     fi
     if [ -f ~/lighthouse/README.md ]; then
       cd ~/lighthouse
@@ -164,7 +191,6 @@ else
     git fetch
     t=$(git rev-list --tags --max-count=1)
     git checkout $(git describe --tags $t)
-    source ~/.cargo/env
     echo -e "${i}VAI COMPILAR LIGHT${f}"
     make
     if [ $? -eq 0  ] && [ -x ~/.cargo/bin/lighthouse ]; then

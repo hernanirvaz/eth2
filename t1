@@ -10,6 +10,8 @@ meeu="$(whoami)"
 cunm="$(uname -n)"
 cust="$(uname -n|cut -c1-3)"
 
+# eth-oeth.service                        eth1 openeth service
+etho='eth-oeth'
 # eth-geth.service                        eth1 geth service
 ethg='eth-geth'
 # eth-beacon.service                      eth2 beacon service
@@ -47,11 +49,16 @@ vnm1='vmi471826.contaboserver.net'
 vnm2='vmi506976.contaboserver.net'
 vnm3='vmi469069.contaboserver.net'
 
-# data is going here
+# data files are going here
 dtdi="/var/lib/lighthouse"
 becn="$dtdi/beacon"
 vldt="$dtdi/validators"
 
-# eth2 penalties
+# eth2 rewards & penalties & limite/horas/position reset
+ratt=29333
+rblk=4208034
 patt=23387
 pinc=16444
+lirs=5
+hors=4
+pors=7

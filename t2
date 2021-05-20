@@ -133,6 +133,27 @@ else
 		[Install]
 		WantedBy=multi-user.target
 		EOF
+    golb="/var/lib/openethereum"
+    echo $H|sudo -S mkdir -p $golb 2>/dev/null
+    sudo chown -R $user:$user $golb
+    cat <<-EOF > $etho.service
+		[Unit]
+		Description=eth1 OpenEthereum service
+		Wants=network-online.target
+		After=network-online.target
+		
+		[Service]
+		User=$user
+		Group=$user
+		Restart=on-failure
+		ExecStart=/usr/local/bin/openethereum --chain foundation --base-path=/var/lib/openethereum --max-peers=10 --cache-size=4096
+		KillSignal=SIGTERM
+		TimeoutStopSec=300
+		ExecStopPost=/home/eth/eth2/t8mail GETHSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
+		
+		[Install]
+		WantedBy=multi-user.target
+		EOF
     sudo mv $ethg.service /etc/systemd/system/$ethg.service
     sudo chmod 644 /etc/systemd/system/$ethg.service
     t6 ge
