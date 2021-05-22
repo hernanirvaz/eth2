@@ -55,10 +55,10 @@ becn="$dtdi/beacon"
 vldt="$dtdi/validators"
 
 # eth2 rewards & penalties & limite/horas/position reset
-ratt=29333
+ratt=0029333
 rblk=4208034
-patt=23387
-pinc=16444
-lirs=5
+patt=$ratt
+pinc=0016444
+lirs=4
 hors=4
 pors=7

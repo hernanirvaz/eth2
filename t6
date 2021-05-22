@@ -74,9 +74,10 @@ function vd { uu "systemctl disable $ethv";vcl;uu 'ufw reload';touch $dtdi/vc_lo
 function pd { [ "$(systemctl status $ethp 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethp"; } }
 function nd { [ "$(systemctl status $ethn 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethn"; } }
 function fd { [ "$(systemctl status $ethf 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethf";fcl;uu 'ufw reload'; } }
-function g0 { g0=0;[ -d /var/lib/goethereum ] && g0=$(echo $H|sudo -S du -s /var/lib/goethereum 2>/dev/null|cut -f1); }
-function g1 { g1=0;[ -d /var/lib/goethereum ] && { if [ "$cunm" = "$znm1" ];then g="http://$zip1:8545";else g="http://$vip1:8545";fi;g1=$(geth attach $g --exec eth.syncing); }; }
-function g2 { g2=0;[ -d /var/lib/goethereum ] && { if [ "$cunm" = "$znm1" ];then g="http://$zip1:8545";else g="http://$vip1:8545";fi;g2=$(geth attach $g --exec net.peerCount); }; }
+function g0 { g0=0;[ -d /var/lib/goethereum   ] && g0=$(echo $H|sudo -S du -s /var/lib/goethereum 2>/dev/null|cut -f1); }
+function g1 { g1=0;[ -d /var/lib/goethereum   ] && { if [ "$cunm" = "$znm1" ];then g="http://$zip1:8545";else g="http://$vip1:8545";fi;g1=$(geth attach $g --exec eth.syncing); }; }
+function g2 { g2=0;[ -d /var/lib/goethereum   ] && { if [ "$cunm" = "$znm1" ];then g="http://$zip1:8545";else g="http://$vip1:8545";fi;g2=$(geth attach $g --exec net.peerCount); }; }
+function o2 { o2=0;[ -d /var/lib/openethereum ] && o2=$(echo $H|sudo -S grep -i 'openethereum.* peers' /var/log/syslog 2>/dev/null|tail -n 1|sed 's%.* \([0-9]*\)/[0-9]* peers.*%\1%'); }
 function g3 { g3=$(echo $H|sudo -S grep -i peers: /var/log/syslog 2>/dev/null|tail -n 1|sed 's%.*peers: *\([0-9]*\).*%\1%'); }
 function gs {
   if [ -d /var/lib/goethereum ] && ([ "$cunm" = "$vnm1" ] || [ "$cunm" = "$znm1" ]); then
@@ -146,6 +147,22 @@ function gk {
     m="OK $m"
   fi
 }
+function ok {
+  t=-1;n=0;v=0;m=""
+  if [ "$(systemctl status $etho 2>/dev/null|grep -i running)" ]; then
+    o2
+    n=$(echo $H|sudo -S grep -i 'Imported  *#' /var/log/syslog 2>/dev/null|wc -l)
+    if [ "$n" -gt 0 ];then m="SYNCED";else m="SYNCING";fi
+    m="$m $cunm $(date --rfc-3339=seconds)"
+    [ -f /home/eth/oeth.log ] && t=$(tail -n 1 /home/eth/oeth.log|sed 's%.*segments: \([0-9]*\).*%\1%')
+  fi
+  if [ "$n" -eq "$t" ]; then
+    m="BLOCKED $m"
+    resolvectl query smtp.gmail.com 2>/dev/null 1>&2
+  else
+    m="OK $m"
+  fi
+}
 function grs {
   if [ $1 -ne 0 ]; then
     cp /etc/systemd/system/$ethg.service ~/$ethg.save
@@ -155,40 +172,51 @@ function grs {
   fi
   gk
   echo -e "RSGE $m nodes: ${g2:-0}, segments: $n" >> /home/eth/geth.log
-  gp;dr;sleep 50s;ga;
+  gp;dr;sleep 50s;ga
+}
+function ors {
+  if [ $1 -ne 0 ]; then
+    cp /etc/systemd/system/$etho.service ~/$etho.save
+    o4=$(grep max-peers ~/$etho.save|sed 's%.*max-peers=\([0-9]*\).*%\1%')
+    o4=$(($o4+$1))
+    [ $o4 -ge 10 ] && [ $o4 -le 15 ] && sed "s%--max-peers=[0-9]*%--max-peers=$o4%" ~/$etho.save > /etc/systemd/system/$etho.service
+  fi
+  ok
+  echo -e "RSOE $m nodes: ${o2:-0}, segments: $n" >> /home/eth/oeth.log
+  op;dr;oa
 }
 function bk {
   t=0;y=0;v=0;x=0;m=""
   for v in $(echo $H|sudo -S grep -i 'inclusion_lag: [1-9][0-9]*' /var/log/syslog 2>/dev/null|sed 's%.*inclusion_lag: *\([0-9]*\).*%\1%')
   do y=$(($y+1));t=$(($t+$v))
   done
+  x=0
   [ "$y" -gt 0 ] && x=$(($t/$y))
-  t=0;n=0;v=0;z=0;a=1;p=0;b=0;d=0;h=0;r=0
+  t=0;n=0;v=0;z=0;a=0;p=0;b=0;d=0;h=0;r=0
   for v in $(echo $H|sudo -S grep -i 'gossip' /var/log/syslog 2>/dev/null|sed 's%.*delay_ms: *\([0-9]*\).*%\1%')
   do n=$(($n+1));t=$(($t+$v))
   done
-  if [ "$n" -gt 0 ]; then
-    g3
-    v=$(($t/$n))
-    a=$(echo $H|sudo -S grep -i 'attestation success' /var/log/syslog 2>/dev/null|wc -l)
-    t=$(echo $H|sudo -S grep -i 'lighthouse'          /var/log/syslog 2>/dev/null|grep    ' INFO '|wc -l)
-    r=$(echo $H|sudo -S grep -i 'lighthouse'          /var/log/syslog 2>/dev/null|grep -v ' INFO '|wc -l)
-    h=$(echo $H|sudo -S grep -i 'to an incorrect'     /var/log/syslog 2>/dev/null|wc -l)
-    z=$(echo $H|sudo -S grep -i 'attestation missing' /var/log/syslog 2>/dev/null|wc -l)
-    p=$(echo $H|sudo -S grep -i 'published block'     /var/log/syslog 2>/dev/null|wc -l)
-    if [ "$2" ]; then
-      resolvectl query pro-api.coinmarketcap.com 2>/dev/null 1>&2
-      #resolvectl query beaconcha.in              2>/dev/null 1>&2
-      e=$(curl -sX GET "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=ETH&convert=EUR&CMC_PRO_API_KEY=3ae5f3df-bd71-489d-a9dd-b626995fba31"|sed 's%.*price.:\([0-9]*\.[0-9]*\).*%\1%')
-      #n=$(curl -sX GET "https://beaconcha.in/api/v1/validator/11766,11767,11770,11771,11772,11773,11774,11775,11776,11777,11778,11779,11780,11782,11783,11784,11786,11788/performance" -H "accept: application/json")
-      #b=$(echo "$n"|python3 -c "$(echo -e "import sys, json\nt=0\nfor x in json.load(sys.stdin)['data']: t=t+x['performance1d']\nprint(t)")")
-      #b=$(echo "scale=0;$b*$e/1000000000"|bc)
-    else
-      e=3000
-    fi
-    b=$(echo "scale=0;($p*$rblk+$a*$ratt)*$e/1000000000"|bc)
-    d=$(echo "scale=2;($h*$pinc+$z*$patt)*$e/1000000000"|bc)
+  v=0
+  [ "$n" -gt 0 ] && v=$(($t/$n))
+  a=$(echo $H|sudo -S grep -i 'attestation success' /var/log/syslog 2>/dev/null|wc -l)
+  t=$(echo $H|sudo -S grep -i 'lighthouse'          /var/log/syslog 2>/dev/null|grep    ' INFO '|wc -l)
+  r=$(echo $H|sudo -S grep -i 'lighthouse'          /var/log/syslog 2>/dev/null|grep -v ' INFO '|wc -l)
+  h=$(echo $H|sudo -S grep -i 'to an incorrect'     /var/log/syslog 2>/dev/null|wc -l)
+  z=$(echo $H|sudo -S grep -i 'attestation missing' /var/log/syslog 2>/dev/null|wc -l)
+  p=$(echo $H|sudo -S grep -i 'published block'     /var/log/syslog 2>/dev/null|wc -l)
+  if [ "$2" ]; then
+    resolvectl query pro-api.coinmarketcap.com 2>/dev/null 1>&2
+    #resolvectl query beaconcha.in              2>/dev/null 1>&2
+    e=$(curl -sX GET "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=ETH&convert=EUR&CMC_PRO_API_KEY=3ae5f3df-bd71-489d-a9dd-b626995fba31"|sed 's%.*price.:\([0-9]*\.[0-9]*\).*%\1%')
+    #n=$(curl -sX GET "https://beaconcha.in/api/v1/validator/11766,11767,11770,11771,11772,11773,11774,11775,11776,11777,11778,11779,11780,11782,11783,11784,11786,11788/performance" -H "accept: application/json")
+    #b=$(echo "$n"|python3 -c "$(echo -e "import sys, json\nt=0\nfor x in json.load(sys.stdin)['data']: t=t+x['performance1d']\nprint(t)")")
+    #b=$(echo "scale=0;$b*$e/1000000000"|bc)
+  else
+    e=3000
   fi
+  b=$(echo "scale=0;($p*$rblk+$a*$ratt)*$e/1000000000"|bc)
+  d=$(echo "scale=2;($h*$pinc+$z*$patt)*$e/1000000000"|bc)
+  g3
   m="$cunm $(date --rfc-3339=seconds)"
   if [ "${1:-k}" = "k" ]; then
     m="$m\n\nREWARDS PENALTIES\t$b€\t$d€"
@@ -207,8 +235,8 @@ function bk {
     m="$m avg_lags: $x,"
     m="$m avg_delays: $v"
   fi
-  n=$(($x*$r/$t))
-  n=$(($x*($h+$z+$r)/($a+$p+$t)))
+  n=0
+  [ "$(($a+$p+$t))" -gt 0 ] && n=$(($x*($h+$z+$r)/($a+$p+$t)))
   if [ "${n:-0}" -ge $lirs ] && [ -f home/eth/beacon.log ] && [ "$(tail -n $hors /home/eth/beacon.log|cut -d' ' -f1|sort -u)" = "BEAC" ]; then
     m="BLOCKED $n $m"
     resolvectl query smtp.gmail.com 2>/dev/null 1>&2
@@ -255,9 +283,15 @@ function bs {
 #[ "$1" = "crf" ] && { cr;cf; }
 [ "$1" = "sr"  ] && { sr;sf; }
 [ "$1" = "gk"  ] && { gk     ;echo -e "GETH $m \n\nNODES\t\t${g2:-0}\nSEGMENTS\t$n"; }
+[ "$1" = "ok"  ] && { ok     ;echo -e "OETH $m \n\nNODES\t\t${o2:-0}\nSEGMENTS\t$n"; }
 [ "$1" = "gl"  ] && { gk     ;echo -e "GETH $m nodes: ${g2:-0}, segments: $n"; }
+[ "$1" = "ol"  ] && { ok     ;echo -e "OETH $m nodes: ${o2:-0}, segments: $n"; }
+[ "$1" = "gh"  ] && { tail -n ${2:-$hors} /home/eth/geth.log;gk;echo -e "GETH $m nodes: ${g2:-0}, segments: $n"; }
+[ "$1" = "oh"  ] && { tail -n ${2:-$hors} /home/eth/oeth.log;ok;echo -e "OETH $m nodes: ${o2:-0}, segments: $n"; }
 [ "$1" = "gkr" ] && { gk     ;[ "$(echo $m|sed 's%\([A-Z]*\) .*%\1%')" != "OK" ] && grs ${2:-0}; }
+[ "$1" = "okr" ] && { ok     ;[ "$(echo $m|sed 's%\([A-Z]*\) .*%\1%')" != "OK" ] && ors ${2:-0}; }
 [ "$1" = "grs" ] && { grs ${2:-0}; }
+[ "$1" = "ors" ] && { ors ${2:-0}; }
 [ "$1" = "bk"  ] && { bk k $2;echo -e "BEAC $m"; }
 [ "$1" = "bl"  ] && { bk l $2;echo -e "BEAC $m"; }
 [ "$1" = "bh"  ] && { tail -n ${2:-$hors} /home/eth/beacon.log;bk l;echo -e "BEAC $m"; }
@@ -270,8 +304,8 @@ function bs {
 # lista portas
 [ "$1" = "lp" ] && { netstat -tulpn; }
 # outros journal system/lighthouse
-[ "$1" = "el" ] && { echo $H|sudo -S grep -i 'openethereum\|geth\|lighthouse'      /var/log/syslog 2>/dev/null|if [ "$2" ];then grep -i "[a-z]* [0-9]* $2";else grep -v ' INFO ';fi; }
-[ "$1" = "sl" ] && { echo $H|sudo -S grep -v 'openethereum\|geth\|lighthouse\|UFW' /var/log/syslog 2>/dev/null|if [ "$2" ];then grep -i "[a-z]* [0-9]* $2";else grep -i 'error' ;fi; }
+[ "$1" = "el" ] && { echo $H|sudo -S grep -i 'openethereum\|geth\[\|lighthouse'      /var/log/syslog 2>/dev/null|if [ "$2" ];then grep -i "[a-z]* [0-9]* $2";else grep -v ' INFO ';fi; }
+[ "$1" = "sl" ] && { echo $H|sudo -S grep -v 'openethereum\|geth\[\|lighthouse\|UFW' /var/log/syslog 2>/dev/null|if [ "$2" ];then grep -i "[a-z]* [0-9]* $2";else grep -i 'error' ;fi; }
 #[ "$1" = "bl" ] && { echo $H|sudo -S grep -i 'Successfully published block' /var/log/syslog 2>/dev/null; }
 #[ "$1" = "nr" ] && { ut "grep -i record /var/log/syslog" "${2:-30}"; }
 [ "$1" = "np" ] && { g2;g3;echo -e "PEERS: GETH ${g2:-0}, BEACON ${g3:-0}"; }
