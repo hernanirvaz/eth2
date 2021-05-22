@@ -77,7 +77,22 @@ function fd { [ "$(systemctl status $ethf 2>/dev/null|grep -i loaded)" ] && { uu
 function g0 { g0=0;[ -d /var/lib/goethereum   ] && g0=$(echo $H|sudo -S du -s /var/lib/goethereum 2>/dev/null|cut -f1); }
 function g1 { g1=0;[ -d /var/lib/goethereum   ] && { if [ "$cunm" = "$znm1" ];then g="http://$zip1:8545";else g="http://$vip1:8545";fi;g1=$(geth attach $g --exec eth.syncing); }; }
 function g2 { g2=0;[ -d /var/lib/goethereum   ] && { if [ "$cunm" = "$znm1" ];then g="http://$zip1:8545";else g="http://$vip1:8545";fi;g2=$(geth attach $g --exec net.peerCount); }; }
-function o2 { o2=0;[ -d /var/lib/openethereum ] && o2=$(echo $H|sudo -S grep -i 'openethereum.* peers' /var/log/syslog 2>/dev/null|tail -n 1|sed 's%.* \([0-9]*\)/[0-9]* peers.*%\1%'); }
+function g1 { g1=0;[ -d /var/lib/goethereum   ] && { if [ "$cunm" = "$znm1" ];then g="http://$zip1:8545";else g="http://$vip1:8545";fi;g1=$(geth attach $g --exec eth.syncing); }; }
+function o1 {
+  o1='{"currentBlock":"0xbe7edd","highestBlock":"0xbe82b9","startingBlock":"0xbe7c7a","warpChunksAmount":null,"warpChunksProcessed":null}'
+  if [ -d /var/lib/openethereum ]; then
+    if [ "$cunm" = "$znm1" ];then o5="POST $zip1:8545";else o5="POST $vip1:8545";fi
+    o1=$(curl -s --data '{"method":"eth_syncing","params":[],"id":1,"jsonrpc":"2.0"}' -H 'Content-Type: application/json' -X $o5|sed 's%.*result":\(.*\),.*%\1%')
+  fi
+}
+function o2 {
+  o2=0
+  if [ -d /var/lib/openethereum ]; then
+    if [ "$cunm" = "$znm1" ];then o5="POST $zip1:8545";else o5="POST $vip1:8545";fi
+    o6=$(curl -s --data '{"method":"net_peerCount","params":[],"id":1,"jsonrpc":"2.0"}' -H 'Content-Type: application/json' -X $o5|sed 's%.*result":"0x\([a-z0-9]*\)".*%\1%')
+    o2=$(echo "obase=10; ibase=16; ${o6^^}"|bc)
+  fi
+}
 function g3 { g3=$(echo $H|sudo -S grep -i peers: /var/log/syslog 2>/dev/null|tail -n 1|sed 's%.*peers: *\([0-9]*\).*%\1%'); }
 function gs {
   if [ -d /var/lib/goethereum ] && ([ "$cunm" = "$vnm1" ] || [ "$cunm" = "$znm1" ]); then
@@ -150,9 +165,9 @@ function gk {
 function ok {
   t=-1;n=0;v=0;m=""
   if [ "$(systemctl status $etho 2>/dev/null|grep -i running)" ]; then
-    o2
+    o1;o2
+    if [ "$(echo $o1|grep -i false)" ];then m="SYNCED";else m="SYNCING";fi
     n=$(echo $H|sudo -S grep -i 'Imported  *#' /var/log/syslog 2>/dev/null|wc -l)
-    if [ "$n" -gt 0 ];then m="SYNCED";else m="SYNCING";fi
     m="$m $cunm $(date --rfc-3339=seconds)"
     [ -f /home/eth/oeth.log ] && t=$(tail -n 1 /home/eth/oeth.log|sed 's%.*segments: \([0-9]*\).*%\1%')
   fi
@@ -237,7 +252,7 @@ function bk {
   fi
   n=0
   [ "$(($a+$p+$t))" -gt 0 ] && n=$(($x*($h+$z+$r)/($a+$p+$t)))
-  if [ "${n:-0}" -ge $lirs ] && [ -f home/eth/beacon.log ] && [ "$(tail -n $hors /home/eth/beacon.log|cut -d' ' -f1|sort -u)" = "BEAC" ]; then
+  if [ "${n:-0}" -ge $lirs ] && [ -f /home/eth/beacon.log ] && [ "$(tail -n $hors /home/eth/beacon.log|cut -d' ' -f1|sort -u)" = "BEAC" ]; then
     m="BLOCKED $n $m"
     resolvectl query smtp.gmail.com 2>/dev/null 1>&2
   else

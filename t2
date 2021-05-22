@@ -147,7 +147,7 @@ else
 		User=$user
 		Group=$user
 		Restart=on-failure
-		ExecStart=/usr/local/bin/openethereum --base-path=/var/lib/openethereum --max-peers=$maxp --no-ws --no-ipc --jsonrpc-interface=$zip1 --cache-size=$cash
+		ExecStart=/usr/local/bin/openethereum --base-path=/var/lib/openethereum --max-peers=$maxp --no-ws --no-ipc --jsonrpc-interface=$zip1 --cache-size=$cash --allow-ips=public --no-discovery
 		ExecStopPost=/home/eth/eth2/t8mail GETHSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 		KillSignal=SIGTERM
 		TimeoutStopSec=300
