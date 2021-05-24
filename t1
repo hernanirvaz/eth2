@@ -56,9 +56,9 @@ vldt="$dtdi/validators"
 
 # eth2 rewards & penalties & limite/horas/position reset
 ratt=0029333
-rblk=4208034
+rblk=4233925
 patt=$ratt
 pinc=0016444
-lirs=4
-hors=4
+lirs=1
+hors=5
 pors=7
