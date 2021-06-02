@@ -54,11 +54,11 @@ dtdi="/var/lib/lighthouse"
 becn="$dtdi/beacon"
 vldt="$dtdi/validators"
 
-# eth2 rewards & penalties & limite/horas/position reset
+# eth2 rewards & penalties & limites/horas/position reset
 ratt=0029333
 rblk=4233925
 patt=$ratt
 pinc=0016444
 lirs=1
-hors=5
+hors=9
 pors=7

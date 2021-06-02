@@ -82,7 +82,7 @@ function g7 {
   t=-1;n=0;g7='OK'
   if [ "$(systemctl status $ethg 2>/dev/null|grep -i running)" ] && [ -f /home/eth/geth.log ]; then
     n=$(echo $H|sudo -S grep -i 'new chain segment' /var/log/syslog 2>/dev/null|wc -l)
-    t=$(tail -n 1 /home/eth/geth.log|sed 's%.*segments: \([0-9]*\).*%\1%')
+    t=$(tail -n 1 /home/eth/geth.log|sed 's%.*blocks: \([0-9]*\).*%\1%')
   fi
   [ "$n" -eq "$t" ] && g7='BLOCKED'
 }
@@ -90,14 +90,14 @@ function o1 {
   o1='{"currentBlock":"0xbe7edd","highestBlock":"0xbe82b9","startingBlock":"0xbe7c7a","warpChunksAmount":null,"warpChunksProcessed":null}'
   if [ -d /var/lib/openethereum ]; then
     if [ "$cunm" = "$znm1" ];then o5="POST $zip1:8545";else o5="POST $vip1:8545";fi
-    o1=$(curl -s --data '{"method":"eth_syncing","params":[],"id":1,"jsonrpc":"2.0"}' -H 'Content-Type: application/json' -X $o5|sed 's%.*result":\(.*\),.*%\1%')
+    o1=$(curl --data '{"method":"eth_syncing","params":[],"id":1,"jsonrpc":"2.0"}' -H 'Content-Type: application/json' -sX $o5|sed 's%.*result":\(.*\),.*%\1%')
   fi
 }
 function o2 {
   o2=0
   if [ -d /var/lib/openethereum ]; then
     if [ "$cunm" = "$znm1" ];then o5="POST $zip1:8545";else o5="POST $vip1:8545";fi
-    o6=$(curl -s --data '{"method":"net_peerCount","params":[],"id":1,"jsonrpc":"2.0"}' -H 'Content-Type: application/json' -X $o5|sed 's%.*result":"0x\([a-z0-9]*\)".*%\1%')
+    o6=$(curl --data '{"method":"net_peerCount","params":[],"id":1,"jsonrpc":"2.0"}' -H 'Content-Type: application/json' -sX $o5|sed 's%.*result":"0x\([a-z0-9]*\)".*%\1%')
     o2=$(echo "obase=10; ibase=16; ${o6^^}"|bc)
   fi
 }
@@ -105,9 +105,24 @@ function o7 {
   t=-1;n=0;o7='OK'
   if [ "$(systemctl status $etho 2>/dev/null|grep -i running)" ] && [ -f /home/eth/oeth.log ]; then
     n=$(echo $H|sudo -S grep -i 'Imported  *#' /var/log/syslog 2>/dev/null|wc -l)
-    t=$(tail -n 1 /home/eth/oeth.log|sed 's%.*segments: \([0-9]*\).*%\1%')
+    t=$(tail -n 1 /home/eth/oeth.log|sed 's%.*blocks: \([0-9]*\).*%\1%')
   fi
   [ "$n" -eq "$t" ] && o7='BLOCKED'
+}
+function b7 {
+  n=0;b7='OK'
+  z=$(echo $H|sudo -S grep -i 'attestation missing' /var/log/syslog 2>/dev/null|wc -l)
+  h=$(echo $H|sudo -S grep -i 'to an incorrect'     /var/log/syslog 2>/dev/null|wc -l)
+  a=$(echo $H|sudo -S grep -i 'attestation success' /var/log/syslog 2>/dev/null|wc -l)
+  p=$(echo $H|sudo -S grep -i 'published block'     /var/log/syslog 2>/dev/null|wc -l)
+  r=$(echo $H|sudo -S grep -i 'lighthouse'          /var/log/syslog 2>/dev/null|grep -v ' INFO '|wc -l)
+  t=$(echo $H|sudo -S grep -i 'lighthouse'          /var/log/syslog 2>/dev/null|grep    ' INFO '|wc -l)
+  w=$(echo $H|sudo -S tail -n 2000                  /var/log/syslog 2>/dev/null|grep -i 'processed block'|wc -l)
+  q=$(echo $H|sudo -S tail -n 2000                  /var/log/syslog 2>/dev/null|grep -i 'block received' |wc -l)
+  [ "$a" -gt 0     ] && n=$(($n+8*(10*$z+$h)/$a))
+  [ "$q" -gt 0     ] && n=$(($n+4*$w/$q))
+  [ "$t" -gt 0     ] && n=$(($n+10*$r/$t))
+  [ "$n" -ge $lirs ] && [ -f /home/eth/beacon.log ] && [ "$(tail -n $hors /home/eth/beacon.log|cut -d' ' -f1|sort -u)" = "BEAC" ] && b7='BLOCKED'
 }
 function gs {
   if [ -d /var/lib/goethereum ] && ([ "$cunm" = "$vnm1" ] || [ "$cunm" = "$znm1" ]); then
@@ -143,17 +158,6 @@ function cr {
   fi
 }
 function ds { echo -e "${i}RESET DNS & SYSTEMD-RESOLVED${f}";sp;sudo systemctl stop  systemd-resolved;sa;sudo systemctl start systemd-resolved; }
-#function cf {
-#  if [ "$cunm" = "$znm1" ] || [ "$cunm" = "$znm2" ]; then
-#    if [ "$(grep 'forwarders {' /etc/bind/named.conf.options |cut -d' ' -f3)" = "192.168.8.1;" ];then m=3; else m=1;fi
-#    echo -e "${i}CHANGE FORWARDER 192.168.8.${m}${f}"
-#    sed -e "s%forwarders .*%forwarders { 192.168.8.$m; };%" /etc/bind/named.conf.options > ~/named.save
-#    echo $H|sudo -S mv ~/named.save /etc/bind/named.conf.options 2>/dev/null
-#    sudo chown root:root /etc/bind/named.conf.options 
-#    sudo chmod 644 /etc/bind/named.conf.options
-#    ds
-#  fi
-#}
 function sr { echo -e "ROUTE\t\t$(ip route show|grep 'default via'|cut -d' ' -f3)"; }
 function sf {
   m="$(netstat -i|grep -v '^lo\|Iface\|Kernel'|cut -d' ' -f1)"
@@ -181,7 +185,7 @@ function grs {
     [ $g4 -ge 5 ] && [ $g4 -le 10 ] && sed "s%--maxpeers [0-9]*%--target-peers $g4%" ~/$ethg.save > /etc/systemd/system/$ethg.service
   fi
   gp;dr;sleep 50s;ga
-  echo -e "RSGE OK RESTAR $cunm $(date --rfc-3339=seconds) nodes: 0, segments: 0" >> /home/eth/geth.log
+  echo -e "RSGE OK RESTAR $cunm $(date --rfc-3339=seconds) nodes: 0, blocks: 0" >> /home/eth/geth.log
 }
 function ors {
   if [ $1 -ne 0 ]; then
@@ -191,7 +195,7 @@ function ors {
     [ $o4 -ge 10 ] && [ $o4 -le 15 ] && sed "s%--max-peers=[0-9]*%--max-peers=$o4%" ~/$etho.save > /etc/systemd/system/$etho.service
   fi
   op;dr;sleep 50s;oa
-  echo -e "RSOE OK RESTAR $cunm $(date --rfc-3339=seconds) nodes: 0, segments: 0" >> /home/eth/oeth.log
+  echo -e "RSOE OK RESTAR $cunm $(date --rfc-3339=seconds) nodes: 0, blocks: 0" >> /home/eth/oeth.log
 }
 function bk {
   t=0;y=0;v=0;x=0;m=""
@@ -206,58 +210,43 @@ function bk {
   done
   v=0
   [ "$n" -gt 0 ] && v=$(($t/$n))
-  a=$(echo $H|sudo -S grep -i 'attestation success' /var/log/syslog 2>/dev/null|wc -l)
-  t=$(echo $H|sudo -S grep -i 'lighthouse'          /var/log/syslog 2>/dev/null|grep    ' INFO '|wc -l)
-  r=$(echo $H|sudo -S grep -i 'lighthouse'          /var/log/syslog 2>/dev/null|grep -v ' INFO '|wc -l)
-  h=$(echo $H|sudo -S grep -i 'to an incorrect'     /var/log/syslog 2>/dev/null|wc -l)
-  z=$(echo $H|sudo -S grep -i 'attestation missing' /var/log/syslog 2>/dev/null|wc -l)
-  p=$(echo $H|sudo -S grep -i 'published block'     /var/log/syslog 2>/dev/null|wc -l)
   if [ "$2" ]; then
     resolvectl query pro-api.coinmarketcap.com 2>/dev/null 1>&2
-    #resolvectl query beaconcha.in              2>/dev/null 1>&2
-    e=$(curl -sX GET "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=ETH&convert=EUR&CMC_PRO_API_KEY=3ae5f3df-bd71-489d-a9dd-b626995fba31"|sed 's%.*price.:\([0-9]*\.[0-9]*\).*%\1%')
-    #n=$(curl -sX GET "https://beaconcha.in/api/v1/validator/11766,11767,11770,11771,11772,11773,11774,11775,11776,11777,11778,11779,11780,11782,11783,11784,11786,11788/performance" -H "accept: application/json")
-    #b=$(echo "$n"|python3 -c "$(echo -e "import sys, json\nt=0\nfor x in json.load(sys.stdin)['data']: t=t+x['performance1d']\nprint(t)")")
-    #b=$(echo "scale=0;$b*$e/1000000000"|bc)
+    m='https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=ETH&convert=EUR&CMC_PRO_API_KEY=3ae5f3df-bd71-489d-a9dd-b626995fba31'
+    e=$(curl -sX GET $m|sed 's%.*price.:\([0-9]*\.[0-9]*\).*%\1%')
   else
     e=3000
   fi
+  b2;b7
   b=$(echo "scale=0;($p*$rblk+$a*$ratt)*$e/1000000000"|bc)
   d=$(echo "scale=2;($h*$pinc+$z*$patt)*$e/1000000000"|bc)
-  b2
-  m="$cunm $(date --rfc-3339=seconds)"
+  m="$b7 $n $cunm $(date --rfc-3339=seconds)"
   if [ "${1:-k}" = "k" ]; then
     m="$m\n\nREWARDS PENALTIES\t$b€\t$d€"
     m="$m\nATTESTATIONS BLOCKS\t$a $p"
     m="$m\nINCORRECT MISSED\t$h $z"
     m="$m\nERRORS\t\t\t$r\t$t"
+    m="$m\nBLOCKS\t\t\t$w\t$q"
     m="$m\nNODES\t\t\t${b2:-0}"
     m="$m\nAVG LAGS\t\t$x"
     m="$m\nAVG DELAYS\t\t$v"
   else
     m="$m rewards_penalties: $b€ $d€,"
     m="$m attestations_blocks: $a $p,"
-    m="$m incorrect_missed: $h $z,"
-    m="$m erros: $r $t,"
+    m="$m erros: $z $h $w $q $r $t,"
     m="$m nodes: ${b2:-0},"
     m="$m avg_lags: $x,"
     m="$m avg_delays: $v"
   fi
-  n=0
-  [ "$(($a+$p+$t))" -gt 0 ] && n=$(($x*($h+$z+$r)/($a+$p+$t)))
-  if [ "${n:-0}" -ge $lirs ] && [ -f /home/eth/beacon.log ] && [ "$(tail -n $hors /home/eth/beacon.log|cut -d' ' -f1|sort -u)" = "BEAC" ]; then
-    m="BLOCKED $n $m"
-    resolvectl query smtp.gmail.com 2>/dev/null 1>&2
-  else
-    m="OK $n $m"
-  fi
+  [ "$o7" = 'BLOCKED' ] && resolvectl query smtp.gmail.com 2>/dev/null 1>&2
 }
 function brs {
   b0=$(systemctl status $ethb 2>/dev/null|grep PID|sed 's%.*PID: *\([0-9]*\).*%\1%')
   b1=0
   while [ $b1 -lt 200 ]; do
-    b4="$(echo $H|sudo -S grep "lighthouse.$b0" /var/log/syslog 2>/dev/null|grep ' INFO '|tail -n $pors|cut -d' ' -f10|sort -u)"
-    if [ "$(echo "$b4"|head -n 1)" = "New" ] && [ "$(echo "$b4"|tail -n 1)" = "Synced" ]; then
+    b4=$(echo $H|sudo -S grep "lighthouse.$b0" /var/log/syslog 2>/dev/null|grep ' INFO '|tail -n $pors|sed 's%  *% %g'|cut -d' ' -f10|sort -u)
+    b5=$(echo "$b4"|head -n 1)
+    if ([ "$b5" = "New" ] || [ "$b5" = "Processed" ]) && [ "$(echo "$b4"|tail -n 1)" = "Synced" ]; then
       if [ $1 -ne 0 ]; then
         cp /etc/systemd/system/$ethb.service ~/$ethb.save
         b3=$(grep target-peers ~/$ethb.save|sed 's%.*target-peers \([0-9]*\).*%\1%')
@@ -287,38 +276,34 @@ function bs {
 [ "$1" = "ds"  ] && { ds; }
 [ "$1" = "rq"  ] && { rq $2; }
 [ "$1" = "cr"  ] && { cr; }
-#[ "$1" = "cf"  ] && { cf; }
-#[ "$1" = "crf" ] && { cr;cf; }
 [ "$1" = "sr"  ] && { sr;sf; }
 [ "$1" = "gs"  ] && { gs     ;echo -e $m; }
 [ "$1" = "gk"  ] && { gk     ;echo -e "GETH $m \n\nNODES\t\t${g2:-0}\nSEGMENTS\t$n"; }
 [ "$1" = "ok"  ] && { ok     ;echo -e "OETH $m \n\nNODES\t\t${o2:-0}\nSEGMENTS\t$n"; }
-[ "$1" = "gl"  ] && { gk     ;echo -e "GETH $m nodes: ${g2:-0}, segments: $n"; }
-[ "$1" = "ol"  ] && { ok     ;echo -e "OETH $m nodes: ${o2:-0}, segments: $n"; }
-[ "$1" = "gh"  ] && { tail -n ${2:-$hors} /home/eth/geth.log;gk;echo -e "GETH $m nodes: ${g2:-0}, segments: $n"; }
-[ "$1" = "oh"  ] && { tail -n ${2:-$hors} /home/eth/oeth.log;ok;echo -e "OETH $m nodes: ${o2:-0}, segments: $n"; }
-[ "$1" = "gkr" ] && { g7     ;[ "$g7" != "OK" ] && grs ${2:-0}; }
-[ "$1" = "okr" ] && { o7     ;[ "$o7" != "OK" ] && ors ${2:-0}; }
-[ "$1" = "g7"  ] && { g7     ;echo -e "$g7"; }
-[ "$1" = "o7"  ] && { o7     ;echo -e "$o7"; }
+[ "$1" = "bk"  ] && { bk k $2;echo -e "BEAC $m"; }
+[ "$1" = "gl"  ] && { gk     ;echo -e "GETH $m nodes: ${g2:-0}, blocks: $n"; }
+[ "$1" = "ol"  ] && { ok     ;echo -e "OETH $m nodes: ${o2:-0}, blocks: $n"; }
+[ "$1" = "bl"  ] && { bk l $2;echo -e "BEAC $m"; }
+[ "$1" = "gh"  ] && { tail -n ${2:-$hors} /home/eth/geth.log;gk;echo -e "GETH $m nodes: ${g2:-0}, blocks: $n"; }
+[ "$1" = "oh"  ] && { tail -n ${2:-$hors} /home/eth/oeth.log;ok;echo -e "OETH $m nodes: ${o2:-0}, blocks: $n"; }
+[ "$1" = "bh"  ] && { tail -n ${2:-$hors} /home/eth/beacon.log;bk l;echo -e "BEAC $m"; }
+[ "$1" = "gkr" ] && { g7;[ "$g7" != "OK" ] && grs ${2:-0}; }
+[ "$1" = "okr" ] && { o7;[ "$o7" != "OK" ] && ors ${2:-0}; }
+[ "$1" = "bkr" ] && { b7;[ "$b7" != "OK" ] && brs ${2:-0}; }
+[ "$1" = "g7"  ] && { g7;echo -e "$g7"; }
+[ "$1" = "o7"  ] && { o7;echo -e "$o7"; }
+[ "$1" = "b7"  ] && { b7;echo -e "$b7"; }
 [ "$1" = "grs" ] && { grs ${2:-0}; }
 [ "$1" = "ors" ] && { ors ${2:-0}; }
-[ "$1" = "bk"  ] && { bk k $2;echo -e "BEAC $m"; }
-[ "$1" = "bl"  ] && { bk l $2;echo -e "BEAC $m"; }
-[ "$1" = "bh"  ] && { tail -n ${2:-$hors} /home/eth/beacon.log;bk l;echo -e "BEAC $m"; }
-[ "$1" = "bkr" ] && { bk l   ;[ "$(echo $m|sed 's%\([A-Z]*\) .*%\1%')" != "OK" ] && brs ${2:-0}; }
 [ "$1" = "brs" ] && { brs ${2:-0}; }
 [ "$1" = "bs"  ] && { bs  ${2:-1}; }
 
-# lista servicos
+# lista servicos & portas
 [ "$1" = "ll" ] && { uu "systemctl list-units $pate $patp $patf"; }
-# lista portas
 [ "$1" = "lp" ] && { netstat -tulpn; }
 # outros journal system/lighthouse
 [ "$1" = "el" ] && { echo $H|sudo -S grep -i 'openethereum\|geth\[\|lighthouse'      /var/log/syslog 2>/dev/null|if [ "$2" ];then grep -i "[a-z]* [0-9]* $2";else grep -v ' INFO ';fi; }
 [ "$1" = "sl" ] && { echo $H|sudo -S grep -v 'openethereum\|geth\[\|lighthouse\|UFW' /var/log/syslog 2>/dev/null|if [ "$2" ];then grep -i "[a-z]* [0-9]* $2";else grep -i 'error' ;fi; }
-#[ "$1" = "bl" ] && { echo $H|sudo -S grep -i 'Successfully published block' /var/log/syslog 2>/dev/null; }
-#[ "$1" = "nr" ] && { ut "grep -i record /var/log/syslog" "${2:-30}"; }
 [ "$1" = "np" ] && { g2;b2;echo -e "PEERS: GETH ${g2:-0}, BEACON ${b2:-0}"; }
 [ "$1" = "ws" ] && { uu "ufw status numbered"; }
 [ "$1" = "wa" ] && if [ "$(echo $H|sudo -S ufw status 2>/dev/null|grep -i inactive)" ];then echo -e "${i}ARRANCA FIREWALL${f}";sudo ufw enable; else echo -e "${i}FIREWALL JA ACTIVE${f}";fi
@@ -444,15 +429,12 @@ if [ -z "$1" ]; then
   c1="$c1\nll\t\tlista servicos"
   c1="$c1\nlp\t\tlista portas"
   c1="$c1\nnp\t\tnode peers"
-#  c1="$c1\nnr\t\tnode record"
   c1="$c1\ngs\t\tgeth syncing"
   c1="$c1\ngkr\t\tgeth check/reset (if necessary)"
   c1="$c1\nws\t\tfirewall status"
   c1="$c1\nwa\t\tfirewall arranca"
   c1="$c1\nwpr\t\tfirewall para"
   c1="$c1\ncr\t\tchange route"
-#  c1="$c1\ncf\t\tchange forwarders"
-#  c1="$c1\ncrf\t\tchange route & forwarders"
   c1="$c1\nsr\t\tshow route & DNS"
   c1="$c1\nrs\t\treset netplan\t& systemd-resolved"
   c1="$c1\nds\t\treset dns\t& systemd-resolved"
