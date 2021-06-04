@@ -182,7 +182,7 @@ function grs {
     cp /etc/systemd/system/$ethg.service ~/$ethg.save
     g4=$(grep maxpeers ~/$ethg.save|sed 's%.*maxpeers \([0-9]*\).*%\1%')
     g4=$(($g4+$1))
-    [ $g4 -ge 5 ] && [ $g4 -le 10 ] && sed "s%--maxpeers [0-9]*%--target-peers $g4%" ~/$ethg.save > /etc/systemd/system/$ethg.service
+    [ $g4 -ge 5 ] && [ $g4 -le 15 ] && sed "s%--maxpeers [0-9]*%--target-peers $g4%" ~/$ethg.save > /etc/systemd/system/$ethg.service
   fi
   gp;dr;sleep 50s;ga
   echo -e "RSGE OK RESTAR $cunm $(date --rfc-3339=seconds) nodes: 0, blocks: 0" >> /home/eth/geth.log
@@ -245,8 +245,8 @@ function brs {
   b1=0
   while [ $b1 -lt 200 ]; do
     b4=$(echo $H|sudo -S grep "lighthouse.$b0" /var/log/syslog 2>/dev/null|grep ' INFO '|tail -n $pors|sed 's%  *% %g'|cut -d' ' -f10|sort -u)
-    b5=$(echo "$b4"|head -n 1)
-    if ([ "$b5" = "New" ] || [ "$b5" = "Processed" ]) && [ "$(echo "$b4"|tail -n 1)" = "Synced" ]; then
+    b5=$(echo "$b4"|head -n1)
+    if [ "$(echo "$b4"|wc -l)" -eq 2 ] && [ "$(echo "$b4"|tail -n1)" = "Synced" ] && ([ "$b5" = "New" ] || [ "$b5" = "Processed" ]); then
       if [ $1 -ne 0 ]; then
         cp /etc/systemd/system/$ethb.service ~/$ethb.save
         b3=$(grep target-peers ~/$ethb.save|sed 's%.*target-peers \([0-9]*\).*%\1%')
