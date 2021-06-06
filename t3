@@ -64,8 +64,10 @@ if [ -x /usr/local/bin/lighthouse ]; then
     #t6 be
     #t6 ba
     #t6 bj
+  else
+    echo -e "${i}BEACON JA CONFIGURADO${f}"
   fi
-  if [ "$cunm" = "$znm3" ] || [ "$cunm" = "n$vnm3" ]; then
+  if [ "$cunm" = "$znm2" ] || [ "$cunm" = "$vnm3" ]; then
     user="eth3"
     if [ "$cunm" = "$znm3" ]; then
       vlcl="--beacon-nodes http://127.0.0.1:5052,http://$zip2:5052"
@@ -93,20 +95,19 @@ if [ -x /usr/local/bin/lighthouse ]; then
       echo -e "sudo chmod 666 $vldt/slashing_protection.sqlite*"
       echo -e "t6 vpr;t6 vds"
       echo -e "touch $dtdi/vc_lock"
-      echo -e "touch $dtdi/vc_slash"
     fi
     if [ ! -f $dtdi/vc_slash ] && [ -f $dtdi/vc_lock ] && [ -f $dtdi/vc_keys ]; then
       echo -e "${i}COPIAR $vldt/slashing_protection.sqlite*${f}"
       echo $H|sudo -S mkdir -p $vldt 2>/dev/null
       sudo chown -R $meeu:$meeu $vldt
-      scp $vip3:$vldt/slashing_protection.sqlite* $vldt
+      [ -f ~/slashing_protection.sqlite          ] && { cp ~/slashing_protection.sqlite         $vldt;chmod 600 $vldt/slashing_protection.sqlite;         }
+      [ -f ~/slashing_protection.sqlite-journal  ] && { cp ~/slashing_protection.sqlite-journal $vldt;chmod 600 $vldt/slashing_protection.sqlite-journal; }
       if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
       sudo chown -R $user:$user $vldt
-      sudo chmod 600 $vldt/slashing_protection.sqlite*
       sudo chmod 700 $vldt
+      touch $dtdi/vc_slash
     fi
-    if [ ! -f /etc/systemd/system/$ethv.service ] && [ ! -f $dtdi/vc_lock ] && [ -f $dtdi/vc_keys ]; then
-      t6 vpr
+    if [ ! -f /etc/systemd/system/$ethv.service ] && [ ! -f $dtdi/vc_lock ] && [ -f $dtdi/vc_keys ] && [ -f $dtdi/vc_slash ]; then
       echo -e "${i}CONFIGURE VALIDATOR${f}"
       echo $H|sudo -S mkdir -p $vldt 2>/dev/null
       if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
@@ -131,12 +132,12 @@ if [ -x /usr/local/bin/lighthouse ]; then
 			EOF
       sudo mv $ethv.service /etc/systemd/system/$ethv.service
       sudo chmod 644 /etc/systemd/system/$ethv.service
-      #t6 ve
-      #t6 va
-      #t6 vj
+      echo -e "${i}VALIDATOR CONFIGURADO VERIFICAR TUDO (LOCK & SLASH DB)${f}"
     else
       echo -e "${i}VALIDATOR JA CONFIGURADO OR LOCKED ($dtdi/vc_lock)${f}"
     fi
+  else
+    echo -e "${i}VALIDATOR NAO DEVE SER INSTALADO AQUI${f}"
   fi
 else
   if [ "$cunm" = "$znm1" ] || [ "$cunm" = "$vnm1" ]; then

@@ -70,7 +70,7 @@ function fp { [ "$(systemctl status $ethf 2>/dev/null|grep -i loaded)" ] && { uu
 function gd { uu "systemctl disable $ethg";gcl;uu 'ufw reload'; }
 function od { uu "systemctl disable $etho";ocl;uu 'ufw reload'; }
 function bd { uu "systemctl disable $ethb";bcl;uu 'ufw reload'; }
-function vd { uu "systemctl disable $ethv";vcl;uu 'ufw reload';touch $dtdi/vc_lock; }
+function vd { uu "systemctl disable $ethv";vcl;uu 'ufw reload';ssp;touch $dtdi/vc_lock; }
 function pd { [ "$(systemctl status $ethp 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethp"; } }
 function nd { [ "$(systemctl status $ethn 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethn"; } }
 function fd { [ "$(systemctl status $ethf 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethf";fcl;uu 'ufw reload'; } }
@@ -154,10 +154,14 @@ function cr {
     echo $H|sudo -S mv ~/00-installer-config.save /etc/netplan/00-installer-config.yaml 2>/dev/null
     sudo chown root:root /etc/netplan/00-installer-config.yaml 
     sudo chmod 644 /etc/netplan/00-installer-config.yaml 
-    rs
+    echo $H|sudo -S netplan apply 2>/dev/null
+    sp
+    sudo systemctl stop systemd-resolved
+    sa
+    sudo systemctl start systemd-resolved
   fi
 }
-function ds { echo -e "${i}RESET DNS & SYSTEMD-RESOLVED${f}";sp;sudo systemctl stop  systemd-resolved;sa;sudo systemctl start systemd-resolved; }
+function ds { echo -e "${i}RESET DNS & SYSTEMD-RESOLVED${f}";sp;sudo systemctl stop systemd-resolved;sa;sudo systemctl start systemd-resolved; }
 function sr { echo -e "ROUTE\t\t$(ip route show|grep 'default via'|cut -d' ' -f3)"; }
 function sf {
   m="$(netstat -i|grep -v '^lo\|Iface\|Kernel'|cut -d' ' -f1)"
@@ -182,9 +186,9 @@ function grs {
     cp /etc/systemd/system/$ethg.service ~/$ethg.save
     g4=$(grep maxpeers ~/$ethg.save|sed 's%.*maxpeers \([0-9]*\).*%\1%')
     g4=$(($g4+$1))
-    [ $g4 -ge 5 ] && [ $g4 -le 15 ] && sed "s%--maxpeers [0-9]*%--target-peers $g4%" ~/$ethg.save > /etc/systemd/system/$ethg.service
+    [ $g4 -ge 5 ] && [ $g4 -le 15 ] && sed "s%--maxpeers [0-9]*%--maxpeers $g4%" ~/$ethg.save > /etc/systemd/system/$ethg.service
   fi
-  gp;dr;sleep 50s;ga
+  gp;dr;sleep 30s;ga
   echo -e "RSGE OK RESTAR $cunm $(date --rfc-3339=seconds) nodes: 0, blocks: 0" >> /home/eth/geth.log
 }
 function ors {
@@ -194,7 +198,7 @@ function ors {
     o4=$(($o4+$1))
     [ $o4 -ge 10 ] && [ $o4 -le 15 ] && sed "s%--max-peers=[0-9]*%--max-peers=$o4%" ~/$etho.save > /etc/systemd/system/$etho.service
   fi
-  op;dr;sleep 50s;oa
+  op;dr;sleep 30s;oa
   echo -e "RSOE OK RESTAR $cunm $(date --rfc-3339=seconds) nodes: 0, blocks: 0" >> /home/eth/oeth.log
 }
 function bk {
@@ -241,26 +245,29 @@ function bk {
   [ "$o7" = 'BLOCKED' ] && resolvectl query smtp.gmail.com 2>/dev/null 1>&2
 }
 function brs {
-  b0=$(systemctl status $ethb 2>/dev/null|grep PID|sed 's%.*PID: *\([0-9]*\).*%\1%')
-  b1=0
-  while [ $b1 -lt 200 ]; do
-    b4=$(echo $H|sudo -S grep "lighthouse.$b0" /var/log/syslog 2>/dev/null|grep ' INFO '|tail -n $pors|sed 's%  *% %g'|cut -d' ' -f10|sort -u)
-    b5=$(echo "$b4"|head -n1)
-    if [ "$(echo "$b4"|wc -l)" -eq 2 ] && [ "$(echo "$b4"|tail -n1)" = "Synced" ] && ([ "$b5" = "New" ] || [ "$b5" = "Processed" ]); then
-      if [ $1 -ne 0 ]; then
-        cp /etc/systemd/system/$ethb.service ~/$ethb.save
-        b3=$(grep target-peers ~/$ethb.save|sed 's%.*target-peers \([0-9]*\).*%\1%')
-        b3=$(($b3+$1))
-        [ $b3 -ge 10 ] && [ $b3 -le 30 ] && sed "s%--target-peers [0-9]*%--target-peers $b3%" ~/$ethb.save > /etc/systemd/system/$ethb.service
+  if [ ! -f /home/eth/beacon-restart ]; then
+    touch /home/eth/beacon-restart
+    b0=$(systemctl status $ethb 2>/dev/null|grep PID|sed 's%.*PID: *\([0-9]*\).*%\1%')
+    b1=0
+    while [ $b1 -lt 400 ]; do
+      b4=$(echo $H|sudo -S grep "lighthouse.$b0" /var/log/syslog 2>/dev/null|grep ' INFO '|tail -n $pors|sed 's%  *% %g'|cut -d' ' -f10|sort -u)
+      b5=$(echo "$b4"|head -n1)
+      if [ "$(echo "$b4"|wc -l)" -eq 2 ] && [ "$(echo "$b4"|tail -n1)" = "Synced" ] && ([ "$b5" = "New" ] || [ "$b5" = "Processed" ]); then
+        if [ $1 -ne 0 ]; then
+          cp /etc/systemd/system/$ethb.service ~/$ethb.save
+          b3=$(grep target-peers ~/$ethb.save|sed 's%.*target-peers \([0-9]*\).*%\1%')
+          b3=$(($b3+$1))
+          [ $b3 -ge 10 ] && [ $b3 -le 30 ] && sed "s%--target-peers [0-9]*%--target-peers $b3%" ~/$ethb.save > /etc/systemd/system/$ethb.service
+        fi
+        bk l;echo -e "RSTF $m" >> /home/eth/beacon.log
+        bp;dr;ba;
+        b1=400
       fi
-      bk l
-      echo -e "RSBN $m" >> /home/eth/beacon.log
-      bp;dr;ba;
-      b1=200
-    fi
-    sleep 3s
-    b1=$(($b1+1))
-  done
+      sleep 3s
+      b1=$(($b1+1))
+    done
+    rm /home/eth/beacon-restart
+  fi
 }
 function bs {
   for l in $(echo $H|sudo -S grep -i 'lighthouse.*incorrect' /var/log/syslog 2>/dev/null|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\) .*validator: \([0-9]*\).*epoch: \([0-9]*\).*%\1:\2:\3%'|sort -u|tail -n $1);do
@@ -271,7 +278,24 @@ function bs {
     sudo grep "$v.*$e\|$s" /var/log/syslog
   done
 }
+function ssp {
+  if [ ! -f $dtdi/vc_lock ] && [ -f $dtdi/vc_slash ] && [ -f $dtdi/vc_keys ]; then
+    echo -e "${i}SAVE SLASHING PROTECTION DB${f}"
+    echo $H|sudo -S cp $vldt/slashing_protection.sqlite         /home/eth 2>/dev/null
+    echo $H|sudo -S cp $vldt/slashing_protection.sqlite-journal /home/eth 2>/dev/null
+    sudo chown eth:eth /home/eth/slashing_protection.sqlite
+    sudo chown eth:eth /home/eth/slashing_protection.sqlite-journal
+    if [ "$cunm" = "$znm3" ]; then
+      scp /home/eth/slashing_protection.sqlite         ztc2:~
+      scp /home/eth/slashing_protection.sqlite-journal ztc2:~
+    else
+      scp /home/eth/slashing_protection.sqlite         ztc3:~
+      scp /home/eth/slashing_protection.sqlite-journal ztc3:~
+    fi
+  fi
+}
 
+[ "$1" = "ssp" ] && { ssp; }
 [ "$1" = "rs"  ] && { rs; }
 [ "$1" = "ds"  ] && { ds; }
 [ "$1" = "rq"  ] && { rq $2; }
@@ -426,11 +450,11 @@ if [ -z "$1" ]; then
   c1="$c1\nsl [s]\t\tlista system journal  s=TOTAL"
   c1="$c1\nel [s]\t\tlista geth,lighthouse s=TOTAL"
   c1="$c1\nbs [n]\t\tlista erros com custo n=max erros"
+  c1="$c1\nssp\t\tsave slashing protection DB"
   c1="$c1\nll\t\tlista servicos"
   c1="$c1\nlp\t\tlista portas"
   c1="$c1\nnp\t\tnode peers"
   c1="$c1\ngs\t\tgeth syncing"
-  c1="$c1\ngkr\t\tgeth check/reset (if necessary)"
   c1="$c1\nws\t\tfirewall status"
   c1="$c1\nwa\t\tfirewall arranca"
   c1="$c1\nwpr\t\tfirewall para"
