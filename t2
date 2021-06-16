@@ -82,12 +82,12 @@ sudo chmod 644 /etc/systemd/timesyncd.conf
 sudo chmod 644 /etc/apt/apt.conf.d/*
 sudo chmod 755 /etc/update-motd.d/*
 # nao executa - nao acho ser necessario
-sudo chmod -x /etc/update-motd.d/97-overlayroot
+[ -f /etc/update-motd.d/97-overlayroot ] && sudo chmod -x /etc/update-motd.d/97-overlayroot
 sudo netplan apply
 sudo systemctl restart systemd-resolved
 sudo systemctl restart systemd-timesyncd
 
-if [ "$cunm" != "$znm1" ] && [ "$cunm" != "$vnm1" ]; then
+if [ "$cunm" != "$znm1" ] && [ "$cunm" != "n$vnm1" ]; then
   echo -e "${i}GETH NAO DEVE SER INSTALADO AQUI - DEVE FAZER REBOOT${f}"
 else
   if [ -f /etc/systemd/system/$ethg.service ] || [ -f /etc/systemd/system/$etho.service ]; then

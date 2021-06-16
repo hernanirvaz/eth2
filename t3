@@ -8,7 +8,7 @@ if [ -x ~/lighthouse ] && [ ! -d ~/lighthouse ]; then
 fi
 
 if [ -x /usr/local/bin/lighthouse ]; then
-  if [ ! -f /etc/systemd/system/$ethb.service ] && [ "$cunm" != "$znm1" ] && [ "$cunm" != "$vnm1" ]; then
+  if [ ! -f /etc/systemd/system/$ethb.service ] && [ "$cunm" != "$znm1" ] && [ "$cunm" != "n$vnm1" ]; then
     user="eth2"
     # slots per restore point after init can't be changed
     sprp=1024 # Yearly Disk Usage  12.8GB
@@ -53,7 +53,7 @@ if [ -x /usr/local/bin/lighthouse ]; then
 		Group=$user
 		Restart=always
 		RestartSec=10
-		ExecStart=/usr/local/bin/lighthouse$blkc --datadir $dtdi bn --target-peers $tarp $bcnd --staking --eth1-endpoints $endp --subscribe-all-subnets --import-all-attestations
+		ExecStart=/usr/local/bin/lighthouse$blkc --datadir $dtdi bn --target-peers $tarp $bcnd --staking --eth1-endpoints $endp --subscribe-all-subnets --import-all-attestations --disable-upnp
 		ExecStopPost=/home/eth/eth2/t8mail BEACSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 		
 		[Install]
@@ -200,7 +200,7 @@ else
         scp ~/.cargo/bin/lighthouse ztc3:~
       fi
       if [ "$cunm" = "$vnm1" ]; then
-        scp ~/.cargo/bin/lighthouse vpsm:~
+        #scp ~/.cargo/bin/lighthouse vpsm:~
         scp ~/.cargo/bin/lighthouse vpss:~
       fi
       if [ -x /usr/local/bin/lighthouse ]; then

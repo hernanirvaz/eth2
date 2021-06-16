@@ -53,9 +53,9 @@ if [ "$1" = "eth2" ]; then
   if [ "$cunm" = "$znm1" ] || [ "$cunm" = "$vnm1" ]; then
     if [ -x ~/.cargo/bin/rustup ]; then
       echo -e "${i}UPDATE RUST${f}"
+      resolvectl query static.rust-lang.org
       rustup update
     fi
-    resolvectl query github.com
     if [ -f ~/lighthouse/README.md ]; then
       cd ~/lighthouse
       make clean
@@ -63,9 +63,11 @@ if [ "$1" = "eth2" ]; then
     else
       cd ~
       echo $H|sudo -S rm -rf ~/lighthouse 2>/dev/null
+      resolvectl query github.com
       git clone https://github.com/sigp/lighthouse.git
       cd ~/lighthouse
     fi 
+    resolvectl query github.com
     git fetch
     if [ "$(echo \"$2\"|egrep 'v[0-9]+\.[0-9]+\.[0-9]+')" ]; then
       v=$2
@@ -105,7 +107,7 @@ if [ "$1" = "eth2" ]; then
     fi
   fi
   echo $H|sudo -S chmod 755 /usr/local/bin/lighthouse 2>/dev/null
-  #if [ "$cunm" != "n$znm1" ] && [ "$cunm" != "$vnm1" ];then t6 ba;fi
-  #if [ "$cunm"  = "n$znm3" ] || [ "$cunm"  = "$vnm3" ];then t6 va;fi
+  if [ "$cunm" != "$znm1" ] && [ "$cunm" != "$vnm1" ];then t6 ba;fi
+  if [ "$cunm"  = "$znm3" ] || [ "$cunm"  = "$vnm3" ];then t6 va;fi
   echo -e "${i}NOVO LIGHT INSTALADO - PODE/DEVE VERIFICAR${f}"
 fi

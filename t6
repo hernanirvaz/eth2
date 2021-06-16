@@ -120,8 +120,8 @@ function b7 {
   w=$(echo $H|sudo -S tail -n 2000                  /var/log/syslog 2>/dev/null|grep -i 'processed block'|wc -l)
   q=$(echo $H|sudo -S tail -n 2000                  /var/log/syslog 2>/dev/null|grep -i 'block received' |wc -l)
   [ "$a" -gt 0     ] && n=$(($n+8*(10*$z+$h)/$a))
-  [ "$q" -gt 0     ] && n=$(($n+4*$w/$q))
-  [ "$t" -gt 0     ] && n=$(($n+10*$r/$t))
+  [ "$q" -gt 0     ] && n=$(($n+2*$w/$q))
+  [ "$t" -gt 0     ] && n=$(($n+7*$r/$t))
   [ "$n" -ge $lirs ] && [ -f /home/eth/beacon.log ] && [ "$(tail -n $hors /home/eth/beacon.log|cut -d' ' -f1|sort -u)" = "BEAC" ] && b7='BLOCKED'
 }
 function gs {
@@ -219,7 +219,7 @@ function bk {
     m='https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=ETH&convert=EUR&CMC_PRO_API_KEY=3ae5f3df-bd71-489d-a9dd-b626995fba31'
     e=$(curl -sX GET $m|sed 's%.*price.:\([0-9]*\.[0-9]*\).*%\1%')
   else
-    e=3000
+    e=2000
   fi
   b2;b7
   b=$(echo "scale=0;($p*$rblk+$a*$ratt)*$e/1000000000"|bc)
@@ -248,23 +248,30 @@ function brs {
   if [ ! -f /home/eth/beacon-restart ]; then
     touch /home/eth/beacon-restart
     b0=$(systemctl status $ethb 2>/dev/null|grep PID|sed 's%.*PID: *\([0-9]*\).*%\1%')
-    b1=0
-    while [ $b1 -lt 400 ]; do
-      b4=$(echo $H|sudo -S grep "lighthouse.$b0" /var/log/syslog 2>/dev/null|grep ' INFO '|tail -n $pors|sed 's%  *% %g'|cut -d' ' -f10|sort -u)
-      b5=$(echo "$b4"|head -n1)
-      if [ "$(echo "$b4"|wc -l)" -eq 2 ] && [ "$(echo "$b4"|tail -n1)" = "Synced" ] && ([ "$b5" = "New" ] || [ "$b5" = "Processed" ]); then
-        if [ $1 -ne 0 ]; then
-          cp /etc/systemd/system/$ethb.service ~/$ethb.save
-          b3=$(grep target-peers ~/$ethb.save|sed 's%.*target-peers \([0-9]*\).*%\1%')
-          b3=$(($b3+$1))
-          [ $b3 -ge 10 ] && [ $b3 -le 30 ] && sed "s%--target-peers [0-9]*%--target-peers $b3%" ~/$ethb.save > /etc/systemd/system/$ethb.service
-        fi
-        bk l;echo -e "RSTF $m" >> /home/eth/beacon.log
-        bp;dr;ba;
-        b1=400
-      fi
-      sleep 3s
-      b1=$(($b1+1))
+    while true; do
+      b6=$(echo $H|sudo -S grep "lighthouse.$b0.* INFO Synced " /var/log/syslog 2>/dev/null|tail -n32|sed 's%.* epoch: \([0-9]*\).*%\1%'|sort -u)
+      sleep 1s
+      if [ "$(echo "$b6"|wc -l)" -eq 1 ]; then
+        b1=0
+        while [ $b1 -lt 400 ]; do
+          b4=$(echo $H|sudo -S grep "lighthouse.$b0.* INFO " /var/log/syslog 2>/dev/null|tail -n $pors|sed 's%.* INFO \([^ ]*\) .*%\1%'|sort -u)
+          b5=$(echo "$b4"|head -n1)
+          if [ "$(echo "$b4"|wc -l)" -eq 2 ] && [ "$(echo "$b4"|tail -n1)" = "Synced" ] && ([ "$b5" = "New" ] || [ "$b5" = "Processed" ]); then
+            if [ $1 -ne 0 ]; then
+              cp /etc/systemd/system/$ethb.service ~/$ethb.save
+              b3=$(grep target-peers ~/$ethb.save|sed 's%.*target-peers \([0-9]*\).*%\1%')
+              b3=$(($b3+$1))
+              [ $b3 -ge 10 ] && [ $b3 -le 30 ] && sed "s%--target-peers [0-9]*%--target-peers $b3%" ~/$ethb.save > /etc/systemd/system/$ethb.service
+            fi
+            bk l;echo -e "RSTB $m" >> /home/eth/beacon.log
+            bp;dr;ba;
+            b1=400
+          fi
+          sleep 3s
+          b1=$(($b1+1))
+        done
+        break
+      fi 
     done
     rm /home/eth/beacon-restart
   fi
