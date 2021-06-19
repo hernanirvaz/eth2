@@ -93,9 +93,13 @@ if [ -x /usr/local/bin/lighthouse ]; then
       echo -e "${i}COPIAR $vldt/slashing_protection.sqlite*${f}"
       echo $H|sudo -S mkdir -p $vldt 2>/dev/null
       sudo chown $meeu:$meeu $vldt
-      [ -f ~/slashing_protection.sqlite          ] && { cp ~/slashing_protection.sqlite         $vldt;chmod 600 $vldt/slashing_protection.sqlite;         }
-      [ -f ~/slashing_protection.sqlite-journal  ] && { cp ~/slashing_protection.sqlite-journal $vldt;chmod 600 $vldt/slashing_protection.sqlite-journal; }
-      [ -f $vldt/slashing_protection.sqlite      ] && { touch $dtdi/vc_slash; }
+      if [ -f ~/slashing_protection.sqlite ]; then
+        rm $vldt/slashing_protection.sqlite-journal
+        cp ~/slashing_protection.sqlite $vldt
+        chmod 600 $vldt/slashing_protection.sqlite
+      fi
+      [ -f ~/slashing_protection.sqlite-journal ] && { cp ~/slashing_protection.sqlite-journal $vldt;chmod 600 $vldt/slashing_protection.sqlite-journal; }
+      [ -f $vldt/slashing_protection.sqlite     ] && { touch $dtdi/vc_slash; }
       if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
       sudo chown $user:$user $vldt
       sudo chmod 700 $vldt
