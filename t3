@@ -8,7 +8,7 @@ if [ -x ~/lighthouse ] && [ ! -d ~/lighthouse ]; then
 fi
 
 if [ -x /usr/local/bin/lighthouse ]; then
-  if [ ! -f /etc/systemd/system/$ethb.service ] && [ "$cunm" != "$znm1" ] && [ "$cunm" != "n$vnm1" ]; then
+  if [ ! -f /etc/systemd/system/$ethb.service ] && [ "$cunm" != "$znm1" ] && [ "$cunm" != "$vnm1" ]; then
     user="eth2"
     # slots per restore point after init can't be changed
     sprp=1024 # Yearly Disk Usage  12.8GB
@@ -61,19 +61,12 @@ if [ -x /usr/local/bin/lighthouse ]; then
 		EOF
     sudo mv $ethb.service /etc/systemd/system/$ethb.service
     sudo chmod 644 /etc/systemd/system/$ethb.service
-    #t6 be
-    #t6 ba
-    #t6 bj
   else
     echo -e "${i}BEACON JA CONFIGURADO${f}"
   fi
   if [ "$cunm" = "$znm2" ] || [ "$cunm" = "$vnm3" ]; then
     user="eth3"
-    if [ "$cunm" = "$znm3" ]; then
-      vlcl="--beacon-nodes http://127.0.0.1:5052,http://$zip2:5052"
-    else
-      vlcl="--beacon-nodes http://$vip2:5052,http://$vip1:5052"
-    fi
+    vlcl="--beacon-nodes http://127.0.0.1:5052,https://1q1s6o6cB6Jysu7KKlbLUYiOdAM:8974468780164028652df958a69fbd30@eth2-beacon-mainnet.infura.io"
     if [ "$B" = "mainnet" ]; then
       blkc=""
     else
@@ -85,9 +78,9 @@ if [ -x /usr/local/bin/lighthouse ]; then
       echo $H|sudo -S mkdir -p $dtdi 2>/dev/null
       sudo chown $meeu:$meeu $dtdi
       if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
-      touch $dtdi/vc_keys
       echo -e "STORE($K)\n"
       lighthouse$blkc --datadir $dtdi account validator import --directory $HOME/$D
+      [ -f $vldt/validator_definitions.yml ] && touch $dtdi/vc_keys
     fi
     if [ ! -f $dtdi/vc_lock ] && [ -f $dtdi/vc_keys ]; then
       echo -e "${i}BLOQUEAR VALIDATOR EXECUTE${f}"
@@ -99,15 +92,15 @@ if [ -x /usr/local/bin/lighthouse ]; then
     if [ ! -f $dtdi/vc_slash ] && [ -f $dtdi/vc_lock ] && [ -f $dtdi/vc_keys ]; then
       echo -e "${i}COPIAR $vldt/slashing_protection.sqlite*${f}"
       echo $H|sudo -S mkdir -p $vldt 2>/dev/null
-      sudo chown -R $meeu:$meeu $vldt
+      sudo chown $meeu:$meeu $vldt
       [ -f ~/slashing_protection.sqlite          ] && { cp ~/slashing_protection.sqlite         $vldt;chmod 600 $vldt/slashing_protection.sqlite;         }
       [ -f ~/slashing_protection.sqlite-journal  ] && { cp ~/slashing_protection.sqlite-journal $vldt;chmod 600 $vldt/slashing_protection.sqlite-journal; }
+      [ -f $vldt/slashing_protection.sqlite      ] && { touch $dtdi/vc_slash; }
       if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
-      sudo chown -R $user:$user $vldt
+      sudo chown $user:$user $vldt
       sudo chmod 700 $vldt
-      touch $dtdi/vc_slash
     fi
-    if [ ! -f /etc/systemd/system/$ethv.service ] && [ ! -f $dtdi/vc_lock ] && [ -f $dtdi/vc_keys ] && [ -f $dtdi/vc_slash ]; then
+    if [ ! -f /etc/systemd/system/$ethv.service ] && [ -f $dtdi/vc_slash ] && [ -f $dtdi/vc_lock ] && [ -f $dtdi/vc_keys ]; then
       echo -e "${i}CONFIGURE VALIDATOR${f}"
       echo $H|sudo -S mkdir -p $vldt 2>/dev/null
       if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
@@ -124,7 +117,7 @@ if [ -x /usr/local/bin/lighthouse ]; then
 			Group=$user
 			Restart=always
 			RestartSec=10
-			ExecStart=/usr/local/bin/lighthouse$blkc --datadir $dtdi vc $vlcl --metrics
+			ExecStart=/usr/local/bin/lighthouse$blkc --datadir $dtdi vc $vlcl
 			ExecStopPost=/home/eth/eth2/t8mail VALISTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 			
 			[Install]

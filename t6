@@ -56,14 +56,14 @@ function fe { fop;uu 'ufw reload';uu "systemctl enable $ethf"; }
 function ga { [ "$(systemctl status $ethg 2>/dev/null|grep -i 'inactive\|failed')" ] && [ -d /var/lib/goethereum   ] && { uu "systemctl start $ethg"; } }
 function oa { [ "$(systemctl status $etho 2>/dev/null|grep -i 'inactive\|failed')" ] && [ -d /var/lib/openethereum ] && { uu "systemctl start $etho"; } }
 function ba { [ "$(systemctl status $ethb 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $ethb"; } }
-function va { [ "$(systemctl status $ethv 2>/dev/null|grep -i 'inactive\|failed')" ] && [ ! -f $dtdi/vc_lock ] && { uu "systemctl start $ethv"; } }
+function va { [ "$(systemctl status $ethv 2>/dev/null|grep -i 'inactive\|failed')" ] && [ ! -f $dtdi/vc_lock ] && { uu "systemctl start $ethv";rm $dtdi/vc_slash; } }
 function pa { [ "$(systemctl status $ethp 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $ethp"; } }
 function na { [ "$(systemctl status $ethn 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $ethn"; } }
 function fa { [ "$(systemctl status $ethf 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $ethf"; } }
 function gp { [ "$(systemctl status $ethg 2>/dev/null|grep -i loaded)" ] && { uu "systemctl stop $ethg"; } }
 function op { [ "$(systemctl status $etho 2>/dev/null|grep -i loaded)" ] && { uu "systemctl stop $etho"; } }
 function bp { [ "$(systemctl status $ethb 2>/dev/null|grep -i loaded)" ] && { uu "systemctl stop $ethb"; } }
-function vp { [ "$(systemctl status $ethv 2>/dev/null|grep -i loaded)" ] && { uu "systemctl stop $ethv"; } }
+function vp { [ "$(systemctl status $ethv 2>/dev/null|grep -i loaded)" ] && { uu "systemctl stop $ethv";touch $dtdi/vc_slash; } }
 function pp { [ "$(systemctl status $ethp 2>/dev/null|grep -i loaded)" ] && { uu "systemctl stop $ethp"; } }
 function np { [ "$(systemctl status $ethn 2>/dev/null|grep -i loaded)" ] && { uu "systemctl stop $ethn"; } }
 function fp { [ "$(systemctl status $ethf 2>/dev/null|grep -i loaded)" ] && { uu "systemctl stop $ethf"; } }
@@ -293,8 +293,8 @@ function ssp {
     sudo chown eth:eth /home/eth/slashing_protection.sqlite
     sudo chown eth:eth /home/eth/slashing_protection.sqlite-journal
     if [ "$cunm" = "$znm3" ]; then
-      scp /home/eth/slashing_protection.sqlite         ztc2:~
-      scp /home/eth/slashing_protection.sqlite-journal ztc2:~
+      scp /home/eth/slashing_protection.sqlite         vpss:~
+      scp /home/eth/slashing_protection.sqlite-journal vpss:~
     else
       scp /home/eth/slashing_protection.sqlite         ztc3:~
       scp /home/eth/slashing_protection.sqlite-journal ztc3:~
