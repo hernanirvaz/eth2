@@ -110,15 +110,17 @@ function o7 {
   [ "$n" -eq "$t" ] && o7='BLOCKED'
 }
 function b7 {
+  n=$(echo "$H"|sudo -S tail -n 2000         /var/log/syslog 2>/dev/null)
+  w=$(echo "$n"|grep -i 'processed block'|wc -l)
+  q=$(echo "$n"|grep -i 'block received' |wc -l)
+  n=$(echo "$H"|sudo -S grep -i 'lighthouse' /var/log/syslog 2>/dev/null)
+  r=$(echo "$n"|grep -v ' INFO '|wc -l)
+  t=$(echo "$n"|grep    ' INFO '|wc -l)
+  z=$(echo "$H"|sudo -S grep -i 'attestation missing' /var/log/syslog 2>/dev/null|wc -l)
+  h=$(echo "$H"|sudo -S grep -i 'to an incorrect'     /var/log/syslog 2>/dev/null|wc -l)
+  a=$(echo "$H"|sudo -S grep -i 'attestation success' /var/log/syslog 2>/dev/null|wc -l)
+  p=$(echo "$H"|sudo -S grep -i 'published block'     /var/log/syslog 2>/dev/null|wc -l)
   n=0;b7='OK'
-  z=$(echo $H|sudo -S grep -i 'attestation missing' /var/log/syslog 2>/dev/null|wc -l)
-  h=$(echo $H|sudo -S grep -i 'to an incorrect'     /var/log/syslog 2>/dev/null|wc -l)
-  a=$(echo $H|sudo -S grep -i 'attestation success' /var/log/syslog 2>/dev/null|wc -l)
-  p=$(echo $H|sudo -S grep -i 'published block'     /var/log/syslog 2>/dev/null|wc -l)
-  r=$(echo $H|sudo -S grep -i 'lighthouse'          /var/log/syslog 2>/dev/null|grep -v ' INFO '|wc -l)
-  t=$(echo $H|sudo -S grep -i 'lighthouse'          /var/log/syslog 2>/dev/null|grep    ' INFO '|wc -l)
-  w=$(echo $H|sudo -S tail -n 2000                  /var/log/syslog 2>/dev/null|grep -i 'processed block'|wc -l)
-  q=$(echo $H|sudo -S tail -n 2000                  /var/log/syslog 2>/dev/null|grep -i 'block received' |wc -l)
   [ "$q" -gt 0     ] && n=$(($n+9*$w/$q))
   [ "$a" -gt 0     ] && n=$(($n+9*(19*$z+$h)/$a))
   [ "$t" -gt 0     ] && n=$(($n+7*$r/$t))
