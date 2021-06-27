@@ -81,7 +81,7 @@ function b2 { b2=0;[ -d /var/lib/lighthouse ] && b2=$(echo $H|sudo -S grep -i 'l
 function g7 {
   t=-1;n=0;g7='OK'
   if [ "$(systemctl status $ethg 2>/dev/null|grep -i running)" ] && [ -f /home/eth/geth.log ]; then
-    n=$(echo $H|sudo -S grep -i 'new chain segment' /var/log/syslog 2>/dev/null|wc -l)
+    n=$(echo $H|sudo -S grep -i 'imported new' /var/log/syslog 2>/dev/null|wc -l)
     t=$(tail -n 1 /home/eth/geth.log|sed 's%.*blocks: \([0-9]*\).*%\1%')
   fi
   [ "$n" -eq "$t" ] && g7='BLOCKED'
