@@ -164,9 +164,9 @@ function cr {
   fi
 }
 function ds { echo -e "${i}RESET DNS & SYSTEMD-RESOLVED${f}";sp;sudo systemctl stop systemd-resolved;sa;sudo systemctl start systemd-resolved; }
-function sr { echo -e "ROUTES\t\t" $(ip route show|grep 'default via'|cut -d' ' -f3); }
+function sr { echo -e "ROUTES\t\t" $(ip route show|grep 'default via'|grep -v 'linkdown'|cut -d' ' -f3); }
 function sf {
-  m="$(netstat -i|grep -v '^lo\|Iface\|Kernel'|cut -d' ' -f1)"
+  m=$(ip a|grep 'state UP'|cut -d: -f2)
   echo -e "DNS\t\t" $(resolvectl|grep 'Current DNS'|cut -d' ' -f6)
   for n in $m;do echo -e "$n\t\t" $(resolvectl dns|grep $n|cut -d' ' -f4-6);done
 }
