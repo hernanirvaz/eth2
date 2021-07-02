@@ -215,7 +215,7 @@ function bk {
   done
   v=0
   [ "$n" -gt 0 ] && v=$(($t/$n))
-  if [ "$2" ]; then
+  if [ "$1" ]; then
     resolvectl query pro-api.coinmarketcap.com 2>/dev/null 1>&2
     m='https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=ETH&convert=EUR&CMC_PRO_API_KEY=3ae5f3df-bd71-489d-a9dd-b626995fba31'
     e=$(curl -sX GET $m|sed 's%.*price.:\([0-9]*\.[0-9]*\).*%\1%')
@@ -226,23 +226,12 @@ function bk {
   b=$(echo "scale=0;($p*$rblk+$a*$ratt)*$e/1000000000"|bc)
   d=$(echo "scale=2;($h*$pinc+$z*$patt)*$e/1000000000"|bc)
   m="$b7 $n $cunm $(date --rfc-3339=seconds)"
-  if [ "${1:-k}" = "k" ]; then
-    m="$m\n\nREWARDS PENALTIES\t$b€\t$d€"
-    m="$m\nATTESTATIONS BLOCKS\t$a $p"
-    m="$m\nINCORRECT MISSED\t$h $z"
-    m="$m\nERRORS\t\t\t$r\t$t"
-    m="$m\nBLOCKS\t\t\t$w\t$q"
-    m="$m\nNODES\t\t\t${b2:-0}"
-    m="$m\nAVG LAGS\t\t$x"
-    m="$m\nAVG DELAYS\t\t$v"
-  else
-    m="$m rewards_penalties: $b€ $d€,"
-    m="$m attestations_blocks: $a $p,"
-    m="$m erros: $z $h $w $q $r $t,"
-    m="$m nodes: ${b2:-0},"
-    m="$m avg_lags: $x,"
-    m="$m avg_delays: $v"
-  fi
+  m="$m rewards_penalties: $b€ $d€"
+  m="$m attestations_blocks: $a $p"
+  m="$m erros: $z $h $w $q $r $t"
+  m="$m nodes: ${b2:-0}"
+  m="$m avg_lags: $x"
+  m="$m avg_delays: $v"
   [ "$o7" = 'BLOCKED' ] && resolvectl query smtp.gmail.com 2>/dev/null 1>&2
 }
 function brs {
@@ -264,7 +253,7 @@ function brs {
               b3=$(($b3+$1))
               [ $b3 -ge 10 ] && [ $b3 -le 30 ] && sed "s%--target-peers [0-9]*%--target-peers $b3%" ~/$ethb.save > /etc/systemd/system/$ethb.service
             fi
-            bk l;echo -e "RSTB $m" >> /home/eth/beacon.log
+            bk;echo -e "RSTB $m" >> /home/eth/beacon.log
             bp
             if [ "$2" ];then sudo reboot;else dr;ba;fi
             b1=400
@@ -310,16 +299,16 @@ function ssp {
 [ "$1" = "rq"  ] && { rq $2; }
 [ "$1" = "cr"  ] && { cr; }
 [ "$1" = "sr"  ] && { sr;sf; }
-[ "$1" = "gs"  ] && { gs     ;echo -e $m; }
-[ "$1" = "gk"  ] && { gk     ;echo -e "GETH $m \n\nNODES\t\t${g2:-0}\nSEGMENTS\t$n"; }
-[ "$1" = "ok"  ] && { ok     ;echo -e "OETH $m \n\nNODES\t\t${o2:-0}\nSEGMENTS\t$n"; }
-[ "$1" = "bk"  ] && { bk k $2;echo -e "BEAC $m"; }
-[ "$1" = "gl"  ] && { gk     ;echo -e "GETH $m nodes: ${g2:-0}, blocks: $n"; }
-[ "$1" = "ol"  ] && { ok     ;echo -e "OETH $m nodes: ${o2:-0}, blocks: $n"; }
-[ "$1" = "bl"  ] && { bk l $2;echo -e "BEAC $m"; }
-[ "$1" = "gh"  ] && { tail -n ${2:-$hors} /home/eth/geth.log;gk;echo -e "GETH $m nodes: ${g2:-0}, blocks: $n"; }
-[ "$1" = "oh"  ] && { tail -n ${2:-$hors} /home/eth/oeth.log;ok;echo -e "OETH $m nodes: ${o2:-0}, blocks: $n"; }
-[ "$1" = "bh"  ] && { tail -n ${2:-$hors} /home/eth/beacon.log;bk l;echo -e "BEAC $m"; }
+[ "$1" = "gs"  ] && { gs   ;echo -e $m; }
+[ "$1" = "gk"  ] && { gk   ;echo -e "GETH $m \n\nNODES\t\t${g2:-0}\nSEGMENTS\t$n"; }
+[ "$1" = "ok"  ] && { ok   ;echo -e "OETH $m \n\nNODES\t\t${o2:-0}\nSEGMENTS\t$n"; }
+[ "$1" = "bk"  ] && { bk $2;echo -e "BEAC $m"; }
+[ "$1" = "gl"  ] && { gk   ;echo -e "GETH $m nodes: ${g2:-0} blocks: $n"; }
+[ "$1" = "ol"  ] && { ok   ;echo -e "OETH $m nodes: ${o2:-0} blocks: $n"; }
+[ "$1" = "bl"  ] && { bk $2;echo -e "BEAC $m"; }
+[ "$1" = "gh"  ] && { tail -n ${2:-$hors} /home/eth/geth.log;gk;echo -e "GETH $m nodes: ${g2:-0} blocks: $n"; }
+[ "$1" = "oh"  ] && { tail -n ${2:-$hors} /home/eth/oeth.log;ok;echo -e "OETH $m nodes: ${o2:-0} blocks: $n"; }
+[ "$1" = "bh"  ] && { tail -n ${2:-$hors} /home/eth/beacon.log;bk;echo -e "BEAC $m"; }
 [ "$1" = "gkr" ] && { g7;[ "$g7" != "OK" ] && grs ${2:-0}; }
 [ "$1" = "okr" ] && { o7;[ "$o7" != "OK" ] && ors ${2:-0}; }
 [ "$1" = "bkr" ] && { b7;[ "$b7" != "OK" ] && brs ${2:-0}; }
