@@ -121,7 +121,7 @@ function b7 {
   a=$(echo "$H"|sudo -S grep -i 'attestation success' /var/log/syslog 2>/dev/null|wc -l)
   p=$(echo "$H"|sudo -S grep -i 'published block'     /var/log/syslog 2>/dev/null|wc -l)
   n=0;b7='OK'
-  [ "$q" -gt 0     ] && n=$(($n+19*$w/$q))
+  [ "$q" -gt 0     ] && n=$(($n+25*$w/$q))
   [ "$a" -gt 0     ] && n=$(($n+9*(10*$z+$h)/$a))
   [ "$t" -gt 0     ] && n=$(($n+7*$r/$t))
   [ "$n" -ge $lirs ] && [ -f /home/eth/beacon.log ] && [ "$(tail -n $hors /home/eth/beacon.log|cut -d' ' -f1|sort -u)" = "BEAC" ] && b7='BLOCKED'
