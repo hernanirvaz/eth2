@@ -110,7 +110,7 @@ function o7 {
   [ "$n" -eq "$t" ] && o7='BK'
 }
 function b7 {
-  n=$(echo "$H"|sudo -S grep -i 'lighthouse' /var/log/syslog 2>/dev/null|tail -n 2000)
+  n=$(echo "$H"|sudo -S grep -i 'lighthouse' /var/log/syslog 2>/dev/null|tail -n $(($hors*200)))
   w=$(echo "$n"|grep -i 'processed block'|wc -l)
   q=$(echo "$n"|grep -i 'block received' |wc -l)
   r=$(echo "$n"|grep -v ' INFO '|wc -l)
