@@ -125,7 +125,7 @@ function b7 {
   [ "$a" -gt 0     ] && n=$(($n+7*(5*$z+$h)/$a))
   if [ "$n" -ge $l1rs ]; then
     if [ "$n" -ge $l2rs ]; then
-      b7='BK'
+      [ -f /home/eth/beacon.log ] && [ "$(tail -n $l2rs /home/eth/beacon.log|cut -d' ' -f1|sort -u)" = "BEAC" ] && b7='BK'
     else
       [ -f /home/eth/beacon.log ] && [ "$(tail -n $hors /home/eth/beacon.log|cut -d' ' -f1|sort -u)" = "BEAC" ] && b7='BK'
     fi
