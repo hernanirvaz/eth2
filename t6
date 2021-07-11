@@ -245,12 +245,11 @@ function brs {
   if [ ! -f /home/eth/beacon-restart ]; then
     touch /home/eth/beacon-restart
     b0=$(systemctl status $ethb 2>/dev/null|grep PID|sed 's%.*PID: *\([0-9]*\).*%\1%')
-    while true; do
+    while [ -f /home/eth/beacon-restart ]; do
       b6=$(echo $H|sudo -S grep "lighthouse.$b0.* INFO Synced " /var/log/syslog 2>/dev/null|tail -n32|sed 's%.* epoch: \([0-9]*\).*%\1%'|sort -u)
-      sleep 1s
       if [ "$(echo "$b6"|wc -l)" -eq 1 ]; then
         b1=0
-        while [ $b1 -lt 400 ]; do
+        while [ $b1 -lt 400 ] && [ -f /home/eth/beacon-restart ]; do
           b4=$(echo $H|sudo -S grep "lighthouse.$b0.* INFO " /var/log/syslog 2>/dev/null|tail -n $pors|sed 's%.* INFO \([^ ]*\) .*%\1%'|sort -u)
           b5=$(echo "$b4"|head -n1)
           if [ "$(echo "$b4"|wc -l)" -eq 2 ] && [ "$(echo "$b4"|tail -n1)" = "Synced" ] && ([ "$b5" = "New" ] || [ "$b5" = "Processed" ]); then
@@ -268,10 +267,10 @@ function brs {
           sleep 3s
           b1=$(($b1+1))
         done
-        break
+        rm /home/eth/beacon-restart
       fi 
+      sleep 1s
     done
-    rm /home/eth/beacon-restart
   fi
 }
 function bs {
