@@ -121,7 +121,7 @@ function b7 {
   p=$(echo "$H"|sudo -S grep -i 'published block'     /var/log/syslog 2>/dev/null|wc -l)
   n=0;b7='OK'
   [ "$q" -gt 0     ] && n=$(($n+50*$w/$q))
-  [ "$t" -gt 0     ] && n=$(($n+70*$r/$t))
+  [ "$t" -gt 0     ] && n=$(($n+50*$r/$t))
   [ "$a" -gt 0     ] && n=$(($n+10*(5*$z+$h)/$a))
   if [ "$n" -ge $l1rs ]; then
     if [ "$n" -ge $l2rs ]; then
