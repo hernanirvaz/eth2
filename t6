@@ -245,6 +245,7 @@ function bk {
 function brs {
   if [ ! -f /home/eth/beacon-restart ]; then
     echo -e "BEAC $m" >> /home/eth/beacon.log
+    bk;echo -e "RSTI $m" >> /home/eth/beacon.log
     touch /home/eth/beacon-restart
     b0=$(systemctl status $ethb 2>/dev/null|grep PID|sed 's%.*PID: *\([0-9]*\).*%\1%')
     while [ -f /home/eth/beacon-restart ]; do
@@ -261,7 +262,7 @@ function brs {
               b3=$(($b3+$1))
               [ $b3 -ge 10 ] && [ $b3 -le 30 ] && sed "s%--target-peers [0-9]*%--target-peers $b3%" ~/$ethb.save > /etc/systemd/system/$ethb.service
             fi
-            bk;echo -e "RSTB $m" >> /home/eth/beacon.log
+            bk;echo -e "RSTF $m" >> /home/eth/beacon.log
             bp
             if [ "$2" ];then sudo reboot;else dr;ba;fi
             b1=400
