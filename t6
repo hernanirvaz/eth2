@@ -121,7 +121,7 @@ function b7 {
   p=$(echo "$H"|sudo -S grep -i 'published block'     /var/log/syslog 2>/dev/null|wc -l)
   n=0;b7='OK'
   [ "$q" -gt 0     ] && n=$(($n+50*$w/$q))
-  [ "$t" -gt 0     ] && n=$(($n+50*$r/$t))
+  [ "$t" -gt 0     ] && n=$(($n+70*$r/$t))
   [ "$a" -gt 0     ] && n=$(($n+10*(5*$z+$h)/$a))
   if [ "$n" -ge $l1rs ]; then
     if [ "$n" -ge $l2rs ]; then
@@ -210,18 +210,19 @@ function ors {
   echo -e "RSOE OK RESTAR $cunm $(date --rfc-3339=seconds) nodes: 0, blocks: 0" >> /home/eth/oeth.log
 }
 function bk {
-  t=0;y=0;v=0;x=0;m=""
+  m=""
+  t=0;y=0
   for v in $(echo $H|sudo -S grep -i 'inclusion_lag: [1-9][0-9]*' /var/log/syslog 2>/dev/null|sed 's%.*inclusion_lag: *\([0-9]*\).*%\1%')
   do y=$(($y+1));t=$(($t+$v))
   done
   x=0
   [ "$y" -gt 0 ] && x=$(($t/$y))
-  t=0;n=0;v=0;z=0;a=0;p=0;b=0;d=0;h=0;r=0
+  t=0;y=0
   for v in $(echo $H|sudo -S grep -i 'gossip' /var/log/syslog 2>/dev/null|sed 's%.*delay_ms: *\([0-9]*\).*%\1%')
-  do n=$(($n+1));t=$(($t+$v))
+  do y=$(($y+1));t=$(($t+$v))
   done
   v=0
-  [ "$n" -gt 0 ] && v=$(($t/$n))
+  [ "$y" -gt 0 ] && v=$(($t/$y))
   if [ "$1" ]; then
     resolvectl query pro-api.coinmarketcap.com 2>/dev/null 1>&2
     m='https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=ETH&convert=EUR&CMC_PRO_API_KEY=3ae5f3df-bd71-489d-a9dd-b626995fba31'
@@ -243,6 +244,7 @@ function bk {
 }
 function brs {
   if [ ! -f /home/eth/beacon-restart ]; then
+    echo -e "BEAC $m" >> /home/eth/beacon.log
     touch /home/eth/beacon-restart
     b0=$(systemctl status $ethb 2>/dev/null|grep PID|sed 's%.*PID: *\([0-9]*\).*%\1%')
     while [ -f /home/eth/beacon-restart ]; do
