@@ -61,6 +61,6 @@ rblk=4233925
 patt=$ratt
 pinc=0016444
 l1rs=1
-l2rs=9
+l2rs=5
 hors=18
 pors=7
