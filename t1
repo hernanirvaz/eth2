@@ -16,6 +16,7 @@ etho='eth-oeth'
 ethg='eth-geth'
 # eth-beacon.service                      eth2 beacon service
 ethb='eth-beacon'
+bpid=$(systemctl status $ethb 2>/dev/null|grep PID|sed 's%.*PID: *\([0-9]*\).*%\1%')
 # eth-validator.service                   eth2 validator service
 ethv='eth-validator'
 # prometheus.service                      Monitoring system and time series database
