@@ -267,7 +267,7 @@ function bh {
     [ $c20 -gt 0 ] && a20=$((n20/c20))
     [ $c15 -gt 0 ] && a15=$((n15/c15))
     [ $c10 -gt 0 ] && a10=$((n10/c10))
-    echo "RESU BN $rplg avg_incorrect_25_20_15_10: $a25 $a20 $a15 $a10"
+    echo "RESU $(systemctl status eth-beacon|grep target-peers|sed 's%.*target-peers \([0-9]*\).*%\1%') $rplg avg_incorrect_25_20_15_10: $a25 $a20 $a15 $a10"
     bk;echo -e "BEAC $m"
   fi
 }
