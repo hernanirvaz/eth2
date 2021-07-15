@@ -299,6 +299,13 @@ function ssp {
     fi
   fi
 }
+function bh {
+  [ "$1" ] || echo "RST1 GE $l1rs"
+  tail -n ${1:-$hors} /home/eth/beacon.log|head -n $((${1:-$hors}-$l2rs))
+  [ "$1" ] || echo "RST2 GE $l2rs"
+  tail -n $l2rs /home/eth/beacon.log
+  bk;echo -e "BEAC $m"
+}
 
 [ "$1" = "ts" ] && { systemctl status systemd-timesyncd|grep synchronization|sed 's%.*"\(.*\)"%\1%';timedatectl|grep synchronized; }
 [ "$1" = "ssp" ] && { ssp; }
@@ -316,7 +323,7 @@ function ssp {
 [ "$1" = "bl"  ] && { bk $2;echo -e "BEAC $m"; }
 [ "$1" = "gh"  ] && { tail -n ${2:-$hors} /home/eth/geth.log;gk;echo -e "GETH $m nodes: ${g2:-0} blocks: $n"; }
 [ "$1" = "oh"  ] && { tail -n ${2:-$hors} /home/eth/oeth.log;ok;echo -e "OETH $m nodes: ${o2:-0} blocks: $n"; }
-[ "$1" = "bh"  ] && { tail -n ${2:-$hors} /home/eth/beacon.log|head -n $((${2:-$hors}-$l2rs));echo "RST2 GE $l2rs";tail -n $l2rs /home/eth/beacon.log;bk;echo -e "BEAC $m"; }
+[ "$1" = "bh"  ] && { bh  $2; }
 [ "$1" = "gkr" ] && { g7;[ "$g7" != "OK" ] && grs ${2:-0}; }
 [ "$1" = "okr" ] && { o7;[ "$o7" != "OK" ] && ors ${2:-0}; }
 [ "$1" = "bkr" ] && { b7;[ "$b7" != "OK" ] && brs ${2:-0}; }
