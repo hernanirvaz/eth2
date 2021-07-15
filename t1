@@ -64,3 +64,5 @@ l1rs=1
 l2rs=5
 hors=18
 pors=7
+rplg=0
+[ -f /home/eth/beacon.log ] && rplg=$(cat /home/eth/beacon.log|wc -l)
