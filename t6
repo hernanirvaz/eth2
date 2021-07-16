@@ -257,7 +257,7 @@ function bh {
           if [ $f21 -ge 25 ];then
             if [ $f21 -ge 30 ]
             then n30=$((n30+f15));c30=$((c30+1))
-            lse n25=$((n25+f15));c25=$((c25+1))
+            else n25=$((n25+f15));c25=$((c25+1))
             fi
           else n20=$((n20+f15));c20=$((c20+1))
           fi
