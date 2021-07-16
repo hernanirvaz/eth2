@@ -111,7 +111,7 @@ function o7 {
 }
 function b7 {
   n=$(echo "$H"|sudo -S grep "lighthouse.$bpid" /var/log/syslog 2>/dev/null|tail -n $(($hors*200)))
-  w=0 #$(echo "$n"|grep -i 'processed block'|wc -l)
+  w=$(echo "$n"|grep -i 'processed block'|wc -l)
   q=$(echo "$n"|grep -i 'block received' |wc -l)
   r=$(echo "$n"|grep -v ' INFO '|wc -l)
   t=$(echo "$n"|grep    ' INFO '|wc -l)
@@ -120,7 +120,7 @@ function b7 {
   a=$(echo "$H"|sudo -S grep -i 'attestation success' /var/log/syslog 2>/dev/null|wc -l)
   p=$(echo "$H"|sudo -S grep -i 'published block'     /var/log/syslog 2>/dev/null|wc -l)
   n=0;b7='OK'
-  [ "$q" -gt 0 ] && n=$(($n+90*$w/$q))
+  [ "$q" -gt 0 ] && n=$(($n+50*$w/$q))
   [ "$t" -gt 0 ] && n=$(($n+30*$r/$t))
   [ "$a" -gt 0 ] && n=$(($n+10*(5*$z+$h)/$a))
   if [ "$n" -ge $l1rs ]; then
