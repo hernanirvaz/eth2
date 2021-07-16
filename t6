@@ -111,8 +111,8 @@ function o7 {
 }
 function b7 {
   n=$(echo "$H"|sudo -S grep "lighthouse.$bpid" /var/log/syslog 2>/dev/null|tail -n $(($hors*200)))
-  w=$(echo "$n"|grep -i 'processed block'|wc -l)
-  q=$(echo "$n"|grep -i 'block received' |wc -l)
+  w=0 #$(echo "$n"|grep -i 'processed block'|wc -l)
+  q=0 #$(echo "$n"|grep -i 'block received' |wc -l)
   r=$(echo "$n"|grep -v ' INFO '|wc -l)
   t=$(echo "$n"|grep    ' INFO '|wc -l)
   z=$(echo "$H"|sudo -S grep -i 'attestation missing' /var/log/syslog 2>/dev/null|wc -l)
