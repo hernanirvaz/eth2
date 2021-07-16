@@ -112,7 +112,7 @@ function o7 {
 function b7 {
   n=$(echo "$H"|sudo -S grep "lighthouse.$bpid" /var/log/syslog 2>/dev/null|tail -n $(($hors*200)))
   w=0 #$(echo "$n"|grep -i 'processed block'|wc -l)
-  q=0 #$(echo "$n"|grep -i 'block received' |wc -l)
+  q=$(echo "$n"|grep -i 'block received' |wc -l)
   r=$(echo "$n"|grep -v ' INFO '|wc -l)
   t=$(echo "$n"|grep    ' INFO '|wc -l)
   z=$(echo "$H"|sudo -S grep -i 'attestation missing' /var/log/syslog 2>/dev/null|wc -l)
@@ -120,7 +120,7 @@ function b7 {
   a=$(echo "$H"|sudo -S grep -i 'attestation success' /var/log/syslog 2>/dev/null|wc -l)
   p=$(echo "$H"|sudo -S grep -i 'published block'     /var/log/syslog 2>/dev/null|wc -l)
   n=0;b7='OK'
-  #[ "$q" -gt 0 ] && n=$(($n+90*$w/$q))
+  [ "$q" -gt 0 ] && n=$(($n+90*$w/$q))
   [ "$t" -gt 0 ] && n=$(($n+30*$r/$t))
   [ "$a" -gt 0 ] && n=$(($n+10*(5*$z+$h)/$a))
   if [ "$n" -ge $l1rs ]; then
@@ -260,13 +260,14 @@ function bm {
       fi
     else n10=$((n10+v[14]));c10=$((c10+1))
     fi
-  done <<< $(tail -n $rplg /home/eth/beacon.log)
+  done <<< $(tail -n ${1:-$rplg} /home/eth/beacon.log)
   [ $c30 -gt 0 ] && a30=$((n30/c30))
   [ $c25 -gt 0 ] && a25=$((n25/c25))
   [ $c20 -gt 0 ] && a20=$((n20/c20))
   [ $c15 -gt 0 ] && a15=$((n15/c15))
   [ $c10 -gt 0 ] && a10=$((n10/c10))
-  m="$(systemctl status eth-beacon|grep target-peers|sed 's%.*target-peers \([0-9]*\).*%\1%') $rplg"
+  m="$(systemctl status eth-beacon|grep target-peers|sed 's%.*target-peers \([0-9]*\).*%\1%') ${1:-$rplg}"
+  m="$m $cunm $(date --rfc-3339=seconds)"
   m="$m count_30_25_20_15_10: $c30 $c25 $c20 $c15 $c10 avg_incorrect_30_25_20_15_10: $a30 $a25 $a20 $a15 $a10"
 }
 function bh {
@@ -274,7 +275,7 @@ function bh {
   tail -n ${1:-$hors} /home/eth/beacon.log|head -n $((${1:-$hors}-$l2rs))
   [ "$1" ] || echo "RST2 GE $l2rs"
   tail -n $l2rs /home/eth/beacon.log
-  [ "$1" ] || { bm;echo -e "RESU $m"; }
+  [ "$1" ] || { bm;echo -e "BNRS $m"; }
   bk;echo -e "BEAC $m"
 }
 function brs {
@@ -349,6 +350,7 @@ function ssp {
 [ "$1" = "gl"  ] && { gk   ;echo -e "GETH $m nodes: ${g2:-0} blocks: $n"; }
 [ "$1" = "ol"  ] && { ok   ;echo -e "OETH $m nodes: ${o2:-0} blocks: $n"; }
 [ "$1" = "bl"  ] && { bk $2;echo -e "BEAC $m"; }
+[ "$1" = "bm"  ] && { bm $2;echo -e "BNRS $m"; }
 [ "$1" = "gh"  ] && { tail -n ${2:-$hors} /home/eth/geth.log;gk;echo -e "GETH $m nodes: ${g2:-0} blocks: $n"; }
 [ "$1" = "oh"  ] && { tail -n ${2:-$hors} /home/eth/oeth.log;ok;echo -e "OETH $m nodes: ${o2:-0} blocks: $n"; }
 [ "$1" = "bh"  ] && { bh  $2; }
