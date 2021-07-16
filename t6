@@ -242,40 +242,40 @@ function bk {
   m="$m avg_delays: $v"
   [ "$b7" != 'OK' ] && resolvectl query smtp.gmail.com 2>/dev/null 1>&2
 }
+function bm {
+  n30=0;n25=0;n20=0;n15=0;n10=0
+  c30=0;c25=0;c20=0;c15=0;c10=0
+  a30=0;a25=0;a20=0;a15=0;a10=0
+  while read -a v;do
+    if [ ${v[20]} -ge 15 ];then
+      if [ ${v[20]} -ge 20 ];then
+        if [ ${v[20]} -ge 25 ];then
+          if [ ${v[20]} -ge 30 ]
+          then n30=$((n30+v[14]));c30=$((c30+1))
+          else n25=$((n25+v[14]));c25=$((c25+1))
+          fi
+        else n20=$((n20+v[14]));c20=$((c20+1))
+        fi
+      else n15=$((n15+v[14]));c15=$((c15+1))
+      fi
+    else n10=$((n10+v[14]));c10=$((c10+1))
+    fi
+  done <<< $(tail -n $rplg /home/eth/beacon.log)
+  [ $c30 -gt 0 ] && a30=$((n30/c30))
+  [ $c25 -gt 0 ] && a25=$((n25/c25))
+  [ $c20 -gt 0 ] && a20=$((n20/c20))
+  [ $c15 -gt 0 ] && a15=$((n15/c15))
+  [ $c10 -gt 0 ] && a10=$((n10/c10))
+  m="$(systemctl status eth-beacon|grep target-peers|sed 's%.*target-peers \([0-9]*\).*%\1%') $rplg"
+  m="$m count_30_25_20_15_10: $c30 $c25 $c20 $c15 $c10 avg_incorrect_30_25_20_15_10: $a30 $a25 $a20 $a15 $a10"
+}
 function bh {
   [ "$1" ] || echo "RST1 GE $l1rs"
   tail -n ${1:-$hors} /home/eth/beacon.log|head -n $((${1:-$hors}-$l2rs))
   [ "$1" ] || echo "RST2 GE $l2rs"
   tail -n $l2rs /home/eth/beacon.log
-  if [ ! "$1" ]; then
-    n30=0;n25=0;n20=0;n15=0;n10=0
-    c30=0;c25=0;c20=0;c15=0;c10=0
-    a30=0;a25=0;a20=0;a15=0;a10=0
-    while read -r f01 f02 f03 f04 f05 f06 f07 f08 f09 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21 f22 f23 f24 f25;do
-      if [ $f21 -ge 15 ];then
-        if [ $f21 -ge 20 ];then
-          if [ $f21 -ge 25 ];then
-            if [ $f21 -ge 30 ]
-            then n30=$((n30+f15));c30=$((c30+1))
-            else n25=$((n25+f15));c25=$((c25+1))
-            fi
-          else n20=$((n20+f15));c20=$((c20+1))
-          fi
-        else n15=$((n15+f15));c15=$((c15+1))
-        fi
-      else n10=$((n10+f15));c10=$((c10+1))
-      fi
-    done <<< $(tail -n $rplg /home/eth/beacon.log)
-    [ $c30 -gt 0 ] && a30=$((n30/c30))
-    [ $c25 -gt 0 ] && a25=$((n25/c25))
-    [ $c20 -gt 0 ] && a20=$((n20/c20))
-    [ $c15 -gt 0 ] && a15=$((n15/c15))
-    [ $c10 -gt 0 ] && a10=$((n10/c10))
-    m="RESU $(systemctl status eth-beacon|grep target-peers|sed 's%.*target-peers \([0-9]*\).*%\1%') $rplg"
-    echo "$m count_30_25_20_15_10: $c30 $c25 $c20 $c15 $c10 avg_incorrect_30_25_20_15_10: $a30 $a25 $a20 $a15 $a10"
-    bk
-    echo -e "BEAC $m"
-  fi
+  [ "$1" ] || { bm;echo -e "RESU $m"; }
+  bk;echo -e "BEAC $m"
 }
 function brs {
   if [ ! -f /home/eth/beacon-restart ]; then
