@@ -70,7 +70,7 @@ function fp { [ "$(systemctl status $ethf 2>/dev/null|grep -i loaded)" ] && { uu
 function gd { uu "systemctl disable $ethg";gcl;uu 'ufw reload'; }
 function od { uu "systemctl disable $etho";ocl;uu 'ufw reload'; }
 function bd { uu "systemctl disable $ethb";bcl;uu 'ufw reload'; }
-function vd { uu "systemctl disable $ethv";vcl;uu 'ufw reload';ssp;touch $dtdi/vc_lock; }
+function vd { uu "systemctl disable $ethv";vcl;uu 'ufw reload';touch $dtdi/vc_lock; }
 function pd { [ "$(systemctl status $ethp 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethp"; } }
 function nd { [ "$(systemctl status $ethn 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethn"; } }
 function fd { [ "$(systemctl status $ethf 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethf";fcl;uu 'ufw reload'; } }
@@ -320,24 +320,23 @@ function bs {
   done
 }
 function ssp {
-  if [ ! -f $dtdi/vc_lock ] && [ -f $dtdi/vc_slash ] && [ -f $dtdi/vc_keys ]; then
+  echo -e "${i}QUER MESMO TRANSFERIR VALIDATORS?${f}"
+  read rsp
+  if [ "$rsp" = 'sim' ] && [ ! -f $dtdi/vc_slash ] && [ ! -f $dtdi/vc_lock ] && [ -f $dtdi/vc_keys ]; then
+    vp;vd;sleep 10s
     echo -e "${i}SAVE SLASHING PROTECTION DB${f}"
-    echo $H|sudo -S cp $vldt/slashing_protection.sqlite         /home/eth 2>/dev/null
-    echo $H|sudo -S cp $vldt/slashing_protection.sqlite-journal /home/eth 2>/dev/null
+    echo $H|sudo -S cp $vldt/slashing_protection.sqlite /home/eth 2>/dev/null
     sudo chown eth:eth /home/eth/slashing_protection.sqlite
-    sudo chown eth:eth /home/eth/slashing_protection.sqlite-journal
     if [ "$cunm" = "$znm3" ]; then
-      scp /home/eth/slashing_protection.sqlite         vpss:~
-      scp /home/eth/slashing_protection.sqlite-journal vpss:~
+      scp /home/eth/slashing_protection.sqlite vpss:~
     else
-      scp /home/eth/slashing_protection.sqlite         ztc3:~
-      scp /home/eth/slashing_protection.sqlite-journal ztc3:~
+      scp /home/eth/slashing_protection.sqlite ztc3:~
     fi
   fi
 }
 
-[ "$1" = "ts" ] && { systemctl status systemd-timesyncd|grep synchronization|sed 's%.*"\(.*\)"%\1%';timedatectl|grep synchronized; }
-[ "$1" = "ssp" ] && { ssp; }
+[ "$1" = "ts"  ] && { systemctl status systemd-timesyncd|grep synchronization|sed 's%.*"\(.*\)"%\1%';timedatectl|grep synchronized; }
+[ "$1" = "vcp" ] && { ssp; }
 [ "$1" = "rs"  ] && { rs; }
 [ "$1" = "ds"  ] && { ds; }
 [ "$1" = "rq"  ] && { rq $2; }
@@ -494,7 +493,6 @@ if [ -z "$1" ]; then
   c1="$c1\nsl [s]\t\tlista system journal  s=TOTAL"
   c1="$c1\nel [s]\t\tlista geth,lighthouse s=TOTAL"
   c1="$c1\nbs [n]\t\tlista erros com custo n=max erros"
-  c1="$c1\nssp\t\tsave slashing protection DB"
   c1="$c1\nll\t\tlista servicos"
   c1="$c1\nlp\t\tlista portas"
   c1="$c1\nnp\t\tnode peers"

@@ -87,20 +87,19 @@ if [ -x /usr/local/bin/lighthouse ]; then
       echo -e "sudo chmod 777 $vldt"
       echo -e "sudo chmod 666 $vldt/slashing_protection.sqlite*"
       echo -e "t6 vpr;t6 vds"
-      echo -e "touch $dtdi/vc_lock"
+      touch $dtdi/vc_lock
     fi
     if [ ! -f $dtdi/vc_slash ] && [ -f $dtdi/vc_lock ] && [ -f $dtdi/vc_keys ]; then
       echo -e "${i}COPIAR $vldt/slashing_protection.sqlite*${f}"
       echo $H|sudo -S mkdir -p $vldt 2>/dev/null
       sudo chown $meeu:$meeu $vldt
       if [ -f ~/slashing_protection.sqlite ]; then
-        rm $vldt/slashing_protection.sqlite-journal
+        sudo rm $vldt/slashing_protection.sqlite $vldt/slashing_protection.sqlite-journal
         cp ~/slashing_protection.sqlite $vldt
+        [ -f $vldt/slashing_protection.sqlite ] && { touch $dtdi/vc_slash; }
         chmod 600 $vldt/slashing_protection.sqlite
+        chown $user:$user $vldt/slashing_protection.sqlite
       fi
-      [ -f ~/slashing_protection.sqlite-journal ] && { cp ~/slashing_protection.sqlite-journal $vldt;chmod 600 $vldt/slashing_protection.sqlite-journal; }
-      [ -f $vldt/slashing_protection.sqlite     ] && { touch $dtdi/vc_slash; }
-      if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
       sudo chown $user:$user $vldt
       sudo chmod 700 $vldt
     fi
