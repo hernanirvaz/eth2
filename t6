@@ -269,15 +269,15 @@ function bm {
   [ $c10 -gt 0 ] && a10=$((n10/c10))
   m="$(systemctl status eth-beacon|grep target-peers|sed 's%.*target-peers \([0-9]*\).*%\1%') ${1:-$rplg}"
   m="$m $cunm $(date --rfc-3339=seconds)"
-  m="$m count_30_25_20_15_10: $c30 $c25 $c20 $c15 $c10 avg_incorrect_30_25_20_15_10: $a30 $a25 $a20 $a15 $a10 max_incorrect_30_25_20_15_10: $m30 $m25 $m20 $m15 $m10"
+  m="$m cnt_30_25_20_15_10: $c30 $c25 $c20 $c15 $c10 avg_incorrect: $a30 $a25 $a20 $a15 $a10 max_incorrect: $m30 $m25 $m20 $m15 $m10"
 }
 function bh {
-  [ "$1" ] || echo "RST1 GE $l1rs"
+  [ "$1" ] || echo -e "RST1 GE $l1rs"
   tail -n ${1:-$hors} /home/eth/beacon.log|head -n $((${1:-$hors}-$l2rs))
-  [ "$1" ] || echo "RST2 GE $l2rs"
+  [ "$1" ] || echo -e "RST2 GE $l2rs"
   tail -n $l2rs /home/eth/beacon.log
-  [ "$1" ] || { bm;echo -e "BNRS $m"; }
-  bk;echo -e "BEAC $m"
+  bk;echo -e "\nBEAC $m"
+  [ "$1" ] || { bm;echo -e "\nBNRS $m"; }
 }
 function brs {
   if [ ! -f /home/eth/beacon-restart ]; then
