@@ -149,7 +149,6 @@ else
       curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
     fi
     source ~/.cargo/env
-    # eth-oeth.service eth1 openeth service
     if [ -f /etc/systemd/system/$etho.service ]; then
       if [ -f ~/openethereum/README.md ]; then
         cd ~/openethereum
@@ -164,6 +163,7 @@ else
       git fetch
       t=$(git rev-list --tags --max-count=1)
       git checkout $(git describe --tags $t)
+      echo -e "${i}VAI COMPILAR OPEN ETHEREUM${f}"
       cargo build --release --features final
       if [ $? -eq 0  ] && [ -x ~/openethereum/target/release/openethereum ]; then
         if [ -x /usr/local/bin/openethereum ]; then
@@ -175,39 +175,38 @@ else
         echo -e "${i}NAO EXISTE OPENETHEREUM COMPILADO PARA INSTALAR${f}"
       fi
     fi
-    if [ -f ~/lighthouse/README.md ]; then
-      cd ~/lighthouse
-      make clean
-      cargo clean
-    else
-      cd ~
-      echo $H|sudo -S rm -rf ~/lighthouse 2>/dev/null
-      git clone https://github.com/sigp/lighthouse.git
-      cd ~/lighthouse
-    fi
-    git fetch
-    t=$(git rev-list --tags --max-count=1)
-    git checkout $(git describe --tags $t)
-    echo -e "${i}VAI COMPILAR LIGHT${f}"
-    make
-    if [ $? -eq 0  ] && [ -x ~/.cargo/bin/lighthouse ]; then
-      if [ "$cunm" = "$znm1" ]; then
-        scp ~/.cargo/bin/lighthouse ztc2:~
-        scp ~/.cargo/bin/lighthouse ztc3:~
+    if [ -f /etc/systemd/system/$ethg.service ]; then
+      if [ -f ~/lighthouse/README.md ]; then
+        cd ~/lighthouse
+        make clean
+        cargo clean
+      else
+        cd ~
+        echo $H|sudo -S rm -rf ~/lighthouse 2>/dev/null
+        git clone https://github.com/sigp/lighthouse.git
+        cd ~/lighthouse
       fi
-      if [ "$cunm" = "$vnm1" ]; then
-        #scp ~/.cargo/bin/lighthouse vpsm:~
-        scp ~/.cargo/bin/lighthouse vpss:~
+      git fetch
+      t=$(git rev-list --tags --max-count=1)
+      git checkout $(git describe --tags $t)
+      echo -e "${i}VAI COMPILAR LIGHT${f}"
+      make
+      if [ $? -eq 0  ] && [ -x ~/.cargo/bin/lighthouse ]; then
+        if [ "$cunm" = "$znm1" ]; then
+          scp ~/.cargo/bin/lighthouse ztc2:~
+          scp ~/.cargo/bin/lighthouse ztc3:~
+        fi
+        if [ "$cunm" = "$vnm1" ]; then
+          scp ~/.cargo/bin/lighthouse vpss:~
+        fi
+        if [ -x /usr/local/bin/lighthouse ]; then
+          echo $H|sudo -S cp /usr/local/bin/lighthouse /usr/local/bin/lighthouse.save 2>/dev/null
+        fi
+        echo $H|sudo -S cp ~/.cargo/bin/lighthouse /usr/local/bin 2>/dev/null
+        echo $H|sudo -S chmod 755 /usr/local/bin/lighthouse 2>/dev/null
+      else
+        echo -e "${i}NAO EXISTE LIGHT COMPILADO PARA INSTALAR${f}"
       fi
-      if [ -x /usr/local/bin/lighthouse ]; then
-        echo $H|sudo -S cp /usr/local/bin/lighthouse /usr/local/bin/lighthouse.save 2>/dev/null
-        t6 vpr
-        t6 bpr
-      fi
-      echo $H|sudo -S cp ~/.cargo/bin/lighthouse /usr/local/bin 2>/dev/null
-      echo $H|sudo -S chmod 755 /usr/local/bin/lighthouse 2>/dev/null
-    else
-      echo -e "${i}NAO EXISTE LIGHT COMPILADO PARA INSTALAR${f}"
     fi
   else
     echo -e "${i}RUST NAO DEVE SER INSTALADO AQUI${f}"
