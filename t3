@@ -138,12 +138,13 @@ if [ -x /usr/local/bin/lighthouse ]; then
 else
   if [ "$cunm" = "$znm1" ] || [ "$cunm" = "$vnm1" ]; then
     if [ -x ~/.cargo/bin/rustup ]; then
-      if [ "$1" ];then
+      if [ "$1" ]; then
+        echo -e "${i}RUST OVERRIDE SET $1${f}"
+        rustup override set $1
+      else
         echo -e "${i}UPDATE RUST${f}"
         source ~/.cargo/env
         rustup update
-      else
-        echo -e "${i}RUST NOT UPDATED PARM1 ($1)${f}"
       fi
     else
       echo -e "${i}INSTALAR DEPENDENCIAS RUST${f}"
