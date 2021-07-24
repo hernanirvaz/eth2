@@ -138,9 +138,13 @@ if [ -x /usr/local/bin/lighthouse ]; then
 else
   if [ "$cunm" = "$znm1" ] || [ "$cunm" = "$vnm1" ]; then
     if [ -x ~/.cargo/bin/rustup ]; then
-      echo -e "${i}UPDATE RUST${f}"
-      source ~/.cargo/env
-      rustup update
+      if [ "$1" ];then
+        echo -e "${i}UPDATE RUST${f}"
+        source ~/.cargo/env
+        rustup update
+      else
+        echo -e "${i}RUST NOT UPDATED PARM1 ($1)${f}"
+      fi
     else
       echo -e "${i}INSTALAR DEPENDENCIAS RUST${f}"
       echo $H|sudo -S apt install -y git gcc g++ make cmake pkg-config libssl-dev build-essential libudev-dev perl yasm 2>/dev/null
