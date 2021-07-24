@@ -120,8 +120,8 @@ function b7 {
   a=$(echo "$H"|sudo -S grep -i 'attestation success' /var/log/syslog 2>/dev/null|wc -l)
   p=$(echo "$H"|sudo -S grep -i 'published block'     /var/log/syslog 2>/dev/null|wc -l)
   n=0;b7='OK'
-  #[ "$q" -gt 0 ] && n=$(($n+50*$w/$q))
   [ "$t" -gt 0 ] && n=$(($n+20*$r/$t))
+  [ "$q" -gt 0 ] && n=$(($n+10*$w/$q))
   [ "$a" -gt 0 ] && n=$(($n+10*(5*$z+$h)/$a))
   if [ "$n" -ge $l1rs ]; then
     if [ "$n" -ge $l2rs ]; then
