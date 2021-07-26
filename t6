@@ -218,7 +218,7 @@ function bk {
   x=0
   [ "$y" -gt 0 ] && x=$(($t/$y))
   t=0;y=0
-  for v in $(echo $H|sudo -S grep -i 'gossip' /var/log/syslog 2>/dev/null|sed 's%.*delay_ms: *\([0-9]*\).*%\1%')
+  for v in $(echo $H|sudo -S grep -i 'gossip, ' /var/log/syslog 2>/dev/null|sed 's%.*delay_ms: *\([0-9]*\).*%\1%')
   do y=$(($y+1));t=$(($t+$v))
   done
   v=0
