@@ -207,7 +207,7 @@ function ors {
     [ $o4 -ge 10 ] && [ $o4 -le 15 ] && sed "s%--max-peers=[0-9]*%--max-peers=$o4%" ~/$etho.save > /etc/systemd/system/$etho.service
   fi
   op;dr;sleep 30s;oa
-  echo -e "RSOE OK RESTAR $cunm $(date --rfc-3339=seconds) nodes: 0, blocks: 0" >> /home/eth/oeth.log
+  echo -e "RSTO OK RESTAR $cunm $(date --rfc-3339=seconds) nodes: 0, blocks: 0" >> /home/eth/oeth.log
 }
 function bk {
   m=""
