@@ -127,7 +127,7 @@ else
 		Group=$user
 		Restart=always
 		RestartSec=10
-		ExecStart=/usr/bin/geth$blkc --datadir $golb --http --http.addr $zip1 --maxpeers $maxp --cache $cach 
+		ExecStart=/usr/bin/geth$blkc --datadir $golb --http --http.addr $zip1 --maxpeers $maxp --cache $cach --ipcdisable
 		ExecStopPost=/home/eth/eth2/t8mail GETHSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 		
 		[Install]
@@ -161,7 +161,7 @@ else
 		User=$user
 		Group=$user
 		Restart=on-failure
-		ExecStart=/usr/local/bin/openethereum --base-path=/var/lib/openethereum --jsonrpc-interface=$zip1 --cache-size=$cach --max-peers=$maxp --no-ws --no-ipc
+		ExecStart=/usr/local/bin/openethereum --base-path=/var/lib/openethereum --jsonrpc-interface=$zip1 --max-peers=$maxp --cache-size=$cach --no-ws --no-ipc
 		ExecStopPost=/home/eth/eth2/t8mail GETHSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 		KillSignal=SIGTERM
 		TimeoutStopSec=300
