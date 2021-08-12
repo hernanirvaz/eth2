@@ -272,7 +272,7 @@ function bm {
   m="$m cnt_30_25_20_15_10: $c30 $c25 $c20 $c15 $c10 max_incorrect: $m30 $m25 $m20 $m15 $m10 avg_incorrect: $a30 $a25 $a20 $a15 $a10"
 }
 function bh {
-  [ "$1" ] || echo -e "BEAC GE $l1rs"
+  [ "$1" ] || echo -e "BEAC GE $hors"
   tail -n ${1:-$hors} /home/eth/beacon.log|head -n $((${1:-$hors}-$l2rs))
   [ "$1" ] || echo -e "BEAC GE $l2rs"
   tail -n $l2rs /home/eth/beacon.log
