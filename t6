@@ -277,7 +277,7 @@ function bh {
   [ "$1" ] || echo -e "BEAC GE $l2rs"
   tail -n $l2rs /home/eth/beacon.log
   bk;echo -e "\nBEAC $m"
-  [ "$1" ] || { bm;echo -e "\nBNRS $m"; }
+  [ "$1" ] || { bm;echo -e "\nBEAC $m"; }
 }
 function brs {
   if [ ! -f /home/eth/beacon-restart ]; then
@@ -350,7 +350,7 @@ function ssp {
 [ "$1" = "gl"  ] && { gk   ;echo -e "GETH $m nodes: ${g2:-0} blocks: $n"; }
 [ "$1" = "ol"  ] && { ok   ;echo -e "OETH $m nodes: ${o2:-0} blocks: $n"; }
 [ "$1" = "bl"  ] && { bk $2;echo -e "BEAC $m"; }
-[ "$1" = "bm"  ] && { bm $2;echo -e "BNRS $m"; }
+[ "$1" = "bm"  ] && { bm $2;echo -e "BEAC $m"; }
 [ "$1" = "gh"  ] && { tail -n ${2:-$hors} /home/eth/geth.log;gk;echo -e "GETH $m nodes: ${g2:-0} blocks: $n"; }
 [ "$1" = "oh"  ] && { tail -n ${2:-$hors} /home/eth/oeth.log;ok;echo -e "OETH $m nodes: ${o2:-0} blocks: $n"; }
 [ "$1" = "bh"  ] && { bh  $2; }
