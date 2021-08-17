@@ -75,9 +75,8 @@ function pd { [ "$(systemctl status $ethp 2>/dev/null|grep -i loaded)" ] && { uu
 function nd { [ "$(systemctl status $ethn 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethn"; } }
 function fd { [ "$(systemctl status $ethf 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethf";fcl;uu 'ufw reload'; } }
 function g0 { g0=0;[ -d /var/lib/goethereum ] && g0=$(echo $H|sudo -S du -s /var/lib/goethereum 2>/dev/null|cut -f1); }
-function g1 { g1=0;[ -d /var/lib/goethereum ] && { if [ "$cunm" = "$znm1" ];then g="http://$zip1:8545";else g="http://$vip1:8545";fi;g1=$(geth attach $g --exec eth.syncing); }; }
-function g2 { g2=0;[ -d /var/lib/goethereum ] && { if [ "$cunm" = "$znm1" ];then g="http://$zip1:8545";else g="http://$vip1:8545";fi;g2=$(geth attach $g --exec net.peerCount); }; }
-function b2 { b2=0;[ -d /var/lib/lighthouse ] && b2=$(echo $H|sudo -S grep -i 'lighthouse.*peers:' /var/log/syslog 2>/dev/null|tail -n 1|sed 's%.*peers: *\([0-9]*\).*%\1%'); }
+function g1 { g1=0;[ "$(systemctl status $ethg 2>/dev/null|grep -i running)" ] && { if [ "$cunm" = "$znm1" ];then g="http://$zip1:8545";else g="http://$vip1:8545";fi;g1=$(geth attach $g --exec eth.syncing); }; }
+function g2 { g2=0;[ "$(systemctl status $ethg 2>/dev/null|grep -i running)" ] && { if [ "$cunm" = "$znm1" ];then g="http://$zip1:8545";else g="http://$vip1:8545";fi;g2=$(geth attach $g --exec net.peerCount); }; }
 function g7 {
   t=-1;n=0;g7='OK'
   if [ "$(systemctl status $ethg 2>/dev/null|grep -i running)" ] && [ -f /home/eth/geth.log ]; then
@@ -109,6 +108,7 @@ function o7 {
   fi
   [ "$n" -eq "$t" ] && o7='BK'
 }
+function b2 { b2=0;[ -d /var/lib/lighthouse ] && b2=$(echo $H|sudo -S grep -i 'lighthouse.*peers:' /var/log/syslog 2>/dev/null|tail -n 1|sed 's%.*peers: *\([0-9]*\).*%\1%'); }
 function b7 {
   n=$(echo "$H"|sudo -S grep "lighthouse.$bpid" /var/log/syslog 2>/dev/null|tail -n $(($hors*200)))
   w=$(echo "$n"|grep -i 'processed block'|wc -l)
