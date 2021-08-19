@@ -197,7 +197,7 @@ function grs {
     [ $g4 -ge 5 ] && [ $g4 -le 15 ] && sed "s%--maxpeers [0-9]*%--maxpeers $g4%" ~/$ethg.save > /etc/systemd/system/$ethg.service
   fi
   gp;dr;sleep 30s;ga
-  echo -e "RSTG OK RESTAR $cunm $(date --rfc-3339=seconds) nodes: 0, blocks: 0" >> /home/eth/geth.log
+  echo -e "GETH OK RESTAR $cunm $(date --rfc-3339=seconds) nodes: 0 blocks: 0" >> /home/eth/geth.log
 }
 function ors {
   if [ $1 -ne 0 ]; then
@@ -207,7 +207,7 @@ function ors {
     [ $o4 -ge 10 ] && [ $o4 -le 15 ] && sed "s%--max-peers=[0-9]*%--max-peers=$o4%" ~/$etho.save > /etc/systemd/system/$etho.service
   fi
   op;dr;sleep 30s;oa
-  echo -e "RSTO OK RESTAR $cunm $(date --rfc-3339=seconds) nodes: 0, blocks: 0" >> /home/eth/oeth.log
+  echo -e "OETH OK RESTAR $cunm $(date --rfc-3339=seconds) nodes: 0 blocks: 0" >> /home/eth/oeth.log
 }
 function bk {
   m=""
@@ -345,9 +345,6 @@ function ssp {
 [ "$1" = "cr"  ] && { cr; }
 [ "$1" = "sr"  ] && { sr;sf; }
 [ "$1" = "gs"  ] && { gs   ;echo -e $m; }
-[ "$1" = "gk"  ] && { gk   ;echo -e "GETH $m \n\nNODES\t\t${g2:-0}\nSEGMENTS\t$n"; }
-[ "$1" = "ok"  ] && { ok   ;echo -e "OETH $m \n\nNODES\t\t${o2:-0}\nSEGMENTS\t$n"; }
-[ "$1" = "bk"  ] && { bk $2;echo -e "BEAC $m"; }
 [ "$1" = "gl"  ] && { gk   ;echo -e "GETH $m nodes: ${g2:-0} blocks: $n"; }
 [ "$1" = "ol"  ] && { ok   ;echo -e "OETH $m nodes: ${o2:-0} blocks: $n"; }
 [ "$1" = "bl"  ] && { bk $2;echo -e "BEAC $m"; }
