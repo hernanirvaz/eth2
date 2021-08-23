@@ -19,8 +19,11 @@ fi
 # openethereum update
 if [ "$1" = "oeth" ] && [ -x ~/.cargo/bin/rustup ] && ([ "$cunm" = "$znm1" ] || [ "$cunm" = "$vnm1" ]); then
   echo -e "${i}UPDATE RUST${f}"
-  rustup update
-  resolvectl query github.com
+  resolvectl query static.rust-lang.org
+  #rustup toolchain install 1.52.1
+  #rustup override set 1.52.1
+  #rustup override unset
+  rustup update stable
   if [ -f ~/openethereum/README.md ]; then
     cd ~/openethereum
     make clean
@@ -31,6 +34,7 @@ if [ "$1" = "oeth" ] && [ -x ~/.cargo/bin/rustup ] && ([ "$cunm" = "$znm1" ] || 
     git clone https://github.com/openethereum/openethereum
     cd ~/openethereum
   fi
+  resolvectl query github.com
   git fetch
   t=$(git rev-list --tags --max-count=1)
   git checkout $(git describe --tags $t)
@@ -54,7 +58,10 @@ if [ "$1" = "eth2" ]; then
     if [ -x ~/.cargo/bin/rustup ]; then
       echo -e "${i}UPDATE RUST${f}"
       resolvectl query static.rust-lang.org
-      rustup update
+      #rustup toolchain install 1.52.1
+      #rustup override set 1.52.1
+      #rustup override unset
+      rustup update stable
     fi
     if [ -f ~/lighthouse/README.md ]; then
       cd ~/lighthouse
@@ -82,9 +89,6 @@ if [ "$1" = "eth2" ]; then
       if [ "$cunm" = "$znm1" ]; then
         scp ~/.cargo/bin/lighthouse $zip2:~
         scp ~/.cargo/bin/lighthouse $zip3:~
-      fi
-      if [ "$cunm" = "$vnm1" ]; then
-        #scp ~/.cargo/bin/lighthouse $vip2:~
         scp ~/.cargo/bin/lighthouse $vip3:~
       fi
       if [ -x /usr/local/bin/lighthouse ]; then
