@@ -218,6 +218,12 @@ function bk {
   x=0
   [ "$y" -gt 0 ] && x=$(($t/$y))
   t=0;y=0
+  for v in $(echo $H|sudo -S grep -i 'inclusion delay' /var/log/syslog 2>/dev/null|sed 's%.*delay: *\([0-9]*\).*%\1%')
+  do y=$(($y+1));t=$(($t+$v))
+  done
+  l=0
+  [ "$y" -gt 0 ] && l=$(($t/$y))
+  t=0;y=0
   for v in $(echo $H|sudo -S grep -i 'src: gossip' /var/log/syslog 2>/dev/null|sed 's%.*delay_ms: *\([0-9]*\).*%\1%')
   do y=$(($y+1));t=$(($t+$v))
   done
@@ -238,8 +244,7 @@ function bk {
   m="$m attestations_blocks: $a $p"
   m="$m erros: $z $h $w $q $r $t"
   m="$m nodes: ${b2:-0}"
-  m="$m avg_lags: $x"
-  m="$m avg_delays: $v"
+  m="$m avg_delays: $x $l $v"
   [ "$b7" != 'OK' ] && resolvectl query smtp.gmail.com 2>/dev/null 1>&2
 }
 function bm {
