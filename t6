@@ -116,7 +116,7 @@ function b7 {
   r=$(echo "$n"|grep -v ' INFO '|wc -l)
   t=$(echo "$n"|grep    ' INFO '|wc -l)
   z=$(echo "$H"|sudo -S grep -i 'attestation missing' /var/log/syslog 2>/dev/null|wc -l)
-  h=$(echo "$H"|sudo -S grep -i 'to an incorrect'     /var/log/syslog 2>/dev/null|wc -l)
+  h=$(echo "$H"|sudo -S grep -i 'failed to match'     /var/log/syslog 2>/dev/null|wc -l)
   a=$(echo "$H"|sudo -S grep -i 'attestation success' /var/log/syslog 2>/dev/null|wc -l)
   p=$(echo "$H"|sudo -S grep -i 'published block'     /var/log/syslog 2>/dev/null|wc -l)
   n=0;b7='OK'
