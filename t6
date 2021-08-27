@@ -303,8 +303,8 @@ function brs {
               [ $b3 -ge 10 ] && [ $b3 -le 30 ] && sed "s%--target-peers [0-9]*%--target-peers $b3%" ~/$ethb.save > /etc/systemd/system/$ethb.service
             fi
             bk;echo -e "RSTF $m" >> /home/eth/beacon.log
-            bp
             [ "$2" = "bnvc" ] && vp
+            bp
             dr
             b1=400
             rm /home/eth/beacon-restart
