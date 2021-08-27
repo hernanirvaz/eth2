@@ -303,10 +303,17 @@ function brs {
               [ $b3 -ge 10 ] && [ $b3 -le 30 ] && sed "s%--target-peers [0-9]*%--target-peers $b3%" ~/$ethb.save > /etc/systemd/system/$ethb.service
             fi
             bk;echo -e "RSTF $m" >> /home/eth/beacon.log
-            bp;dr
+            bp
+            [ "$2" = "bnvc" ] && vp
+            dr
             b1=400
             rm /home/eth/beacon-restart
-            if [ "$2" ];then sudo reboot;else ba;fi
+            if [ "$2" = "reboot" ]; then
+              sudo reboot
+            else
+              ba
+              [ "$2" = "bnvc" ] && va
+            fi
           fi
           sleep 3s
           b1=$(($b1+1))
@@ -367,6 +374,7 @@ function ssp {
 [ "$1" = "ors" ] && { ors ${2:-0}; }
 [ "$1" = "brs" ] && { brs ${2:-0}; }
 [ "$1" = "srs" ] && { brs 0 reboot; }
+[ "$1" = "lrs" ] && { brs 0 bnvc; }
 [ "$1" = "bs"  ] && { bs  ${2:-1}; }
 
 # lista servicos & portas
@@ -493,10 +501,15 @@ if [ -z "$1" ]; then
   c1="$c1\nl [s]\t\tlog   s=curl"
   c1="$c1\n"
   c1="$c1\noutros"
+  c1="$c1\ngrs [n]\t\t$ethg restart n=nodes to change"
+  c1="$c1\nors [n]\t\t$etho restart n=nodes to change"
+  c1="$c1\nbrs [n]\t\t$ethb restart n=nodes to change"
+  c1="$c1\nsrs\t\tsystem restart"
+  c1="$c1\nlrs\t\tlighthouse restart"
   c1="$c1\nyj\t\tsystem journal"
   c1="$c1\nsl [s]\t\tlista system journal  s=TOTAL"
   c1="$c1\nel [s]\t\tlista geth,lighthouse s=TOTAL"
-  c1="$c1\nbs [n]\t\tlista erros com custo n=max erros"
+  c1="$c1\nbs [n]\t\tbeacon errors com custo n=max erros"
   c1="$c1\nll\t\tlista servicos"
   c1="$c1\nlp\t\tlista portas"
   c1="$c1\nnp\t\tnode peers"
