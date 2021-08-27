@@ -288,9 +288,11 @@ function brs {
   if [ ! -f /home/eth/beacon-restart ]; then
     bk;echo -e "RSTI $m" >> /home/eth/beacon.log
     touch /home/eth/beacon-restart
+    echo -e "inicio beacon-restart-epoch"
     while [ -f /home/eth/beacon-restart ]; do
       b6=$(echo $H|sudo -S grep "lighthouse.$bpid.* INFO Synced " /var/log/syslog 2>/dev/null|tail -n32|sed 's%.* epoch: \([0-9]*\).*%\1%'|sort -u)
       if [ "$(echo "$b6"|wc -l)" -eq 1 ]; then
+        echo -e "inicio beacon-restart-interval"
         b1=0
         while [ $b1 -lt 400 ] && [ -f /home/eth/beacon-restart ]; do
           b4=$(echo $H|sudo -S grep "lighthouse.$bpid.* INFO " /var/log/syslog 2>/dev/null|tail -n $pors|sed 's%.* INFO \([^ ]*\) .*%\1%'|sort -u)
