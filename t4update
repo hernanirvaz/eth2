@@ -93,8 +93,8 @@ if [ "$1" = "eth2" ]; then
       fi
       if [ -x /usr/local/bin/lighthouse ]; then
         echo $H|sudo -S cp /usr/local/bin/lighthouse /usr/local/bin/lighthouse.save 2>/dev/null
-        if [ "$cunm"  = "$znm3" ] || [ "$cunm"  = "$vnm3" ];then t6 vpr;fi
-        if [ "$cunm" != "$znm1" ] && [ "$cunm" != "$vnm1" ];then t6 bpr;fi
+        #if [ "$cunm"  = "$znm3" ] || [ "$cunm"  = "$vnm3" ];then t6 vpr;fi
+        #if [ "$cunm" != "$znm1" ] && [ "$cunm" != "$vnm1" ];then t6 bpr;fi
         echo $H|sudo -S cp ~/.cargo/bin/lighthouse /usr/local/bin 2>/dev/null
       fi
     else
@@ -103,15 +103,15 @@ if [ "$1" = "eth2" ]; then
   else
     if [ -x ~/lighthouse ]; then
       echo $H|sudo -S cp /usr/local/bin/lighthouse /usr/local/bin/lighthouse.save 2>/dev/null
-      if [ "$cunm"  = "$znm3" ] || [ "$cunm"  = "$vnm3" ];then t6 vpr;fi
-      if [ "$cunm" != "$znm1" ] && [ "$cunm" != "$vnm1" ];then t6 bpr;fi
+      #if [ "$cunm"  = "$znm3" ] || [ "$cunm"  = "$vnm3" ];then t6 vpr;fi
+      #if [ "$cunm" != "$znm1" ] && [ "$cunm" != "$vnm1" ];then t6 bpr;fi
       sudo mv ~/lighthouse /usr/local/bin
     else
       echo -e "${i}NAO EXISTE LIGHT COMPILADO PARA INSTALAR${f}"
     fi
   fi
   echo $H|sudo -S chmod 755 /usr/local/bin/lighthouse 2>/dev/null
-  if [ "$cunm" != "$znm1" ] && [ "$cunm" != "$vnm1" ];then t6 ba;fi
-  if [ "$cunm"  = "$znm3" ] || [ "$cunm"  = "$vnm3" ];then t6 va;fi
+  #if [ "$cunm" != "$znm1" ] && [ "$cunm" != "$vnm1" ];then t6 ba;fi
+  #if [ "$cunm"  = "$znm3" ] || [ "$cunm"  = "$vnm3" ];then t6 va;fi
   echo -e "${i}NOVO LIGHT INSTALADO - PODE/DEVE VERIFICAR${f}"
 fi
