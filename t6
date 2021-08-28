@@ -350,7 +350,7 @@ function ssp {
     vp;sleep 10s;vd;
     echo -e "${i}SAVE SLASHING PROTECTION DB${f}"
     echo $H|sudo -S cp $vldt/slashing_protection.sqlite /home/eth 2>/dev/null
-    sudo chown eth:eth /home/eth/slashing_protection.sqlite
+    sudo chown eth3:eth3 /home/eth/slashing_protection.sqlite
     if [ "$cunm" = "$znm3" ]; then
       scp /home/eth/slashing_protection.sqlite vpss:~
     else
