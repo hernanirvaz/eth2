@@ -347,14 +347,14 @@ function ssp {
   echo -e "${i}QUER MESMO TRANSFERIR VALIDATORS?${f}"
   read rsp
   if [ "$rsp" = 'sim' ] && [ ! -f $dtdi/vc_slash ] && [ ! -f $dtdi/vc_lock ] && [ -f $dtdi/vc_keys ]; then
-    vp;vd;sleep 10s
+    vp;sleep 10s;vd;
     echo -e "${i}SAVE SLASHING PROTECTION DB${f}"
     echo $H|sudo -S cp $vldt/slashing_protection.sqlite /home/eth 2>/dev/null
     sudo chown eth:eth /home/eth/slashing_protection.sqlite
     if [ "$cunm" = "$znm3" ]; then
       scp /home/eth/slashing_protection.sqlite vpss:~
     else
-      scp /home/eth/slashing_protection.sqlite ztc3:~
+      scp /home/eth/slashing_protection.sqlite ztc3.fruga.pt:~
     fi
   fi
 }
@@ -519,6 +519,11 @@ if [ -z "$1" ]; then
   c1="$c1\ngrs [n]\t\t$ethg restart n=nodes to change"
   c1="$c1\nors [n]\t\t$etho restart n=nodes to change"
   c1="$c1\nbrs [n]\t\t$ethb restart n=nodes to change"
+  if [ "$cunm" = "$znm3" ]; then
+    c1="$c1\nvcp\t\t$ethv copy to $vnm3 server"
+  else
+    c1="$c1\nvcp\t\t$ethv copy to $znm3 server"
+  fi
   c1="$c1\nsrs\t\tsystem restart"
   c1="$c1\nlrs\t\tlighthouse restart"
   c1="$c1\nyj\t\tsystem journal"
