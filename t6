@@ -21,7 +21,7 @@ function rd { uu "systemctl disable $trrt";rcl;uu 'ufw reload'; }
 function sop { uu 'ufw delete deny 53            ';rxw 'to any port 53 comment dns'; }
 function scl { uu 'ufw        deny 53 comment dns';rxw 'to any port 53 '  ' delete'; }
 function se { sop;uu 'ufw reload';uu "systemctl enable $dnsd"; }
-function sa { [ "$(systemctl status $dnsd 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $dnsd"; } }
+function sa { [ "$(systemctl status $dnsd 2>/dev/null|grep -i disabled)" ] || { [ "$(systemctl status $dnsd 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $dnsd"; } } }
 function sp { [ "$(systemctl status $dnsd 2>/dev/null|grep -i loaded)" ] && { uu "systemctl stop $dnsd"; } }
 function sd { uu "systemctl disable $dnsd";scl;uu 'ufw reload'; }
 
@@ -350,8 +350,13 @@ function ssp {
     fi
   fi
 }
+function ts {
+  systemctl status systemd-timesyncd|grep synchronization|sed 's%.*"\(.*\)"%\1%'
+  timedatectl|grep synchronized
+}
 
-[ "$1" = "ts"  ] && { systemctl status systemd-timesyncd|grep synchronization|sed 's%.*"\(.*\)"%\1%';timedatectl|grep synchronized; }
+[ "$1" = "ts"  ] && { ts; }
+[ "$1" = "trs" ] && { [ "$(systemctl status systemd-timesyncd 2>/dev/null|grep -i masked)" ] || { uu "systemctl restart systemd-timesyncd"; };ts; }
 [ "$1" = "vcp" ] && { ssp; }
 [ "$1" = "rs"  ] && { rs; }
 [ "$1" = "ds"  ] && { ds; }
@@ -517,6 +522,7 @@ if [ -z "$1" ]; then
   c1="$c1\nnp\t\tnode peers"
   c1="$c1\ngs\t\tgeth syncing"
   c1="$c1\nts\t\ttime status"
+  c1="$c1\ntrs\t\ttime sync restart"
   c1="$c1\nws\t\tfirewall status"
   c1="$c1\nwa\t\tfirewall arranca"
   c1="$c1\nwpr\t\tfirewall para"
