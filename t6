@@ -282,7 +282,7 @@ function bm {
   [ $c10 -gt 0 ] && a10=$((n10/c10))
   m="$(systemctl status eth-beacon|grep target-peers|sed 's%.*target-peers \([0-9]*\).*%\1%') ${1:-$rplg}"
   m="$m $cunm $(date --rfc-3339=seconds)"
-  m="$m cnt_40510: $c40 $c35 $c30 $c25 $c20 $c15 $c10 max_incorrect: $m40 $m35 $m30 $m25 $m20 $m15 $m10 avg_incorrect: $a40 $a35 $a30 $a25 $a20 $a15 $a10"
+  m="$m cnt_40510: $c40 $c35 $c30 $c25 $c20 $c15 $c10 max_error: $m40 $m35 $m30 $m25 $m20 $m15 $m10 avg_error: $a40 $a35 $a30 $a25 $a20 $a15 $a10"
 }
 function bh {
   [ "$1" ] || echo -e "BEAC GE $hors"
@@ -335,7 +335,7 @@ function brs {
   fi
 }
 function bs {
-  for l in $(echo $H|sudo -S grep -i 'lighthouse.*incorrect' /var/log/syslog 2>/dev/null|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\) .*validator: \([0-9]*\).*epoch: \([0-9]*\).*%\1:\2:\3%'|sort -u|tail -n $1);do
+  for l in $(echo $H|sudo -S grep -i 'lighthouse.*failed to' /var/log/syslog 2>/dev/null|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\) .*validator: \([0-9]*\).*epoch: \([0-9]*\).*%\1:\2:\3%'|sort -u|tail -n $1);do
     v=$(echo $l|cut -d: -f4)
     e=$(echo $l|cut -d: -f5)
     s=$(sudo grep -i "lighthouse.*attestation.*$v.*slot.*$e" /var/log/syslog|sed 's%.*slot: \([0-9]*\).*%\1%'|sort -u)
