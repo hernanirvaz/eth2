@@ -347,14 +347,14 @@ function ssp {
   echo -e "${i}QUER MESMO TRANSFERIR VALIDATORS?${f}"
   read rsp
   if [ "$rsp" = 'sim' ] && [ ! -f $dtdi/vc_slash ] && [ ! -f $dtdi/vc_lock ] && [ -f $dtdi/vc_keys ]; then
-    vp;sleep 10s;vd;
+    vp;vd;sleep 10s;
     echo -e "${i}SAVE SLASHING PROTECTION DB${f}"
     echo $H|sudo -S cp $vldt/slashing_protection.sqlite /home/eth 2>/dev/null
     sudo chown eth3:eth3 /home/eth/slashing_protection.sqlite
     if [ "$cunm" = "$znm3" ]; then
-      scp /home/eth/slashing_protection.sqlite vpss:~
+      scp ~/slashing_protection.sqlite vpss:~
     else
-      scp /home/eth/slashing_protection.sqlite ztc3.fruga.pt:~
+      scp ~/slashing_protection.sqlite ztc3.fruga.pt:~
     fi
   fi
 }
