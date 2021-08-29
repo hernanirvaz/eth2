@@ -9,34 +9,20 @@ p1='/etc/prometheus'
 meeu="$(whoami)"
 cunm="$(uname -n)"
 cust="$(uname -n|cut -c1-3)"
-
-# eth-oeth.service                        eth1 openeth service
 etho='eth-oeth'
-# eth-geth.service                        eth1 geth service
 ethg='eth-geth'
-# eth-beacon.service                      eth2 beacon service
 ethb='eth-beacon'
 bpid=$(systemctl status $ethb 2>/dev/null|grep PID|sed 's%.*PID: *\([0-9]*\).*%\1%')
-# eth-validator.service                   eth2 validator service
 ethv='eth-validator'
-# prometheus.service                      Monitoring system and time series database
 ethp='prometheus'
-# prometheus-node-exporter.service        Prometheus exporter for machine metrics
-# prometheus-node-exporter-apt.timer      Run apt metrics collection every 15 minutes
-# prometheus-node-exporter-smartmon.timer Run smart metrics collection every 15 minutes
 ethn='prometheus-node-exporter'
-# grafana-server.service                  Grafana instance
 ethf='grafana-server'
 pate='eth-*'
 patp='prometheus*'
 patf='grafana*'
-# Plex Media Server
 plex='plexmediaserver'
-# Transmission BitTorrent Daemon
 trrt='transmission-daemon'
-# Bind9
 dnsd='named'
-
 zip1='192.168.8.25'
 zip2='192.168.8.28'
 zip3='192.168.8.31'
@@ -49,13 +35,10 @@ vip3='164.68.107.45'
 vnm1='vmi471826.contaboserver.net'
 vnm2='vmi506976.contaboserver.net'
 vnm3='vmi469069.contaboserver.net'
-
-# data files are going here
 dtdi="/var/lib/lighthouse"
 becn="$dtdi/beacon"
 vldt="$dtdi/validators"
 
-# eth2 rewards & penalties & limites/horas/position reset
 ratt=0029333
 rblk=4233925
 pinc=0016444
