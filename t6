@@ -305,7 +305,7 @@ function brs {
         while [ $b1 -lt 400 ] && [ -f /home/eth/beacon-restart ]; do
           b4=$(echo $H|sudo -S grep "lighthouse.$bpid.* INFO " /var/log/syslog 2>/dev/null|tail -n $pors|sed 's%.* INFO \([^ ]*\) .*%\1%'|sort -u)
           b5=$(echo "$b4"|head -n1)
-          if [ "$(echo "$b4"|wc -l)" -le 3 ] && [ "$(echo "$b4"|tail -n1)" = "Synced" ] && ([ "$b5" = "New" ] || [ "$b5" = "Processed" ]); then
+          if [ "$(echo "$b4"|wc -l)" -eq 2 ] && [ "$(echo "$b4"|tail -n1)" = "Synced" ] && ([ "$b5" = "New" ] || [ "$b5" = "Processed" ]); then
             if [ $1 -ne 0 ]; then
               cp /etc/systemd/system/$ethb.service ~/$ethb.save
               b3=$(grep target-peers ~/$ethb.save|sed 's%.*target-peers \([0-9]*\).*%\1%')
