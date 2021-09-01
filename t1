@@ -40,7 +40,7 @@ becn="$dtdi/beacon"
 vldt="$dtdi/validators"
 
 ratt=0024959
-rblk=4949695
+rblk=5228254
 pinc=0012897
 pdel=0002700
 patt=0018500
