@@ -39,14 +39,10 @@ dtdi="/var/lib/lighthouse"
 becn="$dtdi/beacon"
 vldt="$dtdi/validators"
 
-ratt=0029333
-rblk=4233925
-pinc=0016444
-patt=$ratt
-
 ratt=0024959
 rblk=4949695
 pinc=0012897
+pdel=0002700
 patt=0018500
 l1rs=1
 l2rs=5
