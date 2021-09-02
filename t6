@@ -235,7 +235,7 @@ function bk {
     m='https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=ETH&convert=EUR&CMC_PRO_API_KEY=3ae5f3df-bd71-489d-a9dd-b626995fba31'
     e=$(curl -sX GET $m|sed 's%.*price.:\([0-9]*\.[0-9]*\).*%\1%')
   else
-    e=2000
+    e=3000
   fi
   b2;b7
   b=$(echo "scale=0;($p*$rblk+$a*$ratt)*$e/1000000000"|bc)
