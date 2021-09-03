@@ -249,41 +249,41 @@ function bk {
   [ "$b7" != 'OK' ] && resolvectl query smtp.gmail.com 2>/dev/null 1>&2
 }
 function bm {
-  m40=0;m35=0;m30=0;m25=0;m20=0;m15=0;m10=0
-  n40=0;n35=0;n30=0;n25=0;n20=0;n15=0;n10=0
-  c40=0;c35=0;c30=0;c25=0;c20=0;c15=0;c10=0
-  a40=0;a35=0;a30=0;a25=0;a20=0;a15=0;a10=0
+  m50=0;m45=0;m40=0;m35=0;m30=0;m25=0;m20=0
+  n50=0;n45=0;n40=0;n35=0;n30=0;n25=0;n20=0
+  c50=0;c45=0;c40=0;c35=0;c30=0;c25=0;c20=0
+  a50=0;a45=0;a40=0;a35=0;a30=0;a25=0;a20=0
   while read -a v;do
-    if [ ${v[21]} -ge 15 ];then
-      if [ ${v[21]} -ge 20 ];then
-        if [ ${v[21]} -ge 25 ];then
-          if [ ${v[21]} -ge 30 ];then
-            if [ ${v[21]} -ge 35 ];then
-              if [ ${v[21]} -ge 40 ]
-              then n40=$((n40+v[14]));c40=$((c40+1));if [ ${v[14]} -gt $m40 ];then m40=${v[14]};fi
-              else n35=$((n35+v[14]));c35=$((c35+1));if [ ${v[14]} -gt $m35 ];then m35=${v[14]};fi
+    if [ ${v[21]} -ge 25 ];then
+      if [ ${v[21]} -ge 30 ];then
+        if [ ${v[21]} -ge 35 ];then
+          if [ ${v[21]} -ge 40 ];then
+            if [ ${v[21]} -ge 45 ];then
+              if [ ${v[21]} -ge 50 ]
+              then n50=$((n50+v[14]));c50=$((c50+1));if [ ${v[14]} -gt $m50 ];then m50=${v[14]};fi
+              else n45=$((n45+v[14]));c45=$((c45+1));if [ ${v[14]} -gt $m45 ];then m45=${v[14]};fi
               fi
-            else n30=$((n30+v[14]));c30=$((c30+1));if [ ${v[14]} -gt $m30 ];then m30=${v[14]};fi
+            else n40=$((n40+v[14]));c40=$((c40+1));if [ ${v[14]} -gt $m40 ];then m40=${v[14]};fi
             fi
-          else n25=$((n25+v[14]));c25=$((c25+1));if [ ${v[14]} -gt $m25 ];then m25=${v[14]};fi
+          else n35=$((n35+v[14]));c35=$((c35+1));if [ ${v[14]} -gt $m35 ];then m35=${v[14]};fi
           fi
-        else n20=$((n20+v[14]));c20=$((c20+1));if [ ${v[14]} -gt $m20 ];then m20=${v[14]};fi
+        else n30=$((n30+v[14]));c30=$((c30+1));if [ ${v[14]} -gt $m30 ];then m30=${v[14]};fi
         fi
-      else n15=$((n15+v[14]));c15=$((c15+1));if [ ${v[14]} -gt $m15 ];then m15=${v[14]};fi
+      else n25=$((n25+v[14]));c25=$((c25+1));if [ ${v[14]} -gt $m25 ];then m25=${v[14]};fi
       fi
-    else n10=$((n10+v[14]));c10=$((c10+1));if [ ${v[14]} -gt $m10 ];then m10=${v[14]};fi
+    else n20=$((n20+v[14]));c20=$((c20+1));if [ ${v[14]} -gt $m20 ];then m20=${v[14]};fi
     fi
   done <<< $(tail -n ${1:-$rplg} /home/eth/beacon.log)
+  [ $c50 -gt 0 ] && a50=$((n50/c50))
+  [ $c45 -gt 0 ] && a45=$((n45/c45))
   [ $c40 -gt 0 ] && a40=$((n40/c40))
   [ $c35 -gt 0 ] && a35=$((n35/c35))
   [ $c30 -gt 0 ] && a30=$((n30/c30))
   [ $c25 -gt 0 ] && a25=$((n25/c25))
   [ $c20 -gt 0 ] && a20=$((n20/c20))
-  [ $c15 -gt 0 ] && a15=$((n15/c15))
-  [ $c10 -gt 0 ] && a10=$((n10/c10))
   m="$(systemctl status eth-beacon|grep target-peers|sed 's%.*target-peers \([0-9]*\).*%\1%') ${1:-$rplg}"
   m="$m $cunm $(date --rfc-3339=seconds)"
-  m="$m cnt_40510: $c40 $c35 $c30 $c25 $c20 $c15 $c10 max_error: $m40 $m35 $m30 $m25 $m20 $m15 $m10 avg_error: $a40 $a35 $a30 $a25 $a20 $a15 $a10"
+  m="$m cnt_50520: $c50 $c45 $c40 $c35 $c30 $c25 $c20 max_error: $m50 $m45 $m40 $m35 $m30 $m25 $m20 avg_error: $a50 $a45 $a40 $a35 $a30 $a25 $a20"
 }
 function bh {
   [ "$1" ] || echo -e "BEAC GE $hors"
