@@ -41,12 +41,9 @@ vldt="$dtdi/validators"
 
 ratt=0024959
 rblk=5228254
-pinc=0012897
-pdel=0002700
-patt=0018500
-minc=378
-mdel=079
-matt=542
+pmis=0018500
+pmat=0011971
+pdly=0002700
 l1rs=1
 l2rs=5
 hors=18
