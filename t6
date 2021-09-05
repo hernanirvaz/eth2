@@ -273,7 +273,7 @@ function bm {
       fi
     else n20=$((n20+v[14]));c20=$((c20+1));if [ ${v[14]} -gt $m20 ];then m20=${v[14]};fi
     fi
-  done <<< $(tail -n ${1:-$rplg} /home/eth/beacon.log)
+  done <<< $(grep 'BEAC' /home/eth/beacon.log|tail -n ${1:-$rplg})
   [ $c50 -gt 0 ] && a50=$((n50/c50))
   [ $c45 -gt 0 ] && a45=$((n45/c45))
   [ $c40 -gt 0 ] && a40=$((n40/c40))
