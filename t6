@@ -291,13 +291,13 @@ function bo {
   fi
 }
 function bh {
-  [ "$1" ] || echo -e "BEAC BH $hors"
+  [ "$1" ] || echo -e "BEAC BH $(($hors-$l2rs))"
   tail -n ${1:-$hors} /home/eth/beacon.log|head -n $((${1:-$hors}-$l2rs))
   [ "$1" ] || echo -e "BEAC BH $l2rs"
   tail -n $l2rs /home/eth/beacon.log
-  [ "$1" ] || { echo -e "BEAC BO ${1:-$hors}";bo; }
-  bk;echo -e "\nBEAC $m"
-  [ "$1" ] || { bm;echo -e "\nBEAC $m"; }
+  [ "$1" ] || { echo -e "BEAC BO $hors";bo $hors; }
+  echo -e "BEAC BL";bk;echo -e "BEAC $m"
+  [ "$1" ] || { echo -e "BEAC BM";bm;echo -e "BEAC $m"; }
 }
 function brs {
   if [ ! -f /home/eth/beacon-restart ]; then
