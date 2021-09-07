@@ -285,6 +285,11 @@ function bm {
   m="$m $cunm $(date --rfc-3339=seconds)"
   m="$m cnt_50520: $c50 $c45 $c40 $c35 $c30 $c25 $c20 max_error: $m50 $m45 $m40 $m35 $m30 $m25 $m20 avg_error: $a50 $a45 $a40 $a35 $a30 $a25 $a20"
 }
+function bo {
+  if [ -f /home/eth/beacon.log ]; then
+    grep "$(tail -n1 /home/eth/beacon.log|sed 's%.* \([0-9]*:[0-9]*\):.*%\1%')" /home/eth/beacon.log|tail -n ${1:-$hors}|sort -k15
+  fi
+}
 function bh {
   [ "$1" ] || echo -e "BEAC BH $hors"
   tail -n ${1:-$hors} /home/eth/beacon.log|head -n $((${1:-$hors}-$l2rs))
@@ -363,11 +368,6 @@ function ssp {
 function ts {
   systemctl status systemd-timesyncd|grep synchronization|sed 's%.*"\(.*\)"%\1%'
   timedatectl|grep synchronized
-}
-function bo {
-  if [ -f /home/eth/beacon.log ]; then
-    grep "$(tail -n1 /home/eth/beacon.log|sed 's%.* \([0-9]*:[0-9]*\):.*%\1%')" /home/eth/beacon.log|tail -n ${1:-$hors}
-  fi
 }
 
 [ "$1" = "ts"  ] && { ts; }
