@@ -287,7 +287,7 @@ function bm {
 }
 function bo {
   if [ -f /home/eth/beacon.log ]; then
-    grep "$(tail -n1 /home/eth/beacon.log|sed 's%.* \([0-9]*:[0-9]*\):.*%\1%')" /home/eth/beacon.log|tail -n ${1:-$hors}|sort -k15
+    grep "$(tail -n1 /home/eth/beacon.log|sed 's%.* \([0-9]*:[0-9]*\):.*%\1%')" /home/eth/beacon.log|tail -n ${1:-$hors}|sort -k15.1n
   fi
 }
 function bh {
