@@ -239,7 +239,7 @@ function bk {
   fi
   b2;b7
   b=$(echo "scale=0;($p*$rblk+$a*$ratt)*$e/1000000000"|bc)
-  d=$(echo "scale=2;($h*$pmat+$z*$pmis+$k*$pdly)*$e/1000000000"|bc)
+  d=$(echo "scale=2;($z*$pmis+$h*$pmat+$k*$pdly)*$e/1000000000"|bc)
   m="$b7 $n $cunm $(date --rfc-3339=seconds)"
   m="$m rewards_penalties: $b€ $d€"
   m="$m attestations_blocks: $a $p"
