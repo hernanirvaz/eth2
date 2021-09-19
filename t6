@@ -122,7 +122,7 @@ function b7 {
   n=0;b7='OK'
   [ "$t" -gt 100 ] && n=$(($n+20*$r/$t))
   [ "$q" -gt 100 ] && n=$(($n+20*$w/$q))
-  [ "$a" -gt 100 ] && n=$(($n+20*(10*$z+$h)/$a))
+  [ "$a" -gt 100 ] && n=$(($n+20*(20*$z+$h)/$a))
   if [ "$n" -ge $l1rs ]; then
     if [ "$n" -ge $l2rs ]; then
       [ -f /home/eth/beacon.log ] && [ "$(tail -n $l2rs /home/eth/beacon.log|cut -d' ' -f1|sort -u)" = "BEAC" ] && b7='BK'
@@ -302,16 +302,15 @@ function bh {
   [ "$1" ] || { echo -e "BEAC BM";bm;echo -e "BEAC $m"; }
 }
 function brs {
-  if [ ! -f /home/eth/beacon-restart ]; then
+  if [ ! -f /home/eth/beacon.restart.inicio ]; then
     bk;echo -e "RSTI $m" >> /home/eth/beacon.log
-    touch /home/eth/beacon-restart
-    echo -e "beacon-restart-epoch"
-    while [ -f /home/eth/beacon-restart ]; do
+    touch /home/eth/beacon.restart.inicio
+    while [ -f /home/eth/beacon.restart.inicio ]; do
       b6=$(echo $H|sudo -S grep "lighthouse.$bpid.* INFO Synced " /var/log/syslog 2>/dev/null|tail -n32|sed 's%.* epoch: \([0-9]*\).*%\1%'|sort -u)
       if [ "$(echo "$b6"|wc -l)" -eq 1 ]; then
-        echo -e "beacon-restart-interval"
+        touch /home/eth/beacon.restart.interval
         b1=0
-        while [ $b1 -lt 400 ] && [ -f /home/eth/beacon-restart ]; do
+        while [ $b1 -lt 400 ] && [ -f /home/eth/beacon.restart.interval ]; do
           b4=$(echo $H|sudo -S grep "lighthouse.$bpid.* INFO " /var/log/syslog 2>/dev/null|tail -n $pors|sed 's%.* INFO \([^ ]*\) .*%\1%'|sort -u)
           b5=$(echo "$b4"|head -n1)
           if [ "$(echo "$b4"|wc -l)" -eq 2 ] && [ "$(echo "$b4"|tail -n1)" = "Synced" ] && ([ "$b5" = "New" ] || [ "$b5" = "Processed" ]); then
@@ -326,8 +325,8 @@ function brs {
             bp
             dr
             b1=400
-            rm /home/eth/beacon-restart
             if [ "$2" = "reboot" ]; then
+              rm -f /home/eth/beacon.restart.inicio /home/eth/beacon.restart.interval
               sudo reboot
             else
               ba
@@ -337,7 +336,7 @@ function brs {
           sleep 3s
           b1=$(($b1+1))
         done
-        [ -f /home/eth/beacon-restart ] && rm /home/eth/beacon-restart
+        rm -f /home/eth/beacon.restart.inicio /home/eth/beacon.restart.interval
       fi 
       sleep 1s
     done
