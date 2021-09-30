@@ -284,9 +284,9 @@ function bm {
   [ $c25 -gt 0 ] && a25=$(echo "scale=2;($z25*$pmis+$n25*$pmat+$k25*$pdly)/$c25*3000/1000000000"|bc)
   [ $c20 -gt 0 ] && a20=$(echo "scale=2;($z20*$pmis+$n20*$pmat+$k20*$pdly)/$c20*3000/1000000000"|bc)
   bo
-  m="$(systemctl status eth-beacon|grep target-peers|sed 's%.*target-peers \([0-9]*\).*%\1%') $(printf '%02i' $h3)"
-  m="$m $cunm $(date --rfc-3339=seconds)"
-  m="$m cnt_50520: $c50 $c45 $c40 $c35 $c30 $c25 $c20 avg_penalties: $a50 $a45 $a40 $a35 $a30 $a25 $a20"
+  m="$(systemctl status eth-beacon|grep target-peers|sed 's%.*target-peers \([0-9]*\).*%\1%') $(printf '%02i' $h3) $cunm $(date --rfc-3339=seconds)"
+  m="$m cnt_50_5_20: $(printf '%004i' $c50) $(printf '%004i' $c45) $(printf '%004i' $c40) $(printf '%004i' $c35) $(printf '%004i' $c30) $(printf '%004i' $c25) $(printf '%004i' $c20)"
+  m="$m avg_penalty: $(printf '%3.2f' $a50) $(printf '%3.2f' $a45) $(printf '%3.2f' $a40) $(printf '%3.2f' $a35) $(printf '%3.2f' $a30) $(printf '%3.2f' $a25) $(printf '%3.2f' $a20)"
   echo -e "BEAC $m"
 }
 function boo {
