@@ -241,11 +241,11 @@ function bk {
   b=$(echo "scale=0;($p*$rblk+$a*$ratt)*$e/1000000000"|bc)
   d=$(echo "scale=2;($z*$pmis+$h*$pmat+$k*$pdly)*$e/1000000000"|bc)
   m="$b7 $(printf '%02i' $n) $cunm $(date --rfc-3339=seconds)"
-  m="$m rewards_penalties: $b $d"
-  m="$m attestations_blocks: $a $p"
-  m="$m erros: $z $h $k $w $q $r $t"
-  m="$m nodes: ${b2:-0}"
-  m="$m avg_delays: $x $l $j"
+  m="$m rewards_penalties: $(printf '%03i' $b) $(printf '%3.2f' $d)"
+  m="$m attestations_blocks: $(printf '%04i' $a) $(printf '%01i' $p)"
+  m="$m erros: $(printf '%03i' $z) $(printf '%03i' $h) $(printf '%03i' $k) $(printf '%03i' $w) $(printf '%03i' $q) $(printf '%03i' $r) $(printf '%04i' $t)"
+  m="$m nodes: $(printf '%02i' ${b2:-0})"
+  m="$m avg_delays: $(printf '%02i' $x) $(printf '%02i' $l) $(printf '%04i' $j)"
   [ "$b7" != 'OK' ] && resolvectl query smtp.gmail.com 2>/dev/null 1>&2
 }
 function bm {
@@ -256,24 +256,25 @@ function bm {
   z50=0;z45=0;z40=0;z35=0;z30=0;z25=0;z20=0
   k50=0;k45=0;k40=0;k35=0;k30=0;k25=0;k20=0
   while read -a v;do
-    if [ ${v[21]} -ge 25 ];then
-      if [ ${v[21]} -ge 30 ];then
-        if [ ${v[21]} -ge 35 ];then
-          if [ ${v[21]} -ge 40 ];then
-            if [ ${v[21]} -ge 45 ];then
-              if [ ${v[21]} -ge 50 ]
-              then z50=$((z50+v[13]));n50=$((n50+v[14]));k50=$((k50+v[15]));c50=$((c50+1))
-              else z45=$((z45+v[13]));n45=$((n45+v[14]));k45=$((k45+v[15]));c45=$((c45+1))
+    v13=$((10#${v[13]}));v14=$((10#${v[14]}));v15=$((10#${v[15]}))
+    if [ $((10#${v[21]})) -ge 25 ];then
+      if [ $((10#${v[21]})) -ge 30 ];then
+        if [ $((10#${v[21]})) -ge 35 ];then
+          if [ $((10#${v[21]})) -ge 40 ];then
+            if [ $((10#${v[21]})) -ge 45 ];then
+              if [ $((10#${v[21]})) -ge 50 ]
+              then z50=$((z50+v13));n50=$((n50+v14));k50=$((k50+v15));c50=$((c50+1))
+              else z45=$((z45+v13));n45=$((n45+v14));k45=$((k45+v15));c45=$((c45+1))
               fi
-            else z40=$((z40+v[13]));n40=$((n40+v[14]));k40=$((k40+v[15]));c40=$((c40+1))
+            else z40=$((z40+v13));n40=$((n40+v14));k40=$((k40+v15));c40=$((c40+1))
             fi
-          else z35=$((z35+v[13]));n35=$((n35+v[14]));k35=$((k35+v[15]));c35=$((c35+1))
+          else z35=$((z35+v13));n35=$((n35+v14));k35=$((k35+v15));c35=$((c35+1))
           fi
-        else z30=$((z30+v[13]));n30=$((n30+v[14]));k30=$((k30+v[15]));c30=$((c30+1))
+        else z30=$((z30+v13));n30=$((n30+v14));k30=$((k30+v15));c30=$((c30+1))
         fi
-      else z25=$((z25+v[13]));n25=$((n25+v[14]));k25=$((k25+v[15]));c25=$((c25+1))
+      else z25=$((z25+v13));n25=$((n25+v14));k25=$((k25+v15));c25=$((c25+1))
       fi
-    else z20=$((z20+v[13]));n20=$((n20+v[14]));k20=$((k20+v[15]));c20=$((c20+1))
+    else z20=$((z20+v13));n20=$((n20+v14));k20=$((k20+v15));c20=$((c20+1))
     fi
   done <<< $(grep 'BEAC' /home/eth/beacon.log|tail -n ${1:-$rplg})
   [ $c50 -gt 0 ] && a50=$(echo "scale=2;($z50*$pmis+$n50*$pmat+$k50*$pdly)/$c50*3000/1000000000"|bc)
