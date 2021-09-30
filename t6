@@ -291,7 +291,7 @@ function bm {
   echo -e "BEAC $m"
 }
 function boo {
-  echo -e "BEAC BO $(printf '%02i' $h3)";grep "BEAC.*$h2" /home/eth/beacon.log|sort -k9.1n|head -n$h3
+  grep "BEAC.*$h2" /home/eth/beacon.log|sort -k9.1n|head -n$h3
 }
 function bo {
   b8=$(grep BEAC /home/eth/beacon.log|tail -n1|sed 's%.* \([0-9]*-[0-9]*-[0-9]*\) \([0-9]*:[0-9]*\):.*%\1 \2%')
@@ -303,7 +303,8 @@ function bh {
   [ "$1" ] || echo -e "BEAC BH $(printf '%02i' $((${1:-$hors}-$l2rs)))"
   tail -n$((${1:-$hors}+1)) /home/eth/beacon.log|head -n$((${1:-$hors}-$l2rs))
   [ "$1" ] || echo -e "BEAC BH $(printf '%02i' $l2rs)"
-  tail -n$(($l2rs+1))       /home/eth/beacon.log|head -n$l2rs;bo;boo
+  tail -n$(($l2rs+1))       /home/eth/beacon.log|head -n$l2rs
+  [ "$1" ] || { bo;echo -e "BEAC BO $(printf '%02i' $h3)";boo; }
   echo -e "BEAC BL";bk;echo -e "BEAC $m"
   [ "$1" ] || bm
 }
