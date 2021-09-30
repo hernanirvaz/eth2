@@ -241,7 +241,7 @@ function bk {
   b=$(echo "scale=0;($p*$rblk+$a*$ratt)*$e/1000000000"|bc)
   d=$(echo "scale=2;($z*$pmis+$h*$pmat+$k*$pdly)*$e/1000000000"|bc)
   m="$b7 $(printf '%02i' $n) $cunm $(date --rfc-3339=seconds)"
-  m="$m rewards_penalties: $(printf '%03i' $b) $(printf '%3.2f' $d)"
+  m="$m reward_penalty: $(printf '%03i' $b) $(printf '%3.2f' $d)"
   m="$m attestations_blocks: $(printf '%04i' $a) $(printf '%01i' $p)"
   m="$m erros: $(printf '%03i' $z) $(printf '%03i' $h) $(printf '%03i' $k) $(printf '%03i' $w) $(printf '%03i' $q) $(printf '%03i' $r) $(printf '%04i' $t)"
   m="$m nodes: $(printf '%02i' ${b2:-0})"
