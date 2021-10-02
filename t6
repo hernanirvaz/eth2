@@ -240,12 +240,12 @@ function bk {
   b2;b7
   b=$(echo "scale=0;($p*$rblk+$a*$ratt)*$e/1000000000"|bc)
   d=$(echo "scale=2;($z*$pmis+$h*$pmat+$k*$pdly)*$e/1000000000"|bc)
-  m="$b7 $(printf '%02i' $n) $cunm $(date --rfc-3339=seconds)"
-  m="$m reward_penalty: $(printf '%03i' $b) $(printf '%3.2f' $d)"
-  m="$m attestations_blocks: $(printf '%04i' $a) $(printf '%01i' $p)"
-  m="$m erros: $(printf '%03i' $z) $(printf '%03i' $h) $(printf '%03i' $k) $(printf '%03i' $w) $(printf '%03i' $q) $(printf '%03i' $r) $(printf '%04i' $t)"
-  m="$m nodes: $(printf '%02i' ${b2:-0})"
-  m="$m avg_delays: $(printf '%02i' $x) $(printf '%02i' $l) $(printf '%04i' $j)"
+  m="$b7 $(printf '%2i' $n) $cunm $(date --rfc-3339=seconds)"
+  m="$m reward_penalty: $(printf '%3i' $b) $(printf '%3.2f' $d)"
+  m="$m attestations_blocks: $(printf '%4i' $a) $(printf '%1i' $p)"
+  m="$m erros: $(printf '%3i' $z) $(printf '%3i' $h) $(printf '%3i' $k) $(printf '%3i' $w) $(printf '%3i' $q) $(printf '%3i' $r) $(printf '%4i' $t)"
+  m="$m nodes: $(printf '%2i' ${b2:-0})"
+  m="$m avg_delays: $(printf '%2i' $x) $(printf '%2i' $l) $(printf '%4i' $j)"
   [ "$b7" != 'OK' ] && resolvectl query smtp.gmail.com 2>/dev/null 1>&2
 }
 function bm {
@@ -285,8 +285,8 @@ function bm {
   [ $c25 -gt 0 ] && a25=$(echo "scale=2;($z25*$pmis+$n25*$pmat+$k25*$pdly)/$c25*3000/1000000000"|bc)
   [ $c20 -gt 0 ] && a20=$(echo "scale=2;($z20*$pmis+$n20*$pmat+$k20*$pdly)/$c20*3000/1000000000"|bc)
   bo
-  m="$(systemctl status eth-beacon|grep target-peers|sed 's%.*target-peers \([0-9]*\).*%\1%') $(printf '%02i' $h3) $cunm $(date --rfc-3339=seconds)"
-  m="$m cnt_50_5_20: $(printf '%004i' $c50) $(printf '%004i' $c45) $(printf '%004i' $c40) $(printf '%004i' $c35) $(printf '%004i' $c30) $(printf '%004i' $c25) $(printf '%004i' $c20)"
+  m="$(systemctl status eth-beacon|grep target-peers|sed 's%.*target-peers \([0-9]*\).*%\1%') $(printf '%2i' $h3) $cunm $(date --rfc-3339=seconds)"
+  m="$m cnt_50_5_20: $(printf '%4i'   $c50) $(printf '%4i'   $c45) $(printf '%4i'   $c40) $(printf '%4i'   $c35) $(printf '%4i'   $c30) $(printf '%4i'   $c25) $(printf '%4i'   $c20)"
   m="$m avg_penalty: $(printf '%3.2f' $a50) $(printf '%3.2f' $a45) $(printf '%3.2f' $a40) $(printf '%3.2f' $a35) $(printf '%3.2f' $a30) $(printf '%3.2f' $a25) $(printf '%3.2f' $a20)"
   echo -e "BEAC $m"
 }
@@ -300,13 +300,13 @@ function bo {
   if [ "$1" ];then h3=$1;else h3=$(grep "BEAC.*$h2" /home/eth/beacon.log|sort -k9.1n|grep -n $h1|cut -d: -f1);fi
 }
 function bh {
-  [ "$1" ] || echo -e "BEAC BH $(printf '%02i' $((${1:-$hors}-$l2rs)))"
+  [ "$1" ] || echo -e "BEAC BH $(printf '%2i' $((${1:-$hors}-$l2rs)))"
   tail -n$((${1:-$hors}+1)) /home/eth/beacon.log|head -n$((${1:-$hors}-$l2rs))
-  [ "$1" ] || echo -e "BEAC BH $(printf '%02i' $l2rs)"
+  [ "$1" ] || echo -e "BEAC BH $(printf '%2i' $l2rs)"
   tail -n$(($l2rs+1))       /home/eth/beacon.log|head -n$l2rs
-  [ "$1" ] || { bo;echo -e "BEAC BO $(printf '%02i' $h3)";boo; }
+  [ "$1" ] || { bo;echo -e "BEAC BO $(printf '%2i' $h3)";boo; }
   echo -e "BEAC BL";bk;echo -e "BEAC $m"
-  [ "$1" ] || bm
+  [ "$1" ] || { echo -e "BEAC BM";bm; }
 }
 function brs {
   if [ ! -f /home/eth/beacon.restart.inicio ]; then
