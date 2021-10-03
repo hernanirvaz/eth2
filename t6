@@ -57,15 +57,17 @@ function ga { [ "$(systemctl status $ethg 2>/dev/null|grep -i 'inactive\|failed'
 function oa { [ "$(systemctl status $etho 2>/dev/null|grep -i 'inactive\|failed')" ] && [ -d /var/lib/openethereum ] && { uu "systemctl start $etho"; } }
 function ba { [ "$(systemctl status $ethb 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $ethb"; } }
 function va {
-  if [ "$(systemctl status $ethv 2>/dev/null|grep -i 'inactive\|failed')" ] && [ ! -f $dtdi/vc_lock ]; then
-    if [ -f /home/eth/slashing_protection.sqlite ]; then
-      echo $H|sudo -S cp /home/eth/slashing_protection.sqlite $vldt 2>/dev/null
-      sudo chown eth3:eth3 $vldt/slashing_protection.sqlite
-      sudo chmod 600 $vldt/slashing_protection.sqlite
-      rm /home/eth/slashing_protection.sqlite
+  if [ "$(systemctl status $ethv 2>/dev/null|grep -i 'inactive\|failed')" ]; then
+    if [ -f $dtdi/vc_lock ]; then
+      if [ -f /home/eth/slashing_protection.sqlite ]; then
+        echo $H|sudo -S cp /home/eth/slashing_protection.sqlite $vldt 2>/dev/null
+        sudo chown eth3:eth3 $vldt/slashing_protection.sqlite
+        sudo chmod 600 $vldt/slashing_protection.sqlite
+      fi
+    else
+      uu "systemctl start $ethv"
+      rm $dtdi/vc_slash
     fi
-    uu "systemctl start $ethv"
-    rm $dtdi/vc_slash
   fi
 }
 function pa { [ "$(systemctl status $ethp 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $ethp"; } }
