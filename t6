@@ -56,7 +56,18 @@ function fe { fop;uu 'ufw reload';uu "systemctl enable $ethf"; }
 function ga { [ "$(systemctl status $ethg 2>/dev/null|grep -i 'inactive\|failed')" ] && [ -d /var/lib/goethereum   ] && { uu "systemctl start $ethg"; } }
 function oa { [ "$(systemctl status $etho 2>/dev/null|grep -i 'inactive\|failed')" ] && [ -d /var/lib/openethereum ] && { uu "systemctl start $etho"; } }
 function ba { [ "$(systemctl status $ethb 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $ethb"; } }
-function va { [ "$(systemctl status $ethv 2>/dev/null|grep -i 'inactive\|failed')" ] && [ ! -f $dtdi/vc_lock ] && { uu "systemctl start $ethv";rm $dtdi/vc_slash; } }
+function va {
+  if [ "$(systemctl status $ethv 2>/dev/null|grep -i 'inactive\|failed')" ] && [ ! -f $dtdi/vc_lock ]; then
+    if [ -f /home/eth/slashing_protection.sqlite ]; then
+      echo $H|sudo -S cp /home/eth/slashing_protection.sqlite $vldt 2>/dev/null
+      sudo chown eth3:eth3 $vldt/slashing_protection.sqlite
+      sudo chmod 600 $vldt/slashing_protection.sqlite
+      rm /home/eth/slashing_protection.sqlite
+    fi
+    uu "systemctl start $ethv"
+    rm $dtdi/vc_slash
+  fi
+}
 function pa { [ "$(systemctl status $ethp 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $ethp"; } }
 function na { [ "$(systemctl status $ethn 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $ethn"; } }
 function fa { [ "$(systemctl status $ethf 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $ethf"; } }
@@ -364,14 +375,16 @@ function ssp {
   echo -e "${i}QUER MESMO TRANSFERIR VALIDATORS?${f}"
   read rsp
   if [ "$rsp" = 'sim' ] && [ ! -f $dtdi/vc_slash ] && [ ! -f $dtdi/vc_lock ] && [ -f $dtdi/vc_keys ]; then
-    vp;vd;sleep 10s;
+    vp;vd
     echo -e "${i}SAVE SLASHING PROTECTION DB${f}"
     echo $H|sudo -S cp $vldt/slashing_protection.sqlite /home/eth 2>/dev/null
-    sudo chown eth3:eth3 /home/eth/slashing_protection.sqlite
+    sudo chown eth:eth /home/eth/slashing_protection.sqlite
     if [ "$cunm" = "$znm3" ]; then
-      scp ~/slashing_protection.sqlite vpss:~
+      scp /home/eth/slashing_protection.sqlite vpss:~
+      echo -e "${i}SAVED SLASHING PROTECTION DB IN vpss${f}"
     else
-      scp ~/slashing_protection.sqlite ztc3.fruga.pt:~
+      scp /home/eth/slashing_protection.sqlite ztc3.fruga.pt:~
+      echo -e "${i}SAVED SLASHING PROTECTION DB IN ztc3${f}"
     fi
   fi
 }
