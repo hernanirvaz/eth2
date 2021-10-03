@@ -286,6 +286,7 @@ function bm {
   [ $c20 -gt 0 ] && a20=$(echo "scale=2;($z20*$pmis+$n20*$pmat+$k20*$pdly)/$c20*3000/1000000000"|bc)
   bo
   m="$(systemctl status eth-beacon|grep target-peers|sed 's%.*target-peers \([0-9]*\).*%\1%') $(printf '%2i' $h3) $cunm $(date --rfc-3339=seconds)"
+  m="$m cnt_lines_days: $(printf '%5i' ${1:-$rplg}) $(printf '%2i' $h4)"
   m="$m cnt_50_5_20: $(printf '%4i'   $c50) $(printf '%4i'   $c45) $(printf '%4i'   $c40) $(printf '%4i'   $c35) $(printf '%4i'   $c30) $(printf '%4i'   $c25) $(printf '%4i'   $c20)"
   m="$m avg_penalty: $(printf '%3.2f' $a50) $(printf '%3.2f' $a45) $(printf '%3.2f' $a40) $(printf '%3.2f' $a35) $(printf '%3.2f' $a30) $(printf '%3.2f' $a25) $(printf '%3.2f' $a20)"
   echo -e "BEAC $m"
@@ -298,6 +299,7 @@ function bo {
   h1=$(echo $b8|cut -d' ' -f1)
   h2=$(echo $b8|cut -d' ' -f2)
   if [ "$1" ];then h3=$1;else h3=$(grep "BEAC.*$h2" /home/eth/beacon.log|sort -k9.1n|grep -n $h1|cut -d: -f1);fi
+  h4=$(grep "BEAC.*$h2" /home/eth/beacon.log|wc -l)
 }
 function bh {
   [ "$1" ] || echo -e "BEAC BH $(printf '%2i' $((${1:-$hors}-$l2rs)))"
