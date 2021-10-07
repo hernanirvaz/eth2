@@ -300,7 +300,7 @@ function bm {
   bo
   m="$(systemctl status eth-beacon|grep target-peers|sed 's%.*target-peers \([0-9]*\).*%\1%') $(printf '%2i' $h3) $cunm $(date --rfc-3339=seconds)"
   m="$m cnt_lines_days: $(printf '%5i' ${1:-$rplg}) $(printf '%2i' $h4)"
-  m="$m cnt_50_5_20: $(printf '%4i'   $c50) $(printf '%4i'   $c45) $(printf '%4i'   $c40) $(printf '%4i'   $c35) $(printf '%4i'   $c30) $(printf '%4i'   $c25) $(printf '%4i'   $c20)"
+  m="$m cnt_50_05_20: $(printf '%4i'  $c50) $(printf '%4i'   $c45) $(printf '%4i'   $c40) $(printf '%4i'   $c35) $(printf '%4i'   $c30) $(printf '%4i'   $c25) $(printf '%4i'   $c20)"
   m="$m avg_penalty: $(printf '%3.2f' $a50) $(printf '%3.2f' $a45) $(printf '%3.2f' $a40) $(printf '%3.2f' $a35) $(printf '%3.2f' $a30) $(printf '%3.2f' $a25) $(printf '%3.2f' $a20)"
   echo -e "BEAC $m"
 }
