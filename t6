@@ -304,6 +304,21 @@ function bm {
   m="$m avg_penalty: $(printf '%3.2f' $a50) $(printf '%3.2f' $a45) $(printf '%3.2f' $a40) $(printf '%3.2f' $a35) $(printf '%3.2f' $a30) $(printf '%3.2f' $a25) $(printf '%3.2f' $a20)"
   echo -e "BEAC $m"
 }
+function cpu {
+  h5=$(echo $H|sudo -S grep 'e above threshold' /var/log/syslog|tail -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%');if [ "$h5" ];then h5="cpu throttled at $h5";else h5='';fi
+  h6=$(echo $H|sudo -S grep 'ture/speed normal' /var/log/syslog|tail -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%');if [ "$h6" ];then h6="cpu ok at $h6"       ;else h6='';fi
+  h7=0
+  h8=0
+  for v in $(sensors|grep ' [-+][0-9][0-9]*'|sed 's%.*: *\([-+][0-9][0-9]*\.[0-9]*\).*%\1%')
+  do h7=$((h7+1));h8=$(echo "scale=1;$h8$v"|bc)
+  done
+}
+function bst {
+  echo "BEAC $(printf '%5s' $(systemctl status $ethb|grep Memory:|sed 's%.*Memory: \(.*\)%\1%')) $cunm $(date --rfc-3339=seconds) $(systemctl status $ethb|grep Active:|sed 's%.*Active: \(.*\)%\1%')"
+}
+function vst {
+  echo "VALI $(printf '%5s' $(systemctl status $ethv|grep Memory:|sed 's%.*Memory: \(.*\)%\1%')) $cunm $(date --rfc-3339=seconds) $(systemctl status $ethv|grep Active:|sed 's%.*Active: \(.*\)%\1%')"
+}
 function boo {
   grep "BEAC.*$h2" /home/eth/beacon.log|sort -k9.1n|head -n$h3
 }
@@ -322,6 +337,8 @@ function bh {
   [ "$1" ] || { bo;echo -e "BEAC BO $(printf '%2i' $h3)";boo; }
   echo -e "BEAC BL";bk;echo -e "BEAC $m"
   [ "$1" ] || { echo -e "BEAC BM";bm; }
+  [ "$1" ] || { cpu;echo TEMP $(echo "scale=2;$h8/$h7"|bc) $cunm $(date --rfc-3339=seconds) $h5 $h6; }
+  [ "$1" ] || { bst;vst; }
 }
 function brs {
   if [ ! -f /home/eth/beacon.restart.inicio ]; then
