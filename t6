@@ -305,8 +305,8 @@ function bm {
   echo -e "BEAC $m"
 }
 function cpu {
-  h5=$(echo $H|sudo -S grep 'e above threshold' /var/log/syslog|tail -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%');if [ "$h5" ];then h5="cpu throttled at $h5";else h5='';fi
-  h6=$(echo $H|sudo -S grep 'ture/speed normal' /var/log/syslog|tail -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%');if [ "$h6" ];then h6="cpu ok at $h6"       ;else h6='';fi
+  h5=$(echo $H|sudo -S grep 'e above threshold' /var/log/syslog|head -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%');if [ "$h5" ];then h5="cpu throttled: $h5";else h5='';fi
+  h6=$(echo $H|sudo -S grep 'ture/speed normal' /var/log/syslog|tail -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%');if [ "$h6" ];then h6="cpu ok: $h6"       ;else h6='';fi
   h7=0
   h8=0
   for v in $(sensors|grep ' [-+][0-9][0-9]*'|sed 's%.*: *\([-+][0-9][0-9]*\.[0-9]*\).*%\1%')
@@ -337,8 +337,8 @@ function bh {
   [ "$1" ] || { bo;echo -e "BEAC BO $(printf '%2i' $h3)";boo; }
   echo -e "BEAC BL";bk;echo -e "BEAC $m"
   [ "$1" ] || { echo -e "BEAC BM";bm; }
-  [ "$1" ] || { cpu;echo TEMP $(echo "scale=2;$h8/$h7"|bc) $cunm $(date --rfc-3339=seconds) $h5 $h6; }
   [ "$1" ] || { bst;vst; }
+  [ "$1" ] || { cpu;echo TEMP $(echo "scale=1;$h8/$h7"|bc)C $cunm $(date --rfc-3339=seconds) $h5 $h6; }
 }
 function brs {
   if [ ! -f /home/eth/beacon.restart.inicio ]; then
