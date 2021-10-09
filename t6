@@ -347,8 +347,8 @@ function bh {
 }
 function brs {
   if [ ! -f /home/eth/beacon.restart.inicio ]; then
-    bk;echo -e "RSTI $m" >> /home/eth/beacon.log
     touch /home/eth/beacon.restart.inicio
+    bk;echo -e "RSTI $m" >> /home/eth/beacon.log
     while [ -f /home/eth/beacon.restart.inicio ]; do
       b6=$(echo $H|sudo -S grep "lighthouse.$bpid.* INFO Synced " /var/log/syslog 2>/dev/null|tail -n32|sed 's%.* epoch: \([0-9]*\).*%\1%'|sort -u)
       if [ "$(echo "$b6"|wc -l)" -eq 1 ]; then
