@@ -140,9 +140,10 @@ function b7 {
   a=$(echo "$H"|sudo -S grep -i 'attestation success'   /var/log/syslog 2>/dev/null|wc -l)
   p=$(echo "$H"|sudo -S grep -i 'published block'       /var/log/syslog 2>/dev/null|wc -l)
   n=0;b7='OK'
-  [ "$t" -gt 100 ] && n=$(($n+20*$r/$t))
-  [ "$q" -gt 100 ] && n=$(($n+20*$w/$q))
-  [ "$a" -gt 100 ] && n=$(($n+10*(10*$z+$h+$k)/$a))
+  #bo;bv;[ "$h3" -gt "$v3" ] && n=$(($n+$h3-$v3))
+  [ "$t"  -gt '100' ] && n=$(($n+20*$r/$t))
+  [ "$q"  -gt '100' ] && n=$(($n+20*$w/$q))
+  [ "$a"  -gt '100' ] && n=$(($n+10*(10*$z+$h+$k)/$a))
   if [ "$n" -ge $l1rs ]; then
     if [ "$n" -ge $l2rs ]; then
       [ -f /home/eth/beacon.log ] && [ "$(tail -n $l2rs /home/eth/beacon.log|cut -d' ' -f1|sort -u)" = "BEAC" ] && b7='BK'
@@ -268,28 +269,30 @@ function bm {
   a50=0;a45=0;a40=0;a35=0;a30=0;a25=0;a20=0
   z50=0;z45=0;z40=0;z35=0;z30=0;z25=0;z20=0
   k50=0;k45=0;k40=0;k35=0;k30=0;k25=0;k20=0
-  while read -a v;do
-    v13=$((10#${v[13]}));v14=$((10#${v[14]}));v15=$((10#${v[15]}))
-    if [ $((10#${v[21]})) -ge 25 ];then
-      if [ $((10#${v[21]})) -ge 30 ];then
-        if [ $((10#${v[21]})) -ge 35 ];then
-          if [ $((10#${v[21]})) -ge 40 ];then
-            if [ $((10#${v[21]})) -ge 45 ];then
-              if [ $((10#${v[21]})) -ge 50 ]
-              then z50=$((z50+v13));n50=$((n50+v14));k50=$((k50+v15));c50=$((c50+1))
-              else z45=$((z45+v13));n45=$((n45+v14));k45=$((k45+v15));c45=$((c45+1))
+  if [ -f /home/eth/beacon.log ]; then
+    while read -a v;do
+      v13=$((10#${v[13]}));v14=$((10#${v[14]}));v15=$((10#${v[15]}))
+      if [ $((10#${v[21]})) -ge 25 ];then
+        if [ $((10#${v[21]})) -ge 30 ];then
+          if [ $((10#${v[21]})) -ge 35 ];then
+            if [ $((10#${v[21]})) -ge 40 ];then
+              if [ $((10#${v[21]})) -ge 45 ];then
+                if [ $((10#${v[21]})) -ge 50 ]
+                then z50=$((z50+v13));n50=$((n50+v14));k50=$((k50+v15));c50=$((c50+1))
+                else z45=$((z45+v13));n45=$((n45+v14));k45=$((k45+v15));c45=$((c45+1))
+                fi
+              else z40=$((z40+v13));n40=$((n40+v14));k40=$((k40+v15));c40=$((c40+1))
               fi
-            else z40=$((z40+v13));n40=$((n40+v14));k40=$((k40+v15));c40=$((c40+1))
+            else z35=$((z35+v13));n35=$((n35+v14));k35=$((k35+v15));c35=$((c35+1))
             fi
-          else z35=$((z35+v13));n35=$((n35+v14));k35=$((k35+v15));c35=$((c35+1))
+          else z30=$((z30+v13));n30=$((n30+v14));k30=$((k30+v15));c30=$((c30+1))
           fi
-        else z30=$((z30+v13));n30=$((n30+v14));k30=$((k30+v15));c30=$((c30+1))
+        else z25=$((z25+v13));n25=$((n25+v14));k25=$((k25+v15));c25=$((c25+1))
         fi
-      else z25=$((z25+v13));n25=$((n25+v14));k25=$((k25+v15));c25=$((c25+1))
+      else z20=$((z20+v13));n20=$((n20+v14));k20=$((k20+v15));c20=$((c20+1))
       fi
-    else z20=$((z20+v13));n20=$((n20+v14));k20=$((k20+v15));c20=$((c20+1))
-    fi
-  done <<< $(grep 'BEAC' /home/eth/beacon.log|tail -n ${1:-$rplg})
+    done <<< $(grep 'BEAC' /home/eth/beacon.log|tail -n ${1:-$rplg})
+  fi
   [ $c50 -gt 0 ] && a50=$(echo "scale=2;($z50*$pmis+$n50*$pmat+$k50*$pdly)/$c50*3000/1000000000"|bc)
   [ $c45 -gt 0 ] && a45=$(echo "scale=2;($z45*$pmis+$n45*$pmat+$k45*$pdly)/$c45*3000/1000000000"|bc)
   [ $c40 -gt 0 ] && a40=$(echo "scale=2;($z40*$pmis+$n40*$pmat+$k40*$pdly)/$c40*3000/1000000000"|bc)
@@ -298,7 +301,7 @@ function bm {
   [ $c25 -gt 0 ] && a25=$(echo "scale=2;($z25*$pmis+$n25*$pmat+$k25*$pdly)/$c25*3000/1000000000"|bc)
   [ $c20 -gt 0 ] && a20=$(echo "scale=2;($z20*$pmis+$n20*$pmat+$k20*$pdly)/$c20*3000/1000000000"|bc)
   bo
-  m="$(systemctl status eth-beacon|grep target-peers|sed 's%.*target-peers \([0-9]*\).*%\1%') $(printf '%2i' $h3) $cunm $(date --rfc-3339=seconds)"
+  m="$(printf '%2i' $(systemctl status eth-beacon|grep target-peers|sed 's%.*target-peers \([0-9]*\).*%\1%')) $(printf '%2i' $h3) $cunm $(date --rfc-3339=seconds)"
   m="$m cnt_lines_days: $(printf '%5i' ${1:-$rplg}) $(printf '%2i' $h4)"
   m="$m cnt_50_05_20: $(printf '%4i'  $c50) $(printf '%4i'   $c45) $(printf '%4i'   $c40) $(printf '%4i'   $c35) $(printf '%4i'   $c30) $(printf '%4i'   $c25) $(printf '%4i'   $c20)"
   m="$m avg_penalty: $(printf '%3.2f' $a50) $(printf '%3.2f' $a45) $(printf '%3.2f' $a40) $(printf '%3.2f' $a35) $(printf '%3.2f' $a30) $(printf '%3.2f' $a25) $(printf '%3.2f' $a20)"
@@ -327,14 +330,28 @@ function vst {
   echo "VALI $(printf '%5s' $(systemctl status $ethv|grep Memory:|sed 's%.*Memory: \(.*\)%\1%')) $cunm $(date --rfc-3339=seconds) $(systemctl status $ethv|grep Active:|sed 's%.*Active: \(.*\)%\1%')"
 }
 function boo {
-  grep "BEAC.*$h2" /home/eth/beacon.log|sort -k9.1n|head -n$h3
+  if [ -f /home/eth/beacon.log ]; then
+    grep "BEAC.*$h2" /home/eth/beacon.log|sort -k9.1n|head -n$h3
+  fi
 }
 function bo {
-  b8=$(grep BEAC /home/eth/beacon.log|tail -n1|sed 's%.* \([0-9]*-[0-9]*-[0-9]*\) \([0-9]*:[0-9]*\):.*%\1 \2%')
-  h1=$(echo $b8|cut -d' ' -f1)
-  h2=$(echo $b8|cut -d' ' -f2)
-  if [ "$1" ];then h3=$1;else h3=$(grep "BEAC.*$h2" /home/eth/beacon.log|sort -k9.1n|grep -n $h1|cut -d: -f1);fi
-  h4=$(grep "BEAC.*$h2" /home/eth/beacon.log|wc -l)
+  h2='00:00';h3=0;h4=0
+  if [ -f /home/eth/beacon.log ]; then
+    b8=$(grep BEAC /home/eth/beacon.log|tail -n1|sed 's%.* \([0-9]*-[0-9]*-[0-9]*\) \([0-9]*:[0-9]*\):.*%\1 \2%')
+    h1=$(echo $b8|cut -d' ' -f1)
+    h2=$(echo $b8|cut -d' ' -f2)
+    if [ "$1" ];then h3=$1;else h3=$(grep "BEAC.*$h2" /home/eth/beacon.log|sort -k9.1n|grep -n $h1|cut -d: -f1);fi
+    h4=$(grep "BEAC.*$h2" /home/eth/beacon.log|wc -l)
+  fi 
+}
+function bv {
+  v1=0;v2=0;v3=0
+  if [ -f /home/eth/beacon-resumo.log ]; then
+    while read -a v;do
+      v1=$((${v[2]}+v1));v2=$((1+v2))
+    done <<< $(grep BEAC /home/eth/beacon-resumo.log)
+  fi
+  [ $v2 -gt 0 ] && v3=$((v1/v2))
 }
 function bh {
   [ "$1" ] || echo -e "BEAC BH $(printf '%2i' $((${1:-$hors}-$l2rs)))"
@@ -436,7 +453,7 @@ function ts {
 [ "$1" = "gh"  ] && { tail -n ${2:-$hors} /home/eth/geth.log;gk;echo -e "GETH $m nodes: ${g2:-0} blocks: $n"; }
 [ "$1" = "oh"  ] && { tail -n ${2:-$hors} /home/eth/oeth.log;ok;echo -e "OETH $m nodes: ${o2:-0} blocks: $n"; }
 [ "$1" = "bh"  ] && { [ -f /home/eth/beacon.log ] && { bh $2; } }
-[ "$1" = "bo"  ] && { [ -f /home/eth/beacon.log ] && { bo $2;boo; } }
+[ "$1" = "bo"  ] && { bo $2;boo; }
 [ "$1" = "gkr" ] && { g7;[ "$g7" != "OK" ] && grs ${2:-0}; }
 [ "$1" = "okr" ] && { o7;[ "$o7" != "OK" ] && ors ${2:-0}; }
 [ "$1" = "bkr" ] && { b7;[ "$b7" != "OK" ] && brs ${2:-0}; }
