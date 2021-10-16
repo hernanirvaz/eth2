@@ -301,7 +301,7 @@ function bm {
   [ $c25 -gt 0 ] && a25=$(echo "scale=2;($z25*$pmis+$n25*$pmat+$k25*$pdly)/$c25*3000/1000000000"|bc)
   [ $c20 -gt 0 ] && a20=$(echo "scale=2;($z20*$pmis+$n20*$pmat+$k20*$pdly)/$c20*3000/1000000000"|bc)
   bo;bv
-  v3=$(((v1+h3)/(1+v2)))
+  v3=$(printf '%.0f' $(echo "scale=5;($v1+$h3)/(1+$v2)"|bc))
   m="$(printf '%2i' $v3) $(printf '%2i' $h3) $cunm $(date --rfc-3339=seconds)"
   m="$m lnprdy: $(printf '%8i' ${1:-$rplg}) $(printf '%2i' $(systemctl status eth-beacon|grep target-peers|sed 's%.*target-peers \([0-9]*\).*%\1%')) $(printf '%4i' $h4)"
   m="$m cnt_50_05_20: $(printf '%4i'  $c50) $(printf '%4i'   $c45) $(printf '%4i'   $c40) $(printf '%4i'   $c35) $(printf '%4i'   $c30) $(printf '%4i'   $c25) $(printf '%4i'   $c20)"
@@ -352,7 +352,7 @@ function bv {
       v1=$((${v[2]}+v1));v2=$((1+v2))
     done <<< $(grep BEAC $p3)
   fi
-  [ $v2 -gt 0 ] && v3=$((v1/v2))
+  [ $v2 -gt 0 ] && v3=$(printf '%.0f' $(echo "scale=5;$v1/$v2"|bc))
 }
 function bh {
   [ "$1" ] || echo -e "BEAC BH $(printf '%2i' $((${1:-$hors}-$l2rs)))"
