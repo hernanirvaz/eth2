@@ -303,8 +303,8 @@ function bm {
   bo;bv
   v3=$(((v1+h3)/(1+v2)))
   m="$(printf '%2i' $v3) $(printf '%2i' $h3) $cunm $(date --rfc-3339=seconds)"
-  m="$m line_peer_day: $(printf '%5i' ${1:-$rplg}) $(printf '%2i' $(systemctl status eth-beacon|grep target-peers|sed 's%.*target-peers \([0-9]*\).*%\1%')) $(printf '%2i' $h4)"
-  m="$m cnt_500520: $(printf '%4i'    $c50) $(printf '%4i'   $c45) $(printf '%4i'   $c40) $(printf '%4i'   $c35) $(printf '%4i'   $c30) $(printf '%4i'   $c25) $(printf '%4i'   $c20)"
+  m="$m lnprdy: $(printf '%8i' ${1:-$rplg}) $(printf '%2i' $(systemctl status eth-beacon|grep target-peers|sed 's%.*target-peers \([0-9]*\).*%\1%')) $(printf '%4i' $h4)"
+  m="$m cnt_50_05_20: $(printf '%4i'  $c50) $(printf '%4i'   $c45) $(printf '%4i'   $c40) $(printf '%4i'   $c35) $(printf '%4i'   $c30) $(printf '%4i'   $c25) $(printf '%4i'   $c20)"
   m="$m avg_penalty: $(printf '%3.2f' $a50) $(printf '%3.2f' $a45) $(printf '%3.2f' $a40) $(printf '%3.2f' $a35) $(printf '%3.2f' $a30) $(printf '%3.2f' $a25) $(printf '%3.2f' $a20)"
   echo -e "BEAC $m"
 }
