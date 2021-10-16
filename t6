@@ -93,7 +93,7 @@ function g2 { g2=0;[ "$(systemctl status $ethg 2>/dev/null|grep -i running)" ] &
 function g7 {
   t=-1;n=0;g7='OK'
   if [ "$(systemctl status $ethg 2>/dev/null|grep -i running)" ] && [ -f /home/eth/geth.log ]; then
-    n=$(echo $H|sudo -S grep -i 'imported new' /var/log/syslog 2>/dev/null|wc -l)
+    n=$(echo $H|sudo -S grep -i 'imported new' $p4 2>/dev/null|wc -l)
     t=$(tail -n 1 /home/eth/geth.log|sed 's%.*blocks: \([0-9]*\).*%\1%')
   fi
   [ "$n" -eq "$t" ] && g7='BK'
@@ -116,29 +116,29 @@ function o2 {
 function o7 {
   t=-1;n=0;o7='OK'
   if [ "$(systemctl status $etho 2>/dev/null|grep -i running)" ] && [ -f /home/eth/oeth.log ]; then
-    n=$(echo $H|sudo -S grep -i 'Imported  *#' /var/log/syslog 2>/dev/null|wc -l)
+    n=$(echo $H|sudo -S grep -i 'Imported  *#' $p4 2>/dev/null|wc -l)
     t=$(tail -n 1 /home/eth/oeth.log|sed 's%.*blocks: \([0-9]*\).*%\1%')
   fi
   [ "$n" -eq "$t" ] && o7='BK'
 }
-function b2 { b2=0;[ -d /var/lib/lighthouse ] && b2=$(echo $H|sudo -S grep -i 'lighthouse.*peers:' /var/log/syslog 2>/dev/null|tail -n 1|sed 's%.*peers: *\([0-9]*\).*%\1%'); }
+function b2 { b2=0;[ -d /var/lib/lighthouse ] && b2=$(echo $H|sudo -S grep -i 'lighthouse.*peers:' $p4 2>/dev/null|tail -n 1|sed 's%.*peers: *\([0-9]*\).*%\1%'); }
 function b7 {
   t=0;y=0
-  for v in $(echo $H|sudo -S grep -i 'inclusion delay' /var/log/syslog 2>/dev/null|sed 's%.*delay: *\([0-9]*\).*%\1%')
+  for v in $(echo $H|sudo -S grep -i 'inclusion delay' $p4 2>/dev/null|sed 's%.*delay: *\([0-9]*\).*%\1%')
   do y=$(($y+1));t=$(($t+$v))
   done
   l=0
   k=$(($t-$y))
   [ "$y" -gt 0 ] && l=$(($k/$y))
-  n=$(echo "$H"|sudo -S grep "lighthouse.$bpid" /var/log/syslog 2>/dev/null|tail -n $(($hors*200)))
+  n=$(echo "$H"|sudo -S grep "lighthouse.$bpid" $p4 2>/dev/null|tail -n $(($hors*200)))
   w=$(echo "$n"|grep -i 'processed block'|wc -l)
   q=$(echo "$n"|grep -i 'block received' |wc -l)
   r=$(echo "$n"|grep -v ' INFO '|wc -l)
   t=$(echo "$n"|grep    ' INFO '|wc -l)
-  z=$(echo "$H"|sudo -S grep -i 'attestation missing'   /var/log/syslog 2>/dev/null|wc -l)
-  h=$(echo "$H"|sudo -S grep -i 'failed to match'       /var/log/syslog 2>/dev/null|wc -l)
-  a=$(echo "$H"|sudo -S grep -i 'attestation success'   /var/log/syslog 2>/dev/null|wc -l)
-  p=$(echo "$H"|sudo -S grep -i 'published block'       /var/log/syslog 2>/dev/null|wc -l)
+  z=$(echo "$H"|sudo -S grep -i 'attestation missing'   $p4 2>/dev/null|wc -l)
+  h=$(echo "$H"|sudo -S grep -i 'failed to match'       $p4 2>/dev/null|wc -l)
+  a=$(echo "$H"|sudo -S grep -i 'attestation success'   $p4 2>/dev/null|wc -l)
+  p=$(echo "$H"|sudo -S grep -i 'published block'       $p4 2>/dev/null|wc -l)
   n=0;b7='OK'
   #bo;bv;[ "$h3" -gt "$v3" ] && n=$(($n+$h3-$v3))
   [ "$t"  -gt '100' ] && n=$(($n+20*$r/$t))
@@ -146,9 +146,9 @@ function b7 {
   [ "$a"  -gt '100' ] && n=$(($n+10*(10*$z+$h+$k)/$a))
   if [ "$n" -ge $l1rs ]; then
     if [ "$n" -ge $l2rs ]; then
-      [ -f /home/eth/beacon.log ] && [ "$(tail -n $l2rs /home/eth/beacon.log|cut -d' ' -f1|sort -u)" = "BEAC" ] && b7='BK'
+      [ -f $p2 ] && [ "$(tail -n $l2rs $p2|cut -d' ' -f1|sort -u)" = "BEAC" ] && b7='BK'
     else
-      [ -f /home/eth/beacon.log ] && [ "$(tail -n $hors /home/eth/beacon.log|cut -d' ' -f1|sort -u)" = "BEAC" ] && b7='BK'
+      [ -f $p2 ] && [ "$(tail -n $hors $p2|cut -d' ' -f1|sort -u)" = "BEAC" ] && b7='BK'
     fi
   fi
 }
@@ -158,8 +158,8 @@ function gs {
     if [ "$(echo $g1|grep -i false)" ]; then
       m="GETH SYNCED - PEERCOUNT $g2"
     else
-      g5=$(echo $H|sudo -S grep -i 'new block headers' /var/log/syslog 2>/dev/null)
-      g6=$(echo $H|sudo -S grep -i 'new state entries' /var/log/syslog 2>/dev/null)
+      g5=$(echo $H|sudo -S grep -i 'new block headers' $p4 2>/dev/null)
+      g6=$(echo $H|sudo -S grep -i 'new state entries' $p4 2>/dev/null)
       h=$(echo  $g1 |sed -Ee 's%.*highestBlock: *([0-9]+).*%\1%i')
       c=$(echo  $g1 |sed -Ee 's%.*currentBlock: *([0-9]+).*%\1%i')
       k=$(echo  $g1 |sed -Ee 's%.*knownStates: *([0-9]+).*%\1%i')
@@ -233,13 +233,13 @@ function ors {
 function bk {
   m=""
   t=0;y=0
-  for v in $(echo $H|sudo -S grep -i 'inclusion_lag: [1-9][0-9]*' /var/log/syslog 2>/dev/null|sed 's%.*inclusion_lag: *\([0-9]*\).*%\1%')
+  for v in $(echo $H|sudo -S grep -i 'inclusion_lag: [1-9][0-9]*' $p4 2>/dev/null|sed 's%.*inclusion_lag: *\([0-9]*\).*%\1%')
   do y=$(($y+1));t=$(($t+$v))
   done
   x=0
   [ "$y" -gt 0 ] && x=$(($t/$y))
   t=0;y=0
-  for v in $(echo $H|sudo -S grep -i 'src: gossip' /var/log/syslog 2>/dev/null|sed 's%.*delay_ms: *\([0-9]*\).*%\1%')
+  for v in $(echo $H|sudo -S grep -i 'src: gossip' $p4 2>/dev/null|sed 's%.*delay_ms: *\([0-9]*\).*%\1%')
   do y=$(($y+1));t=$(($t+$v))
   done
   j=0
@@ -269,7 +269,7 @@ function bm {
   a50=0;a45=0;a40=0;a35=0;a30=0;a25=0;a20=0
   z50=0;z45=0;z40=0;z35=0;z30=0;z25=0;z20=0
   k50=0;k45=0;k40=0;k35=0;k30=0;k25=0;k20=0
-  if [ -f /home/eth/beacon.log ]; then
+  if [ -f $p2 ]; then
     while read -a v;do
       v13=$((10#${v[13]}));v14=$((10#${v[14]}));v15=$((10#${v[15]}))
       if [ $((10#${v[21]})) -ge 25 ];then
@@ -291,7 +291,7 @@ function bm {
         fi
       else z20=$((z20+v13));n20=$((n20+v14));k20=$((k20+v15));c20=$((c20+1))
       fi
-    done <<< $(grep 'BEAC' /home/eth/beacon.log|tail -n ${1:-$rplg})
+    done <<< $(grep 'BEAC' $p2|tail -n ${1:-$rplg})
   fi
   [ $c50 -gt 0 ] && a50=$(echo "scale=2;($z50*$pmis+$n50*$pmat+$k50*$pdly)/$c50*3000/1000000000"|bc)
   [ $c45 -gt 0 ] && a45=$(echo "scale=2;($z45*$pmis+$n45*$pmat+$k45*$pdly)/$c45*3000/1000000000"|bc)
@@ -300,16 +300,17 @@ function bm {
   [ $c30 -gt 0 ] && a30=$(echo "scale=2;($z30*$pmis+$n30*$pmat+$k30*$pdly)/$c30*3000/1000000000"|bc)
   [ $c25 -gt 0 ] && a25=$(echo "scale=2;($z25*$pmis+$n25*$pmat+$k25*$pdly)/$c25*3000/1000000000"|bc)
   [ $c20 -gt 0 ] && a20=$(echo "scale=2;($z20*$pmis+$n20*$pmat+$k20*$pdly)/$c20*3000/1000000000"|bc)
-  bo
-  m="$(printf '%2i' $(systemctl status eth-beacon|grep target-peers|sed 's%.*target-peers \([0-9]*\).*%\1%')) $(printf '%2i' $h3) $cunm $(date --rfc-3339=seconds)"
-  m="$m cnt_lines_days: $(printf '%5i' ${1:-$rplg}) $(printf '%2i' $h4)"
+  bo;bv
+  v3=$(((v1+h3)/(1+v2)))
+  m="$(printf '%2i' $v3) $(printf '%2i' $h3) $cunm $(date --rfc-3339=seconds)"
+  m="$m lines_peers_days: $(printf '%5i' ${1:-$rplg}) $(printf '%2i' $(systemctl status eth-beacon|grep target-peers|sed 's%.*target-peers \([0-9]*\).*%\1%')) $(printf '%2i' $h4)"
   m="$m cnt_50_05_20: $(printf '%4i'  $c50) $(printf '%4i'   $c45) $(printf '%4i'   $c40) $(printf '%4i'   $c35) $(printf '%4i'   $c30) $(printf '%4i'   $c25) $(printf '%4i'   $c20)"
   m="$m avg_penalty: $(printf '%3.2f' $a50) $(printf '%3.2f' $a45) $(printf '%3.2f' $a40) $(printf '%3.2f' $a35) $(printf '%3.2f' $a30) $(printf '%3.2f' $a25) $(printf '%3.2f' $a20)"
   echo -e "BEAC $m"
 }
 function cpu {
-  h5=$(echo $H|sudo -S grep 'e above threshold' /var/log/syslog 2>/dev/null|head -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%');if [ "$h5" ];then h5="cpu throttled: $h5";else h5='';fi
-  h6=$(echo $H|sudo -S grep 'ture/speed normal' /var/log/syslog 2>/dev/null|tail -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%');if [ "$h6" ];then h6="cpu ok: $h6"       ;else h6='';fi
+  h5=$(echo $H|sudo -S grep 'e above threshold' $p4 2>/dev/null|head -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%');if [ "$h5" ];then h5="cpu throttled: $h5";else h5='';fi
+  h6=$(echo $H|sudo -S grep 'ture/speed normal' $p4 2>/dev/null|tail -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%');if [ "$h6" ];then h6="cpu ok: $h6"       ;else h6='';fi
   h7=0
   h8=0
   if [ "$(which sensors)" ]; then
@@ -330,34 +331,34 @@ function vst {
   echo "VALI $(printf '%5s' $(systemctl status $ethv|grep Memory:|sed 's%.*Memory: \(.*\)%\1%')) $cunm $(date --rfc-3339=seconds) $(systemctl status $ethv|grep Active:|sed 's%.*Active: \(.*\)%\1%')"
 }
 function boo {
-  if [ -f /home/eth/beacon.log ]; then
-    grep "BEAC.*$h2" /home/eth/beacon.log|sort -k9.1n|head -n$h3
+  if [ -f $p2 ]; then
+    grep "BEAC.*$h2" $p2|sort -k9.1n|head -n$h3
   fi
 }
 function bo {
   h2='00:00';h3=0;h4=0
-  if [ -f /home/eth/beacon.log ]; then
-    b8=$(grep BEAC /home/eth/beacon.log|tail -n1|sed 's%.* \([0-9]*-[0-9]*-[0-9]*\) \([0-9]*:[0-9]*\):.*%\1 \2%')
+  if [ -f $p2 ]; then
+    b8=$(grep BEAC $p2|tail -n1|sed 's%.* \([0-9]*-[0-9]*-[0-9]*\) \([0-9]*:[0-9]*\):.*%\1 \2%')
     h1=$(echo $b8|cut -d' ' -f1)
     h2=$(echo $b8|cut -d' ' -f2)
-    if [ "$1" ];then h3=$1;else h3=$(grep "BEAC.*$h2" /home/eth/beacon.log|sort -k9.1n|grep -n $h1|cut -d: -f1);fi
-    h4=$(grep "BEAC.*$h2" /home/eth/beacon.log|wc -l)
+    if [ "$1" ];then h3=$1;else h3=$(grep "BEAC.*$h2" $p2|sort -k9.1n|grep -n $h1|cut -d: -f1);fi
+    h4=$(grep "BEAC.*$h2" $p2|wc -l)
   fi 
 }
 function bv {
   v1=0;v2=0;v3=0
-  if [ -f /home/eth/beacon-resumo.log ]; then
+  if [ -f $p3 ]; then
     while read -a v;do
       v1=$((${v[2]}+v1));v2=$((1+v2))
-    done <<< $(grep BEAC /home/eth/beacon-resumo.log)
+    done <<< $(grep BEAC $p3)
   fi
   [ $v2 -gt 0 ] && v3=$((v1/v2))
 }
 function bh {
   [ "$1" ] || echo -e "BEAC BH $(printf '%2i' $((${1:-$hors}-$l2rs)))"
-  tail -n$((${1:-$hors}+1)) /home/eth/beacon.log|head -n$((${1:-$hors}-$l2rs))
+  tail -n$((${1:-$hors}+1)) $p2|head -n$((${1:-$hors}-$l2rs))
   [ "$1" ] || echo -e "BEAC BH $(printf '%2i' $l2rs)"
-  tail -n$(($l2rs+1))       /home/eth/beacon.log|head -n$l2rs
+  tail -n$(($l2rs+1))       $p2|head -n$l2rs
   [ "$1" ] || { bo;echo -e "BEAC BO $(printf '%2i' $h3)";boo; }
   echo -e "BEAC BL";bk;echo -e "BEAC $m"
   [ "$1" ] || { echo -e "BEAC BM";bm; }
@@ -367,14 +368,14 @@ function bh {
 function brs {
   if [ ! -f /home/eth/beacon.restart.inicio ]; then
     touch /home/eth/beacon.restart.inicio
-    bk;echo -e "RSTI $m" >> /home/eth/beacon.log
+    bk;echo -e "RSTI $m" >> $p2
     while [ -f /home/eth/beacon.restart.inicio ]; do
-      b6=$(echo $H|sudo -S grep "lighthouse.$bpid.* INFO Synced " /var/log/syslog 2>/dev/null|tail -n32|sed 's%.* epoch: \([0-9]*\).*%\1%'|sort -u)
+      b6=$(echo $H|sudo -S grep "lighthouse.$bpid.* INFO Synced " $p4 2>/dev/null|tail -n32|sed 's%.* epoch: \([0-9]*\).*%\1%'|sort -u)
       if [ "$(echo "$b6"|wc -l)" -eq 1 ]; then
         touch /home/eth/beacon.restart.interval
         b1=0
         while [ $b1 -lt 400 ] && [ -f /home/eth/beacon.restart.interval ]; do
-          b4=$(echo $H|sudo -S grep "lighthouse.$bpid.* INFO " /var/log/syslog 2>/dev/null|tail -n $pors|sed 's%.* INFO \([^ ]*\) .*%\1%'|sort -u)
+          b4=$(echo $H|sudo -S grep "lighthouse.$bpid.* INFO " $p4 2>/dev/null|tail -n $pors|sed 's%.* INFO \([^ ]*\) .*%\1%'|sort -u)
           b5=$(echo "$b4"|head -n1)
           if [ "$(echo "$b4"|wc -l)" -eq 2 ] && [ "$(echo "$b4"|tail -n1)" = "Synced" ] && ([ "$b5" = "New" ] || [ "$b5" = "Processed" ]); then
             if [ $1 -ne 0 ]; then
@@ -383,7 +384,7 @@ function brs {
               b3=$(($b3+$1))
               [ $b3 -ge 20 ] && [ $b3 -le 50 ] && sed "s%--target-peers [0-9]*%--target-peers $b3%" ~/$ethb.save > /etc/systemd/system/$ethb.service
             fi
-            bk;echo -e "RSTF $m" >> /home/eth/beacon.log
+            bk;echo -e "RSTF $m" >> $p2
             [ "$2" = "bnvc" ] && vp
             bp
             dr
@@ -406,12 +407,12 @@ function brs {
   fi
 }
 function bs {
-  for l in $(echo $H|sudo -S grep -i 'lighthouse.*failed to' /var/log/syslog 2>/dev/null|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\) .*validator: \([0-9]*\).*epoch: \([0-9]*\).*%\1:\2:\3%'|sort -u|tail -n $1);do
+  for l in $(echo $H|sudo -S grep -i 'lighthouse.*failed to' $p4 2>/dev/null|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\) .*validator: \([0-9]*\).*epoch: \([0-9]*\).*%\1:\2:\3%'|sort -u|tail -n $1);do
     v=$(echo $l|cut -d: -f4)
     e=$(echo $l|cut -d: -f5)
-    s=$(sudo grep -i "lighthouse.*attestation.*$v.*slot.*$e" /var/log/syslog|sed 's%.*slot: \([0-9]*\).*%\1%'|sort -u)
+    s=$(sudo grep -i "lighthouse.*attestation.*$v.*slot.*$e" $p4|sed 's%.*slot: \([0-9]*\).*%\1%'|sort -u)
     echo -e "${i}VALIDATOR $v, EPOCH $e, SLOT $s${f}"
-    sudo grep "$v.*$e\|$s" /var/log/syslog
+    sudo grep "$v.*$e\|$s" $p4
   done
 }
 function ssp {
@@ -449,10 +450,11 @@ function ts {
 [ "$1" = "gl"  ] && { gk   ;echo -e "GETH $m nodes: ${g2:-0} blocks: $n"; }
 [ "$1" = "ol"  ] && { ok   ;echo -e "OETH $m nodes: ${o2:-0} blocks: $n"; }
 [ "$1" = "bl"  ] && { bk $2;echo -e "BEAC $m"; }
+[ "$1" = "bv"  ] && { bv   ;echo -e "BEAC BV $(printf '%2i' $v3)"; }
 [ "$1" = "bm"  ] && { bm $2; }
 [ "$1" = "gh"  ] && { tail -n ${2:-$hors} /home/eth/geth.log;gk;echo -e "GETH $m nodes: ${g2:-0} blocks: $n"; }
 [ "$1" = "oh"  ] && { tail -n ${2:-$hors} /home/eth/oeth.log;ok;echo -e "OETH $m nodes: ${o2:-0} blocks: $n"; }
-[ "$1" = "bh"  ] && { [ -f /home/eth/beacon.log ] && { bh $2; } }
+[ "$1" = "bh"  ] && { [ -f $p2 ] && { bh $2; } }
 [ "$1" = "bo"  ] && { bo $2;boo; }
 [ "$1" = "gkr" ] && { g7;[ "$g7" != "OK" ] && grs ${2:-0}; }
 [ "$1" = "okr" ] && { o7;[ "$o7" != "OK" ] && ors ${2:-0}; }
@@ -471,8 +473,8 @@ function ts {
 [ "$1" = "ll" ] && { uu "systemctl list-units $pate $patp $patf"; }
 [ "$1" = "lp" ] && { netstat -tulpn; }
 # outros journal system/lighthouse
-[ "$1" = "el" ] && { echo $H|sudo -S grep -i 'openethereum\|geth\[\|lighthouse'      /var/log/syslog 2>/dev/null|if [ "$2" ];then grep -i "[a-z]* [0-9]* $2";else grep -v ' INFO ';fi; }
-[ "$1" = "sl" ] && { echo $H|sudo -S grep -v 'openethereum\|geth\[\|lighthouse\|UFW' /var/log/syslog 2>/dev/null|if [ "$2" ];then grep -i "[a-z]* [0-9]* $2";else grep -i 'error' ;fi; }
+[ "$1" = "el" ] && { echo $H|sudo -S grep -i 'openethereum\|geth\[\|lighthouse'      $p4 2>/dev/null|if [ "$2" ];then grep -i "[a-z]* [0-9]* $2";else grep -v ' INFO ';fi; }
+[ "$1" = "sl" ] && { echo $H|sudo -S grep -v 'openethereum\|geth\[\|lighthouse\|UFW' $p4 2>/dev/null|if [ "$2" ];then grep -i "[a-z]* [0-9]* $2";else grep -i 'error' ;fi; }
 [ "$1" = "np" ] && { g2;b2;echo -e "PEERS: GETH ${g2:-0}, BEACON ${b2:-0}"; }
 [ "$1" = "ws" ] && { uu "ufw status numbered"; }
 [ "$1" = "wa" ] && if [ "$(echo $H|sudo -S ufw status 2>/dev/null|grep -i inactive)" ];then echo -e "${i}ARRANCA FIREWALL${f}";sudo ufw enable; else echo -e "${i}FIREWALL JA ACTIVE${f}";fi

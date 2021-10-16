@@ -5,6 +5,9 @@ f="\e[25m\n"
 
 p0='/home/eth/eth2'
 p1='/etc/prometheus'
+p2='/home/eth/beacon.log'
+p3='/home/eth/beacon-resumo.log'
+p4='/var/log/syslog '
 
 meeu="$(whoami)"
 cunm="$(uname -n)"
@@ -49,4 +52,4 @@ l2rs=5
 hors=18
 pors=7
 rplg=0
-[ $rplg -eq 0 ] && [ -f /home/eth/beacon.log ] && rplg=$(cat /home/eth/beacon.log|wc -l)
+[ $rplg -eq 0 ] && [ -f $p2 ] && rplg=$(cat $p2|wc -l)
