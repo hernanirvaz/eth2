@@ -137,6 +137,7 @@ function b7 {
   t=$(echo "$n"|grep    ' INFO '|wc -l)
   z=$(echo "$H"|sudo -S grep -i 'attestation missing'   $p4 2>/dev/null|wc -l)
   h=$(echo "$H"|sudo -S grep -i 'failed to match'       $p4 2>/dev/null|wc -l)
+  #a=0;for v in $(echo $H|sudo -S grep -i 'attestation success' $p4 2>/dev/null|sed 's%.*validators: [\(.*\)].*%\1%');do y=($(echo $v|sed 's%,% %g'));a=$(($a+${#y[@]}));done
   a=$(echo "$H"|sudo -S grep -i 'attestation success'   $p4 2>/dev/null|wc -l)
   p=$(echo "$H"|sudo -S grep -i 'published block'       $p4 2>/dev/null|wc -l)
   n=0;b7='OK'
