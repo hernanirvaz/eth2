@@ -129,10 +129,10 @@ function b7 {
   r=$(echo "$n"|grep -v ' INFO '|wc -l)
   t=$(echo "$n"|grep    ' INFO '|wc -l)
   p=$(echo "$H"|sudo -S grep -i 'published block' $p4 2>/dev/null|wc -l)
-  z=0;for v in $(echo $H|sudo -S grep -i 'attestation(s) missing' $p4 2>/dev/null|sed 's%.*validators: \[\(.*\)\].*%\1%');do y=($(echo $v|sed 's%,% %g'));z=$(($z+${#y[@]}));done
-  h=0;for v in $(echo $H|sudo -S grep -i 'attestation(s) failed'  $p4 2>/dev/null|sed 's%.*validators: \[\(.*\)\].*%\1%');do y=($(echo $v|sed 's%,% %g'));h=$(($h+${#y[@]}));done
-  k=0;for v in $(echo $H|sudo -S grep -i 'attestation(s) had'     $p4 2>/dev/null|sed 's%.*validators: \[\(.*\)\].*%\1%');do y=($(echo $v|sed 's%,% %g'));k=$(($k+${#y[@]}));done
-  a=0;for v in $(echo $H|sudo -S grep -i 'attestation(s) success' $p4 2>/dev/null|sed 's%.*validators: \[\(.*\)\].*%\1%');do y=($(echo $v|sed 's%,% %g'));a=$(($a+${#y[@]}));done
+  z=0;for v in $(echo $H|sudo -S grep -i 'attestation(s) missing' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%');do y=($(echo $v|sed 's%,%%g'));z=$(($z+${#y[@]}));done
+  h=0;for v in $(echo $H|sudo -S grep -i 'attestation(s) failed'  $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%');do y=($(echo $v|sed 's%,%%g'));h=$(($h+${#y[@]}));done
+  k=0;for v in $(echo $H|sudo -S grep -i 'attestation(s) had'     $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%');do y=($(echo $v|sed 's%,%%g'));k=$(($k+${#y[@]}));done
+  a=0;for v in $(echo $H|sudo -S grep -i 'attestation(s) success' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%');do y=($(echo $v|sed 's%,%%g'));a=$(($a+${#y[@]}));done
   n=0;b7='OK'
   [ "$q"  -gt '100' ] && n=$(($n+20*$w/$q))
   [ "$t"  -gt '100' ] && n=$(($n+20*$r/$t))
