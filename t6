@@ -356,6 +356,7 @@ function bh {
   echo -e "BEAC BL";bk;echo -e "BEAC $m"
   [ "$1" ] || { echo -e "BEAC BM";bm; }
   [ "$1" ] || { bst;vst; }
+  [ "$1" ] || { ts; }
   [ "$1" ] || { cpu;cpd; }
 }
 function brs {
@@ -426,8 +427,11 @@ function ssp {
   fi
 }
 function ts {
-  systemctl status systemd-timesyncd|grep synchronization|sed 's%.*"\(.*\)"%\1%'
-  timedatectl|grep synchronized
+  m="CLCK"
+  m="$m $(printf '%5s' $(timedatectl|grep synchronized:|sed 's%.*synchronized: \(.*\)%\1%'))"
+  m="$m $cunm $(date --rfc-3339=seconds)"
+  m="$m $(systemctl status systemd-timesyncd|grep Active:|sed 's%.*Active: \(.*\)%\1%')"
+  echo -e "$m"
 }
 
 [ "$1" = "ts"  ] && { ts; }
