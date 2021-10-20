@@ -308,8 +308,8 @@ function bm {
   echo -e "BEAC $m"
 }
 function cpu {
-  h5=$(echo $H|sudo -S grep 'e above threshold' $p4 2>/dev/null|head -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%');if [ "$h5" ];then h5="cpu throttled: $h5";else h5='';fi
-  h6=$(echo $H|sudo -S grep 'ture/speed normal' $p4 2>/dev/null|tail -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%');if [ "$h6" ];then h6="cpu ok: $h6"       ;else h6='';fi
+  h5=$(echo $H|sudo -S grep 'e above threshold' $p4 2>/dev/null|head -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%');if [ "$h5" ];then h5="throttled: $h5";else h5='';fi
+  h6=$(echo $H|sudo -S grep 'ture/speed normal' $p4 2>/dev/null|tail -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%');if [ "$h6" ];then h6="ok: $h6"       ;else h6='';fi
   h7=0
   h8=0
   if [ "$(which sensors)" ]; then
@@ -324,16 +324,16 @@ function cpd {
   echo -e "TEMP $(printf '%4.1f' $(echo "scale=1;$h8/$h7"|bc))C $cunm $(date --rfc-3339=seconds) $h5 $h6"
 }
 function gst {
-  echo "GETH $(printf '%5s' $(systemctl status $ethg|grep Memory:|sed 's%.*Memory: \(.*\)%\1%')) $cunm $(date --rfc-3339=seconds) $(systemctl status $ethg|grep Active:|sed 's%.*Active: \(.*\)%\1%')"
+  echo "GETH $(printf '%5s' $(systemctl status $ethg|grep Memory:|sed 's%.*Memory: \(.*\)%\1%')) $cunm $(date --rfc-3339=seconds) status: $(systemctl status $ethg|grep Active:|sed 's%.*Active: \(.*\)%\1%')"
 }
 function ost {
-  echo "OETH $(printf '%5s' $(systemctl status $etho|grep Memory:|sed 's%.*Memory: \(.*\)%\1%')) $cunm $(date --rfc-3339=seconds) $(systemctl status $etho|grep Active:|sed 's%.*Active: \(.*\)%\1%')"
+  echo "OETH $(printf '%5s' $(systemctl status $etho|grep Memory:|sed 's%.*Memory: \(.*\)%\1%')) $cunm $(date --rfc-3339=seconds) status: $(systemctl status $etho|grep Active:|sed 's%.*Active: \(.*\)%\1%')"
 }
 function bst {
-  echo "BEAC $(printf '%5s' $(systemctl status $ethb|grep Memory:|sed 's%.*Memory: \(.*\)%\1%')) $cunm $(date --rfc-3339=seconds) $(systemctl status $ethb|grep Active:|sed 's%.*Active: \(.*\)%\1%')"
+  echo "BEAC $(printf '%5s' $(systemctl status $ethb|grep Memory:|sed 's%.*Memory: \(.*\)%\1%')) $cunm $(date --rfc-3339=seconds) status: $(systemctl status $ethb|grep Active:|sed 's%.*Active: \(.*\)%\1%')"
 }
 function vst {
-  echo "VALI $(printf '%5s' $(systemctl status $ethv|grep Memory:|sed 's%.*Memory: \(.*\)%\1%')) $cunm $(date --rfc-3339=seconds) $(systemctl status $ethv|grep Active:|sed 's%.*Active: \(.*\)%\1%')"
+  echo "VALI $(printf '%5s' $(systemctl status $ethv|grep Memory:|sed 's%.*Memory: \(.*\)%\1%')) $cunm $(date --rfc-3339=seconds) status: $(systemctl status $ethv|grep Active:|sed 's%.*Active: \(.*\)%\1%')"
 }
 function boo {
   if [ -f $p2 ]; then
@@ -443,7 +443,7 @@ function ts {
   m="CLCK"
   m="$m $(printf '%5s' $(timedatectl|grep synchronized:|sed 's%.*synchronized: \(.*\)%\1%'))"
   m="$m $cunm $(date --rfc-3339=seconds)"
-  m="$m $(systemctl status systemd-timesyncd|grep Active:|sed 's%.*Active: \(.*\)%\1%')"
+  m="$m status: $(systemctl status systemd-timesyncd|grep Active:|sed 's%.*Active: \(.*\)%\1%')"
   echo -e "$m"
 }
 function errors {
