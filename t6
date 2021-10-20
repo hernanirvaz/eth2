@@ -323,6 +323,12 @@ function cpu {
 function cpd {
   echo -e "TEMP $(printf '%4.1f' $(echo "scale=1;$h8/$h7"|bc))C $cunm $(date --rfc-3339=seconds) $h5 $h6"
 }
+function gst {
+  echo "GETH $(printf '%5s' $(systemctl status $ethg|grep Memory:|sed 's%.*Memory: \(.*\)%\1%')) $cunm $(date --rfc-3339=seconds) $(systemctl status $ethg|grep Active:|sed 's%.*Active: \(.*\)%\1%')"
+}
+function ost {
+  echo "OETH $(printf '%5s' $(systemctl status $etho|grep Memory:|sed 's%.*Memory: \(.*\)%\1%')) $cunm $(date --rfc-3339=seconds) $(systemctl status $etho|grep Active:|sed 's%.*Active: \(.*\)%\1%')"
+}
 function bst {
   echo "BEAC $(printf '%5s' $(systemctl status $ethb|grep Memory:|sed 's%.*Memory: \(.*\)%\1%')) $cunm $(date --rfc-3339=seconds) $(systemctl status $ethb|grep Active:|sed 's%.*Active: \(.*\)%\1%')"
 }
@@ -470,8 +476,8 @@ function errors {
 [ "$1" = "bl"  ] && { bk $2;echo -e "BEAC $m"; }
 [ "$1" = "bv"  ] && { bv   ;echo -e "BEAC BV $(printf '%2i' $v3)"; }
 [ "$1" = "bm"  ] && { bm $2; }
-[ "$1" = "gh"  ] && { tail -n ${2:-$hors} $p5;gk;gle;ts;cpu;cpd;errors; }
-[ "$1" = "oh"  ] && { tail -n ${2:-$hors} $p6;ok;ole;ts;cpu;cpd;errors; }
+[ "$1" = "gh"  ] && { tail -n ${2:-$hors} $p5;gk;gle;gst;ts;cpu;cpd;errors; }
+[ "$1" = "oh"  ] && { tail -n ${2:-$hors} $p6;ok;ole;ost;ts;cpu;cpd;errors; }
 [ "$1" = "bh"  ] && { [ -f $p2 ] && { bh $2; } }
 [ "$1" = "bo"  ] && { bo $2;boo; }
 [ "$1" = "gkr" ] && { g7;[ "$g7" != "OK" ] && grs ${2:-0}; }
