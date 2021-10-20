@@ -442,9 +442,9 @@ function ts {
 }
 function errors {
   e1=$(echo $H|sudo -S grep -v 'openethereum\|geth\[\|lighthouse' $p4 2>/dev/null|grep -i 'error' |wc -l)
-  e2=$(echo $H|sudo -S grep -v 'openethereum\|geth\[\|lighthouse' $p4 2>/dev/null|grep -i 'error' |tail -n1|sed 's%.*[0-9]*:[0-9]*:[0-9]*\.[0-9]* \(.*\)%\1%;s%  *% %g'|cut -c1-53)
+  e2=$(echo $H|sudo -S grep -v 'openethereum\|geth\[\|lighthouse' $p4 2>/dev/null|grep -i 'error' |tail -n1|sed 's%.*[0-9]*:[0-9]*:[0-9]*\.[0-9][0-9][0-9]]* *\(.*\)%\1%;s%  *% %g'|cut -c1-53)
   e3=$(echo $H|sudo -S grep -i 'openethereum\|geth\[\|lighthouse' $p4 2>/dev/null|grep -v ' INFO '|wc -l)
-  e4=$(echo $H|sudo -S grep -i 'openethereum\|geth\[\|lighthouse' $p4 2>/dev/null|grep -v ' INFO '|tail -n1|sed 's%.*[0-9]*:[0-9]*:[0-9]*\.[0-9]* \(.*\)%\1%;s%  *% %g'|cut -c1-53)
+  e4=$(echo $H|sudo -S grep -i 'openethereum\|geth\[\|lighthouse' $p4 2>/dev/null|grep -v ' INFO '|tail -n1|sed 's%.*[0-9]*:[0-9]*:[0-9]*\.[0-9][0-9][0-9]]* *\(.*\)%\1%;s%  *% %g'|cut -c1-53)
   m="ERRO"
   m="$m $(printf '%2i' $e1)"
   m="$m $(printf '%2i' $e3)"
