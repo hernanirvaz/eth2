@@ -364,7 +364,7 @@ function bh {
   [ "$1" ] || { bst;vst; }
   [ "$1" ] || { ts; }
   [ "$1" ] || { cpu;cpd; }
-  [ "$1" ] || { senn; }
+  [ "$1" ] || { errors; }
 }
 function brs {
   if [ ! -f /home/eth/beacon.restart.inicio ]; then
@@ -440,8 +440,8 @@ function ts {
   m="$m $(systemctl status systemd-timesyncd|grep Active:|sed 's%.*Active: \(.*\)%\1%')"
   echo -e "$m"
 }
-function senn {
-  m="SENN"
+function errors {
+  m="ERRO"
   m="$m $(printf '%2i' $(echo $H|sudo -S grep -v 'openethereum\|geth\[\|lighthouse' $p4 2>/dev/null|grep -i 'error' |wc -l))"
   m="$m $(printf '%2i' $(echo $H|sudo -S grep -i 'openethereum\|geth\[\|lighthouse' $p4 2>/dev/null|grep -v ' INFO '|wc -l))"
   m="$m $cunm $(date --rfc-3339=seconds)"
@@ -449,7 +449,7 @@ function senn {
 }
 
 [ "$1" = "ts"  ] && { ts; }
-[ "$1" = "es"  ] && { senn; }
+[ "$1" = "es"  ] && { errors; }
 [ "$1" = "cpu" ] && { cpu;cpd; }
 [ "$1" = "trs" ] && { [ "$(systemctl status systemd-timesyncd 2>/dev/null|grep -i masked)" ] || { uu "systemctl restart systemd-timesyncd"; };ts; }
 [ "$1" = "vcp" ] && { ssp; }
@@ -464,8 +464,8 @@ function senn {
 [ "$1" = "bl"  ] && { bk $2;echo -e "BEAC $m"; }
 [ "$1" = "bv"  ] && { bv   ;echo -e "BEAC BV $(printf '%2i' $v3)"; }
 [ "$1" = "bm"  ] && { bm $2; }
-[ "$1" = "gh"  ] && { tail -n ${2:-$hors} $p5;gk;gle;ts;cpu;cpd;senn; }
-[ "$1" = "oh"  ] && { tail -n ${2:-$hors} $p6;ok;ole;ts;cpu;cpd;senn; }
+[ "$1" = "gh"  ] && { tail -n ${2:-$hors} $p5;gk;gle;ts;cpu;cpd;errors; }
+[ "$1" = "oh"  ] && { tail -n ${2:-$hors} $p6;ok;ole;ts;cpu;cpd;errors; }
 [ "$1" = "bh"  ] && { [ -f $p2 ] && { bh $2; } }
 [ "$1" = "bo"  ] && { bo $2;boo; }
 [ "$1" = "gkr" ] && { g7;[ "$g7" != "OK" ] && grs ${2:-0}; }
