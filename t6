@@ -193,13 +193,13 @@ function sf {
 }
 function gk {
   g1;g2;g7
-  if [ "$(echo $g1|grep -i false)" ];then m='SY';else m='NS';fi
+  if [ "$(echo $g1|grep -i false)" ];then m='SYC';else m='NSY';fi
   m="$g7 $m $cunm $(date --rfc-3339=seconds)"
   [ "$g7" != 'OK' ] && resolvectl query smtp.gmail.com 2>/dev/null 1>&2
 }
 function ok {
   o1;o2;o7
-  if [ "$(echo $o1|grep -i false)" ];then m='SY';else m='NS';fi
+  if [ "$(echo $o1|grep -i false)" ];then m='SYC';else m='NSY';fi
   m="$o7 $m $cunm $(date --rfc-3339=seconds)"
   [ "$o7" != 'OK' ] && resolvectl query smtp.gmail.com 2>/dev/null 1>&2
 }
@@ -217,7 +217,7 @@ function grs {
     [ $g4 -ge 5 ] && [ $g4 -le 15 ] && sed "s%--maxpeers [0-9]*%--maxpeers $g4%" ~/$ethg.save > /etc/systemd/system/$ethg.service
   fi
   gp;dr;sleep 30s;ga
-  echo -e "GETH OK RS $cunm $(date --rfc-3339=seconds) nodes:  0 blocks:    0" >> $p5
+  echo -e "GETH RESTAR $cunm $(date --rfc-3339=seconds)" >> $p5
 }
 function ors {
   if [ $1 -ne 0 ]; then
@@ -227,7 +227,7 @@ function ors {
     [ $o4 -ge 10 ] && [ $o4 -le 15 ] && sed "s%--max-peers=[0-9]*%--max-peers=$o4%" ~/$etho.save > /etc/systemd/system/$etho.service
   fi
   op;dr;sleep 30s;oa
-  echo -e "OETH OK RS $cunm $(date --rfc-3339=seconds) nodes:  0 blocks:    0" >> $p6
+  echo -e "OETH RESTAR $cunm $(date --rfc-3339=seconds)" >> $p6
 }
 function bk {
   m=""
@@ -253,7 +253,7 @@ function bk {
   b2;b7
   b=$(echo "scale=0;($p*$rblk+$a*$ratt)*$e/1000000000"|bc)
   d=$(echo "scale=2;($z*$pmis+$h*$pmat+$k*$pdly)*$e/1000000000"|bc)
-  m="$b7 $(printf '%2i' $n) $cunm $(date --rfc-3339=seconds)"
+  m="$b7 $(printf '%3i' $n) $cunm $(date --rfc-3339=seconds)"
   m="$m reward_penalty: $(printf '%3i' $b) $(printf '%3.2f' $d)"
   m="$m attestations_blocks: $(printf '%4i' $a) $(printf '%1i' $p)"
   m="$m erros: $(printf '%3i' $z) $(printf '%3i' $h) $(printf '%3i' $k) $(printf '%3i' $w) $(printf '%3i' $q) $(printf '%3i' $r) $(printf '%4i' $t)"
@@ -301,7 +301,7 @@ function bm {
   [ $c20 -gt 0 ] && a20=$(echo "scale=2;($z20*$pmis+$n20*$pmat+$k20*$pdly)/$c20*3000/1000000000"|bc)
   bo;bv
   v3=$(printf '%.0f' $(echo "scale=5;($v1+$h3)/(1+$v2)"|bc))
-  m="$(printf '%2i' $v3) $(printf '%2i' $h3) $cunm $(date --rfc-3339=seconds)"
+  m="$(printf '%2i' $v3) $(printf '%3i' $h3) $cunm $(date --rfc-3339=seconds)"
   m="$m lnprdy: $(printf '%8i' ${1:-$rplg}) $(printf '%2i' $(systemctl status eth-beacon|grep target-peers|sed 's%.*target-peers \([0-9]*\).*%\1%')) $(printf '%4i' $h4)"
   m="$m cnt_50520: $(printf '%4i'     $c50) $(printf '%4i'   $c45) $(printf '%4i'   $c40) $(printf '%4i'   $c35) $(printf '%4i'   $c30) $(printf '%4i'   $c25) $(printf '%4i'   $c20)"
   m="$m avg_penalty: $(printf '%3.2f' $a50) $(printf '%3.2f' $a45) $(printf '%3.2f' $a40) $(printf '%3.2f' $a35) $(printf '%3.2f' $a30) $(printf '%3.2f' $a25) $(printf '%3.2f' $a20)"
@@ -321,19 +321,19 @@ function cpu {
   fi
 }
 function cpd {
-  echo -e "TEMP $(printf '%4.1f' $(echo "scale=1;$h8/$h7"|bc))C $cunm $(date --rfc-3339=seconds) $h5 $h6"
+  echo -e "TEMP $(printf '%5.1f' $(echo "scale=1;$h8/$h7"|bc))C $cunm $(date --rfc-3339=seconds) $h5 $h6"
 }
 function gst {
-  echo "GETH $(printf '%5s' $(systemctl status $ethg|grep Memory:|sed 's%.*Memory: \(.*\)%\1%')) $cunm $(date --rfc-3339=seconds) status: $(systemctl status $ethg|grep Active:|sed 's%.*Active: \(.*\)%\1%')"
+  echo "GETH $(printf '%6s' $(systemctl status $ethg|grep Memory:|sed 's%.*Memory: \(.*\)%\1%')) $cunm $(date --rfc-3339=seconds) status: $(systemctl status $ethg|grep Active:|sed 's%.*Active: \(.*\)%\1%')"
 }
 function ost {
-  echo "OETH $(printf '%5s' $(systemctl status $etho|grep Memory:|sed 's%.*Memory: \(.*\)%\1%')) $cunm $(date --rfc-3339=seconds) status: $(systemctl status $etho|grep Active:|sed 's%.*Active: \(.*\)%\1%')"
+  echo "OETH $(printf '%6s' $(systemctl status $etho|grep Memory:|sed 's%.*Memory: \(.*\)%\1%')) $cunm $(date --rfc-3339=seconds) status: $(systemctl status $etho|grep Active:|sed 's%.*Active: \(.*\)%\1%')"
 }
 function bst {
-  echo "BEAC $(printf '%5s' $(systemctl status $ethb|grep Memory:|sed 's%.*Memory: \(.*\)%\1%')) $cunm $(date --rfc-3339=seconds) status: $(systemctl status $ethb|grep Active:|sed 's%.*Active: \(.*\)%\1%')"
+  echo "BEAC $(printf '%6s' $(systemctl status $ethb|grep Memory:|sed 's%.*Memory: \(.*\)%\1%')) $cunm $(date --rfc-3339=seconds) status: $(systemctl status $ethb|grep Active:|sed 's%.*Active: \(.*\)%\1%')"
 }
 function vst {
-  echo "VALI $(printf '%5s' $(systemctl status $ethv|grep Memory:|sed 's%.*Memory: \(.*\)%\1%')) $cunm $(date --rfc-3339=seconds) status: $(systemctl status $ethv|grep Active:|sed 's%.*Active: \(.*\)%\1%')"
+  echo "VALI $(printf '%6s' $(systemctl status $ethv|grep Memory:|sed 's%.*Memory: \(.*\)%\1%')) $cunm $(date --rfc-3339=seconds) status: $(systemctl status $ethv|grep Active:|sed 's%.*Active: \(.*\)%\1%')"
 }
 function boo {
   if [ -f $p2 ]; then
@@ -360,11 +360,11 @@ function bv {
   [ $v2 -gt 0 ] && v3=$(printf '%.0f' $(echo "scale=5;$v1/$v2"|bc))
 }
 function bh {
-  [ "$1" ] || echo -e "BEAC BH $(printf '%2i' $((${1:-$hors}-$l2rs)))"
+  [ "$1" ] || echo -e "BEAC BH $(printf '%3i' $((${1:-$hors}-$l2rs)))"
   tail -n$((${1:-$hors}+1)) $p2|head -n$((${1:-$hors}-$l2rs))
-  [ "$1" ] || echo -e "BEAC BH $(printf '%2i' $l2rs)"
+  [ "$1" ] || echo -e "BEAC BH $(printf '%3i' $l2rs)"
   tail -n$(($l2rs+1))       $p2|head -n$l2rs
-  [ "$1" ] || { bo;echo -e "BEAC BO $(printf '%2i' $h3)";boo; }
+  [ "$1" ] || { bo;echo -e "BEAC BO $(printf '%3i' $h3)";boo; }
   echo -e "BEAC BL";bk;echo -e "BEAC $m"
   [ "$1" ] || { echo -e "BEAC BM";bm; }
   [ "$1" ] || { bst;vst; }
@@ -442,7 +442,7 @@ function ssp {
 function ts {
   if [ $(timedatectl|grep synchronized:|sed 's%.*synchronized: \([a-z]*\)%\1%') = yes ];then c1=OK;else c1=NO;fi
   m='CLCK'
-  m="$m $c1 $(printf '%2i' $(echo $H|sudo -S grep -i 'Block arrived early' $p4 2>/dev/null|wc -l))"
+  m="$m $c1 $(printf '%3i' $(echo $H|sudo -S grep -i 'Block arrived early' $p4 2>/dev/null|wc -l))"
   m="$m $cunm $(date --rfc-3339=seconds)"
   m="$m status: $(systemctl status systemd-timesyncd|grep Active:|sed 's%.*Active: \(.*\)%\1%')"
   echo -e "$m"
@@ -454,7 +454,7 @@ function errors {
   e4=$(echo $H|sudo -S grep -i 'openethereum\|geth\[\|lighthouse' $p4 2>/dev/null|grep -v ' INFO '|tail -n1|sed 's%.*[0-9]*:[0-9]*:[0-9]*\.[0-9][0-9][0-9]]* *\(.*\)%\1%;s%  *% %g'|cut -c1-53)
   m="ERRO"
   m="$m $(printf '%2i' $e1)"
-  m="$m $(printf '%2i' $e3)"
+  m="$m $(printf '%3i' $e3)"
   m="$m $cunm $(date --rfc-3339=seconds)"
   [ $e1 -gt 0 ] && m="$m sys: $e2"
   [ $e3 -gt 0 ] && m="$m eth2: $e4"
