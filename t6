@@ -367,6 +367,7 @@ function bh {
   [ "$1" ] || { bo;echo -e "BEAC BO $(printf '%3i' $h3)";boo; }
   echo -e "BEAC BL";bk;echo -e "BEAC $m"
   [ "$1" ] || { echo -e "BEAC BM";bm; }
+  [ "$1" ] || { echo; }
   [ "$1" ] || { bst;vst; }
   [ "$1" ] || { ts; }
   [ "$1" ] || { cpu;cpd; }
@@ -477,8 +478,8 @@ function errors {
 [ "$1" = "bl"  ] && { bk $2;echo -e "BEAC $m"; }
 [ "$1" = "bv"  ] && { bv   ;echo -e "BEAC BV $(printf '%2i' $v3)"; }
 [ "$1" = "bm"  ] && { bm $2; }
-[ "$1" = "gh"  ] && { tail -n ${2:-$hors} $p5;gk;gle;gst;ts;cpu;cpd;errors; }
-[ "$1" = "oh"  ] && { tail -n ${2:-$hors} $p6;ok;ole;ost;ts;cpu;cpd;errors; }
+[ "$1" = "gh"  ] && { tail -n ${2:-$hors} $p5;gk;gle;echo;gst;ts;cpu;cpd;errors; }
+[ "$1" = "oh"  ] && { tail -n ${2:-$hors} $p6;ok;ole;echo;ost;ts;cpu;cpd;errors; }
 [ "$1" = "bh"  ] && { [ -f $p2 ] && { bh $2; } }
 [ "$1" = "bo"  ] && { bo $2;boo; }
 [ "$1" = "gkr" ] && { g7;[ "$g7" != "OK" ] && grs ${2:-0}; }
