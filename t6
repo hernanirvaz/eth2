@@ -364,6 +364,7 @@ function bh {
   [ "$1" ] || { bst;vst; }
   [ "$1" ] || { ts; }
   [ "$1" ] || { cpu;cpd; }
+  [ "$1" ] || { senn; }
 }
 function brs {
   if [ ! -f /home/eth/beacon.restart.inicio ]; then
@@ -439,8 +440,16 @@ function ts {
   m="$m $(systemctl status systemd-timesyncd|grep Active:|sed 's%.*Active: \(.*\)%\1%')"
   echo -e "$m"
 }
+function senn {
+  m="SENN"
+  m="$m $(printf '%2i' $(echo $H|sudo -S grep -v 'openethereum\|geth\[\|lighthouse' $p4 2>/dev/null|grep -i 'error' |wc -l))"
+  m="$m $(printf '%2i' $(echo $H|sudo -S grep -i 'openethereum\|geth\[\|lighthouse' $p4 2>/dev/null|grep -v ' INFO '|wc -l))"
+  m="$m $cunm $(date --rfc-3339=seconds)"
+  echo -e "$m"
+}
 
 [ "$1" = "ts"  ] && { ts; }
+[ "$1" = "es"  ] && { senn; }
 [ "$1" = "cpu" ] && { cpu;cpd; }
 [ "$1" = "trs" ] && { [ "$(systemctl status systemd-timesyncd 2>/dev/null|grep -i masked)" ] || { uu "systemctl restart systemd-timesyncd"; };ts; }
 [ "$1" = "vcp" ] && { ssp; }
@@ -455,8 +464,8 @@ function ts {
 [ "$1" = "bl"  ] && { bk $2;echo -e "BEAC $m"; }
 [ "$1" = "bv"  ] && { bv   ;echo -e "BEAC BV $(printf '%2i' $v3)"; }
 [ "$1" = "bm"  ] && { bm $2; }
-[ "$1" = "gh"  ] && { tail -n ${2:-$hors} $p5;gk;gle;ts;cpu;cpd; }
-[ "$1" = "oh"  ] && { tail -n ${2:-$hors} $p6;ok;ole;ts;cpu;cpd; }
+[ "$1" = "gh"  ] && { tail -n ${2:-$hors} $p5;gk;gle;ts;cpu;cpd;senn; }
+[ "$1" = "oh"  ] && { tail -n ${2:-$hors} $p6;ok;ole;ts;cpu;cpd;senn; }
 [ "$1" = "bh"  ] && { [ -f $p2 ] && { bh $2; } }
 [ "$1" = "bo"  ] && { bo $2;boo; }
 [ "$1" = "gkr" ] && { g7;[ "$g7" != "OK" ] && grs ${2:-0}; }
@@ -476,8 +485,8 @@ function ts {
 [ "$1" = "ll" ] && { uu "systemctl list-units $pate $patp $patf"; }
 [ "$1" = "lp" ] && { netstat -tulpn; }
 # outros journal system/lighthouse
-[ "$1" = "el" ] && { echo $H|sudo -S grep -i 'openethereum\|geth\[\|lighthouse'      $p4 2>/dev/null|if [ "$2" ];then grep -i "[a-z]* [0-9]* $2";else grep -v ' INFO ';fi; }
-[ "$1" = "sl" ] && { echo $H|sudo -S grep -v 'openethereum\|geth\[\|lighthouse\|UFW' $p4 2>/dev/null|if [ "$2" ];then grep -i "[a-z]* [0-9]* $2";else grep -i 'error' ;fi; }
+[ "$1" = "el" ] && { echo $H|sudo -S grep -i 'openethereum\|geth\[\|lighthouse' $p4 2>/dev/null|if [ "$2" ];then grep -i "[a-z]* [0-9]* $2";else grep -v ' INFO ';fi; }
+[ "$1" = "sl" ] && { echo $H|sudo -S grep -v 'openethereum\|geth\[\|lighthouse' $p4 2>/dev/null|if [ "$2" ];then grep -i "[a-z]* [0-9]* $2";else grep -i 'error' ;fi; }
 [ "$1" = "np" ] && { g2;b2;echo -e "PEERS: GETH ${g2:-0}, BEACON ${b2:-0}"; }
 [ "$1" = "ws" ] && { uu "ufw status numbered"; }
 [ "$1" = "wa" ] && if [ "$(echo $H|sudo -S ufw status 2>/dev/null|grep -i inactive)" ];then echo -e "${i}ARRANCA FIREWALL${f}";sudo ufw enable; else echo -e "${i}FIREWALL JA ACTIVE${f}";fi
@@ -614,8 +623,9 @@ if [ -z "$1" ]; then
   c1="$c1\nlp\t\tlista portas"
   c1="$c1\nnp\t\tnode peers"
   c1="$c1\ngs\t\tgeth syncing"
-  c1="$c1\nts\t\ttime status"
-  c1="$c1\ncpu\t\tcpu status"
+  c1="$c1\nts\t\ttime report"
+  c1="$c1\nes\t\terrors report"
+  c1="$c1\ncpu\t\tcpu report"
   c1="$c1\ntrs\t\ttime sync restart"
   c1="$c1\nws\t\tfirewall status"
   c1="$c1\nwa\t\tfirewall arranca"
