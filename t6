@@ -94,7 +94,7 @@ function g7 {
   t=-1;n=0;g7='OK'
   if [ "$(systemctl status $ethg 2>/dev/null|grep -i running)" ] && [ -f $p5 ]; then
     n=$(echo $H|sudo -S grep -i 'imported new' $p4 2>/dev/null|wc -l)
-    t=$(tail -n1 $p5|sed 's%.*blocks: \([0-9]*\).*%\1%')
+    t=$(tail -n1 $p5|sed 's%.*blocks: *\([0-9]*\).*%\1%')
   fi
   [ "$n" -eq "$t" ] && g7='BK'
 }
@@ -117,7 +117,7 @@ function o7 {
   t=-1;n=0;o7='OK'
   if [ "$(systemctl status $etho 2>/dev/null|grep -i running)" ] && [ -f $p6 ]; then
     n=$(echo $H|sudo -S grep -i 'Imported  *#' $p4 2>/dev/null|wc -l)
-    t=$(tail -n1 $p6|sed 's%.*blocks: \([0-9]*\).*%\1%')
+    t=$(tail -n1 $p6|sed 's%.*blocks: *\([0-9]*\).*%\1%')
   fi
   [ "$n" -eq "$t" ] && o7='BK'
 }
