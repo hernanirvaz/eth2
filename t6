@@ -149,7 +149,7 @@ function gs {
   if [ -d /var/lib/goethereum ] && ([ "$cunm" = "$vnm1" ] || [ "$cunm" = "$znm1" ]); then
     g0;g1;g2
     if [ "$(echo $g1|grep -i false)" ]; then
-      m="GETH SYNCED - PEERCOUNT $g2"
+      m="SYNCED - PEERCOUNT $g2"
     else
       g5=$(echo $H|sudo -S grep -i 'new block headers' $p4 2>/dev/null)
       g6=$(echo $H|sudo -S grep -i 'new state entries' $p4 2>/dev/null)
@@ -161,10 +161,10 @@ function gs {
       d=$(echo "$g5"|tail -1|cut -d= -f4|cut -d' ' -f1)
       y=$(echo "$g6"|head -1|cut -d= -f4|cut -d' ' -f1)
       t=$(echo "$g6"|tail -1|cut -d= -f4|cut -d' ' -f1)
-      m="GETH SYNCING - PEERCOUNT: $g2\nBlocks api: $h ($((h-c)))\tStates api: $k ($((k-p)))\nBlocks log: $d ($((d-b)))\tStates log: $t ($((t-y))))"
+      m="SYNCING - PEERCOUNT: $g2\nBlocks api: $h ($((h-c)))\tStates api: $k ($((k-p)))\nBlocks log: $d ($((d-b)))\tStates log: $t ($((t-y))))"
     fi
   else
-    m="NO GETH HERE ($cunm)"
+    m="NOT HERE ($cunm)"
   fi
 }
 function rq { echo -e "\nresolvectl query ${1:-pt.archive.ubuntu.com}";resolvectl query "${1:-pt.archive.ubuntu.com}"; }
@@ -195,19 +195,15 @@ function gk {
   g1;g2;g7
   if [ "$(echo $g1|grep -i false)" ];then m='SYC';else m='NSY';fi
   m="$g7 $m $cunm $(date --rfc-3339=seconds)"
+  m="$m nodes: $(printf '%2i' ${g2:-0}) blocks: $(printf '%4i' $n)"
   [ "$g7" != 'OK' ] && resolvectl query smtp.gmail.com 2>/dev/null 1>&2
 }
 function ok {
   o1;o2;o7
   if [ "$(echo $o1|grep -i false)" ];then m='SYC';else m='NSY';fi
   m="$o7 $m $cunm $(date --rfc-3339=seconds)"
+  m="$m nodes: $(printf '%2i' ${o2:-0}) blocks: $(printf '%4i' $n)"
   [ "$o7" != 'OK' ] && resolvectl query smtp.gmail.com 2>/dev/null 1>&2
-}
-function gle {
-  echo -e "GETH $m nodes: $(printf '%2i' ${g2:-0}) blocks: $(printf '%4i' $n)"
-}
-function ole {
-  echo -e "OETH $m nodes: $(printf '%2i' ${o2:-0}) blocks: $(printf '%4i' $n)"
 }
 function grs {
   if [ $1 -ne 0 ]; then
@@ -305,7 +301,6 @@ function bm {
   m="$m lpd: $(printf '%10i' ${1:-$rplg}) $(printf '%2i' $(systemctl status eth-beacon|grep target-peers|sed 's%.*target-peers \([0-9]*\).*%\1%')) $(printf '%5i' $h4)"
   m="$m cnt_50520: $(printf '%4i'     $c50) $(printf '%4i'   $c45) $(printf '%4i'   $c40) $(printf '%4i'   $c35) $(printf '%4i'   $c30) $(printf '%4i'   $c25) $(printf '%4i'   $c20)"
   m="$m avg_penalty: $(printf '%3.2f' $a50) $(printf '%3.2f' $a45) $(printf '%3.2f' $a40) $(printf '%3.2f' $a35) $(printf '%3.2f' $a30) $(printf '%3.2f' $a25) $(printf '%3.2f' $a20)"
-  echo -e "BEAC $m"
 }
 function cpu {
   h5=$(echo $H|sudo -S grep 'e above threshold' $p4 2>/dev/null|head -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%');if [ "$h5" ];then h5="throttled: $h5";else h5='';fi
@@ -366,7 +361,7 @@ function bh {
   tail -n$(($l2rs+1))       $p2|head -n$l2rs
   [ "$1" ] || { bo;echo -e "BEAC BO $(printf '%3i' $h3)";boo; }
   echo -e "BEAC BL";bk;echo -e "BEAC $m"
-  [ "$1" ] || { echo -e "BEAC BM";bm; }
+  [ "$1" ] || { echo -e "BEAC BM";bm;echo -e "BEAC $m"; }
   [ "$1" ] || { echo; }
   [ "$1" ] || { bst;vst; }
   [ "$1" ] || { ts; }
@@ -472,14 +467,18 @@ function errors {
 [ "$1" = "rq"  ] && { rq $2; }
 [ "$1" = "cr"  ] && { cr; }
 [ "$1" = "sr"  ] && { sr;sf; }
-[ "$1" = "gs"  ] && { gs   ;echo -e $m; }
-[ "$1" = "gl"  ] && { gk   ;gle; }
-[ "$1" = "ol"  ] && { ok   ;ole; }
-[ "$1" = "bl"  ] && { bk $2;echo -e "BEAC $m"; }
+[ "$1" = "gs"  ] && { gs   ;echo -e "GETH $m"; }
+[ "$1" = "gl"  ] && { gk   ;echo -e "GETH $m"; }
+[ "$1" = "ol"  ] && { ok   ;echo -e "OETH $m"; }
+[ "$1" = "glf" ] && { gk   ;echo -e "GETH $m" >> $p5; }
+[ "$1" = "olf" ] && { ok   ;echo -e "OETH $m" >> $p6; }
 [ "$1" = "bv"  ] && { bv   ;echo -e "BEAC BV $(printf '%2i' $v3)"; }
-[ "$1" = "bm"  ] && { bm $2; }
-[ "$1" = "gh"  ] && { tail -n ${2:-$hors} $p5;gk;gle;echo;gst;ts;cpu;cpd;errors; }
-[ "$1" = "oh"  ] && { tail -n ${2:-$hors} $p6;ok;ole;echo;ost;ts;cpu;cpd;errors; }
+[ "$1" = "bl"  ] && { bk $2;echo -e "BEAC $m"; }
+[ "$1" = "bm"  ] && { bm $2;echo -e "BEAC $m"; }
+[ "$1" = "blf" ] && { bk $2;echo -e "BEAC $m" >> $p2; }
+[ "$1" = "bmf" ] && { bm $2;echo -e "BEAC $m" >> $p3; }
+[ "$1" = "gh"  ] && { tail -n ${2:-$hors} $p5;gk;echo -e "GETH $m\n";gst;ts;cpu;cpd;errors; }
+[ "$1" = "oh"  ] && { tail -n ${2:-$hors} $p6;ok;echo -e "OETH $m\n";ost;ts;cpu;cpd;errors; }
 [ "$1" = "bh"  ] && { [ -f $p2 ] && { bh $2; } }
 [ "$1" = "bo"  ] && { bo $2;boo; }
 [ "$1" = "gkr" ] && { g7;[ "$g7" != "OK" ] && grs ${2:-0}; }
