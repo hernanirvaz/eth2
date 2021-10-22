@@ -258,12 +258,11 @@ function bk {
   [ "$b7" != 'OK' ] && resolvectl query smtp.gmail.com 2>/dev/null 1>&2
 }
 function bm {
-  m50=0;m45=0;m40=0;m35=0;m30=0;m25=0;m20=0
-  n50=0;n45=0;n40=0;n35=0;n30=0;n25=0;n20=0
-  c50=0;c45=0;c40=0;c35=0;c30=0;c25=0;c20=0
-  a50=0;a45=0;a40=0;a35=0;a30=0;a25=0;a20=0
-  z50=0;z45=0;z40=0;z35=0;z30=0;z25=0;z20=0
-  k50=0;k45=0;k40=0;k35=0;k30=0;k25=0;k20=0
+  n00=0;n50=0;n45=0;n40=0;n35=0;n30=0;n25=0;n20=0
+  c00=0;c50=0;c45=0;c40=0;c35=0;c30=0;c25=0;c20=0
+  a00=0;a50=0;a45=0;a40=0;a35=0;a30=0;a25=0;a20=0
+  z00=0;z50=0;z45=0;z40=0;z35=0;z30=0;z25=0;z20=0
+  k00=0;k50=0;k45=0;k40=0;k35=0;k30=0;k25=0;k20=0
   if [ -f $p2 ]; then
     while read -a v;do
       v13=$((10#${v[13]}));v14=$((10#${v[14]}));v15=$((10#${v[15]}))
@@ -288,6 +287,10 @@ function bm {
       fi
     done <<< $(grep 'BEAC' $p2|tail -n ${1:-$rplg})
   fi
+  c00=$((c20+c25+c30+c35+c40+c45+c50))
+  z00=$((z20+z25+z30+z35+z40+z45+z50))
+  n00=$((n20+n25+n30+n35+n40+n45+n50))
+  k00=$((k20+k25+k30+k35+k40+k45+k50))
   [ $c50 -gt 0 ] && a50=$(echo "scale=2;($z50*$pmis+$n50*$pmat+$k50*$pdly)/$c50*3000/1000000000"|bc)
   [ $c45 -gt 0 ] && a45=$(echo "scale=2;($z45*$pmis+$n45*$pmat+$k45*$pdly)/$c45*3000/1000000000"|bc)
   [ $c40 -gt 0 ] && a40=$(echo "scale=2;($z40*$pmis+$n40*$pmat+$k40*$pdly)/$c40*3000/1000000000"|bc)
@@ -295,12 +298,13 @@ function bm {
   [ $c30 -gt 0 ] && a30=$(echo "scale=2;($z30*$pmis+$n30*$pmat+$k30*$pdly)/$c30*3000/1000000000"|bc)
   [ $c25 -gt 0 ] && a25=$(echo "scale=2;($z25*$pmis+$n25*$pmat+$k25*$pdly)/$c25*3000/1000000000"|bc)
   [ $c20 -gt 0 ] && a20=$(echo "scale=2;($z20*$pmis+$n20*$pmat+$k20*$pdly)/$c20*3000/1000000000"|bc)
+  [ $c00 -gt 0 ] && a00=$(echo "scale=2;($z00*$pmis+$n00*$pmat+$k00*$pdly)/$c00*3000/1000000000"|bc)
   bo;bv
   v3=$(printf '%.0f' $(echo "scale=5;($v1+$h3)/(1+$v2)"|bc))
   m="$(printf '%2i' $v3) $(printf '%3i' $h3) $cunm $(date --rfc-3339=seconds)"
   m="$m ldp: $(printf '%10i' ${1:-$rplg}) $(printf '%5i' $h4) $(printf '%2i' $(systemctl status eth-beacon|grep target-peers|sed 's%.*target-peers \([0-9]*\).*%\1%'))"
-  m="$m cnt_50520: $(printf '%4i'     $c50) $(printf '%4i'   $c45) $(printf '%4i'   $c40) $(printf '%4i'   $c35) $(printf '%4i'   $c30) $(printf '%4i'   $c25) $(printf '%4i'   $c20)"
-  m="$m avg_penalty: $(printf '%3.2f' $a50) $(printf '%3.2f' $a45) $(printf '%3.2f' $a40) $(printf '%3.2f' $a35) $(printf '%3.2f' $a30) $(printf '%3.2f' $a25) $(printf '%3.2f' $a20)"
+  m="$m cnt_50520: $(printf '%4i' $c50) $(printf '%4i'   $c45) $(printf '%4i'   $c40) $(printf '%4i'   $c35) $(printf '%4i'   $c30) $(printf '%4i'   $c25) $(printf '%4i'   $c20)"
+  m="$m avgpnt: $(printf '%3.2f'  $a50) $(printf '%3.2f' $a45) $(printf '%3.2f' $a40) $(printf '%3.2f' $a35) $(printf '%3.2f' $a30) $(printf '%3.2f' $a25) $(printf '%3.2f' $a20) $(printf '%3.2f' $a00)"
 }
 function cpu {
   h5=$(echo $H|sudo -S grep 'e above threshold' $p4 2>/dev/null|head -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%');if [ "$h5" ];then h5="throttled: $h5";else h5='';fi
