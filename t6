@@ -336,7 +336,10 @@ function vst {
 }
 function boo {
   if [ -f $p2 ]; then
-    grep "BEAC.*$h2" $p2|sort -k9.1n|head -n$h3
+    h9=$h3
+    if [ "$1" ];then h9=$1;else h9=$h3;fi
+    if [ $h9 -lt $l2rs ];then h9=$l2rs;fi
+    grep "BEAC.*$h2" $p2|sort -k9.1n|head -n$h9
   fi
 }
 function bo {
