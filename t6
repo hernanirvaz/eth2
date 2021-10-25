@@ -347,8 +347,12 @@ function bo {
   if [ -f $p2 ]; then
     b8=$(grep BEAC $p2|tail -n1|sed 's%.* \([0-9]*-[0-9]*-[0-9]*\) \([0-9]*:[0-9]*\):.*%\1 \2%')
     h1=$(echo $b8|cut -d' ' -f1)
-    h2=$(echo $b8|cut -d' ' -f2)
-    if [ "$1" ];then h3=$1;else h3=$(grep "BEAC.*$h2" $p2|sort -k8.1n|grep -n $h1|cut -d: -f1);fi
+    if [ "$(echo $1|egrep '^[0-9]+:[0-9]+$')" ];then h2=$1;else if [ "$(echo $2|egrep '^[0-9]+:[0-9]+$')" ];then h2=$2;else h2=$(echo $b8|cut -d' ' -f2)                                  ;fi;fi
+    if [ "$(echo $1|egrep '^[0-9]+$')"        ];then h3=$1;else if [ "$(echo $2|egrep '^[0-9]+$')"        ];then h3=$2;else h3=$(grep "BEAC.*$h2" $p2|sort -k8.1n|grep -n $h1|cut -d: -f1);fi;fi
+    if [ ! "$h3" ];then
+      h1=$(date -d "yesterday $h2" '+%Y-%m-%d')
+      h3=$(grep "BEAC.*$h2" $p2|sort -k8.1n|grep -n $h1|cut -d: -f1)
+    fi
     h4=$(grep "BEAC.*$h2" $p2|wc -l)
   fi 
 }
@@ -487,7 +491,7 @@ function errors {
 [ "$1" = "gh"  ] && { tail -n ${2:-$hors} $p5;gk;echo -e "GETH $m\n";gst;ts;cpu;cpd;errors; }
 [ "$1" = "oh"  ] && { tail -n ${2:-$hors} $p6;ok;echo -e "OETH $m\n";ost;ts;cpu;cpd;errors; }
 [ "$1" = "bh"  ] && { [ -f $p2 ] && { bh $2; } }
-[ "$1" = "bo"  ] && { bo $2;boo; }
+[ "$1" = "bo"  ] && { bo $2 $3;boo; }
 [ "$1" = "gkr" ] && { g7;[ "$g7" != "OK" ] && grs ${2:-0}; }
 [ "$1" = "okr" ] && { o7;[ "$o7" != "OK" ] && ors ${2:-0}; }
 [ "$1" = "bkr" ] && { b7;[ "$b7" != "OK" ] && brs ${2:-0}; }
