@@ -399,16 +399,16 @@ function brs {
               [ $b3 -ge 20 ] && [ $b3 -le 50 ] && sed "s%--target-peers [0-9]*%--target-peers $b3%" ~/$ethb.save > /etc/systemd/system/$ethb.service
             fi
             bk;echo -e "RSTF $m" >> $p2
-            [ "$2" = "bnvc" ] && vp
-            bp
-            dr
+            [ "$2" = "bnvc" ] && { sudo systemctl stop $ethv; }
+            sudo systemctl stop $ethb
+            sudo systemctl daemon-reload
             b1=400
             if [ "$2" = "reboot" ]; then
               rm -f /home/eth/beacon.restart.inicio /home/eth/beacon.restart.interval
               sudo reboot
             else
-              ba
-              [ "$2" = "bnvc" ] && va
+              sudo systemctl start $ethb
+              [ "$2" = "bnvc" ] && { sudo systemctl start $ethv; }
             fi
           fi
           sleep 3s
