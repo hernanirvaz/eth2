@@ -212,7 +212,10 @@ function grs {
     g4=$(($g4+$1))
     [ $g4 -ge 5 ] && [ $g4 -le 15 ] && sed "s%--maxpeers [0-9]*%--maxpeers $g4%" ~/$ethg.save > /etc/systemd/system/$ethg.service
   fi
-  gp;dr;sleep 30s;ga
+  echo $H|sudo -S systemctl stop $ethg 2>/dev/null
+  sudo systemctl daemon-reload
+  sleep 30s
+  sudo systemctl start $ethg
   echo -e "GETH RESTAR $(date --rfc-3339=seconds)" >> $p5
 }
 function ors {
@@ -222,7 +225,10 @@ function ors {
     o4=$(($o4+$1))
     [ $o4 -ge 10 ] && [ $o4 -le 15 ] && sed "s%--max-peers=[0-9]*%--max-peers=$o4%" ~/$etho.save > /etc/systemd/system/$etho.service
   fi
-  op;dr;sleep 30s;oa
+  echo $H|sudo -S systemctl stop $etho 2>/dev/null
+  sudo systemctl daemon-reload
+  sleep 30s
+  sudo systemctl start $etho
   echo -e "OETH RESTAR $(date --rfc-3339=seconds)" >> $p6
 }
 function bk {
