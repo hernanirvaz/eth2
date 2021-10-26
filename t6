@@ -196,14 +196,12 @@ function gk {
   if [ "$(echo $g1|grep -i false)" ];then m='SYC';else m='NSY';fi
   m="$g7 $m $(date --rfc-3339=seconds)"
   m="$m nodes: $(printf '%2i' ${g2:-0}) blocks: $(printf '%4i' $n)"
-  [ "$g7" != 'OK' ] && resolvectl query smtp.gmail.com 2>/dev/null 1>&2
 }
 function ok {
   o1;o2;o7
   if [ "$(echo $o1|grep -i false)" ];then m='SYC';else m='NSY';fi
   m="$o7 $m $(date --rfc-3339=seconds)"
   m="$m nodes: $(printf '%2i' ${o2:-0}) blocks: $(printf '%4i' $n)"
-  [ "$o7" != 'OK' ] && resolvectl query smtp.gmail.com 2>/dev/null 1>&2
 }
 function grs {
   if [ $1 -ne 0 ]; then
@@ -212,6 +210,7 @@ function grs {
     g4=$(($g4+$1))
     [ $g4 -ge 5 ] && [ $g4 -le 15 ] && sed "s%--maxpeers [0-9]*%--maxpeers $g4%" ~/$ethg.save > /etc/systemd/system/$ethg.service
   fi
+  resolvectl query smtp.gmail.com 2>/dev/null 1>&2
   echo $H|sudo -S systemctl stop  $ethg   2>/dev/null
   echo $H|sudo -S systemctl daemon-reload 2>/dev/null;sleep 30s
   echo $H|sudo -S systemctl start $ethg   2>/dev/null
@@ -224,6 +223,7 @@ function ors {
     o4=$(($o4+$1))
     [ $o4 -ge 10 ] && [ $o4 -le 15 ] && sed "s%--max-peers=[0-9]*%--max-peers=$o4%" ~/$etho.save > /etc/systemd/system/$etho.service
   fi
+  resolvectl query smtp.gmail.com 2>/dev/null 1>&2
   echo $H|sudo -S systemctl stop  $etho   2>/dev/null
   echo $H|sudo -S systemctl daemon-reload 2>/dev/null;sleep 30s
   echo $H|sudo -S systemctl start $etho   2>/dev/null
@@ -259,7 +259,6 @@ function bk {
   m="$m erros: $(printf '%3i' $z) $(printf '%3i' $h) $(printf '%3i' $k) $(printf '%3i' $w) $(printf '%3i' $q) $(printf '%3i' $r) $(printf '%4i' $t)"
   m="$m nodes: $(printf '%2i' ${b2:-0})"
   m="$m avg_delays: $(printf '%2i' $x) $(printf '%4i' $j)"
-  [ "$b7" != 'OK' ] && resolvectl query smtp.gmail.com 2>/dev/null 1>&2
 }
 function bm {
   n00=0;n50=0;n45=0;n40=0;n35=0;n30=0;n25=0;n20=0
@@ -403,6 +402,7 @@ function brs {
               [ $b3 -ge 20 ] && [ $b3 -le 50 ] && sed "s%--target-peers [0-9]*%--target-peers $b3%" ~/$ethb.save > /etc/systemd/system/$ethb.service
             fi
             bk;echo -e "RSTF $m" >> $p2
+            resolvectl query smtp.gmail.com 2>/dev/null 1>&2
             [ "$2" = "bnvc" ] && { echo $H|sudo -S systemctl stop $ethv 2>/dev/null; }
             echo $H|sudo -S systemctl stop $ethb    2>/dev/null
             echo $H|sudo -S systemctl daemon-reload 2>/dev/null
