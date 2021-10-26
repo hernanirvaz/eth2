@@ -134,7 +134,7 @@ function b7 {
   k=0;for v in $(echo $H|sudo -S grep -i 'attestation(s) had'     $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%,%%g');do y=($v);k=$((k+${#y[@]}));done
   a=0;for v in $(echo $H|sudo -S grep -i 'attestation(s) success' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%,%%g');do y=($v);a=$((a+${#y[@]}));done
   n=0;b7='OK'
-  [ "$q"  -gt '100' ] && n=$(($n+20*$w/$q))
+  [ "$q"  -gt '100' ] && n=$(($n+10*$w/$q))
   [ "$t"  -gt '100' ] && n=$(($n+20*$r/$t))
   [ "$a"  -gt '100' ] && n=$(($n+10*(10*$z+$h+$k)/$a))
   if [ "$n" -ge $l1rs ]; then
@@ -212,10 +212,9 @@ function grs {
     g4=$(($g4+$1))
     [ $g4 -ge 5 ] && [ $g4 -le 15 ] && sed "s%--maxpeers [0-9]*%--maxpeers $g4%" ~/$ethg.save > /etc/systemd/system/$ethg.service
   fi
-  echo $H|sudo -S systemctl stop $ethg 2>/dev/null
-  sudo systemctl daemon-reload
-  sleep 30s
-  sudo systemctl start $ethg
+  echo $H|sudo -S systemctl stop  $ethg   2>/dev/null
+  echo $H|sudo -S systemctl daemon-reload 2>/dev/null;sleep 30s
+  echo $H|sudo -S systemctl start $ethg   2>/dev/null
   echo -e "GETH RESTAR $(date --rfc-3339=seconds)" >> $p5
 }
 function ors {
@@ -225,10 +224,9 @@ function ors {
     o4=$(($o4+$1))
     [ $o4 -ge 10 ] && [ $o4 -le 15 ] && sed "s%--max-peers=[0-9]*%--max-peers=$o4%" ~/$etho.save > /etc/systemd/system/$etho.service
   fi
-  echo $H|sudo -S systemctl stop $etho 2>/dev/null
-  sudo systemctl daemon-reload
-  sleep 30s
-  sudo systemctl start $etho
+  echo $H|sudo -S systemctl stop  $etho   2>/dev/null
+  echo $H|sudo -S systemctl daemon-reload 2>/dev/null;sleep 30s
+  echo $H|sudo -S systemctl start $etho   2>/dev/null
   echo -e "OETH RESTAR $(date --rfc-3339=seconds)" >> $p6
 }
 function bk {
@@ -405,22 +403,23 @@ function brs {
               [ $b3 -ge 20 ] && [ $b3 -le 50 ] && sed "s%--target-peers [0-9]*%--target-peers $b3%" ~/$ethb.save > /etc/systemd/system/$ethb.service
             fi
             bk;echo -e "RSTF $m" >> $p2
-            [ "$2" = "bnvc" ] && { sudo systemctl stop $ethv; }
-            sudo systemctl stop $ethb
-            sudo systemctl daemon-reload
+            [ "$2" = "bnvc" ] && { echo $H|sudo -S systemctl stop $ethv 2>/dev/null; }
+            echo $H|sudo -S systemctl stop $ethb    2>/dev/null
+            echo $H|sudo -S systemctl daemon-reload 2>/dev/null
             b1=400
+            rm -f /home/eth/beacon.restart.interval
             if [ "$2" = "reboot" ]; then
-              rm -f /home/eth/beacon.restart.inicio /home/eth/beacon.restart.interval
-              sudo reboot
+              rm -f /home/eth/beacon.restart.inicio
+              echo $H|sudo -S reboot 2>/dev/null
             else
-              sudo systemctl start $ethb
-              [ "$2" = "bnvc" ] && { sudo systemctl start $ethv; }
+              echo $H|sudo -S systemctl start $ethb 2>/dev/null
+              [ "$2" = "bnvc" ] && { echo $H|sudo -S systemctl start $ethv 2>/dev/null; }
             fi
           fi
           sleep 3s
           b1=$(($b1+1))
         done
-        rm -f /home/eth/beacon.restart.inicio /home/eth/beacon.restart.interval
+        rm -f /home/eth/beacon.restart.inicio
       fi 
       sleep 1s
     done
