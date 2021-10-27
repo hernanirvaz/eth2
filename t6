@@ -306,8 +306,8 @@ function bm {
   v3=$(printf '%.0f' $(echo "scale=5;($v1+$h3)/(1+$v2)"|bc))
   m="$(printf '%2i' $v3) $(printf '%3i' $h3) $(date --rfc-3339=seconds)"
   m="$m ldp: $(printf '%10i' ${1:-$rplg}) $(printf '%5i' $h4) $(printf '%2i' $(systemctl status eth-beacon|grep target-peers|sed 's%.*target-peers \([0-9]*\).*%\1%'))"
-  m="$m cnt_50520: $(printf '%4i' $c50) $(printf '%4i'   $c45) $(printf '%4i'   $c40) $(printf '%4i'   $c35) $(printf '%4i'   $c30) $(printf '%4i'   $c25) $(printf '%4i'   $c20)"
-  m="$m avgpnt: $(printf '%3.2f'  $a50) $(printf '%3.2f' $a45) $(printf '%3.2f' $a40) $(printf '%3.2f' $a35) $(printf '%3.2f' $a30) $(printf '%3.2f' $a25) $(printf '%3.2f' $a20) $(printf '%3.2f' $a00)"
+  m="$m cnt: $(printf '%5i'      $c50) $(printf '%5i'   $c45) $(printf '%5i'   $c40) $(printf '%5i'   $c35) $(printf '%5i'   $c30) $(printf '%5i'   $c25) $(printf '%5i'   $c20)"
+  m="$m avg_p: $(printf '%3.2f'  $a50) $(printf '%3.2f' $a45) $(printf '%3.2f' $a40) $(printf '%3.2f' $a35) $(printf '%3.2f' $a30) $(printf '%3.2f' $a25) $(printf '%3.2f' $a20) $(printf '%3.2f' $a00)"
 }
 function cpu {
   h5=$(echo $H|sudo -S grep 'e above threshold' $p4 2>/dev/null|head -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%');if [ "$h5" ];then h5="throttled: $h5";else h5='';fi
