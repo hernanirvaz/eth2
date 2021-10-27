@@ -136,7 +136,7 @@ function b7 {
   n=0;b7='OK'
   [ "$q"  -gt '100' ] && n=$(($n+10*$w/$q))
   [ "$t"  -gt '100' ] && n=$(($n+20*$r/$t))
-  [ "$a"  -gt '100' ] && n=$(($n+10*(10*$z+$h+$k)/$a))
+  [ "$a"  -gt '100' ] && n=$(($n+20*(10*$z+$h+$k)/$a))
   if [ "$n" -ge $l1rs ]; then
     if [ "$n" -ge $l2rs ]; then
       [ -f $p2 ] && [ "$(tail -n $l2rs $p2|cut -d' ' -f1|sort -u)" = "BEAC" ] && b7='BK'
