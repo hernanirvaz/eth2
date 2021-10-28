@@ -135,8 +135,8 @@ function b7 {
   a=0;for v in $(echo $H|sudo -S grep -i 'attestation(s) success' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%,%%g');do y=($v);a=$((a+${#y[@]}));done
   n=0;b7='OK'
   [ "$q"  -gt '100' ] && n=$(($n+10*$w/$q))
-  [ "$t"  -gt '100' ] && n=$(($n+20*$r/$t))
   [ "$a"  -gt '100' ] && n=$(($n+20*(10*$z+$h+$k)/$a))
+  [ "$t"  -gt '100' ] && n=$(($n+30*$r/$t))
   if [ "$n" -ge $l1rs ]; then
     if [ "$n" -ge $l2rs ]; then
       [ -f $p2 ] && [ "$(tail -n $l2rs $p2|cut -d' ' -f1|sort -u)" = "BEAC" ] && b7='BK'
@@ -307,7 +307,7 @@ function bm {
   m="$(printf '%2i' $v3) $(printf '%3i' $h3) $(date --rfc-3339=seconds)"
   m="$m ldp: $(printf '%10i' ${1:-$rplg}) $(printf '%5i' $h4) $(printf '%2i' $(systemctl status eth-beacon|grep target-peers|sed 's%.*target-peers \([0-9]*\).*%\1%'))"
   m="$m cnt: $(printf '%5i'      $c50) $(printf '%5i'   $c45) $(printf '%5i'   $c40) $(printf '%5i'   $c35) $(printf '%5i'   $c30) $(printf '%5i'   $c25) $(printf '%5i'   $c20)"
-  m="$m avg_p: $(printf '%3.2f'  $a50) $(printf '%3.2f' $a45) $(printf '%3.2f' $a40) $(printf '%3.2f' $a35) $(printf '%3.2f' $a30) $(printf '%3.2f' $a25) $(printf '%3.2f' $a20) $(printf '%3.2f' $a00)"
+  m="$m avg: $(printf '%3.2f'  $a50) $(printf '%3.2f' $a45) $(printf '%3.2f' $a40) $(printf '%3.2f' $a35) $(printf '%3.2f' $a30) $(printf '%3.2f' $a25) $(printf '%3.2f' $a20) $(printf '%6.2f' $a00)"
 }
 function cpu {
   h5=$(echo $H|sudo -S grep 'e above threshold' $p4 2>/dev/null|head -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%');if [ "$h5" ];then h5="throttled: $h5";else h5='';fi
