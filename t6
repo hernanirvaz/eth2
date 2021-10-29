@@ -135,7 +135,7 @@ function b7 {
   a=0;for v in $(echo $H|sudo -S grep -i 'attestation(s) success' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%,%%g');do y=($v);a=$((a+${#y[@]}));done
   n=0;b7='OK'
   [ "$q"  -gt '100' ] && n=$(($n+10*$w/$q))
-  [ "$a"  -gt '100' ] && n=$(($n+20*(10*$z+$h+$k)/$a))
+  [ "$a"  -gt '100' ] && n=$(($n+15*(10*$z+$h+$k)/$a))
   [ "$t"  -gt '100' ] && n=$(($n+30*$r/$t))
   if [ "$n" -ge $l1rs ]; then
     if [ "$n" -ge $l2rs ]; then
