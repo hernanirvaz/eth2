@@ -507,9 +507,9 @@ function errors {
 [ "$1" = "b7"  ] && { b7;echo -e "$b7"; }
 [ "$1" = "grs" ] && { grs ${2:-0}; }
 [ "$1" = "ors" ] && { ors ${2:-0}; }
+[ "$1" = "srs" ] && { brs ${2:-0} reboot; }
 [ "$1" = "brs" ] && { brs ${2:-0} bnreset; }
-[ "$1" = "srs" ] && { brs 0 reboot; }
-[ "$1" = "lrs" ] && { brs 0 vcreset; }
+[ "$1" = "lrs" ] && { brs ${2:-0} vcreset; }
 [ "$1" = "bs"  ] && { bs  ${2:-1}; }
 
 # lista servicos & portas
