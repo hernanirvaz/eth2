@@ -385,7 +385,6 @@ function bh {
 function brs {
   if [ ! -f /home/eth/beacon.restart.inicio ]; then
     touch /home/eth/beacon.restart.inicio
-    bk;echo -e "RSTI $m" >> $p2
     while [ -f /home/eth/beacon.restart.inicio ]; do
       b6=$(echo $H|sudo -S grep "lighthouse.$bpid.* INFO Synced " $p4 2>/dev/null|tail -n32|sed 's%.* epoch: \([0-9]*\).*%\1%'|sort -u)
       if [ "$(echo "$b6"|wc -l)" -eq 1 ]; then
@@ -401,19 +400,22 @@ function brs {
               b3=$(($b3+$1))
               [ $b3 -ge 20 ] && [ $b3 -le 50 ] && sed "s%--target-peers [0-9]*%--target-peers $b3%" ~/$ethb.save > /etc/systemd/system/$ethb.service
             fi
-            bk;echo -e "RSTF $m" >> $p2
-            resolvectl query smtp.gmail.com 2>/dev/null 1>&2
-            [ "$2" = "bnvc" ] && { echo $H|sudo -S systemctl stop $ethv 2>/dev/null; }
-            echo $H|sudo -S systemctl stop $ethb    2>/dev/null
-            echo $H|sudo -S systemctl daemon-reload 2>/dev/null
-            b1=400
-            rm -f /home/eth/beacon.restart.interval
-            if [ "$2" = "reboot" ]; then
-              rm -f /home/eth/beacon.restart.inicio
-              echo $H|sudo -S reboot 2>/dev/null
-            else
-              echo $H|sudo -S systemctl start $ethb 2>/dev/null
-              [ "$2" = "bnvc" ] && { echo $H|sudo -S systemctl start $ethv 2>/dev/null; }
+            bk
+            if [ "$2" ] || [ "$b7" != "OK" ]; then
+              echo -e "RSTI $m" >> $p2
+              resolvectl query smtp.gmail.com 2>/dev/null 1>&2
+              [ "$2" = "vcreset" ] && { echo $H|sudo -S systemctl stop $ethv 2>/dev/null; }
+              echo $H|sudo -S systemctl stop $ethb    2>/dev/null
+              echo $H|sudo -S systemctl daemon-reload 2>/dev/null
+              b1=400
+              rm -f /home/eth/beacon.restart.interval
+              if [ "$2" = "reboot" ]; then
+                rm -f /home/eth/beacon.restart.inicio
+                echo $H|sudo -S reboot 2>/dev/null
+              else
+                echo $H|sudo -S systemctl start $ethb 2>/dev/null
+                [ "$2" = "vcreset" ] && { echo $H|sudo -S systemctl start $ethv 2>/dev/null; }
+              fi
             fi
           fi
           sleep 3s
@@ -505,9 +507,9 @@ function errors {
 [ "$1" = "b7"  ] && { b7;echo -e "$b7"; }
 [ "$1" = "grs" ] && { grs ${2:-0}; }
 [ "$1" = "ors" ] && { ors ${2:-0}; }
-[ "$1" = "brs" ] && { brs ${2:-0}; }
+[ "$1" = "brs" ] && { brs ${2:-0} bnreset; }
 [ "$1" = "srs" ] && { brs 0 reboot; }
-[ "$1" = "lrs" ] && { brs 0 bnvc; }
+[ "$1" = "lrs" ] && { brs 0 vcreset; }
 [ "$1" = "bs"  ] && { bs  ${2:-1}; }
 
 # lista servicos & portas
