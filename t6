@@ -121,7 +121,7 @@ function o7 {
   fi
   [ "$n" -eq "$t" ] && o7='BK'
 }
-function b2 { b2=0;[ -d /var/lib/lighthouse ] && b2=$(echo $H|sudo -S grep -i 'lighthouse.*peers:' $p4 2>/dev/null|tail -n 1|sed 's%.*peers: *\([0-9]*\).*%\1%'); }
+function b2 { b2=0;[ -d /var/lib/lighthouse ] && b2=$(echo $H|sudo -S grep -i 'lighthouse.*peers:' $p4 2>/dev/null|tail -n1|sed 's%.*peers: *\([0-9]*\).*%\1%'); }
 function b7 {
   n=$(echo "$H"|sudo -S grep "lighthouse.$bpid" $p4 2>/dev/null|tail -n $(($hors*200)))
   w=$(echo "$n"|grep -i 'processed block'|wc -l)
@@ -257,47 +257,49 @@ function bho {
   m="$m avg_delays: $(printf '%2i' $x) $(printf '%4i' $j)"
 }
 function bhr {
+  [ -f ${p2}new ] && rm ${p2}new 
+  [ -f ${p3}new ] && rm ${p3}new 
+
   while read -a v;do
-    m="${v[3]} ${v[4]}"
+    # BEAC OK 0 2021-09-27 23:58:02+01:00 reward_penalty: 287 4.46 attestations_blocks: 4212 0 erros: 0 100 115 0 556 16 3584 nodes: 54 avg_delays: 6 782
+    dt="${v[3]} ${v[4]}"
     b7=${v[1]}
-    b2=${v[20]}
+    b2=${v[20]} # nodes
     n=${v[2]}
-    a=${v[9]}
-    p=${v[10]}
-    z=${v[12]}
-    h=${v[13]}
-    k=${v[14]}
-    w=${v[15]}
-    q=${v[16]}
-    r=${v[17]}
-    t=${v[18]}
-    x=${v[22]}
+    a=${v[9]}   # attestations
+    p=${v[10]}  # blocks
+    z=${v[12]}  # erros missing
+    h=${v[13]}  # erros failed
+    k=${v[14]}  # erros had
+    w=${v[15]}  # processed block
+    q=${v[16]}  # block received
+    r=${v[17]}  # not INFO
+    t=${v[18]}  #     INFO
+    x=${v[22]}  # avg_delays
     j=${v[23]}
     bho
     echo -e "${v[0]} $m" >> ${p2}new
   done <<< $(cat $p2)
 
-  dt=$(echo $(head -n1 ${p2}new)|cut -d' ' -f4-5)
-  echo $dt
-  v0=0;v1=0;v2=0;v3=0
+  v1=0;v2=0
   while read -a o;do
-    if [ ${o[3]} = $(echo $dt|cut -d' ' -f1) ]; then
-      v0=$((v0+1))
-    else
-      bm0
-      while read -a v;do bm1;done <<< $(head -n$v0 ${p2}new|grep 'BEAC')
-      bm2
-      bo $(echo $dt|cut -d' ' -f1) $(echo $(echo $dt|cut -d' ' -f2)|cut -c1-5)
-
-      v1=$((h3+v1))
-      v2=$((1+v2))
-      v3=$(printf '%.0f' $(echo "scale=5;$v1/$v2"|bc))
-
-      bm3
-      echo -e "BEAC $m" >> ${p3}new
-      dt="${o[3]} ${o[4]}"
-    fi
-  done <<< $(cat ${p2}new)
+    # BEAC 12 16 2021-10-31 19:41:54+00:00 ldp: 3063 42 30 cnt: 1008 0 1008 0 995 0 0 avg: 1.91 0.00 2.09 0.00 1.65 0.00 0.00 1.89
+    h1="${o[3]}"
+    h2="23:58"
+    h9=$(grep -n "$h1 $h2" ${p2}new|cut -d: -f1)
+    h3=$(head -n  $h9      ${p2}new|grep "BEAC.*$h2"|sort -k8.1n|grep -n $h1|cut -d: -f1)
+    h4=${o[7]}
+    v1=$((h3+v1))
+    v2=$((1+v2))
+    v3=$(printf '%.0f' $(echo "scale=5;$v1/$v2"|bc))
+    v4=${o[8]}
+    dt="${o[3]} ${o[4]}"
+    bm0
+    while read -a v;do bm1;done <<< $(head -n$h9 ${p2}new|grep 'BEAC')
+    bm2
+    bm3 $h9
+    echo -e "${o[0]} $m" >> ${p3}new
+  done <<< $(cat $p3)
 }
 function bm0 {
   n00=0;n50=0;n45=0;n40=0;n35=0;n30=0;n25=0;n20=0
@@ -307,13 +309,13 @@ function bm0 {
   k00=0;k50=0;k45=0;k40=0;k35=0;k30=0;k25=0;k20=0
 }
 function bm1 {
-  v13=$((10#${v[13]}));v14=$((10#${v[14]}));v12=$((10#${v[12]}))
-  if [ $((10#${v[20]})) -ge 25 ];then
-    if [ $((10#${v[20]})) -ge 30 ];then
-      if [ $((10#${v[20]})) -ge 35 ];then
-        if [ $((10#${v[20]})) -ge 40 ];then
-          if [ $((10#${v[20]})) -ge 45 ];then
-            if [ $((10#${v[20]})) -ge 50 ]
+  v13=$((10#${v[13]}));v14=$((10#${v[14]}));v12=$((10#${v[12]}));v20=$((10#${v[20]}))
+  if [ $v20 -ge 25 ];then
+    if [ $v20 -ge 30 ];then
+      if [ $v20 -ge 35 ];then
+        if [ $v20 -ge 40 ];then
+          if [ $v20 -ge 45 ];then
+            if [ $v20 -ge 50 ]
             then z50=$((z50+v13));n50=$((n50+v14));k50=$((k50+v12));c50=$((c50+1))
             else z45=$((z45+v13));n45=$((n45+v14));k45=$((k45+v12));c45=$((c45+1))
             fi
@@ -344,19 +346,21 @@ function bm2 {
 }
 function bm3 {
   m="$(printf '%2i' $v3) $(printf '%3i' $h3) $dt"
-  m="$m ldp: $(printf '%10i' ${1:-$rplg}) $(printf '%5i' $h4) $(printf '%2i' $(systemctl status eth-beacon|grep target-peers|sed 's%.*target-peers \([0-9]*\).*%\1%'))"
-  m="$m cnt: $(printf '%5i'      $c50) $(printf '%5i'   $c45) $(printf '%5i'   $c40) $(printf '%5i'   $c35) $(printf '%5i'   $c30) $(printf '%5i'   $c25) $(printf '%5i'   $c20)"
-  m="$m avg: $(printf '%3.2f'  $a50) $(printf '%3.2f' $a45) $(printf '%3.2f' $a40) $(printf '%3.2f' $a35) $(printf '%3.2f' $a30) $(printf '%3.2f' $a25) $(printf '%3.2f' $a20) $(printf '%6.2f' $a00)"
+  m="$m ldp: $(printf '%10i' ${1:-$rplg}) $(printf '%5i' $h4) $(printf '%2i' $v4)"
+  m="$m cnt: $(printf '%5i'   $c50) $(printf '%5i'   $c45) $(printf '%5i'   $c40) $(printf '%5i'   $c35) $(printf '%5i'   $c30) $(printf '%5i'   $c25) $(printf '%5i'   $c20)"
+  m="$m avg: $(printf '%3.2f' $a50) $(printf '%3.2f' $a45) $(printf '%3.2f' $a40) $(printf '%3.2f' $a35) $(printf '%3.2f' $a30) $(printf '%3.2f' $a25) $(printf '%3.2f' $a20) $(printf '%6.2f' $a00)"
 }
 function bm {
   bm0
-  if [ -f $p2 ]; then
-    while read -a v;do bm1;done <<< $(grep 'BEAC' $p2)
-  fi
+  [ -f $p2 ] && while read -a v;do bm1;done <<< $(grep BEAC $p2)
   bm2
-  bo;bv
+  bo
+  v1=0;v2=0
+  [ -f $p3 ] && while read -a v;do v1=$((${v[2]}+v1));v2=$((1+v2));done <<< $(cat $p3)
   v3=$(printf '%.0f' $(echo "scale=5;($v1+$h3)/(1+$v2)"|bc))
-  dt=$(date --rfc-3339=seconds);bm3
+  v4=$(systemctl status eth-beacon|grep target-peers|sed 's%.*target-peers \([0-9]*\).*%\1%')
+  dt=$(date --rfc-3339=seconds)
+  bm3
 }
 function cpu {
   h5=$(echo $H|sudo -S grep 'e above threshold' $p4 2>/dev/null|head -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%');if [ "$h5" ];then h5="throttled: $h5";else h5='';fi
@@ -406,15 +410,6 @@ function bo {
     fi
     h4=$(grep "BEAC.*$h2" $p2|wc -l)
   fi 
-}
-function bv {
-  v1=0;v2=0;v3=0
-  if [ -f $p3 ]; then
-    while read -a v;do
-      v1=$((${v[2]}+v1));v2=$((1+v2))
-    done <<< $(grep BEAC $p3)
-  fi
-  [ $v2 -gt 0 ] && v3=$(printf '%.0f' $(echo "scale=5;$v1/$v2"|bc))
 }
 function bh {
   [ "$1" ] || echo -e "BEAC BH $(printf '%3i' $((${1:-$hors}-$l2rs)))"
@@ -538,7 +533,6 @@ function errors {
 [ "$1" = "ol"  ] && { ok;echo -e "OETH $m"; }
 [ "$1" = "glf" ] && { gk;echo -e "GETH $m" >> $p5; }
 [ "$1" = "olf" ] && { ok;echo -e "OETH $m" >> $p6; }
-[ "$1" = "bv"  ] && { bv;echo -e "BEAC BV $(printf '%2i' $v3)"; }
 [ "$1" = "bl"  ] && { bk;echo -e "BEAC $m"; }
 [ "$1" = "bm"  ] && { bm;echo -e "BEAC $m"; }
 [ "$1" = "blf" ] && { bk;echo -e "BEAC $m" >> $p2; }
