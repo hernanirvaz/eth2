@@ -392,8 +392,8 @@ function vst {
 }
 function boo {
   if [ -f $p2 ]; then
-    if [ "$1"          ];then h9=$1   ;else h9=$h3;fi;if [ $h9 -lt $l2rs ];then h9=$l2rs;fi
-    if [ $h9 -gt $hors ];then h0=$hors;else h0=$h9;fi
+    if [ "$(echo $1|egrep '^[0-9]+$')" ];then h9=$1;else h9=$h3;if [ $h9 -lt $l2rs ];then h9=$l2rs;fi;fi
+    if [ "$(echo $1|egrep '^[0-9]+$')" ];then h0=$1;else h0=$h3;if [ $h0 -gt $hors ];then h0=$hors;fi;fi
     grep "BEAC.*$h2" $p2|sort -k8.1n|head -n$h9|tail -n$h0
   fi
 }
@@ -541,7 +541,7 @@ function errors {
 [ "$1" = "oh"  ] && { tail -n ${2:-$hors} $p6;ok;echo -e "OETH $m\n";ost;ts;cpu;cpd;errors; }
 [ "$1" = "bh"  ] && { [ -f $p2 ] && { bh $2; } }
 [ "$1" = "bhr" ] && { [ -f $p2 ] && { bhr; } }
-[ "$1" = "bo"  ] && { bo $2 $3;boo; }
+[ "$1" = "bo"  ] && { bo $2 $3;boo $2; }
 [ "$1" = "gkr" ] && { g7;[ "$g7" != "OK" ] && grs ${2:-0}; }
 [ "$1" = "okr" ] && { o7;[ "$o7" != "OK" ] && ors ${2:-0}; }
 [ "$1" = "bkr" ] && { b7;[ "$b7" != "OK" ] && brs ${2:-0}; }
