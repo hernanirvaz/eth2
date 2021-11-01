@@ -394,7 +394,7 @@ function vst {
 function boo {
   if [ -f $p2 ]; then
     if [ "$(echo $1|egrep '^[0-9]+$')" ];then h9=$1;else h9=$h3;if [ $h9 -lt $l2rs ];then h9=$l2rs;fi;fi
-    if [ "$(echo $1|egrep '^[0-9]+$')" ];then h0=$1;else h0=$h3;if [ $h0 -gt $hors ];then h0=$hors;fi;if [ $h0 -lt $h9 ];then h0=$h9;fi;fi
+    if [ "$(echo $1|egrep '^[0-9]+$')" ];then h0=$1;else h0=$h3;if [ $h0 -gt $hors ];then h0=$hors;fi;fi
     grep "BEAC.*$h2" $p2|sort -k8.1n|head -n$h9|tail -n$h0
   fi
 }
