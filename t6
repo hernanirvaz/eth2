@@ -31,12 +31,12 @@ function gcl { uu 'ufw deny  30303 comment eth1';uu 'ufw        deny 8545 commen
 function ofw { if [ "$cust" = "hrv" ];then uu "ufw$2 allow from $zip2 $1";uu "ufw$2 allow from $zip3 $1";else uu "ufw$2 allow from $vip1 $1";uu "ufw$2 allow from $vip3 $1";fi; }
 function oop { uu 'ufw allow 30303 comment eth1';uu 'ufw delete deny 8545              ';gfw 'to any port 8545 comment oeapi'; }
 function ocl { uu 'ufw deny  30303 comment eth1';uu 'ufw        deny 8545 comment oeapi';gfw 'to any port 8545'     ' delete'; }
-function bfw { if [ "$cust" = "hrv" ];then uu "ufw$2 allow from $zip3 $1";else uu "ufw$2 allow from $vip3 $1";fi; }
-function bop { uu 'ufw allow 9000 comment eth2';uu 'ufw delete deny 5052              ';`# bfw 'to any port 5052 comment bnapi'` ; }
-function bcl { uu 'ufw deny  9000 comment eth2';uu 'ufw        deny 5052 comment bnapi';`# bfw 'to any port 5052'     ' delete'` ; }
+function bfw { if [ "$cust" = "hrv" ];then uu "ufw$2 allow from 192.168.8.0/24 $1";else uu "ufw$2 allow from $vip3 $1";fi; }
+function bop { uu 'ufw allow 9000 comment eth2';uu 'ufw delete deny 5052              ';bfw 'to any port 5052 comment bnapi'; }
+function bcl { uu 'ufw deny  9000 comment eth2';uu 'ufw        deny 5052 comment bnapi';bfw 'to any port 5052'     ' delete'; }
 function vfw { if [ "$cust" = "hrv" ];then uu "ufw$2 allow from $zip1 $1";else uu "ufw$2 allow from $vip1 $1";fi; }
-function vop { uu 'ufw delete deny 5064              ';vfw 'to any port 5064 comment vcmet'; }
-function vcl { uu 'ufw        deny 5064 comment vcmet';vfw 'to any port 5064'     ' delete'; }
+function vop { uu 'ufw delete deny 5064              ';`# vfw 'to any port 5064 comment vcmet'` ; }
+function vcl { uu 'ufw        deny 5064 comment vcmet';`# vfw 'to any port 5064'     ' delete'` ; }
 function fop { uu 'ufw allow 3000/tcp comment grafana'; }
 function fcl { uu 'ufw deny  3000/tcp                '; }
 

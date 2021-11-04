@@ -41,7 +41,8 @@ if [ -x /usr/local/bin/lighthouse ]; then
     cd ~
     if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
     sudo chown $user:$user $becn
-    # bn --slasher --target-peers $tarp $bcnd --staking --validator-monitor-auto --eth1-endpoints $endp --subscribe-all-subnets --import-all-attestations
+    # --slasher --validator-monitor-auto --subscribe-all-subnets --import-all-attestations --disable-upnp
+    # --checkpoint-sync-url https://1q1s6o6cB6Jysu7KKlbLUYiOdAM:8974468780164028652df958a69fbd30@eth2-beacon-mainnet.infura.io
     cat <<-EOF > $ethb.service
 		[Unit]
 		Description=eth2 beacon service
@@ -53,7 +54,7 @@ if [ -x /usr/local/bin/lighthouse ]; then
 		Group=$user
 		Restart=always
 		RestartSec=10
-		ExecStart=/usr/local/bin/lighthouse$blkc --datadir $dtdi bn --target-peers $tarp $bcnd --staking --eth1-endpoints $endp --subscribe-all-subnets --import-all-attestations --disable-upnp
+		ExecStart=/usr/local/bin/lighthouse$blkc --datadir $dtdi bn --target-peers $tarp $bcnd --staking --eth1-endpoints $endp --subscribe-all-subnets --import-all-attestations
 		ExecStopPost=/home/eth/eth2/t8mail BEACSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 		
 		[Install]
