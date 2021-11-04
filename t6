@@ -295,6 +295,7 @@ function bhr {
     v2=$((1+v2))
     v3=$(printf '%.0f' $(echo "scale=5;$v1/$v2"|bc))
     v4=${o[8]}
+    if [ ${#o[@]} -gt 26 ];then v6=" ${o[26]}";else v6='';fi
     dt="${o[3]} ${o[4]}"
     while read -a v;do bm1;done <<< $(head -n$h9 ${p2}new|tail -n$((h9-h0))|grep BEAC)
     bm2
@@ -349,7 +350,8 @@ function bm3 {
   m="$(printf '%2i' $v3) $(printf '%3i' $h3) $dt"
   m="$m ldp: $(printf '%10i' ${1:-$rplg}) $(printf '%5i' $h4) $(printf '%2i' $v4)"
   m="$m cnt: $(printf '%5i'   $c50) $(printf '%5i'   $c45) $(printf '%5i'   $c40) $(printf '%5i'   $c35) $(printf '%5i'   $c30) $(printf '%5i'   $c25) $(printf '%5i'   $c20)"
-  m="$m avg: $(printf '%3.2f' $a50) $(printf '%3.2f' $a45) $(printf '%3.2f' $a40) $(printf '%3.2f' $a35) $(printf '%3.2f' $a30) $(printf '%3.2f' $a25) $(printf '%3.2f' $a20) $(printf '%6.2f' $a00)"
+  m="$m avg: $(printf '%3.2f' $a50) $(printf '%3.2f' $a45) $(printf '%3.2f' $a40) $(printf '%3.2f' $a35) $(printf '%3.2f' $a30) $(printf '%3.2f' $a25) $(printf '%3.2f' $a20)"
+  m="$m $(printf '%6.2f' $a00)$v6"
 }
 function bm {
   bm0
@@ -361,6 +363,26 @@ function bm {
   v3=$(printf '%.0f' $(echo "scale=5;($v1+$h3)/(1+$v2)"|bc))
   v4=$(systemctl status eth-beacon|grep target-peers|sed 's%.*target-peers \([0-9]*\).*%\1%')
   dt=$(date --rfc-3339=seconds)
+  if [ $v4 -ge 25 ];then
+    if [ $v4 -ge 30 ];then
+      if [ $v4 -ge 35 ];then
+        if [ $v4 -ge 40 ];then
+          if [ $v4 -ge 45 ];then
+            if [ $v4 -ge 50 ]
+            then v5=$a50
+            else v5=$a45
+            fi
+          else v5=$a40
+          fi
+        else v5=$a35
+        fi
+      else v5=$a30
+      fi
+    else v5=$a25
+    fi
+  else v5=$a20
+  fi
+  if [ $h3 -gt $v3 ] && [ $(printf '%.0f' $(echo "$v5*100"|bc)) -gt $(printf '%.0f' $(echo "$a00*100"|bc)) ];then v6=' CHANGE_PEERS';else v6='';fi
   bm3
 }
 function cpu {
