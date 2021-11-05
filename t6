@@ -247,13 +247,15 @@ function bk {
   bho
 }
 function bho {
+  #    0  1   2          3              4      5  6               7   8    9                   10   11 12    13  14  15  16  17  18  19   20          21 22   23
+  # BEAC OK   0 2021-11-05 07:21:12+00:00 nodes: 21 reward_penalty:  87 0.76 attestations_blocks: 1278 0 erros:   0  21   3   1 579   4 3596 avg_delays:  5  779
   b=$(echo "scale=0;($p*$rblk+$a*$ratt)*$rate/1000000000"|bc)
   d=$(echo "scale=2;($z*$pmis+$h*$pmat+$k*$pdly)*$rate/1000000000"|bc)
   m="$b7 $(printf '%3i' $n) $dt"
+  m="$m nodes: $(printf '%2i' ${b2:-0})"
   m="$m reward_penalty: $(printf '%3i' $b) $(printf '%3.2f' $d)"
   m="$m attestations_blocks: $(printf '%4i' $a) $(printf '%1i' $p)"
   m="$m erros: $(printf '%3i' $z) $(printf '%3i' $h) $(printf '%3i' $k) $(printf '%3i' $w) $(printf '%3i' $q) $(printf '%3i' $r) $(printf '%4i' $t)"
-  m="$m nodes: $(printf '%2i' ${b2:-0})"
   m="$m avg_delays: $(printf '%2i' $x) $(printf '%4i' $j)"
 }
 function bhr {
@@ -261,22 +263,20 @@ function bhr {
   [ -f ${p3}new ] && rm ${p3}new 
 
   while read -a v;do
-    #    0  1   2          3              4               5   6    7                    8    9 10     11  12  13  14  15  16  17   18     19 20          21 22   23
-    # BEAC OK   0 2021-11-01 14:01:19+00:00 reward_penalty: 182 2.51 attestations_blocks: 2448  1 erros:   0  69   9   0 557  10 3590 nodes: 33 avg_delays:  5  710
     dt="${v[3]} ${v[4]}"
     b7=${v[1]}
-    b2=${v[20]} # nodes
+    b2=${v[6]} # nodes
     n=${v[2]}
-    a=${v[9]}   # attestations
-    p=${v[10]}  # blocks
-    z=${v[12]}  # erros missing
-    h=${v[13]}  # erros failed
-    k=${v[14]}  # erros had
-    w=${v[15]}  # processed block
-    q=${v[16]}  # block received
-    r=${v[17]}  # not INFO
-    t=${v[18]}  #     INFO
-    x=${v[22]}  # avg_delays
+    a=${v[11]} # attestations
+    p=${v[12]} # blocks
+    z=${v[14]} # erros missing
+    h=${v[15]} # erros failed
+    k=${v[16]} # erros had
+    w=${v[17]} # processed block
+    q=${v[18]} # block received
+    r=${v[19]} # not INFO
+    t=${v[20]} #     INFO
+    x=${v[22]} # avg_delays
     j=${v[23]}
     bho
     echo -e "${v[0]} $m" >> ${p2}new
@@ -287,7 +287,7 @@ function bhr {
     h1="${o[3]}"
     h0=$h9
     h9=$(grep -n "$h1 $h2" ${p2}new|cut -d: -f1)
-    h3=$(head -n  $h9      ${p2}new|grep "BEAC.*$h2"|sort -k8.1n|grep -n $h1|cut -d: -f1)
+    h3=$(head -n  $h9      ${p2}new|grep "BEAC.*$h2"|sort -k10.1n|grep -n $h1|cut -d: -f1)
     v1=$((h3+v1))
     v2=$((1+v2))
     v3=$(printf '%.0f' $(echo "scale=5;$v1/$v2"|bc))
@@ -308,7 +308,7 @@ function bm0 {
   k00=0;k50=0;k45=0;k40=0;k35=0;k30=0;k25=0;k20=0
 }
 function bm1 {
-  v13=$((10#${v[13]}));v14=$((10#${v[14]}));v12=$((10#${v[12]}));v20=$((10#${v[20]}))
+  v13=$((10#${v[15]}));v14=$((10#${v[16]}));v12=$((10#${v[14]}));v20=$((10#${v[6]}))
   if [ $v20 -ge 25 ];then
     if [ $v20 -ge 30 ];then
       if [ $v20 -ge 35 ];then
@@ -415,7 +415,7 @@ function boo {
   if [ -f $p2 ]; then
     if [ "$(echo $1|egrep '^[0-9]+$')" ];then h9=$1;else h9=$h3;if [ $h9 -lt $l2rs ];then h9=$l2rs;fi;fi
     if [ "$(echo $1|egrep '^[0-9]+$')" ];then h0=$1;else h0=$h3;if [ $h0 -gt $hors ];then h0=$hors;fi;fi
-    grep "BEAC.*$h2" $p2|sort -k8.1n|head -n$h9|tail -n$h0
+    grep "BEAC.*$h2" $p2|sort -k10.1n|head -n$h9|tail -n$h0
   fi
 }
 function bo {
@@ -423,13 +423,13 @@ function bo {
   if [ -f $p2 ]; then
     b8=$(grep BEAC $p2|tail -n1|sed 's%.* \([0-9]*-[0-9]*-[0-9]*\) \([0-9]*:[0-9]*\):.*%\1 \2%')
     h1=$(echo $b8|cut -d' ' -f1)
-    if [ "$(echo $1|egrep '^[0-9]+:[0-9]+$')" ];then h2=$1;else if [ "$(echo $2|egrep '^[0-9]+:[0-9]+$')" ];then h2=$2;else h2=$(echo $b8|cut -d' ' -f2)                                  ;fi;fi
-    if [ "$(echo $1|egrep '^[0-9]+$')"        ];then h3=$1;else if [ "$(echo $2|egrep '^[0-9]+$')"        ];then h3=$2;else h3=$(grep "BEAC.*$h2" $p2|sort -k8.1n|grep -n $h1|cut -d: -f1);fi;fi
+    if [ "$(echo $1|egrep '^[0-9]+:[0-9]+$')" ];then h2=$1;else if [ "$(echo $2|egrep '^[0-9]+:[0-9]+$')" ];then h2=$2;else h2=$(echo $b8|cut -d' ' -f2)                                   ;fi;fi
+    if [ "$(echo $1|egrep '^[0-9]+$')"        ];then h3=$1;else if [ "$(echo $2|egrep '^[0-9]+$')"        ];then h3=$2;else h3=$(grep "BEAC.*$h2" $p2|sort -k10.1n|grep -n $h1|cut -d: -f1);fi;fi
     n=0
     while [ ! "$h3" ];do
       n=$((n+1))
       h1=$(date -d "$n days ago $h2" '+%Y-%m-%d')
-      h3=$(grep "BEAC.*$h2" $p2|sort -k8.1n|grep -n $h1|cut -d: -f1)
+      h3=$(grep "BEAC.*$h2" $p2|sort -k10.1n|grep -n $h1|cut -d: -f1)
     done
   fi 
 }
