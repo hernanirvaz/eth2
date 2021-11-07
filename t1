@@ -44,21 +44,24 @@ dtdi="/var/lib/lighthouse"
 becn="$dtdi/beacon"
 vldt="$dtdi/validators"
 
-pmis=0009765
-pmat=0018391
-pmah=0004935
-pdly=0009627
-
-ratt=0022759
 rblk=5228254
+ratt=0022759
 pmis=0028963
 pmat=0011781
+pmah=0011781
 pdly=0002700
+
+ratt=0019000
+pmis=0010000
+pmat=0018800
+pmah=0004500
+pdly=0000500
+
 l1rs=1
 l2rs=5
 hors=18
 pors=7
 rplg=0
-rate=3000
+rate=4000
 [ $rate -eq 0 ] && rate=$(curl -sX GET 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=ETH&convert=EUR&CMC_PRO_API_KEY=3ae5f3df-bd71-489d-a9dd-b626995fba31'|sed 's%.*price.:\([0-9]*\.[0-9]*\).*%\1%')
 [ $rplg -eq 0 ] && [ -f $p2 ] && rplg=$(cat $p2|wc -l)

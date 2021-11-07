@@ -130,12 +130,13 @@ function b7 {
   t=$(echo "$n"|grep    ' INFO '|wc -l)
   p=$(echo "$H"|sudo -S grep -i 'published block' $p4 2>/dev/null|wc -l)
   z=0;for v in $(echo $H|sudo -S grep -i 'attestation(s) missing' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%,%%g');do y=($v);z=$((z+${#y[@]}));done
-  h=0;for v in $(echo $H|sudo -S grep -i 'attestation(s) failed'  $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%,%%g');do y=($v);h=$((h+${#y[@]}));done
+  c=0;for v in $(echo $H|sudo -S grep -i 'attestation(s).*target' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%,%%g');do y=($v);c=$((c+${#y[@]}));done
+  h=0;for v in $(echo $H|sudo -S grep -i 'attestation(s).*head'   $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%,%%g');do y=($v);h=$((h+${#y[@]}));done
   k=0;for v in $(echo $H|sudo -S grep -i 'attestation(s) had'     $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%,%%g');do y=($v);k=$((k+${#y[@]}));done
   a=0;for v in $(echo $H|sudo -S grep -i 'attestation(s) success' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%,%%g');do y=($v);a=$((a+${#y[@]}));done
   n=0;b7='OK'
   [ "$q"  -gt '100' ] && n=$(($n+10*$w/$q))
-  [ "$a"  -gt '100' ] && n=$(($n+15*(10*$z+$h+$k)/$a))
+  [ "$a"  -gt '100' ] && n=$(($n+15*(10*$z+$c+$h+$k)/$a))
   [ "$t"  -gt '100' ] && n=$(($n+30*$r/$t))
   if [ "$n" -ge $l1rs ]; then
     if [ "$n" -ge $l2rs ]; then
@@ -247,15 +248,15 @@ function bk {
   bho
 }
 function bho {
-  #    0  1   2          3              4      5  6               7   8    9                   10   11 12    13  14  15  16  17  18  19   20          21 22   23
-  # BEAC OK   0 2021-11-05 07:21:12+00:00 nodes: 21 reward_penalty:  87 0.76 attestations_blocks: 1278 0 erros:   0  21   3   1 579   4 3596 avg_delays:  5  779
+  #    0  1   2          3              4      5  6               7   8    9                   10   11 12    13 14 15  16  17  18  19  20   21          22 23   24
+  # BEAC OK   0 2021-11-07 15:53:03+00:00 nodes: 22 reward_penalty: 189 2.73 attestations_blocks: 2772 0 erros:  0  6  74  15   0 545  10 3590 avg_delays:  5  842
   b=$(echo "scale=0;($p*$rblk+$a*$ratt)*$rate/1000000000"|bc)
-  d=$(echo "scale=2;($z*$pmis+$h*$pmat+$k*$pdly)*$rate/1000000000"|bc)
+  d=$(echo "scale=2;($z*$pmis+$c*$pmat+$h*$pmah+$k*$pdly)*$rate/1000000000"|bc)
   m="$b7 $(printf '%3i' $n) $dt"
   m="$m nodes: $(printf '%2i' ${b2:-0})"
   m="$m reward_penalty: $(printf '%3i' $b) $(printf '%3.2f' $d)"
   m="$m attestations_blocks: $(printf '%4i' $a) $(printf '%1i' $p)"
-  m="$m erros: $(printf '%3i' $z) $(printf '%3i' $h) $(printf '%3i' $k) $(printf '%3i' $w) $(printf '%3i' $q) $(printf '%3i' $r) $(printf '%4i' $t)"
+  m="$m erros: $(printf '%2i' $z) $(printf '%2i' $c) $(printf '%3i' $h) $(printf '%3i' $k) $(printf '%3i' $w) $(printf '%3i' $q) $(printf '%3i' $r) $(printf '%4i' $t)"
   m="$m avg_delays: $(printf '%2i' $x) $(printf '%4i' $j)"
 }
 function bhr {
@@ -270,14 +271,15 @@ function bhr {
     a=${v[11]} # attestations
     p=${v[12]} # blocks
     z=${v[14]} # erros missing
-    h=${v[15]} # erros failed
-    k=${v[16]} # erros had
-    w=${v[17]} # processed block
-    q=${v[18]} # block received
-    r=${v[19]} # not INFO
-    t=${v[20]} #     INFO
-    x=${v[22]} # avg_delays
-    j=${v[23]}
+    c=${v[15]} # erros target
+    h=${v[16]} # erros head
+    k=${v[17]} # erros had
+    w=${v[18]} # processed block
+    q=${v[19]} # block received
+    r=${v[20]} # not INFO
+    t=${v[21]} #     INFO
+    x=${v[23]} # avg_delays
+    j=${v[24]}
     bho
     echo -e "${v[0]} $m" >> ${p2}new
   done <<< $(cat $p2)
@@ -305,28 +307,29 @@ function bm0 {
   c00=0;c50=0;c45=0;c40=0;c35=0;c30=0;c25=0;c20=0
   a00=0;a50=0;a45=0;a40=0;a35=0;a30=0;a25=0;a20=0
   z00=0;z50=0;z45=0;z40=0;z35=0;z30=0;z25=0;z20=0
+  x00=0;x50=0;x45=0;x40=0;x35=0;x30=0;x25=0;x20=0
   k00=0;k50=0;k45=0;k40=0;k35=0;k30=0;k25=0;k20=0
 }
 function bm1 {
-  v13=$((10#${v[15]}));v14=$((10#${v[16]}));v12=$((10#${v[14]}));v20=$((10#${v[6]}))
-  if [ $v20 -ge 25 ];then
-    if [ $v20 -ge 30 ];then
-      if [ $v20 -ge 35 ];then
-        if [ $v20 -ge 40 ];then
-          if [ $v20 -ge 45 ];then
-            if [ $v20 -ge 50 ]
-            then z50=$((z50+v13));n50=$((n50+v14));k50=$((k50+v12));c50=$((c50+1))
-            else z45=$((z45+v13));n45=$((n45+v14));k45=$((k45+v12));c45=$((c45+1))
+  v14=$((10#${v[14]}));v15=$((10#${v[15]}));v16=$((10#${v[16]}));v17=$((10#${v[17]}));v06=$((10#${v[6]}))
+  if [ $v06 -ge 25 ];then
+    if [ $v06 -ge 30 ];then
+      if [ $v06 -ge 35 ];then
+        if [ $v06 -ge 40 ];then
+          if [ $v06 -ge 45 ];then
+            if [ $v06 -ge 50 ]
+            then z50=$((z50+v15));x50=$((x50+v16));n50=$((n50+v17));k50=$((k50+v14));c50=$((c50+1))
+            else z45=$((z45+v15));x45=$((x45+v16));n45=$((n45+v17));k45=$((k45+v14));c45=$((c45+1))
             fi
-          else z40=$((z40+v13));n40=$((n40+v14));k40=$((k40+v12));c40=$((c40+1))
+          else z40=$((z40+v15));x40=$((x40+v16));n40=$((n40+v17));k40=$((k40+v14));c40=$((c40+1))
           fi
-        else z35=$((z35+v13));n35=$((n35+v14));k35=$((k35+v12));c35=$((c35+1))
+        else z35=$((z35+v15));x35=$((x35+v16));n35=$((n35+v17));k35=$((k35+v14));c35=$((c35+1))
         fi
-      else z30=$((z30+v13));n30=$((n30+v14));k30=$((k30+v12));c30=$((c30+1))
+      else z30=$((z30+v15));x30=$((x30+v16));n30=$((n30+v17));k30=$((k30+v14));c30=$((c30+1))
       fi
-    else z25=$((z25+v13));n25=$((n25+v14));k25=$((k25+v12));c25=$((c25+1))
+    else z25=$((z25+v15));x25=$((x25+v16));n25=$((n25+v17));k25=$((k25+v14));c25=$((c25+1))
     fi
-  else z20=$((z20+v13));n20=$((n20+v14));k20=$((k20+v12));c20=$((c20+1))
+  else z20=$((z20+v15));x20=$((x20+v16));n20=$((n20+v17));k20=$((k20+v14));c20=$((c20+1))
   fi
 }
 function bm2 {
@@ -334,22 +337,22 @@ function bm2 {
   z00=$((z20+z25+z30+z35+z40+z45+z50))
   n00=$((n20+n25+n30+n35+n40+n45+n50))
   k00=$((k20+k25+k30+k35+k40+k45+k50))
-  [ $c50 -gt 0 ] && a50=$(echo "scale=2;($k50*$pmis+$z50*$pmat+$n50*$pdly)/$c50*$rate/1000000000"|bc)
-  [ $c45 -gt 0 ] && a45=$(echo "scale=2;($k45*$pmis+$z45*$pmat+$n45*$pdly)/$c45*$rate/1000000000"|bc)
-  [ $c40 -gt 0 ] && a40=$(echo "scale=2;($k40*$pmis+$z40*$pmat+$n40*$pdly)/$c40*$rate/1000000000"|bc)
-  [ $c35 -gt 0 ] && a35=$(echo "scale=2;($k35*$pmis+$z35*$pmat+$n35*$pdly)/$c35*$rate/1000000000"|bc)
-  [ $c30 -gt 0 ] && a30=$(echo "scale=2;($k30*$pmis+$z30*$pmat+$n30*$pdly)/$c30*$rate/1000000000"|bc)
-  [ $c25 -gt 0 ] && a25=$(echo "scale=2;($k25*$pmis+$z25*$pmat+$n25*$pdly)/$c25*$rate/1000000000"|bc)
-  [ $c20 -gt 0 ] && a20=$(echo "scale=2;($k20*$pmis+$z20*$pmat+$n20*$pdly)/$c20*$rate/1000000000"|bc)
-  [ $c00 -gt 0 ] && a00=$(echo "scale=2;($k00*$pmis+$z00*$pmat+$n00*$pdly)/$c00*$rate/1000000000"|bc)
+  [ $c50 -gt 0 ] && a50=$(echo "scale=2;($k50*$pmis+$z50*$pmat+$x50*$pmah+$n50*$pdly)/$c50*$rate/1000000000"|bc)
+  [ $c45 -gt 0 ] && a45=$(echo "scale=2;($k45*$pmis+$z45*$pmat+$x45*$pmah+$n45*$pdly)/$c45*$rate/1000000000"|bc)
+  [ $c40 -gt 0 ] && a40=$(echo "scale=2;($k40*$pmis+$z40*$pmat+$x40*$pmah+$n40*$pdly)/$c40*$rate/1000000000"|bc)
+  [ $c35 -gt 0 ] && a35=$(echo "scale=2;($k35*$pmis+$z35*$pmat+$x35*$pmah+$n35*$pdly)/$c35*$rate/1000000000"|bc)
+  [ $c30 -gt 0 ] && a30=$(echo "scale=2;($k30*$pmis+$z30*$pmat+$x30*$pmah+$n30*$pdly)/$c30*$rate/1000000000"|bc)
+  [ $c25 -gt 0 ] && a25=$(echo "scale=2;($k25*$pmis+$z25*$pmat+$x25*$pmah+$n25*$pdly)/$c25*$rate/1000000000"|bc)
+  [ $c20 -gt 0 ] && a20=$(echo "scale=2;($k20*$pmis+$z20*$pmat+$x20*$pmah+$n20*$pdly)/$c20*$rate/1000000000"|bc)
+  [ $c00 -gt 0 ] && a00=$(echo "scale=2;($k00*$pmis+$z00*$pmat+$x00*$pmah+$n00*$pdly)/$c00*$rate/1000000000"|bc)
 }
 function bm3 {
-  #    0  1   2          3              4      5  6    7       8       9      10      11      12      13      14   15   16   17   18   19   20   21   22      23
-  # BEAC 13  34 2021-11-04 07:50:11+00:00 nodes: 20 cnt:    1008       0    1008       0    1008       0      95 avg: 1.91 0.00 2.09 0.00 1.63 0.00 1.59    1.87
+  #    0  1   2          3              4      5  6    7       8       9      10      11      12      13      14   15   16   17   18   19   20   21   22        23
+  # BEAC 13  34 2021-11-04 07:50:11+00:00 nodes: 20 cnt:    1008       0    1008       0    1008       0      95 avg: 1.91 0.00 2.09 0.00 1.63 0.00 1.59      1.87
   m="$(printf '%2i' $v3) $(printf '%3i' $h3) $dt nodes: $(printf '%2i' $v4)"
   m="$m cnt: $(printf '%7i'   $c50) $(printf '%7i'   $c45) $(printf '%7i'   $c40) $(printf '%7i'   $c35) $(printf '%7i'   $c30) $(printf '%7i'   $c25) $(printf '%7i'   $c20)"
   m="$m avg: $(printf '%3.2f' $a50) $(printf '%3.2f' $a45) $(printf '%3.2f' $a40) $(printf '%3.2f' $a35) $(printf '%3.2f' $a30) $(printf '%3.2f' $a25) $(printf '%3.2f' $a20)"
-  m="$m $(printf '%7.2f' $a00)$v6"
+  m="$m $(printf '%9.2f' $a00)$v6"
 }
 function bm {
   bm0
