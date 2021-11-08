@@ -495,15 +495,6 @@ function brs {
     done
   fi
 }
-function bs {
-  for l in $(echo $H|sudo -S grep -i 'lighthouse.*failed to' $p4 2>/dev/null|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\) .*validator: \([0-9]*\).*epoch: \([0-9]*\).*%\1:\2:\3%'|sort -u|tail -n $1);do
-    v=$(echo $l|cut -d: -f4)
-    e=$(echo $l|cut -d: -f5)
-    s=$(sudo grep -i "lighthouse.*attestation.*$v.*slot.*$e" $p4|sed 's%.*slot: \([0-9]*\).*%\1%'|sort -u)
-    echo -e "${i}VALIDATOR $v, EPOCH $e, SLOT $s${f}"
-    sudo grep "$v.*$e\|$s" $p4
-  done
-}
 function ssp {
   echo -e "${i}QUER MESMO TRANSFERIR VALIDATORS?${f}"
   read rsp
@@ -575,7 +566,6 @@ function errors {
 [ "$1" = "srs" ] && { brs ${2:-0} reboot; }
 [ "$1" = "brs" ] && { brs ${2:-0} bnreset; }
 [ "$1" = "lrs" ] && { brs ${2:-0} vcreset; }
-[ "$1" = "bs"  ] && { bs  ${2:-1}; }
 
 # lista servicos & portas
 [ "$1" = "ll" ] && { uu "systemctl list-units $pate $patp $patf"; }
@@ -714,13 +704,11 @@ if [ -z "$1" ]; then
   c1="$c1\nyj\t\tsystem journal"
   c1="$c1\nsl [s]\t\tlista system journal  s=TOTAL"
   c1="$c1\nel [s]\t\tlista geth,lighthouse s=TOTAL"
-  c1="$c1\nbs [n]\t\tbeacon errors com custo n=max erros"
   c1="$c1\nll\t\tlista servicos"
   c1="$c1\nlp\t\tlista portas"
   c1="$c1\nnp\t\tnode peers"
   c1="$c1\ngs\t\tgeth syncing"
   c1="$c1\nts\t\ttime report"
-  c1="$c1\nes\t\terrors report"
   c1="$c1\ncpu\t\tcpu report"
   c1="$c1\nbh\t\tbeacon historic report"
   c1="$c1\nbhr\t\tbeacon historic recalculate"
