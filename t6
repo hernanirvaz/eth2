@@ -450,6 +450,15 @@ function bh {
   [ "$1" ] || { cpu;cpd; }
   [ "$1" ] || { errors; }
 }
+function brsmin {
+max=${vector[0]}
+min=${vector[0]}
+
+for i in "${vector[@]}"; do
+  (( i > max )) && max=$i
+  (( i < min )) && min=$i
+done
+}
 function brs {
   if [ ! -f /home/eth/beacon.restart.inicio ]; then
     touch /home/eth/beacon.restart.inicio
