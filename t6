@@ -392,7 +392,7 @@ function bm {
   [ $(printf '%.0f' $(echo "$a40*100"|bc)) -lt $(printf '%.0f' $(echo "$v7*100"|bc)) ] && { v7=$a40;v8=$((40-v4)); }
   [ $(printf '%.0f' $(echo "$a45*100"|bc)) -lt $(printf '%.0f' $(echo "$v7*100"|bc)) ] && { v7=$a45;v8=$((45-v4)); }
   [ $(printf '%.0f' $(echo "$a50*100"|bc)) -lt $(printf '%.0f' $(echo "$v7*100"|bc)) ] && { v7=$a50;v8=$((50-v4)); }
-  if [[ $h3 -ge $v3 && $(printf '%.0f' $(echo "$v5*100"|bc)) -ge $(printf '%.0f' $(echo "$a00*100"|bc)) && $v8 -ne 0 ]];then v6=" PEERS_$v8";else v6='';v8=0;fi
+  if [[ $h3 -gt $v3 && $(printf '%.0f' $(echo "$v5*100"|bc)) -ge $(printf '%.0f' $(echo "$a00*100"|bc)) && $v8 -ne 0 ]];then v6=" PEERS_$v8";else v6='';v8=0;fi
   bm3
 }
 function cpu {
