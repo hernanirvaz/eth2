@@ -336,6 +336,7 @@ function bm2 {
   c00=$((c20+c25+c30+c35+c40+c45+c50))
   z00=$((z20+z25+z30+z35+z40+z45+z50))
   n00=$((n20+n25+n30+n35+n40+n45+n50))
+  x00=$((x20+x25+x30+x35+x40+x45+x50))
   k00=$((k20+k25+k30+k35+k40+k45+k50))
   [ $c50 -gt 0 ] && a50=$(echo "scale=2;($k50*$pmis+$z50*$pmat+$x50*$pmah+$n50*$pdly)/$c50*$rate/$decp"|bc)
   [ $c45 -gt 0 ] && a45=$(echo "scale=2;($k45*$pmis+$z45*$pmat+$x45*$pmah+$n45*$pdly)/$c45*$rate/$decp"|bc)
