@@ -383,7 +383,15 @@ function bm {
     fi
   else v5=$a20
   fi
-  if [ $h3 -gt $v3 ] && [ $(printf '%.0f' $(echo "$v5*100"|bc)) -gt $(printf '%.0f' $(echo "$a00*100"|bc)) ];then v6=' CHANGE_PEERS';else v6='';fi
+  v7=$v5;v8=0
+  [ $(printf '%.0f' $(echo "$a20*100"|bc)) -lt $(printf '%.0f' $(echo "$v7*100"|bc)) ] && { v7=$a20;v8=$((20-v4)); }
+  [ $(printf '%.0f' $(echo "$a25*100"|bc)) -lt $(printf '%.0f' $(echo "$v7*100"|bc)) ] && { v7=$a25;v8=$((25-v4)); }
+  [ $(printf '%.0f' $(echo "$a30*100"|bc)) -lt $(printf '%.0f' $(echo "$v7*100"|bc)) ] && { v7=$a30;v8=$((30-v4)); }
+  [ $(printf '%.0f' $(echo "$a35*100"|bc)) -lt $(printf '%.0f' $(echo "$v7*100"|bc)) ] && { v7=$a35;v8=$((35-v4)); }
+  [ $(printf '%.0f' $(echo "$a40*100"|bc)) -lt $(printf '%.0f' $(echo "$v7*100"|bc)) ] && { v7=$a40;v8=$((40-v4)); }
+  [ $(printf '%.0f' $(echo "$a45*100"|bc)) -lt $(printf '%.0f' $(echo "$v7*100"|bc)) ] && { v7=$a45;v8=$((45-v4)); }
+  [ $(printf '%.0f' $(echo "$a50*100"|bc)) -lt $(printf '%.0f' $(echo "$v7*100"|bc)) ] && { v7=$a50;v8=$((50-v4)); }
+  if [[ $h3 -gt $v3 && $(printf '%.0f' $(echo "$v5*100"|bc)) -gt $(printf '%.0f' $(echo "$a00*100"|bc)) && $v8 != 0 ]];then v6=" PEERS_$v8";else v6='';v8=0;fi
   bm3
 }
 function cpu {
@@ -449,15 +457,6 @@ function bh {
   [ "$1" ] || { ts; }
   [ "$1" ] || { cpu;cpd; }
   [ "$1" ] || { errors; }
-}
-function brsmin {
-max=${vector[0]}
-min=${vector[0]}
-
-for i in "${vector[@]}"; do
-  (( i > max )) && max=$i
-  (( i < min )) && min=$i
-done
 }
 function brs {
   if [ ! -f /home/eth/beacon.restart.inicio ]; then
@@ -570,6 +569,7 @@ function errors {
 [ "$1" = "gkr" ] && { g7;[ "$g7" != "OK" ] && grs ${2:-0}; }
 [ "$1" = "okr" ] && { o7;[ "$o7" != "OK" ] && ors ${2:-0}; }
 [ "$1" = "bkr" ] && { b7;[ "$b7" != "OK" ] && brs ${2:-0}; }
+[ "$1" = "bnc" ] && { bm;[  $v8 -ne 0    ] && brs $v8; }
 [ "$1" = "grs" ] && { grs ${2:-0}; }
 [ "$1" = "ors" ] && { ors ${2:-0}; }
 [ "$1" = "srs" ] && { brs ${2:-0} reboot; }
