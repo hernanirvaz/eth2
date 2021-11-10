@@ -44,18 +44,19 @@ dtdi="/var/lib/lighthouse"
 becn="$dtdi/beacon"
 vldt="$dtdi/validators"
 
-rblk=5228254
-ratt=0022759
-pmis=0028963
-pmat=0011781
-pmah=0011781
-pdly=0002700
+rblk=05228254
+ratt=00022759
+pmis=00028963
+pmat=00011781
+pmah=00011781
+pdly=00002700
 
-ratt=0019000
-pmis=0010000
-pmat=0018800
-pmah=0004500
-pdly=0000500
+rblk=22238623
+ratt=00019000
+pmis=00010000
+pmat=00018800
+pmah=00004500
+pdly=00000500
 decp=1000000000
 
 l1rs=1
