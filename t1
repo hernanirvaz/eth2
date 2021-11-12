@@ -54,7 +54,7 @@ decp=1000000000
 
 l1rs=1
 l2rs=5
-hors=18
+hors=24
 pors=7
 rplg=0
 rate=4000
