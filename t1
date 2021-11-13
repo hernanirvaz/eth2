@@ -5,11 +5,12 @@ f="\e[25m\n"
 
 p0='/home/eth/eth2'
 p1='/etc/prometheus'
-p2='/home/eth/beacon.log'
-p3='/home/eth/beacon-resumo.log'
 p4='/var/log/syslog'
 p5='/home/eth/geth.log'
 p6='/home/eth/oeth.log'
+p2='/home/eth/beacon.log'
+p3='/home/eth/bresumo.log'
+p7='/home/eth/barqivo.log'
 
 meeu="$(whoami)"
 cunm="$(uname -n)"
