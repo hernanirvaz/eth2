@@ -448,7 +448,7 @@ function bh {
   tail -n${1:-$hors} $p2|head -n$((${1:-$hors}-$l2rs))
   [ "$1" ] || echo -e "BEAC BH $(printf '%3i' $l2rs)"
   tail -n$l2rs       $p2|head -n$l2rs
-  [ "$1" ] || { bo;echo -e "BEAC BO $(printf '%3i' $h3)";boo; }
+  [ "$1" ] || { bo;echo -e "BEAC BO $(printf '%3i' $h3)/$(grep "BEAC.*$h2" $p2|wc -l)";boo; }
   echo -e "BEAC BL";bk;echo -e "BEAC $m"
   [ "$1" ] || { echo -e "BEAC BM";bm;echo -e "BEAC $m"; }
   [ "$1" ] || { echo; }
