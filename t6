@@ -475,7 +475,7 @@ function bh {
   tail -n$l2rs       $p2|head -n$l2rs
   [ "$1" ] || { bo;echo -e "BEAC BO $(printf '%3i' $h3)/$(echo "$b9"|wc -l)";boo; }
   echo -e "BEAC BL";bk;echo -e "BEAC $m"
-  [ "$1" ] || { echo -e "BEAC BM";bm;echo -e "BEAC $m\n"; }
+  [ "$1" ] || { bm;echo -e "BEAC BM\nBEAC $m\n"; }
   [ "$1" ] || { bst;vst; }
   [ "$1" ] || { ts; }
   [ "$1" ] || { cpu;cpd; }
