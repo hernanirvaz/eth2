@@ -251,9 +251,9 @@ function bho {
   m="$m nodes: $(printf '%2i' ${b2:-0})"
   m="$m reward_penalty: $(printf '%3i' $b) $(printf '%3.2f' $d)"
   m="$m attestation_block: $(printf '%4i' $a) $(printf '%4i' $x4) $(printf '%1i' $p)"
-  m="$m erros: $(printf '%2i' $z) $(printf '%2i' $c) $(printf '%3i' $h) $(printf '%2i' $k)"
+  m="$m erros: $(printf '%1i' $z) $(printf '%2i' $c) $(printf '%3i' $h) $(printf '%2i' $k)"
   m="$m $(printf '%6i' $w) $(printf '%3i' $q) $(printf '%3i' $x5)"
-  m="$m $(printf '%4i' $r) $(printf '%4i' $t) $(printf '%4i' $x6)   "
+  m="$m $(printf '%4i' $r) $(printf '%4i' $t) $(printf '%4i' $x6)    "
   m="$m delay: $(printf '%4i' $j)"
 }
 function bhr {
@@ -380,7 +380,7 @@ function bm {
     while read -a v;do bm1;done <<< $(tail -n$((r1-r0)) $p2|grep BEAC)
   fi
   bm2
-  bo
+  [[ $h3 -eq 0 || ! "$h3" ]] && bo
   v1=0;v2=0
   [ -f $p3 ] && while read -a v;do v1=$((${v[2]}+v1));v2=$((1+v2));done <<< $(cat $p3)
   v3=$(printf '%.0f' $(echo "scale=5;($v1+$h3)/(1+$v2)"|bc))
