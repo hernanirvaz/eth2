@@ -292,7 +292,7 @@ function bhr {
     v2=$((1+v2))
     v3=$(printf '%.0f' $(echo "scale=5;$v1/$v2"|bc))
     v4=${o[6]}
-    if [ ${#o[@]} -gt 24 ];then v6=" ${o[24]}";else v6='';fi
+    if [ ${#o[@]} -gt 16 ];then v6=" ${o[16]}";else v6='';fi
     dt="${o[3]} ${o[4]}"
     while read -a v;do bm1;done <<< $(head -n$h9 ${p2}new|tail -n$((h9-h0))|grep BEAC)
     bm2
@@ -346,18 +346,17 @@ function bm2 {
   [ $c00 -gt 0 ] && a00=$(echo "scale=2;($k00*$pmis+$z00*$pmat+$x00*$pmah+$n00*$pdly)/$c00*$rate/$decp"|bc)
 }
 function bm3 {
-  #    0  1   2          3              4      5  6    7         8         9        10        11        12        13        14   15   16   17   18   19   20   21   22    23      24
-  # BEAC  2   5 2021-11-12 22:44:02+00:00 nodes: 20 cnt:         0         0         0         0         0         0       355 avg: 0.00 0.00 0.00 0.00 0.00 0.00 1.93  1.93 PEERS_5
+  #    0  1   2          3              4      5  6    7    8    9   10   11   12   13   14    15
+  # BEAC  2   1 2021-11-14 16:16:34+00:00 nodes: 20 avg: 0.00 0.00 0.00 0.00 0.00 0.00 1.75  1.75
   m="$(printf '%2i' $v3) $(printf '%3i' $h3) $dt nodes: $(printf '%2i' $v4)"
-  m="$m cnt: $(printf '%9i'   $c50) $(printf '%9i'   $c45) $(printf '%9i'   $c40) $(printf '%9i'   $c35) $(printf '%9i'   $c30) $(printf '%9i'   $c25) $(printf '%9i'   $c20)"
   m="$m avg: $(printf '%4.2f' $a50) $(printf '%4.2f' $a45) $(printf '%4.2f' $a40) $(printf '%4.2f' $a35) $(printf '%4.2f' $a30) $(printf '%4.2f' $a25) $(printf '%4.2f' $a20)"
   m="$m $(printf '%5.2f' $a00)$v6"
 }
 function bm4 {
-  #                                    1                             2                         3                          4        4
-  #    1   2          3    4 5 6 7 8 9 0   1    2 3 4 5 6 7 8   9    0 1 2 3 4 5 6    7    8 9 0 1 2 3 4     5    6 7 8 9 0 1 2    3
-  # BEAC 416 2021-11-13 cnt: 0 0 0 0 0 0 411 mis: 0 0 0 0 0 0 625 mat: 0 0 0 0 0 0 3501 mah: 0 0 0 0 0 0 25550 dly: 0 0 0 0 0 0 3941
-  n="$r1 $(date --rfc-3339=date)"
+  #                                                      1                             2                         3                          4        4
+  #    0      1          2              3    4 5 6 7 8 9 0   1    2 3 4 5 6 7 8   9    0 1 2 3 4 5 6    7    8 9 0 1 2 3 4     5    6 7 8 9 0 1 2    3
+  # BEAC    400 2021-11-14 16:52:36+00:00 cnt: 0 0 0 0 0 0 411 mis: 0 0 0 0 0 0 625 mat: 0 0 0 0 0 0 3501 mah: 0 0 0 0 0 0 25550 dly: 0 0 0 0 0 0 3941
+  n="$(printf '%6i' $r1) $dt"
   n="$n cnt: $c50 $c45 $c40 $c35 $c30 $c25 $c20"
   n="$n mis: $k50 $k45 $k40 $k35 $k30 $k25 $k20"
   n="$n mat: $z50 $z45 $z40 $z35 $z30 $z25 $z20"
@@ -372,13 +371,15 @@ function bm {
     r0=${o[1]}
     c50=${o[ 5]};c45=${o[ 6]};c40=${o[ 7]};c35=${o[ 8]};c30=${o[ 9]};c25=${o[10]};c20=${o[11]}
     k50=${o[13]};k45=${o[14]};k40=${o[15]};k35=${o[16]};k30=${o[17]};k25=${o[18]};k20=${o[19]}
-    z50=${o[22]};z45=${o[22]};z40=${o[23]};z35=${o[24]};z30=${o[25]};z25=${o[26]};z20=${o[27]}
+    z50=${o[21]};z45=${o[22]};z40=${o[23]};z35=${o[24]};z30=${o[25]};z25=${o[26]};z20=${o[27]}
     x50=${o[29]};x45=${o[30]};x40=${o[31]};x35=${o[32]};x30=${o[33]};x25=${o[34]};x20=${o[35]}
     n50=${o[37]};n45=${o[38]};n40=${o[39]};n35=${o[40]};n30=${o[41]};n25=${o[42]};n20=${o[43]}
   fi
   if [ -f $p2 ]; then
     r1=$(cat $p2|wc -l)
     while read -a v;do bm1;done <<< $(tail -n$((r1-r0)) $p2|grep BEAC)
+    #r1=4
+    #while read -a v;do bm1;done <<< $(head -n$((r1-r0)) $p2|grep BEAC)
   fi
   bm2
   bo
@@ -582,7 +583,8 @@ function errors {
 [ "$1" = "glf" ] && { gk;echo -e "GETH $m" >> $p5; }
 [ "$1" = "olf" ] && { ok;echo -e "OETH $m" >> $p6; }
 [ "$1" = "bl"  ] && { bk;echo -e "BEAC $m"; }
-[ "$1" = "bm"  ] && { bm;echo -e "BEAC $m"; }
+[ "$1" = "bm"  ] && { bm;    echo -e "BEAC $m"; }
+[ "$1" = "bn"  ] && { bm;bm4;echo -e "BEAC $n"; }
 [ "$1" = "blf" ] && { bk;echo -e "BEAC $m" >> $p2; }
 [ "$1" = "bmf" ] && { bm;echo -e "BEAC $m" >> $p3; }
 [ "$1" = "gh"  ] && { tail -n ${2:-$hors} $p5;gk;echo -e "GETH $m\n";gst;ts;cpu;cpd;errors; }
