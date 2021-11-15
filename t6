@@ -593,7 +593,7 @@ function errors {
 [ "$1" = "gkr" ] && { g7;[ "$g7" != "OK" ] && grs ${2:-0}; }
 [ "$1" = "okr" ] && { o7;[ "$o7" != "OK" ] && ors ${2:-0}; }
 [ "$1" = "bkr" ] && { b7;[ "$b7" != "OK" ] && brs ${2:-0}; }
-[ "$1" = "bnc" ] && { bm;bm4;echo -e "BEAC $n" >> $p7;[ $v8 -ne 0 ] && brs $v8; }
+[ "$1" = "bnc" ] && { bm;bm4;echo -e "BEAC $n" >> $p7;[ $v8 -ne 0 ] && brs $v8 bnreset; }
 [ "$1" = "grs" ] && { grs ${2:-0}; }
 [ "$1" = "ors" ] && { ors ${2:-0}; }
 [ "$1" = "srs" ] && { brs ${2:-0} reboot; }
