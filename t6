@@ -2,6 +2,56 @@
 
 source /home/eth/eth2/t1
 
+# utilities for commands/journal
+function uu { echo -e "${i}$1${f}";echo $H|sudo -S $1 2>/dev/null; }
+function us { echo $H|sudo -S $1 2>/dev/null; }
+function ut { echo -e "${i}$1${f}";echo $H|sudo -S $1 2>/dev/null|tail -n $2; }
+function jb { uu "journalctl --no-hostname --no-full -f $1"; }
+function dr { echo $H|sudo -S systemctl daemon-reload 2>/dev/null; }
+function dnssh { echo -e "\nresolvectl query $1";resolvectl query "$1"; }
+function netrs { echo -e "${i}RESET NETPLAN & DNS${f}";echo $H|sudo -S netplan apply 2>/dev/null;sp;sudo systemctl stop systemd-resolved;sa;sudo systemctl start systemd-resolved; }
+function dnsrs { echo -e "${i}RESET DNS${f}"                                                    ;sp;sudo systemctl stop systemd-resolved;sa;sudo systemctl start systemd-resolved; }
+function netsh {
+  echo -e "ROUTES\t\t" $(ip route show|grep 'default via'|grep -v 'linkdown'|cut -d' ' -f3)
+  m=$(ip a|grep 'state UP'|cut -d: -f2)
+  echo -e "DNS\t\t" $(resolvectl|grep 'Current DNS'|cut -d' ' -f6)
+  for n in $m;do echo -e "$n\t\t" $(resolvectl dns|grep $n|cut -d' ' -f4-6);done
+}
+function clksh {
+  if [ $(timedatectl|grep synchronized:|sed 's%.*synchronized: \([a-z]*\)%\1%') = yes ];then c1=OK;else c1=NO;fi
+  m='CLCK'
+  m="$m $c1 $(printf '%3i' $(echo $H|sudo -S grep -i 'check system clock' $p4 2>/dev/null|wc -l))"
+  m="$m $(date --rfc-3339=seconds)"
+  m="$m status: $(systemctl status systemd-timesyncd|grep Active:|sed 's%.*Active: \(.*\)%\1%')"
+  echo -e "$m"
+}
+function errsh {
+  e1=$(echo $H|sudo -S grep -v 'openethereum\|geth\[\|lighthouse' $p4 2>/dev/null|grep -i 'error' |wc -l)
+  e2=$(echo $H|sudo -S grep -v 'openethereum\|geth\[\|lighthouse' $p4 2>/dev/null|grep -i 'error' |tail -n1|sed 's%.*hrv-zotac[0-9] *\(.*\)%\1%;s%:%%g;s%  *% %g'|cut -c1-53)
+  e3=$(echo $H|sudo -S grep -i 'openethereum\|geth\[\|lighthouse' $p4 2>/dev/null|grep -v ' INFO '|wc -l)
+  e4=$(echo $H|sudo -S grep -i 'openethereum\|geth\[\|lighthouse' $p4 2>/dev/null|grep -v ' INFO '|tail -n1|sed 's%.*[0-9]*:[0-9]*:[0-9]*\.[0-9][0-9][0-9]]* *\(.*\)%\1%;s%:%%g;s%:%%g;s%  *% %g'|cut -c1-53)
+  m="ERRO"
+  m="$m $(printf '%2i' $e1)"
+  m="$m $(printf '%3i' $e3)"
+  m="$m $(date --rfc-3339=seconds)"
+  [ $e1 -gt 0 ] && m="$m sys: $e2"
+  [ $e3 -gt 0 ] && m="$m eth2: $e4"
+  echo -e "$m"
+}
+function cpush {
+  h5=$(echo $H|sudo -S grep 'e above threshold' $p4 2>/dev/null|head -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%');if [ "$h5" ];then h5="throttled: $h5";else h5='';fi
+  h6=$(echo $H|sudo -S grep 'ture/speed normal' $p4 2>/dev/null|tail -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%');if [ "$h6" ];then h6="ok: $h6"       ;else h6='';fi
+  h7=0
+  h8=0
+  if [ "$(which sensors)" ]; then
+    for v in $(sensors|grep 'Package\|Core'|sed 's%.*: *\([-+][0-9][0-9]*\.[0-9]*\).*%\1%')
+    do h7=$((h7+1));h8=$(echo "scale=1;$h8$v"|bc)
+    done
+  else
+    h7=1
+  fi
+  echo -e "TEMP $(printf '%5.1f' $(echo "scale=1;$h8/$h7"|bc))C $(date --rfc-3339=seconds) $h5 $h6"
+}
 # Plex Media Server
 function rxw { uu "ufw$2 allow from 192.168.8.0/24 $1"; }
 function xop { uu 'ufw delete deny 32400             ';rxw 'to any port 32400 comment plex'; }
@@ -24,7 +74,7 @@ function se { sop;uu 'ufw reload';uu "systemctl enable $dnsd"; }
 function sa { [ "$(systemctl status $dnsd 2>/dev/null|grep -i disabled)" ] || { [ "$(systemctl status $dnsd 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $dnsd"; } } }
 function sp { [ "$(systemctl status $dnsd 2>/dev/null|grep -i loaded)" ] && { uu "systemctl stop $dnsd"; } }
 function sd { uu "systemctl disable $dnsd";scl;uu 'ufw reload'; }
-
+# open/close goethereum/openethereum/beacon/validator/grafana
 function gfw { if [ "$cust" = "hrv" ];then uu "ufw$2 allow from $zip2 $1";uu "ufw$2 allow from $zip3 $1";else uu "ufw$2 allow from $vip1 $1";uu "ufw$2 allow from $vip3 $1";fi; }
 function gop { uu 'ufw allow 30303 comment eth1';uu 'ufw delete deny 8545              ';gfw 'to any port 8545 comment geapi'; }
 function gcl { uu 'ufw deny  30303 comment eth1';uu 'ufw        deny 8545 comment geapi';gfw 'to any port 8545'     ' delete'; }
@@ -39,13 +89,7 @@ function vop { uu 'ufw delete deny 5064              ';`# vfw 'to any port 5064 
 function vcl { uu 'ufw        deny 5064 comment vcmet';`# vfw 'to any port 5064'     ' delete'` ; }
 function fop { uu 'ufw allow 3000/tcp comment grafana'; }
 function fcl { uu 'ufw deny  3000/tcp                '; }
-
-function uu { echo -e "${i}$1${f}";echo $H|sudo -S $1 2>/dev/null; }
-function us { echo $H|sudo -S $1 2>/dev/null; }
-function ut { echo -e "${i}$1${f}";echo $H|sudo -S $1 2>/dev/null|tail -n $2; }
-function jb { uu "journalctl --no-hostname --no-full -f $1"; }
-function dr { echo $H|sudo -S systemctl daemon-reload 2>/dev/null; }
-
+# enable/arranca goethereum/openethereum/beacon/validator/prometheus/grafana 
 function ge { gop;uu 'ufw reload';uu "systemctl enable $ethg"; }
 function oe { oop;uu 'ufw reload';uu "systemctl enable $etho"; }
 function be { bop;uu 'ufw reload';uu "systemctl enable $ethb"; }
@@ -73,6 +117,7 @@ function va {
 function pa { [ "$(systemctl status $ethp 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $ethp"; } }
 function na { [ "$(systemctl status $ethn 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $ethn"; } }
 function fa { [ "$(systemctl status $ethf 2>/dev/null|grep -i 'inactive\|failed')" ] && { uu "systemctl start $ethf"; } }
+# para/disable goethereum/openethereum/beacon/validator/prometheus/grafana 
 function gp { [ "$(systemctl status $ethg 2>/dev/null|grep -i loaded)" ] && { uu "systemctl stop $ethg"; } }
 function op { [ "$(systemctl status $etho 2>/dev/null|grep -i loaded)" ] && { uu "systemctl stop $etho"; } }
 function bp { [ "$(systemctl status $ethb 2>/dev/null|grep -i loaded)" ] && { uu "systemctl stop $ethb"; } }
@@ -87,6 +132,7 @@ function vd { uu "systemctl disable $ethv";vcl;uu 'ufw reload';touch $dtdi/vc_lo
 function pd { [ "$(systemctl status $ethp 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethp"; } }
 function nd { [ "$(systemctl status $ethn 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethn"; } }
 function fd { [ "$(systemctl status $ethf 2>/dev/null|grep -i loaded)" ] && { uu "systemctl disable $ethf";fcl;uu 'ufw reload'; } }
+# service variavel set for goethereum/openethereum/beacon
 function g0 { g0=0;[ -d /var/lib/goethereum ] && g0=$(echo $H|sudo -S du -s /var/lib/goethereum 2>/dev/null|cut -f1); }
 function g1 { g1=0;[ "$(systemctl status $ethg 2>/dev/null|grep -i running)" ] && { if [ "$cunm" = "$znm1" ];then g="http://$zip1:8545";else g="http://$vip1:8545";fi;g1=$(geth attach $g --exec eth.syncing); }; }
 function g2 { g2=0;[ "$(systemctl status $ethg 2>/dev/null|grep -i running)" ] && { if [ "$cunm" = "$znm1" ];then g="http://$zip1:8545";else g="http://$vip1:8545";fi;g2=$(geth attach $g --exec net.peerCount); }; }
@@ -165,30 +211,6 @@ function gs {
   else
     m="NOT HERE ($cunm)"
   fi
-}
-function rq { echo -e "\nresolvectl query ${1:-pt.archive.ubuntu.com}";resolvectl query "${1:-pt.archive.ubuntu.com}"; }
-function rs { echo -e "${i}RESET NETPLAN & SYSTEMD-RESOLVED${f}";echo $H|sudo -S netplan apply 2>/dev/null;sp;sudo systemctl stop systemd-resolved;sa;sudo systemctl start systemd-resolved; }
-function cr {
-  if [ "$cunm" = "$znm1" ] || [ "$cunm" = "$znm2" ] || [ "$cunm" = "$znm3" ]; then
-    if [ "$(ip route show|grep 'default via'|cut -d' ' -f3)" = "192.168.8.1" ];then m=3; else m=1;fi
-    echo -e "${i}CHANGE ROUTE 192.168.8.${m}"
-    sed -e "s%via:.*%via: 192.168.8.$m%" /etc/netplan/00-installer-config.yaml > ~/00-installer-config.save
-    echo $H|sudo -S mv ~/00-installer-config.save /etc/netplan/00-installer-config.yaml 2>/dev/null
-    sudo chown root:root /etc/netplan/00-installer-config.yaml 
-    sudo chmod 644 /etc/netplan/00-installer-config.yaml 
-    echo $H|sudo -S netplan apply 2>/dev/null
-    sp
-    sudo systemctl stop systemd-resolved
-    sa
-    sudo systemctl start systemd-resolved
-  fi
-}
-function ds { echo -e "${i}RESET DNS & SYSTEMD-RESOLVED${f}";sp;sudo systemctl stop systemd-resolved;sa;sudo systemctl start systemd-resolved; }
-function sr { echo -e "ROUTES\t\t" $(ip route show|grep 'default via'|grep -v 'linkdown'|cut -d' ' -f3); }
-function sf {
-  m=$(ip a|grep 'state UP'|cut -d: -f2)
-  echo -e "DNS\t\t" $(resolvectl|grep 'Current DNS'|cut -d' ' -f6)
-  for n in $m;do echo -e "$n\t\t" $(resolvectl dns|grep $n|cut -d' ' -f4-6);done
 }
 function gk {
   g1;g2;g7
@@ -416,22 +438,6 @@ function bm {
   if [[ ($h3 -gt $v3 || $(printf '%.0f' $(echo "$v5*100"|bc)) -ge $(printf '%.0f' $(echo "$a00*100"|bc))) && $v8 -ne 0 ]];then v6=" PEERS_$v8";else v6='';v8=0;fi
   bm3
 }
-function cpu {
-  h5=$(echo $H|sudo -S grep 'e above threshold' $p4 2>/dev/null|head -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%');if [ "$h5" ];then h5="throttled: $h5";else h5='';fi
-  h6=$(echo $H|sudo -S grep 'ture/speed normal' $p4 2>/dev/null|tail -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%');if [ "$h6" ];then h6="ok: $h6"       ;else h6='';fi
-  h7=0
-  h8=0
-  if [ "$(which sensors)" ]; then
-    for v in $(sensors|grep 'Package\|Core'|sed 's%.*: *\([-+][0-9][0-9]*\.[0-9]*\).*%\1%')
-    do h7=$((h7+1));h8=$(echo "scale=1;$h8$v"|bc)
-    done
-  else
-    h7=1
-  fi
-}
-function cpd {
-  echo -e "TEMP $(printf '%5.1f' $(echo "scale=1;$h8/$h7"|bc))C $(date --rfc-3339=seconds) $h5 $h6"
-}
 function gst {
   echo "GETH $(printf '%6s' $(systemctl status $ethg|grep Memory:|sed 's%.*Memory: \(.*\)%\1%')) $(date --rfc-3339=seconds) status: $(systemctl status $ethg|grep Active:|sed 's%.*Active: \(.*\)%\1%')"
 }
@@ -477,9 +483,9 @@ function bh {
   echo -e "BEAC BL";bk;echo -e "BEAC $m"
   [ "$1" ] || { bm;echo -e "BEAC BM\nBEAC $m\n"; }
   [ "$1" ] || { bst;vst; }
-  [ "$1" ] || { ts; }
-  [ "$1" ] || { cpu;cpd; }
-  [ "$1" ] || { errors; }
+  [ "$1" ] || { clksh; }
+  [ "$1" ] || { cpush; }
+  [ "$1" ] || { errsh; }
 }
 function brs {
   if [ ! -f /home/eth/beacon.restart.inicio ]; then
@@ -543,38 +549,13 @@ function ssp {
     fi
   fi
 }
-function ts {
-  if [ $(timedatectl|grep synchronized:|sed 's%.*synchronized: \([a-z]*\)%\1%') = yes ];then c1=OK;else c1=NO;fi
-  m='CLCK'
-  m="$m $c1 $(printf '%3i' $(echo $H|sudo -S grep -i 'check system clock' $p4 2>/dev/null|wc -l))"
-  m="$m $(date --rfc-3339=seconds)"
-  m="$m status: $(systemctl status systemd-timesyncd|grep Active:|sed 's%.*Active: \(.*\)%\1%')"
-  echo -e "$m"
-}
-function errors {
-  e1=$(echo $H|sudo -S grep -v 'openethereum\|geth\[\|lighthouse' $p4 2>/dev/null|grep -i 'error' |wc -l)
-  e2=$(echo $H|sudo -S grep -v 'openethereum\|geth\[\|lighthouse' $p4 2>/dev/null|grep -i 'error' |tail -n1|sed 's%.*hrv-zotac[0-9] *\(.*\)%\1%;s%:%%g;s%  *% %g'|cut -c1-53)
-  e3=$(echo $H|sudo -S grep -i 'openethereum\|geth\[\|lighthouse' $p4 2>/dev/null|grep -v ' INFO '|wc -l)
-  e4=$(echo $H|sudo -S grep -i 'openethereum\|geth\[\|lighthouse' $p4 2>/dev/null|grep -v ' INFO '|tail -n1|sed 's%.*[0-9]*:[0-9]*:[0-9]*\.[0-9][0-9][0-9]]* *\(.*\)%\1%;s%:%%g;s%:%%g;s%  *% %g'|cut -c1-53)
-  m="ERRO"
-  m="$m $(printf '%2i' $e1)"
-  m="$m $(printf '%3i' $e3)"
-  m="$m $(date --rfc-3339=seconds)"
-  [ $e1 -gt 0 ] && m="$m sys: $e2"
-  [ $e3 -gt 0 ] && m="$m eth2: $e4"
-  echo -e "$m"
-}
 
-[ "$1" = "ts"  ] && { ts; }
-[ "$1" = "es"  ] && { errors; }
-[ "$1" = "cpu" ] && { cpu;cpd; }
-[ "$1" = "trs" ] && { [ "$(systemctl status systemd-timesyncd 2>/dev/null|grep -i masked)" ] || { uu "systemctl restart systemd-timesyncd"; };ts; }
+[ "$1" = "nsh" ] && { netsh; }
+[ "$1" = "dsh" ] && { dnssh ${2:-pt.archive.ubuntu.com}; }
+[ "$1" = "nrs" ] && { netrs; }
+[ "$1" = "drs" ] && { dnsrs; }
+[ "$1" = "trs" ] && { [ "$(systemctl status systemd-timesyncd 2>/dev/null|grep -i masked)" ] || { uu "systemctl restart systemd-timesyncd"; };clksh; }
 [ "$1" = "vcp" ] && { ssp; }
-[ "$1" = "rs"  ] && { rs; }
-[ "$1" = "ds"  ] && { ds; }
-[ "$1" = "rq"  ] && { rq $2; }
-[ "$1" = "cr"  ] && { cr; }
-[ "$1" = "sr"  ] && { sr;sf; }
 [ "$1" = "gs"  ] && { gs;echo -e "GETH $m"; }
 [ "$1" = "gl"  ] && { gk;echo -e "GETH $m"; }
 [ "$1" = "ol"  ] && { ok;echo -e "OETH $m"; }
@@ -585,8 +566,8 @@ function errors {
 [ "$1" = "bn"  ] && { bm;bm4;echo -e "BEAC $n"; }
 [ "$1" = "blf" ] && { bk;echo -e "BEAC $m" >> $p2; }
 [ "$1" = "bmf" ] && { bm;echo -e "BEAC $m" >> $p3; }
-[ "$1" = "gh"  ] && { tail -n ${2:-$hors} $p5;gk;echo -e "GETH $m\n";gst;ts;cpu;cpd;errors; }
-[ "$1" = "oh"  ] && { tail -n ${2:-$hors} $p6;ok;echo -e "OETH $m\n";ost;ts;cpu;cpd;errors; }
+[ "$1" = "gh"  ] && { tail -n ${2:-$hors} $p5;gk;echo -e "GETH $m\n";gst;clksh;cpush;errsh; }
+[ "$1" = "oh"  ] && { tail -n ${2:-$hors} $p6;ok;echo -e "OETH $m\n";ost;clksh;cpush;errsh; }
 [ "$1" = "bh"  ] && { [ -f $p2 ] && { bh $2; } }
 [ "$1" = "bhr" ] && { [ -f $p2 ] && { bhr; } }
 [ "$1" = "bo"  ] && { bo $2 $3;boo $2; }
@@ -606,7 +587,6 @@ function errors {
 # outros journal system/lighthouse
 [ "$1" = "el" ] && { echo $H|sudo -S grep -i 'openethereum\|geth\[\|lighthouse' $p4 2>/dev/null|if [ "$2" ];then grep -i "[a-z]* [0-9]* $2";else grep -v ' INFO ';fi; }
 [ "$1" = "sl" ] && { echo $H|sudo -S grep -v 'openethereum\|geth\[\|lighthouse' $p4 2>/dev/null|if [ "$2" ];then grep -i "[a-z]* [0-9]* $2";else grep -i 'error' ;fi; }
-[ "$1" = "np" ] && { g2;b2;echo -e "PEERS: GETH ${g2:-0}, BEACON ${b2:-0}"; }
 [ "$1" = "ws" ] && { uu "ufw status numbered"; }
 [ "$1" = "wa" ] && if [ "$(echo $H|sudo -S ufw status 2>/dev/null|grep -i inactive)" ];then echo -e "${i}ARRANCA FIREWALL${f}";sudo ufw enable; else echo -e "${i}FIREWALL JA ACTIVE${f}";fi
 [ "$1" = "wpr" ] && { uu "ufw disable"; }
@@ -739,20 +719,16 @@ if [ -z "$1" ]; then
   c1="$c1\nel [s]\t\tlista geth,lighthouse s=TOTAL"
   c1="$c1\nll\t\tlista servicos"
   c1="$c1\nlp\t\tlista portas"
-  c1="$c1\nnp\t\tnode peers"
   c1="$c1\ngs\t\tgeth syncing"
-  c1="$c1\nts\t\ttime report"
-  c1="$c1\ncpu\t\tcpu report"
   c1="$c1\nbh\t\tbeacon historic report"
   c1="$c1\nbhr\t\tbeacon historic recalculate"
-  c1="$c1\ntrs\t\ttime sync restart"
   c1="$c1\nws\t\tfirewall status"
   c1="$c1\nwa\t\tfirewall arranca"
   c1="$c1\nwpr\t\tfirewall para"
-  c1="$c1\ncr\t\tchange route"
-  c1="$c1\nsr\t\tshow route & DNS"
-  c1="$c1\nrs\t\treset netplan\t& dns\t& systemd-resolved"
-  c1="$c1\nds\t\treset dns\t& systemd-resolved"
-  c1="$c1\nrq\t\tdns query"
+  c1="$c1\nnsh\t\tnetwork show route & DNS"
+  c1="$c1\ndsh\t\tdns show"
+  c1="$c1\nnrs\t\treset netplan\t& dns"
+  c1="$c1\ndrs\t\treset dns"
+  c1="$c1\ntrs\t\ttime sync restart"
   echo -e "\n$c1\n"
 fi
