@@ -261,9 +261,9 @@ function bk {
   dt=$(date --rfc-3339=seconds)
   bho
 }
-function bh1 { x4=$((10*(15*z+9*c+h+k)));if [ $a -gt 100 ];then x1=$((x4/a));else x1=0;fi; }
+function bh1 { x4=$((10*(15*z+9*c+h+k)));if [ $a -gt 200 ];then x1=$((x4/a));else x1=0;fi; }
 function bh2 { x5=$((10*w))             ;if [ $q -gt 100 ];then x2=$((x5/q));else x2=0;fi; }
-function bh3 { x6=$((90*r))             ;if [ $t -gt 200 ];then x3=$((x6/t));else x3=0;fi; }
+function bh3 { x6=$((90*r))             ;if [ $t -gt 100 ];then x3=$((x6/t));else x3=0;fi; }
 function bho {
   #    0  1   2          3              4      5  6               7   8    9                 10   11  12 13     14 15 16  17 18     19  20  21   22   23   24        25   26
   # BEAC OK   0 2021-11-12 22:44:02+00:00 nodes: 21 reward_penalty: 294 5.10 attestation_block: 3879 3240 0 erros:  9 29 140 20      1 735  10   18 4782 1620    delay:  965
