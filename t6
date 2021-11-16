@@ -16,7 +16,7 @@ function nsh {
   for n in $m;do echo -e "$n\t\t" $(resolvectl dns|grep $n|cut -d' ' -f4-6);done
 }
 function csh {
-  if [[ $(timedatectl|grep synchronized:|sed 's%.*synchronized: \([a-z]*\)%\1%') = yes ]];then c1=OK;else c1=NO;fi
+  if [[ $(timedatectl|grep synchronized:|sed 's%.*synchronized: \([a-z]*\).*%\1%') = yes ]];then c1=OK;else c1=NO;fi
   m='CLCK'
   m="$m $c1 $(printf '%3i' $(echo $H|sudo -S grep -i 'check system clock' $p4 2>/dev/null|wc -l))"
   m="$m $(date --rfc-3339=seconds)"
@@ -566,6 +566,7 @@ function ssp {
 [[ $1 = bmf ]] && { bm;echo -e "BEAC $m" >> $p3; }
 [[ $1 = gh  ]] && { tail -n ${2:-$hors} $p5;gk;echo -e "GETH $m\n";gst;csh;psh;esh; }
 [[ $1 = oh  ]] && { tail -n ${2:-$hors} $p6;ok;echo -e "OETH $m\n";ost;csh;psh;esh; }
+[[ $1 = cpe ]] && { csh;psh;esh; }
 [[ $1 = bh  ]] && { [[ -f $p2 ]] && { bh $2; } }
 [[ $1 = bhr ]] && { [[ -f $p2 ]] && { bhr; } }
 [[ $1 = bo  ]] && { bo $2 $3;boo $2; }
@@ -575,8 +576,8 @@ function ssp {
 [[ $1 = bnc ]] && { bm;bm4;echo -e "BEAC $n" >> $p7;[ $v8 -ne 0 ]] && brs $v8 bnreset; }
 [[ $1 = grs ]] && { grs ${2:-0}; }
 [[ $1 = ors ]] && { ors ${2:-0}; }
-[[ $1 = srs ]] && { brs ${2:-0} reboot; }
 [[ $1 = brs ]] && { brs ${2:-0} bnreset; }
+[[ $1 = srs ]] && { brs ${2:-0} reboot; }
 [[ $1 = lrs ]] && { brs ${2:-0} vcreset; }
 # lista servicos & portas
 [[ $1 = ll  ]] && { cex "systemctl list-units $pate $patp $patf"; }
@@ -703,13 +704,13 @@ if [[ ! $1 ]]; then
   c1="$c1\ngrs [n]\t\t$ethg restart n=nodes to change"
   c1="$c1\nors [n]\t\t$etho restart n=nodes to change"
   c1="$c1\nbrs [n]\t\t$ethb restart n=nodes to change"
+  c1="$c1\nsrs [n]\t\tsystem restart n=nodes to change"
+  c1="$c1\nlrs [n]\t\tlighthouse restart n=nodes to change"
   if [[ $cunm = $znm3 ]]; then
     c1="$c1\nvcp\t\t$ethv copy to $vnm3 server"
   else
     c1="$c1\nvcp\t\t$ethv copy to $znm3 server"
   fi
-  c1="$c1\nsrs\t\tsystem restart"
-  c1="$c1\nlrs\t\tlighthouse restart"
   c1="$c1\nyj\t\tsystem journal"
   c1="$c1\nsl [s]\t\tlista system journal  s=TOTAL"
   c1="$c1\nel [s]\t\tlista geth,lighthouse s=TOTAL"
@@ -718,6 +719,7 @@ if [[ ! $1 ]]; then
   c1="$c1\ngs\t\tgeth syncing"
   c1="$c1\nbh\t\tbeacon historic report"
   c1="$c1\nbhr\t\tbeacon historic recalculate"
+  c1="$c1\ncpe\t\tclock & cpu & errors report"
   c1="$c1\nws\t\tfirewall status"
   c1="$c1\nwa\t\tfirewall arranca"
   c1="$c1\nwpr\t\tfirewall para"
