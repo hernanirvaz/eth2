@@ -131,7 +131,6 @@ function pd { [[ $(systemctl status $ethp 2>/dev/null|grep -i loaded) ]] && { ce
 function nd { [[ $(systemctl status $ethn 2>/dev/null|grep -i loaded) ]] && { cex "systemctl disable $ethn"; } }
 function fd { [[ $(systemctl status $ethf 2>/dev/null|grep -i loaded) ]] && { cex "systemctl disable $ethf";fcl;cex 'ufw reload'; } }
 # service variavel set for goethereum/openethereum/beacon
-function g0 { g0=0;[[ -d /var/lib/goethereum ]] && g0=$(echo $H|sudo -S du -s /var/lib/goethereum 2>/dev/null|cut -f1); }
 function g1 { g1=0;[[ $(systemctl status $ethg 2>/dev/null|grep -i running) ]] && { if [[ $cunm = $znm1 ]];then g="http://$zip1:8545";else g="http://$vip1:8545";fi;g1=$(geth attach $g --exec eth.syncing); }; }
 function g2 { g2=0;[[ $(systemctl status $ethg 2>/dev/null|grep -i running) ]] && { if [[ $cunm = $znm1 ]];then g="http://$zip1:8545";else g="http://$vip1:8545";fi;g2=$(geth attach $g --exec net.peerCount); }; }
 function g7 {
@@ -165,7 +164,6 @@ function o7 {
   fi
   [[ $n -eq $t ]] && o7='BK'
 }
-function b2 { b2=0;[[ -d /var/lib/lighthouse ]] && b2=$(echo $H|sudo -S grep -i 'lighthouse.*peers:' $p4 2>/dev/null|tail -n1|sed 's%.*peers: *\([0-9]*\).*%\1%'); }
 function b7 {
   n=$(echo "$H"|sudo -S grep "lighthouse.$bpid" $p4 2>/dev/null|tail -n3600)
   w=$(echo "$n"|grep -i 'processed block'|wc -l)
@@ -190,7 +188,7 @@ function b7 {
 }
 function gs {
   if [[ -d /var/lib/goethereum && ( $cunm = $vnm1 || $cunm = $znm1 ) ]]; then
-    g0;g1;g2
+    g1;g2
     if [[ $(echo $g1|grep -i false) ]]; then
       m="SYNCED - PEERCOUNT $g2"
     else
@@ -255,7 +253,8 @@ function bk {
   done
   j=0
   [[ $y -gt 0 ]] && j=$(($t/$y))
-  b2;b7
+  b2=$(echo $H|sudo -S grep -i 'lighthouse.*peers:' $p4 2>/dev/null|tail -n1|sed 's%.*peers: *\([0-9]*\).*%\1%')
+  b7
   dt=$(date --rfc-3339=seconds)
   bho
 }
@@ -557,19 +556,19 @@ function ssp {
 [[ $1 = gs  ]] && { gs;echo -e "GETH $m"; }
 [[ $1 = gl  ]] && { gk;echo -e "GETH $m"; }
 [[ $1 = ol  ]] && { ok;echo -e "OETH $m"; }
-[[ $1 = glf ]] && { gk;echo -e "GETH $m" >> $p5; }
-[[ $1 = olf ]] && { ok;echo -e "OETH $m" >> $p6; }
 [[ $1 = bl  ]] && { bk;echo -e "BEAC $m"; }
 [[ $1 = bm  ]] && { bm;    echo -e "BEAC $m"; }
 [[ $1 = bn  ]] && { bm;bm4;echo -e "BEAC $n"; }
+[[ $1 = glf ]] && { gk;echo -e "GETH $m" >> $p5; }
+[[ $1 = olf ]] && { ok;echo -e "OETH $m" >> $p6; }
 [[ $1 = blf ]] && { bk;echo -e "BEAC $m" >> $p2; }
 [[ $1 = bmf ]] && { bm;echo -e "BEAC $m" >> $p3; }
 [[ $1 = gh  ]] && { tail -n ${2:-$hors} $p5;gk;echo -e "GETH $m\n";gst;csh;psh;esh; }
 [[ $1 = oh  ]] && { tail -n ${2:-$hors} $p6;ok;echo -e "OETH $m\n";ost;csh;psh;esh; }
-[[ $1 = cpe ]] && { csh;psh;esh; }
 [[ $1 = bh  ]] && { [[ -f $p2 ]] && { bh $2; } }
-[[ $1 = bhr ]] && { [[ -f $p2 ]] && { bhr; } }
 [[ $1 = bo  ]] && { bo $2 $3;boo $2; }
+[[ $1 = bhr ]] && { [[ -f $p2 ]] && { bhr; } }
+[[ $1 = cpe ]] && { csh;psh;esh; }
 [[ $1 = gkr ]] && { g7;[[ $g7 != OK ]] && grs ${2:-0}; }
 [[ $1 = okr ]] && { o7;[[ $o7 != OK ]] && ors ${2:-0}; }
 [[ $1 = bkr ]] && { b7;[[ $b7 != OK ]] && brs ${2:-0}; }
@@ -590,16 +589,11 @@ function ssp {
 [[ $1 = wpr ]] && { cex "ufw disable"; }
 # journal
 [[ $1 = yj ]] && { jsh; }
-[[ $1 = ej ]] && { jsh "-u $pate"; }
+[[ $1 = ej ]] && { jsh "-u $ethb -u $ethv"; }
 [[ $1 = gj ]] && { jsh "-u $ethg"; }
 [[ $1 = oj ]] && { jsh "-u $etho"; }
 [[ $1 = bj ]] && { jsh "-u $ethb"; }
 [[ $1 = vj ]] && { jsh "-u $ethv"; }
-[[ $1 = pj ]] && { jsh "-u $ethp"; }
-[[ $1 = nj ]] && { jsh "-u $ethn"; }
-[[ $1 = fj ]] && { jsh "-u $ethf"; }
-[[ $1 = xj ]] && { jsh "-u $plex"; }
-[[ $1 = rj ]] && { jsh "-u $trrt"; }
 [[ $1 = sj ]] && { jsh "-u $dnsd"; }
 # arranca
 [[ $1 = ga ]] && { dmr;ga; }
