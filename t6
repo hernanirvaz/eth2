@@ -9,6 +9,7 @@ function dmr { echo $H|sudo -S systemctl daemon-reload 2>/dev/null; }
 function dsh { echo -e "\nresolvectl query $1";resolvectl query "$1"; }
 function drs { echo -e "${i}RESET DNS${f}"                                                    ;sp;sudo systemctl stop systemd-resolved;sa;sudo systemctl start systemd-resolved; }
 function nrs { echo -e "${i}RESET NETPLAN & DNS${f}";echo $H|sudo -S netplan apply 2>/dev/null;sp;sudo systemctl stop systemd-resolved;sa;sudo systemctl start systemd-resolved; }
+function sst { echo "$1 $(printf '%6s' $(echo "$2"|grep Memory:|sed 's%.*Memory: \(.*\)%\1%')) $dt status: $(echo "$2"|grep Active:|sed 's%.*Active: \(.*\)%\1%')"; }
 function nsh {
   echo -e "ROUTES\t\t" $(ip route show|grep 'default via'|grep -v 'linkdown'|cut -d' ' -f3)
   m=$(ip a|grep 'state UP'|cut -d: -f2)
@@ -16,7 +17,7 @@ function nsh {
   for n in $m;do echo -e "$n\t\t" $(resolvectl dns|grep $n|cut -d' ' -f4-6);done
 }
 function csh {
-  if [[ $(timedatectl|grep synchronized:|sed 's%.*synchronized: \([a-z]*\).*%\1%') = yes ]];then c1=OK;else c1=NO;fi
+  if [[ $(timedatectl|grep synchronized:|sed 's%.*synchronized: \([a-z]*\).*%\1%') = yes ]];then c1='OK';else c1='NO';fi
   m='CLCK'
   m="$m $c1 $(printf '%3i' $(echo $H|sudo -S grep -i 'check system clock' $p4 2>/dev/null|wc -l))"
   m="$m $(date --rfc-3339=seconds)"
@@ -24,10 +25,10 @@ function csh {
   echo -e "$m"
 }
 function esh {
-  e1=$(echo $H|sudo -S grep -v 'openethereum\|geth\[\|lighthouse' $p4 2>/dev/null|grep -i 'error' |wc -l)
-  e2=$(echo $H|sudo -S grep -v 'openethereum\|geth\[\|lighthouse' $p4 2>/dev/null|grep -i 'error' |tail -n1|sed 's%.*hrv-zotac[0-9] *\(.*\)%\1%;s%:%%g;s%  *% %g'|cut -c1-53)
-  e3=$(echo $H|sudo -S grep -i 'openethereum\|geth\[\|lighthouse' $p4 2>/dev/null|grep -v ' INFO '|wc -l)
-  e4=$(echo $H|sudo -S grep -i 'openethereum\|geth\[\|lighthouse' $p4 2>/dev/null|grep -v ' INFO '|tail -n1|sed 's%.*[0-9]*:[0-9]*:[0-9]*\.[0-9][0-9][0-9]]* *\(.*\)%\1%;s%:%%g;s%:%%g;s%  *% %g'|cut -c1-53)
+  e1=$(echo $H|sudo -S grep -v 'geth\[\|lighthouse' $p4 2>/dev/null|grep -i 'error' |wc -l)
+  e2=$(echo $H|sudo -S grep -v 'geth\[\|lighthouse' $p4 2>/dev/null|grep -i 'error' |tail -n1|sed 's%.*hrv-zotac[0-9] *\(.*\)%\1%;s%:%%g;s%  *% %g'|cut -c1-53)
+  e3=$(echo $H|sudo -S grep -i 'geth\[\|lighthouse' $p4 2>/dev/null|grep -v ' INFO '|wc -l)
+  e4=$(echo $H|sudo -S grep -i 'geth\[\|lighthouse' $p4 2>/dev/null|grep -v ' INFO '|tail -n1|sed 's%.*[0-9]*:[0-9]*:[0-9]*\.[0-9][0-9][0-9]]* *\(.*\)%\1%;s%:%%g;s%:%%g;s%  *% %g'|cut -c1-53)
   m="ERRO"
   m="$m $(printf '%2i' $e1)"
   m="$m $(printf '%3i' $e3)"
@@ -72,7 +73,7 @@ function se { sop;cex 'ufw reload';cex "systemctl enable $dnsd"; }
 function sa { [[ $(systemctl status $dnsd 2>/dev/null|grep -i disabled) ]] || { [[ $(systemctl status $dnsd 2>/dev/null|grep -i 'inactive\|failed') ]] && cex "systemctl start $dnsd"; } }
 function sp { [[ $(systemctl status $dnsd 2>/dev/null|grep -i loaded) ]] && { cex "systemctl stop $dnsd"; } }
 function sd { cex "systemctl disable $dnsd";scl;cex 'ufw reload'; }
-# open/close goethereum/openethereum/beacon/validator/grafana
+# open/close goethereum/beacon/validator/grafana
 function gfw { if [[ $cust = hrv ]];then cex "ufw$2 allow from $zip2 $1";cex "ufw$2 allow from $zip3 $1";else cex "ufw$2 allow from $vip1 $1";cex "ufw$2 allow from $vip3 $1";fi; }
 function gop { cex 'ufw allow 30303 comment eth1';cex 'ufw delete deny 8545              ';gfw 'to any port 8545 comment geapi'; }
 function gcl { cex 'ufw deny  30303 comment eth1';cex 'ufw        deny 8545 comment geapi';gfw 'to any port 8545'     ' delete'; }
@@ -87,16 +88,14 @@ function vop { cex 'ufw delete deny 5064              ';`# vfw 'to any port 5064
 function vcl { cex 'ufw        deny 5064 comment vcmet';`# vfw 'to any port 5064'     ' delete'` ; }
 function fop { cex 'ufw allow 3000/tcp comment grafana'; }
 function fcl { cex 'ufw deny  3000/tcp                '; }
-# enable/arranca goethereum/openethereum/beacon/validator/prometheus/grafana 
+# enable/arranca goethereum/beacon/validator/prometheus/grafana 
 function ge { gop;cex 'ufw reload';cex "systemctl enable $ethg"; }
-function oe { oop;cex 'ufw reload';cex "systemctl enable $etho"; }
 function be { bop;cex 'ufw reload';cex "systemctl enable $ethb"; }
 function ve { [[ ! -f $dtdi/vc_lock ]] && { vop;cex 'ufw reload';cex "systemctl enable $ethv"; } }
 function pe { cex 'ufw reload';cex "systemctl enable $ethp"; }
 function ne { cex 'ufw reload';cex "systemctl enable $ethn"; }
 function fe { fop;cex 'ufw reload';cex "systemctl enable $ethf"; }
 function ga { [[ $(systemctl status $ethg 2>/dev/null|grep -i 'inactive\|failed') ]] && [[ -d /var/lib/goethereum   ]] && { cex "systemctl start $ethg"; } }
-function oa { [[ $(systemctl status $etho 2>/dev/null|grep -i 'inactive\|failed') ]] && [[ -d /var/lib/openethereum ]] && { cex "systemctl start $etho"; } }
 function ba { [[ $(systemctl status $ethb 2>/dev/null|grep -i 'inactive\|failed') ]] && { cex "systemctl start $ethb"; } }
 function va {
   if [[ $(systemctl status $ethv 2>/dev/null|grep -i 'inactive\|failed') ]]; then
@@ -115,110 +114,51 @@ function va {
 function pa { [[ $(systemctl status $ethp 2>/dev/null|grep -i 'inactive\|failed') ]] && { cex "systemctl start $ethp"; } }
 function na { [[ $(systemctl status $ethn 2>/dev/null|grep -i 'inactive\|failed') ]] && { cex "systemctl start $ethn"; } }
 function fa { [[ $(systemctl status $ethf 2>/dev/null|grep -i 'inactive\|failed') ]] && { cex "systemctl start $ethf"; } }
-# para/disable goethereum/openethereum/beacon/validator/prometheus/grafana 
+# para/disable goethereum/beacon/validator/prometheus/grafana 
 function gp { [[ $(systemctl status $ethg 2>/dev/null|grep -i loaded) ]] && { cex "systemctl stop $ethg"; } }
-function op { [[ $(systemctl status $etho 2>/dev/null|grep -i loaded) ]] && { cex "systemctl stop $etho"; } }
 function bp { [[ $(systemctl status $ethb 2>/dev/null|grep -i loaded) ]] && { cex "systemctl stop $ethb"; } }
 function vp { [[ $(systemctl status $ethv 2>/dev/null|grep -i loaded) ]] && { cex "systemctl stop $ethv";touch $dtdi/vc_slash; } }
 function pp { [[ $(systemctl status $ethp 2>/dev/null|grep -i loaded) ]] && { cex "systemctl stop $ethp"; } }
 function np { [[ $(systemctl status $ethn 2>/dev/null|grep -i loaded) ]] && { cex "systemctl stop $ethn"; } }
 function fp { [[ $(systemctl status $ethf 2>/dev/null|grep -i loaded) ]] && { cex "systemctl stop $ethf"; } }
 function gd { cex "systemctl disable $ethg";gcl;cex 'ufw reload'; }
-function od { cex "systemctl disable $etho";ocl;cex 'ufw reload'; }
 function bd { cex "systemctl disable $ethb";bcl;cex 'ufw reload'; }
 function vd { cex "systemctl disable $ethv";vcl;cex 'ufw reload';touch $dtdi/vc_lock; }
 function pd { [[ $(systemctl status $ethp 2>/dev/null|grep -i loaded) ]] && { cex "systemctl disable $ethp"; } }
 function nd { [[ $(systemctl status $ethn 2>/dev/null|grep -i loaded) ]] && { cex "systemctl disable $ethn"; } }
 function fd { [[ $(systemctl status $ethf 2>/dev/null|grep -i loaded) ]] && { cex "systemctl disable $ethf";fcl;cex 'ufw reload'; } }
-# service variavel set for goethereum/openethereum/beacon
-function g1 { g1=0;[[ $(systemctl status $ethg 2>/dev/null|grep -i running) ]] && { if [[ $cunm = $znm1 ]];then g="http://$zip1:8545";else g="http://$vip1:8545";fi;g1=$(geth attach $g --exec eth.syncing); }; }
-function g2 { g2=0;[[ $(systemctl status $ethg 2>/dev/null|grep -i running) ]] && { if [[ $cunm = $znm1 ]];then g="http://$zip1:8545";else g="http://$vip1:8545";fi;g2=$(geth attach $g --exec net.peerCount); }; }
+# geth control functions
+function g1 { local g="http://$zip1:8545";[[ $cunm = $vnm1 ]] && g="http://$vip1:8545";g1=$(geth attach $g --exec eth.syncing   2>/dev/null); }
+function g2 { local g="http://$zip1:8545";[[ $cunm = $vnm1 ]] && g="http://$vip1:8545";g2=$(geth attach $g --exec net.peerCount 2>/dev/null);[[ $g2 -eq $g2 ]] 2>/dev/null || g2=0; }
 function g7 {
-  t=-1;n=0;g7=OK
-  if [[ $(systemctl status $ethg 2>/dev/null|grep -i running) && -f $p5 ]]; then
-    n=$(echo $H|sudo -S grep -i 'imported new' $p4 2>/dev/null|wc -l)
-    t=$(grep -i blocks: $p5|tail -n1|sed 's%.*blocks: *\([0-9]*\).*%\1%')
-  fi
-  [[ $n -eq $t ]] && g7='BK'
-}
-function o1 {
-  o1='{"currentBlock":"0xbe7edd","highestBlock":"0xbe82b9","startingBlock":"0xbe7c7a","warpChunksAmount":null,"warpChunksProcessed":null}'
-  if [[ -d /var/lib/openethereum ]]; then
-    if [[ $cunm = $znm1 ]];then o5="POST $zip1:8545";else o5="POST $vip1:8545";fi
-    o1=$(curl --data '{"method":"eth_syncing","params":[],"id":1,"jsonrpc":"2.0"}' -H 'Content-Type: application/json' -sX $o5|sed 's%.*result":\(.*\),.*%\1%')
-  fi
-}
-function o2 {
-  o2=0
-  if [[ -d /var/lib/openethereum ]]; then
-    if [[ $cunm = $znm1 ]];then o5="POST $zip1:8545";else o5="POST $vip1:8545";fi
-    o6=$(curl --data '{"method":"net_peerCount","params":[],"id":1,"jsonrpc":"2.0"}' -H 'Content-Type: application/json' -sX $o5|sed 's%.*result":"0x\([a-z0-9]*\)".*%\1%')
-    o2=$(echo "obase=10; ibase=16; ${o6^^}"|bc)
-  fi
-}
-function o7 {
-  t=-1;n=0;o7=OK
-  if [[ $(systemctl status $etho 2>/dev/null|grep -i running) && -f $p6 ]]; then
-    n=$(echo $H|sudo -S grep -i 'Imported  *#' $p4 2>/dev/null|wc -l)
-    t=$(grep -i blocks: $p6|tail -n1|sed 's%.*blocks: *\([0-9]*\).*%\1%')
-  fi
-  [[ $n -eq $t ]] && o7='BK'
-}
-function b7 {
-  n=$(echo "$H"|sudo -S grep "lighthouse.$bpid" $p4 2>/dev/null|tail -n3600)
-  w=$(echo "$n"|grep -i 'processed block'|wc -l)
-  q=$(echo "$n"|grep -i 'block received' |wc -l)
-  r=$(echo "$n"|grep -v ' INFO '|wc -l)
-  t=$(echo "$n"|grep    ' INFO '|wc -l)
-  p=$(echo "$H"|sudo -S grep -i 'published block' $p4 2>/dev/null|wc -l)
-  z=0;for v in $(echo $H|sudo -S grep -i 'attestation(s) missing' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%,%%g');do y=($v);z=$((z+${#y[@]}));done
-  c=0;for v in $(echo $H|sudo -S grep -i 'attestation(s).*target' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%,%%g');do y=($v);c=$((c+${#y[@]}));done
-  h=0;for v in $(echo $H|sudo -S grep -i 'attestation(s).*head'   $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%,%%g');do y=($v);h=$((h+${#y[@]}));done
-  k=0;for v in $(echo $H|sudo -S grep -i 'attestation(s) had'     $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%,%%g');do y=($v);k=$((k+${#y[@]}));done
-  a=0;for v in $(echo $H|sudo -S grep -i 'attestation(s) success' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%,%%g');do y=($v);a=$((a+${#y[@]}));done
-  b7=OK
-  bhe
-  if [[ $((x1+x2+x3)) -ge $l1rs && -f $p2 ]]; then
-    if [[ $((x1+x2+x3)) -ge $l2rs ]]; then
-      [[ $(tail -n $l2rs $p2|cut -d' ' -f1|sort -u) = BEAC ]] && b7='BK'
-    else
-      [[ $(tail -n $hors $p2|cut -d' ' -f1|sort -u) = BEAC ]] && b7='BK'
-    fi
-  fi
+  g0=$(echo $H|sudo -S grep -i 'imported new' $p4 2>/dev/null|wc -l)
+  g7='OK'
+  local t=$(grep -i blocks: $p5 2>/dev/null|tail -n1|sed 's%.*blocks: *\([0-9]*\).*%\1%')
+  if [[ $((${g0:-0}*${t:-0})) -eq 0 ]];then g7='NOT';else if [[ ${g0:-0} -eq ${t:-0} ]];then g7='BK';fi;fi
 }
 function gs {
-  if [[ -d /var/lib/goethereum && ( $cunm = $vnm1 || $cunm = $znm1 ) ]]; then
+  dt=$(date --rfc-3339=seconds)
+  if [[ $(systemctl status $ethg 2>/dev/null|grep -i running) ]]; then
     g1;g2
     if [[ $(echo $g1|grep -i false) ]]; then
-      m="SYNCED - PEERCOUNT $g2"
+      m="SYNCED $dt nodes: $(printf '%2i' ${g2:-0})"
     else
-      g5=$(echo $H|sudo -S grep -i 'new block headers' $p4 2>/dev/null)
-      g6=$(echo $H|sudo -S grep -i 'new state entries' $p4 2>/dev/null)
-      h=$(echo  $g1 |sed -Ee 's%.*highestBlock: *([0-9]+).*%\1%i')
-      c=$(echo  $g1 |sed -Ee 's%.*currentBlock: *([0-9]+).*%\1%i')
-      k=$(echo  $g1 |sed -Ee 's%.*knownStates: *([0-9]+).*%\1%i')
-      p=$(echo  $g1 |sed -Ee 's%.*pulledStates: *([0-9]+).*%\1%i')
-      b=$(echo "$g5"|head -1|cut -d= -f4|cut -d' ' -f1)
-      d=$(echo "$g5"|tail -1|cut -d= -f4|cut -d' ' -f1)
-      y=$(echo "$g6"|head -1|cut -d= -f4|cut -d' ' -f1)
-      t=$(echo "$g6"|tail -1|cut -d= -f4|cut -d' ' -f1)
-      m="SYNCING - PEERCOUNT: $g2\nBlocks api: $h ($((h-c)))\tStates api: $k ($((k-p)))\nBlocks log: $d ($((d-b)))\tStates log: $t ($((t-y))))"
+      local h=$(echo  $g1|sed -Ee 's%.*highestBlock: *([0-9]+).*%\1%i')
+      local c=$(echo  $g1|sed -Ee 's%.*currentBlock: *([0-9]+).*%\1%i')
+      local k=$(echo  $g1|sed -Ee 's%.*knownStates: *([0-9]+).*%\1%i')
+      local p=$(echo  $g1|sed -Ee 's%.*pulledStates: *([0-9]+).*%\1%i')
+      m="SYNCING $dt nodes: $(printf '%2i' ${g2:-0}) blocks: $h ($((h-c))) states: $k ($((k-p)))"
     fi
   else
-    m="NOT HERE ($cunm)"
+    m="NOT HERE $dt"
   fi
 }
 function gk {
+  dt=$(date --rfc-3339=seconds)
   g1;g2;g7
-  if [[ $(echo $g1|grep -i false) ]];then m='SYC';else m='NSY';fi
-  m="$g7 $m $(date --rfc-3339=seconds)"
-  m="$m nodes: $(printf '%2i' ${g2:-0}) blocks: $(printf '%4i' $n)"
-}
-function ok {
-  o1;o2;o7
-  if [[ $(echo $o1|grep -i false) ]];then m='SYC';else m='NSY';fi
-  m="$o7 $m $(date --rfc-3339=seconds)"
-  m="$m nodes: $(printf '%2i' ${o2:-0}) blocks: $(printf '%4i' $n)"
+  if [[ $g7 = 'NOT' ]];then m='HERE';else if [[ $(echo $g1|grep -i false) ]];then m='SYC';else m='NSY';fi;fi
+  m="$g7 $m $dt"
+  [[ ${g0:-0} -gt 0 ]] && m="$m nodes: $(printf '%2i' ${g2:-0}) blocks: $(printf '%4i' ${g0:-0})"
 }
 function grs {
   if [[ $1 -ne 0 ]]; then
@@ -233,18 +173,28 @@ function grs {
   echo $H|sudo -S systemctl start $ethg   2>/dev/null
   echo -e "GETH RESTAR $(date --rfc-3339=seconds)" >> $p5
 }
-function ors {
-  if [[ $1 -ne 0 ]]; then
-    cp /etc/systemd/system/$etho.service ~/$etho.save
-    o4=$(grep max-peers ~/$etho.save|sed 's%.*max-peers=\([0-9]*\).*%\1%')
-    o4=$(($o4+$1))
-    [[ $o4 -ge 10 && $o4 -le 15 ]] && sed "s%--max-peers=[0-9]*%--max-peers=$o4%" ~/$etho.save > /etc/systemd/system/$etho.service
+# beacon control functions
+function b7 {
+  n=$(echo "$H"|sudo -S grep "lighthouse.$bpid" $p4 2>/dev/null|tail -n3600)
+  w=$(echo "$n"|grep -i 'processed block'|wc -l)
+  q=$(echo "$n"|grep -i 'block received' |wc -l)
+  r=$(echo "$n"|grep -v ' INFO '|wc -l)
+  t=$(echo "$n"|grep    ' INFO '|wc -l)
+  p=$(echo "$H"|sudo -S grep -i 'published block' $p4 2>/dev/null|wc -l)
+  z=0;for v in $(echo $H|sudo -S grep -i 'attestation(s) missing' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%,%%g');do y=($v);z=$((z+${#y[@]}));done
+  c=0;for v in $(echo $H|sudo -S grep -i 'attestation(s).*target' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%,%%g');do y=($v);c=$((c+${#y[@]}));done
+  h=0;for v in $(echo $H|sudo -S grep -i 'attestation(s).*head'   $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%,%%g');do y=($v);h=$((h+${#y[@]}));done
+  k=0;for v in $(echo $H|sudo -S grep -i 'attestation(s) had'     $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%,%%g');do y=($v);k=$((k+${#y[@]}));done
+  a=0;for v in $(echo $H|sudo -S grep -i 'attestation(s) success' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%,%%g');do y=($v);a=$((a+${#y[@]}));done
+  b7='OK'
+  bhe
+  if [[ $((x1+x2+x3)) -ge $l1rs && -f $p2 ]]; then
+    if [[ $((x1+x2+x3)) -ge $l2rs ]]; then
+      [[ $(tail -n $l2rs $p2|cut -d' ' -f1|sort -u) = BEAC ]] && b7='BK'
+    else
+      [[ $(tail -n $hors $p2|cut -d' ' -f1|sort -u) = BEAC ]] && b7='BK'
+    fi
   fi
-  resolvectl query smtp.gmail.com 2>/dev/null 1>&2
-  echo $H|sudo -S systemctl stop  $etho   2>/dev/null
-  echo $H|sudo -S systemctl daemon-reload 2>/dev/null;sleep 30s
-  echo $H|sudo -S systemctl start $etho   2>/dev/null
-  echo -e "OETH RESTAR $(date --rfc-3339=seconds)" >> $p6
 }
 function bk {
   t=0;y=0
@@ -435,18 +385,6 @@ function bm {
   if [[ ($h3 -gt $v3 && $(printf '%.0f' $(echo "$v5*100"|bc)) -ge $(printf '%.0f' $(echo "$a00*100"|bc))) && $v8 -ne 0 ]];then v6=" PEERS_$v8";else v6='';v8=0;fi
   bm3
 }
-function gst {
-  echo "GETH $(printf '%6s' $(systemctl status $ethg|grep Memory:|sed 's%.*Memory: \(.*\)%\1%')) $(date --rfc-3339=seconds) status: $(systemctl status $ethg|grep Active:|sed 's%.*Active: \(.*\)%\1%')"
-}
-function ost {
-  echo "OETH $(printf '%6s' $(systemctl status $etho|grep Memory:|sed 's%.*Memory: \(.*\)%\1%')) $(date --rfc-3339=seconds) status: $(systemctl status $etho|grep Active:|sed 's%.*Active: \(.*\)%\1%')"
-}
-function bst {
-  echo "BEAC $(printf '%6s' $(systemctl status $ethb|grep Memory:|sed 's%.*Memory: \(.*\)%\1%')) $(date --rfc-3339=seconds) status: $(systemctl status $ethb|grep Active:|sed 's%.*Active: \(.*\)%\1%')"
-}
-function vst {
-  echo "VALI $(printf '%6s' $(systemctl status $ethv|grep Memory:|sed 's%.*Memory: \(.*\)%\1%')) $(date --rfc-3339=seconds) status: $(systemctl status $ethv|grep Active:|sed 's%.*Active: \(.*\)%\1%')"
-}
 function boo {
   if [[ -f $p2 ]]; then
     h0=$h3;h9=$h3
@@ -479,7 +417,7 @@ function bh {
   [[ $1 ]] || { bo;echo -e "BEAC BO $(printf '%3i' $h3)/$(echo "$b9"|wc -l)";boo; }
   echo -e "BEAC BL";bk;echo -e "BEAC $m"
   [[ $1 ]] || { bm;echo -e "\nBEAC $m"; }
-  [[ $1 ]] || { bst;vst; }
+  [[ $1 ]] || { sst BEAC "$(systemctl status $ethb)";sst VALI "$(systemctl status $ethv)"; }
   [[ $1 ]] || { csh; }
   [[ $1 ]] || { psh; }
   [[ $1 ]] || { esh; }
@@ -503,7 +441,7 @@ function brs {
               [[ $b3 -ge 20 && $b3 -le 50 ]] && sed "s%--target-peers [0-9]*%--target-peers $b3%" ~/$ethb.save > /etc/systemd/system/$ethb.service
             fi
             bk
-            if [[ $2 || $b7 != OK ]]; then
+            if [[ $2 || $b7 != 'OK' ]]; then
               echo -e "RSTI $m" >> $p2
               resolvectl query smtp.gmail.com 2>/dev/null 1>&2
               [[ $2 = vcreset ]] && { echo $H|sudo -S systemctl stop $ethv 2>/dev/null; }
@@ -560,18 +498,15 @@ function ssp {
 [[ $1 = bm  ]] && { bm;    echo -e "BEAC $m"; }
 [[ $1 = bn  ]] && { bm;bm4;echo -e "BEAC $n"; }
 [[ $1 = glf ]] && { gk;echo -e "GETH $m" >> $p5; }
-[[ $1 = olf ]] && { ok;echo -e "OETH $m" >> $p6; }
 [[ $1 = blf ]] && { bk;echo -e "BEAC $m" >> $p2; }
 [[ $1 = bmf ]] && { bm;echo -e "BEAC $m" >> $p3; }
-[[ $1 = gh  ]] && { tail -n ${2:-$hors} $p5;gk;echo -e "GETH $m\n";gst;csh;psh;esh; }
-[[ $1 = oh  ]] && { tail -n ${2:-$hors} $p6;ok;echo -e "OETH $m\n";ost;csh;psh;esh; }
+[[ $1 = gh  ]] && { [[ -f $p5 ]] && { tail -n ${2:-$hors} $p5;gk;echo -e "GETH $m\n";sst GETH "$(systemctl status $ethg)";csh;psh;esh; } }
 [[ $1 = bh  ]] && { [[ -f $p2 ]] && { bh $2; } }
-[[ $1 = bo  ]] && { bo $2 $3;boo $2; }
 [[ $1 = bhr ]] && { [[ -f $p2 ]] && { bhr; } }
+[[ $1 = bo  ]] && { bo $2 $3;boo $2; }
 [[ $1 = cpe ]] && { csh;psh;esh; }
-[[ $1 = gkr ]] && { g7;[[ $g7 != OK ]] && grs ${2:-0}; }
-[[ $1 = okr ]] && { o7;[[ $o7 != OK ]] && ors ${2:-0}; }
-[[ $1 = bkr ]] && { b7;[[ $b7 != OK ]] && brs ${2:-0}; }
+[[ $1 = gkr ]] && { g7;[[ $g7 != 'OK' ]] && grs ${2:-0}; }
+[[ $1 = bkr ]] && { b7;[[ $b7 != 'OK' ]] && brs ${2:-0}; }
 [[ $1 = bnc ]] && { bm;bm4;echo -e "BEAC $n" >> $p7;[ $v8 -ne 0 ]] && brs $v8 bnreset; }
 [[ $1 = grs ]] && { grs ${2:-0}; }
 [[ $1 = ors ]] && { ors ${2:-0}; }
@@ -579,19 +514,17 @@ function ssp {
 [[ $1 = srs ]] && { brs ${2:-0} reboot; }
 [[ $1 = lrs ]] && { brs ${2:-0} vcreset; }
 # lista servicos & portas
-[[ $1 = ll  ]] && { cex "systemctl list-units $pate $patp $patf"; }
 [[ $1 = lp  ]] && { netstat -tulpn; }
 # outros journal system/lighthouse
-[[ $1 = el  ]] && { echo $H|sudo -S grep -i 'openethereum\|geth\[\|lighthouse' $p4 2>/dev/null|if [[ $2 ]];then grep -i "[a-z]* [0-9]* $2";else grep -v ' INFO ';fi; }
-[[ $1 = sl  ]] && { echo $H|sudo -S grep -v 'openethereum\|geth\[\|lighthouse' $p4 2>/dev/null|if [[ $2 ]];then grep -i "[a-z]* [0-9]* $2";else grep -i 'error' ;fi; }
+[[ $1 = el  ]] && { echo $H|sudo -S grep -i 'geth\[\|lighthouse' $p4 2>/dev/null|if [[ $2 ]];then grep -i "[a-z]* [0-9]* $2";else grep -v ' INFO ';fi; }
+[[ $1 = sl  ]] && { echo $H|sudo -S grep -v 'geth\[\|lighthouse' $p4 2>/dev/null|if [[ $2 ]];then grep -i "[a-z]* [0-9]* $2";else grep -i 'error' ;fi; }
 [[ $1 = ws  ]] && { cex "ufw status numbered"; }
 [[ $1 = wa  ]] && if [[ $(echo $H|sudo -S ufw status 2>/dev/null|grep -i inactive) ]];then echo -e "${i}ARRANCA FIREWALL${f}";sudo ufw enable; else echo -e "${i}FIREWALL JA ACTIVE${f}";fi
 [[ $1 = wpr ]] && { cex "ufw disable"; }
 # journal
 [[ $1 = yj ]] && { jsh; }
-[[ $1 = ej ]] && { jsh "-u $ethb -u $ethv"; }
+[[ $1 = ej ]] && { jsh "-u $ethg -u $ethb -u $ethv"; }
 [[ $1 = gj ]] && { jsh "-u $ethg"; }
-[[ $1 = oj ]] && { jsh "-u $etho"; }
 [[ $1 = bj ]] && { jsh "-u $ethb"; }
 [[ $1 = vj ]] && { jsh "-u $ethv"; }
 [[ $1 = sj ]] && { jsh "-u $dnsd"; }
@@ -608,12 +541,10 @@ function ssp {
 [[ $1 = sa ]] && { dmr;sa; }
 # para & arranca & journal
 [[ $1 = gaj ]] && { dmr;ga;jsh "-u $ethg"; }
-[[ $1 = oaj ]] && { dmr;oa;jsh "-u $etho"; }
 [[ $1 = baj ]] && { dmr;ba;jsh "-u $ethb"; }
 [[ $1 = vaj ]] && { dmr;va;jsh "-u $ethv"; }
 [[ $1 = saj ]] && { dmr;sa;jsh "-u $dnsd"; }
 [[ $1 = gpa ]] && { gp;dmr;ga;jsh "-u $ethg"; }
-[[ $1 = opa ]] && { op;dmr;oa;jsh "-u $etho"; }
 [[ $1 = bpa ]] && { bp;dmr;ba;jsh "-u $ethb"; }
 [[ $1 = vpa ]] && { vp;dmr;va;jsh "-u $ethv"; }
 [[ $1 = xpa ]] && { xp;xa; }
@@ -627,7 +558,6 @@ function ssp {
 [[ $1 = rpd ]] && { rp;rd; }
 [[ $1 = spd ]] && { sp;sd; }
 [[ $1 = gea ]] && { ge;dmr;ga;jsh "-u $ethg"; }
-[[ $1 = oea ]] && { oe;dmr;oa;jsh "-u $etho"; }
 [[ $1 = bea ]] && { be;dmr;ba;jsh "-u $ethb"; }
 [[ $1 = vea ]] && { ve;dmr;va;jsh "-u $ethv"; }
 [[ $1 = xea ]] && { xe;xa; }
@@ -671,7 +601,6 @@ if [[ ! $1 ]]; then
   c1="\nprimeira letra"
   c1="$c1\ne\t\t$ethg $ethb $ethv"
   c1="$c1\ng\t\t$ethg"
-  c1="$c1\no\t\t$etho"
   c1="$c1\nb\t\t$ethb"
   c1="$c1\nv\t\t$ethv"
   c1="$c1\np\t\t$ethp"
@@ -691,36 +620,38 @@ if [[ ! $1 ]]; then
   c1="$c1\npd\t\tpara\t& disable"
   c1="$c1\npa\t\tpara\t& arranca\t& journal"
   c1="$c1\nea\t\tenable\t& arranca\t& journal"
-  c1="$c1\nk [s]\t\tcheck s=curl"
-  c1="$c1\nl [s]\t\tlog   s=curl"
   c1="$c1\n"
   c1="$c1\noutros"
-  c1="$c1\ngrs [n]\t\t$ethg restart n=nodes to change"
-  c1="$c1\nors [n]\t\t$etho restart n=nodes to change"
-  c1="$c1\nbrs [n]\t\t$ethb restart n=nodes to change"
-  c1="$c1\nsrs [n]\t\tsystem restart n=nodes to change"
-  c1="$c1\nlrs [n]\t\tlighthouse restart n=nodes to change"
   if [[ $cunm = $znm3 ]]; then
     c1="$c1\nvcp\t\t$ethv copy to $vnm3 server"
   else
     c1="$c1\nvcp\t\t$ethv copy to $znm3 server"
   fi
+  c1="$c1\ngh\t\tgeth historic report"
+  c1="$c1\ngl\t\tgeth log report"
+  c1="$c1\ngs\t\tgeth syncing"
+  c1="$c1\ngrs [n]\t\t$ethg restart n=nodes to change"
+  c1="$c1\nbrs [n]\t\t$ethb restart n=nodes to change"
+  c1="$c1\nsrs [n]\t\tsystem restart n=nodes to change"
+  c1="$c1\nlrs [n]\t\tlighthouse restart n=nodes to change"
   c1="$c1\nyj\t\tsystem journal"
   c1="$c1\nsl [s]\t\tlista system journal  s=TOTAL"
   c1="$c1\nel [s]\t\tlista geth,lighthouse s=TOTAL"
-  c1="$c1\nll\t\tlista servicos"
-  c1="$c1\nlp\t\tlista portas"
-  c1="$c1\ngs\t\tgeth syncing"
   c1="$c1\nbh\t\tbeacon historic report"
   c1="$c1\nbhr\t\tbeacon historic recalculate"
-  c1="$c1\ncpe\t\tclock & cpu & errors report"
+  c1="$c1\nbl\t\tbeacon log report"
+  c1="$c1\nbm\t\tbeacon medias report"
+  c1="$c1\nbo\t\tbeacon homologous report"
+  c1="$c1\nbn\t\tbeacon archive report"
   c1="$c1\nws\t\tfirewall status"
   c1="$c1\nwa\t\tfirewall arranca"
   c1="$c1\nwpr\t\tfirewall para"
-  c1="$c1\nnsh\t\tnetwork show route & DNS"
-  c1="$c1\ndsh\t\tdns show"
-  c1="$c1\nnrs\t\treset netplan\t& dns"
-  c1="$c1\ndrs\t\treset dns"
+  c1="$c1\ncpe\t\tclock & cpu & errors report"
+  c1="$c1\nlp\t\tlista portas"
+  c1="$c1\nnsh\t\tnetwork/route/DNS show "
+  c1="$c1\ndsh [url]\tdns show"
+  c1="$c1\nnrs\t\tdns/netplan reset"
+  c1="$c1\ndrs\t\tdns reset"
   c1="$c1\ntrs\t\ttime sync restart"
   echo -e "\n$c1\n"
 fi

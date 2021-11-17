@@ -33,7 +33,7 @@ else
   echo -e "${i}FIREWALL $(echo $H|sudo -S ufw status 2>/dev/null|grep -i status|tr '[:lower:]' '[:upper:]')${f}"
 fi 
 
-if [ -f /etc/systemd/system/$ethg.service ] || [ -f /etc/systemd/system/$etho.service ] || [ -f /etc/systemd/system/$ethb.service ] || [ -f /etc/systemd/system/$ethv.service ]; then
+if [[ -f /etc/systemd/system/$ethg.service || -f /etc/systemd/system/$ethb.service || -f /etc/systemd/system/$ethv.service ]]; then
   echo -e "${i}SERVER JA INSTALADO ANTES - LINUX UPDATE & SYSTEM CONFIGS SKIPPED${f}"
 else
   echo -e "${i}UPDATE LINUX${f}"
@@ -135,41 +135,5 @@ else
 		EOF
     sudo mv $ethg.service /etc/systemd/system/$ethg.service
     sudo chmod 644 /etc/systemd/system/$ethg.service
-  fi
-  if [ -f /etc/systemd/system/$etho.service ]; then
-    echo -e "${i}OPEN ETHEREUM JA INSTALADO${f}"
-  else
-    echo -e "${i}INSTALAR OPEN ETHEREUM${f}"
-    golb="/var/lib/openethereum"
-    if [ "$B" = "mainnet" ]; then
-      cach=4096 # default full node
-      cach=1024 # default
-      maxp=10
-    else
-      cach=1024 # default
-      maxp=50   # default
-    fi
-    sudo mkdir -p $golb
-    sudo chown -R $user:$user $golb
-    cat <<-EOF > $etho.service
-		[Unit]
-		Description=eth1 OpenEthereum service
-		Wants=network-online.target
-		After=network-online.target
-		
-		[Service]
-		User=$user
-		Group=$user
-		Restart=on-failure
-		ExecStart=/usr/local/bin/openethereum --base-path=/var/lib/openethereum --jsonrpc-interface=$zip1 --max-peers=$maxp --cache-size=$cach --no-ws --no-ipc
-		ExecStopPost=/home/eth/eth2/t8mail GETHSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
-		KillSignal=SIGTERM
-		TimeoutStopSec=300
-		
-		[Install]
-		WantedBy=multi-user.target
-		EOF
-    sudo mv $etho.service /etc/systemd/system/$etho.service
-    sudo chmod 644 /etc/systemd/system/$etho.service
   fi
 fi
