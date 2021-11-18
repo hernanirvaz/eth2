@@ -33,4 +33,3 @@ function si {
 
 [ "$1" = "BNDLCHK" ] && { [ "$(t6 b7)" != "OK" ] && echo -e "Subject: $(t6 bk)"|ssmtp hernanilr@gmail.com; }
 [ "$1" = "GETHCHK" ] && { [ "$(t6 g7)" != "OK" ] && echo -e "Subject: $(t6 gk)"|ssmtp hernanilr@gmail.com; }
-[ "$1" = "OETHCHK" ] && { [ "$(t6 o7)" != "OK" ] && echo -e "Subject: $(t6 ok)"|ssmtp hernanilr@gmail.com; }
