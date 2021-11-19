@@ -408,13 +408,13 @@ function bo {
   fi 
 }
 function bh {
-  [[ $1 ]] || echo -e "BEAC BH $(printf '%3i' $((${1:-$hors}-$l2rs)))"
+  [[ $1 ]] || echo -e "BH $(printf '%8i' $((${1:-$hors}-$l2rs)))"
   tail -n${1:-$hors} $p2|head -n$((${1:-$hors}-$l2rs))
-  [[ $1 ]] || echo -e "BEAC BH $(printf '%3i' $l2rs)"
+  [[ $1 ]] || echo -e "BH $(printf '%8i' $l2rs)"
   tail -n$l2rs       $p2|head -n$l2rs
-  [[ $1 ]] || { bo;echo -e "BEAC BO $(printf '%3i' $h3)/$(echo "$b0"|wc -l)";boo; }
-  echo -e "BEAC BL";bk;echo -e "BEAC $m"
-  [[ $1 ]] || { bm;echo -e "\nBEAC $m"; }
+  [[ $1 ]] || { bo;echo -e "BO $(printf '%8i' $h3)/$(echo "$b0"|wc -l)";boo; }
+  [[ $1 ]] || { bk;echo -e "BL\nBEAC $m"; }
+  [[ $1 ]] || { bm;echo -e "BM $(printf '%8i' $r1)\nBEAC $m"; }
   [[ $1 ]] || { sst BEAC "$(systemctl status $ethb)";sst VALI "$(systemctl status $ethv)"; }
   [[ $1 ]] || { csh; }
   [[ $1 ]] || { psh; }
