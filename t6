@@ -179,23 +179,23 @@ function grs {
   echo -e "GETH RESTAR $(date --rfc-3339=seconds)" >> $p5
 }
 # beacon control functions
-function b3 { echo $((10*(14*z+4*c+h+k))); }
-function b4 { echo $((10*w))             ; }
-function b5 { echo $((90*r))             ; }
+function bb { echo $((10*(14*z+4*c+h+k))); }
+function bq { echo $((10*w))             ; }
+function bi { echo $((90*r))             ; }
 function bt { if [[ $3 -gt $1 ]];then echo $(($2/$3));else echo 0;fi; }
-function bu { echo $(($(bt 200 $(b3) $a)+$(bt 100 $(b4) $q)+$(bt 100 $(b5) $t))); }
+function bu { echo $(($(bt 200 $(bb) $a)+$(bt 100 $(bq) $q)+$(bt 100 $(bi) $t))); }
 function b7 {
-  n=$(echo "$H"|sudo -S grep "lighthouse.$bpid" $p4 2>/dev/null|tail -n3600)
+  local n=$(echo $H|sudo -S grep "lighthouse.$bpid" $p4 2>/dev/null|tail -n3600)
   w=$(echo "$n"|grep -i 'processed block'|wc -l)
   q=$(echo "$n"|grep -i 'block received' |wc -l)
   r=$(echo "$n"|grep -v ' INFO '|wc -l)
   t=$(echo "$n"|grep    ' INFO '|wc -l)
   p=$(echo "$H"|sudo -S grep -i 'published block' $p4 2>/dev/null|wc -l)
-  a=0;for v in $(echo $H|sudo -S grep -i 'attestation(s) success' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%,%%g');do y=($v);a=$((a+${#y[@]}));done
-  z=0;for v in $(echo $H|sudo -S grep -i 'attestation(s) missing' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%,%%g');do y=($v);z=$((z+${#y[@]}));done
-  c=0;for v in $(echo $H|sudo -S grep -i 'attestation(s).*target' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%,%%g');do y=($v);c=$((c+${#y[@]}));done
-  h=0;for v in $(echo $H|sudo -S grep -i 'attestation(s).*head'   $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%,%%g');do y=($v);h=$((h+${#y[@]}));done
-  k=0;for v in $(echo $H|sudo -S grep -i 'attestation(s) had'     $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%,%%g');do y=($v);k=$((k+${#y[@]}));done
+  a=$(echo $(echo $H|sudo -S grep -i 'attestation(s) success' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%[,"]%%g')|wc -w)
+  z=$(echo $(echo $H|sudo -S grep -i 'attestation(s) missing' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%[,"]%%g')|wc -w)
+  c=$(echo $(echo $H|sudo -S grep -i 'attestation(s).*target' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%[,"]%%g')|wc -w)
+  h=$(echo $(echo $H|sudo -S grep -i 'attestation(s).*head'   $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%[,"]%%g')|wc -w)
+  k=$(echo $(echo $H|sudo -S grep -i 'attestation(s) had'     $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%[,"]%%g')|wc -w)
   b7='OK'
   if [[ $(bu) -ge $l1rs && -f $p2 ]]; then
     if [[ $(bu) -ge $l2rs ]]; then
@@ -224,10 +224,10 @@ function bko {
   m="$m nodes: $(printf '%2i' ${b2:-0}) reward_penalty:"
   m="$m $(printf '%3i'   $(echo "scale=0;($p*$rblk+$a*$ratt)*$rate/$decp"|bc))"
   m="$m $(printf '%3.2f' $(echo "scale=2;($z*$pmis+$c*$pmat+$h*$pmah+$k*$pdly)*$rate/$decp"|bc))"
-  m="$m attestation_block: $(printf '%4i' $a) $(printf '%4i' $(b3)) $(printf '%1i' $p)"
+  m="$m attestation_block: $(printf '%4i' $a) $(printf '%4i' $(bb)) $(printf '%1i' $p)"
   m="$m erros: $(printf '%1i' $z) $(printf '%2i' $c) $(printf '%3i' $h) $(printf '%2i' $k)"
-  m="$m $(printf '%6i' $w) $(printf '%3i' $q) $(printf '%3i' $(b4))"
-  m="$m $(printf '%4i' $r) $(printf '%4i' $t) $(printf '%4i' $(b5))    "
+  m="$m $(printf '%6i' $w) $(printf '%3i' $q) $(printf '%3i' $(bq))"
+  m="$m $(printf '%4i' $r) $(printf '%4i' $t) $(printf '%4i' $(bi))    "
   m="$m delay: $(printf '%4i' $j)"
 }
 function bhr {
@@ -495,7 +495,6 @@ function ssp {
 [[ $1 = vcp ]] && { ssp; }
 [[ $1 = gs  ]] && { gs;echo -e "GETH $m"; }
 [[ $1 = gl  ]] && { gk;echo -e "GETH $m"; }
-[[ $1 = ol  ]] && { ok;echo -e "OETH $m"; }
 [[ $1 = bl  ]] && { bk;echo -e "BEAC $m"; }
 [[ $1 = bm  ]] && { bm;    echo -e "BEAC $m"; }
 [[ $1 = bn  ]] && { bm;bno;echo -e "BEAC $n"; }
