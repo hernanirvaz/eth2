@@ -135,7 +135,7 @@ function gv {
   g2=$(geth attach $g --exec net.peerCount 2>/dev/null)
   [[ $g2 -eq $g2 ]] 2>/dev/null || g2=0
 }
-function g7 {
+function gb {
   g0=$(echo $H|sudo -S grep -i 'imported new' $p4 2>/dev/null|wc -l)
   g7='OK'
   local t=$(grep -i blocks: $p5 2>/dev/null|tail -n1|sed 's%.*blocks: *\([0-9]*\).*%\1%')
@@ -160,7 +160,7 @@ function gs {
 }
 function gk {
   dt=$(date --rfc-3339=seconds)
-  gv;g7
+  gv;gb
   if [[ $g7 = 'NOT' ]];then m='HERE';else if [[ $(echo $g1|grep -i false) ]];then m='SYC';else m='NSY';fi;fi
   m="$g7 $m $dt"
   [[ ${g0:-0} -gt 0 ]] && m="$m nodes: $(printf '%2i' ${g2:-0}) blocks: $(printf '%4i' ${g0:-0})"
@@ -179,12 +179,12 @@ function grs {
   echo -e "GETH RESTAR $(date --rfc-3339=seconds)" >> $p5
 }
 # beacon control functions
-function bb { echo $((10*(14*z+4*c+h+k))); }
-function bq { echo $((10*w))             ; }
-function bi { echo $((90*r))             ; }
+function bz { echo $((10*(14*z+4*c+h+k))); }
+function bw { echo $((10*w))             ; }
+function br { echo $((90*r))             ; }
 function bt { if [[ $3 -gt $1 ]];then echo $(($2/$3));else echo 0;fi; }
-function bu { echo $(($(bt 200 $(bb) $a)+$(bt 100 $(bq) $q)+$(bt 100 $(bi) $t))); }
-function b7 {
+function bu { echo $(($(bt 200 $(bz) $a)+$(bt 100 $(bw) $q)+$(bt 100 $(br) $t))); }
+function bb {
   local n=$(echo $H|sudo -S grep "lighthouse.$bpid" $p4 2>/dev/null|tail -n3600)
   w=$(echo "$n"|grep -i 'processed block'|wc -l)
   q=$(echo "$n"|grep -i 'block received' |wc -l)
@@ -196,9 +196,10 @@ function b7 {
   c=$(echo $(echo $H|sudo -S grep -i 'attestation(s).*target' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%[,"]%%g')|wc -w)
   h=$(echo $(echo $H|sudo -S grep -i 'attestation(s).*head'   $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%[,"]%%g')|wc -w)
   k=$(echo $(echo $H|sudo -S grep -i 'attestation(s) had'     $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%[,"]%%g')|wc -w)
+  n=$(bu)
   b7='OK'
-  if [[ $(bu) -ge $l1rs && -f $p2 ]]; then
-    if [[ $(bu) -ge $l2rs ]]; then
+  if [[ -f $p2 && $n -ge $l1rs ]]; then
+    if [[ $n -ge $l2rs ]]; then
       [[ $(tail -n $l2rs $p2|cut -d' ' -f1|sort -u) = BEAC ]] && b7='BK'
     else
       [[ $(tail -n $hors $p2|cut -d' ' -f1|sort -u) = BEAC ]] && b7='BK'
@@ -210,12 +211,10 @@ function bk {
   for v in $(echo $H|sudo -S grep -i 'src: gossip' $p4 2>/dev/null|sed 's%.*delay_ms: *\([0-9]*\).*%\1%')
   do n=$((n+1));l=$((l+v))
   done
-  j=0
-  [[ $n -gt 0 ]] && j=$((l/n))
+  j=0;[[ $n -gt 0 ]] && j=$((l/n))
   b2=$(echo $H|sudo -S grep -i 'lighthouse.*peers:' $p4 2>/dev/null|tail -n1|sed 's%.*peers: *\([0-9]*\).*%\1%')
-  b7
   dt=$(date --rfc-3339=seconds)
-  bko
+  bb;bko
 }
 function bko {
   #    0  1   2          3              4      5  6               7   8    9                 10   11  12 13     14 15 16  17 18     19  20  21   22   23   24        25   26
@@ -224,10 +223,10 @@ function bko {
   m="$m nodes: $(printf '%2i' ${b2:-0}) reward_penalty:"
   m="$m $(printf '%3i'   $(echo "scale=0;($p*$rblk+$a*$ratt)*$rate/$decp"|bc))"
   m="$m $(printf '%3.2f' $(echo "scale=2;($z*$pmis+$c*$pmat+$h*$pmah+$k*$pdly)*$rate/$decp"|bc))"
-  m="$m attestation_block: $(printf '%4i' $a) $(printf '%4i' $(bb)) $(printf '%1i' $p)"
+  m="$m attestation_block: $(printf '%4i' $a) $(printf '%4i' $(bz)) $(printf '%1i' $p)"
   m="$m erros: $(printf '%1i' $z) $(printf '%2i' $c) $(printf '%3i' $h) $(printf '%2i' $k)"
-  m="$m $(printf '%6i' $w) $(printf '%3i' $q) $(printf '%3i' $(bq))"
-  m="$m $(printf '%4i' $r) $(printf '%4i' $t) $(printf '%4i' $(bi))    "
+  m="$m $(printf '%6i' $w) $(printf '%3i' $q) $(printf '%3i' $(bw))"
+  m="$m $(printf '%4i' $r) $(printf '%4i' $t) $(printf '%4i' $(br))    "
   m="$m delay: $(printf '%4i' $j)"
 }
 function bhr {
@@ -253,7 +252,7 @@ function bhr {
     echo -e "${v[0]} $m" >> ${p2}new
   done <<< $(cat $p2)
 
-  v1=0;v2=0;h2='23:58';h9=0;bm0
+  r1=0;v1=0;v2=0;h2='23:58';h9=0;bm0
   while read -a o;do
     h1="${o[3]}"
     h0=$h9
@@ -322,9 +321,6 @@ function bmo {
   m="$(printf '%2i' $v3) $(printf '%3i' $h3) $dt nodes: $(printf '%2i' $v4)"
   m="$m avg: $(printf '%4.2f' $a50) $(printf '%4.2f' $a45) $(printf '%4.2f' $a40) $(printf '%4.2f' $a35) $(printf '%4.2f' $a30) $(printf '%4.2f' $a25) $(printf '%4.2f' $a20)"
   m="$m $(printf '%5.2f' $a00)$v6"
-}
-function bno {
-  #                                                      1                             2                         3                          4        4
   #    0      1          2              3    4 5 6 7 8 9 0   1    2 3 4 5 6 7 8   9    0 1 2 3 4 5 6    7    8 9 0 1 2 3 4     5    6 7 8 9 0 1 2    3
   # BEAC    400 2021-11-14 16:52:36+00:00 cnt: 0 0 0 0 0 0 411 mis: 0 0 0 0 0 0 625 mat: 0 0 0 0 0 0 3501 mah: 0 0 0 0 0 0 25550 dly: 0 0 0 0 0 0 3941
   n="$(printf '%6i' $r1) $dt"
@@ -428,18 +424,16 @@ function brs {
   if [[ ! -f /home/eth/beacon.restart.inicio ]]; then
     touch /home/eth/beacon.restart.inicio
     while [[ -f /home/eth/beacon.restart.inicio ]]; do
-      local l=$(echo $H|sudo -S grep "lighthouse.$bpid.* INFO Synced " $p4 2>/dev/null|tail -n32|sed 's%.* epoch: \([0-9]*\).*%\1%'|sort -u)
-      if [[ $(echo "$l"|wc -l) -eq 1 ]]; then
+      if [[ $(echo $H|sudo -S grep Synced $p4 2>/dev/null|tail -n32|sed 's%.* epoch: \([0-9]*\).*%\1%'|sort -u|wc -l) -eq 1 ]]; then
         touch /home/eth/beacon.restart.interval
         local n=0
         while [[ $n -lt 400 && -f /home/eth/beacon.restart.interval ]]; do
-          local o=$(echo $H|sudo -S grep "lighthouse.$bpid.* INFO " $p4 2>/dev/null|tail -n $pors|sed 's%.* INFO \([^ ]*\) .*%\1%'|sort -u)
+          local o=$(echo $H|sudo -S grep "lighthouse.$bpid.* INFO " $p4 2>/dev/null|tail -n$pors|sed 's%.* INFO \([^ ]*\) .*%\1%'|sort -u)
           local k=$(echo "$o"|head -n1)
           if [[ $(echo "$o"|wc -l) -eq 2 && $(echo "$o"|tail -n1) = Synced && ( $k = New || $k = Processed ) ]]; then
             if [[ $1 -ne 0 ]]; then
               cp /etc/systemd/system/$ethb.service ~/$ethb.save
-              local p=$(grep target-peers ~/$ethb.save|sed 's%.*target-peers \([0-9]*\).*%\1%')
-              p=$((p+$1))
+              local p=$(($(grep target-peers ~/$ethb.save|sed 's%.*target-peers \([0-9]*\).*%\1%')+$1))
               [[ $p -ge 20 && $p -le 50 ]] && sed "s%--target-peers [0-9]*%--target-peers $p%" ~/$ethb.save > /etc/systemd/system/$ethb.service
             fi
             bk
@@ -464,7 +458,7 @@ function brs {
           n=$((n+1))
         done
         rm -f /home/eth/beacon.restart.inicio
-      fi 
+      fi
       sleep 1s
     done
   fi
@@ -496,21 +490,21 @@ function ssp {
 [[ $1 = gs  ]] && { gs;echo -e "GETH $m"; }
 [[ $1 = gl  ]] && { gk;echo -e "GETH $m"; }
 [[ $1 = bl  ]] && { bk;echo -e "BEAC $m"; }
-[[ $1 = bm  ]] && { bm;    echo -e "BEAC $m"; }
-[[ $1 = bn  ]] && { bm;bno;echo -e "BEAC $n"; }
+[[ $1 = bm  ]] && { bm;echo -e "BEAC $m"; }
+[[ $1 = bn  ]] && { bm;echo -e "BEAC $n"; }
 [[ $1 = glf ]] && { gk;echo -e "GETH $m" >> $p5; }
 [[ $1 = blf ]] && { bk;echo -e "BEAC $m" >> $p2; }
 [[ $1 = bmf ]] && { bm;echo -e "BEAC $m" >> $p3; }
+[[ $1 = bnf ]] && { bm;echo -e "BEAC $n" >> $p7; }
+[[ $1 = bmc ]] && { bm;echo -e "BEAC $m" >> $p3;[[ $v8 -ne 0 ]] && { sleep 3m;brs $v8 bnreset; } }
 [[ $1 = gh  ]] && { [[ -f $p5 ]] && { tail -n ${2:-$hors} $p5;gk;echo -e "GETH $m\n";sst GETH "$(systemctl status $ethg)";csh;psh;esh; } }
 [[ $1 = bh  ]] && { [[ -f $p2 ]] && { bh $2; } }
 [[ $1 = bhr ]] && { [[ -f $p2 ]] && { bhr; } }
 [[ $1 = bo  ]] && { bo $2 $3;boo $2; }
 [[ $1 = cpe ]] && { csh;psh;esh; }
-[[ $1 = gkr ]] && { g7;[[ $g7 != 'OK' ]] && grs ${2:-0}; }
-[[ $1 = bkr ]] && { b7;[[ $b7 != 'OK' ]] && brs ${2:-0}; }
-[[ $1 = bnc ]] && { bm;bno;echo -e "BEAC $n" >> $p7;[[ $v8 -ne 0 ]] && brs $v8 bnreset; }
+[[ $1 = gkr ]] && { gb;[[ $g7 != 'OK' ]] && grs ${2:-0}; }
+[[ $1 = bkr ]] && { bb;[[ $b7 != 'OK' ]] && brs ${2:-0}; }
 [[ $1 = grs ]] && { grs ${2:-0}; }
-[[ $1 = ors ]] && { ors ${2:-0}; }
 [[ $1 = brs ]] && { brs ${2:-0} bnreset; }
 [[ $1 = srs ]] && { brs ${2:-0} reboot; }
 [[ $1 = lrs ]] && { brs ${2:-0} vcreset; }
