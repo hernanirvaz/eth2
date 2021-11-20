@@ -3,6 +3,7 @@
 source /home/eth/eth2/t1
 
 # utilities for commands/journal
+function eip { curl -s4 "http://${1}:${2}@dyn.dns.he.net/nic/update?hostname=${1}" 2>/dev/null 1>&2; }
 function cex { echo -e "${i}$1${f}";echo $H|sudo -S $1 2>/dev/null; }
 function jsh { cex "journalctl --no-hostname --no-full -f $1"; }
 function dmr { echo $H|sudo -S systemctl daemon-reload 2>/dev/null; }
@@ -481,6 +482,7 @@ function ssp {
   fi
 }
 
+[[ $1 = eip ]] && { eip $2 $3; }
 [[ $1 = dsh ]] && { dsh ${2:-pt.archive.ubuntu.com}; }
 [[ $1 = drs ]] && { drs; }
 [[ $1 = nsh ]] && { nsh; }
@@ -643,6 +645,7 @@ if [[ ! $1 ]]; then
   c1="$c1\nwpr\t\tfirewall para"
   c1="$c1\ncpe\t\tclock & cpu & errors report"
   c1="$c1\nlp\t\tlista portas"
+  c1="$c1\neip\t\tset dynamic DNS"
   c1="$c1\nnsh\t\tnetwork/route/DNS show "
   c1="$c1\ndsh [url]\tdns show"
   c1="$c1\nnrs\t\tdns/netplan reset"
