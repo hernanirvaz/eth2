@@ -392,7 +392,7 @@ function bm {
 function boo {
   if [[ -f $p2 ]]; then
     h0=${h3:-0};h9=${h3:-0}
-    if [[ $(echo $1|egrep '^[0-9]+$') ]];then h9=$1;else if [[ $h9 -lt $l2rs && $(echo "$b0"|wc -l) -gt $l2rs ]];then h0=$l2rs;h9=$l2rs;fi;fi
+    if [[ $(echo $1|egrep '^[0-9]+$') ]];then h9=$1;else if [[ $h9 -lt $l2rs && $(echo "$b0"|wc -l) -ge $l2rs ]];then h0=$l2rs;h9=$l2rs;fi;fi
     if [[ $(echo $1|egrep '^[0-9]+$') ]];then h0=$1;else if [[ $h0 -gt $hors ]];then h0=$hors;fi;fi
     echo "$b0"|sort -k10.1n|head -n$h9|tail -n$h0
   fi
