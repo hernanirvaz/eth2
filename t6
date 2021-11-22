@@ -180,24 +180,24 @@ function grs {
   echo -e "GETH RESTAR $(date --rfc-3339=seconds)" >> $p5
 }
 # beacon control functions
-function bz { echo $((10*(14*z+4*c+h+k))); }
+function bz { echo $((10*(13*z+3*c+h+k))); }
 function bw { echo $((10*w))             ; }
 function br { echo $((90*r))             ; }
 function bt { if [[ $3 -gt $1 ]];then echo $(($2/$3));else echo 0;fi; }
 function bu { echo $(($(bt 200 $(bz) $a)+$(bt 100 $(bw) $q)+$(bt 100 $(br) $t))); }
 function bb {
-  local n=$(echo $H|sudo -S grep "lighthouse.$bpid" $p4 2>/dev/null|tail -n3600)
-  w=$(echo "$n"|grep -i 'processed block'|wc -l)
-  q=$(echo "$n"|grep -i 'block received' |wc -l)
-  r=$(echo "$n"|grep -v ' INFO '|wc -l)
-  t=$(echo "$n"|grep    ' INFO '|wc -l)
+  local e=$(echo $H|sudo -S grep "lighthouse.$bpid" $p4 2>/dev/null|tail -n3600)
+  w=$(echo "$e"|grep -i 'processed block'|wc -l)
+  q=$(echo "$e"|grep -i 'block received' |wc -l)
+  r=$(echo "$e"|grep -v ' INFO '|wc -l)
+  t=$(echo "$e"|grep    ' INFO '|wc -l)
   p=$(echo "$H"|sudo -S grep -i 'published block' $p4 2>/dev/null|wc -l)
   a=$(echo $(echo $H|sudo -S grep -i 'attestation(s) success' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%[,"]%%g')|wc -w)
   z=$(echo $(echo $H|sudo -S grep -i 'attestation(s) missing' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%[,"]%%g')|wc -w)
   c=$(echo $(echo $H|sudo -S grep -i 'attestation(s).*target' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%[,"]%%g')|wc -w)
   h=$(echo $(echo $H|sudo -S grep -i 'attestation(s).*head'   $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%[,"]%%g')|wc -w)
   k=$(echo $(echo $H|sudo -S grep -i 'attestation(s) had'     $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%[,"]%%g')|wc -w)
-  n=$(bu)
+  local n=$(bu)
   b7='OK'
   if [[ -f $p2 && $n -ge $l1rs ]]; then
     if [[ $n -ge $l2rs ]]; then
