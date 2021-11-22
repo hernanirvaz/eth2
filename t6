@@ -180,8 +180,9 @@ function grs {
 # beacon control functions
 function bt { if [[ $3 -gt $1 ]];then echo $(($2/$3));else echo 0;fi; }
 function bz { echo $((10*(13*b8[15]+3*b8[16]+b8[17]+b8[18]))); }
-function bw { echo $((10*b8[19]))                            ; }
-function br { echo $((90*b8[22]))                            ; }
+function bw { echo $((10*b8[19])); }
+function br { echo $((90*b8[22])); }
+function bs { echo $(tail -n$1 $p2 2>/dev/null|cut -d' ' -f1|sort -u|wc -l); }
 function bu { echo $(($(bt 200 $(bz) ${b8[11]})+$(bt 100 $(bw) ${b8[20]})+$(bt 100 $(br) ${b8[23]}))); }
 function bb {
   local e=$(echo $H|sudo -S grep "lighthouse.$bpid" $p4 2>/dev/null|tail -n3600)
@@ -189,7 +190,6 @@ function bb {
   b8[20]=$(echo "$e"|grep    'block received' |wc -l)
   b8[22]=$(echo "$e"|grep -v ' INFO '|wc -l)
   b8[23]=$(echo "$e"|grep    ' INFO '|wc -l)
-  b8[13]=$(echo "$H"|sudo -S grep 'published block' $p4 2>/dev/null|wc -l)
   b8[11]=$(echo $(echo $H|sudo -S grep 'attestation(s) success' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%[,"]%%g')|wc -w)
   b8[15]=$(echo $(echo $H|sudo -S grep 'attestation(s) missing' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%[,"]%%g')|wc -w)
   b8[16]=$(echo $(echo $H|sudo -S grep 'attestation(s).*target' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%[,"]%%g')|wc -w)
@@ -197,16 +197,12 @@ function bb {
   b8[18]=$(echo $(echo $H|sudo -S grep 'attestation(s) had'     $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%[,"]%%g')|wc -w)
   local n=$(bu)
   ok='OK'
-  if [[ -f $p2 && $n -ge $l1rs ]]; then
-    if [[ $n -ge $l2rs ]]; then
-      [[ $(tail -n $l2rs $p2|cut -d' ' -f1|sort -u|wc -l) -eq 1 ]] && ok='BK'
-    else
-      [[ $(tail -n $hors $p2|cut -d' ' -f1|sort -u|wc -l) -eq 1 ]] && ok='BK'
-    fi
-  fi
+  [[ $n -ge $l1rs ]] && if [[ $n -ge $l2rs ]];then [[ $(bs $l2rs) -eq 1 ]] && ok='BK';else [[ $(bs $hors) -eq 1 ]] && ok='BK';fi
 }
 function bk {
-  local l=0;local n=0;b8[26]=0
+  b8[26]=0
+  b8[13]=$(echo $H|sudo -S grep 'ublished block' $p4 2>/dev/null|wc -l)
+  local l=0;local n=0
   for v in $(echo $H|sudo -S grep 'src: gossip,' $p4 2>/dev/null|sed 's%.*delay_ms: *\([0-9]*\).*%\1%');do n=$((n+1));l=$((l+v));done;[[ $n -gt 0 ]] && b8[26]=$((l/n))
   dt=$(date --rfc-3339=seconds)
   nn=$(echo $H|sudo -S grep 'lighthouse.*peers:' $p4 2>/dev/null|tail -n1|sed 's%.*peers: *\([0-9]*\).*%\1%')
@@ -266,14 +262,18 @@ function bhr {
   done <<< $(cat $p2)
 
   bm0
-  local e='23:58';local d='0000-00-00'
+  local d='000-00-00';local e='23:58'
   local l=0;local n=0;local b=0;local g=0
   while read -a o;do
-    d=${o[3]};b=$g;g=$(grep -n "$d $e" ${p2}new|cut -d: -f1)
+    d=${o[3]}
+    b=$g
+    g=$(grep -n "$d $e" ${p2}new|cut -d: -f1)
+    dt="${o[3]} ${o[4]}"
+    nn=${o[6]}
     b6=$(head -n$g ${p2}new|grep "BEAC.*$e"|sort -k10.1n|grep -n $d|cut -d: -f1);l=$((b6+l));n=$((1+n))
-    nn=${o[6]};b1=$b6;b3=$(printf '%.0f' $(echo "scale=5;$l/$n"|bc));dt="${o[3]} ${o[4]}"
-    if [[ ${#o[@]} -gt 16 ]];then b4=" ${o[16]}";else b4='';fi
+    b3=$(printf '%.0f' $(echo "scale=5;$l/$n"|bc))
     while read -a v;do bm1;done <<< $(head -n$g ${p2}new|tail -n$((g-b))|grep BEAC)
+    if [[ ${#o[@]} -gt 16 ]];then b4=" ${o[16]}";else b4='';fi
     bm2;bmo
     echo -e "${o[0]} $m" >> ${p3}new
   done <<< $(cat $p3)
@@ -353,10 +353,7 @@ function bm {
       if [[ $nn -ge 35 ]];then
         if [[ $nn -ge 40 ]];then
           if [[ $nn -ge 45 ]];then
-            if [[ $nn -ge 50 ]]
-            then n=$a50
-            else n=$a45
-            fi
+            if [[ $nn -ge 50 ]];then n=$a50;else n=$a45;fi
           else n=$a40
           fi
         else n=$a35
@@ -375,7 +372,7 @@ function bm {
   [[ $(printf '%.0f' $(echo "$a40*100"|bc)) -lt $(printf '%.0f' $(echo "$l*100"|bc)) ]] && { l=$a40;b5=$((40-nn)); }
   [[ $(printf '%.0f' $(echo "$a45*100"|bc)) -lt $(printf '%.0f' $(echo "$l*100"|bc)) ]] && { l=$a45;b5=$((45-nn)); }
   [[ $(printf '%.0f' $(echo "$a50*100"|bc)) -lt $(printf '%.0f' $(echo "$l*100"|bc)) ]] && { l=$a50;b5=$((50-nn)); }
-  [[ $(tail -n $hors $p2|cut -d' ' -f1|sort -u|wc -l) -gt 1 ]] && b5=0
+  [[ $(bs $hors) -gt 1 ]] && b5=0
   if [[ ($b6 -gt $b3 && $(printf '%.0f' $(echo "$n*100"|bc)) -ge $(printf '%.0f' $(echo "$a00*100"|bc))) && $b5 -ne 0 ]];then b4=" PEERS_$b5";else b4='';b5=0;fi
   bmo
 }
