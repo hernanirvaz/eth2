@@ -373,7 +373,7 @@ function bm {
   [[ $(printf '%.0f' $(echo "$a45*100"|bc)) -lt $(printf '%.0f' $(echo "$l*100"|bc)) ]] && { l=$a45;b5=$((45-nn)); }
   [[ $(printf '%.0f' $(echo "$a50*100"|bc)) -lt $(printf '%.0f' $(echo "$l*100"|bc)) ]] && { l=$a50;b5=$((50-nn)); }
   [[ $(bs $hors) -gt 1 ]] && b5=0
-  if [[ ($b6 -gt $b3 && $(printf '%.0f' $(echo "$n*100"|bc)) -ge $(printf '%.0f' $(echo "$a00*100"|bc))) && $b5 -ne 0 ]];then b4=" PEERS_$b5";else b4='';b5=0;fi
+  if [[ ($b6 -gt $b3 && $(printf '%.0f' $(echo "$n*100"|bc)) -ge $(printf '%.0f' $(echo "$a00*100"|bc))) && $b5 -ne 0 ]];then b4=" PEERS$b5";else b4='';b5=0;fi
   bmo
 }
 function boo {
