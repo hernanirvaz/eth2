@@ -430,7 +430,7 @@ function brs {
             if [[ $1 -ne 0 ]]; then
               cp /etc/systemd/system/$ethb.service ~/$ethb.save
               local g=$(($(grep target-peers ~/$ethb.save|sed 's%.*target-peers \([0-9]*\).*%\1%')+$1))
-              [[ $g -ge 20 && $g -le 50 ]] && sed "s%--target-peers [0-9]*%--target-peers $p%" ~/$ethb.save > /etc/systemd/system/$ethb.service
+              [[ $g -ge 20 && $g -le 50 ]] && sed "s%--target-peers [0-9]*%--target-peers $g%" ~/$ethb.save > /etc/systemd/system/$ethb.service
             fi
             bk
             if [[ $2 || $b7 != 'OK' ]]; then
