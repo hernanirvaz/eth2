@@ -184,6 +184,7 @@ function bw { echo $((10*b8[19])); }
 function br { echo $((90*b8[22])); }
 function bs { echo $(tail -n$1 $p2 2>/dev/null|cut -d' ' -f1|sort -u|wc -l); }
 function bu { echo $(($(bt 200 $(bz) ${b8[11]})+$(bt 100 $(bw) ${b8[20]})+$(bt 100 $(br) ${b8[23]}))); }
+function by { local n=20;if [[ $1 -ge 25 ]];then if [[ $1 -ge 30 ]];then if [[ $1 -ge 35 ]];then if [[ $1 -ge 40 ]];then if [[ $1 -ge 45 ]];then if [[ $1 -ge 50 ]];then n=50;else n=45;fi;else n=40;fi;else n=35;fi;else n=30;fi;else n=25;fi;fi;echo $n; }
 function bb {
   local e=$(echo $H|sudo -S grep "lighthouse.$bpid" $p4 2>/dev/null|tail -n3600)
   b8[19]=$(echo "$e"|grep    'processed block'|wc -l)
@@ -227,23 +228,23 @@ function bmo {
   #    0  1   2          3              4      5  6    7    8    9   10   11   12   13   14    15
   # BEAC  2   1 2021-11-14 16:16:34+00:00 nodes: 20 avg: 0.00 0.00 0.00 0.00 0.00 0.00 1.75  1.75
   m="$(printf '%2i' $b3) $(printf '%3i' $b6) $dt nodes: $(printf '%2i' $nn)"
-  m="$m avg: $(printf '%4.2f' $a50) $(printf '%4.2f' $a45) $(printf '%4.2f' $a40) $(printf '%4.2f' $a35) $(printf '%4.2f' $a30) $(printf '%4.2f' $a25) $(printf '%4.2f' $a20)"
-  m="$m $(printf '%5.2f' $a00)$b4"
+  m="$m avg: $(printf '%4.2f' ${a[50]}) $(printf '%4.2f' ${a[45]}) $(printf '%4.2f' ${a[40]}) $(printf '%4.2f' ${a[35]}) $(printf '%4.2f' ${a[30]}) $(printf '%4.2f' ${a[25]}) $(printf '%4.2f' ${a[20]})"
+  m="$m $(printf '%5.2f' ${a[00]})$b4"
   #    0      1          2              3    4 5 6 7 8 9 0   1    2 3 4 5 6 7 8   9    0 1 2 3 4 5 6    7    8 9 0 1 2 3 4     5    6 7 8 9 0 1 2    3
   # BEAC    400 2021-11-14 16:52:36+00:00 cnt: 0 0 0 0 0 0 411 mis: 0 0 0 0 0 0 625 mat: 0 0 0 0 0 0 3501 mah: 0 0 0 0 0 0 25550 dly: 0 0 0 0 0 0 3941
   s="$(printf '%6i' $b1) $dt"
-  s="$s cnt: $c50 $c45 $c40 $c35 $c30 $c25 $c20"
-  s="$s mis: $k50 $k45 $k40 $k35 $k30 $k25 $k20"
-  s="$s mat: $z50 $z45 $z40 $z35 $z30 $z25 $z20"
-  s="$s mah: $x50 $x45 $x40 $x35 $x30 $x25 $x20"
-  s="$s dly: $n50 $n45 $n40 $n35 $n30 $n25 $n20"
+  s="$s cnt: ${c[50]} ${c[45]} ${c[40]} ${c[35]} ${c[30]} ${c[25]} ${c[20]}"
+  s="$s mis: ${k[50]} ${k[45]} ${k[40]} ${k[35]} ${k[30]} ${k[25]} ${k[20]}"
+  s="$s mat: ${z[50]} ${z[45]} ${z[40]} ${z[35]} ${z[30]} ${z[25]} ${z[20]}"
+  s="$s mah: ${x[50]} ${x[45]} ${x[40]} ${x[35]} ${x[30]} ${x[25]} ${x[20]}"
+  s="$s dly: ${w[50]} ${w[45]} ${w[40]} ${w[35]} ${w[30]} ${w[25]} ${w[20]}"
 }
 function bhr {
   [[ -f ${p2}new ]] && rm ${p2}new 
   [[ -f ${p3}new ]] && rm ${p3}new 
 
   while read -a v;do
-    dt="${v[3]} ${v[4]}"
+    dt=${v[3]}\ ${v[4]}
     ok=${v[1]}
     nn=${v[6]}
     b8[11]=${v[11]} # attestation
@@ -268,7 +269,7 @@ function bhr {
     d=${o[3]}
     b=$g
     g=$(grep -n "$d $e" ${p2}new|cut -d: -f1)
-    dt="${o[3]} ${o[4]}"
+    dt=${o[3]}\ ${o[4]}
     nn=${o[6]}
     b6=$(head -n$g ${p2}new|grep "BEAC.*$e"|sort -k10.1n|grep -n $d|cut -d: -f1);l=$((b6+l));n=$((1+n))
     b3=$(printf '%.0f' $(echo "scale=5;$l/$n"|bc))
@@ -279,62 +280,52 @@ function bhr {
   done <<< $(cat $p3)
 }
 function bm0 {
-  n00=0;n50=0;n45=0;n40=0;n35=0;n30=0;n25=0;n20=0
-  c00=0;c50=0;c45=0;c40=0;c35=0;c30=0;c25=0;c20=0
-  a00=0;a50=0;a45=0;a40=0;a35=0;a30=0;a25=0;a20=0
-  z00=0;z50=0;z45=0;z40=0;z35=0;z30=0;z25=0;z20=0
-  x00=0;x50=0;x45=0;x40=0;x35=0;x30=0;x25=0;x20=0
-  k00=0;k50=0;k45=0;k40=0;k35=0;k30=0;k25=0;k20=0
+  w[00]=0;w[50]=0;w[45]=0;w[40]=0;w[35]=0;w[30]=0;w[25]=0;w[20]=0
+  c[00]=0;c[50]=0;c[45]=0;c[40]=0;c[35]=0;c[30]=0;c[25]=0;c[20]=0
+  a[00]=0;a[50]=0;a[45]=0;a[40]=0;a[35]=0;a[30]=0;a[25]=0;a[20]=0
+  z[00]=0;z[50]=0;z[45]=0;z[40]=0;z[35]=0;z[30]=0;z[25]=0;z[20]=0
+  x[00]=0;x[50]=0;x[45]=0;x[40]=0;x[35]=0;x[30]=0;x[25]=0;x[20]=0
+  k[00]=0;k[50]=0;k[45]=0;k[40]=0;k[35]=0;k[30]=0;k[25]=0;k[20]=0
 }
 function bm1 {
-  v15=$((10#${v[15]}));v16=$((10#${v[16]}));v17=$((10#${v[17]}));v18=$((10#${v[18]}));v06=$((10#${v[6]}))
-  if [[ $v06 -ge 25 ]];then
-    if [[ $v06 -ge 30 ]];then
-      if [[ $v06 -ge 35 ]];then
-        if [[ $v06 -ge 40 ]];then
-          if [[ $v06 -ge 45 ]];then
-            if [[ $v06 -ge 50 ]]
-            then z50=$((z50+v16));x50=$((x50+v17));n50=$((n50+v18));k50=$((k50+v15));c50=$((c50+1))
-            else z45=$((z45+v16));x45=$((x45+v17));n45=$((n45+v18));k45=$((k45+v15));c45=$((c45+1))
-            fi
-          else z40=$((z40+v16));x40=$((x40+v17));n40=$((n40+v18));k40=$((k40+v15));c40=$((c40+1))
-          fi
-        else z35=$((z35+v16));x35=$((x35+v17));n35=$((n35+v18));k35=$((k35+v15));c35=$((c35+1))
-        fi
-      else z30=$((z30+v16));x30=$((x30+v17));n30=$((n30+v18));k30=$((k30+v15));c30=$((c30+1))
-      fi
-    else z25=$((z25+v16));x25=$((x25+v17));n25=$((n25+v18));k25=$((k25+v15));c25=$((c25+1))
-    fi
-  else z20=$((z20+v16));x20=$((x20+v17));n20=$((n20+v18));k20=$((k20+v15));c20=$((c20+1))
-  fi
+  local n=$(by ${v[06]})
+  k[$n]=$((k[n]+v[15]))
+  z[$n]=$((z[n]+v[16]))
+  x[$n]=$((x[n]+v[17]))
+  w[$n]=$((w[n]+v[18]))
+  c[$n]=$((c[n]+1))
 }
 function bm2 {
-  c00=$((c20+c25+c30+c35+c40+c45+c50))
-  z00=$((z20+z25+z30+z35+z40+z45+z50))
-  n00=$((n20+n25+n30+n35+n40+n45+n50))
-  x00=$((x20+x25+x30+x35+x40+x45+x50))
-  k00=$((k20+k25+k30+k35+k40+k45+k50))
-  [[ $c50 -gt 0 ]] && a50=$(echo "scale=2;($k50*$pmis+$z50*$pmat+$x50*$pmah+$n50*$pdly)/$c50*$rate/$decp"|bc)
-  [[ $c45 -gt 0 ]] && a45=$(echo "scale=2;($k45*$pmis+$z45*$pmat+$x45*$pmah+$n45*$pdly)/$c45*$rate/$decp"|bc)
-  [[ $c40 -gt 0 ]] && a40=$(echo "scale=2;($k40*$pmis+$z40*$pmat+$x40*$pmah+$n40*$pdly)/$c40*$rate/$decp"|bc)
-  [[ $c35 -gt 0 ]] && a35=$(echo "scale=2;($k35*$pmis+$z35*$pmat+$x35*$pmah+$n35*$pdly)/$c35*$rate/$decp"|bc)
-  [[ $c30 -gt 0 ]] && a30=$(echo "scale=2;($k30*$pmis+$z30*$pmat+$x30*$pmah+$n30*$pdly)/$c30*$rate/$decp"|bc)
-  [[ $c25 -gt 0 ]] && a25=$(echo "scale=2;($k25*$pmis+$z25*$pmat+$x25*$pmah+$n25*$pdly)/$c25*$rate/$decp"|bc)
-  [[ $c20 -gt 0 ]] && a20=$(echo "scale=2;($k20*$pmis+$z20*$pmat+$x20*$pmah+$n20*$pdly)/$c20*$rate/$decp"|bc)
-  [[ $c00 -gt 0 ]] && a00=$(echo "scale=2;($k00*$pmis+$z00*$pmat+$x00*$pmah+$n00*$pdly)/$c00*$rate/$decp"|bc)
+  k[00]=$((k[20]+k[25]+k[30]+k[35]+k[40]+k[45]+k[50]))
+  z[00]=$((z[20]+z[25]+z[30]+z[35]+z[40]+z[45]+z[50]))
+  x[00]=$((x[20]+x[25]+x[30]+x[35]+x[40]+x[45]+x[50]))
+  w[00]=$((w[20]+w[25]+w[30]+w[35]+w[40]+w[45]+w[50]))
+  c[00]=$((c[20]+c[25]+c[30]+c[35]+c[40]+c[45]+c[50]))
+  [[ ${c[50]} -gt 0 ]] && a[50]=$(echo "scale=2;(${k[50]}*$pmis+${z[50]}*$pmat+${x[50]}*$pmah+${w[50]}*$pdly)/${c[50]}*$rate/$decp"|bc)
+  [[ ${c[45]} -gt 0 ]] && a[45]=$(echo "scale=2;(${k[45]}*$pmis+${z[45]}*$pmat+${x[45]}*$pmah+${w[45]}*$pdly)/${c[45]}*$rate/$decp"|bc)
+  [[ ${c[40]} -gt 0 ]] && a[40]=$(echo "scale=2;(${k[40]}*$pmis+${z[40]}*$pmat+${x[40]}*$pmah+${w[40]}*$pdly)/${c[40]}*$rate/$decp"|bc)
+  [[ ${c[35]} -gt 0 ]] && a[35]=$(echo "scale=2;(${k[35]}*$pmis+${z[35]}*$pmat+${x[35]}*$pmah+${w[35]}*$pdly)/${c[35]}*$rate/$decp"|bc)
+  [[ ${c[30]} -gt 0 ]] && a[30]=$(echo "scale=2;(${k[30]}*$pmis+${z[30]}*$pmat+${x[30]}*$pmah+${w[30]}*$pdly)/${c[30]}*$rate/$decp"|bc)
+  [[ ${c[25]} -gt 0 ]] && a[25]=$(echo "scale=2;(${k[25]}*$pmis+${z[25]}*$pmat+${x[25]}*$pmah+${w[25]}*$pdly)/${c[25]}*$rate/$decp"|bc)
+  [[ ${c[20]} -gt 0 ]] && a[20]=$(echo "scale=2;(${k[20]}*$pmis+${z[20]}*$pmat+${x[20]}*$pmah+${w[20]}*$pdly)/${c[20]}*$rate/$decp"|bc)
+  [[ ${c[00]} -gt 0 ]] && a[00]=$(echo "scale=2;(${k[00]}*$pmis+${z[00]}*$pmat+${x[00]}*$pmah+${w[00]}*$pdly)/${c[00]}*$rate/$decp"|bc)
 }
 function bm {
   bm0
-  local l=0;local n=0;local b=0
+  local b=0
   b1=0
+  nn=$(systemctl status eth-beacon|grep target-peers|sed 's%.*target-peers \([0-9]*\).*%\1%')
+  # DO NOT USE [[
+  [ ${nn:-0} -eq $nn ] 2>/dev/null || nn=0
+  dt=$(date --rfc-3339=seconds)
   if [[ -f $p7 ]]; then
     read -a o <<< $(tail -n1 $p7)
     b=${o[1]}
-    c50=${o[ 5]};c45=${o[ 6]};c40=${o[ 7]};c35=${o[ 8]};c30=${o[ 9]};c25=${o[10]};c20=${o[11]}
-    k50=${o[13]};k45=${o[14]};k40=${o[15]};k35=${o[16]};k30=${o[17]};k25=${o[18]};k20=${o[19]}
-    z50=${o[21]};z45=${o[22]};z40=${o[23]};z35=${o[24]};z30=${o[25]};z25=${o[26]};z20=${o[27]}
-    x50=${o[29]};x45=${o[30]};x40=${o[31]};x35=${o[32]};x30=${o[33]};x25=${o[34]};x20=${o[35]}
-    n50=${o[37]};n45=${o[38]};n40=${o[39]};n35=${o[40]};n30=${o[41]};n25=${o[42]};n20=${o[43]}
+    k[50]=${o[13]};k[45]=${o[14]};k[40]=${o[15]};k[35]=${o[16]};k[30]=${o[17]};k[25]=${o[18]};k[20]=${o[19]}
+    z[50]=${o[21]};z[45]=${o[22]};z[40]=${o[23]};z[35]=${o[24]};z[30]=${o[25]};z[25]=${o[26]};z[20]=${o[27]}
+    x[50]=${o[29]};x[45]=${o[30]};x[40]=${o[31]};x[35]=${o[32]};x[30]=${o[33]};x[25]=${o[34]};x[20]=${o[35]}
+    w[50]=${o[37]};w[45]=${o[38]};w[40]=${o[39]};w[35]=${o[40]};w[30]=${o[41]};w[25]=${o[42]};w[20]=${o[43]}
+    c[50]=${o[ 5]};c[45]=${o[ 6]};c[40]=${o[ 7]};c[35]=${o[ 8]};c[30]=${o[ 9]};c[25]=${o[10]};c[20]=${o[11]}
   fi
   if [[ -f $p2 ]]; then
     b1=$(cat $p2|wc -l)
@@ -342,38 +333,20 @@ function bm {
   fi
   bm2
   [[ ${b6:-0} -eq 0 ]] && bo
+  local l=0;local n=0
   [[ -f $p3 ]] && while read -a v;do l=$((${v[2]}+l));n=$((1+n));done <<< $(cat $p3)
   b3=$(printf '%.0f' $(echo "scale=5;($l+$b6)/(1+$n)"|bc))
-  nn=$(systemctl status eth-beacon|grep target-peers|sed 's%.*target-peers \([0-9]*\).*%\1%')
-  # DO NOT USE [[
-  [ ${nn:-0} -eq $nn ] 2>/dev/null || nn=0
-  dt=$(date --rfc-3339=seconds)
-  if [[ $nn -ge 25 ]];then
-    if [[ $nn -ge 30 ]];then
-      if [[ $nn -ge 35 ]];then
-        if [[ $nn -ge 40 ]];then
-          if [[ $nn -ge 45 ]];then
-            if [[ $nn -ge 50 ]];then n=$a50;else n=$a45;fi
-          else n=$a40
-          fi
-        else n=$a35
-        fi
-      else n=$a30
-      fi
-    else n=$a25
-    fi
-  else n=$a20
-  fi
-  l=$n;b5=0
-  [[ $(printf '%.0f' $(echo "$a20*100"|bc)) -lt $(printf '%.0f' $(echo "$l*100"|bc)) ]] && { l=$a20;b5=$((20-nn)); }
-  [[ $(printf '%.0f' $(echo "$a25*100"|bc)) -lt $(printf '%.0f' $(echo "$l*100"|bc)) ]] && { l=$a25;b5=$((25-nn)); }
-  [[ $(printf '%.0f' $(echo "$a30*100"|bc)) -lt $(printf '%.0f' $(echo "$l*100"|bc)) ]] && { l=$a30;b5=$((30-nn)); }
-  [[ $(printf '%.0f' $(echo "$a35*100"|bc)) -lt $(printf '%.0f' $(echo "$l*100"|bc)) ]] && { l=$a35;b5=$((35-nn)); }
-  [[ $(printf '%.0f' $(echo "$a40*100"|bc)) -lt $(printf '%.0f' $(echo "$l*100"|bc)) ]] && { l=$a40;b5=$((40-nn)); }
-  [[ $(printf '%.0f' $(echo "$a45*100"|bc)) -lt $(printf '%.0f' $(echo "$l*100"|bc)) ]] && { l=$a45;b5=$((45-nn)); }
-  [[ $(printf '%.0f' $(echo "$a50*100"|bc)) -lt $(printf '%.0f' $(echo "$l*100"|bc)) ]] && { l=$a50;b5=$((50-nn)); }
+  b4=''
+  b5=0;l=${a[$nn]}
+  [[ $(printf '%.0f' $(echo "${a[20]}*100"|bc)) -lt $(printf '%.0f' $(echo "$l*100"|bc)) ]] && { l=${a[20]};b5=$((20-nn)); }
+  [[ $(printf '%.0f' $(echo "${a[25]}*100"|bc)) -lt $(printf '%.0f' $(echo "$l*100"|bc)) ]] && { l=${a[25]};b5=$((25-nn)); }
+  [[ $(printf '%.0f' $(echo "${a[30]}*100"|bc)) -lt $(printf '%.0f' $(echo "$l*100"|bc)) ]] && { l=${a[30]};b5=$((30-nn)); }
+  [[ $(printf '%.0f' $(echo "${a[35]}*100"|bc)) -lt $(printf '%.0f' $(echo "$l*100"|bc)) ]] && { l=${a[35]};b5=$((35-nn)); }
+  [[ $(printf '%.0f' $(echo "${a[40]}*100"|bc)) -lt $(printf '%.0f' $(echo "$l*100"|bc)) ]] && { l=${a[40]};b5=$((40-nn)); }
+  [[ $(printf '%.0f' $(echo "${a[45]}*100"|bc)) -lt $(printf '%.0f' $(echo "$l*100"|bc)) ]] && { l=${a[45]};b5=$((45-nn)); }
+  [[ $(printf '%.0f' $(echo "${a[50]}*100"|bc)) -lt $(printf '%.0f' $(echo "$l*100"|bc)) ]] && { l=${a[50]};b5=$((50-nn)); }
   [[ $(bs $hors) -gt 1 ]] && b5=0
-  if [[ ($b6 -gt $b3 && $(printf '%.0f' $(echo "$n*100"|bc)) -ge $(printf '%.0f' $(echo "$a00*100"|bc))) && $b5 -ne 0 ]];then b4=" PEERS$b5";else b4='';b5=0;fi
+  [[ ($b6 -gt $b3 && $(printf '%.0f' $(echo "${a[$nn]}*100"|bc)) -ge $(printf '%.0f' $(echo "${a[00]}*100"|bc))) && $b5 -ne 0 ]] && b4=" PEERS$b5"
   bmo
 }
 function boo {
