@@ -409,46 +409,46 @@ function bh {
   [[ $1 ]] || { sst BEAC "$(systemctl status $ethb)";sst VALI "$(systemctl status $ethv)"; }
 }
 function brs {
+  #while [[ -f /home/eth/beacon.restart.inicio ]]; do
+  #if [[ $(echo $H|sudo -S grep Synced $p4 2>/dev/null|tail -n32|sed 's%.* epoch: \([0-9]*\).*%\1%'|sort -u|wc -l) -eq 1 ]]; then
+  #touch /home/eth/beacon.restart.interval
+  #rm -f /home/eth/beacon.restart.interval
+  #fi
+  #sleep 1s
+  #done
   if [[ ! -f /home/eth/beacon.restart.inicio ]]; then
     touch /home/eth/beacon.restart.inicio
-    while [[ -f /home/eth/beacon.restart.inicio ]]; do
-      if [[ $(echo $H|sudo -S grep Synced $p4 2>/dev/null|tail -n32|sed 's%.* epoch: \([0-9]*\).*%\1%'|sort -u|wc -l) -eq 1 ]]; then
-        touch /home/eth/beacon.restart.interval
-        local n=0
-        while [[ $n -lt 400 && -f /home/eth/beacon.restart.interval ]]; do
-          local l=$(echo $H|sudo -S grep "lighthouse.$bpid.* INFO " $p4 2>/dev/null|tail -n$pors|sed 's%.* INFO \([^ ]*\) .*%\1%'|sort -u)
-          local b=$(echo "$l"|head -n1)
-          if [[ $(echo "$l"|wc -l) -eq 2 && $(echo "$l"|tail -n1) = Synced && ( $b = New || $b = Processed ) ]]; then
-            if [[ $1 -ne 0 ]]; then
-              cp /etc/systemd/system/$ethb.service ~/$ethb.save
-              local g=$(($(grep target-peers ~/$ethb.save|sed 's%.*target-peers \([0-9]*\).*%\1%')+$1))
-              [[ $g -ge 20 && $g -le 50 ]] && sed "s%--target-peers [0-9]*%--target-peers $g%" ~/$ethb.save > /etc/systemd/system/$ethb.service
-            fi
-            bk
-            if [[ $2 || $ok != 'OK' ]]; then
-              echo -e "RSTI $m" >> $p2
-              resolvectl query smtp.gmail.com 2>/dev/null 1>&2
-              [[ $2 = vcreset ]] && { echo $H|sudo -S systemctl stop $ethv 2>/dev/null; }
-              echo $H|sudo -S systemctl stop $ethb    2>/dev/null
-              echo $H|sudo -S systemctl daemon-reload 2>/dev/null
-              n=400
-              rm -f /home/eth/beacon.restart.interval
-              if [[ $2 = reboot ]]; then
-                rm -f /home/eth/beacon.restart.inicio
-                echo $H|sudo -S reboot 2>/dev/null
-              else
-                echo $H|sudo -S systemctl start $ethb 2>/dev/null
-                [[ $2 = vcreset ]] && { echo $H|sudo -S systemctl start $ethv 2>/dev/null; }
-              fi
-            fi
+    local n=0
+    while [[ -f /home/eth/beacon.restart.inicio && $n -lt 400 ]]; do
+      local l=$(echo $H|sudo -S grep "lighthouse.$bpid.* INFO " $p4 2>/dev/null|tail -n$pors|sed 's%.* INFO \([^ ]*\) .*%\1%'|sort -u)
+      local b=$(echo "$l"|head -n1)
+      if [[ $(echo "$l"|wc -l) -eq 2 && $(echo "$l"|tail -n1) = Synced && ( $b = New || $b = Processed ) ]]; then
+        if [[ $1 -ne 0 ]]; then
+          cp /etc/systemd/system/$ethb.service ~/$ethb.save
+          local g=$(($(grep target-peers ~/$ethb.save|sed 's%.*target-peers \([0-9]*\).*%\1%')+$1))
+          [[ $g -ge 20 && $g -le 50 ]] && sed "s%--target-peers [0-9]*%--target-peers $g%" ~/$ethb.save > /etc/systemd/system/$ethb.service
+        fi
+        bk
+        if [[ $2 || $ok != 'OK' ]]; then
+          echo -e "RSTI $m" >> $p2
+          resolvectl query smtp.gmail.com 2>/dev/null 1>&2
+          [[ $2 = vcreset ]] && { echo $H|sudo -S systemctl stop $ethv 2>/dev/null; }
+          echo $H|sudo -S systemctl stop $ethb    2>/dev/null
+          echo $H|sudo -S systemctl daemon-reload 2>/dev/null
+          n=400
+          if [[ $2 = reboot ]]; then
+            rm -f /home/eth/beacon.restart.inicio
+            echo $H|sudo -S reboot 2>/dev/null
+          else
+            echo $H|sudo -S systemctl start $ethb 2>/dev/null
+            [[ $2 = vcreset ]] && { echo $H|sudo -S systemctl start $ethv 2>/dev/null; }
           fi
-          sleep 3s
-          n=$((n+1))
-        done
-        rm -f /home/eth/beacon.restart.inicio
+        fi
       fi
-      sleep 1s
+      sleep 3s
+      n=$((n+1))
     done
+    rm -f /home/eth/beacon.restart.inicio
   fi
 }
 function ssp {
