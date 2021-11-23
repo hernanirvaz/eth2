@@ -179,32 +179,32 @@ function grs {
 }
 # beacon control functions
 function bt { if [[ $3 -gt $1 ]];then echo $(($2/$3));else echo 0;fi; }
-function bz { echo $((10*(13*b8[15]+3*b8[16]+b8[17]+b8[18]))); }
-function bw { echo $((10*b8[19])); }
-function br { echo $((90*b8[22])); }
+function bz { echo $((10*(13*b15+3*b16+b17+b18))); }
+function bw { echo $((10*b19)); }
+function br { echo $((90*b22)); }
 function bs { echo $(tail -n$1 $p2 2>/dev/null|cut -d' ' -f1|sort -u|wc -l); }
-function bu { echo $(($(bt 200 $(bz) ${b8[11]})+$(bt 100 $(bw) ${b8[20]})+$(bt 100 $(br) ${b8[23]}))); }
-function by { local n=20;if [[ $1 -ge 25 ]];then if [[ $1 -ge 30 ]];then if [[ $1 -ge 35 ]];then if [[ $1 -ge 40 ]];then if [[ $1 -ge 45 ]];then if [[ $1 -ge 50 ]];then n=50;else n=45;fi;else n=40;fi;else n=35;fi;else n=30;fi;else n=25;fi;fi;echo $n; }
+function bu { echo $(($(bt 200 $(bz) $b11)+$(bt 100 $(bw) $b20)+$(bt 100 $(br) $b23))); }
+function bx { if [[ $1 -ge ${2:-25} && ${2:-25} -le 50 ]];then echo $(bx $1 $((${2:-25}+5)));else echo $((${2:-25}-5));fi; }
 function bb {
   local e=$(echo $H|sudo -S grep "lighthouse.$bpid" $p4 2>/dev/null|tail -n3600)
-  b8[19]=$(echo "$e"|grep    'processed block'|wc -l)
-  b8[20]=$(echo "$e"|grep    'block received' |wc -l)
-  b8[22]=$(echo "$e"|grep -v ' INFO '|wc -l)
-  b8[23]=$(echo "$e"|grep    ' INFO '|wc -l)
-  b8[11]=$(echo $(echo $H|sudo -S grep 'attestation(s) success' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%[,"]%%g')|wc -w)
-  b8[15]=$(echo $(echo $H|sudo -S grep 'attestation(s) missing' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%[,"]%%g')|wc -w)
-  b8[16]=$(echo $(echo $H|sudo -S grep 'attestation(s).*target' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%[,"]%%g')|wc -w)
-  b8[17]=$(echo $(echo $H|sudo -S grep 'attestation(s).*head'   $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%[,"]%%g')|wc -w)
-  b8[18]=$(echo $(echo $H|sudo -S grep 'attestation(s) had'     $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%[,"]%%g')|wc -w)
+  b19=$(echo "$e"|grep    'processed block'|wc -l)
+  b20=$(echo "$e"|grep    'block received' |wc -l)
+  b22=$(echo "$e"|grep -v ' INFO '|wc -l)
+  b23=$(echo "$e"|grep    ' INFO '|wc -l)
+  b11=$(echo $(echo $H|sudo -S grep 'attestation(s) success' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%[,"]%%g')|wc -w)
+  b15=$(echo $(echo $H|sudo -S grep 'attestation(s) missing' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%[,"]%%g')|wc -w)
+  b16=$(echo $(echo $H|sudo -S grep 'attestation(s).*target' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%[,"]%%g')|wc -w)
+  b17=$(echo $(echo $H|sudo -S grep 'attestation(s).*head'   $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%[,"]%%g')|wc -w)
+  b18=$(echo $(echo $H|sudo -S grep 'attestation(s) had'     $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%[,"]%%g')|wc -w)
   local n=$(bu)
   ok='OK'
   [[ $n -ge $l1rs ]] && if [[ $n -ge $l2rs ]];then [[ $(bs $l2rs) -eq 1 ]] && ok='BK';else [[ $(bs $hors) -eq 1 ]] && ok='BK';fi
 }
 function bk {
-  b8[26]=0
-  b8[13]=$(echo $H|sudo -S grep 'ublished block' $p4 2>/dev/null|wc -l)
+  b26=0
+  b13=$(echo $H|sudo -S grep 'ublished block' $p4 2>/dev/null|wc -l)
   local l=0;local n=0
-  for v in $(echo $H|sudo -S grep 'src: gossip,' $p4 2>/dev/null|sed 's%.*delay_ms: *\([0-9]*\).*%\1%');do n=$((n+1));l=$((l+v));done;[[ $n -gt 0 ]] && b8[26]=$((l/n))
+  for v in $(echo $H|sudo -S grep 'src: gossip,' $p4 2>/dev/null|sed 's%.*delay_ms: *\([0-9]*\).*%\1%');do n=$((n+1));l=$((l+v));done;[[ $n -gt 0 ]] && b26=$((l/n))
   dt=$(date --rfc-3339=seconds)
   nn=$(echo $H|sudo -S grep 'lighthouse.*peers:' $p4 2>/dev/null|tail -n1|sed 's%.*peers: *\([0-9]*\).*%\1%')
   # DO NOT USE [[
@@ -216,13 +216,13 @@ function bko {
   # BEAC OK   0 2021-11-22 17:15:58+00:00 nodes: 32 reward_penalty: 224 3.54 attestation_block: 2950 2280 0 erros: 2 14 131 29      0 537   0   14 3586 1260     delay: 1000
   m="$ok $(printf '%3i' $(bu)) $dt"
   m="$m nodes: $(printf '%2i' $nn) reward_penalty:"
-  m="$m $(printf '%3i'   $(echo "scale=0;(${b8[11]}*$ratt+${b8[13]}*$rblk)*$rate/$decp"|bc))"
-  m="$m $(printf '%3.2f' $(echo "scale=2;(${b8[15]}*$pmis+${b8[16]}*$pmat+${b8[17]}*$pmah+${b8[18]}*$pdly)*$rate/$decp"|bc))"
-  m="$m attestation_block: $(printf '%4i' ${b8[11]}) $(printf '%4i' $(bz)) $(printf '%1i' ${b8[13]})"
-  m="$m erros: $(printf '%1i' ${b8[15]}) $(printf '%2i' ${b8[16]}) $(printf '%3i' ${b8[17]}) $(printf '%2i' ${b8[18]})"
-  m="$m $(printf '%6i' ${b8[19]}) $(printf '%3i' ${b8[20]}) $(printf '%3i' $(bw))"
-  m="$m $(printf '%4i' ${b8[22]}) $(printf '%4i' ${b8[23]}) $(printf '%4i' $(br))    "
-  m="$m delay: $(printf '%4i' ${b8[26]})"
+  m="$m $(printf '%3i'   $(echo "scale=0;($b11*$ratt+$b13*$rblk)*$rate/$decp"|bc))"
+  m="$m $(printf '%3.2f' $(echo "scale=2;($b15*$pmis+$b16*$pmat+$b17*$pmah+$b18*$pdly)*$rate/$decp"|bc))"
+  m="$m attestation_block: $(printf '%4i' $b11) $(printf '%4i' $(bz)) $(printf '%1i' $b13)"
+  m="$m erros: $(printf '%1i' $b15) $(printf '%2i' $b16) $(printf '%3i' $b17) $(printf '%2i' $b18)"
+  m="$m $(printf '%6i' $b19) $(printf '%3i' $b20) $(printf '%3i' $(bw))"
+  m="$m $(printf '%4i' $b22) $(printf '%4i' $b23) $(printf '%4i' $(br))    "
+  m="$m delay: $(printf '%4i' $b26)"
 }
 function bmo {
   #    0  1   2          3              4      5  6    7    8    9   10   11   12   13   14    15
@@ -247,17 +247,17 @@ function bhr {
     dt=${v[3]}\ ${v[4]}
     ok=${v[1]}
     nn=${v[6]}
-    b8[11]=${v[11]} # attestation
-    b8[13]=${v[13]} # block
-    b8[15]=${v[15]} # erros missing
-    b8[16]=${v[16]} # erros target
-    b8[17]=${v[17]} # erros head
-    b8[18]=${v[18]} # erros had
-    b8[19]=${v[19]} # processed block
-    b8[20]=${v[20]} # block received
-    b8[22]=${v[22]} # not INFO
-    b8[23]=${v[23]} #     INFO
-    b8[26]=${v[26]} # delay
+    b11=${v[11]} # attestation
+    b13=${v[13]} # block
+    b15=${v[15]} # erros missing
+    b16=${v[16]} # erros target
+    b17=${v[17]} # erros head
+    b18=${v[18]} # erros had
+    b19=${v[19]} # processed block
+    b20=${v[20]} # block received
+    b22=${v[22]} # not INFO
+    b23=${v[23]} #     INFO
+    b26=${v[26]} # delay
     bko
     echo -e "${v[0]} $m" >> ${p2}new
   done <<< $(cat $p2)
@@ -288,7 +288,7 @@ function bm0 {
   k[00]=0;k[50]=0;k[45]=0;k[40]=0;k[35]=0;k[30]=0;k[25]=0;k[20]=0
 }
 function bm1 {
-  local n=$(by ${v[06]})
+  local n=$(bx ${v[06]})
   k[$n]=$((k[n]+v[15]))
   z[$n]=$((z[n]+v[16]))
   x[$n]=$((x[n]+v[17]))
