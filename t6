@@ -158,7 +158,7 @@ function gs {
       local n=$(echo $g1|sed -Ee 's%.*currentBlock: *([0-9]+).*%\1%i')
       local l=$(echo $g1|sed -Ee 's%.*knownStates: *([0-9]+).*%\1%i')
       local b=$(echo $g1|sed -Ee 's%.*pulledStates: *([0-9]+).*%\1%i')
-      m="SYNCING $dt nodes: $(printf '%2i' $nn) blocks: $((g*1)) ($((g-n))) states: $((l*1)) ($((l-b)))"
+      m="SYNCIN $dt nodes: $(printf '%2i' $nn) blocks: $((g*1)) ($((g-n))) states: $((l*1)) ($((l-b)))"
     fi
   else
     m="NOT HERE $dt"
@@ -168,7 +168,7 @@ function grs {
   m="RESTAR $(date --rfc-3339=seconds)"
   if [[ $1 -ne 0 ]]; then
     cp /etc/systemd/system/$ethg.service ~/$ethg.save
-    nn=$(num $(($(grep maxpeers ~/$ethg.save|sed 's%.*maxpeers \([0-9]*\).*%\1%')+$1)))
+    nn=$(num $(($(systemctl status $ethg|grep maxpeers|sed 's%.*--maxpeers \([0-9]*\).*%\1%')+$1)))
     if [[ $nn -ge 10 && $nn -le 15 ]]; then
       sed "s%--maxpeers [0-9]*%--maxpeers $nn%" ~/$ethg.save > /etc/systemd/system/$ethg.service
       m="$m nodes: $(printf '%2i' $nn)"
@@ -312,7 +312,7 @@ function bm {
   bm0
   local b=0
   b1=0
-  nn=$(num $(systemctl status eth-beacon|grep target-peers|sed 's%.*target-peers \([0-9]*\).*%\1%'))
+  nn=$(num $(systemctl status $ethb|grep target-peers|sed 's%.*--target-peers \([0-9]*\).*%\1%'))
   dt=$(date --rfc-3339=seconds)
   if [[ -f $p7 ]]; then
     read -a o <<< $(tail -n1 $p7)
@@ -385,27 +385,29 @@ function brs {
       local l=$(echo $H|sudo -S grep "lighthouse.$bpid.* INFO " $p4 2>/dev/null|tail -n$pors|sed 's%.* INFO \([^ ]*\) .*%\1%'|sort -u)
       local b=$(echo "$l"|head -n1)
       if [[ $(echo "$l"|wc -l) -eq 2 && $(echo "$l"|tail -n1) = Synced && ( $b = New || $b = Processed ) ]]; then
-        rm -f /home/eth/beacon.restart.inicio
         [[ $2 ]] && { ok=${2:0:2};ok=${ok^^}; }
-        m="$ok $(printf '%3i' $(num $(echo $H|sudo -S grep 'lighthouse.*peers:' $p4 2>/dev/null|tail -n1|sed 's%.*peers: *\([0-9]*\).*%\1%'))) $(date --rfc-3339=seconds)";n=400
+        dt=$(date --rfc-3339=seconds);m="$ok     $dt"
         if [[ $1 -ne 0 ]]; then
           cp /etc/systemd/system/$ethb.service ~/$ethb.save
-          nn=$(num $(($(grep target-peers ~/$ethb.save|sed 's%.*target-peers \([0-9]*\).*%\1%')+$1)))
-          [[ $nn -ge 20 && $nn -le 50 ]] && { sed "s%--target-peers [0-9]*%--target-peers $nn%" ~/$ethb.save > /etc/systemd/system/$ethb.service;m="$m nodes: $(printf '%2i' $nn)"; }
-        fi
-        if [[ $ok != 'OK' ]]; then
-          echo -e "RSTI $m" >> $p2
-          resolvectl query smtp.gmail.com 2>/dev/null 1>&2
-          [[ $2 = vcreset ]] && { echo $H|sudo -S systemctl stop $ethv 2>/dev/null; }
-          echo $H|sudo -S systemctl stop $ethb    2>/dev/null
-          echo $H|sudo -S systemctl daemon-reload 2>/dev/null
-          if [[ $2 = reboot ]]; then
-            echo $H|sudo -S reboot 2>/dev/null
-          else
-            echo $H|sudo -S systemctl start $ethb 2>/dev/null
-            [[ $2 = vcreset ]] && { echo $H|sudo -S systemctl start $ethv 2>/dev/null; }
+          nn=$(num $(($(systemctl status $ethb|grep target-peers|sed 's%.*--target-peers \([0-9]*\).*%\1%')+$1)))
+          if [[ $nn -ge 20 && $nn -le 50 ]]; then 
+            sed "s%--target-peers [0-9]*%--target-peers $nn%" ~/$ethb.save > /etc/systemd/system/$ethb.service
+            m="$ok $(printf '%3i' $nn) $dt nodes: $(printf '%2i' $(num $(echo $H|sudo -S grep 'lighthouse.*peers:' $p4 2>/dev/null|tail -n1|sed 's%.*peers: *\([0-9]*\).*%\1%')))"
           fi
         fi
+        echo -e "RSTI $m" >> $p2
+        resolvectl query smtp.gmail.com 2>/dev/null 1>&2
+        [[ $2 = vcreset ]] && { echo $H|sudo -S systemctl stop $ethv 2>/dev/null; }
+        echo $H|sudo -S systemctl stop $ethb    2>/dev/null
+        echo $H|sudo -S systemctl daemon-reload 2>/dev/null
+        if [[ $2 = reboot ]]; then
+          rm -f /home/eth/beacon.restart.inicio
+          echo $H|sudo -S reboot 2>/dev/null
+        else
+          echo $H|sudo -S systemctl start $ethb 2>/dev/null
+          [[ $2 = vcreset ]] && { echo $H|sudo -S systemctl start $ethv 2>/dev/null; }
+        fi
+        rm -f /home/eth/beacon.restart.inicio
       fi
       sleep 3s
       n=$((n+1))
