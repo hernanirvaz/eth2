@@ -376,10 +376,6 @@ function bh {
   [[ $1 ]] || { bk;echo -e "BL\nBEAC $m"; }
   [[ $1 ]] || { bm;echo -e "BM $(printf '%8i' $b1)\nBEAC $m"; }
   [[ $1 ]] || { sst BEAC "$(systemctl status $ethb)";sst VALI "$(systemctl status $ethv)"; }
-  ok=
-  echo $ok
-  
-  echo $ok
 }
 function brs {
   if [[ ! -f /home/eth/beacon.restart.inicio ]]; then
