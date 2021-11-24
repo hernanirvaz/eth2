@@ -207,7 +207,7 @@ function bk {
   b7=0;local l=0;local n=0;for v in $(echo $H|sudo -S grep 'src: gossip,' $p4 2>/dev/null|sed 's%.*delay_ms: *\([0-9]*\).*%\1%');do n=$((n+1));l=$((l+v));done;[[ $n -gt 0 ]] && b7=$((l/n))
   dt=$(date --rfc-3339=seconds)
   nn=$(num $(echo $H|sudo -S grep 'lighthouse.*peers:' $p4 2>/dev/null|tail -n1|sed 's%.*peers: *\([0-9]*\).*%\1%'))
-  bb;bko
+  bko
 }
 function bko {
   #    0  1   2          3              4      5  6               7   8    9                 10   11  12 13    14 15 16  17 18     19  20  21   22   23   24         25   26
@@ -373,7 +373,7 @@ function bh {
   [[ $1 ]] || echo -e "BH $(printf '%8i' ${1:-$hors})"
   tail -n${1:-$hors} $p2
   [[ $1 ]] || { bo;echo -e "BO $(printf '%8i' $b2)/$(echo "$b0"|wc -l)";boo; }
-  [[ $1 ]] || { bk;echo -e "BL\nBEAC $m"; }
+  [[ $1 ]] || { bb;bk;echo -e "BL\nBEAC $m"; }
   [[ $1 ]] || { bm;echo -e "BM $(printf '%8i' $b1)\nBEAC $m"; }
   [[ $1 ]] || { sst BEAC "$(systemctl status $ethb)";sst VALI "$(systemctl status $ethv)"; }
 }
@@ -385,14 +385,16 @@ function brs {
       local l=$(echo $H|sudo -S grep "lighthouse.$bpid.* INFO " $p4 2>/dev/null|tail -n$pors|sed 's%.* INFO \([^ ]*\) .*%\1%'|sort -u)
       local b=$(echo "$l"|head -n1)
       if [[ $(echo "$l"|wc -l) -eq 2 && $(echo "$l"|tail -n1) = Synced && ( $b = New || $b = Processed ) ]]; then
-        rm -f /home/eth/beacon.restart.inicio;n=400;bk;[[ $2 ]] && { ok=${2:0:2};ok=${ok^^}; }
+        rm -f /home/eth/beacon.restart.inicio
+        [[ $2 ]] && { ok=${2:0:2};ok=${ok^^}; }
+        m="$ok $(printf '%3i' $(num $(echo $H|sudo -S grep 'lighthouse.*peers:' $p4 2>/dev/null|tail -n1|sed 's%.*peers: *\([0-9]*\).*%\1%'))) $(date --rfc-3339=seconds)";n=400
         if [[ $1 -ne 0 ]]; then
           cp /etc/systemd/system/$ethb.service ~/$ethb.save
           nn=$(num $(($(grep target-peers ~/$ethb.save|sed 's%.*target-peers \([0-9]*\).*%\1%')+$1)))
-          [[ $nn -ge 20 && $nn -le 50 ]] && sed "s%--target-peers [0-9]*%--target-peers $nn%" ~/$ethb.save > /etc/systemd/system/$ethb.service
+          [[ $nn -ge 20 && $nn -le 50 ]] && { sed "s%--target-peers [0-9]*%--target-peers $nn%" ~/$ethb.save > /etc/systemd/system/$ethb.service;m="$m nodes: $(printf '%2i' $nn)"; }
         fi
         if [[ $ok != 'OK' ]]; then
-          bko;echo -e "RSTI $m" >> $p2
+          echo -e "RSTI $m" >> $p2
           resolvectl query smtp.gmail.com 2>/dev/null 1>&2
           [[ $2 = vcreset ]] && { echo $H|sudo -S systemctl stop $ethv 2>/dev/null; }
           echo $H|sudo -S systemctl stop $ethb    2>/dev/null
@@ -438,11 +440,11 @@ function ssp {
 [[ $1 = vcp ]] && { ssp; }
 [[ $1 = gs  ]] && { gs;echo -e "GETH $m"; }
 [[ $1 = gl  ]] && { gk;echo -e "GETH $m"; }
-[[ $1 = bl  ]] && { bk;echo -e "BEAC $m"; }
+[[ $1 = bl  ]] && { bb;bk;echo -e "BEAC $m"; }
 [[ $1 = bm  ]] && { bm;echo -e "BEAC $m"; }
 [[ $1 = bn  ]] && { bm;echo -e "BEAC $s"; }
 [[ $1 = glf ]] && { gk;echo -e "GETH $m" >> $p5; }
-[[ $1 = blf ]] && { bk;echo -e "BEAC $m" >> $p2; }
+[[ $1 = blf ]] && { bb;bk;echo -e "BEAC $m" >> $p2; }
 [[ $1 = bmf ]] && { bm;echo -e "BEAC $m" >> $p3; }
 [[ $1 = bnf ]] && { bm;echo -e "BEAC $s" >> $p7; }
 [[ $1 = bmc ]] && { bm;echo -e "BEAC $m" >> $p3;[[ $b5 -ne 0 ]] && { sleep 3m;brs $b5 pereset; } }
