@@ -3,7 +3,7 @@
 source /home/eth/eth2/t1
 
 # utilities for commands/journal
-function num { if [ ${1:-0} -eq $1 ] 2>/dev/null;then echo $1;else echo 0;fi; }
+function num { if [ ${1:-0} -eq $1 ] 2>/dev/null;then echo $1;else echo ${2:-0};fi; }
 function eip { curl -s4 "http://${1}:${2}@dyn.dns.he.net/nic/update?hostname=${1}" 2>/dev/null 1>&2; }
 function cex { echo -e "${i}$1${f}";echo $H|sudo -S $1 2>/dev/null; }
 function jsh { cex "journalctl --no-hostname --no-full -f $1"; }
@@ -206,26 +206,29 @@ function bk {
   b6=$(echo $H|sudo -S grep 'ublished block' $p4 2>/dev/null|wc -l)
   b7=0;local l=0;local n=0;for v in $(echo $H|sudo -S grep 'src: gossip,' $p4 2>/dev/null|sed 's%.*delay_ms: *\([0-9]*\).*%\1%');do n=$((n+1));l=$((l+v));done;[[ $n -gt 0 ]] && b7=$((l/n))
   dt=$(date --rfc-3339=seconds)
-  nn=$(num $(echo $H|sudo -S grep 'lighthouse.*peers:' $p4 2>/dev/null|tail -n1|sed 's%.*peers: *\([0-9]*\).*%\1%'))
+  nn=$(num $(systemctl status $ethb|grep target-peers|sed 's%.*--target-peers \([0-9]*\).*%\1%'))
+  b8=$(num $(echo $H|sudo -S grep 'lighthouse.*peers:' $p4 2>/dev/null|tail -n1|sed 's%.*peers: *\([0-9]*\).*%\1%'))
   bko
 }
 function bko {
   #    0  1   2          3              4      5  6               7   8    9                 10   11  12 13    14 15 16  17 18     19  20  21   22   23   24         25   26
   # BEAC OK   0 2021-11-22 17:15:58+00:00 nodes: 32 reward_penalty: 224 3.54 attestation_block: 2950 2280 0 erros: 2 14 131 29      0 537   0   14 3586 1260     delay: 1000
-  m="$ok $(printf '%3i' $(bu)) $dt"
-  m="$m nodes: $(printf '%2i' $nn) reward_penalty:"
-  m="$m $(printf '%3i'   $(echo "scale=0;($z5*$ratt+$b6*$rblk)*$rate/$decp"|bc))"
-  m="$m $(printf '%3.2f' $(echo "scale=2;($z6*$pmis+$z7*$pmat+$z8*$pmah+$z9*$pdly)*$rate/$decp"|bc))"
-  m="$m attestation_block: $(printf '%4i' $z5) $(printf '%4i' $(bz)) $(printf '%1i' $b6)"
-  m="$m erros: $(printf '%1i' $z6) $(printf '%2i' $z7) $(printf '%3i' $z8) $(printf '%2i' $z9)"
-  m="$m $(printf '%6i' $z1) $(printf '%3i' $z2) $(printf '%3i' $(bw))"
-  m="$m $(printf '%4i' $z3) $(printf '%4i' $z4) $(printf '%4i' $(br))    "
-  m="$m delay: $(printf '%4i' $b7)"
+  m="$ok $(printf '%3i' $(bu)) $dt $(printf 'nod%02i:' $b8) $(printf '%2i' $nn)"
+  if [[ ${1:-BEAC} = BEAC ]];then 
+    m="$m reward_penalty:"
+    m="$m $(printf '%3i'   $(echo "scale=0;($z5*$ratt+$b6*$rblk)*$rate/$decp"|bc))"
+    m="$m $(printf '%3.2f' $(echo "scale=2;($z6*$pmis+$z7*$pmat+$z8*$pmah+$z9*$pdly)*$rate/$decp"|bc))"
+    m="$m attestation_block: $(printf '%4i' $z5) $(printf '%4i' $(bz)) $(printf '%1i' $b6)"
+    m="$m erros: $(printf '%1i' $z6) $(printf '%2i' $z7) $(printf '%3i' $z8) $(printf '%2i' $z9)"
+    m="$m $(printf '%6i' $z1) $(printf '%3i' $z2) $(printf '%3i' $(bw))"
+    m="$m $(printf '%4i' $z3) $(printf '%4i' $z4) $(printf '%4i' $(br))    "
+    m="$m delay: $(printf '%4i' $b7)"
+  fi 
 }
 function bmo {
   #    0  1   2          3              4      5  6    7    8    9   10   11   12   13   14    15
   # BEAC  2   1 2021-11-14 16:16:34+00:00 nodes: 20 avg: 0.00 0.00 0.00 0.00 0.00 0.00 1.75  1.75
-  m="$(printf '%2i' $b3) $(printf '%3i' $b2) $dt nodes: $(printf '%2i' $nn)"
+  m="$(printf '%2i' $b3) $(printf '%3i' $b2) $dt $(printf 'nod%02i:' $b8) $(printf '%2i' $nn)"
   m="$m avg: $(printf '%4.2f' ${a[50]}) $(printf '%4.2f' ${a[45]}) $(printf '%4.2f' ${a[40]}) $(printf '%4.2f' ${a[35]}) $(printf '%4.2f' ${a[30]}) $(printf '%4.2f' ${a[25]}) $(printf '%4.2f' ${a[20]})"
   m="$m $(printf '%5.2f' ${a[00]})$b4"
   #    0      1          2              3    4 5 6 7 8 9 0   1    2 3 4 5 6 7 8   9    0 1 2 3 4 5 6    7    8 9 0 1 2 3 4     5    6 7 8 9 0 1 2    3
@@ -247,6 +250,7 @@ function bhr {
     nn=${v[6]}
     b6=${v[13]} # published block
     b7=${v[26]} # delay
+    b8=$(echo ${v[5]}|sed 's%nod\([0-9]*\):%\1%')
     z1=${v[19]} # processed block
     z2=${v[20]} # block received
     z3=${v[22]} # not INFO
@@ -256,7 +260,7 @@ function bhr {
     z7=${v[16]} # erros target
     z8=${v[17]} # erros head
     z9=${v[18]} # erros had
-    bko
+    bko ${v[0]}
     echo -e "${v[0]} $m" >> ${p2}new
   done <<< $(cat $p2)
 
@@ -269,6 +273,7 @@ function bhr {
     g=$(grep -n "$d $e" ${p2}new|cut -d: -f1)
     dt=${o[3]}\ ${o[4]}
     nn=${o[6]}
+    b8=$(echo ${o[5]}|sed 's%nod\([0-9]*\):%\1%')
     b2=$(head -n$g ${p2}new|grep "BEAC.*$e"|sort -k10.1n|grep -n $d|cut -d: -f1);l=$((b2+l));n=$((1+n))
     b3=$(printf '%.0f' $(echo "scale=5;$l/$n"|bc))
     while read -a v;do bm1;done <<< $(head -n$g ${p2}new|tail -n$((g-b))|grep BEAC)
@@ -313,6 +318,7 @@ function bm {
   local b=0
   b1=0
   nn=$(num $(systemctl status $ethb|grep target-peers|sed 's%.*--target-peers \([0-9]*\).*%\1%'))
+  b8=$(num $(echo $H|sudo -S grep 'lighthouse.*peers:' $p4 2>/dev/null|tail -n1|sed 's%.*peers: *\([0-9]*\).*%\1%'))
   dt=$(date --rfc-3339=seconds)
   if [[ -f $p7 ]]; then
     read -a o <<< $(tail -n1 $p7)
@@ -386,13 +392,16 @@ function brs {
       local b=$(echo "$l"|head -n1)
       if [[ $(echo "$l"|wc -l) -eq 2 && $(echo "$l"|tail -n1) = Synced && ( $b = New || $b = Processed ) ]]; then
         [[ $2 ]] && { ok=${2:0:2};ok=${ok^^}; }
-        dt=$(date --rfc-3339=seconds);m="$ok     $dt"
+        dt=$(date --rfc-3339=seconds)
+        nn=$(num $(systemctl status $ethb|grep target-peers|sed 's%.*--target-peers \([0-9]*\).*%\1%'))
+        b8=$(num $(echo $H|sudo -S grep 'lighthouse.*peers:' $p4 2>/dev/null|tail -n1|sed 's%.*peers: *\([0-9]*\).*%\1%'))
+        m="$ok   0 $dt $(printf 'nod%02i:' $b8) $(printf '%2i' $nn)"
         if [[ $1 -ne 0 ]]; then
           cp /etc/systemd/system/$ethb.service ~/$ethb.save
-          nn=$(num $(($(systemctl status $ethb|grep target-peers|sed 's%.*--target-peers \([0-9]*\).*%\1%')+$1)))
+          nn=$(num $((nn+$1)))
           if [[ $nn -ge 20 && $nn -le 50 ]]; then 
             sed "s%--target-peers [0-9]*%--target-peers $nn%" ~/$ethb.save > /etc/systemd/system/$ethb.service
-            m="$ok $(printf '%3i' $nn) $dt nodes: $(printf '%2i' $(num $(echo $H|sudo -S grep 'lighthouse.*peers:' $p4 2>/dev/null|tail -n1|sed 's%.*peers: *\([0-9]*\).*%\1%')))"
+            m="$ok   0 $dt $(printf 'nod%02i:' $b8) $(printf '%2i' $nn)"
           fi
         fi
         echo -e "RSTI $m" >> $p2
