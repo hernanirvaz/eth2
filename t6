@@ -28,8 +28,8 @@ function csh {
 }
 function esh {
   local l=$(echo $H|sudo -S grep -v 'geth\[\|lighthouse' $p4 2>/dev/null|grep -i 'error' |wc -l)
-  local e=$(echo $H|sudo -S grep -v 'geth\[\|lighthouse' $p4 2>/dev/null|grep -i 'error' |tail -n1|sed 's%.*hrv-zotac[0-9] *\(.*\)%\1%;s%:%%g;s%  *% %g'|cut -c1-53)
   local n=$(echo $H|sudo -S grep -i 'geth\[\|lighthouse' $p4 2>/dev/null|grep -v ' INFO '|wc -l)
+  local e=$(echo $H|sudo -S grep -v 'geth\[\|lighthouse' $p4 2>/dev/null|grep -i 'error' |tail -n1|sed 's%.*hrv-zotac[0-9] *\(.*\)%\1%;s%:%%g;s%  *% %g'|cut -c1-53)
   local d=$(echo $H|sudo -S grep -i 'geth\[\|lighthouse' $p4 2>/dev/null|grep -v ' INFO '|tail -n1|sed 's%.*[0-9]*:[0-9]*:[0-9]*\.[0-9][0-9][0-9]]* *\(.*\)%\1%;s%:%%g;s%:%%g;s%  *% %g'|cut -c1-53)
   m="ERRO"
   m="$m $(printf '%2i' $l)"
@@ -40,17 +40,11 @@ function esh {
   echo -e "$m"
 }
 function psh {
-  local l=0;local n=0
-  local b=$(echo $H|sudo -S grep 'e above threshold' $p4 2>/dev/null|head -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%');if [[ $b ]];then b="throttled: $b";else b='';fi
-  local g=$(echo $H|sudo -S grep 'ture/speed normal' $p4 2>/dev/null|tail -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%');if [[ $g ]];then g="ok: $g"       ;else g='';fi
-  if [[ $(which sensors) ]]; then
-    for v in $(sensors|grep 'Package\|Core'|sed 's%.*: *\([-+][0-9][0-9]*\.[0-9]*\).*%\1%')
-    do n=$((n+1));l=$(echo "scale=1;$l$v"|bc)
-    done
-  else
-    n=1
-  fi
-  echo -e "TEMP $(printf '%5.1f' $(echo "scale=1;$l/$n"|bc))C $(date --rfc-3339=seconds) $b $g"
+  local l=0;local n=0;local v=0
+  local e=$(echo $H|sudo -S grep 'ture/speed normal' $p4 2>/dev/null|tail -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%');if [[ $e ]];then e="ok: $e"       ;else e='';fi
+  local d=$(echo $H|sudo -S grep 'e above threshold' $p4 2>/dev/null|head -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%');if [[ $d ]];then d="throttled: $d";else d='';fi
+  for v in $(sensors 2>/dev/null|grep 'Package\|Core'|sed 's%.*: *\([-+][0-9][0-9]*\.[0-9]*\).*%\1%');do n=$((n+1));l=$(echo "scale=1;$l$v"|bc);done;[[ $n -eq 0 ]] && n=1
+  echo -e "TEMP $(printf '%5.1f' $(echo "scale=1;$l/$n"|bc))C $(date --rfc-3339=seconds) $d $e"
 }
 # Plex Media Server
 function rxw { cex "ufw$2 allow from 192.168.8.0/24 $1"; }
@@ -157,8 +151,8 @@ function gs {
       local g=$(echo $g1|sed -Ee 's%.*highestBlock: *([0-9]+).*%\1%i')
       local n=$(echo $g1|sed -Ee 's%.*currentBlock: *([0-9]+).*%\1%i')
       local l=$(echo $g1|sed -Ee 's%.*knownStates: *([0-9]+).*%\1%i')
-      local b=$(echo $g1|sed -Ee 's%.*pulledStates: *([0-9]+).*%\1%i')
-      m="SYNCIN $dt nodes: $(printf '%2i' $nn) blocks: $((g*1)) ($((g-n))) states: $((l*1)) ($((l-b)))"
+      local h=$(echo $g1|sed -Ee 's%.*pulledStates: *([0-9]+).*%\1%i')
+      m="SYNCIN $dt nodes: $(printf '%2i' $nn) blocks: $((g*1)) ($((g-n))) states: $((l*1)) ($((l-h)))"
     fi
   else
     m="NOT HERE $dt"
@@ -188,6 +182,9 @@ function br { echo $((90*z3)); }
 function bs { echo $(tail -n$1 $p2 2>/dev/null|cut -d' ' -f1|sort -u|wc -l); }
 function bu { echo $(($(bt 200 $(bz) $z5)+$(bt 100 $(bw) $z2)+$(bt 100 $(br) $z4))); }
 function bx { if [[ $1 -ge ${2:-25} && ${2:-25} -le 50 ]];then echo $(bx $1 $((${2:-25}+5)));else echo $((${2:-25}-5));fi; }
+function bv { echo $(num $(systemctl status $ethb|grep target-peers|sed 's%.*--target-peers \([0-9]*\).*%\1%')); }
+function bq { echo $(num $(echo $H|sudo -S grep 'lighthouse.*peers:' $p4 2>/dev/null|tail -n1|sed 's%.*peers: *\([0-9]*\).*%\1%')); }
+function bf { dt=$(date --rfc-3339=seconds);nn=$(bv);b8=$(bq); }
 function bb {
   local e=$(echo $H|sudo -S grep "lighthouse.$bpid" $p4 2>/dev/null|tail -n3600)
   z1=$(echo "$e"|grep    'processed block'|wc -l)
@@ -204,31 +201,28 @@ function bb {
 }
 function bk {
   b6=$(echo $H|sudo -S grep 'ublished block' $p4 2>/dev/null|wc -l)
-  b7=0;local l=0;local n=0;for v in $(echo $H|sudo -S grep 'src: gossip,' $p4 2>/dev/null|sed 's%.*delay_ms: *\([0-9]*\).*%\1%');do n=$((n+1));l=$((l+v));done;[[ $n -gt 0 ]] && b7=$((l/n))
-  dt=$(date --rfc-3339=seconds)
-  nn=$(num $(systemctl status $ethb|grep target-peers|sed 's%.*--target-peers \([0-9]*\).*%\1%'))
-  b8=$(num $(echo $H|sudo -S grep 'lighthouse.*peers:' $p4 2>/dev/null|tail -n1|sed 's%.*peers: *\([0-9]*\).*%\1%'))
-  bko
+  b7=0;local l=0;local n=0;local v=0
+  for v in $(echo $H|sudo -S grep 'src: gossip,' $p4 2>/dev/null|sed 's%.*delay_ms: *\([0-9]*\).*%\1%');do n=$((n+1));l=$((l+v));done
+  [[ $n -gt 0 ]] && b7=$((l/n))
+  bf;bko
 }
 function bko {
   #    0  1   2          3              4      5  6               7   8    9                 10   11  12 13    14 15 16  17 18     19  20  21   22   23   24         25   26
-  # BEAC OK   0 2021-11-22 17:15:58+00:00 nodes: 32 reward_penalty: 224 3.54 attestation_block: 2950 2280 0 erros: 2 14 131 29      0 537   0   14 3586 1260     delay: 1000
-  m="$ok $(printf '%3i' $(bu)) $dt $(printf 'nod%02i:' $b8) $(printf '%2i' $nn)"
-  if [[ ${1:-BEAC} = BEAC ]];then 
-    m="$m reward_penalty:"
-    m="$m $(printf '%3i'   $(echo "scale=0;($z5*$ratt+$b6*$rblk)*$rate/$decp"|bc))"
-    m="$m $(printf '%3.2f' $(echo "scale=2;($z6*$pmis+$z7*$pmat+$z8*$pmah+$z9*$pdly)*$rate/$decp"|bc))"
-    m="$m attestation_block: $(printf '%4i' $z5) $(printf '%4i' $(bz)) $(printf '%1i' $b6)"
-    m="$m erros: $(printf '%1i' $z6) $(printf '%2i' $z7) $(printf '%3i' $z8) $(printf '%2i' $z9)"
-    m="$m $(printf '%6i' $z1) $(printf '%3i' $z2) $(printf '%3i' $(bw))"
-    m="$m $(printf '%4i' $z3) $(printf '%4i' $z4) $(printf '%4i' $(br))    "
-    m="$m delay: $(printf '%4i' $b7)"
-  fi 
+  # BEAC OK   0 2021-11-22 17:15:58+00:00 node00: 32 reward_penalty: 224 3.54 attestation_block: 2950 2280 0 erros: 2 14 131 29      0 537   0   14 3586 1260     delay: 1000
+  m="$ok $(printf '%3i' $(bu)) $dt $(printf 'node%02i:' $b8) $(printf '%2i' $nn)"
+  m="$m reward_penalty:"
+  m="$m $(printf '%3i'   $(echo "scale=0;($z5*$ratt+$b6*$rblk)*$rate/$decp"|bc))"
+  m="$m $(printf '%3.2f' $(echo "scale=2;($z6*$pmis+$z7*$pmat+$z8*$pmah+$z9*$pdly)*$rate/$decp"|bc))"
+  m="$m attestation_block: $(printf '%4i' $z5) $(printf '%4i' $(bz)) $(printf '%1i' $b6)"
+  m="$m erros: $(printf '%1i' $z6) $(printf '%2i' $z7) $(printf '%3i' $z8) $(printf '%2i' $z9)"
+  m="$m $(printf '%6i' $z1) $(printf '%3i' $z2) $(printf '%3i' $(bw))"
+  m="$m $(printf '%4i' $z3) $(printf '%4i' $z4) $(printf '%4i' $(br))    "
+  m="$m delay: $(printf '%4i' $b7)"
 }
 function bmo {
-  #    0  1   2          3              4      5  6    7    8    9   10   11   12   13   14    15
-  # BEAC  2   1 2021-11-14 16:16:34+00:00 nodes: 20 avg: 0.00 0.00 0.00 0.00 0.00 0.00 1.75  1.75
-  m="$(printf '%2i' $b3) $(printf '%3i' $b2) $dt $(printf 'nod%02i:' $b8) $(printf '%2i' $nn)"
+  #    0  1   2          3              4       5  6    7    8    9   10   11   12   13   14    15
+  # BEAC  2   1 2021-11-14 16:16:34+00:00 node00: 20 avg: 0.00 0.00 0.00 0.00 0.00 0.00 1.75  1.75
+  m="$(printf '%2i' $b3) $(printf '%3i' $b2) $dt $(printf 'node%02i:' $b8) $(printf '%2i' $nn)"
   m="$m avg: $(printf '%4.2f' ${a[50]}) $(printf '%4.2f' ${a[45]}) $(printf '%4.2f' ${a[40]}) $(printf '%4.2f' ${a[35]}) $(printf '%4.2f' ${a[30]}) $(printf '%4.2f' ${a[25]}) $(printf '%4.2f' ${a[20]})"
   m="$m $(printf '%5.2f' ${a[00]})$b4"
   #    0      1          2              3    4 5 6 7 8 9 0   1    2 3 4 5 6 7 8   9    0 1 2 3 4 5 6    7    8 9 0 1 2 3 4     5    6 7 8 9 0 1 2    3
@@ -244,39 +238,45 @@ function bhr {
   [[ -f ${p2}new ]] && rm ${p2}new 
   [[ -f ${p3}new ]] && rm ${p3}new 
 
+  unset v
   while read -a v;do
     ok=${v[1]}
     dt=${v[3]}\ ${v[4]}
+    b8=$(echo ${v[5]}|sed 's%node\([0-9]*\):%\1%')
     nn=${v[6]}
-    b6=${v[13]} # published block
-    b7=${v[26]} # delay
-    b8=$(echo ${v[5]}|sed 's%nod\([0-9]*\):%\1%')
-    z1=${v[19]} # processed block
-    z2=${v[20]} # block received
-    z3=${v[22]} # not INFO
-    z4=${v[23]} #     INFO
-    z5=${v[11]} # attestation
-    z6=${v[15]} # erros missing
-    z7=${v[16]} # erros target
-    z8=${v[17]} # erros head
-    z9=${v[18]} # erros had
-    bko ${v[0]}
+    if [[ ${v[0]} != BEAC ]];then 
+      m="$ok $(printf '%3i' ${v[2]}) $dt $(printf 'node%02i:' $b8) $(printf '%2i' $nn)"
+    else
+      b6=${v[13]} # published block
+      b7=${v[26]} # delay
+      z1=${v[19]} # processed block
+      z2=${v[20]} # block received
+      z3=${v[22]} # not INFO
+      z4=${v[23]} #     INFO
+      z5=${v[11]} # attestation
+      z6=${v[15]} # erros missing
+      z7=${v[16]} # erros target
+      z8=${v[17]} # erros head
+      z9=${v[18]} # erros had
+      bko 
+    fi
     echo -e "${v[0]} $m" >> ${p2}new
   done <<< $(cat $p2)
 
   bm0
-  local d='000-00-00';local e='23:58'
-  local l=0;local n=0;local b=0;local g=0
+  local d='0000-00-00';local e='23:58';local l=0;local n=0;local h=0;local g=0
+  unset o
   while read -a o;do
     d=${o[3]}
-    b=$g
+    h=$g
     g=$(grep -n "$d $e" ${p2}new|cut -d: -f1)
     dt=${o[3]}\ ${o[4]}
     nn=${o[6]}
-    b8=$(echo ${o[5]}|sed 's%nod\([0-9]*\):%\1%')
+    b8=$(echo ${o[5]}|sed 's%node\([0-9]*\):%\1%')
     b2=$(head -n$g ${p2}new|grep "BEAC.*$e"|sort -k10.1n|grep -n $d|cut -d: -f1);l=$((b2+l));n=$((1+n))
     b3=$(printf '%.0f' $(echo "scale=5;$l/$n"|bc))
-    while read -a v;do bm1;done <<< $(head -n$g ${p2}new|tail -n$((g-b))|grep BEAC)
+    unset v
+    while read -a v;do bm1;done <<< $(head -n$g ${p2}new|tail -n$((g-h))|grep BEAC)
     if [[ ${#o[@]} -gt 16 ]];then b4=" ${o[16]}";else b4='';fi
     bm2;bmo
     echo -e "${o[0]} $m" >> ${p3}new
@@ -314,15 +314,11 @@ function bm2 {
   [[ ${c[00]} -gt 0 ]] && a[00]=$(echo "scale=2;(${k[00]}*$pmis+${z[00]}*$pmat+${x[00]}*$pmah+${w[00]}*$pdly)/${c[00]}*$rate/$decp"|bc)
 }
 function bm {
-  bm0
-  local b=0
-  b1=0
-  nn=$(num $(systemctl status $ethb|grep target-peers|sed 's%.*--target-peers \([0-9]*\).*%\1%'))
-  b8=$(num $(echo $H|sudo -S grep 'lighthouse.*peers:' $p4 2>/dev/null|tail -n1|sed 's%.*peers: *\([0-9]*\).*%\1%'))
-  dt=$(date --rfc-3339=seconds)
+  bm0;bf
+  b1=0;local g=0
   if [[ -f $p7 ]]; then
-    read -a o <<< $(tail -n1 $p7)
-    b=${o[1]}
+    unset o;read -a o <<< $(tail -n1 $p7)
+    g=${o[1]}
     k[50]=${o[13]};k[45]=${o[14]};k[40]=${o[15]};k[35]=${o[16]};k[30]=${o[17]};k[25]=${o[18]};k[20]=${o[19]}
     z[50]=${o[21]};z[45]=${o[22]};z[40]=${o[23]};z[35]=${o[24]};z[30]=${o[25]};z[25]=${o[26]};z[20]=${o[27]}
     x[50]=${o[29]};x[45]=${o[30]};x[40]=${o[31]};x[35]=${o[32]};x[30]=${o[33]};x[25]=${o[34]};x[20]=${o[35]}
@@ -331,12 +327,12 @@ function bm {
   fi
   if [[ -f $p2 ]]; then
     b1=$(cat $p2|wc -l)
-    while read -a v;do bm1;done <<< $(tail -n$((b1-b)) $p2|grep BEAC)
+    unset v;while read -a v;do bm1;done <<< $(tail -n$((b1-g)) $p2|grep BEAC)
   fi
   bm2
   [[ ${b2:-0} -eq 0 ]] && bo
   local l=0;local n=0
-  [[ -f $p3 ]] && while read -a v;do l=$((${v[2]}+l));n=$((1+n));done <<< $(cat $p3)
+  unset v;[[ -f $p3 ]] && while read -a v;do l=$((${v[2]}+l));n=$((1+n));done <<< $(cat $p3)
   b3=$(printf '%.0f' $(echo "scale=5;($l+$b2)/(1+$n)"|bc))
   b4=''
   b5=0;l=${a[$nn]}
@@ -353,11 +349,12 @@ function bm {
 }
 function boo {
   if [[ -f $p2 ]]; then
-    local b=${b2:-0};local g=${b2:-0}
-    if [[ $(echo $1|egrep '^[0-9]+$') ]];then g=$1;else if [[ $g -lt $l2rs && $(echo "$b0"|wc -l) -ge $l2rs ]];then b=$l2rs;g=$l2rs;fi;fi
-    if [[ $(echo $1|egrep '^[0-9]+$') ]];then b=$1;else if [[ $b -gt $hors ]];then b=$hors;fi;fi
-    echo "$b0"|sort -k10.1n|head -n$g|tail -n$b
+    local e=${b2:-0};local d=${b2:-0}
+    if [[ $(echo $1|egrep '^[0-9]+$') ]];then e=$1;else if [[ $e -lt $l2rs && $(echo "$b0"|wc -l) -ge $l2rs ]];then d=$l2rs;e=$l2rs;fi;fi
+    if [[ $(echo $1|egrep '^[0-9]+$') ]];then d=$1;else if [[ $d -gt $hors ]];then d=$hors;fi;fi
+    echo "$b0"|sort -k10.1n|head -n$e|tail -n$d
   fi
+
 }
 function bo {
   b2=0
@@ -389,22 +386,15 @@ function brs {
     local n=0
     while [[ -f /home/eth/beacon.restart.inicio && $n -lt 400 ]]; do
       local l=$(echo $H|sudo -S grep "lighthouse.$bpid.* INFO " $p4 2>/dev/null|tail -n$pors|sed 's%.* INFO \([^ ]*\) .*%\1%'|sort -u)
-      local b=$(echo "$l"|head -n1)
-      if [[ $(echo "$l"|wc -l) -eq 2 && $(echo "$l"|tail -n1) = Synced && ( $b = New || $b = Processed ) ]]; then
-        [[ $2 ]] && { ok=${2:0:2};ok=${ok^^}; }
-        dt=$(date --rfc-3339=seconds)
-        nn=$(num $(systemctl status $ethb|grep target-peers|sed 's%.*--target-peers \([0-9]*\).*%\1%'))
-        b8=$(num $(echo $H|sudo -S grep 'lighthouse.*peers:' $p4 2>/dev/null|tail -n1|sed 's%.*peers: *\([0-9]*\).*%\1%'))
-        m="$ok   0 $dt $(printf 'nod%02i:' $b8) $(printf '%2i' $nn)"
+      local d=$(echo "$l"|head -n1)
+      if [[ $(echo "$l"|wc -l) -eq 2 && $(echo "$l"|tail -n1) = Synced && ( $d = New || $d = Processed ) ]]; then
+        bf;[[ $2 ]] && { ok=${2:0:2};ok=${ok^^}; }
         if [[ $1 -ne 0 ]]; then
           cp /etc/systemd/system/$ethb.service ~/$ethb.save
-          nn=$(num $((nn+$1)))
-          if [[ $nn -ge 20 && $nn -le 50 ]]; then 
-            sed "s%--target-peers [0-9]*%--target-peers $nn%" ~/$ethb.save > /etc/systemd/system/$ethb.service
-            m="$ok   0 $dt $(printf 'nod%02i:' $b8) $(printf '%2i' $nn)"
-          fi
+          nn=$((nn+$1))
+          [[ $nn -ge 20 && $nn -le 50 ]] && sed "s%--target-peers [0-9]*%--target-peers $nn%" ~/$ethb.save > /etc/systemd/system/$ethb.service
         fi
-        echo -e "RSTI $m" >> $p2
+        echo -e "RSTI $ok $(printf '%3i' $n) $dt $(printf 'node%02i:' $b8) $(printf '%2i' $nn)" >> $p2
         resolvectl query smtp.gmail.com 2>/dev/null 1>&2
         [[ $2 = vcreset ]] && { echo $H|sudo -S systemctl stop $ethv 2>/dev/null; }
         echo $H|sudo -S systemctl stop $ethb    2>/dev/null
