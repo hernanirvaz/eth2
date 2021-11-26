@@ -3,6 +3,7 @@
 source /home/eth/eth2/t1
 
 # utilities for commands/journal
+function dts { date '+%Y-%m-%d %H:%M:%S'; }
 function pst { systemctl status $1 2>/dev/null; }
 function num { if [ ${1:-0} -eq $1 ] 2>/dev/null;then echo $1;else echo 0;fi; }
 function eip { curl -s4 "http://${1}:${2}@dyn.dns.he.net/nic/update?hostname=${1}" 2>/dev/null 1>&2; }
@@ -25,7 +26,7 @@ function csh {
   [[ $(timedatectl|grep synchronized:|sed 's%.*synchronized: \([a-z]*\).*%\1%') = yes ]] && e='OK'
   m='CLCK'
   m="$m $e $(printf '%3i' $(echo $H|sudo -S grep -i 'check system clock' $p4 2>/dev/null|wc -l))"
-  m="$m $(date --rfc-3339=seconds)"
+  m="$m $(dts)"
   m="$m status: $(pst systemd-timesyncd|grep Active:|sed 's%.*Active: \(.*\)%\1%')"
   echo -e "$m"
 }
@@ -37,7 +38,7 @@ function esh {
   m="ERRO"
   m="$m $(printf '%2i' $l)"
   m="$m $(printf '%3i' $n)"
-  m="$m $(date --rfc-3339=seconds)"
+  m="$m $(dts)"
   [[ $l -gt 0 ]] && m="$m sys: $e"
   [[ $n -gt 0 ]] && m="$m eth2: $d"
   echo -e "$m"
@@ -47,7 +48,7 @@ function psh {
   local e=$(echo $H|sudo -S grep 'ture/speed normal' $p4 2>/dev/null|tail -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%');if [[ $e ]];then e="ok: $e"       ;else e='';fi
   local d=$(echo $H|sudo -S grep 'e above threshold' $p4 2>/dev/null|head -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%');if [[ $d ]];then d="throttled: $d";else d='';fi
   for v in $(sensors 2>/dev/null|grep 'Package\|Core'|sed 's%.*: *\([-+][0-9][0-9]*\.[0-9]*\).*%\1%');do n=$((n+1));l=$(echo "scale=1;$l$v"|bc);done;[[ $n -eq 0 ]] && n=1
-  echo -e "TEMP $(printf '%5.1f' $(echo "scale=1;$l/$n"|bc))C $(date --rfc-3339=seconds) $d $e"
+  echo -e "TEMP $(printf '%5.1f' $(echo "scale=1;$l/$n"|bc))C $(dts) $d $e"
 }
 # Plex Media Server
 function rxw { cex "ufw$2 allow from 192.168.8.0/24 $1"; }
@@ -129,7 +130,7 @@ function fd { [[ $(pst $ethf|grep -i loaded) ]] && { cex "systemctl disable $eth
 function gv { echo $(num $(pst $ethg|grep maxpeers|sed 's%.*--maxpeers \([0-9]*\).*%\1%')); }
 function gg { echo $(num $(geth attach "http://$cgth:8545" --exec net.peerCount 2>/dev/null)); }
 function gy { echo       $(geth attach "http://$cgth:8545" --exec eth.syncing   2>/dev/null); }
-function gf { dt=$(date --rfc-3339=seconds);g8=$(gg);nn=$(gv); }
+function gf { dt=$(dts);g8=$(gg);nn=$(gv); }
 function gb {
   ok='OK'
   g0=$(echo $H|sudo -S grep -i 'imported new' $p4 2>/dev/null|wc -l)
@@ -155,7 +156,7 @@ function gs {
       m="SYNCIN $dt $(printf 'node%02i:' $g8) $(printf '%2i' $nn) blocks: $((g*1)) ($((g-n))) states: $((l*1)) ($((l-h)))"
     fi
   else
-    m="NOT HERE $(date --rfc-3339=seconds)"
+    m="NOT HERE $(dts)"
   fi
 }
 function grs {
@@ -180,7 +181,7 @@ function bu { echo $(($(bt 200 $(bz) $z5)+$(bt 100 $(bw) $z2)+$(bt 100 $(br) $z4
 function bx { if [[ $1 -ge ${2:-25} && ${2:-25} -le 50 ]];then echo $(bx $1 $((${2:-25}+5)));else echo $((${2:-25}-5));fi; }
 function bv { echo $(num $(pst $ethb|grep target-peers|sed 's%.*--target-peers \([0-9]*\).*%\1%')); }
 function bq { echo $(num $(echo $H|sudo -S grep 'lighthouse.*peers:' $p4 2>/dev/null|tail -n1|sed 's%.*peers: *\([0-9]*\).*%\1%')); }
-function bf { dt=$(date --rfc-3339=seconds);nn=$(bv);b8=$(bq); }
+function bf { dt=$(dts);nn=$(bv);b8=$(bq); }
 function bb {
   local e=$(echo $H|sudo -S grep "lighthouse.$bpid" $p4 2>/dev/null|tail -n3600)
   z1=$(echo "$e"|grep    'processed block'|wc -l)
@@ -203,7 +204,7 @@ function bk {
     b7=$((l/n))
     bf;bb;bko
   else
-    m="NOT HERE $(date --rfc-3339=seconds)"
+    m="NOT HERE $(dts)"
   fi
 }
 function bko {
