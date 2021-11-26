@@ -371,7 +371,6 @@ function bo {
   fi 
 }
 function bh {
-  [[ $1 ]] || echo -e "BH $(printf '%8i' ${1:-$hors})"
   tail -n${1:-$hors} $p2
   [[ $1 ]] || { bo;echo -e "BO $(printf '%8i' $b2)/$(echo "$b0"|wc -l)";boo; }
   [[ $1 ]] || { bk;echo -e "BL\nBEAC $m"; }
