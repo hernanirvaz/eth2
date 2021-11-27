@@ -58,7 +58,7 @@ function gy { echo       $(geth attach "http://$cgth:8545" --exec eth.syncing   
 function gf { dt=$(dts);g8=$(gg);nn=$(gv); }
 function gb {
   ok='OK'
-  g0=$(echo $H|sudo -S grep 'new chain segment' $p4 2>/dev/null|wc -l)
+  g0=$(echo $H|sudo -S grep 'mported new' $p4 2>/dev/null|wc -l)
   local g=$(num $(grep -i blocks: $p5 2>/dev/null|tail -n1|sed 's%.*blocks: *\([0-9]*\).*%\1%'))
   [[ $g0 -eq $g ]] && ok='BK'
 }
