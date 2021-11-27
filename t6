@@ -444,17 +444,17 @@ function ssp {
 [[ $1 = blf ]] && { bk;echo -e "BEAC $m" >> $p2; }
 [[ $1 = bmf ]] && { bm;echo -e "BEAC $m" >> $p3; }
 [[ $1 = bnf ]] && { bm;echo -e "BEAC $s" >> $p7; }
-[[ $1 = bmc ]] && { bm;echo -e "BEAC $m" >> $p3;[[ $b5 -ne 0 ]] && { sleep 3m;brs $b5 pereset; } }
 [[ $1 = gh  ]] && { [[ -f $p5 ]] && { tail -n ${2:-$hors} $p5;gk;echo -e "GETH $m\n";sst GETH "$(pst $ethg)";csh;psh;esh; } }
 [[ $1 = bh  ]] && { [[ -f $p2 ]] && { bh $2;[[ $2 ]] || { csh;psh;esh; } } }
 [[ $1 = bhr ]] && { [[ -f $p2 ]] && { bhr; } }
 [[ $1 = bo  ]] && { bo $2 $3;boo $2; }
 [[ $1 = cpe ]] && { csh;psh;esh; }
-[[ $1 = gkr ]] && { gb;[[ $ok != 'OK' ]] && grs ${2:-0}; }
-[[ $1 = bkr ]] && { bb;[[ $ok != 'OK' ]] && brs ${2:-0}; }
-[[ $1 = grs ]] && { grs ${2:-0}; }
+[[ $1 = gkr ]] && { gb;[[ $ok != 'OK' ]] && grs ${2:-0}    ; }
+[[ $1 = bkr ]] && { bb;[[ $ok != 'OK' ]] && brs ${2:-0}    ; }
+[[ $1 = bmc ]] && { bm;[[ $b5 -ne 0   ]] && brs $b5 pereset; }
+[[ $1 = grs ]] && { grs ${2:-0}        ; }
 [[ $1 = brs ]] && { brs ${2:-0} bnreset; }
-[[ $1 = srs ]] && { brs ${2:-0} reboot; }
+[[ $1 = srs ]] && { brs ${2:-0} reboot ; }
 [[ $1 = lrs ]] && { brs ${2:-0} vcreset; }
 # lista servicos & portas
 [[ $1 = lp  ]] && { netstat -tulpn; }
