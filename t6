@@ -107,10 +107,10 @@ function bq { echo $(num $(echo $H|sudo -S grep 'lighthouse.*peers:' $p4 2>/dev/
 function bf { dt=$(dts);nn=$(bv);b8=$(bq); }
 function bb {
   local e=$(echo $H|sudo -S grep "lighthouse.$bpid" $p4 2>/dev/null|tail -n3600)
-  z1=$(echo "$e"|grep    'processed block'|wc -l)
-  z2=$(echo "$e"|grep    'block received' |wc -l)
-  z3=$(echo "$e"|grep -v ' INFO '         |wc -l)
-  z4=$(echo "$e"|grep    ' INFO '         |wc -l)
+  z1=$(echo "$e"|grep    'rocessed block'|wc -l)
+  z2=$(echo "$e"|grep    'block received'|wc -l)
+  z3=$(echo "$e"|grep -v ' INFO '        |wc -l)
+  z4=$(echo "$e"|grep    ' INFO '        |wc -l)
   z5=$(echo $(echo $H|sudo -S grep 'attestation(s) success' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%[,"]%%g')|wc -w)
   z6=$(echo $(echo $H|sudo -S grep 'attestation(s) missing' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%[,"]%%g')|wc -w)
   z7=$(echo $(echo $H|sudo -S grep 'attestation(s).*target' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%[,"]%%g')|wc -w)
