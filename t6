@@ -136,7 +136,7 @@ function bm {
   local l=0;local n=0;[[ -f $p3 ]] && { unset v;while read -a v;do l=$((${v[2]}+l));n=$((1+n));done <<< $(cat $p3); }
   b3=$(printf '%.0f' $(echo "scale=5;($l+$b2)/(1+$n)"|bc));b4=''
   b5=0;b8=${a[$nn]};bf 20;bf 25;bf 30;bf 35;bf 40;bf 45;bf 50
-  if [[ ($b2 -gt $b3 && $(printf '%.0f' $(echo "${a[$nn]}*100"|bc)) -ge $(printf '%.0f' $(echo "${a[00]}*100"|bc))) && $(bs $hors) -eq 1 && $b5 -ne 0 ]];then b4=" PEERS$b5";else b5=0;fi
+  if [[ ($b2 -gt $b3 || $(printf '%.0f' $(echo "${a[$nn]}*100"|bc)) -ge $(printf '%.0f' $(echo "${a[00]}*100"|bc))) && $(bs $hors) -eq 1 && $b5 -ne 0 ]];then b4=" PEERS$b5";else b5=0;fi
   bmo
 }
 function bh {
