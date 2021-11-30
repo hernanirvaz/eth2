@@ -11,45 +11,12 @@ function eip { curl -s4 "http://${1}:${2}@dyn.dns.he.net/nic/update?hostname=${1
 function cex { echo -e "${i}$1${f}";echo $H|sudo -S $1 2>/dev/null; }
 function sex { echo $H|sudo -S $1 2>/dev/null 1>&2; }
 function jsh { cex "journalctl --no-hostname --no-full -f $1"; }
+function rdn { cex "systemctl stop $dnsd";sex 'systemctl stop systemd-resolved';cex "systemctl start $dnsd";sex 'systemctl start systemd-resolved'; }
 function dmr { sex "systemctl daemon-reload"; }
 function dsh { echo -e "\nresolvectl query $1";resolvectl query "$1"; }
-function rdn { cex "systemctl stop $dnsd";sex 'systemctl stop systemd-resolved';cex "systemctl start $dnsd";sex 'systemctl start systemd-resolved'; }
 function drs { echo -e 'RESET DNS'                              ;rdn; }
 function nrs { echo -e 'RESET NETPLAN & DNS';cex 'netplan apply';rdn; }
 function sst { echo "$1 $(printf '%6s' $(echo "$2"|grep Memory:|sed 's%.*Memory: \(.*\)%\1%')) $dt status: $(echo "$2"|grep Active:|sed 's%.*Active: \(.*\)%\1%')"; }
-function nsh {
-  echo -e "ROUTES\t\t" $(ip route show|grep 'default via'|grep -v 'linkdown'|cut -d' ' -f3)
-  echo -e "DNS\t\t" $(resolvectl|grep 'Current DNS'|cut -d' ' -f6)
-  local v=0;for v in $(ip a|grep 'state UP'|cut -d: -f2);do echo -e "$v\t\t" $(resolvectl dns|grep $v|cut -d' ' -f4-6);done
-}
-function csh {
-  local e='NO';[[ $(timedatectl|grep synchronized:|sed 's%.*synchronized: \([a-z]*\).*%\1%') = yes ]] && e='OK'
-  m='CLCK'
-  m="$m $e $(printf '%3i' $(echo $H|sudo -S grep -i 'check system clock' $p4 2>/dev/null|wc -l))"
-  m="$m $(dts)"
-  m="$m status: $(pst systemd-timesyncd|grep Active:|sed 's%.*Active: \(.*\)%\1%')"
-  echo -e "$m"
-}
-function esh {
-  local l=$(echo $H|sudo -S grep -v 'geth\[\|lighthouse' $p4 2>/dev/null|grep -i 'error' |wc -l)
-  local n=$(echo $H|sudo -S grep -i 'geth\[\|lighthouse' $p4 2>/dev/null|grep -v ' INFO '|wc -l)
-  local e=$(echo $H|sudo -S grep -v 'geth\[\|lighthouse' $p4 2>/dev/null|grep -i 'error' |tail -n1|sed 's%.*hrv-zotac[0-9] *\(.*\)%\1%;s%:%%g;s%  *% %g'|cut -c1-53)
-  local d=$(echo $H|sudo -S grep -i 'geth\[\|lighthouse' $p4 2>/dev/null|grep -v ' INFO '|tail -n1|sed 's%.*[0-9]*:[0-9]*:[0-9]*\.[0-9][0-9][0-9]]* *\(.*\)%\1%;s%:%%g;s%:%%g;s%  *% %g'|cut -c1-53)
-  m="ERRO"
-  m="$m $(printf '%2i' $l)"
-  m="$m $(printf '%3i' $n)"
-  m="$m $(dts)"
-  [[ $l -gt 0 ]] && m="$m sys: $e"
-  [[ $n -gt 0 ]] && m="$m eth2: $d"
-  echo -e "$m"
-}
-function psh {
-  local l=0;local n=0
-  local e=$(echo $H|sudo -S grep 'ture/speed normal' $p4 2>/dev/null|tail -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%');if [[ $e ]];then e="ok: $e"       ;else e='';fi
-  local d=$(echo $H|sudo -S grep 'e above threshold' $p4 2>/dev/null|head -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%');if [[ $d ]];then d="throttled: $d";else d='';fi
-  local v=0;for v in $(sensors 2>/dev/null|grep 'Package\|Core'|sed 's%.*: *\([-+][0-9][0-9]*\.[0-9]*\).*%\1%');do n=$((n+1));l=$(echo "scale=1;$l$v"|bc);done
-  [[ $n -eq 0 ]] && n=1;echo -e "TEMP $(printf '%5.1f' $(echo "scale=1;$l/$n"|bc))C $(dts) $d $e"
-}
 # geth error control functions
 function gv { echo $(num $(pst $ethg|grep maxpeers|sed 's%.*--maxpeers \([0-9]*\).*%\1%'   )); }
 function gq { echo $(num $(geth attach "http://$cgth:8545" --exec net.peerCount 2>/dev/null)); }
@@ -84,7 +51,7 @@ function grs {
     nn=$((nn+$1));[[ $nn -ge 10 && $nn -le 15 ]] && sed "s%--maxpeers [0-9]*%--maxpeers $nn%" ~/$ethg.save > /etc/systemd/system/$ethg.service
   fi
   resolvectl query smtp.gmail.com 2>/dev/null 1>&2
-  sex "systemctl stop $ethg";dmr;echo -e "GETH RESTAR $dt $(printf 'node%02i:' $nn) $(printf '%2i' $nr)" >> $p5;sex "systemctl start $ethg"
+  sex "systemctl stop $ethg";dmr;echo "GETH RESTAR $dt $(printf 'node%02i:' $nn) $(printf '%2i' $nr)" >> $p5;sex "systemctl start $ethg"
 }
 # beacon error control functions
 function bt { if [[ $3 -gt $1 ]];then echo $(($2/$3))                                                       ;else echo 0;fi; }
@@ -101,10 +68,7 @@ function bi { echo $(by ${k[$1]} ${z[$1]} ${x[$1]} ${w[$1]} ${c[$1]}); }
 function bf { if [[ $(printf '%.0f' $(echo "${a[$1]}*100"|bc)) -lt $(printf '%.0f' $(echo "$b8*100"|bc)) ]];then b5=$(($1-nn));b8=${a[$1]};fi; }
 function bb {
   local e=$(echo $H|sudo -S grep "lighthouse.$bpid" $p4 2>/dev/null|tail -n3600)
-  z1=$(echo "$e"|grep    'rocessed block'|wc -l)
-  z2=$(echo "$e"|grep    'block received'|wc -l)
-  z3=$(echo "$e"|grep -v ' INFO '        |wc -l)
-  z4=$(echo "$e"|grep    ' INFO '        |wc -l)
+  z1=$(echo "$e"|grep 'rocessed block'|wc -l);z2=$(echo "$e"|grep 'block received'|wc -l);z3=$(echo "$e"|grep -v ' INFO '|wc -l);z4=$(echo "$e"|grep ' INFO '|wc -l)
   z5=$(echo $(echo $H|sudo -S grep 'attestation(s) success' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%[,"]%%g')|wc -w)
   z6=$(echo $(echo $H|sudo -S grep 'attestation(s) missing' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%[,"]%%g')|wc -w)
   z7=$(echo $(echo $H|sudo -S grep 'attestation(s).*target' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%;s%[,"]%%g')|wc -w)
@@ -223,23 +187,12 @@ function brl {
   [[ -f ${p3}new ]] && rm ${p3}new
   unset v
   while read -a v;do
-    ok=${v[1]}
-    dt=${v[3]}\ ${v[4]};nn=$(bx ${v[5]});nr=${v[6]}
+    ok=${v[1]};dt=${v[3]}\ ${v[4]};nn=$(bx ${v[5]});nr=${v[6]}
     if [[ ${v[0]} != BEAC ]];then
       m=" $ok $(printf '%3i' ${v[2]}) $dt $(printf 'node%02i:' $nn) $(printf '%2i' $nr)"
     else
-      b6=${v[13]} # published block
-      b7=${v[26]} # delay
-      z1=${v[19]} # processed block
-      z2=${v[20]} # block received
-      z3=${v[22]} # not INFO
-      z4=${v[23]} #     INFO
-      z5=${v[11]} # attestation
-      z6=${v[15]} # erros missing
-      z7=${v[16]} # erros target
-      z8=${v[17]} # erros head
-      z9=${v[18]} # erros had
-      blo
+      # published block/delay/processed block/block received/not INFO/INFO/attestation/erros missing/erros target/erros head/erros had
+      b6=${v[13]};b7=${v[26]};z1=${v[19]};z2=${v[20]};z3=${v[22]};z4=${v[23]};z5=${v[11]};z6=${v[15]};z7=${v[16]};z8=${v[17]};z9=${v[18]};blo
     fi
     echo -e "${v[0]}$m" >> ${p2}new
   done <<< $(cat $p2)
@@ -298,6 +251,28 @@ function ssp {
       echo -e "${i}SAVED SLASHING PROTECTION DB IN ztc3${f}"
     fi
   fi
+}
+function nsh {
+  echo -e "ROUTES\t\t" $(ip route show|grep 'default via'|grep -v 'linkdown'|cut -d' ' -f3) "\nDNS\t\t" $(resolvectl|grep 'Current DNS'|cut -d' ' -f6)
+  local v=0;for v in $(ip a|grep 'state UP'|cut -d: -f2);do echo -e "$v\t\t" $(resolvectl dns|grep $v|cut -d' ' -f4-6);done
+}
+function csh {
+  local e='NO';[[ $(timedatectl|grep synchronized:|sed 's%.*synchronized: \([a-z]*\).*%\1%') = yes ]] && e='OK'
+  echo "CLCK $e $(printf '%3i' $(echo $H|sudo -S grep 'check system clock' $p4 2>/dev/null|wc -l)) $(dts) status: $(pst systemd-timesyncd|grep Active:|sed 's%.*Active: \(.*\)%\1%')"
+}
+function esh {
+  local l=$(echo $H|sudo -S grep -v 'geth\[\|lighthouse' $p4 2>/dev/null|grep -i 'error' |wc -l)
+  local n=$(echo $H|sudo -S grep -i 'geth\[\|lighthouse' $p4 2>/dev/null|grep -v ' INFO '|wc -l)
+  local e=$(echo $H|sudo -S grep -v 'geth\[\|lighthouse' $p4 2>/dev/null|grep -i 'error' |tail -n1|sed 's%.*hrv-zotac[0-9] *\(.*\)%\1%;s%:%%g;s%  *% %g'|cut -c1-53)
+  local d=$(echo $H|sudo -S grep -i 'geth\[\|lighthouse' $p4 2>/dev/null|grep -v ' INFO '|tail -n1|sed 's%.*[0-9]*:[0-9]*:[0-9]*\.[0-9][0-9][0-9]]* *\(.*\)%\1%;s%:%%g;s%:%%g;s%  *% %g'|cut -c1-53)
+  m="ERRO $(printf '%2i' $l) $(printf '%3i' $n) $(dts)";[[ $l -gt 0 ]] && m="$m sys: $e";[[ $n -gt 0 ]] && m="$m eth2: $d";echo "$m"
+}
+function psh {
+  local l=0;local n=0
+  local e=$(echo $H|sudo -S grep 'ture/speed normal' $p4 2>/dev/null|tail -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%');if [[ $e ]];then e="ok: $e"       ;else e='';fi
+  local d=$(echo $H|sudo -S grep 'e above threshold' $p4 2>/dev/null|head -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%');if [[ $d ]];then d="throttled: $d";else d='';fi
+  local v=0;for v in $(sensors 2>/dev/null|grep 'Package\|Core'|sed 's%.*: *\([-+][0-9][0-9]*\.[0-9]*\).*%\1%');do n=$((n+1));l=$(echo "scale=1;$l$v"|bc);done
+  [[ $n -eq 0 ]] && n=1;echo "TEMP $(printf '%5.1f' $(echo "scale=1;$l/$n"|bc))C $(dts) $d $e"
 }
 # Plex Media Server
 function rxw { cex "ufw$2 allow from 192.168.8.0/24 $1"; }
