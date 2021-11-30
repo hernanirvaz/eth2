@@ -92,7 +92,7 @@ function by { if [[ $5 -gt  0 ]];then echo "scale=2;($1*$pmis+$2*$pmat+$3*$pmah+
 function bv { echo $(num $(pst $ethb|grep target-peers|sed 's%.*--target-peers \([0-9]*\).*%\1%')); }
 function bq { echo $(num $(echo $H|sudo -S grep 'lighthouse.*peers:' $p4 2>/dev/null|tail -n1|sed 's%.*peers: *\([0-9]*\).*%\1%')); }
 function bx { echo $1|sed 's%node\([0-9]*\):%\1%'; }
-function bz { echo $((10*(13*z6+3*z7+z8+z9))); }
+function bz { echo $((10*(9*z6+3*z7+z8+z9))); }
 function bw { echo $((10*z1)); }
 function br { echo $((90*z3)); }
 function bu { echo $(($(bt 200 $(bz) $z5)+$(bt 100 $(bw) $z2)+$(bt 100 $(br) $z4))); }
