@@ -104,19 +104,17 @@ function bh {
   [[ $1 ]] || { sst BEAC "$(pst $ethb)";sst VALI "$(pst $ethv)"; }
 }
 function blo {
-  #    0  1   2          3              4      5  6               7   8    9                 10   11  12 13    14 15 16  17 18     19  20  21   22   23   24         25   26
+  #    0  1   2          3              4       5  6               7   8    9                 10   11  12 13    14 15 16  17 18     19  20  21   22   23   24         25   26
   # BEAC OK   0 2021-11-22 17:15:58+00:00 node00: 32 reward_penalty: 224 3.54 attestation_block: 2950 2280 0 erros: 2 14 131 29      0 537   0   14 3586 1260     delay: 1000
-  m=" $ok $(printf '%3i' $(bu)) $dt $(printf 'node%02i:' $nn) $(printf '%2i' $nr)"
-  m="$m reward_penalty: $(printf '%3i' $(echo "scale=0;($z5*$ratt+$b6*$rblk)*$rate/$decp"|bc)) $(printf '%4.2f' $(by $z6 $z7 $z8 $z9 1))"
-  m="$m attestation_block: $(printf '%4i' $z5) $(printf '%4i' $(bz)) $(printf '%1i' $b6) erros: $(printf '%1i' $z6) $(printf '%2i' $z7) $(printf '%3i' $z8) $(printf '%2i' $z9)"
-  m="$m $(printf '%6i' $z1) $(printf '%3i' $z2) $(printf '%3i' $(bw)) $(printf '%4i' $z3) $(printf '%4i' $z4) $(printf '%4i' $(br))     delay: $(printf '%4i' $b7)"
+  m=" $ok $(printf '%3i' $(bu)) $dt $(printf 'node%02i:' $nn) $(printf '%2i' $nr) reward_penalty: $(printf '%3i' $(echo "scale=0;($z5*$ratt+$b6*$rblk)*$rate/$decp"|bc))"
+  m="$m $(printf '%4.2f' $(by $z6 $z7 $z8 $z9 1)) attestation_block: $(printf '%4i' $z5) $(printf '%4i' $(bz)) $(printf '%1i' $b6) erros: $(printf '%1i' $z6) $(printf '%2i' $z7) $(printf '%3i' $z8)"
+  m="$m $(printf '%2i' $z9) $(printf '%6i' $z1) $(printf '%3i' $z2) $(printf '%3i' $(bw)) $(printf '%4i' $z3) $(printf '%4i' $z4) $(printf '%4i' $(br))     delay: $(printf '%4i' $b7)"
 }
 function bmo {
   #    0  1   2          3              4       5  6    7    8    9   10   11   12   13   14    15
   # BEAC  2   1 2021-11-14 16:16:34+00:00 node00: 20 avg: 0.00 0.00 0.00 0.00 0.00 0.00 1.75  1.75
-  m=" $(printf '%2i' $b3) $(printf '%3i' $b2) $dt $(printf 'node%02i:' $nn) $(printf '%2i' $nr)"
-  m="$m avg: $(printf '%4.2f' ${a[50]}) $(printf '%4.2f' ${a[45]}) $(printf '%4.2f' ${a[40]}) $(printf '%4.2f' ${a[35]}) $(printf '%4.2f' ${a[30]}) $(printf '%4.2f' ${a[25]}) $(printf '%4.2f' ${a[20]})"
-  m="$m $(printf '%5.2f' ${a[00]})$b4"
+  m=" $(printf '%2i' $b3) $(printf '%3i' $b2) $dt $(printf 'node%02i:' $nn) $(printf '%2i' $nr) avg: $(printf '%4.2f' ${a[50]}) $(printf '%4.2f' ${a[45]}) $(printf '%4.2f' ${a[40]})"
+  m="$m $(printf '%4.2f' ${a[35]}) $(printf '%4.2f' ${a[30]}) $(printf '%4.2f' ${a[25]}) $(printf '%4.2f' ${a[20]}) $(printf '%5.2f' ${a[00]})$b4"
   #    0      1          2              3    4 5 6 7 8 9 0   1    2 3 4 5 6 7 8   9    0 1 2 3 4 5 6    7    8 9 0 1 2 3 4     5    6 7 8 9 0 1 2    3
   # BEAC    400 2021-11-14 16:52:36+00:00 cnt: 0 0 0 0 0 0 411 mis: 0 0 0 0 0 0 625 mat: 0 0 0 0 0 0 3501 mah: 0 0 0 0 0 0 25550 dly: 0 0 0 0 0 0 3941
   s=" $(printf '%6i' $b1) $dt cnt: ${c[50]} ${c[45]} ${c[40]} ${c[35]} ${c[30]} ${c[25]} ${c[20]}"
@@ -155,8 +153,7 @@ function brl {
   [[ -f ${p2}new ]] && rm ${p2}new
   [[ -f ${p3}new ]] && rm ${p3}new
   unset v;while read -a v;do ok=${v[1]};dt=${v[3]}\ ${v[4]};nn=$(bx ${v[5]});nr=${v[6]}
-    if [[ ${v[0]} = BEAC ]];then
-      # published block/delay/processed block/block received/not INFO/INFO/attestation/erros missing/erros target/erros head/erros had
+    if [[ ${v[0]} = BEAC ]];then # published block/delay/processed block/block received/not INFO/INFO/attestation/erros missing/erros target/erros head/erros had
       b6=${v[13]};b7=${v[26]};z1=${v[19]};z2=${v[20]};z3=${v[22]};z4=${v[23]};z5=${v[11]};z6=${v[15]};z7=${v[16]};z8=${v[17]};z9=${v[18]};blo
     else
       m=" $ok $(printf '%3i' ${v[2]}) $dt $(printf 'node%02i:' $nn) $(printf '%2i' $nr)"
@@ -182,11 +179,9 @@ function brs {
           nn=$((nn+$1));[[ $nn -ge 20 && $nn -le 50 ]] && sed "s%--target-peers [0-9]*%--target-peers $nn%" ~/$ethb.save > /etc/systemd/system/$ethb.service
         fi
         resolvectl query smtp.gmail.com 2>/dev/null 1>&2
-        sex "systemctl stop $ethb";[[ $2 = vcreset ]] && sex "systemctl stop $ethv";dmr
-        echo -e "RSTI $ok $(printf '%3i' $n) $dt $(printf 'node%02i:' $nn) $(printf '%2i' $nr)" >> $p2
+        sex "systemctl stop $ethb";[[ $2 = vcreset ]] && sex "systemctl stop $ethv";dmr;echo "RSTI $ok $(printf '%3i' $n) $dt $(printf 'node%02i:' $nn) $(printf '%2i' $nr)" >> $p2
         if [[ $2 = reboot ]];then
-          rm -f /home/eth/beacon.restart.inicio
-          sex reboot
+          rm -f /home/eth/beacon.restart.inicio;sex reboot
         else
           sex "systemctl start $ethb";[[ $2 = vcreset ]] && sex "systemctl start $ethv"
         fi
@@ -202,14 +197,11 @@ function ssp {
   if [[ $rsp = sim && ! -f $dtdi/vc_slash && ! -f $dtdi/vc_lock && -f $dtdi/vc_keys ]];then
     vp;vd
     echo -e "${i}SAVE SLASHING PROTECTION DB${f}"
-    echo $H|sudo -S cp $vldt/slashing_protection.sqlite /home/eth 2>/dev/null
-    sudo chown eth:eth /home/eth/slashing_protection.sqlite
+    echo $H|sudo -S cp $vldt/slashing_protection.sqlite /home/eth 2>/dev/null;sudo chown eth:eth /home/eth/slashing_protection.sqlite
     if [[ $cunm = $znm3 ]];then
-      scp /home/eth/slashing_protection.sqlite vpss:~
-      echo -e "${i}SAVED SLASHING PROTECTION DB IN vpss${f}"
+      scp /home/eth/slashing_protection.sqlite vpss:~         ;echo -e "${i}SAVED SLASHING PROTECTION DB IN vpss${f}"
     else
-      scp /home/eth/slashing_protection.sqlite ztc3.fruga.pt:~
-      echo -e "${i}SAVED SLASHING PROTECTION DB IN ztc3${f}"
+      scp /home/eth/slashing_protection.sqlite ztc3.fruga.pt:~;echo -e "${i}SAVED SLASHING PROTECTION DB IN ztc3${f}"
     fi
   fi
 }
