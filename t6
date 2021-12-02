@@ -84,7 +84,7 @@ function bl {
 function bm {
   bm0;dt=$(dts);nn=$(bv);nr=$(bq);b1=0;local g=0
   if [[ -f $p7 ]];then
-    unset o;read -a o <<< $(tail -n1 $p7);g=${o[1]}
+    g=$(tail -n1 $p7|sed 's%  *%\t%g'|cut -f2)
     k[50]=${o[13]};k[45]=${o[14]};k[40]=${o[15]};k[35]=${o[16]};k[30]=${o[17]};k[25]=${o[18]};k[20]=${o[19]}
     z[50]=${o[21]};z[45]=${o[22]};z[40]=${o[23]};z[35]=${o[24]};z[30]=${o[25]};z[25]=${o[26]};z[20]=${o[27]}
     x[50]=${o[29]};x[45]=${o[30]};x[40]=${o[31]};x[35]=${o[32]};x[30]=${o[33]};x[25]=${o[34]};x[20]=${o[35]}
@@ -115,9 +115,9 @@ function bmo {
   # BEAC  2   1 2021-11-14 16:16:34+00:00 node00: 20 avg: 0.00 0.00 0.00 0.00 0.00 0.00 1.75  1.75
   m=" $(printf '%2i' $b3) $(printf '%3i' $b2) $dt $(printf 'node%02i:' $nn) $(printf '%2i' $nr) avg: $(printf '%4.2f' ${a[50]}) $(printf '%4.2f' ${a[45]}) $(printf '%4.2f' ${a[40]})"
   m="$m $(printf '%4.2f' ${a[35]}) $(printf '%4.2f' ${a[30]}) $(printf '%4.2f' ${a[25]}) $(printf '%4.2f' ${a[20]}) $(printf '%5.2f' ${a[00]})$b4"
-  #    0      1          2              3    4 5 6 7 8 9 0   1    2 3 4 5 6 7 8   9    0 1 2 3 4 5 6    7    8 9 0 1 2 3 4     5    6 7 8 9 0 1 2    3
-  # BEAC    400 2021-11-14 16:52:36+00:00 cnt: 0 0 0 0 0 0 411 mis: 0 0 0 0 0 0 625 mat: 0 0 0 0 0 0 3501 mah: 0 0 0 0 0 0 25550 dly: 0 0 0 0 0 0 3941
-  s=" $(printf '%6i' $b1) $dt cnt: ${c[50]} ${c[45]} ${c[40]} ${c[35]} ${c[30]} ${c[25]} ${c[20]}"
+  #    0   1          2              3    4 5 6 7 8 9 0   1    2 3 4 5 6 7 8   9    0 1 2 3 4 5 6    7    8 9 0 1 2 3 4     5    6 7 8 9 0 1 2    3
+  # BEAC 400 2021-11-14 16:52:36+00:00 cnt: 0 0 0 0 0 0 411 mis: 0 0 0 0 0 0 625 mat: 0 0 0 0 0 0 3501 mah: 0 0 0 0 0 0 25550 dly: 0 0 0 0 0 0 3941
+  s=" $b1 $dt cnt: ${c[50]} ${c[45]} ${c[40]} ${c[35]} ${c[30]} ${c[25]} ${c[20]}"
   s="$s mis: ${k[50]} ${k[45]} ${k[40]} ${k[35]} ${k[30]} ${k[25]} ${k[20]} mat: ${z[50]} ${z[45]} ${z[40]} ${z[35]} ${z[30]} ${z[25]} ${z[20]}"
   s="$s mah: ${x[50]} ${x[45]} ${x[40]} ${x[35]} ${x[30]} ${x[25]} ${x[20]} dly: ${w[50]} ${w[45]} ${w[40]} ${w[35]} ${w[30]} ${w[25]} ${w[20]}"
 }
@@ -150,8 +150,7 @@ function bo2 {
   fi
 }
 function brl {
-  [[ -f ${p2}new ]] && rm ${p2}new
-  [[ -f ${p3}new ]] && rm ${p3}new
+  [[ -f ${p2}new ]] && rm ${p2}new;[[ -f ${p3}new ]] && rm ${p3}new
   unset v;while read -a v;do ok=${v[1]};dt=${v[3]}\ ${v[4]};nn=$(bx ${v[5]});nr=${v[6]}
     if [[ ${v[0]} = BEAC ]];then # published block/delay/processed block/block received/not INFO/INFO/attestation/erros missing/erros target/erros head/erros had
       b6=${v[13]};b7=${v[26]};z1=${v[19]};z2=${v[20]};z3=${v[22]};z4=${v[23]};z5=${v[11]};z6=${v[15]};z7=${v[16]};z8=${v[17]};z9=${v[18]};blo
@@ -166,6 +165,10 @@ function brl {
       unset v;while read -a v;do bm1;done <<< $(head -n$g ${p2}new|tail -n$((g-h))|grep BEAC);if [[ ${#o[@]} -gt 16 ]];then b4=" ${o[16]}";else b4='';fi;bm2;bmo;echo "${o[0]}$m" >> ${p3}new
     done <<< $(cat $p3)
   fi
+}
+function bsl {
+  [[ -f ${p2}new ]] && rm ${p2}new;[[ -f ${p7}new ]] && rm ${p7}new
+  tail -n$(($(cat $p2|wc -l)-$(tail -n1 $p7|sed 's%  *%\t%g'|cut -f2))) $p2 > ${p2}new;head -n$(($(cat $p7|wc -l)-1)) $p7 > ${p7}new;tail -n1 $p7|sed 's%BEAC [0-9]*%BEAC 0%' >> ${p7}new
 }
 function brs {
   if [[ ! -f /home/eth/beacon.restart.inicio ]];then
@@ -320,9 +323,10 @@ function fd { [[ $(pwr $ethf loaded) ]] && { cex "systemctl disable $ethf";fcl;c
 [[ $1 = blf ]] && { bl;echo -e "BEAC$m" >> $p2; }
 [[ $1 = bmf ]] && { bm;echo -e "BEAC$m" >> $p3; }
 [[ $1 = bnf ]] && { bm;echo -e "BEAC$s" >> $p7; }
-[[ $1 = gh  ]] && { [[ -f $p5 ]] && { tail -n ${2:-$hors} $p5;gl;echo -e "GETH$m\n";sst GETH "$(pst $ethg)";csh;psh;esh; } }
-[[ $1 = bh  ]] && { [[ -f $p2 ]] && { bh $2;[[ $2 ]] || { csh;psh;esh; } } }
-[[ $1 = brl ]] && { [[ -f $p2 ]] && { brl; } }
+[[ $1 = gh  ]] && { [[ -f $p5           ]] && { tail -n ${2:-$hors} $p5;gl;echo -e "GETH$m\n";sst GETH "$(pst $ethg)";csh;psh;esh; } }
+[[ $1 = bh  ]] && { [[ -f $p2           ]] && { bh $2;[[ $2 ]] || { csh;psh;esh; } } }
+[[ $1 = brl ]] && { [[ -f $p2           ]] && { brl; } }
+[[ $1 = bsl ]] && { [[ -f $p2 && -f $p7 ]] && { bsl; } }
 [[ $1 = bo  ]] && { bo1 $2 $3;bo2 $2; }
 [[ $1 = cpe ]] && { csh;psh;esh; }
 [[ $1 = glr ]] && { gb;[[ $ok != 'OK' ]] && grs ${2:-0}    ; }
@@ -446,9 +450,9 @@ if [[ ! $1 ]];then
   else
     c1="$c1\nvcp\t\t$ethv copy to $znm3 server"
   fi
+  c1="$c1\ngl[f]\t\tgeth log report"
   c1="$c1\ngh\t\tgeth historic report"
-  c1="$c1\ngl\t\tgeth log report"
-  c1="$c1\ngs\t\tgeth syncing"
+  c1="$c1\ngs\t\tgeth syncing report"
   c1="$c1\ngrs [n]\t\t$ethg restart n=nodes to change"
   c1="$c1\nbrs [n]\t\t$ethb restart n=nodes to change"
   c1="$c1\nsrs [n]\t\tsystem restart n=nodes to change"
@@ -456,12 +460,13 @@ if [[ ! $1 ]];then
   c1="$c1\nyj\t\tsystem journal"
   c1="$c1\nsl [s]\t\tlista system journal  s=TOTAL"
   c1="$c1\nel [s]\t\tlista geth,lighthouse s=TOTAL"
-  c1="$c1\nbh\t\tbeacon historic report"
   c1="$c1\nbrl\t\tbeacon recalculate logs"
-  c1="$c1\nbl\t\tbeacon log report"
-  c1="$c1\nbm\t\tbeacon medias report"
+  c1="$c1\nbsl\t\tbeacon substitute logs"
+  c1="$c1\nbl[f]\t\tbeacon log report"
+  c1="$c1\nbm[f]\t\tbeacon medias report"
+  c1="$c1\nbn[f]\t\tbeacon archive report"
+  c1="$c1\nbh\t\tbeacon historic report"
   c1="$c1\nbo\t\tbeacon homologous report"
-  c1="$c1\nbn\t\tbeacon archive report"
   c1="$c1\nws\t\tfirewall status"
   c1="$c1\nwa\t\tfirewall arranca"
   c1="$c1\nwpr\t\tfirewall para"
