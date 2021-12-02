@@ -84,7 +84,7 @@ function bl {
 function bm {
   bm0;dt=$(dts);nn=$(bv);nr=$(bq);b1=0;local g=0
   if [[ -f $p7 ]];then
-    g=$(tail -n1 $p7|sed 's%  *%\t%g'|cut -f2)
+    unset o;read -a o <<< $(tail -n1 $p7);g=${o[1]}
     k[50]=${o[13]};k[45]=${o[14]};k[40]=${o[15]};k[35]=${o[16]};k[30]=${o[17]};k[25]=${o[18]};k[20]=${o[19]}
     z[50]=${o[21]};z[45]=${o[22]};z[40]=${o[23]};z[35]=${o[24]};z[30]=${o[25]};z[25]=${o[26]};z[20]=${o[27]}
     x[50]=${o[29]};x[45]=${o[30]};x[40]=${o[31]};x[35]=${o[32]};x[30]=${o[33]};x[25]=${o[34]};x[20]=${o[35]}
@@ -169,6 +169,11 @@ function brl {
 function bsl {
   [[ -f ${p2}new ]] && rm ${p2}new;[[ -f ${p7}new ]] && rm ${p7}new
   tail -n$(($(cat $p2|wc -l)-$(tail -n1 $p7|sed 's%  *%\t%g'|cut -f2))) $p2 > ${p2}new;head -n$(($(cat $p7|wc -l)-1)) $p7 > ${p7}new;tail -n1 $p7|sed 's%BEAC [0-9]*%BEAC 0%' >> ${p7}new
+}
+function bnl {
+  [[ -f $p2 && -f ${p2}new ]] && { cp $p2 ${p2}sav;mv ${p2}new $p2; }
+  [[ -f $p3 && -f ${p3}new ]] && { cp $p3 ${p3}sav;mv ${p3}new $p3; }
+  [[ -f $p7 && -f ${p7}new ]] && { cp $p7 ${p7}sav;mv ${p7}new $p7; }
 }
 function brs {
   if [[ ! -f /home/eth/beacon.restart.inicio ]];then
@@ -327,6 +332,7 @@ function fd { [[ $(pwr $ethf loaded) ]] && { cex "systemctl disable $ethf";fcl;c
 [[ $1 = bh  ]] && { [[ -f $p2           ]] && { bh $2;[[ $2 ]] || { csh;psh;esh; } } }
 [[ $1 = brl ]] && { [[ -f $p2           ]] && { brl; } }
 [[ $1 = bsl ]] && { [[ -f $p2 && -f $p7 ]] && { bsl; } }
+[[ $1 = bnl ]] && { bnl; }
 [[ $1 = bo  ]] && { bo1 $2 $3;bo2 $2; }
 [[ $1 = cpe ]] && { csh;psh;esh; }
 [[ $1 = glr ]] && { gb;[[ $ok != 'OK' ]] && grs ${2:-0}    ; }
