@@ -330,8 +330,8 @@ function fd { [[ $(pwr $ethf loaded) ]] && { cex "systemctl disable $ethf";fcl;c
 [[ $1 = bnf ]] && { bm;echo -e "BEAC$s" >> $p7; }
 [[ $1 = gh  ]] && { [[ -f $p5           ]] && { tail -n ${2:-$hors} $p5;gl;echo -e "GETH$m\n";sst GETH "$(pst $ethg)";csh;psh;esh; } }
 [[ $1 = bh  ]] && { [[ -f $p2           ]] && { bh $2;[[ $2 ]] || { csh;psh;esh; } } }
-[[ $1 = brl ]] && { [[ -f $p2           ]] && { brl; } }
-[[ $1 = bsl ]] && { [[ -f $p2 && -f $p7 ]] && { bsl; } }
+[[ $1 = brl ]] && { [[ -f $p2           ]] && brl; }
+[[ $1 = bsl ]] && { [[ -f $p2 && -f $p7 ]] && bsl; }
 [[ $1 = bnl ]] && { bnl; }
 [[ $1 = bo  ]] && { bo1 $2 $3;bo2 $2; }
 [[ $1 = cpe ]] && { csh;psh;esh; }
@@ -339,8 +339,8 @@ function fd { [[ $(pwr $ethf loaded) ]] && { cex "systemctl disable $ethf";fcl;c
 [[ $1 = blr ]] && { bb;[[ $ok != 'OK' ]] && brs ${2:-0}    ; }
 [[ $1 = bmc ]] && { bm;[[ $b5 -ne 0   ]] && brs $b5 pereset; }
 [[ $1 = grs ]] && { grs ${2:-0}        ; }
-[[ $1 = brs ]] && { brs ${2:-0} bnreset; }
 [[ $1 = srs ]] && { brs ${2:-0} reboot ; }
+[[ $1 = brs ]] && { brs ${2:-0} bnreset; }
 [[ $1 = lrs ]] && { brs ${2:-0} vcreset; }
 # lista servicos & portas
 [[ $1 = lp  ]] && { netstat -tulpn; }
@@ -468,6 +468,7 @@ if [[ ! $1 ]];then
   c1="$c1\nel [s]\t\tlista geth,lighthouse s=TOTAL"
   c1="$c1\nbrl\t\tbeacon recalculate logs"
   c1="$c1\nbsl\t\tbeacon substitute logs"
+  c1="$c1\nbnl\t\tbeacon new logs"
   c1="$c1\nbl[f]\t\tbeacon log report"
   c1="$c1\nbm[f]\t\tbeacon medias report"
   c1="$c1\nbn[f]\t\tbeacon archive report"
