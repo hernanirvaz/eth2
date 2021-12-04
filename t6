@@ -16,42 +16,47 @@ function dmr { sex "systemctl daemon-reload"; }
 function dsh { echo -e "\nresolvectl query $1";resolvectl query "$1"; }
 function drs { echo -e 'RESET DNS'                              ;rdn; }
 function nrs { echo -e 'RESET NETPLAN & DNS';cex 'netplan apply';rdn; }
-function sst { echo "$1 $(printf '%6s' $(echo "$2"|grep Memory:|sed 's%.*Memory: \(.*\)%\1%')) $dt status: $(echo "$2"|grep Active:|sed 's%.*Active: \(.*\)%\1%')"; }
+function sst { echo "$1 $(printf '%6s' $(echo "$2"|grep Memory:|sed 's%.*Memory: \(.*\)%\1%')) $(dts) status: $(echo "$2"|grep Active:|sed 's%.*Active: \(.*\)%\1%')"; }
+function dnn { echo "$1 $2 $(printf 'node%02i:' $3) $(printf '%2i' $4)"; }
 # geth error control functions
-function gv { echo $(num $(pst $ethg|grep maxpeers|sed 's%.*--maxpeers \([0-9]*\).*%\1%'   )); }
-function gq { echo $(num $(geth attach "http://$cgth:8545" --exec net.peerCount 2>/dev/null)); }
-function gy { echo       $(geth attach "http://$cgth:8545" --exec eth.syncing   2>/dev/null) ; }
+function gv { echo $(num $(pst $ethg|grep maxpeers|sed 's%.*--maxpeers \([0-9]*\).*%\1%'   )); } # configured peers
+function gq { echo $(num $(geth attach "http://$cgth:8545" --exec net.peerCount 2>/dev/null)); } # current peers
+function gy { echo       $(geth attach "http://$cgth:8545" --exec eth.syncing   2>/dev/null) ; } # current syncing status
+# variaveis servico geth; g0=numero de new imported chain segments; ok=OK/BK blocked
 function gb { g0=$(echo $H|sudo -S grep 'mported new' $p4 2>/dev/null|wc -l);ok='OK';[[ $g0 -eq $(grep sgs: $p5 2>/dev/null|tail -n1|sed 's%.*sgs: *\([0-9]*\).*%\1%') ]] && ok='BK'; }
+# log servico geth; GETH OK SYC 2021-12-04 11:12:11 node10: 10 sgs: 2973
 function gl {
   if [[ $(pwr $ethg running) ]];then
-    dt=$(dts);nn=$(gv);nr=$(gq);g1=$(gy);gb;if [[ $(echo $g1|grep -i false) ]];then m='SYC';else m='NSY';fi
-    m=" $ok $m $dt $(printf 'node%02i:' $nn) $(printf '%2i' $nr) sgs: $(printf '%4i' $g0)"
+    gb;if [[ $(gy|grep false) ]];then m='SYC';else m='NSY';fi
+    m=" $ok $m $(dnn $(dts) $(gv) $(gq)) sgs: $(printf '%4i' $g0)"
   else
     m=" NOT HERE $(dts)"
   fi
 }
+# sync status servico geth; GETH SYCING 2021-12-04 11:46:29 node10:  5 blocks: 13739649 (10)
 function gs {
   if [[ $(pwr $ethg running) ]];then
-    dt=$(dts);nn=$(gv);nr=$(gq);g1=$(gy)
-    if [[ $(echo $g1|grep -i false) ]];then
-      m=" SYNCED $dt $(printf 'node%02i:' $nn) $(printf '%2i' $nr)"
+    local e=$(gy)
+    if [[ $(echo $e|grep false) ]];then
+      m=" SYNCED $(dnn $(dts) $(gv) $(gq))"
     else
-      local g=$(echo $g1|sed -Ee 's%.*highestBlock: *([0-9]+).*%\1%i')
-      local n=$(echo $g1|sed -Ee 's%.*currentBlock: *([0-9]+).*%\1%i')
-      m=" SYCING $dt $(printf 'node%02i:' $nn) $(printf '%2i' $nr) blocks: $((g*1)) ($((g-n)))"
+      local g=$(echo $e|sed -Ee 's%.*highestBlock: *([0-9]+).*%\1%i')
+      local n=$(echo $e|sed -Ee 's%.*currentBlock: *([0-9]+).*%\1%i')
+      m=" SYCING $(dnn $(dts) $(gv) $(gq)) blocks: $((g*1)) ($((g-n)))"
     fi
   else
     m=" NOT HERE $(dts)"
   fi
 }
+# restart servico geth; $1=alteracao configured peers
 function grs {
-  dt=$(dts);nn=$(gv);nr=$(gq)
+  local n=$(gv)
   if [[ $1 -ne 0 ]];then
     cp /etc/systemd/system/$ethg.service ~/$ethg.save
-    nn=$((nn+$1));[[ $nn -ge 10 && $nn -le 15 ]] && sed "s%--maxpeers [0-9]*%--maxpeers $nn%" ~/$ethg.save > /etc/systemd/system/$ethg.service
+    n=$(($1+n));[[ $n -ge 10 && $n -le 15 ]] && sed "s%--maxpeers [0-9]*%--maxpeers $n%" ~/$ethg.save > /etc/systemd/system/$ethg.service
   fi
   resolvectl query smtp.gmail.com 2>/dev/null 1>&2
-  sex "systemctl stop $ethg";dmr;echo "GETH RESTAR $dt $(printf 'node%02i:' $nn) $(printf '%2i' $nr)" >> $p5;sex "systemctl start $ethg"
+  sex "systemctl stop $ethg";dmr;sex "systemctl start $ethg";sleep 10s;echo "GETH RESTAR $(dnn $(dts) $n $(gq))" >> $p5
 }
 # beacon error control functions
 function bt { if [[ $3 -gt $1 ]];then echo $(($2/$3))                                                       ;else echo 0;fi; }
@@ -230,7 +235,7 @@ function esh {
 }
 function psh {
   local l=0;local n=0
-  local e=$(echo $H|sudo -S grep 'ture/speed normal' $p4 2>/dev/null|tail -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%');if [[ $e ]];then e="ok: $e"       ;else e='';fi
+  local e=$(echo $H|sudo -S grep 'ture/speed normal' $p4 2>/dev/null|tail -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%');if [[ $e ]];then e="normal: $e"   ;else e='';fi
   local d=$(echo $H|sudo -S grep 'e above threshold' $p4 2>/dev/null|head -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%');if [[ $d ]];then d="throttled: $d";else d='';fi
   local v=0;for v in $(sensors 2>/dev/null|grep 'Package\|Core'|sed 's%.*: *\([-+][0-9][0-9]*\.[0-9]*\).*%\1%');do n=$((n+1));l=$(echo "scale=1;$l$v"|bc);done
   [[ $n -eq 0 ]] && n=1;echo "TEMP $(printf '%5.1f' $(echo "scale=1;$l/$n"|bc))C $(dts) $d $e"
