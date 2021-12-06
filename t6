@@ -62,7 +62,6 @@ function br { echo $((90*z3)); }                                                
 function bu { echo $(($(nu3 200 $(bz) $z5)+$(nu3 100 $(bw) $z2)+$(nu3 100 $(br) $z4))); }                                     # restart index
 function bs { tail -n$1 $p2 2>/dev/null|cut -d' ' -f1|sort -u|wc -l; }                                                        # log restart activity test
 function bi { by ${k[$1]} ${z[$1]} ${x[$1]} ${w[$1]} ${c[$1]}; }                                                              # avg penalty from cumulative paid error arrays
-function bf { if [[ $(nu2 ${a[$1]}*100) -lt $(nu2 $b5*100) ]];then b4=$(($1-nn));b5=${a[$1]};fi; }                            # compare current penalty with avg penalty array
 function bb {
   local e=$(echo $H|sudo -S grep "lighthouse.$bpid" $p4 2>/dev/null|tail -n3600)
   z1=$(echo "$e"|grep 'rocessed block'|wc -l);z2=$(echo "$e"|grep 'block received'|wc -l);z3=$(echo "$e"|grep -v ' INFO '|wc -l);z4=$(echo "$e"|grep ' INFO '|wc -l)
@@ -89,10 +88,8 @@ function bm {
     c[50]=${o[ 5]};c[45]=${o[ 6]};c[40]=${o[ 7]};c[35]=${o[ 8]};c[30]=${o[ 9]};c[25]=${o[10]};c[20]=${o[11]}
   fi
   [[ -f $p2 ]] && { b1=$(cat $p2|wc -l);unset v;while read -a v;do bm1;done <<< $(tail -n$((b1-g)) $p2|grep BEAC); };bm2;[[ ${b2:-0} -eq 0 ]] && bo1
-  local l=0;local n=0;[[ -f $p3 ]] && { unset v;while read -a v;do l=$((${v[2]}+l));n=$((1+n));done <<< $(cat $p3); }
-  b3=$(nu2 "($l+$b2)/(1+$n)" 5)
-  b4=0;b5=${a[$nn]};bf 20;bf 25;bf 30;bf 35;bf 40;bf 45;bf 50 # search peer config with min penalty
-  [[ $b2 -le $b3 || $(bs $hors) -gt 1 ]] && b4=0;bmo
+  local l=0;local n=0;[[ -f $p3 ]] && { unset v;while read -a v;do l=$((${v[2]}+l));n=$((1+n));done <<< $(cat $p3); };b3=$(nu2 "($l+$b2)/(1+$n)" 5)
+  b4=0;b5=${a[$nn]};bmn;[[ $b2 -le $b3 || $(bs $hors) -gt 1 ]] && b4=0;bmo
 }
 function bh {
   tail -n${1:-$hors} $p2
@@ -108,11 +105,13 @@ function blo {
   m="$m $(printf '%4.2f' $(by $z6 $z7 $z8 $z9)) attestation_block: $(printf '%4i' $z5) $(printf '%4i' $(bz)) $(printf '%1i' $b6) erros: $(printf '%1i' $z6) $(printf '%2i' $z7) $(printf '%3i' $z8)"
   m="$m $(printf '%2i' $z9) $(printf '%6i' $z1) $(printf '%3i' $z2) $(printf '%3i' $(bw)) $(printf '%4i' $z3) $(printf '%4i' $z4) $(printf '%4i' $(br))     delay: $(printf '%4i' $b7)"
 }
+# recursively compare avg penalty array with current penalty
+function bmn { local n=${1:-20};if [[ $(nu2 ${a[$n]}*100) -lt $(nu2 $b5*100) ]];then b4=$((n-nn));b5=${a[$n]};fi;[[ $n -lt 50 ]] && bmn $((n+5)); }
 function bmo {
-  #    0  1   2          3              4       5  6    7    8    9   10   11   12   13   14    15
-  # BEAC  2   1 2021-11-14 16:16:34+00:00 node00: 20 avg: 0.00 0.00 0.00 0.00 0.00 0.00 1.75  1.75
+  #    0  1   2          3        4       5  6    7    8    9   10   11   12   13   14          15   16          17 18
+  # BEAC  6   2 2021-12-06 09:54:17 node40: 43 avg: 2.63 2.89 1.49 2.24 2.65 1.95 1.97 global_avg: 2.06 peer_change: 0
   m=" $(printf '%2i' $b3) $(printf '%3i' $b2) $dt $(printf 'node%02i:' $nn) $(printf '%2i' $nr) avg: $(printf '%4.2f' ${a[50]}) $(printf '%4.2f' ${a[45]}) $(printf '%4.2f' ${a[40]})"
-  m="$m $(printf '%4.2f' ${a[35]}) $(printf '%4.2f' ${a[30]}) $(printf '%4.2f' ${a[25]}) $(printf '%4.2f' ${a[20]}) $(printf '%4.2f' ${a[00]}) $b4"
+  m="$m $(printf '%4.2f' ${a[35]}) $(printf '%4.2f' ${a[30]}) $(printf '%4.2f' ${a[25]}) $(printf '%4.2f' ${a[20]}) global_avg: $(printf '%4.2f' ${a[00]}) peer_change: $b4"
   #    0   1          2              3    4 5 6 7 8 9 0   1    2 3 4 5 6 7 8   9    0 1 2 3 4 5 6    7    8 9 0 1 2 3 4     5    6 7 8 9 0 1 2    3
   # BEAC 400 2021-11-14 16:52:36+00:00 cnt: 0 0 0 0 0 0 411 mis: 0 0 0 0 0 0 625 mat: 0 0 0 0 0 0 3501 mah: 0 0 0 0 0 0 25550 dly: 0 0 0 0 0 0 3941
   s=" $b1 $dt cnt: ${c[50]} ${c[45]} ${c[40]} ${c[35]} ${c[30]} ${c[25]} ${c[20]}"
@@ -160,7 +159,7 @@ function brl {
   if [[ -f $p3 ]];then
     unset o;bm0;local d='0000-00-00';local e='23:58';local l=0;local n=0;local h=0;local g=0;while read -a o;do d=${o[3]};h=$g;g=$(grep -n "$d $e" ${p2}new|cut -d: -f1)
       dt=${o[3]}\ ${o[4]};nn=$(bx ${o[5]});nr=${o[6]};b2=$(head -n$g ${p2}new|grep "BEAC.*$e"|sort -k10.1n|grep -n $d|cut -d: -f1);l=$((b2+l));n=$((1+n));b3=$(nu2 $l/$n 5)
-      unset v;while read -a v;do bm1;done <<< $(head -n$g ${p2}new|tail -n$((g-h))|grep BEAC);b4=${o[16]};bm2;bmo;echo "${o[0]}$m" >> ${p3}new
+      unset v;while read -a v;do bm1;done <<< $(head -n$g ${p2}new|tail -n$((g-h))|grep BEAC);bm2;b4=${o[18]};bmo;echo "${o[0]}$m" >> ${p3}new
     done <<< $(cat $p3)
   fi
 }
