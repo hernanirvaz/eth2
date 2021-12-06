@@ -3,10 +3,11 @@
 source /home/eth/eth2/t1
 
 # utilities for commands/journal
-function nu0 { if [ ${1:-0} -eq $1 ] 2>/dev/null;then echo $1;else echo 0;fi; }                                                                       # force numeric output
-function nu1 { echo "scale=$2;$1"|bc; }                                                                                                               # arbitrary precision calculations
-function nu2 { printf ${3:-%.0f} $(nu1 $1 ${2:-0}); }                                                                                                 # format arbitrary precision calculations
-function nu3 { if [[ $3 -gt $1 ]];then echo $(($2/$3));else echo 0;fi; }                                                                              # targeted division for beacon restart index
+function nu0 { if [ ${1:-0} -eq $1 ] 2>/dev/null;then echo $1;else echo 0;fi; }                                                # force numeric output
+function nu1 { echo "scale=$2;$1"|bc; }                                                                                        # arbitrary precision calculations
+function nu2 { printf ${3:-%.0f} $(nu1 $1 ${2:-0}); }                                                                          # format arbitrary precision calculations
+function nu3 { if [[ $3 -gt $1 ]];then echo $(($2/$3));else echo 0;fi; }                                                       # targeted division for beacon restart index
+function nu4 { if [[ ${5:-1} -ne 0 ]];then nu1 "($1*$pmis+$2*$pmat+$3*$pmah+$4*$pdly)/${5:-1}*$rate/$decp" 2;else echo 0;fi; } # penalty calculator for beacon log ordering
 function dts { date '+%Y-%m-%d %H:%M:%S'; }
 function pst { systemctl status $1 2>/dev/null; }
 function pwr { systemctl status $1 2>/dev/null|grep "${2:-inactive\|failed}"; }
@@ -52,16 +53,16 @@ function grs {
   sex "systemctl stop $ethg";dmr;sex "systemctl start $ethg";sleep 10s;echo "GETH RESTAR $(dnn $(dts) $n $(gq))" >> $p5 # restart servico geth
 }
 # beacon error control functions
-function by { if [[ ${5:-1} -ne 0 ]];then nu1 "($1*$pmis+$2*$pmat+$3*$pmah+$4*$pdly)/${5:-1}*$rate/$decp" 2;else echo 0;fi; } # penalty calculator for beacon log ordering
 function bv { nu0 $(pst $ethb|grep target-peers|sed 's%.*--target-peers \([0-9]*\).*%\1%')                                ; } # configured peers
 function bq { nu0 $(echo $H|sudo -S grep 'lighthouse.*peers:' $p4 2>/dev/null|tail -n1|sed 's%.*peers: *\([0-9]*\).*%\1%'); } # current peers
+function bi { nu4 ${k[$1]} ${z[$1]} ${x[$1]} ${w[$1]} ${c[$1]}; }                                                             # avg penalty from cumulative paid error arrays
 function bx { echo $1|sed 's%node\([0-9]*\):%\1%'; }                                                                          # configured peers extraction from node tag
 function bz { echo $((10*(9*z6+3*z7+z8+z9))); }                                                                               # numerator paid errors restart index
 function bw { echo $((10*z1)); }                                                                                              # numerator processed blocks restart index
 function br { echo $((90*z3)); }                                                                                              # numerator general errors restart index
 function bu { echo $(($(nu3 200 $(bz) $z5)+$(nu3 100 $(bw) $z2)+$(nu3 100 $(br) $z4))); }                                     # restart index
 function bs { tail -n$1 $p2 2>/dev/null|cut -d' ' -f1|sort -u|wc -l; }                                                        # log restart activity test
-function bi { by ${k[$1]} ${z[$1]} ${x[$1]} ${w[$1]} ${c[$1]}; }                                                              # avg penalty from cumulative paid error arrays
+function bk { cat       $p2 2>/dev/null|                      wc -l; }                                                        # log line count
 function bb {
   local e=$(echo $H|sudo -S grep "lighthouse.$bpid" $p4 2>/dev/null|tail -n3600)
   z1=$(echo "$e"|grep 'rocessed block'|wc -l);z2=$(echo "$e"|grep 'block received'|wc -l);z3=$(echo "$e"|grep -v ' INFO '|wc -l);z4=$(echo "$e"|grep ' INFO '|wc -l)
@@ -73,12 +74,12 @@ function bb {
   ok='OK';local g=$(bu);[[ $g -ge $l1rs ]] && if [[ $g -ge $l2rs ]];then [[ $(bs $l2rs) -eq 1 ]] && ok='BK';else [[ $(bs $hors) -eq 1 ]] && ok='BK';fi
 }
 function bl {
-  b6=$(echo $H|sudo -S grep 'ublished block' $p4 2>/dev/null|wc -l);b7=0;local l=0;local n=0;local v=0
+  b6=$(echo $H|sudo -S grep 'ublished block' $p4 2>/dev/null|wc -l);b5=0;local l=0;local n=0;local v=0
   for v in $(echo $H|sudo -S grep 'src: gossip,' $p4 2>/dev/null|sed 's%.*delay_ms: *\([0-9]*\).*%\1%');do n=$((n+1));l=$((l+v));done
-  if [[ $n -gt 0 ]];then b7=$((l/n));dt=$(dts);nn=$(bv);nr=$(bq);bb;blo;else m=" NOT HERE $(dts)";fi
+  if [[ $n -gt 0 ]];then b5=$((l/n));dt=$(dts);nn=$(bv);nr=$(bq);bb;blo;else m=" NOT HERE $(dts)";fi
 }
 function bm {
-  bm0;dt=$(dts);nn=$(bv);nr=$(bq);b1=0;local g=0
+  bm0;dt=$(dts);nn=$(bv);nr=$(bq);local g=0
   if [[ -f $p7 ]];then
     unset o;read -a o <<< $(tail -n1 $p7);g=${o[1]}
     k[50]=${o[13]};k[45]=${o[14]};k[40]=${o[15]};k[35]=${o[16]};k[30]=${o[17]};k[25]=${o[18]};k[20]=${o[19]}
@@ -87,13 +88,13 @@ function bm {
     w[50]=${o[37]};w[45]=${o[38]};w[40]=${o[39]};w[35]=${o[40]};w[30]=${o[41]};w[25]=${o[42]};w[20]=${o[43]}
     c[50]=${o[ 5]};c[45]=${o[ 6]};c[40]=${o[ 7]};c[35]=${o[ 8]};c[30]=${o[ 9]};c[25]=${o[10]};c[20]=${o[11]}
   fi
-  [[ -f $p2 ]] && { b1=$(cat $p2|wc -l);unset v;while read -a v;do bm1;done <<< $(tail -n$((b1-g)) $p2|grep BEAC); };bm2;[[ ${b2:-0} -eq 0 ]] && bo1
+  [[ -f $p2 ]] && { unset v;while read -a v;do bm1;done <<< $(tail -n$(($(bk)-g)) $p2|grep BEAC); };bm2;[[ ${b2:-0} -eq 0 ]] && bo1
   local l=0;local n=0;[[ -f $p3 ]] && { unset v;while read -a v;do l=$((${v[2]}+l));n=$((1+n));done <<< $(cat $p3); };b3=$(nu2 "($l+$b2)/(1+$n)" 5)
-  b4=0;b5=${a[$nn]};bmn;[[ $b2 -le $b3 || $(bs $hors) -gt 1 ]] && b4=0;bmo
+  b4=0;bmn ${a[$nn]};[[ $b2 -le $b3 || $(bs $hors) -gt 1 ]] && b4=0;bmo;bno
 }
 function bh {
   tail -n${1:-$hors} $p2
-  [[ $1 ]] || { bo1;echo -e "BO$(printf '%5i' $(echo "$b0"|wc -l)) $(printf '%3i' $b2)";bo2; }
+  [[ $1 ]] || { bo1;echo -e "BO$(printf '%5i' $(echo "$b1"|wc -l)) $(printf '%3i' $b2)";bo2; }
   [[ $1 ]] || { bl ;echo -e "BL$(printf '%9i' $(cat $p2 2>/dev/null|wc -l))\nBEAC$m"; }
   [[ $1 ]] || { bm ;echo -e "BM$(printf '%9i' $(cat $p3 2>/dev/null|wc -l))\nBEAC$m"; }
   [[ $1 ]] || { sst BEAC "$(pst $ethb)";sst VALI "$(pst $ethv)"; }
@@ -101,20 +102,22 @@ function bh {
 function blo {
   #    0  1   2          3              4       5  6               7   8    9                 10   11  12 13    14 15 16  17 18     19  20  21   22   23   24         25   26
   # BEAC OK   0 2021-11-22 17:15:58+00:00 node00: 32 reward_penalty: 224 3.54 attestation_block: 2950 2280 0 erros: 2 14 131 29      0 537   0   14 3586 1260     delay: 1000
-  m=" $ok $(printf '%3i' $(bu)) $dt $(printf 'node%02i:' $nn) $(printf '%2i' $nr) reward_penalty: $(nu2 "($z5*$ratt+$b6*$rblk)*$rate/$decp" 0 %3i)"
-  m="$m $(printf '%4.2f' $(by $z6 $z7 $z8 $z9)) attestation_block: $(printf '%4i' $z5) $(printf '%4i' $(bz)) $(printf '%1i' $b6) erros: $(printf '%1i' $z6) $(printf '%2i' $z7) $(printf '%3i' $z8)"
-  m="$m $(printf '%2i' $z9) $(printf '%6i' $z1) $(printf '%3i' $z2) $(printf '%3i' $(bw)) $(printf '%4i' $z3) $(printf '%4i' $z4) $(printf '%4i' $(br))     delay: $(printf '%4i' $b7)"
+  m=" $ok $(printf '%3i' $(bu)) $dt $(printf 'node%02i:' $nn) $(printf '%2i' $nr) reward_penalty: $(nu2 "($z5*$ratt+$b6*$rblk)*$rate/$decp" 0 %3i) $(printf '%4.2f' $(nu4 $z6 $z7 $z8 $z9))"
+  m="$m attestation_block: $(printf '%4i' $z5) $(printf '%4i' $(bz)) $(printf '%1i' $b6) erros: $(printf '%1i' $z6) $(printf '%2i' $z7) $(printf '%3i' $z8)"
+  m="$m $(printf '%2i' $z9) $(printf '%6i' $z1) $(printf '%3i' $z2) $(printf '%3i' $(bw)) $(printf '%4i' $z3) $(printf '%4i' $z4) $(printf '%4i' $(br))     delay: $(printf '%4i' $b5)"
 }
 # recursively compare avg penalty array with current penalty
-function bmn { local n=${1:-20};if [[ $(nu2 ${a[$n]}*100) -lt $(nu2 $b5*100) ]];then b4=$((n-nn));b5=${a[$n]};fi;[[ $n -lt 50 ]] && bmn $((n+5)); }
+function bmn { local g=$1;local n=${2:-20};if [[ $(nu2 ${a[$n]}*100) -lt $(nu2 $g*100) ]];then b4=$((n-nn));g=${a[$n]};fi;[[ $n -lt 50 ]] && bmn $g $((n+5)); }
 function bmo {
   #    0  1   2          3        4       5  6    7    8    9   10   11   12   13   14          15   16          17 18
   # BEAC  6   2 2021-12-06 09:54:17 node40: 43 avg: 2.63 2.89 1.49 2.24 2.65 1.95 1.97 global_avg: 2.06 peer_change: 0
   m=" $(printf '%2i' $b3) $(printf '%3i' $b2) $dt $(printf 'node%02i:' $nn) $(printf '%2i' $nr) avg: $(printf '%4.2f' ${a[50]}) $(printf '%4.2f' ${a[45]}) $(printf '%4.2f' ${a[40]})"
   m="$m $(printf '%4.2f' ${a[35]}) $(printf '%4.2f' ${a[30]}) $(printf '%4.2f' ${a[25]}) $(printf '%4.2f' ${a[20]}) global_avg: $(printf '%4.2f' ${a[00]}) peer_change: $b4"
+}
+function bno {
   #    0   1          2              3    4 5 6 7 8 9 0   1    2 3 4 5 6 7 8   9    0 1 2 3 4 5 6    7    8 9 0 1 2 3 4     5    6 7 8 9 0 1 2    3
   # BEAC 400 2021-11-14 16:52:36+00:00 cnt: 0 0 0 0 0 0 411 mis: 0 0 0 0 0 0 625 mat: 0 0 0 0 0 0 3501 mah: 0 0 0 0 0 0 25550 dly: 0 0 0 0 0 0 3941
-  s=" $b1 $dt cnt: ${c[50]} ${c[45]} ${c[40]} ${c[35]} ${c[30]} ${c[25]} ${c[20]}"
+  s=" $(bk) $dt cnt: ${c[50]} ${c[45]} ${c[40]} ${c[35]} ${c[30]} ${c[25]} ${c[20]}"
   s="$s mis: ${k[50]} ${k[45]} ${k[40]} ${k[35]} ${k[30]} ${k[25]} ${k[20]} mat: ${z[50]} ${z[45]} ${z[40]} ${z[35]} ${z[30]} ${z[25]} ${z[20]}"
   s="$s mah: ${x[50]} ${x[45]} ${x[40]} ${x[35]} ${x[30]} ${x[25]} ${x[20]} dly: ${w[50]} ${w[45]} ${w[40]} ${w[35]} ${w[30]} ${w[25]} ${w[20]}"
 }
@@ -133,24 +136,24 @@ function bo1 {
   b2=0
   if [[ -f $p2 ]];then
     local e='00:00';local l=$(grep BEAC $p2|tail -n1|sed 's%.* \([0-9]*-[0-9]*-[0-9]*\) \([0-9]*:[0-9]*\):.*%\1 \2%');local d=$(echo $l|cut -d' ' -f1);local n=0
-    if [[ $(echo $1|egrep '^[0-9]+:[0-9]+$') ]];then e=$1 ;else if [[ $(echo $2|egrep '^[0-9]+:[0-9]+$') ]];then e=$2 ;else e=$(echo $l|cut -d' ' -f2);fi;fi;b0=$(grep "BEAC.*$e" $p2)
-    if [[ $(echo $1|egrep '^[0-9]+$')        ]];then b2=$1;else if [[ $(echo $2|egrep '^[0-9]+$')        ]];then b2=$2;else b2=$(echo "$b0"|sort -k10.1n|grep -n $d|cut -d: -f1);fi;fi
-    while [[ ${b2:-0} -eq 0 && $n -lt 50 ]];do n=$((n+1));d=$(date -d "$n days ago $e" '+%Y-%m-%d');b2=$(echo "$b0"|sort -k10.1n|grep -n $d|cut -d: -f1);done
+    if [[ $(echo $1|egrep '^[0-9]+:[0-9]+$') ]];then e=$1 ;else if [[ $(echo $2|egrep '^[0-9]+:[0-9]+$') ]];then e=$2 ;else e=$(echo $l|cut -d' ' -f2);fi;fi;b1=$(grep "BEAC.*$e" $p2)
+    if [[ $(echo $1|egrep '^[0-9]+$')        ]];then b2=$1;else if [[ $(echo $2|egrep '^[0-9]+$')        ]];then b2=$2;else b2=$(echo "$b1"|sort -k10.1n|grep -n $d|cut -d: -f1);fi;fi
+    while [[ ${b2:-0} -eq 0 && $n -lt 50 ]];do n=$((n+1));d=$(date -d "$n days ago $e" '+%Y-%m-%d');b2=$(echo "$b1"|sort -k10.1n|grep -n $d|cut -d: -f1);done
   fi
 }
 function bo2 {
   if [[ -f $p2 ]];then
     local e=${b2:-0};local d=${b2:-0}
-    if [[ $(echo $1|egrep '^[0-9]+$') ]];then e=$1;else if [[ $e -lt $l2rs && $(echo "$b0"|wc -l) -ge $l2rs ]];then d=$l2rs;e=$l2rs;fi;fi
+    if [[ $(echo $1|egrep '^[0-9]+$') ]];then e=$1;else if [[ $e -lt $l2rs && $(echo "$b1"|wc -l) -ge $l2rs ]];then d=$l2rs;e=$l2rs;fi;fi
     if [[ $(echo $1|egrep '^[0-9]+$') ]];then d=$1;else if [[ $d -gt $hors ]];then d=$hors;fi;fi
-    echo "$b0"|sort -k10.1n|head -n$e|tail -n$d
+    echo "$b1"|sort -k10.1n|head -n$e|tail -n$d
   fi
 }
 function brl {
   [[ -f ${p2}new ]] && rm ${p2}new;[[ -f ${p3}new ]] && rm ${p3}new
   unset v;while read -a v;do ok=${v[1]};dt=${v[3]}\ ${v[4]};nn=$(bx ${v[5]});nr=${v[6]}
     if [[ ${v[0]} = BEAC ]];then # published block/delay/processed block/block received/not INFO/INFO/attestation/erros missing/erros target/erros head/erros had
-      b6=${v[13]};b7=${v[26]};z1=${v[19]};z2=${v[20]};z3=${v[22]};z4=${v[23]};z5=${v[11]};z6=${v[15]};z7=${v[16]};z8=${v[17]};z9=${v[18]};blo
+      b6=${v[13]};b5=${v[26]};z1=${v[19]};z2=${v[20]};z3=${v[22]};z4=${v[23]};z5=${v[11]};z6=${v[15]};z7=${v[16]};z8=${v[17]};z9=${v[18]};blo
     else
       m=" $ok $(printf '%3i' ${v[2]}) $dt $(printf 'node%02i:' $nn) $(printf '%2i' $nr)"
     fi
