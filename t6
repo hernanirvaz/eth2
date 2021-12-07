@@ -93,7 +93,7 @@ function bh {
   tail -n${1:-$hors} $p2
   [[ $1 ]] || { bo1;echo -e "BO$(printf '%5i' $(echo "$b1"|wc -l)) $(printf '%3i' $b2)";bo2; }
   [[ $1 ]] || { bl ;echo -e "BL$(printf '%9i' $(cat $p2 2>/dev/null|wc -l))\nBEAC$m"; }
-  [[ $1 ]] || { bm ;echo -e "BM$(printf '%9i' $(cat $p3 2>/dev/null|wc -l))\nBEAC$m"; }
+  [[ $1 ]] || { bm ;echo -e "BM$(printf '%5i' $(cat $p3 2>/dev/null|wc -l))\nBEAC$m"; }
   [[ $1 ]] || { sst BEAC $ethb;sst VALI $ethv; }
 }
 # recursively compare avg penalty array with current penalty
