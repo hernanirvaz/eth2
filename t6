@@ -74,9 +74,8 @@ function bb {
   ok='OK';local g=$(bu);[[ $g -ge $l1rs ]] && if [[ $g -ge $l2rs ]];then [[ $(bs $l2rs) -eq 1 ]] && ok='BK';else [[ $(bs $hors) -eq 1 ]] && ok='BK';fi
 }
 function bl {
-  b6=$(echo $H|sudo -S grep 'ublished block' $p4 2>/dev/null|wc -l);b5=0;local l=0;local n=0;local v=0
-  for v in $(echo $H|sudo -S grep 'src: gossip,' $p4 2>/dev/null|sed 's%.*delay_ms: *\([0-9]*\).*%\1%');do n=$((n+1));l=$((l+v));done
-  if [[ $n -gt 0 ]];then b5=$((l/n));dt=$(dts);nn=$(bv);nr=$(bq);bb;blo;else m=" NOT HERE $(dts)";fi
+  local l=0;local n=0;local v=0;for v in $(echo $H|sudo -S grep 'delay_ms: [0-9]' $p4 2>/dev/null|sed 's%.*delay_ms: *\([0-9]*\).*%\1%');do n=$((n+1));l=$((l+v));done
+  if [[ $n -gt 0  ]];then b5=$((l/n));b6=$(echo $H|sudo -S grep 'published block' $p4 2>/dev/null|wc -l);dt=$(dts);nn=$(bv);nr=$(bq);bb;blo;else m=" NOT HERE $(dts)";fi
 }
 function bm {
   bm0;dt=$(dts);nn=$(bv);nr=$(bq);local g=0
