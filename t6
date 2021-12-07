@@ -35,11 +35,11 @@ function gl {
   if [[ $(fs0 $ethg running) ]];then
     local e=$(gy);gb
     if [[ $(echo $e|grep false) ]];then
-      m=" $ok SYC $(dnn $(dts) $(gv) $(gq)) sgs: $(printf '%4i' $g0)"                                                         # GETH OK SYC 2021-12-04 17:40:50 node10:  7 sgs: 4726
+      m=" $ok SYC $(dnn $(dts) $(gv) $(gq)) sgs: $(printf '%4i' $g0)"                                                         # OK SYC 2021-12-04 17:40:50 node10:  7 sgs: 4726
     else
       local g=$(echo $e|sed -Ee 's%.*highestBlock: *([0-9]+).*%\1%i')
       local n=$(echo $e|sed -Ee 's%.*currentBlock: *([0-9]+).*%\1%i')
-      m=" $ok NSY $(dnn $(dts) $(gv) $(gq)) sgs: $(printf '%4i' $g0) blocks: $((g*1)) ($((g-n)))"                             # GETH OK NSY 2021-12-04 17:40:37 node10:  4 sgs: 4725 blocks: 13741168 (6)
+      m=" $ok NSY $(dnn $(dts) $(gv) $(gq)) sgs: $(printf '%4i' $g0) blocks: $((g*1)) ($((g-n)))"                             # OK NSY 2021-12-04 17:40:37 node10:  4 sgs: 4725 blocks: 8 (6)
     fi
   else
     m=" NOT HERE $(dts)"
