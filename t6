@@ -3,52 +3,55 @@
 source /home/eth/eth2/t1
 
 # utilities for commands/journal
-function nu0 { if [ ${1:-0} -eq $1 ] 2>/dev/null;then echo $1;else echo 0;fi; }                                                # force numeric output
-function nu1 { echo "scale=$2;$1"|bc; }                                                                                        # arbitrary precision calculations
-function nu2 { printf ${3:-%.0f} $(nu1 $1 ${2:-0}); }                                                                          # format arbitrary precision calculations
-function nu3 { if [[ $3 -gt $1 ]];then echo $(($2/$3));else echo 0;fi; }                                                       # targeted division for beacon restart index
-function nu4 { if [[ ${5:-1} -ne 0 ]];then nu1 "($1*$pmis+$2*$pmat+$3*$pmah+$4*$pdly)/${5:-1}*$rate/$decp" 2;else echo 0;fi; } # penalty calculator for beacon log ordering
-function cex { echo -e "${i}$1${f}";echo $H|sudo -S $1                      2>/dev/null     ; }                                # visible superuser-command
-function sex {                      echo $H|sudo -S $1                      2>/dev/null 1>&2; }                                # silent  superuser-command
-function dmr {                      echo $H|sudo -S systemctl daemon-reload 2>/dev/null 1>&2; }                                # silent  daemon-reload
-function dts { date '+%Y-%m-%d %H:%M:%S'; }                                                                                    # my logs date format
-function jsh { cex "journalctl --no-hostname --no-full -f $1"; }                                                               # my journal format
-function fso { systemctl status $1 2>/dev/null|grep "${2:-inactive\|failed}"; }                                                # filtered service status output
-function rdn { cex "systemctl stop $dnsd";sex 'systemctl stop systemd-resolved';cex "systemctl start $dnsd";sex 'systemctl start systemd-resolved'; }
-function sst { echo "$1 $(printf '%6s' $(fso $2 Memory:|sed 's%.*Memory: \(.*\)%\1%')) $(dts) status: $(fso $2 Active:|sed 's%.*Active: \(.*\)%\1%')"; }
-function dnn { echo "$1 $2 $(printf 'node%02i:' $3) $(printf '%2i' $4)"; }
+function nu0 { if [ ${1:-0} -eq $1 ] 2>/dev/null;then echo $1;else echo 0;fi; }                                               # force numeric output
+function nu1 { echo "scale=$2;$1"|bc; }                                                                                       # arbitrary precision calculations
+function nu2 { printf ${3:-%.0f} $(nu1 $1 ${2:-0}); }                                                                         # format arbitrary precision calculations
+function nu3 { if [[ $3 -gt $1 ]];then echo $(($2/$3));else echo 0;fi; }                                                      # targeted division for beacon restart index
+function nu4 { if [[ $5 -ne 0 ]];then nu1 "($1*$pmis+$2*$pmat+$3*$pmah+$4*$pdly)/$5*$rate/$decp" 2;else echo 0;fi; }          # penalty calculator for beacon log ordering
+function cex { echo -e "${i}$1${f}";echo $H|sudo -S $1                      2>/dev/null     ; }                               # visible superuser-command
+function sex {                      echo $H|sudo -S $1                      2>/dev/null 1>&2; }                               # silent  superuser-command
+function dmr {                      echo $H|sudo -S systemctl daemon-reload 2>/dev/null 1>&2; }                               # silent  daemon-reload
+function dts { date '+%Y-%m-%d %H:%M:%S'; }                                                                                   # my logs date format
+function jsh { cex "journalctl --no-hostname --no-full -f $1"; }                                                              # my journal format
+function fs0 { systemctl status $1 2>/dev/null|grep "${2:-inactive\|failed}"; }                                               # filtered service status output
+function fs1 { systemctl status $1 2>/dev/null|grep "${2:-Active:}"|sed "s%.*${2:-Active:} \(${3:-.}*\).*%\1%"; }             # filtered & edited service status output
+function sst { echo "$1 $(printf '%6s' $(fs1 $2 Memory:)) $(dts) status: $(fs1 $2)"; }                                        # my service status output
+function dnn { echo "$1 $2 $(printf 'node%02i:' $3) $(printf '%2i' $4)"; }                                                    # my date & node info output yyyy-mm-dd hh:mm:ss node40: 43
+function rd0 { cex "systemctl stop  $dnsd";sex 'systemctl stop  systemd-resolved'; }                                          # DNS stop
+function rd1 { cex "systemctl start $dnsd";sex 'systemctl start systemd-resolved'; }                                          # DNS start
+function chp {
+  cp $p8/$1.service ~/$1.sav;local n=$(($2+$3))                                                                               # alteracao configured peers [+/-]$2
+  [[ $n -ge $4 && $n -le $5 ]] && sed "s%peers [0-9]*%peers $n%" ~/$1.sav > $p8/$1.service                                    # editar service file se dentro dos limites
+}
 # geth error control functions
-function gv { nu0 $(fso $ethg maxpeers|sed 's%.*--maxpeers \([0-9]*\).*%\1%'   ); }               # configured peers
-function gq { nu0 $(geth attach "http://$cgth:8545" --exec net.peerCount 2>/dev/null); }          # current peers
-function gy { geth attach "http://$cgth:8545" --exec eth.syncing         2>/dev/null ; }          # current syncing status
+function gv { nu0 $(fs1 $ethg maxpeers [0-9])                                        ; }                                      # configured peers
+function gq { nu0 $(geth attach "http://$cgth:8545" --exec net.peerCount 2>/dev/null); }                                      # current peers
+function gy { geth attach "http://$cgth:8545" --exec eth.syncing         2>/dev/null ; }                                      # current syncing status
 function gb {
-  g0=$(echo $H|sudo -S grep 'mported new' $p4 2>/dev/null|wc -l);ok='OK'                          # g0 numero de new imported chain segments
-  [[ $g0 -eq $(grep sgs: $p5 2>/dev/null|tail -n1|sed 's%.*sgs: *\([0-9]*\).*%\1%') ]] && ok='BK' # ok OK/BK blocked
+  g0=$(echo $H|sudo -S grep 'mported new' $p4 2>/dev/null|wc -l);ok='OK'                                                      # g0 numero de new imported chain segments
+  [[ $g0 -eq $(grep sgs: $p5 2>/dev/null|tail -n1|sed 's%.*sgs: *\([0-9]*\).*%\1%') ]] && ok='BK'                             # ok OK/BK blocked
 }
 function gl {
-  if [[ $(fso $ethg running) ]];then
+  if [[ $(fs0 $ethg running) ]];then
     local e=$(gy);gb
     if [[ $(echo $e|grep false) ]];then
-      m=" $ok SYC $(dnn $(dts) $(gv) $(gq)) sgs: $(printf '%4i' $g0)"                             # GETH OK SYC 2021-12-04 17:40:50 node10:  7 sgs: 4726
+      m=" $ok SYC $(dnn $(dts) $(gv) $(gq)) sgs: $(printf '%4i' $g0)"                                                         # GETH OK SYC 2021-12-04 17:40:50 node10:  7 sgs: 4726
     else
-      local g=$(echo $e|sed -Ee 's%.*highestBlock: *([0-9]+).*%\1%i');local n=$(echo $e|sed -Ee 's%.*currentBlock: *([0-9]+).*%\1%i')
-      m=" $ok NSY $(dnn $(dts) $(gv) $(gq)) sgs: $(printf '%4i' $g0) blocks: $((g*1)) ($((g-n)))" # GETH OK NSY 2021-12-04 17:40:37 node10:  4 sgs: 4725 blocks: 13741168 (6)
+      local g=$(echo $e|sed -Ee 's%.*highestBlock: *([0-9]+).*%\1%i')
+      local n=$(echo $e|sed -Ee 's%.*currentBlock: *([0-9]+).*%\1%i')
+      m=" $ok NSY $(dnn $(dts) $(gv) $(gq)) sgs: $(printf '%4i' $g0) blocks: $((g*1)) ($((g-n)))"                             # GETH OK NSY 2021-12-04 17:40:37 node10:  4 sgs: 4725 blocks: 13741168 (6)
     fi
   else
     m=" NOT HERE $(dts)"
   fi
 }
 function grs {
-  local n=$(gv)
-  if [[ $1 -ne 0 ]];then # [+/-$1] alteracao configured peers
-    cp /etc/systemd/system/$ethg.service ~/$ethg.save
-    n=$(($1+n));[[ $n -ge 10 && $n -le 15 ]] && sed "s%--maxpeers [0-9]*%--maxpeers $n%" ~/$ethg.save > /etc/systemd/system/$ethg.service
-  fi
+  if [[ $1 -ne 0 ]];then chp $ethg $1 $(gv) 10 15;fi
   resolvectl query smtp.gmail.com 2>/dev/null 1>&2
-  sex "systemctl stop $ethg";dmr;sex "systemctl start $ethg";sleep 10s;echo "GETH RESTAR $(dnn $(dts) $n $(gq))" >> $p5 # restart servico geth
+  sex "systemctl stop $ethg";dmr;sex "systemctl start $ethg";sleep 10s;echo "GETH RESTAR $(dnn $(dts) $n $(gq))" >> $p5
 }
 # beacon error control functions
-function bv { nu0 $(fso $ethb target-peers|sed 's%.*--target-peers \([0-9]*\).*%\1%')                                     ; } # configured peers
+function bv { nu0 $(fs1 $ethb target-peers [0-9])                                                                         ; } # configured peers
 function bq { nu0 $(echo $H|sudo -S grep 'lighthouse.*peers:' $p4 2>/dev/null|tail -n1|sed 's%.*peers: *\([0-9]*\).*%\1%'); } # current peers
 function bi { nu4 ${k[$1]} ${z[$1]} ${x[$1]} ${w[$1]} ${c[$1]}; }                                                             # avg penalty from cumulative paid error arrays
 function bx { echo $1|sed 's%node\([0-9]*\):%\1%'; }                                                                          # configured peers extraction from node tag
@@ -98,14 +101,14 @@ function bmn { local g=$1;local n=${2:-20};if [[ $(nu2 ${a[$n]}*100) -lt $(nu2 $
 function blo {
   #    0  1   2          3              4       5  6               7   8    9                 10   11  12 13    14 15 16  17 18     19  20  21   22   23   24         25   26
   # BEAC OK   0 2021-11-22 17:15:58+00:00 node00: 32 reward_penalty: 224 3.54 attestation_block: 2950 2280 0 erros: 2 14 131 29      0 537   0   14 3586 1260     delay: 1000
-  m=" $ok $(printf '%3i' $(bu)) $dt $(printf 'node%02i:' $nn) $(printf '%2i' $nr) reward_penalty: $(nu2 "($z5*$ratt+$b6*$rblk)*$rate/$decp" 0 %3i) $(printf '%4.2f' $(nu4 $z6 $z7 $z8 $z9))"
+  m=" $ok $(printf '%3i' $(bu)) $(dnn $dt $nn $nr) reward_penalty: $(nu2 "($z5*$ratt+$b6*$rblk)*$rate/$decp" 0 %3i) $(printf '%4.2f' $(nu4 $z6 $z7 $z8 $z9 1))"
   m="$m attestation_block: $(printf '%4i' $z5) $(printf '%4i' $(bz)) $(printf '%1i' $b6) erros: $(printf '%1i' $z6) $(printf '%2i' $z7) $(printf '%3i' $z8)"
   m="$m $(printf '%2i' $z9) $(printf '%6i' $z1) $(printf '%3i' $z2) $(printf '%3i' $(bw)) $(printf '%4i' $z3) $(printf '%4i' $z4) $(printf '%4i' $(br))     delay: $(printf '%4i' $b5)"
 }
 function bmo {
   #    0  1   2          3        4       5  6    7    8    9   10   11   12   13   14          15   16          17 18
   # BEAC  6   2 2021-12-06 09:54:17 node40: 43 avg: 2.63 2.89 1.49 2.24 2.65 1.95 1.97 global_avg: 2.06 peer_change: 0
-  m=" $(printf '%2i' $b3) $(printf '%3i' $b2) $dt $(printf 'node%02i:' $nn) $(printf '%2i' $nr) avg: $(printf '%4.2f' ${a[50]}) $(printf '%4.2f' ${a[45]}) $(printf '%4.2f' ${a[40]})"
+  m=" $(printf '%2i' $b3) $(printf '%3i' $b2) $(dnn $dt $nn $nr) avg: $(printf '%4.2f' ${a[50]}) $(printf '%4.2f' ${a[45]}) $(printf '%4.2f' ${a[40]})"
   m="$m $(printf '%4.2f' ${a[35]}) $(printf '%4.2f' ${a[30]}) $(printf '%4.2f' ${a[25]}) $(printf '%4.2f' ${a[20]}) global_avg: $(printf '%4.2f' ${a[00]}) peer_change: $b4"
 }
 function bno {
@@ -149,7 +152,7 @@ function brl {
     if [[ ${v[0]} = BEAC ]];then # published block/delay/processed block/block received/not INFO/INFO/attestation/erros missing/erros target/erros head/erros had
       b6=${v[13]};b5=${v[26]};z1=${v[19]};z2=${v[20]};z3=${v[22]};z4=${v[23]};z5=${v[11]};z6=${v[15]};z7=${v[16]};z8=${v[17]};z9=${v[18]};blo
     else
-      m=" $ok $(printf '%3i' ${v[2]}) $dt $(printf 'node%02i:' $nn) $(printf '%2i' $nr)"
+      m=" $ok $(printf '%3i' ${v[2]}) $(dnn $dt $nn $nr)"
     fi
     echo "${v[0]}$m" >> ${p2}new
   done <<< $(cat $p2)
@@ -176,12 +179,9 @@ function brs {
       local l=$(echo $H|sudo -S grep "lighthouse.$bpid.* INFO " $p4 2>/dev/null|tail -n$pors|sed 's%.* INFO \([^ ]*\) .*%\1%'|sort -u)
       if [[ $(echo "$l"|wc -l) -eq 2 && $(echo "$l"|tail -n1) = Synced && $(echo "$l"|head -n1) = New ]];then
         dt=$(dts);nn=$(bv);nr=$(bq);[[ $2 ]] && { ok=${2:0:2};ok=${ok^^}; }
-        if [[ $1 -ne 0 ]];then
-          cp /etc/systemd/system/$ethb.service ~/$ethb.save
-          nn=$((nn+$1));[[ $nn -ge 20 && $nn -le 50 ]] && sed "s%--target-peers [0-9]*%--target-peers $nn%" ~/$ethb.save > /etc/systemd/system/$ethb.service
-        fi
+        if [[ $1 -ne 0 ]];then chp $ethb $1 $nn 20 50;fi
         resolvectl query smtp.gmail.com 2>/dev/null 1>&2
-        sex "systemctl stop $ethb";[[ $2 = vcreset ]] && sex "systemctl stop $ethv";dmr;echo "RSTI $ok $(printf '%3i' $n) $dt $(printf 'node%02i:' $nn) $(printf '%2i' $nr)" >> $p2
+        sex "systemctl stop $ethb";[[ $2 = vcreset ]] && sex "systemctl stop $ethv";dmr;echo "RSTI $ok $(printf '%3i' $n) $(dnn $dt $nn $nr)" >> $p2
         if [[ $2 = reboot ]];then
           rm -f /home/eth/beacon.restart.inicio;sex reboot
         else
@@ -213,7 +213,7 @@ function nsh {
 }
 function csh {
   local e='NO';[[ $(timedatectl|grep synchronized:|sed 's%.*synchronized: \([a-z]*\).*%\1%') = yes ]] && e='OK'
-  echo "CLCK $e $(printf '%3i' $(echo $H|sudo -S grep 'check system clock' $p4 2>/dev/null|wc -l)) $(dts) status: $(fso systemd-timesyncd Active:|sed 's%.*Active: \(.*\)%\1%')"
+  echo "CLCK $e $(printf '%3i' $(echo $H|sudo -S grep 'check system clock' $p4 2>/dev/null|wc -l)) $(dts) status: $(fs1 systemd-timesyncd)"
 }
 function esh {
   local l=$(echo $H|sudo -S grep -v 'geth\[\|lighthouse' $p4 2>/dev/null|grep -i 'error' |wc -l)
@@ -234,22 +234,22 @@ function rxw { cex "ufw$2 allow from 192.168.8.0/24 $1"; }
 function xop { cex 'ufw delete deny 32400             ';rxw 'to any port 32400 comment plex'; }
 function xcl { cex 'ufw        deny 32400 comment plex';rxw 'to any port 32400 '   ' delete'; }
 function xe  { xop;cex 'ufw reload';cex "systemctl enable $plex"; }
-function xa  { [[ $(fso $plex       ) ]] && { cex "systemctl start $plex"; } }
-function xp  { [[ $(fso $plex loaded) ]] && { cex "systemctl stop  $plex"; } }
+function xa  { [[ $(fs0 $plex       ) ]] && { cex "systemctl start $plex"; } }
+function xp  { [[ $(fs0 $plex loaded) ]] && { cex "systemctl stop  $plex"; } }
 function xd  { cex "systemctl disable $plex";xcl;cex 'ufw reload'; }
 # Transmission BitTorrent Daemon
 function rop { cex 'ufw allow 51413 comment torrent';rxw 'to any port 9091 comment torrent'; }
 function rcl { cex 'ufw deny  51413 comment torrent';rxw 'to any port 9091'       ' delete'; }
 function re  { rop;cex 'ufw reload';cex "systemctl enable $trrt"; }
-function ra  { [[ $(fso $trrt       ) ]] && { cex "systemctl start $trrt"; } }
-function rp  { [[ $(fso $trrt loaded) ]] && { cex "systemctl stop  $trrt"; } }
+function ra  { [[ $(fs0 $trrt       ) ]] && { cex "systemctl start $trrt"; } }
+function rp  { [[ $(fs0 $trrt loaded) ]] && { cex "systemctl stop  $trrt"; } }
 function rd  { cex "systemctl disable $trrt";rcl;cex 'ufw reload'; }
 # Bind9
 function sop { cex 'ufw delete deny 53            ';rxw 'to any port 53 comment dns'; }
 function scl { cex 'ufw        deny 53 comment dns';rxw 'to any port 53 '  ' delete'; }
 function se  { sop;cex 'ufw reload';cex "systemctl enable $dnsd"; }
-function sa  { [[ $(fso $dnsd disabled) ]] || { [[ $(fso $dnsd) ]] && cex "systemctl start $dnsd"; } }
-function sp  { [[ $(fso $dnsd loaded  ) ]] && { cex "systemctl stop $dnsd"; } }
+function sa  { [[ $(fs0 $dnsd disabled) ]] || { [[ $(fs0 $dnsd) ]] && cex "systemctl start $dnsd"; } }
+function sp  { [[ $(fs0 $dnsd loaded  ) ]] && { cex "systemctl stop $dnsd"; } }
 function sd  { cex "systemctl disable $dnsd";scl;cex 'ufw reload'; }
 # open/close goethereum/beacon/validator/grafana
 function gfw { if [[ $cust = hrv ]];then cex "ufw$2 allow from $zip2 $1";cex "ufw$2 allow from $zip3 $1";else cex "ufw$2 allow from $vip1 $1";cex "ufw$2 allow from $vip3 $1";fi; }
@@ -273,10 +273,10 @@ function ve  { [[ ! -f $dtdi/vc_lock ]] && { vop;cex 'ufw reload';cex "systemctl
 function pe  { cex 'ufw reload';cex "systemctl enable $ethp"; }
 function ne  { cex 'ufw reload';cex "systemctl enable $ethn"; }
 function fe  { fop;cex 'ufw reload';cex "systemctl enable $ethf"; }
-function ga  { [[ $(fso $ethg) ]] && [[ -d /var/lib/goethereum   ]] && { cex "systemctl start $ethg"; } }
-function ba  { [[ $(fso $ethb) ]] && { cex "systemctl start $ethb"; } }
+function ga  { [[ $(fs0 $ethg) ]] && [[ -d /var/lib/goethereum   ]] && { cex "systemctl start $ethg"; } }
+function ba  { [[ $(fs0 $ethb) ]] && { cex "systemctl start $ethb"; } }
 function va  {
-  if [[ $(fso $ethv) ]];then
+  if [[ $(fs0 $ethv) ]];then
     if [[ -f $dtdi/vc_lock ]];then
       if [[ -f /home/eth/slashing_protection.sqlite ]];then
         echo $H|sudo -S cp /home/eth/slashing_protection.sqlite $vldt 2>/dev/null
@@ -289,29 +289,29 @@ function va  {
     fi
   fi
 }
-function pa { [[ $(fso $ethp) ]] && { cex "systemctl start $ethp"; } }
-function na { [[ $(fso $ethn) ]] && { cex "systemctl start $ethn"; } }
-function fa { [[ $(fso $ethf) ]] && { cex "systemctl start $ethf"; } }
+function pa { [[ $(fs0 $ethp) ]] && { cex "systemctl start $ethp"; } }
+function na { [[ $(fs0 $ethn) ]] && { cex "systemctl start $ethn"; } }
+function fa { [[ $(fs0 $ethf) ]] && { cex "systemctl start $ethf"; } }
 # para/disable goethereum/beacon/validator/prometheus/grafana
-function gp { [[ $(fso $ethg loaded) ]] && { cex "systemctl stop $ethg"; } }
-function bp { [[ $(fso $ethb loaded) ]] && { cex "systemctl stop $ethb"; } }
-function vp { [[ $(fso $ethv loaded) ]] && { cex "systemctl stop $ethv";touch $dtdi/vc_slash; } }
-function pp { [[ $(fso $ethp loaded) ]] && { cex "systemctl stop $ethp"; } }
-function np { [[ $(fso $ethn loaded) ]] && { cex "systemctl stop $ethn"; } }
-function fp { [[ $(fso $ethf loaded) ]] && { cex "systemctl stop $ethf"; } }
+function gp { [[ $(fs0 $ethg loaded) ]] && { cex "systemctl stop $ethg"; } }
+function bp { [[ $(fs0 $ethb loaded) ]] && { cex "systemctl stop $ethb"; } }
+function vp { [[ $(fs0 $ethv loaded) ]] && { cex "systemctl stop $ethv";touch $dtdi/vc_slash; } }
+function pp { [[ $(fs0 $ethp loaded) ]] && { cex "systemctl stop $ethp"; } }
+function np { [[ $(fs0 $ethn loaded) ]] && { cex "systemctl stop $ethn"; } }
+function fp { [[ $(fs0 $ethf loaded) ]] && { cex "systemctl stop $ethf"; } }
 function gd { cex "systemctl disable $ethg";gcl;cex 'ufw reload'; }
 function bd { cex "systemctl disable $ethb";bcl;cex 'ufw reload'; }
 function vd { cex "systemctl disable $ethv";vcl;cex 'ufw reload';touch $dtdi/vc_lock; }
-function pd { [[ $(fso $ethp loaded) ]] && { cex "systemctl disable $ethp"; } }
-function nd { [[ $(fso $ethn loaded) ]] && { cex "systemctl disable $ethn"; } }
-function fd { [[ $(fso $ethf loaded) ]] && { cex "systemctl disable $ethf";fcl;cex 'ufw reload'; } }
+function pd { [[ $(fs0 $ethp loaded) ]] && { cex "systemctl disable $ethp"; } }
+function nd { [[ $(fs0 $ethn loaded) ]] && { cex "systemctl disable $ethn"; } }
+function fd { [[ $(fs0 $ethf loaded) ]] && { cex "systemctl disable $ethf";fcl;cex 'ufw reload'; } }
 
 [[ $1 = eip ]] && { curl -s4 "http://${2}:${3}@dyn.dns.he.net/nic/update?hostname=${2}" 2>/dev/null 1>&2; }
 [[ $1 = dsh ]] && { echo QUERY DNS;resolvectl query ${2:-smtp.gmail.com}; }
-[[ $1 = drs ]] && { echo RESET DNS;rdn; }
-[[ $1 = nrs ]] && { echo RESET DNS \& NETPLAN;cex 'netplan apply';rdn; }
+[[ $1 = drs ]] && { echo RESET DNS;rd0;rd1; }
+[[ $1 = nrs ]] && { echo RESET DNS \& NETPLAN;cex 'netplan apply';rd0;rd1; }
 [[ $1 = nsh ]] && { nsh; }
-[[ $1 = trs ]] && { [[ $(fso systemd-timesyncd masked) ]] || { cex "systemctl restart systemd-timesyncd"; };csh; }
+[[ $1 = trs ]] && { [[ $(fs0 systemd-timesyncd masked) ]] || { cex "systemctl restart systemd-timesyncd"; };csh; }
 [[ $1 = vcp ]] && { ssp; }
 [[ $1 = gl  ]] && { gl;echo -e "GETH$m"; }
 [[ $1 = glf ]] && { gl;echo -e "GETH$m" >> $p5; }
