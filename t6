@@ -19,6 +19,7 @@ function sst { echo "$1 $(printf '%6s' $(fs1 $2 Memory:)) $(dts) status: $(fs1 $
 function dnn { echo "$1 $2 $(printf 'node%02i:' $3) $(printf '%2i' $4)"; }                                                    # my date & node info output yyyy-mm-dd hh:mm:ss node40: 43
 function rd0 { cex "systemctl stop  $dnsd";sex 'systemctl stop  systemd-resolved'; }                                          # DNS stop
 function rd1 { cex "systemctl start $dnsd";sex 'systemctl start systemd-resolved'; }                                          # DNS start
+function epr { resolvectl query smtp.gmail.com 2>/dev/null 1>&2;sex "systemctl stop $1";dmr; }                                # eth service stop
 function chp {
   cp $p8/$1.service ~/$1.sav;local n=$(($2+$3))                                                                               # alteracao configured peers [+/-]$2
   [[ $n -ge $4 && $n -le $5 ]] && sed "s%peers [0-9]*%peers $n%" ~/$1.sav > $p8/$1.service                                    # editar service file se dentro dos limites
@@ -46,9 +47,8 @@ function gl {
   fi
 }
 function grs {
-  if [[ $1 -ne 0 ]];then chp $ethg $1 $(gv) 10 15;fi
-  resolvectl query smtp.gmail.com 2>/dev/null 1>&2
-  sex "systemctl stop $ethg";dmr;sex "systemctl start $ethg";sleep 10s;echo "GETH RESTAR $(dnn $(dts) $n $(gq))" >> $p5
+  [[ $1 -ne 0 ]] && chp $ethg $1 $(gv) 10 15;epr $ethg                                                                        # change config & stop service & daemon-reload
+  sex "systemctl start $ethg";sleep 10s;echo "GETH RESTAR $(dnn $(dts) $(gv) $(gq))" >> $p5                                   # start service with new config
 }
 # beacon error control functions
 function bv { nu0 $(fs1 $ethb target-peers [0-9])                                                                         ; } # configured peers
@@ -177,15 +177,15 @@ function brs {
     touch /home/eth/beacon.restart.inicio;local n=0
     while [[ -f /home/eth/beacon.restart.inicio && $n -lt 200 ]]; do
       local l=$(echo $H|sudo -S grep "lighthouse.$bpid.* INFO " $p4 2>/dev/null|tail -n$pors|sed 's%.* INFO \([^ ]*\) .*%\1%'|sort -u)
-      if [[ $(echo "$l"|wc -l) -eq 2 && $(echo "$l"|tail -n1) = Synced && $(echo "$l"|head -n1) = New ]];then
-        dt=$(dts);nn=$(bv);nr=$(bq);[[ $2 ]] && { ok=${2:0:2};ok=${ok^^}; }
-        if [[ $1 -ne 0 ]];then chp $ethb $1 $nn 20 50;fi
-        resolvectl query smtp.gmail.com 2>/dev/null 1>&2
-        sex "systemctl stop $ethb";[[ $2 = vcreset ]] && sex "systemctl stop $ethv";dmr;echo "RSTI $ok $(printf '%3i' $n) $(dnn $dt $nn $nr)" >> $p2
-        if [[ $2 = reboot ]];then
+      if [[ $(echo "$l"|wc -l) -eq 2 && $(echo "$l"|head -n1) = New && $(echo "$l"|tail -n1) = Synced ]];then
+        ok=${2:-$ok}
+        [[ $1 -ne 0 ]] && chp $ethb $1 $(bv) 20 50;epr $ethb;[[ $2 = VC ]] && sex "systemctl stop $ethv"                      # change config & stop service & daemon-reload
+        if [[ $2 = RB ]];then
+          echo "RSTI $ok $(printf '%3i' $n) $(dnn $(dts) $(bv) $(bq))" >> $p2
           rm -f /home/eth/beacon.restart.inicio;sex reboot
         else
-          sex "systemctl start $ethb";[[ $2 = vcreset ]] && sex "systemctl start $ethv"
+          sex "systemctl start $ethb";[[ $2 = VC ]] && sex "systemctl start $ethv"                                            # start service with new config
+          echo "RSTI $ok $(printf '%3i' $n) $(dnn $(dts) $(bv) $(bq))" >> $p2
         fi
         rm -f /home/eth/beacon.restart.inicio
       fi
@@ -328,13 +328,13 @@ function fd { [[ $(fs0 $ethf loaded) ]] && { cex "systemctl disable $ethf";fcl;c
 [[ $1 = bnl ]] && { bnl; }
 [[ $1 = bo  ]] && { bo1 $2 $3;bo2 $2; }
 [[ $1 = cpe ]] && { csh;psh;esh; }
-[[ $1 = glr ]] && { gb;[[ $ok != 'OK' ]] && grs ${2:-0}    ; }
-[[ $1 = blr ]] && { bb;[[ $ok != 'OK' ]] && brs ${2:-0}    ; }
-[[ $1 = bmc ]] && { bm;[[ $b4 -ne 0   ]] && brs $b4 pereset; }
-[[ $1 = grs ]] && { grs ${2:-0}        ; }
-[[ $1 = srs ]] && { brs ${2:-0} reboot ; }
-[[ $1 = brs ]] && { brs ${2:-0} bnreset; }
-[[ $1 = lrs ]] && { brs ${2:-0} vcreset; }
+[[ $1 = glr ]] && { gb;[[ $ok != OK ]] && grs ${2:-0}; }
+[[ $1 = blr ]] && { bb;[[ $ok != OK ]] && brs ${2:-0}; }
+[[ $1 = bmc ]] && { bm;[[ $b4 -ne 0 ]] && brs $b4 PE ; }
+[[ $1 = grs ]] && { grs ${2:-0}   ; }
+[[ $1 = srs ]] && { brs ${2:-0} RB; }
+[[ $1 = brs ]] && { brs ${2:-0} BN; }
+[[ $1 = lrs ]] && { brs ${2:-0} VC; }
 # lista servicos & portas
 [[ $1 = lp  ]] && { netstat -tulpn; }
 # outros journal system/lighthouse
