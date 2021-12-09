@@ -3,13 +3,13 @@
 i="\n\e[5m"
 f="\e[25m\n"
 
-p0='/home/eth/eth2'
+p0='/home/eth'
 p1='/etc/prometheus'
 p4='/var/log/syslog'
-p5='/home/eth/geth.log'
-p2='/home/eth/beacon.log'
-p3='/home/eth/bmedias.log'
-p7='/home/eth/barqivo.log'
+p5="$p0/geth.log"
+p2="$p0/beacon.log"
+p3="$p0/bmedias.log"
+p7="$p0/barqivo.log"
 p8='/etc/systemd/system'
 
 meeu="$(whoami)"

@@ -3,104 +3,102 @@
 source /home/eth/eth2/t1
 
 # utilities for commands/journal
-function nu0 { if [ ${1:-0} -eq $1 ] 2>/dev/null;then echo $1;else echo 0;fi; }                                               # force numeric output
-function nu1 { echo "scale=$2;$1"|bc; }                                                                                       # arbitrary precision calculations
-function nu2 { printf ${3:-%.0f} $(nu1 $1 ${2:-0}); }                                                                         # format arbitrary precision calculations
-function nu3 { if [[ $3 -gt $1 ]];then echo $(($2/$3));else echo 0;fi; }                                                      # targeted division for beacon restart index
-function nu4 { if [[ $5 -ne 0 ]];then nu1 "($1*$pmis+$2*$pmat+$3*$pmah+$4*$pdly)/$5*$rate/$decp" 2;else echo 0;fi; }          # penalty calculator from 4 paid errors 
-function cex { echo -e "${i}$1${f}";echo $H|sudo -S $1                      2>/dev/null     ; }                               # visible superuser-command
-function sex {                      echo $H|sudo -S $1                      2>/dev/null 1>&2; }                               # silent  superuser-command
-function dmr {                      echo $H|sudo -S systemctl daemon-reload 2>/dev/null 1>&2; }                               # silent  daemon-reload
-function dts { date '+%Y-%m-%d %H:%M:%S'; }                                                                                   # my logs date format
-function jsh { cex "journalctl --no-hostname --no-full -f $1"; }                                                              # my journal format
-function fs0 { systemctl status $1 2>/dev/null|grep "${2:-inactive\|failed}"; }                                               # filtered service status output
-function fs1 { systemctl status $1 2>/dev/null|grep "${2:-Active:}"|sed "s%.*${2:-Active:} \(${3:-.}*\).*%\1%"; }             # filtered & edited service status output
-function sst { echo "$1 $(printf '%6s' $(fs1 $2 Memory:)) $(dts) status: $(fs1 $2)"; }                                        # my service status output
-function dnn { echo "$1 $2 $(printf 'node%02i:' $3) $(printf '%2i' $4)"; }                                                    # my date & node info output yyyy-mm-dd hh:mm:ss node40: 43
-function rd0 { cex "systemctl stop  $dnsd";sex 'systemctl stop  systemd-resolved'; }                                          # DNS stop
-function rd1 { cex "systemctl start $dnsd";sex 'systemctl start systemd-resolved'; }                                          # DNS start
-function epr { resolvectl query smtp.gmail.com 2>/dev/null 1>&2;sex "systemctl stop $1";dmr; }                                # eth service stop
+function nu0 { if [ ${1:-0} -eq $1 ] 2>/dev/null;then echo $1;else echo 0;fi; }                                                                   # force numeric output
+function nu1 { echo "scale=$2;$1"|bc; }                                                                                                           # arbitrary precision calculations
+function nu2 { printf ${3:-%.0f} $(nu1 $1 ${2:-0}); }                                                                                             # format arbitrary precision calculations
+function nu3 { if [[ $3 -gt $1 ]];then echo $(($2/$3))                                             ;else echo 0;fi; }                             # targeted division for beacon restart index
+function nu4 { if [[ $5 -ne 0  ]];then nu1 "($1*$pmis+$2*$pmat+$3*$pmah+$4*$pdly)/$5*$rate/$decp" 2;else echo 0;fi; }                             # penalty calculator from 4 paid errors 
+function cex { echo -e "${i}$1${f}";echo $H|sudo -S $1                      2>/dev/null     ; }                                                   # visible superuser-command
+function sex {                      echo $H|sudo -S $1                      2>/dev/null 1>&2; }                                                   # silent  superuser-command
+function dmr {                      echo $H|sudo -S systemctl daemon-reload 2>/dev/null 1>&2; }                                                   # silent  daemon-reload
+function dts { date '+%Y-%m-%d %H:%M:%S'; }                                                                                                       # my logs date format
+function jsh { cex "journalctl --no-hostname --no-full -f $1"; }                                                                                  # my journal format
+function fs0 { systemctl status $1 2>/dev/null|grep "${2:-inactive\|failed}"; }                                                                   # filtered service status output
+function fs1 { systemctl status $1 2>/dev/null|grep "${2:-Active:}"|sed "s%.*${2:-Active:} \(${3:-.}*\).*%\1%"; }                                 # filtered & edited service status output
+function sst { echo "$1 $(printf '%6s' $(fs1 $2 Memory:)) $(dts) status: $(fs1 $2)"; }                                                            # my service status output
+function dnn { echo "$1 $2 $(printf 'node%02i:' $3) $(printf '%2i' $4)"; }                                                                        # my date & node info output yyyy-mm-dd hh:mm:ss node40: 43
+function rd0 { cex "systemctl stop  $dnsd";sex 'systemctl stop  systemd-resolved'; }                                                              # DNS stop
+function rd1 { cex "systemctl start $dnsd";sex 'systemctl start systemd-resolved'; }                                                              # DNS start
+function epr { resolvectl query smtp.gmail.com 2>/dev/null 1>&2;sex "systemctl stop $1";dmr; }                                                    # service stop/reload
 function chp {
-  cp $p8/$1.service ~/$1.sav;local n=$(($2+$3))                                                                               # alteracao configured peers [+/-]$2
-  [[ $n -ge $4 && $n -le $5 ]] && sed "s%peers [0-9]*%peers $n%" ~/$1.sav > $p8/$1.service                                    # editar service file se dentro dos limites
+  cp $p8/$1.service ~/$1.sav;local n=$(($2+$3))                                                                                                   # alteracao configured peers [+/-]$2
+  [[ $n -ge $4 && $n -le $5 ]] && sed "s%peers [0-9]*%peers $n%" ~/$1.sav > $p8/$1.service                                                        # editar service file se dentro dos limites
 }
-# geth error control functions
-function gv { nu0 $(fs1 $ethg maxpeers [0-9])                                        ; }                                      # configured peers
-function gq { nu0 $(geth attach "http://$cgth:8545" --exec net.peerCount 2>/dev/null); }                                      # current peers
-function gy { geth attach "http://$cgth:8545" --exec eth.syncing         2>/dev/null ; }                                      # current syncing status
+function gv { nu0 $(fs1 $ethg maxpeers [0-9])                                        ; }                                                          # configured peers
+function gq { nu0 $(geth attach "http://$cgth:8545" --exec net.peerCount 2>/dev/null); }                                                          # current peers
+function gy { geth attach "http://$cgth:8545" --exec eth.syncing         2>/dev/null ; }                                                          # current syncing status
 function gb {
-  g0=$(echo $H|sudo -S grep 'mported new' $p4 2>/dev/null|wc -l)                                                              # numero de new imported chain segments
-  ok=OK;[[ $g0 -eq $(grep sgs: $p5 2>/dev/null|tail -n1|sed 's%.*sgs: *\([0-9]*\).*%\1%') ]] && ok=BK                         # OK/BK
+  g0=$(echo $H|sudo -S grep 'mported new' $p4 2>/dev/null|wc -l)                                                                                  # numero de new imported chain segments
+  ok=OK;[[ $g0 -eq $(grep sgs: $p5 2>/dev/null|tail -n1|sed 's%.*sgs: *\([0-9]*\).*%\1%') ]] && ok=BK                                             # OK/BK
 }
-function gl {
+function gl {                                                                                                                                     # geth log report
   if [[ $(fs0 $ethg running) ]];then
     local e=$(gy);gb
     if [[ $(echo $e|grep false) ]];then
-      m=" $ok SYC $(dnn $(dts) $(gv) $(gq)) sgs: $(printf '%4i' $g0)"                                                         # OK SYC 2021-12-04 17:40:50 node10:  7 sgs: 4726
+      m=" $ok SYC $(dnn $(dts) $(gv) $(gq)) sgs: $(printf '%4i' $g0)"                                                                             # OK SYC 2021-12-04 17:40:50 node10: 7 sgs: 6
     else
       local g=$(echo $e|sed -Ee 's%.*highestBlock: *([0-9]+).*%\1%i')
       local n=$(echo $e|sed -Ee 's%.*currentBlock: *([0-9]+).*%\1%i')
-      m=" $ok NSY $(dnn $(dts) $(gv) $(gq)) sgs: $(printf '%4i' $g0) blocks: $((g*1)) ($((g-n)))"                             # OK NSY 2021-12-04 17:40:37 node10:  4 sgs: 4725 blocks: 8 (6)
+      m=" $ok NSY $(dnn $(dts) $(gv) $(gq)) sgs: $(printf '%4i' $g0) blocks: $((g*1)) ($((g-n)))"                                                 # OK NSY 2021-12-04 17:40:37 node10: 4 sgs: 5 blocks: 8 (6)
     fi
   else
     m=" NOT HERE $(dts)"
   fi
 }
 function grs {
-  [[ $1 -ne 0 ]] && chp $ethg $1 $(gv) 10 15;epr $ethg                                                                        # change config & stop service & daemon-reload
-  sex "systemctl start $ethg";sleep 10s;echo "GETH RESTAR $(dnn $(dts) $(gv) $(gq))" >> $p5                                   # start service with new config
+  [[ $1 -ne 0 ]] && chp $ethg $1 $(gv) 10 15;epr $ethg                                                                                            # change config & stop/load geth
+  sex "systemctl start $ethg";sleep 10s;echo "GETH RESTAR $(dnn $(dts) $(gv) $(gq))" >> $p5                                                       # start geth & geth log entry
 }
-# beacon error control functions
-function bv { nu0 $(fs1 $ethb target-peers [0-9])                                                                         ; } # configured peers
-function bq { nu0 $(echo $H|sudo -S grep 'lighthouse.*peers:' $p4 2>/dev/null|tail -n1|sed 's%.*peers: *\([0-9]*\).*%\1%'); } # current peers
-function bi { nu4 ${k[$1]} ${z[$1]} ${x[$1]} ${w[$1]} ${c[$1]}; }                                                             # avg penalty from 4 cumulative paid error arrays
-function bx { echo $1|sed 's%node\([0-9]*\):%\1%'; }                                                                          # configured peers extraction from node tag
-function bz { echo $((10*(9*z6+3*z7+z8+z9))); }                                                                               # numerator paid errors restart index
-function bw { echo $((10*z1)); }                                                                                              # numerator processed blocks restart index
-function br { echo $((90*z3)); }                                                                                              # numerator general errors restart index
-function bu { echo $(($(nu3 200 $(bz) $z5)+$(nu3 100 $(bw) $z2)+$(nu3 100 $(br) $z4))); }                                     # restart index
-function bs { tail -n$1 $p2 2>/dev/null|cut -d' ' -f1|sort -u|wc -l; }                                                        # log restart activity test
-function bk { cat       $p2 2>/dev/null                      |wc -l; }                                                        # log line count
+function bv { nu0 $(fs1 $ethb target-peers [0-9])                                                                         ; }                     # configured peers
+function bq { nu0 $(echo $H|sudo -S grep 'lighthouse.*peers:' $p4 2>/dev/null|tail -n1|sed 's%.*peers: *\([0-9]*\).*%\1%'); }                     # current peers
+function bi { nu4 ${k[$1]} ${z[$1]} ${x[$1]} ${w[$1]} ${c[$1]}; }                                                                                 # avg penalty from 4 cumulative paid error arrays
+function bx { echo $1|sed 's%node\([0-9]*\):%\1%'; }                                                                                              # configured peers extraction from node tag
+function bz { echo $((10*(9*z6+3*z7+z8+z9))); }                                                                                                   # numerator paid errors restart index
+function bw { echo $((10*z1)); }                                                                                                                  # numerator processed blocks restart index
+function br { echo $((90*z3)); }                                                                                                                  # numerator general errors restart index
+function bu { echo $(($(nu3 200 $(bz) $z5)+$(nu3 100 $(bw) $z2)+$(nu3 100 $(br) $z4))); }                                                         # restart index
+function bs { tail -n$1 $p2 2>/dev/null|cut -d' ' -f1|sort -u|wc -l; }                                                                            # beacon log restart activity test
+function bk { cat       $p2 2>/dev/null                      |wc -l; }                                                                            # beacon log line count
 function bb {
-  local e=$(echo $H|sudo -S grep "lighthouse.$bpid" $p4 2>/dev/null|tail -n3600)                                              # last beacon log messages
-  z1=$(echo "$e"|grep 'rocessed block'|wc -l);z2=$(echo "$e"|grep 'block received'|wc -l)                                     # processed blocks restart index vars
-  z3=$(echo "$e"|grep -v ' INFO '     |wc -l);z4=$(echo "$e"|grep ' INFO '        |wc -l)                                     # general errors restart index vars
-  z5=$(echo $H|sudo -S grep 'attestation(s) success' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w)           # denominator paid errors restart index
-  z6=$(echo $H|sudo -S grep 'attestation(s) missing' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w)           # missing part for paid errors restart index
-  z7=$(echo $H|sudo -S grep 'attestation(s).*target' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w)           # failed target part for paid errors restart index
-  z8=$(echo $H|sudo -S grep 'attestation(s).*head'   $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w)           # failed head part for paid errors restart index
-  z9=$(echo $H|sudo -S grep 'attestation(s) had'     $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w)           # sub-optimal delay part for paid errors restart index
-  ok=OK;local g=$(bu);[[ ($g -ge $l1rs && $(bs $hors) -eq 1) || ($g -ge $l2rs && $(bs $l2rs) -eq 1) ]] && ok=BK               # OK/BK
+  local e=$(echo $H|sudo -S grep "lighthouse.$bpid" $p4 2>/dev/null|tail -n3600)                                                                  # most recent beacon messages
+  z1=$(echo "$e"|grep 'rocessed block'|wc -l);z2=$(echo "$e"|grep 'block received'|wc -l)                                                         # processed blocks           restart index
+  z3=$(echo "$e"|grep -v ' INFO '     |wc -l);z4=$(echo "$e"|grep ' INFO '        |wc -l)                                                         # general errors             restart index
+  z5=$(echo $H|sudo -S grep 'attestation(s) success' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w)                               # denominator       paid     restart index
+  z6=$(echo $H|sudo -S grep 'attestation(s) missing' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w)                               # missing           paid err restart index
+  z7=$(echo $H|sudo -S grep 'attestation(s).*target' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w)                               # failed target     paid err restart index
+  z8=$(echo $H|sudo -S grep 'attestation(s).*head'   $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w)                               # failed head       paid err restart index
+  z9=$(echo $H|sudo -S grep 'attestation(s) had'     $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w)                               # sub-optimal delay paid err restart index
+  ok=OK;local g=$(bu);[[ ($g -ge $l1rs && $(bs $hors) -eq 1) || ($g -ge $l2rs && $(bs $l2rs) -eq 1) ]] && ok=BK                                   # OK/BK
 }
 function bl {
-  local l=0;local n=0;local v=0;for v in $(echo $H|sudo -S grep 'delay_ms: [0-9]' $p4 2>/dev/null|sed 's%.*delay_ms: *\([0-9]*\).*%\1%');do n=$((n+1));l=$((l+v));done   # delays in service logs
-  if [[ $n -gt 0  ]];then b5=$((l/n));b6=$(echo $H|sudo -S grep 'published block' $p4 2>/dev/null|wc -l);dt=$(dts);nn=$(bv);nr=$(bq);bb;blo;else m=" NOT HERE $(dts)";fi # obtaim log output
+  local l=0;local n=0;local v=0;for v in $(echo $H|sudo -S grep 'delay_ms: [0-9]' $p4 2>/dev/null|sed 's%.*delay_ms: *\([0-9]*\).*%\1%');do n=$((n+1));l=$((l+v));done   # delays in service
+  if [[ $n -gt 0  ]];then b5=$((l/n));b6=$(echo $H|sudo -S grep 'published block' $p4 2>/dev/null|wc -l);dt=$(dts);nn=$(bv);nr=$(bq);bb;blo;else m=" NOT HERE $(dts)";fi # obtaim beacon log output
 }
 function bm {
   bm0;dt=$(dts);nn=$(bv);nr=$(bq);local g=0
   if [[ -f $p7 ]];then
-    unset o;read -a o <<< $(tail -n1 $p7);g=${o[1]}                                                                           # init arrays from last line of barqivo log
-    k[50]=${o[13]};k[45]=${o[14]};k[40]=${o[15]};k[35]=${o[16]};k[30]=${o[17]};k[25]=${o[18]};k[20]=${o[19]}                  # sum missing error array
-    z[50]=${o[21]};z[45]=${o[22]};z[40]=${o[23]};z[35]=${o[24]};z[30]=${o[25]};z[25]=${o[26]};z[20]=${o[27]}                  # sum failed target error array
-    x[50]=${o[29]};x[45]=${o[30]};x[40]=${o[31]};x[35]=${o[32]};x[30]=${o[33]};x[25]=${o[34]};x[20]=${o[35]}                  # sum failed head error array
-    w[50]=${o[37]};w[45]=${o[38]};w[40]=${o[39]};w[35]=${o[40]};w[30]=${o[41]};w[25]=${o[42]};w[20]=${o[43]}                  # sum sub-optimal delay error array
-    c[50]=${o[ 5]};c[45]=${o[ 6]};c[40]=${o[ 7]};c[35]=${o[ 8]};c[30]=${o[ 9]};c[25]=${o[10]};c[20]=${o[11]}                  # cnt array (beacon log lines)
+    unset o;read -a o <<< $(tail -n1 $p7);g=${o[1]}                                                                                               # init arrays from barqivo log
+    k[50]=${o[13]};k[45]=${o[14]};k[40]=${o[15]};k[35]=${o[16]};k[30]=${o[17]};k[25]=${o[18]};k[20]=${o[19]}                                      # missing           error array
+    z[50]=${o[21]};z[45]=${o[22]};z[40]=${o[23]};z[35]=${o[24]};z[30]=${o[25]};z[25]=${o[26]};z[20]=${o[27]}                                      # failed target     error array
+    x[50]=${o[29]};x[45]=${o[30]};x[40]=${o[31]};x[35]=${o[32]};x[30]=${o[33]};x[25]=${o[34]};x[20]=${o[35]}                                      # failed head       error array
+    w[50]=${o[37]};w[45]=${o[38]};w[40]=${o[39]};w[35]=${o[40]};w[30]=${o[41]};w[25]=${o[42]};w[20]=${o[43]}                                      # sub-optimal delay error array
+    c[50]=${o[ 5]};c[45]=${o[ 6]};c[40]=${o[ 7]};c[35]=${o[ 8]};c[30]=${o[ 9]};c[25]=${o[10]};c[20]=${o[11]}                                      # cnt array (beacon log lines)
   fi
-  [[ -f $p2 ]] && { unset v;while read -a v;do bm1;done <<< $(tail -n$(($(bk)-g)) $p2|grep BEAC); }                           # add data from additional beacon lines log
-  [[ ${b2:-0} -eq 0 ]] && bo1;bm2;local l=0;local n=0                                                                         # cur homologous position & totalized data
-  [[ -f $p3 ]] && { unset v;while read -a v;do l=$((${v[2]}+l));n=$((1+n));done <<< $(cat $p3)  ; }                           # avg homologous position
-  b3=$(nu2 "($l+$b2)/(1+$n)" 5);b4=0;bmn ${a[$nn]};[[ $b2 -le $b3 || $(bs $hors) -gt 1 ]] && b4=0;bmo;bno                     # arithmetic change configured peers & obtaim medias/arquivo outputs
+  [[ -f $p2 ]] && { unset v;while read -a v;do bm1;done <<< $(tail -n$(($(bk)-g)) $p2|grep BEAC); }                                               # add data from remaining beacon log
+  [[ ${b2:-0} -eq 0 ]] && bo1;bm2;local l=0;local n=0                                                                                             # cur homologous position & totalized data
+  [[ -f $p3 ]] && { unset v;while read -a v;do l=$((${v[2]}+l));n=$((1+n));done <<< $(cat $p3)  ; }                                               # avg homologous position
+  b3=$(nu2 "($l+$b2)/(1+$n)" 5);b4=0;bmn ${a[$nn]};[[ $b2 -le $b3 || $(bs $hors) -gt 1 ]] && b4=0;bmo;bno                                         # change configured peers & obtaim medias/arqivo outputs
 }
 function bh {
-  tail -n${1:-$hors} $p2                                                                                                      # beacon log last lines
-  [[ $1 ]] || { bo1;echo -e "BO$(printf '%5i' $(echo "$b1"|wc -l)) $(printf '%3i' $b2)";bo2; }                                # homologous report
-  [[ $1 ]] || { bl ;echo -e "BL$(printf '%9i' $(cat $p2 2>/dev/null|wc -l))\nBEAC$m"; }                                       # cur log report
-  [[ $1 ]] || { bm ;echo -e "BM$(printf '%5i' $(cat $p3 2>/dev/null|wc -l))\nBEAC$m"; }                                       # medias report
-  [[ $1 ]] || { sst BEAC $ethb;sst VALI $ethv; }                                                                              # beacon/validator services status
+  tail -n${1:-$hors} $p2                                                                                                                          # beacon log report ($hors last lines)
+  [[ $1 ]] || { bo1;echo -e "BO$(printf '%5i' $(echo "$b1"|wc -l)) $(printf '%3i' $b2)";bo2; }                                                    # homologous report
+  [[ $1 ]] || { bl ;echo -e "BL$(printf '%9i' $(cat $p2 2>/dev/null|wc -l))\nBEAC$m"; }                                                           # beacon log report
+  [[ $1 ]] || { bm ;echo -e "BM$(printf '%5i' $(cat $p3 2>/dev/null|wc -l))\nBEAC$m"; }                                                           # medias report
+  [[ $1 ]] || { sst BEAC $ethb;sst VALI $ethv; }                                                                                                  # beacon/validator services status
 }
 function bmn {
   local g=$1;local n=${2:-20}
-  if [[ $(nu2 ${a[$n]}*100) -lt $(nu2 $g*100) ]];then b4=$((n-nn));g=${a[$n]};fi;[[ $n -lt 50 ]] && bmn $g $((n+5))           # recursively compare avg with cur penalties
+  if [[ $(nu2 ${a[$n]}*100) -lt $(nu2 $g*100) ]];then b4=$((n-nn));g=${a[$n]};fi;[[ $n -lt 50 ]] && bmn $g $((n+5))                               # recursively compare avg with cur penalties
 }
 function blo {
   #    0  1   2          3              4       5  6               7   8    9                 10   11  12 13    14 15 16  17 18     19  20  21   22   23   24         25   26
@@ -129,27 +127,52 @@ function bm0 { # inicializar paid error arrays / cnt array / avg penalty from 4 
 }
 function bm1 { local n=$(bx ${v[5]});k[$n]=$((k[n]+v[15]));z[$n]=$((z[n]+v[16]));x[$n]=$((x[n]+v[17]));w[$n]=$((w[n]+v[18]));c[$n]=$((c[n]+1)); } # 4 cumulative paid errors & cnt arrays
 function bm2 {
-  k[00]=$((k[20]+k[25]+k[30]+k[35]+k[40]+k[45]+k[50]));z[00]=$((z[20]+z[25]+z[30]+z[35]+z[40]+z[45]+z[50]))                                       # tot missing/failed target error arrays
-  x[00]=$((x[20]+x[25]+x[30]+x[35]+x[40]+x[45]+x[50]));w[00]=$((w[20]+w[25]+w[30]+w[35]+w[40]+w[45]+w[50]))                                       # tot failed head/sub-optimal delay error arrays
+  k[00]=$((k[20]+k[25]+k[30]+k[35]+k[40]+k[45]+k[50]));z[00]=$((z[20]+z[25]+z[30]+z[35]+z[40]+z[45]+z[50]))                                       # tot missing/failed target err arrays
+  x[00]=$((x[20]+x[25]+x[30]+x[35]+x[40]+x[45]+x[50]));w[00]=$((w[20]+w[25]+w[30]+w[35]+w[40]+w[45]+w[50]))                                       # tot failed head/sub-optimal delay err arrays
   c[00]=$((c[20]+c[25]+c[30]+c[35]+c[40]+c[45]+c[50]))                                                                                            # tot cnt array (beacon log lines)
-  a[00]=$(bi 00);a[20]=$(bi 20);a[25]=$(bi 25);a[30]=$(bi 30);a[35]=$(bi 35);a[40]=$(bi 40);a[45]=$(bi 45);a[50]=$(bi 50)                         # avg array (penalty from 4 paid errors)
+  a[00]=$(bi 00);a[20]=$(bi 20);a[25]=$(bi 25);a[30]=$(bi 30);a[35]=$(bi 35);a[40]=$(bi 40);a[45]=$(bi 45);a[50]=$(bi 50)                         # avg array (penalty from 4 paid err)
 }
-function bo1 { # homologous position
-  b2=0
-  if [[ -f $p2 ]];then
-    local e='00:00';local l=$(grep BEAC $p2|tail -n1|sed 's%.* \([0-9]*-[0-9]*-[0-9]*\) \([0-9]*:[0-9]*\):.*%\1 \2%');local d=$(echo $l|cut -d' ' -f1);local n=0
-    if [[ $(echo $1|egrep '^[0-9]+:[0-9]+$') ]];then e=$1 ;else if [[ $(echo $2|egrep '^[0-9]+:[0-9]+$') ]];then e=$2 ;else e=$(echo $l|cut -d' ' -f2);fi;fi;b1=$(grep "BEAC.*$e" $p2)
-    if [[ $(echo $1|egrep '^[0-9]+$')        ]];then b2=$1;else if [[ $(echo $2|egrep '^[0-9]+$')        ]];then b2=$2;else b2=$(echo "$b1"|sort -k10.1n|grep -n $d|cut -d: -f1);fi;fi
-    while [[ ${b2:-0} -eq 0 && $n -lt 50 ]];do n=$((n+1));d=$(date -d "$n days ago $e" '+%Y-%m-%d');b2=$(echo "$b1"|sort -k10.1n|grep -n $d|cut -d: -f1);done
-  fi
+function bo1 { # homologous lines/position
+  b2=0;[[ ! -f $p2 ]] && return                                                                                                                   # beacon log must exist
+  [[ $(echo $1|egrep '^[0-9]+$')        ]] && b2=$1
+  [[ $(echo $2|egrep '^[0-9]+$')        ]] && b2=$2;local t=00:00                                                                                 # homologous position forced
+  [[ $(echo $1|egrep '^[0-9]+:[0-9]+$') ]] && t=$1
+  [[ $(echo $2|egrep '^[0-9]+:[0-9]+$') ]] && t=$2                                                                                                # homologous time forced
+  local l=$(grep BEAC $p2|tail -n1|sed 's%.* \([0-9]*-[0-9]*-[0-9]*\) \([0-9]*:[0-9]*\):.*%\1\t\2%')                                              # last yyyy-mm-dd hh:mm beacon log
+  local d=$(echo "$l"|cut -f1);[[ $t = 00:00 ]] && t=$(echo "$l"|cut -f2)
+  b1=$(grep "BEAC.*$t" $p2);[[ $b2 -eq 0 ]] && b2=$(echo "$b1"|sort -k10.1n|grep -n $d|cut -d: -f1)                                               # homologous lines/position
+  local n=0;while [[ ${b2:-0} -eq 0 && $n -lt 50 ]];do                                                                                            # search past for homologous info
+    n=$((n+1));d=$(date -d "$n days ago $t" '+%Y-%m-%d')                                                                                          # obtain n day ago date (max 50 days)
+    b2=$(echo "$b1"|sort -k10.1n|grep -n $d|cut -d: -f1)                                                                                          # homologous position
+  done
 }
 function bo2 { # homologous report
-  if [[ -f $p2 ]];then
-    local e=${b2:-0};local d=${b2:-0}
-    if [[ $(echo $1|egrep '^[0-9]+$') ]];then e=$1;else if [[ $e -lt $l2rs && $(echo "$b1"|wc -l) -ge $l2rs ]];then d=$l2rs;e=$l2rs;fi;fi
-    if [[ $(echo $1|egrep '^[0-9]+$') ]];then d=$1;else if [[ $d -gt $hors ]];then d=$hors;fi;fi
-    echo "$b1"|sort -k10.1n|head -n$e|tail -n$d
-  fi
+  [[ ! -f $p2 ]] && return                                                                                                                        # beacon log must exist
+  local g=${b2:-0};local d=${b2:-0}                                                                                                               # init head/tail lines
+  if [[ $(echo $1|egrep '^[0-9]+$') ]];then g=$1;else if [[ $g -lt $l2rs && $(echo "$b1"|wc -l) -ge $l2rs ]];then d=$l2rs;g=$l2rs;fi;fi           # ajust head lines
+  if [[ $(echo $1|egrep '^[0-9]+$') ]];then d=$1;else if [[ $d -gt $hors ]];then d=$hors;fi;fi                                                    # ajust tail lines
+  echo "$b1"|sort -k10.1n|head -n$g|tail -n$d                                                                                                     # filter homologous report
+}
+function brs {
+  [[ -f $p0/beacon.restart.inicio ]] && return                                                                                                    # se restart flag existe exit
+  touch $p0/beacon.restart.inicio;local n=0
+  while [[ -f $p0/beacon.restart.inicio && $n -lt 200 ]]; do                                                                                      # procura posicao ideal restart
+    local l=$(echo $H|sudo -S grep "lighthouse.$bpid.* INFO " $p4 2>/dev/null|tail -n$pors|sed 's%.* INFO \([^ ]*\) .*%\1%'|sort -u)              # last $pors unique INFO beacon lines
+    if [[ $(echo "$l"|wc -l) -eq 2 && $(echo "$l"|head -n1) = New && $(echo "$l"|tail -n1) = Synced ]];then                                       # posicao ideal = only 2 INFO types
+      ok=${2:-$ok}                                                                                                                                # ${PE|RB|BN|VC:-OK|BK}
+      [[ $1 -ne 0 ]] && chp $ethb $1 $(bv) 20 50;epr $ethb;[[ $2 = VC ]] && sex "systemctl stop $ethv"                                            # change config & stop/load beacon [& stop validator]
+      if [[ $2 = RB ]];then
+        echo "RSTR $ok $(printf '%3i' $n) $(dnn $(dts) $(bv) $(bq))" >> $p2                                                                       # reboot com beacon log entry before start
+        rm -f $p0/beacon.restart.inicio;sex reboot
+      else
+        sex "systemctl start $ethb";[[ $2 = VC ]] && sex "systemctl start $ethv";sleep 10s                                                        # start beacon/validator
+        echo "RSTR $ok $(printf '%3i' $n) $(dnn $(dts) $(bv) $(bq))" >> $p2                                                                       # beacon log entry after start
+      fi
+      rm -f $p0/beacon.restart.inicio
+    fi
+    sleep 3s;n=$((n+1))                                                                                                                           # procura ate 200 vezes, every 3s
+  done
+  rm -f $p0/beacon.restart.inicio
 }
 function brl { # recalculate beacon/bmedias logs
   [[ -f ${p2}new ]] && rm ${p2}new;[[ -f ${p3}new ]] && rm ${p3}new
@@ -158,8 +181,7 @@ function brl { # recalculate beacon/bmedias logs
       b6=${v[13]};b5=${v[26]};z1=${v[19]};z2=${v[20]};z3=${v[22]};z4=${v[23]};z5=${v[11]};z6=${v[15]};z7=${v[16]};z8=${v[17]};z9=${v[18]};blo     # calculated output
     else
       m=" $ok $(printf '%3i' ${v[2]}) $(dnn $dt $nn $nr)"                                                                                         # other lines
-    fi
-    echo "${v[0]}$m" >> ${p2}new                                                                                                                  # new beacon log output
+    fi;echo "${v[0]}$m" >> ${p2}new                                                                                                               # new beacon log output
   done <<< $(cat $p2)
   if [[ -f $p3 ]];then
     unset o;bm0;local d='0000-00-00';local e='23:58';local l=0;local n=0;local h=0;local g=0
@@ -167,52 +189,31 @@ function brl { # recalculate beacon/bmedias logs
       d=${o[3]};h=$g;g=$(grep -n "$d $e" ${p2}new|cut -d: -f1)                                                                                    # beacon log line position
       dt=${o[3]}\ ${o[4]};nn=$(bx ${o[5]});nr=${o[6]}                                                                                             # uncalculated vars
       b2=$(head -n$g ${p2}new|grep "BEAC.*$e"|sort -k10.1n|grep -n $d|cut -d: -f1);l=$((b2+l));n=$((1+n));b3=$(nu2 $l/$n 5)                       # cur/avg homologous position
-      unset v;while read -a v;do bm1;done <<< $(head -n$g ${p2}new|tail -n$((g-h))|grep BEAC)                                                     # add data from interim beacon lines log
+      unset v;while read -a v;do bm1;done <<< $(head -n$g ${p2}new|tail -n$((g-h))|grep BEAC)                                                     # add data from interim beacon log
       bm2;b4=${o[18]};bmo;echo "${o[0]}$m" >> ${p3}new                                                                                            # totalize data & new bmedias log output
     done <<< $(cat $p3)
   fi
 }
-function bsl {
+function bsl { # shrink beacon log using barqivo
   [[ -f ${p2}new ]] && rm ${p2}new;[[ -f ${p7}new ]] && rm ${p7}new
-  tail -n$(($(cat $p2|wc -l)-$(tail -n1 $p7|sed 's%  *%\t%g'|cut -f2))) $p2 > ${p2}new;head -n$(($(cat $p7|wc -l)-1)) $p7 > ${p7}new;tail -n1 $p7|sed 's%BEAC [0-9]*%BEAC 0%' >> ${p7}new
+  tail -n$(($(cat $p2|wc -l)-$(tail -n1 $p7|cut -d' ' -f2))) $p2 > ${p2}new                                                                       # new beacon log output
+  head -n$(($(cat $p7|wc -l)-1)) $p7 > ${p7}new;tail -n1 $p7|sed 's%BEAC [0-9]*%BEAC 0%' >> ${p7}new                                              # new barqivo log output
 }
-function bnl {
+function bnl { # replace beacon/medias/barqivo logs with new versions (sav versions are kept)
   [[ -f $p2 && -f ${p2}new ]] && { cp $p2 ${p2}sav;mv ${p2}new $p2; }
   [[ -f $p3 && -f ${p3}new ]] && { cp $p3 ${p3}sav;mv ${p3}new $p3; }
   [[ -f $p7 && -f ${p7}new ]] && { cp $p7 ${p7}sav;mv ${p7}new $p7; }
-}
-function brs {
-  if [[ ! -f /home/eth/beacon.restart.inicio ]];then
-    touch /home/eth/beacon.restart.inicio;local n=0
-    while [[ -f /home/eth/beacon.restart.inicio && $n -lt 200 ]]; do
-      local l=$(echo $H|sudo -S grep "lighthouse.$bpid.* INFO " $p4 2>/dev/null|tail -n$pors|sed 's%.* INFO \([^ ]*\) .*%\1%'|sort -u)
-      if [[ $(echo "$l"|wc -l) -eq 2 && $(echo "$l"|head -n1) = New && $(echo "$l"|tail -n1) = Synced ]];then
-        ok=${2:-$ok}                                                                                                          # ${PE|RB|BN|VC:-OK|BK}
-        [[ $1 -ne 0 ]] && chp $ethb $1 $(bv) 20 50;epr $ethb;[[ $2 = VC ]] && sex "systemctl stop $ethv"                      # change config & stop beacon & daemon-reload [& stop validator]
-        if [[ $2 = RB ]];then
-          echo "RSTI $ok $(printf '%3i' $n) $(dnn $(dts) $(bv) $(bq))" >> $p2
-          rm -f /home/eth/beacon.restart.inicio;sex reboot
-        else
-          sex "systemctl start $ethb";[[ $2 = VC ]] && sex "systemctl start $ethv"                                            # start services with new config
-          echo "RSTI $ok $(printf '%3i' $n) $(dnn $(dts) $(bv) $(bq))" >> $p2
-        fi
-        rm -f /home/eth/beacon.restart.inicio
-      fi
-      sleep 3s;n=$((n+1))
-    done
-    rm -f /home/eth/beacon.restart.inicio
-  fi
 }
 function ssp {
   echo -e "${i}QUER MESMO TRANSFERIR VALIDATORS?${f}";read rsp
   if [[ $rsp = sim && ! -f $dtdi/vc_slash && ! -f $dtdi/vc_lock && -f $dtdi/vc_keys ]];then
     vp;vd
     echo -e "${i}SAVE SLASHING PROTECTION DB${f}"
-    echo $H|sudo -S cp $vldt/slashing_protection.sqlite /home/eth 2>/dev/null;sudo chown eth:eth /home/eth/slashing_protection.sqlite
+    echo $H|sudo -S cp $vldt/slashing_protection.sqlite $p0 2>/dev/null;sudo chown eth:eth $p0/slashing_protection.sqlite
     if [[ $cunm = $znm3 ]];then
-      scp /home/eth/slashing_protection.sqlite vpss:~         ;echo -e "${i}SAVED SLASHING PROTECTION DB IN vpss${f}"
+      scp $p0/slashing_protection.sqlite vpss:~         ;echo -e "${i}SAVED SLASHING PROTECTION DB IN vpss${f}"
     else
-      scp /home/eth/slashing_protection.sqlite ztc3.fruga.pt:~;echo -e "${i}SAVED SLASHING PROTECTION DB IN ztc3${f}"
+      scp $p0/slashing_protection.sqlite ztc3.fruga.pt:~;echo -e "${i}SAVED SLASHING PROTECTION DB IN ztc3${f}"
     fi
   fi
 }
@@ -287,8 +288,8 @@ function ba  { [[ $(fs0 $ethb) ]] && { cex "systemctl start $ethb"; } }
 function va  {
   if [[ $(fs0 $ethv) ]];then
     if [[ -f $dtdi/vc_lock ]];then
-      if [[ -f /home/eth/slashing_protection.sqlite ]];then
-        echo $H|sudo -S cp /home/eth/slashing_protection.sqlite $vldt 2>/dev/null
+      if [[ -f $p0/slashing_protection.sqlite ]];then
+        echo $H|sudo -S cp $p0/slashing_protection.sqlite $vldt 2>/dev/null
         sudo chown eth3:eth3 $vldt/slashing_protection.sqlite
         sudo chmod 600 $vldt/slashing_protection.sqlite
       fi
@@ -337,8 +338,8 @@ function fd { [[ $(fs0 $ethf loaded) ]] && { cex "systemctl disable $ethf";fcl;c
 [[ $1 = bnl ]] && { bnl; }
 [[ $1 = bo  ]] && { bo1 $2 $3;bo2 $2; }
 [[ $1 = cpe ]] && { csh;psh;esh; }
-[[ $1 = glr ]] && { gb;[[ $ok != OK ]] && grs ${2:-0}; }
-[[ $1 = blr ]] && { bb;[[ $ok != OK ]] && brs ${2:-0}; }
+[[ $1 = glr ]] && { gb;[[ $ok != OK ]] && grs 0; }
+[[ $1 = blr ]] && { bb;[[ $ok != OK ]] && brs 0; }
 [[ $1 = bmc ]] && { bm;[[ $b4 -ne 0 ]] && brs $b4 PE ; }
 [[ $1 = grs ]] && { grs ${2:-0}   ; }
 [[ $1 = srs ]] && { brs ${2:-0} RB; }
@@ -378,8 +379,6 @@ function fd { [[ $(fs0 $ethf loaded) ]] && { cex "systemctl disable $ethf";fcl;c
 [[ $1 = gpa ]] && { gp;dmr;ga;jsh "-u $ethg"; }
 [[ $1 = bpa ]] && { bp;dmr;ba;jsh "-u $ethb"; }
 [[ $1 = vpa ]] && { vp;dmr;va;jsh "-u $ethv"; }
-[[ $1 = xpa ]] && { xp;xa; }
-[[ $1 = rpa ]] && { rp;ra; }
 [[ $1 = spa ]] && { sp;sa;jsh "-u $dnsd"; }
 [[ $1 = gpd ]] && { gp;gd; }
 [[ $1 = opd ]] && { op;od; }
@@ -391,8 +390,6 @@ function fd { [[ $(fs0 $ethf loaded) ]] && { cex "systemctl disable $ethf";fcl;c
 [[ $1 = gea ]] && { ge;dmr;ga;jsh "-u $ethg"; }
 [[ $1 = bea ]] && { be;dmr;ba;jsh "-u $ethb"; }
 [[ $1 = vea ]] && { ve;dmr;va;jsh "-u $ethv"; }
-[[ $1 = xea ]] && { xe;xa; }
-[[ $1 = rea ]] && { re;ra; }
 [[ $1 = sea ]] && { se;sa;jsh "-u $dnsd"; }
 # enable
 [[ $1 = ge ]] && { ge; }
@@ -429,7 +426,7 @@ function fd { [[ $(fs0 $ethf loaded) ]] && { cex "systemctl disable $ethf";fcl;c
 [[ $1 = sds ]] && { sd; }
 
 if [[ ! $1 ]];then
-  m="\nprimeira letra"
+  m="primeira letra"
   m="$m\ne\t\t$ethg $ethb $ethv"
   m="$m\ng\t\t$ethg"
   m="$m\nb\t\t$ethb"
@@ -440,10 +437,8 @@ if [[ ! $1 ]];then
   m="$m\nx\t\t$plex"
   m="$m\nr\t\t$trrt"
   m="$m\ns\t\t$dnsd"
-  m="$m\n"
   m="$m\nsegunda letra"
-  m="$m\na\t\tarranca"
-  m="$m\naj\t\tarranca\t& journal"
+  m="$m\na[j]\t\tarranca\t[& journal]"
   m="$m\ne\t\tenable"
   m="$m\nj\t\tjournal"
   m="$m\npr\t\tpara"
@@ -451,7 +446,6 @@ if [[ ! $1 ]];then
   m="$m\npd\t\tpara\t& disable"
   m="$m\npa\t\tpara\t& arranca\t& journal"
   m="$m\nea\t\tenable\t& arranca\t& journal"
-  m="$m\n"
   m="$m\noutros"
   if [[ $cunm = $znm3 ]];then
     m="$m\nvcp\t\t$ethv copy to $vnm3 server"
@@ -467,14 +461,14 @@ if [[ ! $1 ]];then
   m="$m\nyj\t\tsystem journal"
   m="$m\nsl [s]\t\tlista system journal  s=TOTAL"
   m="$m\nel [s]\t\tlista geth,lighthouse s=TOTAL"
-  m="$m\nbrl\t\tbeacon recalculate logs"
-  m="$m\nbsl\t\tbeacon substitute logs"
-  m="$m\nbnl\t\tbeacon new logs"
+  m="$m\nbrl\t\trecalculate beacon/bmedias logs"
+  m="$m\nbsl\t\tshrink beacon log using barqivo"
+  m="$m\nbnl\t\treplace logs with new versions"
   m="$m\nbl[f]\t\tbeacon log report"
-  m="$m\nbm[f]\t\tbeacon medias report"
-  m="$m\nbn[f]\t\tbeacon archive report"
-  m="$m\nbh\t\tbeacon historic report"
-  m="$m\nbo\t\tbeacon homologous report"
+  m="$m\nbm[f]\t\tmedias report"
+  m="$m\nbn[f]\t\tarqivo report"
+  m="$m\nbh\t\thistoric report"
+  m="$m\nbo\t\thomologous report"
   m="$m\nws\t\tfirewall status"
   m="$m\nwa\t\tfirewall arranca"
   m="$m\nwpr\t\tfirewall para"
