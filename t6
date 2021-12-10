@@ -20,6 +20,8 @@ function dnn { echo "$1 $2 $(printf 'node%02i:' $3) $(printf '%2i' $4)"; }      
 function rd0 { cex "systemctl stop  $dnsd";sex 'systemctl stop  systemd-resolved'; }                                                              # DNS stop
 function rd1 { cex "systemctl start $dnsd";sex 'systemctl start systemd-resolved'; }                                                              # DNS start
 function epr { resolvectl query smtp.gmail.com 2>/dev/null 1>&2;sex "systemctl stop $1";dmr; }                                                    # service stop/reload
+function pt0 { echo $1|egrep '^[0-9]+$'       ; }                                                                                                 # parm number test
+function pt1 { echo $1|egrep '^[0-9]+:[0-9]+$'; }                                                                                                 # parm time test
 function chp {
   cp $p8/$1.service ~/$1.sav;local n=$(($2+$3))                                                                                                   # alteracao configured peers [+/-]$2
   [[ $n -ge $4 && $n -le $5 ]] && sed "s%peers [0-9]*%peers $n%" ~/$1.sav > $p8/$1.service                                                        # editar service file se dentro dos limites
@@ -59,6 +61,8 @@ function br { echo $((90*z3)); }                                                
 function bu { echo $(($(nu3 200 $(bz) $z5)+$(nu3 100 $(bw) $z2)+$(nu3 100 $(br) $z4))); }                                                         # restart index
 function bs { tail -n$1 $p2 2>/dev/null|cut -d' ' -f1|sort -u|wc -l; }                                                                            # beacon log restart activity test
 function bk { cat       $p2 2>/dev/null                      |wc -l; }                                                                            # beacon log line count
+function bf { sort -k10.1n; }                                                                                                                     # order beacon log by penalty
+function bt { bf|grep -n $1|cut -d: -f1; }                                                                                                        # obtain position of ordered beacon log 
 function bb {
   local e=$(echo $H|sudo -S grep "lighthouse.$bpid" $p4 2>/dev/null|tail -n3600)                                                                  # most recent beacon messages
   z1=$(echo "$e"|grep 'rocessed block'|wc -l);z2=$(echo "$e"|grep 'block received'|wc -l)                                                         # processed blocks           restart index
@@ -84,9 +88,9 @@ function bm {
     w[50]=${o[37]};w[45]=${o[38]};w[40]=${o[39]};w[35]=${o[40]};w[30]=${o[41]};w[25]=${o[42]};w[20]=${o[43]}                                      # sub-optimal delay error array
     c[50]=${o[ 5]};c[45]=${o[ 6]};c[40]=${o[ 7]};c[35]=${o[ 8]};c[30]=${o[ 9]};c[25]=${o[10]};c[20]=${o[11]}                                      # cnt array (beacon log lines)
   fi
-  [[ -f $p2 ]] && { unset v;while read -a v;do bm1;done <<< $(tail -n$(($(bk)-g)) $p2|grep BEAC); }                                               # add data from remaining beacon log
+  [[ -f $p2         ]] && { unset v;while read -a v;do bm1;done <<< $(tail -n$(($(bk)-g)) $p2|grep BEAC); }                                       # add data from remaining beacon log
   [[ ${b2:-0} -eq 0 ]] && bo1;bm2;local l=0;local n=0                                                                                             # cur homologous position & totalized data
-  [[ -f $p3 ]] && { unset v;while read -a v;do l=$((${v[2]}+l));n=$((1+n));done <<< $(cat $p3)  ; }                                               # avg homologous position
+  [[ -f $p3         ]] && { unset v;while read -a v;do l=$((${v[2]}+l));n=$((1+n));done <<< $(cat $p3)  ; }                                       # avg homologous position
   b3=$(nu2 "($l+$b2)/(1+$n)" 5);b4=0;bmn ${a[$nn]};[[ $b2 -le $b3 || $(bs $hors) -gt 1 ]] && b4=0;bmo;bno                                         # change configured peers & obtaim medias/arqivo outputs
 }
 function bh {
@@ -121,8 +125,8 @@ function bno {
   s="$s mah: ${x[50]} ${x[45]} ${x[40]} ${x[35]} ${x[30]} ${x[25]} ${x[20]} dly: ${w[50]} ${w[45]} ${w[40]} ${w[35]} ${w[30]} ${w[25]} ${w[20]}"
 }
 function bm0 { # inicializar paid error arrays / cnt array / avg penalty from 4 cumulative paid error arrays
-  unset k;k[00]=0;k[50]=0;k[45]=0;k[40]=0;k[35]=0;k[30]=0;k[25]=0;k[20]=0;unset z;z[00]=0;z[50]=0;z[45]=0;z[40]=0;z[35]=0;z[30]=0;z[25]=0;z[20]=0 # missing/failed target error arrays
-  unset x;x[00]=0;x[50]=0;x[45]=0;x[40]=0;x[35]=0;x[30]=0;x[25]=0;x[20]=0;unset w;w[00]=0;w[50]=0;w[45]=0;w[40]=0;w[35]=0;w[30]=0;w[25]=0;w[20]=0 # failed head/sub-optimal delay error arrays
+  unset k;k[00]=0;k[50]=0;k[45]=0;k[40]=0;k[35]=0;k[30]=0;k[25]=0;k[20]=0;unset z;z[00]=0;z[50]=0;z[45]=0;z[40]=0;z[35]=0;z[30]=0;z[25]=0;z[20]=0 # missing/failed target err arrays
+  unset x;x[00]=0;x[50]=0;x[45]=0;x[40]=0;x[35]=0;x[30]=0;x[25]=0;x[20]=0;unset w;w[00]=0;w[50]=0;w[45]=0;w[40]=0;w[35]=0;w[30]=0;w[25]=0;w[20]=0 # failed head/sub-optimal delay err arrays
   unset c;c[00]=0;c[50]=0;c[45]=0;c[40]=0;c[35]=0;c[30]=0;c[25]=0;c[20]=0;unset a;a[00]=0;a[50]=0;a[45]=0;a[40]=0;a[35]=0;a[30]=0;a[25]=0;a[20]=0 # cnt/avg penalty arrays
 }
 function bm1 { local n=$(bx ${v[5]});k[$n]=$((k[n]+v[15]));z[$n]=$((z[n]+v[16]));x[$n]=$((x[n]+v[17]));w[$n]=$((w[n]+v[18]));c[$n]=$((c[n]+1)); } # 4 cumulative paid errors & cnt arrays
@@ -134,24 +138,20 @@ function bm2 {
 }
 function bo1 { # homologous lines/position
   b2=0;[[ ! -f $p2 ]] && return                                                                                                                   # beacon log must exist
-  [[ $(echo $1|egrep '^[0-9]+$')        ]] && b2=$1
-  [[ $(echo $2|egrep '^[0-9]+$')        ]] && b2=$2;local t=00:00                                                                                 # homologous position forced
-  [[ $(echo $1|egrep '^[0-9]+:[0-9]+$') ]] && t=$1
-  [[ $(echo $2|egrep '^[0-9]+:[0-9]+$') ]] && t=$2                                                                                                # homologous time forced
+  local t=00:00;[[ $(pt0 $1) ]] && b2=$1;[[ $(pt0 $2) ]] && b2=$2;[[ $(pt1 $1) ]] && t=$1;[[ $(pt1 $2) ]] && t=$2                                 # homologous position/time forced
   local l=$(grep BEAC $p2|tail -n1|sed 's%.* \([0-9]*-[0-9]*-[0-9]*\) \([0-9]*:[0-9]*\):.*%\1\t\2%')                                              # last yyyy-mm-dd hh:mm beacon log
   local d=$(echo "$l"|cut -f1);[[ $t = 00:00 ]] && t=$(echo "$l"|cut -f2)
-  b1=$(grep "BEAC.*$t" $p2);[[ $b2 -eq 0 ]] && b2=$(echo "$b1"|sort -k10.1n|grep -n $d|cut -d: -f1)                                               # homologous lines/position
-  local n=0;while [[ ${b2:-0} -eq 0 && $n -lt 50 ]];do                                                                                            # search past for homologous info
-    n=$((n+1));d=$(date -d "$n days ago $t" '+%Y-%m-%d')                                                                                          # obtain n day ago date (max 50 days)
-    b2=$(echo "$b1"|sort -k10.1n|grep -n $d|cut -d: -f1)                                                                                          # homologous position
+  b1=$(grep "BEAC.*$t" $p2);[[ $b2 -eq 0 ]] && b2=$(echo "$b1"|bt $d)                                                                             # homologous lines/position
+  local n=0;while [[ ${b2:-0} -eq 0 && $n -lt 50 ]];do                                                                                            # search past for homologous info (max 50 days)
+    n=$((n+1));d=$(date -d "$n days ago $t" '+%Y-%m-%d');b2=$(echo "$b1"|bt $d)                                                                   # obtain n day ago date & homologous position
   done
 }
 function bo2 { # homologous report
   [[ ! -f $p2 ]] && return                                                                                                                        # beacon log must exist
   local g=${b2:-0};local d=${b2:-0}                                                                                                               # init head/tail lines
-  if [[ $(echo $1|egrep '^[0-9]+$') ]];then g=$1;else if [[ $g -lt $l2rs && $(echo "$b1"|wc -l) -ge $l2rs ]];then d=$l2rs;g=$l2rs;fi;fi           # ajust head lines
-  if [[ $(echo $1|egrep '^[0-9]+$') ]];then d=$1;else if [[ $d -gt $hors ]];then d=$hors;fi;fi                                                    # ajust tail lines
-  echo "$b1"|sort -k10.1n|head -n$g|tail -n$d                                                                                                     # filter homologous report
+  if [[ $(pt0 $1) ]];then g=$1;else if [[ $g -lt $l2rs && $(echo "$b1"|wc -l) -ge $l2rs ]];then d=$l2rs;g=$l2rs;fi;fi                             # ajust head lines
+  if [[ $(pt0 $1) ]];then d=$1;else if [[ $d -gt $hors                                  ]];then d=$hors        ;fi;fi                             # ajust tail lines
+  echo "$b1"|bf|head -n$g|tail -n$d                                                                                                               # filter homologous report
 }
 function brs {
   [[ -f $p0/beacon.restart.inicio ]] && return                                                                                                    # se restart flag existe exit
@@ -188,7 +188,7 @@ function brl { # recalculate beacon/bmedias logs
     while read -a o;do
       d=${o[3]};h=$g;g=$(grep -n "$d $e" ${p2}new|cut -d: -f1)                                                                                    # beacon log line position
       dt=${o[3]}\ ${o[4]};nn=$(bx ${o[5]});nr=${o[6]}                                                                                             # uncalculated vars
-      b2=$(head -n$g ${p2}new|grep "BEAC.*$e"|sort -k10.1n|grep -n $d|cut -d: -f1);l=$((b2+l));n=$((1+n));b3=$(nu2 $l/$n 5)                       # cur/avg homologous position
+      b2=$(head -n$g ${p2}new|grep "BEAC.*$e"|bt $d);l=$((b2+l));n=$((1+n));b3=$(nu2 $l/$n 5)                                                     # cur/avg homologous position
       unset v;while read -a v;do bm1;done <<< $(head -n$g ${p2}new|tail -n$((g-h))|grep BEAC)                                                     # add data from interim beacon log
       bm2;b4=${o[18]};bmo;echo "${o[0]}$m" >> ${p3}new                                                                                            # totalize data & new bmedias log output
     done <<< $(cat $p3)
