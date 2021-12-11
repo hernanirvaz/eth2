@@ -4,44 +4,43 @@ source /home/eth/eth2/t1
 
 # utilities for commands/journal
 function nu0 { if [ ${1:-0} -eq $1 ] 2>/dev/null;then echo $1;else echo 0;fi; }                                                                   # force numeric output
-function nu1 { echo "scale=$2;$1"|bc; }                                                                                                           #        arbitrary precision calculations
-function nu2 { printf ${3:-%.0f} $(nu1 $1 ${2:-0}); }                                                                                             # format arbitrary precision calculations
-function nu3 { if [[ $3 -gt $1 ]];then echo $(($2/$3))                                             ;else echo 0;fi; }                             # targeted division for beacon restart index
-function nu4 { if [[ $5 -ne 0  ]];then nu1 "($1*$pmis+$2*$pmat+$3*$pmah+$4*$pdly)/$5*$rate/$decp" 2;else echo 0;fi; }                             # penalty calculator from 4 paid errors
-function cex { echo -e "${i}$1${f}";echo $H|sudo -S $1                      2>/dev/null     ; }                                                   # visible superuser-command
-function sex {                      echo $H|sudo -S $1                      2>/dev/null 1>&2; }                                                   # silent  superuser-command
-function dmr {                      echo $H|sudo -S systemctl daemon-reload 2>/dev/null 1>&2; }                                                   # silent  daemon-reload
-function dts { date '+%Y-%m-%d %H:%M'; }                                                                                                       # my logs date format
-function jsh { cex "journalctl --no-hostname --no-full -f $1"; }                                                                                  # my journal format
-function fs0 { systemctl status $1 2>/dev/null|grep "${2:-inactive\|failed}"; }                                                                   # filtered service status output
-function fs1 { systemctl status $1 2>/dev/null|grep "${2:-Active:}"|sed "s%.*${2:-Active:} \(${3:-.}*\).*%\1%"; }                                 # filtered & edited service status output
-function sst { echo "$1 $(printf '%6s' $(fs1 $2 Memory:)) $(dts) status: $(fs1 $2)"; }                                                            # my services status output
-function dnn { echo "$1 $2 $(printf 'node%02i:' $3) $(printf '%2i' $4)"; }                                                                        # my date/node info (yyyy-mm-dd hh:mm:ss node40: 43)
+function nu1 { echo "scale=$2;$1"|bc; }                                                                                                           # arbitrary precision calculations
+function nu2 { printf ${3:-%.0f} $(nu1 $1 ${2:-0}); }                                                                                             # arbitrary precision calculations formated
+function nu3 { if [[ $3 -gt $1 ]];then echo $(($2/$3))                                             ;else echo 0;fi; }                             # targeted division
+function nu4 { if [[ $5 -ne 0  ]];then nu1 "($1*$pmis+$2*$pmat+$3*$pmah+$4*$pdly)/$5*$rate/$decp" 2;else echo 0;fi; }                             # penalty calculator
+function cex { echo -e "${i}$1${f}";echo $H|sudo -S $1                      2>/dev/null     ; }                                                   # superuser-command (visible)
+function sex {                      echo $H|sudo -S $1                      2>/dev/null 1>&2; }                                                   # superuser-command (silent)
+function dmr {                      echo $H|sudo -S systemctl daemon-reload 2>/dev/null 1>&2; }                                                   # daemon-reload     (silent)
+function dts { date '+%Y-%m-%d %H:%M'; }                                                                                                          # my logs date format
+function jsh { cex "journalctl --no-hostname --no-full -f $1"; }                                                                                  # my journal   format
+function fs0 { systemctl status $1 2>/dev/null|grep "${2:-inactive\|failed}"; }                                                                   # service status word test
+function fs1 { systemctl status $1 2>/dev/null|grep "${2:-Active:}"|sed "s%.*${2:-Active:} \(${3:-.}*\).*%\1%"; }                                 # service status word test with data extraction
+function fs2 { echo $1|egrep '^[0-9]+$'       ; }                                                                                                 # parm integer test
+function fs3 { echo $1|egrep '^[0-9]+:[0-9]+$'; }                                                                                                 # parm hh:mm   test
+function sst { echo "$1 $(printf '%6s' $(fs1 $2 Memory:)) $(dts) status: $(fs1 $2)"; }                                                            # my services status
+function dnn { echo "$1 $2 $(printf 'node%02i:' $3) $(printf '%2i' $4)"; }                                                                        # my date/nodes info (yyyy-dd-mm hh:mm node10: 7)
 function rd0 { cex "systemctl stop  $dnsd";sex 'systemctl stop  systemd-resolved'; }                                                              # DNS stop
 function rd1 { cex "systemctl start $dnsd";sex 'systemctl start systemd-resolved'; }                                                              # DNS start
 function epr { resolvectl query smtp.gmail.com 2>/dev/null 1>&2;sex "systemctl stop $1";dmr; }                                                    # service stop/reload
-function pt0 { echo $1|egrep '^[0-9]+$'       ; }                                                                                                 # parm integer test
-function pt1 { echo $1|egrep '^[0-9]+:[0-9]+$'; }                                                                                                 # parm hh:mm   test
 function chp {
-  cp $p8/$1.service ~/$1.sav;local n=$(($2+$3))                                                                                                   # alteracao configured peers [+/-]$2
-  [[ $n -ge $4 && $n -le $5 ]] && sed "s%peers [0-9]*%peers $n%" ~/$1.sav > $p8/$1.service                                                        # editar service file se dentro dos limites
+  cp $p8/$1.service ~/$1.sav;local n=$(($2+$3))                                                                                                   # change configured peers [+/-]$2
+  [[ $n -ge $4 && $n -le $5 ]] && sed "s%peers [0-9]*%peers $n%" ~/$1.sav > $p8/$1.service                                                        # editar service file (se dentro dos limites)
 }
-function gv { nu0 $(fs1 $ethg maxpeers [0-9])                                        ; }                                                          # configured peers
-function gq { nu0 $(geth attach "http://$cgth:8545" --exec net.peerCount 2>/dev/null); }                                                          # current    peers
-function gy { geth attach "http://$cgth:8545" --exec eth.syncing         2>/dev/null ; }                                                          # current syncing status
+function gv { nu0 $(fs1 $ethg maxpeers [0-9])                                        ; }                                                          # get configured peers
+function gq { nu0 $(geth attach "http://$cgth:8545" --exec net.peerCount 2>/dev/null); }                                                          # get current    peers
+function gy {       geth attach "http://$cgth:8545" --exec eth.syncing   2>/dev/null ; }                                                          # current syncing status
 function gb {
   g0=$(echo $H|sudo -S grep 'mported new' $p4 2>/dev/null|wc -l)                                                                                  # numero de new imported chain segments
   ok=OK;[[ $g0 -eq $(grep sgs: $p5 2>/dev/null|tail -n1|sed 's%.*sgs: *\([0-9]*\).*%\1%') ]] && ok=BK                                             # OK/BK
 }
 function gl {                                                                                                                                     # geth log report
-  if [[ $(fs0 $ethg running) ]];then
-    local e=$(gy);gb
+  if [[ $(fs0 $ethg running) ]];then local e=$(gy);gb
     if [[ $(echo $e|grep false) ]];then
-      m=" $ok SYC $(dnn $(dts) $(gv) $(gq)) sgs: $(printf '%4i' $g0)"                                                                             # OK SYC 2021-12-04 17:40:50 node10: 7 sgs: 6
+      m=" $ok SYC $(dnn $(dts) $(gv) $(gq)) sgs: $(printf '%4i' $g0)"                                                                             # OK SYC (dnn) sgs: 6
     else
       local g=$(echo $e|sed -Ee 's%.*highestBlock: *([0-9]+).*%\1%i')
       local n=$(echo $e|sed -Ee 's%.*currentBlock: *([0-9]+).*%\1%i')
-      m=" $ok NSY $(dnn $(dts) $(gv) $(gq)) sgs: $(printf '%4i' $g0) blocks: $((g*1)) ($((g-n)))"                                                 # OK NSY 2021-12-04 17:40:37 node10: 4 sgs: 5 blocks: 8 (6)
+      m=" $ok NSY $(dnn $(dts) $(gv) $(gq)) sgs: $(printf '%4i' $g0) blocks: $((g*1)) ($((g-n)))"                                                 # OK NSY (dnn) sgs: 5 blocks: 8 (6)
     fi
   else
     m=" NOT HERE $(dts)"
@@ -51,18 +50,18 @@ function grs {
   [[ $1 -ne 0 ]] && chp $ethg $1 $(gv) 10 15;epr $ethg                                                                                            # change config & stop/load geth
   sex "systemctl start $ethg";sleep 10s;echo "GETH RESTAR $(dnn $(dts) $(gv) $(gq))" >> $p5                                                       # start geth & geth log entry
 }
-function bv { nu0 $(fs1 $ethb target-peers [0-9])                                                                         ; }                     # configured peers
-function bq { nu0 $(echo $H|sudo -S grep 'lighthouse.*peers:' $p4 2>/dev/null|tail -n1|sed 's%.*peers: *\([0-9]*\).*%\1%'); }                     # current    peers
-function bi { nu4 ${k[$1]} ${z[$1]} ${x[$1]} ${w[$1]} ${c[$1]}; }                                                                                 # avg penalty from 4 cumulative paid error arrays
-function bx { echo $1|sed 's%node\([0-9]*\):%\1%'; }                                                                                              # configured peers extraction from node tag
-function bz { echo $((10*(9*z6+3*z7+z8+z9))); }                                                                                                   # numerator paid errors restart index
-function bw { echo $((10*z1)); }                                                                                                                  # numerator processed blocks restart index
-function br { echo $((90*z3)); }                                                                                                                  # numerator general errors restart index
-function bu { echo $(($(nu3 200 $(bz) $z5)+$(nu3 100 $(bw) $z2)+$(nu3 100 $(br) $z4))); }                                                         # restart index
-function bs { tail -n$1 $p2 2>/dev/null|cut -d' ' -f1|sort -u|wc -l; }                                                                            # beacon log restart activity test
-function bk { cat       $p2 2>/dev/null                      |wc -l; }                                                                            # beacon log line count
-function bf { sort -k10.1n; }                                                                                                                     # order beacon log by penalty
-function bt { bf|grep -n $1|cut -d: -f1; }                                                                                                        # obtain position of ordered beacon log
+function bv { nu0 $(fs1 $ethb target-peers [0-9])                                                                         ; }                     # get configured peers
+function bq { nu0 $(echo $H|sudo -S grep 'lighthouse.*peers:' $p4 2>/dev/null|tail -n1|sed 's%.*peers: *\([0-9]*\).*%\1%'); }                     # get current    peers
+function bi { nu4 ${k[$1]} ${z[$1]} ${x[$1]} ${w[$1]} ${c[$1]}; }                                                                                 # get avg penalty from paid error arrays
+function bx { echo $1|sed 's%node\([0-9]*\):%\1%'; }                                                                                              # get peers from node tag
+function bz { echo $((10*(9*z6+3*z7+z8+z9))); }                                                                                                   # numerator paid errors
+function bw { echo $((10*z1)); }                                                                                                                  # numerator processed blocks
+function br { echo $((90*z3)); }                                                                                                                  # numerator general errors
+function bu { echo $(($(nu3 200 $(bz) $z5)+$(nu3 100 $(bw) $z2)+$(nu3 100 $(br) $z4))); }                                                         # get restart index
+function bs { tail -n$1 $p2 2>/dev/null|cut -d' ' -f1|sort -u|wc -l; }                                                                            # get beacon log restart activity test
+function bk { cat       $p2 2>/dev/null                      |wc -l; }                                                                            # get beacon log line count
+function bf { sort -k10.1n; }                                                                                                                     # srt beacon log by penalty
+function bt { bf|grep -n $1|cut -d: -f1; }                                                                                                        # get position in ordered beacon log
 function bb {
   local e=$(echo $H|sudo -S grep "lighthouse.$bpid" $p4 2>/dev/null|tail -n3600)                                                                  # most recent beacon messages
   z1=$(echo "$e"|grep 'rocessed block'|wc -l);z2=$(echo "$e"|grep 'block received'|wc -l)                                                         # processed blocks           restart index
@@ -74,9 +73,14 @@ function bb {
   z9=$(echo $H|sudo -S grep 'attestation(s) had'     $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w)                               # sub-optimal delay paid err restart index
   ok=OK;local g=$(bu);[[ ($g -ge $l1rs && $(bs $hors) -eq 1) || ($g -ge $l2rs && $(bs $l2rs) -eq 1) ]] && ok=BK                                   # OK/BK
 }
-function bl {
-  local l=0;local n=0;local v=0;for v in $(echo $H|sudo -S grep 'delay_ms: [0-9]' $p4 2>/dev/null|sed 's%.*delay_ms: *\([0-9]*\).*%\1%');do n=$((n+1));l=$((l+v));done   # delays in service
-  if [[ $n -gt 0  ]];then b5=$((l/n));b6=$(echo $H|sudo -S grep 'published block' $p4 2>/dev/null|wc -l);dt=$(dts);nn=$(bv);nr=$(bq);bb;blo;else m=" NOT HERE $(dts)";fi # obtaim beacon log output
+function bl {                                                                                                                                     # beacon log report
+  local l=0;local n=0;local v=0
+  for v in $(echo $H|sudo -S grep 'delay_ms: [0-9]' $p4 2>/dev/null|sed 's%.*delay_ms: *\([0-9]*\).*%\1%');do n=$((n+1));l=$((l+v));done          # delays in beacon activities
+  if [[ $n -gt 0  ]];then
+    b5=$((l/n));b6=$(echo $H|sudo -S grep 'published block' $p4 2>/dev/null|wc -l);dt=$(dts);nn=$(bv);nr=$(bq);bb;blo                             # get output
+  else
+    m=" NOT HERE $(dts)"
+  fi
 }
 function bm {
   bm0;dt=$(dts);nn=$(bv);nr=$(bq);local g=0
@@ -129,6 +133,10 @@ function bm0 { # inicializar paid error arrays / cnt array / avg penalty from 4 
   unset x;x[00]=0;x[50]=0;x[45]=0;x[40]=0;x[35]=0;x[30]=0;x[25]=0;x[20]=0;unset w;w[00]=0;w[50]=0;w[45]=0;w[40]=0;w[35]=0;w[30]=0;w[25]=0;w[20]=0 # failed head/sub-optimal delay err arrays
   unset c;c[00]=0;c[50]=0;c[45]=0;c[40]=0;c[35]=0;c[30]=0;c[25]=0;c[20]=0;unset a;a[00]=0;a[50]=0;a[45]=0;a[40]=0;a[35]=0;a[30]=0;a[25]=0;a[20]=0 # cnt/avg penalty arrays
 }
+#function mis { echo ${v[15]}; }
+#function mat { echo ${v[16]}; }
+#function mah { echo ${v[17]}; }
+#function dly { echo ${v[18]}; }
 function bm1 { local n=$(bx ${v[5]});k[$n]=$((k[n]+v[15]));z[$n]=$((z[n]+v[16]));x[$n]=$((x[n]+v[17]));w[$n]=$((w[n]+v[18]));c[$n]=$((c[n]+1)); } # cumulative paid errors & cnt arrays
 function bm2 {
   k[00]=$((k[20]+k[25]+k[30]+k[35]+k[40]+k[45]+k[50]));z[00]=$((z[20]+z[25]+z[30]+z[35]+z[40]+z[45]+z[50]))                                       # tot missing/failed target err arrays
@@ -138,7 +146,7 @@ function bm2 {
 }
 function bo1 { # homologous lines/position
   b2=0;[[ ! -f $p2 ]] && return                                                                                                                   # beacon log must exist
-  local t=00:00;[[ $(pt0 $1) ]] && b2=$1;[[ $(pt0 $2) ]] && b2=$2;[[ $(pt1 $1) ]] && t=$1;[[ $(pt1 $2) ]] && t=$2                                 # homologous position/time forced
+  local t=00:00;[[ $(fs2 $1) ]] && b2=$1;[[ $(fs2 $2) ]] && b2=$2;[[ $(fs3 $1) ]] && t=$1;[[ $(fs3 $2) ]] && t=$2                                 # homologous position/time forced
   local l=$(grep BEAC $p2|tail -n1|sed 's%.* \([0-9]*-[0-9]*-[0-9]*\) \([0-9]*:[0-9]*\).*%\1\t\2%')                                               # last yyyy-mm-dd hh:mm beacon log
   local d=$(echo "$l"|cut -f1);[[ $t = 00:00 ]] && t=$(echo "$l"|cut -f2)
   b1=$(grep "BEAC.*$t" $p2);[[ $b2 -eq 0 ]] && b2=$(echo "$b1"|bt $d)                                                                             # homologous lines/position
@@ -149,8 +157,8 @@ function bo1 { # homologous lines/position
 function bo2 { # homologous report
   [[ ! -f $p2 ]] && return                                                                                                                        # beacon log must exist
   local g=${b2:-0};local d=${b2:-0}                                                                                                               # init head/tail lines
-  if [[ $(pt0 $1) ]];then g=$1;else if [[ $g -lt $l2rs && $(echo "$b1"|wc -l) -ge $l2rs ]];then d=$l2rs;g=$l2rs;fi;fi                             # ajust head lines
-  if [[ $(pt0 $1) ]];then d=$1;else if [[ $d -gt $hors                                  ]];then d=$hors        ;fi;fi                             # ajust tail lines
+  if [[ $(fs2 $1) ]];then g=$1;else if [[ $g -lt $l2rs && $(echo "$b1"|wc -l) -ge $l2rs ]];then d=$l2rs;g=$l2rs;fi;fi                             # ajust head lines
+  if [[ $(fs2 $1) ]];then d=$1;else if [[ $d -gt $hors                                  ]];then d=$hors        ;fi;fi                             # ajust tail lines
   echo "$b1"|bf|head -n$g|tail -n$d                                                                                                               # filter homologous report
 }
 function brs {
