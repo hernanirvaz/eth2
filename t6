@@ -53,24 +53,28 @@ function grs {
 function bv { nu0 $(fs1 $ethb target-peers [0-9])                                                                         ; }                     # get configured peers
 function bq { nu0 $(echo $H|sudo -S grep 'lighthouse.*peers:' $p4 2>/dev/null|tail -n1|sed 's%.*peers: *\([0-9]*\).*%\1%'); }                     # get current    peers
 function bi { nu4 ${k[$1]} ${z[$1]} ${x[$1]} ${w[$1]} ${c[$1]}; }                                                                                 # get avg penalty from paid error arrays
-function bx { echo $1|sed 's%node\([0-9]*\):%\1%'; }                                                                                              # get peers from node tag
-function bz { echo $((10*(9*z6+3*z7+z8+z9))); }                                                                                                   # numerator paid errors
+function bx { echo ${1:-${v[5]}}|sed 's%node\([0-9]*\):%\1%'; }                                                                                   # get peers from node tag
+function bz { echo $((10*(9*zk+3*zz+zx+zw))); }                                                                                                   # numerator paid errors
 function bw { echo $((10*z1)); }                                                                                                                  # numerator processed blocks
 function br { echo $((90*z3)); }                                                                                                                  # numerator general errors
-function bu { echo $(($(nu3 200 $(bz) $z5)+$(nu3 100 $(bw) $z2)+$(nu3 100 $(br) $z4))); }                                                         # get restart index
+function bu { echo $(($(nu3 200 $(bz) $z5)+$(nu3 100 $(bw) $z2)+$(nu3 100 $(br) $z4))); }                                                         # get restart idx
+function kb { echo ${v[15]}; }                                                                                                                    # get missing           paid err (beacon log)
+function zb { echo ${v[16]}; }                                                                                                                    # get failed target     paid err (beacon log)
+function xb { echo ${v[17]}; }                                                                                                                    # get failed head       paid err (beacon log)
+function wb { echo ${v[18]}; }                                                                                                                    # get sub-optimal delay paid err (beacon log)
 function bs { tail -n$1 $p2 2>/dev/null|cut -d' ' -f1|sort -u|wc -l; }                                                                            # get beacon log restart activity test
 function bk { cat       $p2 2>/dev/null                      |wc -l; }                                                                            # get beacon log line count
 function bf { sort -k10.1n; }                                                                                                                     # srt beacon log by penalty
 function bt { bf|grep -n $1|cut -d: -f1; }                                                                                                        # get position in ordered beacon log
 function bb {
   local e=$(echo $H|sudo -S grep "lighthouse.$bpid" $p4 2>/dev/null|tail -n3600)                                                                  # most recent beacon messages
-  z1=$(echo "$e"|grep 'rocessed block'|wc -l);z2=$(echo "$e"|grep 'block received'|wc -l)                                                         # processed blocks           restart index
-  z3=$(echo "$e"|grep -v ' INFO '     |wc -l);z4=$(echo "$e"|grep ' INFO '        |wc -l)                                                         # general errors             restart index
-  z5=$(echo $H|sudo -S grep 'attestation(s) success' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w)                               # denominator       paid     restart index
-  z6=$(echo $H|sudo -S grep 'attestation(s) missing' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w)                               # missing           paid err restart index
-  z7=$(echo $H|sudo -S grep 'attestation(s).*target' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w)                               # failed target     paid err restart index
-  z8=$(echo $H|sudo -S grep 'attestation(s).*head'   $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w)                               # failed head       paid err restart index
-  z9=$(echo $H|sudo -S grep 'attestation(s) had'     $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w)                               # sub-optimal delay paid err restart index
+  z1=$(echo "$e"|grep 'rocessed block'|wc -l);z2=$(echo "$e"|grep 'block received'|wc -l)                                                         # processed blocks           (restart idx)
+  z3=$(echo "$e"|grep -v ' INFO '     |wc -l);z4=$(echo "$e"|grep ' INFO '        |wc -l)                                                         # general errors             (restart idx)
+  z5=$(echo $H|sudo -S grep 'attestation(s) success' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w)                               # denominator       paid     (restart idx)
+  zk=$(echo $H|sudo -S grep 'attestation(s) missing' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w)                               # missing           paid err (restart idx)
+  zz=$(echo $H|sudo -S grep 'attestation(s).*target' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w)                               # failed target     paid err (restart idx)
+  zx=$(echo $H|sudo -S grep 'attestation(s).*head'   $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w)                               # failed head       paid err (restart idx)
+  zw=$(echo $H|sudo -S grep 'attestation(s) had'     $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w)                               # sub-optimal delay paid err (restart idx)
   ok=OK;local g=$(bu);[[ ($g -ge $l1rs && $(bs $hors) -eq 1) || ($g -ge $l2rs && $(bs $l2rs) -eq 1) ]] && ok=BK                                   # OK/BK
 }
 function bl {                                                                                                                                     # beacon log report
@@ -86,11 +90,11 @@ function bm {
   bm0;dt=$(dts);nn=$(bv);nr=$(bq);local g=0
   if [[ -f $p7 ]];then
     unset o;read -a o <<< $(tail -n1 $p7);g=${o[1]}                                                                                               # init arrays from barqivo log
-    k[50]=${o[13]};k[45]=${o[14]};k[40]=${o[15]};k[35]=${o[16]};k[30]=${o[17]};k[25]=${o[18]};k[20]=${o[19]}                                      # missing           error array
-    z[50]=${o[21]};z[45]=${o[22]};z[40]=${o[23]};z[35]=${o[24]};z[30]=${o[25]};z[25]=${o[26]};z[20]=${o[27]}                                      # failed target     error array
-    x[50]=${o[29]};x[45]=${o[30]};x[40]=${o[31]};x[35]=${o[32]};x[30]=${o[33]};x[25]=${o[34]};x[20]=${o[35]}                                      # failed head       error array
-    w[50]=${o[37]};w[45]=${o[38]};w[40]=${o[39]};w[35]=${o[40]};w[30]=${o[41]};w[25]=${o[42]};w[20]=${o[43]}                                      # sub-optimal delay error array
-    c[50]=${o[ 5]};c[45]=${o[ 6]};c[40]=${o[ 7]};c[35]=${o[ 8]};c[30]=${o[ 9]};c[25]=${o[10]};c[20]=${o[11]}                                      # cnt array (beacon log lines)
+    k[50]=${o[13]};k[45]=${o[14]};k[40]=${o[15]};k[35]=${o[16]};k[30]=${o[17]};k[25]=${o[18]};k[20]=${o[19]}                                      # missing           err array
+    z[50]=${o[21]};z[45]=${o[22]};z[40]=${o[23]};z[35]=${o[24]};z[30]=${o[25]};z[25]=${o[26]};z[20]=${o[27]}                                      # failed target     err array
+    x[50]=${o[29]};x[45]=${o[30]};x[40]=${o[31]};x[35]=${o[32]};x[30]=${o[33]};x[25]=${o[34]};x[20]=${o[35]}                                      # failed head       err array
+    w[50]=${o[37]};w[45]=${o[38]};w[40]=${o[39]};w[35]=${o[40]};w[30]=${o[41]};w[25]=${o[42]};w[20]=${o[43]}                                      # sub-optimal delay err array
+    c[50]=${o[ 5]};c[45]=${o[ 6]};c[40]=${o[ 7]};c[35]=${o[ 8]};c[30]=${o[ 9]};c[25]=${o[10]};c[20]=${o[11]}                                      # cnt array (beacon log)
   fi
   [[ -f $p2         ]] && { unset v;while read -a v;do bm1;done <<< $(tail -n$(($(bk)-g)) $p2|grep BEAC); }                                       # add data from remaining beacon log
   [[ ${b2:-0} -eq 0 ]] && bo1;bm2;local l=0;local n=0                                                                                             # cur homologous position & totalized data
@@ -111,9 +115,9 @@ function bmn {
 function blo {
   #    0  1   2          3              4       5  6               7   8    9                 10   11  12 13    14 15 16  17 18     19  20  21   22   23   24         25   26
   # BEAC OK   0 2021-11-22 17:15:58+00:00 node20: 32 reward_penalty: 224 3.54 attestation_block: 2950 2280 0 erros: 2 14 131 29      0 537   0   14 3586 1260     delay: 1000
-  m=" $ok $(printf '%3i' $(bu)) $(dnn $dt $nn $nr) reward_penalty: $(nu2 "($z5*$ratt+$b6*$rblk)*$rate/$decp" 0 %3i) $(printf '%4.2f' $(nu4 $z6 $z7 $z8 $z9 1))"
-  m="$m attestation_block: $(printf '%4i' $z5) $(printf '%4i' $(bz)) $(printf '%1i' $b6) erros: $(printf '%1i' $z6) $(printf '%2i' $z7) $(printf '%3i' $z8)"
-  m="$m $(printf '%2i' $z9) $(printf '%6i' $z1) $(printf '%3i' $z2) $(printf '%3i' $(bw)) $(printf '%4i' $z3) $(printf '%4i' $z4) $(printf '%4i' $(br))     delay: $(printf '%4i' $b5)"
+  m=" $ok $(printf '%3i' $(bu)) $(dnn $dt $nn $nr) reward_penalty: $(nu2 "($z5*$ratt+$b6*$rblk)*$rate/$decp" 0 %3i) $(printf '%4.2f' $(nu4 $zk $zz $zx $zw 1))"
+  m="$m attestation_block: $(printf '%4i' $z5) $(printf '%4i' $(bz)) $(printf '%1i' $b6) erros: $(printf '%1i' $zk) $(printf '%2i' $zz) $(printf '%3i' $zx)"
+  m="$m $(printf '%2i' $zw) $(printf '%6i' $z1) $(printf '%3i' $z2) $(printf '%3i' $(bw)) $(printf '%4i' $z3) $(printf '%4i' $z4) $(printf '%4i' $(br))     delay: $(printf '%4i' $b5)"
 }
 function bmo {
   #    0  1   2          3        4       5  6    7    8    9   10   11   12   13   14          15   16          17 18
@@ -128,16 +132,12 @@ function bno {
   s="$s mis: ${k[50]} ${k[45]} ${k[40]} ${k[35]} ${k[30]} ${k[25]} ${k[20]} mat: ${z[50]} ${z[45]} ${z[40]} ${z[35]} ${z[30]} ${z[25]} ${z[20]}"
   s="$s mah: ${x[50]} ${x[45]} ${x[40]} ${x[35]} ${x[30]} ${x[25]} ${x[20]} dly: ${w[50]} ${w[45]} ${w[40]} ${w[35]} ${w[30]} ${w[25]} ${w[20]}"
 }
-function bm0 { # inicializar paid error arrays / cnt array / avg penalty from 4 cumulative paid error arrays
+function bm0 {
   unset k;k[00]=0;k[50]=0;k[45]=0;k[40]=0;k[35]=0;k[30]=0;k[25]=0;k[20]=0;unset z;z[00]=0;z[50]=0;z[45]=0;z[40]=0;z[35]=0;z[30]=0;z[25]=0;z[20]=0 # missing/failed target err arrays
   unset x;x[00]=0;x[50]=0;x[45]=0;x[40]=0;x[35]=0;x[30]=0;x[25]=0;x[20]=0;unset w;w[00]=0;w[50]=0;w[45]=0;w[40]=0;w[35]=0;w[30]=0;w[25]=0;w[20]=0 # failed head/sub-optimal delay err arrays
   unset c;c[00]=0;c[50]=0;c[45]=0;c[40]=0;c[35]=0;c[30]=0;c[25]=0;c[20]=0;unset a;a[00]=0;a[50]=0;a[45]=0;a[40]=0;a[35]=0;a[30]=0;a[25]=0;a[20]=0 # cnt/avg penalty arrays
 }
-#function mis { echo ${v[15]}; }
-#function mat { echo ${v[16]}; }
-#function mah { echo ${v[17]}; }
-#function dly { echo ${v[18]}; }
-function bm1 { local n=$(bx ${v[5]});k[$n]=$((k[n]+v[15]));z[$n]=$((z[n]+v[16]));x[$n]=$((x[n]+v[17]));w[$n]=$((w[n]+v[18]));c[$n]=$((c[n]+1)); } # cumulative paid errors & cnt arrays
+function bm1 { local n=$(bx);k[$n]=$((k[n]+$(kb)));z[$n]=$((z[n]+$(zb)));x[$n]=$((x[n]+$(xb)));w[$n]=$((w[n]+$(wb)));c[$n]=$((c[n]+1)); }         # cumulative paid errors & cnt arrays
 function bm2 {
   k[00]=$((k[20]+k[25]+k[30]+k[35]+k[40]+k[45]+k[50]));z[00]=$((z[20]+z[25]+z[30]+z[35]+z[40]+z[45]+z[50]))                                       # tot missing/failed target err arrays
   x[00]=$((x[20]+x[25]+x[30]+x[35]+x[40]+x[45]+x[50]));w[00]=$((w[20]+w[25]+w[30]+w[35]+w[40]+w[45]+w[50]))                                       # tot failed head/sub-optimal delay err arrays
@@ -161,7 +161,7 @@ function bo2 { # homologous report
   if [[ $(fs2 $1) ]];then d=$1;else if [[ $d -gt $hors                                  ]];then d=$hors        ;fi;fi                             # ajust tail lines
   echo "$b1"|bf|head -n$g|tail -n$d                                                                                                               # filter homologous report
 }
-function brs {
+function brs { # beacon/validator restart
   [[ -f $p0/beacon.restart.inicio ]] && return                                                                                                    # se restart flag existe exit
   touch $p0/beacon.restart.inicio;local n=0
   while [[ -f $p0/beacon.restart.inicio && $n -lt 200 ]]; do                                                                                      # procura posicao ideal restart
@@ -184,9 +184,9 @@ function brs {
 }
 function brl { # recalculate beacon/bmedias logs
   [[ -f ${p2}new ]] && rm ${p2}new;[[ -f ${p3}new ]] && rm ${p3}new
-  unset v;while read -a v;do ok=${v[1]};dt=${v[3]}\ ${v[4]};nn=$(bx ${v[5]});nr=${v[6]}                                                           # uncalculated vars
+  unset v;while read -a v;do ok=${v[1]};dt=${v[3]}\ ${v[4]};nn=$(bx);nr=${v[6]}                                                                   # uncalculated vars
     if [[ ${v[0]} = BEAC ]];then
-      b6=${v[13]};b5=${v[26]};z1=${v[19]};z2=${v[20]};z3=${v[22]};z4=${v[23]};z5=${v[11]};z6=${v[15]};z7=${v[16]};z8=${v[17]};z9=${v[18]};blo     # calculated output
+      b6=${v[13]};b5=${v[26]};z1=${v[19]};z2=${v[20]};z3=${v[22]};z4=${v[23]};z5=${v[11]};zk=$(kb);zz=$(zb);zx=$(xb);zw=$(wb);blo                 # calculated output
     else
       m=" $ok $(printf '%3i' ${v[2]}) $(dnn $dt $nn $nr)"                                                                                         # other lines
     fi;echo "${v[0]}$m" >> ${p2}new                                                                                                               # new beacon log output
