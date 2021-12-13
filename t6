@@ -30,7 +30,7 @@ function gv { nu0 $(fs1 $ethg maxpeers [0-9])                                   
 function gq { nu0 $(geth attach "http://$cgth:8545" --exec net.peerCount 2>/dev/null); }                                                          # get current    peers
 function gy {       geth attach "http://$cgth:8545" --exec eth.syncing   2>/dev/null ; }                                                          # current syncing status
 function gb {
-  g0=$(echo $H|sudo -S grep 'mported new' $p4 2>/dev/null|wc -l)                                                                                  # numero de new imported chain segments
+  g0=$(echo $H|sudo -S grep 'mported new' $p4 2>/dev/null|wc -l)                                                                                  # new imported chain segments
   ok=OK;[[ $g0 -eq $(grep sgs: $p5 2>/dev/null|tail -n1|sed 's%.*sgs: *\([0-9]*\).*%\1%') ]] && ok=BK                                             # OK/BK
 }
 function gl {                                                                                                                                     # geth log report
@@ -77,7 +77,7 @@ function bb {
   zw=$(echo $H|sudo -S grep 'attestation(s) had'     $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w)                               # sub-optimal delay paid err (restart idx)
   ok=OK;local g=$(bu);[[ ($g -ge $l1rs && $(bs $hors) -eq 1) || ($g -ge $l2rs && $(bs $l2rs) -eq 1) ]] && ok=BK                                   # OK/BK
 }
-function bl {                                                                                                                                     # beacon log report
+function bl { # beacon log report
   local l=0;local n=0;local v=0
   for v in $(echo $H|sudo -S grep 'delay_ms: [0-9]' $p4 2>/dev/null|sed 's%.*delay_ms: *\([0-9]*\).*%\1%');do n=$((n+1));l=$((l+v));done          # delays in beacon activities
   if [[ $n -gt 0  ]];then
@@ -186,7 +186,7 @@ function brl { # recalculate beacon/bmedias logs
   [[ -f ${p2}new ]] && rm ${p2}new;[[ -f ${p3}new ]] && rm ${p3}new
   unset v;while read -a v;do ok=${v[1]};dt=${v[3]}\ ${v[4]};nn=$(bx);nr=${v[6]}                                                                   # uncalculated vars
     if [[ ${v[0]} = BEAC ]];then
-      b6=${v[13]};b5=${v[26]};z1=${v[19]};z2=${v[20]};z3=${v[22]};z4=${v[23]};z5=${v[11]};zk=$(kb);zz=$(zb);zx=$(xb);zw=$(wb);blo                 # calculated output
+      b5=${v[26]};b6=${v[13]};z1=${v[19]};z2=${v[20]};z3=${v[22]};z4=${v[23]};z5=${v[11]};zk=$(kb);zz=$(zb);zx=$(xb);zw=$(wb);blo                 # calculated output
     else
       m=" $ok $(printf '%3i' ${v[2]}) $(dnn $dt $nn $nr)"                                                                                         # other lines
     fi;echo "${v[0]}$m" >> ${p2}new                                                                                                               # new beacon log output
