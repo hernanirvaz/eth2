@@ -164,7 +164,7 @@ function bo2 { # homologous report
 function brs { # beacon/validator restart
   [[ -f $p0/beacon.restart.inicio ]] && return                                                                                                    # se restart flag existe exit
   touch $p0/beacon.restart.inicio;local n=0
-  while [[ -f $p0/beacon.restart.inicio && $n -lt 200 ]]; do                                                                                      # procura posicao ideal restart
+  while [[ -f $p0/beacon.restart.inicio && $n -lt 300 ]]; do                                                                                      # procura posicao ideal restart
     local l=$(echo $H|sudo -S grep "lighthouse.$bpid.* INFO " $p4 2>/dev/null|tail -n$pors|sed 's%.* INFO \([^ ]*\) .*%\1%'|sort -u)              # last $pors unique INFO beacon lines
     if [[ $(echo "$l"|wc -l) -eq 2 && $(echo "$l"|head -n1) = New && $(echo "$l"|tail -n1) = Synced ]];then                                       # posicao ideal = only 2 INFO types
       ok=${2:-$ok}                                                                                                                                # ${PE|RB|BN|VC:-OK|BK}
