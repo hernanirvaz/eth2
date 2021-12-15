@@ -80,10 +80,10 @@ function bb {
   ok=OK;local g=$(bu);[[ ($g -ge 1 && $(bs $hors) -eq 1) || ($g -ge $l2rs && $(bs $l2rs) -eq 1) ]] && ok=BK                                       # OK/BK
 }
 function bl { # beacon log report
-  local l=0;local n=0;local v=0
-  for v in $(echo $H|sudo -S grep 'delay_ms: [0-9]' $p4 2>/dev/null|sed 's%.*delay_ms: *\([0-9]*\).*%\1%');do ((n+=1));((l+=v));done              # delays in beacon activities
-  if [[ $n -gt 0  ]];then
-    b5=$((l/n));b6=$(echo $H|sudo -S grep 'published block' $p4 2>/dev/null|wc -l);dt=$(dts);nn=$(bv);nr=$(bq);bb;blo                             # get output
+  local e=$(echo $H|sudo -S grep 'delay_ms: [0-9]' $p4 2>/dev/null|sed 's%.*delay_ms: *\([0-9]*\).*%\1%')                                         # delays in beacon activities
+  if [[ $e ]];then
+    b5=$(($(echo "$e"|paste -sd+|bc)/$(echo "$e"|wc -l)));b6=$(echo $H|sudo -S grep 'published block' $p4 2>/dev/null|wc -l)                      # avg delays & published blocks
+    dt=$(dts);nn=$(bv);nr=$(bq);bb;blo                                                                                                            # get output
   else
     m=" NOT HERE $(dts)"
   fi
