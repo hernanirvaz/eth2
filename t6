@@ -65,10 +65,10 @@ function kb { echo ${v[15]}; }                                                  
 function zb { echo ${v[16]}; }                                                                                                                    # get failed target     paid err (beacon log)
 function xb { echo ${v[17]}; }                                                                                                                    # get failed head       paid err (beacon log)
 function wb { echo ${v[18]}; }                                                                                                                    # get sub-optimal delay paid err (beacon log)
-function bs { tail -n$1 $p2 2>/dev/null|cut -d' ' -f1|sort -u|wc -l; }                                                                            # get beacon log restart activity test
-function bk { cat       $p2 2>/dev/null                      |wc -l; }                                                                            # get beacon log line count
-function bf { sort -k10.1n; }                                                                                                                     # srt beacon log by penalty
-function bt { bf|grep -n $1|cut -d: -f1; }                                                                                                        # get position in ordered beacon log
+function bs { tail -n$1 $p2 2>/dev/null|cut -d' ' -f1|sort -u|wc -l; }                                                                            # get restart activity test      (beacon log)
+function bk { cat       $p2 2>/dev/null                      |wc -l; }                                                                            # get line count                 (beacon log)
+function bf { sort -k10.1n; }                                                                                                                     # srt by penalty                 (beacon log)
+function bt { bf|grep -n $1|cut -d: -f1; }                                                                                                        # get ordered position           (beacon log)
 function bb {
   local e=$(echo $H|sudo -S grep "lighthouse.$bpid" $p4 2>/dev/null|tail -n3600)                                                                  # most recent beacon messages
   z1=$(echo "$e"|grep 'rocessed block'|wc -l);z2=$(echo "$e"|grep 'block received'|wc -l)                                                         # processed blocks           (restart idx)
@@ -96,7 +96,7 @@ function bm {
     z[50]=${o[21]};z[45]=${o[22]};z[40]=${o[23]};z[35]=${o[24]};z[30]=${o[25]};z[25]=${o[26]};z[20]=${o[27]}                                      # failed target     err array
     x[50]=${o[29]};x[45]=${o[30]};x[40]=${o[31]};x[35]=${o[32]};x[30]=${o[33]};x[25]=${o[34]};x[20]=${o[35]}                                      # failed head       err array
     w[50]=${o[37]};w[45]=${o[38]};w[40]=${o[39]};w[35]=${o[40]};w[30]=${o[41]};w[25]=${o[42]};w[20]=${o[43]}                                      # sub-optimal delay err array
-    c[50]=${o[ 5]};c[45]=${o[ 6]};c[40]=${o[ 7]};c[35]=${o[ 8]};c[30]=${o[ 9]};c[25]=${o[10]};c[20]=${o[11]}                                      # cnt array
+    c[50]=${o[ 5]};c[45]=${o[ 6]};c[40]=${o[ 7]};c[35]=${o[ 8]};c[30]=${o[ 9]};c[25]=${o[10]};c[20]=${o[11]}                                      #                   cnt array
   fi
   [[ -f $p2         ]] && bm1 "$(tail -n$(($(bk)-g)) $p2|grep BEAC)";bm2                                                                          # sum paid err arrays from remaining beacon log
   [[ ${b2:-0} -eq 0 ]] && bo1;b3=$(nu5 "$(sed -Ee 's%BEAC +[0-9]+ +([0-9]+).+%\1%' $p3 2>/dev/null;echo $b2)")                                    # cur/avg homologous position
