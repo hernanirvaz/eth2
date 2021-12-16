@@ -11,7 +11,7 @@ function nu4 { if [[ $5 -ne 0  ]];then nu1 "($1*$pmis+$2*$pmat+$3*$pmah+$4*$pdly
 function nu5 { if [[ $1        ]];then echo $(($(echo "$1"|paste -sd+|bc)/$(echo "$1"|wc -l)))     ;else echo 0;fi; }                             # get average from list of numbers
 function cex { echo -e "${i}$1${f}";echo $H|sudo -S $1                      2>/dev/null     ; }                                                   # superuser-command (visible)
 function sex {                      echo $H|sudo -S $1                      2>/dev/null 1>&2; }                                                   # superuser-command (silent)
-function dmr { sex 'daemon-reload'                           ; }                                                                                  # daemon-reload
+function dmr { sex 'systemctl daemon-reload'                 ; }                                                                                  # daemon-reload
 function jsh { cex "journalctl --no-hostname --no-full -f $1"; }                                                                                  # my journal   format
 function dts { date '+%Y-%m-%d %H:%M'; }                                                                                                          # my logs date format
 function fs0 { systemctl status $1 2>/dev/null|grep "${2:-inactive\|failed}"                                  ; }                                 # service status word test
