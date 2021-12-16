@@ -144,12 +144,12 @@ function bm2 {
   c[00]=$((c[20]+c[25]+c[30]+c[35]+c[40]+c[45]+c[50]))                                                                                            # tot cnt array (beacon log lines)
   a[00]=$(bi 00);a[20]=$(bi 20);a[25]=$(bi 25);a[30]=$(bi 30);a[35]=$(bi 35);a[40]=$(bi 40);a[45]=$(bi 45);a[50]=$(bi 50)                         # tot/avg penalty arrays
 }
-function bm3 { read -a o <<< $(tail -n1 $p7);bmk;bmz;bmx;bmw;bmc; }                                                                               # init arrays from barqivo log
-function bmk { local g=${1:-19};local n=${2:-20};k[$n]=${o[$g]};[[ $n -lt 50 ]] && bmk $((g-1)) $((n+5)); }                                       # missing           err array
-function bmz { local g=${1:-27};local n=${2:-20};z[$n]=${o[$g]};[[ $n -lt 50 ]] && bmz $((g-1)) $((n+5)); }                                       # failed target     err array
-function bmx { local g=${1:-35};local n=${2:-20};x[$n]=${o[$g]};[[ $n -lt 50 ]] && bmx $((g-1)) $((n+5)); }                                       # failed head       err array
-function bmw { local g=${1:-43};local n=${2:-20};w[$n]=${o[$g]};[[ $n -lt 50 ]] && bmw $((g-1)) $((n+5)); }                                       # sub-optimal delay err array
-function bmc { local g=${1:-11};local n=${2:-20};c[$n]=${o[$g]};[[ $n -lt 50 ]] && bmc $((g-1)) $((n+5)); }                                       #                   cnt array
+function bm3 { read -a o <<< $(tail -n1 $p7);bmk;bmz;bmx;bmw;bmc; }                                                                               # set arrays from barqivo log
+function bmk { local g=${1:-19};local n=${2:-20};k[$n]=${o[$g]};[[ $n -lt 50 ]] && bmk $((g-1)) $((n+5)); }                                       # set missing           err array
+function bmz { local g=${1:-27};local n=${2:-20};z[$n]=${o[$g]};[[ $n -lt 50 ]] && bmz $((g-1)) $((n+5)); }                                       # set failed target     err array
+function bmx { local g=${1:-35};local n=${2:-20};x[$n]=${o[$g]};[[ $n -lt 50 ]] && bmx $((g-1)) $((n+5)); }                                       # set failed head       err array
+function bmw { local g=${1:-43};local n=${2:-20};w[$n]=${o[$g]};[[ $n -lt 50 ]] && bmw $((g-1)) $((n+5)); }                                       # set sub-optimal delay err array
+function bmc { local g=${1:-11};local n=${2:-20};c[$n]=${o[$g]};[[ $n -lt 50 ]] && bmc $((g-1)) $((n+5)); }                                       # set                   cnt array
 function bo1 {                                                                                                                                    # homologous lines/position
   b2=0;[[ ! -f $p2 ]] && return                                                                                                                   # beacon log must exist
   local t=00:00;[[ $(fs2 $1) ]] && b2=$1;[[ $(fs2 $2) ]] && b2=$2;[[ $(fs3 $1) ]] && t=$1;[[ $(fs3 $2) ]] && t=$2                                 # homologous position/time forced
