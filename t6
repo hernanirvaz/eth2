@@ -124,17 +124,12 @@ function bno {
   s="$s mis: ${k[50]} ${k[45]} ${k[40]} ${k[35]} ${k[30]} ${k[25]} ${k[20]} mat: ${z[50]} ${z[45]} ${z[40]} ${z[35]} ${z[30]} ${z[25]} ${z[20]}"
   s="$s mah: ${x[50]} ${x[45]} ${x[40]} ${x[35]} ${x[30]} ${x[25]} ${x[20]} dly: ${w[50]} ${w[45]} ${w[40]} ${w[35]} ${w[30]} ${w[25]} ${w[20]}"
 }
-function bm0 {
-  unset o;o[ 1]=0                                                                                                                                 # init barqivo array line count
-  unset k;k[00]=0;k[50]=0;k[45]=0;k[40]=0;k[35]=0;k[30]=0;k[25]=0;k[20]=0;unset z;z[00]=0;z[50]=0;z[45]=0;z[40]=0;z[35]=0;z[30]=0;z[25]=0;z[20]=0 # missing/failed target err arrays
-  unset x;x[00]=0;x[50]=0;x[45]=0;x[40]=0;x[35]=0;x[30]=0;x[25]=0;x[20]=0;unset w;w[00]=0;w[50]=0;w[45]=0;w[40]=0;w[35]=0;w[30]=0;w[25]=0;w[20]=0 # failed head/sub-optimal delay err arrays
-  unset c;c[00]=0;c[50]=0;c[45]=0;c[40]=0;c[35]=0;c[30]=0;c[25]=0;c[20]=0;unset a;a[00]=0;a[50]=0;a[45]=0;a[40]=0;a[35]=0;a[30]=0;a[25]=0;a[20]=0 # cnt/avg penalty arrays
-}
+function bm0 { unset o;o[1]=0;unset k;k[0]=0;unset z;z[0]=0;unset x;x[0]=0;unset w;w[0]=0;unset c;c[0]=0;unset a;a[0]=0;bm4; }                    # ini err/cnt/avg penalty arrays
 function bm1 {
   local e=$1;local n=${2:-20};local l=$(echo "$e"|grep "node$n:"|sed -Ee 's%.+erros: +([0-9]+) +([0-9]+) +([0-9]+) +([0-9]+).+%\1\t\2\t\3\t\4%')  # obtain err data for current array
   if [[ $l ]];then
-    ((k[n]+=$(echo "$l"|cut -f1|paste -sd+|bc)));((z[n]+=$(echo "$l"|cut -f2|paste -sd+|bc)))                                                     # cumulative missing/failed target err arrays
-    ((x[n]+=$(echo "$l"|cut -f3|paste -sd+|bc)));((w[n]+=$(echo "$l"|cut -f4|paste -sd+|bc)));((c[n]+=$(echo "$l"|wc -l)))                        # cumulative failed head/sub-optimal delay/cnt err arrays
+    ((k[n]+=$(echo "$l"|cut -f1|paste -sd+|bc)));((z[n]+=$(echo "$l"|cut -f2|paste -sd+|bc)))                                                     # sum missing/failed target err arrays
+    ((x[n]+=$(echo "$l"|cut -f3|paste -sd+|bc)));((w[n]+=$(echo "$l"|cut -f4|paste -sd+|bc)));((c[n]+=$(echo "$l"|wc -l)))                        # sum failed head/sub-optimal delay/cnt err arrays
   fi
   [[ $n -lt 50 ]] && bm1 "$e" $((n+5))                                                                                                            # recursively sum paid err arrays
 }
@@ -145,11 +140,12 @@ function bm2 {
   a[00]=$(bi 00);a[20]=$(bi 20);a[25]=$(bi 25);a[30]=$(bi 30);a[35]=$(bi 35);a[40]=$(bi 40);a[45]=$(bi 45);a[50]=$(bi 50)                         # tot/avg penalty arrays
 }
 function bm3 { read -a o <<< $(tail -n1 $p7);bmk;bmz;bmx;bmw;bmc; }                                                                               # set arrays from barqivo log
-function bmk { local g=${1:-19};local n=${2:-20};k[$n]=${o[$g]};[[ $n -lt 50 ]] && bmk $((g-1)) $((n+5)); }                                       # set missing           err array
-function bmz { local g=${1:-27};local n=${2:-20};z[$n]=${o[$g]};[[ $n -lt 50 ]] && bmz $((g-1)) $((n+5)); }                                       # set failed target     err array
-function bmx { local g=${1:-35};local n=${2:-20};x[$n]=${o[$g]};[[ $n -lt 50 ]] && bmx $((g-1)) $((n+5)); }                                       # set failed head       err array
-function bmw { local g=${1:-43};local n=${2:-20};w[$n]=${o[$g]};[[ $n -lt 50 ]] && bmw $((g-1)) $((n+5)); }                                       # set sub-optimal delay err array
-function bmc { local g=${1:-11};local n=${2:-20};c[$n]=${o[$g]};[[ $n -lt 50 ]] && bmc $((g-1)) $((n+5)); }                                       # set                   cnt array
+function bm4 { local n=${1:-20};k[$n]=0;z[$n]=0;x[$n]=0;w[$n]=0;c[$n]=0;a[$n]=0;[[ $n -lt 50 ]] && bm4 $((n+5)); }                                # recursively ini penalty arrays
+function bmk { local g=${1:-19};local n=${2:-20};k[$n]=${o[$g]};[[ $n -lt 50 ]] && bmk $((g-1)) $((n+5)); }                                       # recursively set missing           err array
+function bmz { local g=${1:-27};local n=${2:-20};z[$n]=${o[$g]};[[ $n -lt 50 ]] && bmz $((g-1)) $((n+5)); }                                       # recursively set failed target     err array
+function bmx { local g=${1:-35};local n=${2:-20};x[$n]=${o[$g]};[[ $n -lt 50 ]] && bmx $((g-1)) $((n+5)); }                                       # recursively set failed head       err array
+function bmw { local g=${1:-43};local n=${2:-20};w[$n]=${o[$g]};[[ $n -lt 50 ]] && bmw $((g-1)) $((n+5)); }                                       # recursively set sub-optimal delay err array
+function bmc { local g=${1:-11};local n=${2:-20};c[$n]=${o[$g]};[[ $n -lt 50 ]] && bmc $((g-1)) $((n+5)); }                                       # recursively set                   cnt array
 function bo1 {                                                                                                                                    # homologous lines/position
   b2=0;[[ ! -f $p2 ]] && return                                                                                                                   # beacon log must exist
   local t=00:00;[[ $(fs2 $1) ]] && b2=$1;[[ $(fs2 $2) ]] && b2=$2;[[ $(fs3 $1) ]] && t=$1;[[ $(fs3 $2) ]] && t=$2                                 # homologous position/time forced
