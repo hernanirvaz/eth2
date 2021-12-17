@@ -91,7 +91,7 @@ function bm {
   [[ -f $p7         ]] && bm3                                                                                                                     # init arrays from barqivo log
   [[ -f $p2         ]] && bm1 "$(tail -n$(($(bk)-o[1])) $p2|grep BEAC)";bm2                                                                       # sum paid err arrays from remaining beacon log
   [[ ${b2:-0} -eq 0 ]] && bo1;b3=$(nu4 "$(sed -Ee 's%BEAC +[0-9]+ +([0-9]+).+%\1%' $p3 2>/dev/null;echo $b2)")                                    # cur/avg homologous position
-  b4=0;bmn ${a[$nn]} 20;[[ $b2 -le $b3 || $(bs $hors) -gt 1 ]] && b4=0;bmo;bno                                                                       # change configured peers & medias/arqivo outputs
+  b4=0;bmn ${a[$nn]} 20;[[ $b2 -le $b3 || $(bs $hors) -gt 1 ]] && b4=0;bmo;bno                                                                    # change configured peers & medias/arqivo outputs
 }
 function bh {
   tail -n${1:-$hors} $p2                                                                                                                          # beacon log report ($hors last lines)
