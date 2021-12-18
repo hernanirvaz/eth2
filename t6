@@ -87,16 +87,16 @@ function bl {                                                                   
   fi
 }
 function bm {
-  bm0;dt=$(dts);nn=$(bv);nr=$(bq)
-  [[ -f $p7         ]] && bm3                                                                                                                     # init arrays from barqivo log
-  [[ -f $p2         ]] && bm1 "$(tail -n$(($(bk)-o[1])) $p2|grep BEAC)";bm2                                                                       # sum paid err arrays from remaining beacon log
+  bm0;dt=$(dts);nn=$(bv);nr=$(bq)                                                                                                                 # ini vars
+  [[ -f $p7         ]] && bm3                                                                                                                     # set arrays from barqivo log
+  [[ -f $p2         ]] && bm1 "$(tail -n$(($(bk)-o[1])) $p2|grep BEAC)" 20;bm2                                                                    # sum paid err arrays from remaining beacon log
   [[ ${b2:-0} -eq 0 ]] && bo1;b3=$(nu4 "$(sed -Ee 's%BEAC +[0-9]+ +([0-9]+).+%\1%' $p3 2>/dev/null;echo $b2)")                                    # cur/avg homologous position
   b4=0;bmn ${a[$nn]} 20;[[ $b2 -le $b3 || $(bs $hors) -gt 1 ]] && b4=0;bmo;bno                                                                    # change configured peers & medias/arqivo outputs
 }
 function bh {
   tail -n${1:-$hors} $p2                                                                                                                          # beacon log report ($hors last lines)
   [[ $1 ]] || { bo1;echo -e "BO$(printf '%5i' $(echo "$b1"|wc -l)) $(printf '%3i' $b2)";bo2; }                                                    # homologous report
-  [[ $1 ]] || { bl ;echo -e "BL$(printf '%9i' $(cat $p2 2>/dev/null|wc -l))\nBEAC$m"; }                                                           # beacon log report
+  [[ $1 ]] || { bl ;echo -e "BL$(printf '%9i' $(cat $p2 2>/dev/null|wc -l))\nBEAC$m"; }                                                           # beacon log current
   [[ $1 ]] || { bm ;echo -e "BM$(printf '%5i' $(cat $p3 2>/dev/null|wc -l))\nBEAC$m"; }                                                           # medias report
   [[ $1 ]] || { sst BEAC $ethb;sst VALI $ethv; }                                                                                                  # beacon/validator services status
 }
@@ -123,7 +123,7 @@ function bno {
 }
 function bm0 { unset o;o[1]=0;unset k;k[0]=0;unset z;z[0]=0;unset x;x[0]=0;unset w;w[0]=0;unset c;c[0]=0;unset a;a[0]=0;bm4; }                    # ini err/cnt/avg penalty arrays
 function bm1 {
-  local e=$1;local n=${2:-20};local l=$(echo "$e"|grep "node$n:"|sed -Ee 's%.+erros: +([0-9]+) +([0-9]+) +([0-9]+) +([0-9]+).+%\1\t\2\t\3\t\4%')  # obtain err data for current array
+  local e=$1;local n=$2;local l=$(echo "$e"|grep "node$n:"|sed -Ee 's%.+erros: +([0-9]+) +([0-9]+) +([0-9]+) +([0-9]+).+%\1\t\2\t\3\t\4%')        # obtain err data for current array
   if [[ $l ]];then
     ((k[n]+=$(echo "$l"|cut -f1|paste -sd+|bc)));((z[n]+=$(echo "$l"|cut -f2|paste -sd+|bc)))                                                     # sum missing/failed target err arrays
     ((x[n]+=$(echo "$l"|cut -f3|paste -sd+|bc)));((w[n]+=$(echo "$l"|cut -f4|paste -sd+|bc)));((c[n]+=$(echo "$l"|wc -l)))                        # sum failed head/sub-optimal delay/cnt err arrays
@@ -195,7 +195,7 @@ function brl {                                                                  
     while read -a o;do
       d=${o[3]};h=$g;g=$(grep -n "$d $e" ${p2}new|cut -d: -f1);dt=${o[3]}\ ${o[4]};nn=$(bx ${o[5]});nr=${o[6]}                                    # beacon log position & uncalculated vars
       b2=$(head -n$g ${p2}new|grep "BEAC.*$e"|bt $d);((l+=b2));((n+=1));b3=$(nu2 $l/$n 5 1)                                                       # cur/avg homologous position
-      bm1 "$(head -n$g ${p2}new|tail -n$((g-h))|grep BEAC)";bm2                                                                                   # sum paid err arrays from interim beacon log
+      bm1 "$(head -n$g ${p2}new|tail -n$((g-h))|grep BEAC)" 20;bm2                                                                                # sum paid err arrays from interim beacon log
       b4=${o[18]};bmo;echo "${o[0]}$m" >> ${p3}new                                                                                                # new bmedias log output
     done <<< $(cat $p3)
   fi
