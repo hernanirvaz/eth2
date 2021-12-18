@@ -59,14 +59,14 @@ function bz { echo $((10*(9*zk+3*zz+zx+zw))); }                                 
 function bw { echo $((10*z1)); }                                                                                                                  # numerator processed blocks
 function br { echo $((90*z3)); }                                                                                                                  # numerator general errors
 function bu { echo $(($(nu5 200 $(bz) $z5)+$(nu5 100 $(bw) $z2)+$(nu5 100 $(br) $z4))); }                                                         # get restart idx
-function kb { echo ${v[15]}; }                                                                                                                    # get missing           paid err (beacon log)
-function zb { echo ${v[16]}; }                                                                                                                    # get failed target     paid err (beacon log)
-function xb { echo ${v[17]}; }                                                                                                                    # get failed head       paid err (beacon log)
-function wb { echo ${v[18]}; }                                                                                                                    # get sub-optimal delay paid err (beacon log)
-function bs { tail -n$1 $p2 2>/dev/null|cut -d' ' -f1|sort -u|wc -l; }                                                                            # get restart activity test      (beacon log)
-function bk { cat       $p2 2>/dev/null                      |wc -l; }                                                                            # get line count                 (beacon log)
-function bf { sort -k10.1n; }                                                                                                                     # srt by penalty                 (beacon log)
-function bt { bf|grep -n $1|cut -d: -f1; }                                                                                                        # get ordered position           (beacon log)
+function kb { echo ${v[15]}; }                                                                                                                    # get missing           paid err
+function zb { echo ${v[16]}; }                                                                                                                    # get failed target     paid err
+function xb { echo ${v[17]}; }                                                                                                                    # get failed head       paid err
+function wb { echo ${v[18]}; }                                                                                                                    # get sub-optimal delay paid err
+function bs { tail -n$1 $p2 2>/dev/null|cut -d' ' -f1|sort -u|wc -l; }                                                                            # get restart activity test
+function bk { cat       $p2 2>/dev/null                      |wc -l; }                                                                            # get line count
+function bf { sort -k10.1n; }                                                                                                                     # srt by penalty
+function bt { bf|grep -n $1|cut -d: -f1; }                                                                                                        # get ordered position
 function bb {
   local e=$(echo $H|sudo -S grep "lighthouse.$bpid" $p4 2>/dev/null|tail -n3600)                                                                  # most recent beacon messages
   z1=$(echo "$e"|grep 'rocessed block'|wc -l);z2=$(echo "$e"|grep 'block received'|wc -l)                                                         # processed blocks           (restart idx)
