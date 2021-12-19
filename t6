@@ -102,26 +102,26 @@ function bh {
 }
 function bmn { local g=$1;local n=$2;if [[ $(nu2 ${a[$n]}) -lt $(nu2 $g) ]];then b4=$((n-nn));g=${a[$n]};fi;[[ $n -lt 50 ]] && bmn $g $((n+5)); } # recursively compare avg with cur penalties
 function blo {
-  #    0  1   2          3              4       5  6               7   8    9                 10   11  12 13    14 15 16  17 18     19  20  21   22   23   24         25   26
-  # BEAC OK   0 2021-11-22 17:15:58+00:00 node20: 32 reward_penalty: 224 3.54 attestation_block: 2950 2280 0 erros: 2 14 131 29      0 537   0   14 3586 1260     delay: 1000
+  #    0  1   2          3     4       5  6               7   8    9                 10   11  12 13    14 15 16  17 18     19  20  21   22   23   24         25   26
+  # BEAC OK   0 2021-11-22 17:15 node20: 32 reward_penalty: 224 3.54 attestation_block: 2950 2280 0 erros: 2 14 131 29      0 537   0   14 3586 1260     delay: 1000
   m=" $ok $(printf '%3i' $(bu)) $(dnn $dt $nn $nr) reward_penalty: $(nu2 "($z5*$ratt+$b0*$rblk)*$rate/$decp" 0 1 %3i) $(printf '%4.2f' $(nu3 $zk $zz $zx $zw 1))"
   m="$m attestation_block: $(printf '%4i' $z5) $(printf '%4i' $(bz)) $(printf '%1i' $b0) erros: $(printf '%1i' $zk) $(printf '%2i' $zz) $(printf '%3i' $zx)"
   m="$m $(printf '%2i' $zw) $(printf '%6i' $z1) $(printf '%3i' $z2) $(printf '%3i' $(bw)) $(printf '%4i' $z3) $(printf '%4i' $z4) $(printf '%4i' $(br))     delay: $(printf '%4i' $b5)"
 }
 function bmo {
-  #    0  1   2          3        4       5  6    7    8    9   10   11   12   13   14          15   16          17 18
-  # BEAC  6   2 2021-12-06 09:54:17 node40: 43 avg: 2.63 2.89 1.49 2.24 2.65 1.95 1.97 global_avg: 2.06 peer_change: 0
+  #    0  1   2          3     4       5  6    7    8    9   10   11   12   13   14          15   16          17 18
+  # BEAC  6   2 2021-12-06 09:54 node40: 43 avg: 2.63 2.89 1.49 2.24 2.65 1.95 1.97 global_avg: 2.06 peer_change: 0
   m=" $(printf '%2i' $b3) $(printf '%3i' $b2) $(dnn $dt $nn $nr) avg: $(printf '%4.2f' ${a[50]}) $(printf '%4.2f' ${a[45]}) $(printf '%4.2f' ${a[40]})"
   m="$m $(printf '%4.2f' ${a[35]}) $(printf '%4.2f' ${a[30]}) $(printf '%4.2f' ${a[25]}) $(printf '%4.2f' ${a[20]}) global_avg: $(printf '%4.2f' ${a[00]}) peer_change: $b4"
 }
 function bno {
-  #    0   1          2        3    4 5 6 7 8 9 10 11   12 13 14 15 16 17 18 19   20 21 22 23 24 25 26 27   28 29 30 31 32 33 34 35   36 37 38 39 40 41 42 43
-  # BEAC 620 2021-12-09 09:17:59 cnt: 0 0 0 0 0 11 11 mis: 22 22 22 22 22 22 22 mat: 33 33 33 33 33 33 33 mah: 44 44 44 44 44 44 44 dly: 55 55 55 55 55 55 55
+  #    0   1          2     3    4 5 6 7 8 9 10 11   12 13 14 15 16 17 18 19   20 21 22 23 24 25 26 27   28 29 30 31 32 33 34 35   36 37 38 39 40 41 42 43
+  # BEAC 620 2021-12-09 09:17 cnt: 0 0 0 0 0 11 11 mis: 22 22 22 22 22 22 22 mat: 33 33 33 33 33 33 33 mah: 44 44 44 44 44 44 44 dly: 55 55 55 55 55 55 55
   s=" $(bk) $dt cnt: ${c[50]} ${c[45]} ${c[40]} ${c[35]} ${c[30]} ${c[25]} ${c[20]}"
   s="$s mis: ${k[50]} ${k[45]} ${k[40]} ${k[35]} ${k[30]} ${k[25]} ${k[20]} mat: ${z[50]} ${z[45]} ${z[40]} ${z[35]} ${z[30]} ${z[25]} ${z[20]}"
   s="$s mah: ${x[50]} ${x[45]} ${x[40]} ${x[35]} ${x[30]} ${x[25]} ${x[20]} dly: ${w[50]} ${w[45]} ${w[40]} ${w[35]} ${w[30]} ${w[25]} ${w[20]}"
 }
-function bm0 { unset o;o[1]=0;unset k;k[0]=0;unset z;z[0]=0;unset x;x[0]=0;unset w;w[0]=0;unset c;c[0]=0;unset a;a[0]=0;bm4; }                    # ini err/cnt/avg penalty arrays
+function bm0 { unset o;o[1]=0;unset k;k[0]=0;unset z;z[0]=0;unset x;x[0]=0;unset w;w[0]=0;unset c;c[0]=0;unset a;a[0]=0;bm4 20; }                 # ini err/cnt/avg penalty arrays
 function bm1 {
   local e=$1;local n=$2;local l=$(echo "$e"|grep "node$n:"|sed -Ee 's%.+erros: +([0-9]+) +([0-9]+) +([0-9]+) +([0-9]+).+%\1\t\2\t\3\t\4%')        # obtain err data for current array
   if [[ $l ]];then
@@ -131,27 +131,25 @@ function bm1 {
   [[ $n -lt 50 ]] && bm1 "$e" $((n+5))                                                                                                            # recursively sum paid err arrays
 }
 function bm2 {
-  k[00]=$((k[20]+k[25]+k[30]+k[35]+k[40]+k[45]+k[50]));z[00]=$((z[20]+z[25]+z[30]+z[35]+z[40]+z[45]+z[50]))                                       # tot missing/failed target err arrays
-  x[00]=$((x[20]+x[25]+x[30]+x[35]+x[40]+x[45]+x[50]));w[00]=$((w[20]+w[25]+w[30]+w[35]+w[40]+w[45]+w[50]))                                       # tot failed head/sub-optimal delay err arrays
-  c[00]=$((c[20]+c[25]+c[30]+c[35]+c[40]+c[45]+c[50]))                                                                                            # tot cnt array (beacon log lines)
-  a[00]=$(bi 00);a[20]=$(bi 20);a[25]=$(bi 25);a[30]=$(bi 30);a[35]=$(bi 35);a[40]=$(bi 40);a[45]=$(bi 45);a[50]=$(bi 50)                         # tot/avg penalty arrays
+  k[0]=$((k[20]+k[25]+k[30]+k[35]+k[40]+k[45]+k[50]));z[0]=$((z[20]+z[25]+z[30]+z[35]+z[40]+z[45]+z[50]))                                         # tot missing/failed target err arrays
+  x[0]=$((x[20]+x[25]+x[30]+x[35]+x[40]+x[45]+x[50]));w[0]=$((w[20]+w[25]+w[30]+w[35]+w[40]+w[45]+w[50]))                                         # tot failed head/sub-optimal delay err arrays
+  c[0]=$((c[20]+c[25]+c[30]+c[35]+c[40]+c[45]+c[50]))                                                                                             # tot cnt array (beacon log lines)
+  a[0]=$(bi 0);a[20]=$(bi 20);a[25]=$(bi 25);a[30]=$(bi 30);a[35]=$(bi 35);a[40]=$(bi 40);a[45]=$(bi 45);a[50]=$(bi 50)                           # tot/avg penalty arrays
 }
-function bm3 { read -a o <<< $(tail -n1 $p7);bmk;bmz;bmx;bmw;bmc; }                                                                               # set arrays from barqivo log
-function bm4 { local n=${1:-20};k[$n]=0;z[$n]=0;x[$n]=0;w[$n]=0;c[$n]=0;a[$n]=0;[[ $n -lt 50 ]] && bm4 $((n+5)); }                                # recursively ini penalty arrays
-function bmk { local g=${1:-19};local n=${2:-20};k[$n]=${o[$g]};[[ $n -lt 50 ]] && bmk $((g-1)) $((n+5)); }                                       # recursively set missing           err array
-function bmz { local g=${1:-27};local n=${2:-20};z[$n]=${o[$g]};[[ $n -lt 50 ]] && bmz $((g-1)) $((n+5)); }                                       # recursively set failed target     err array
-function bmx { local g=${1:-35};local n=${2:-20};x[$n]=${o[$g]};[[ $n -lt 50 ]] && bmx $((g-1)) $((n+5)); }                                       # recursively set failed head       err array
-function bmw { local g=${1:-43};local n=${2:-20};w[$n]=${o[$g]};[[ $n -lt 50 ]] && bmw $((g-1)) $((n+5)); }                                       # recursively set sub-optimal delay err array
-function bmc { local g=${1:-11};local n=${2:-20};c[$n]=${o[$g]};[[ $n -lt 50 ]] && bmc $((g-1)) $((n+5)); }                                       # recursively set                   cnt array
+function bm3 { read -a o <<< $(tail -n1 $p7);bmk 20;bmz 20;bmx 20;bmw 20;bmc 20; }                                                                # set arrays from barqivo log
+function bm4 { k[$1]=0;z[$1]=0;x[$1]=0;w[$1]=0;c[$1]=0;a[$1]=0;[[ $1 -lt 50 ]] && bm4 $(($1+5)); }                                                # recursively ini penalty arrays
+function bmk { local g=${2:-19};k[$1]=${o[$g]}                ;[[ $1 -lt 50 ]] && bmk $(($1+5)) $((g-1)); }                                       # recursively set missing           err array
+function bmz { local g=${2:-27};z[$1]=${o[$g]}                ;[[ $1 -lt 50 ]] && bmz $(($1+5)) $((g-1)); }                                       # recursively set failed target     err array
+function bmx { local g=${2:-35};x[$1]=${o[$g]}                ;[[ $1 -lt 50 ]] && bmx $(($1+5)) $((g-1)); }                                       # recursively set failed head       err array
+function bmw { local g=${2:-43};w[$1]=${o[$g]}                ;[[ $1 -lt 50 ]] && bmw $(($1+5)) $((g-1)); }                                       # recursively set sub-optimal delay err array
+function bmc { local g=${2:-11};c[$1]=${o[$g]}                ;[[ $1 -lt 50 ]] && bmc $(($1+5)) $((g-1)); }                                       # recursively set                   cnt array
 function bo1 {                                                                                                                                    # homologous lines/position
   b2=0;[[ ! -f $p2 ]] && return                                                                                                                   # beacon log must exist
   local t=00:00;[[ $(fs2 $1) ]] && b2=$1;[[ $(fs2 $2) ]] && b2=$2;[[ $(fs3 $1) ]] && t=$1;[[ $(fs3 $2) ]] && t=$2                                 # homologous position/time forced
   local l=$(grep BEAC $p2|tail -n1|sed 's%.* \([0-9]*-[0-9]*-[0-9]*\) \([0-9]*:[0-9]*\).*%\1\t\2%')                                               # last yyyy-mm-dd hh:mm beacon log
   local d=$(echo "$l"|cut -f1);[[ $t = 00:00 ]] && t=$(echo "$l"|cut -f2)
   b1=$(grep "BEAC.*$t" $p2);[[ $b2 -eq 0 ]] && b2=$(echo "$b1"|bt $d)                                                                             # homologous lines/position
-  local n=0;while [[ ${b2:-0} -eq 0 && $n -lt 50 ]];do                                                                                            # search past for homologous info (max 50 days)
-    ((n+=1));d=$(date -d "$n days ago $t" '+%Y-%m-%d');b2=$(echo "$b1"|bt $d)                                                                     # obtain n day ago date & homologous position
-  done
+  local n=0;while [[ ${b2:-0} -eq 0 && $n -lt 50 ]];do ((n+=1));d=$(date -d "$n days ago $t" '+%Y-%m-%d');b2=$(echo "$b1"|bt $d);done             # search past homologous info (max 50 days)
 }
 function bo2 {                                                                                                                                    # homologous report
   [[ ! -f $p2 ]] && return                                                                                                                        # beacon log must exist
@@ -292,17 +290,16 @@ function fe  { fop;cex 'ufw reload';cex "systemctl enable $ethf"; }
 function ga  { [[ $(fs0 $ethg) ]] && [[ -d /var/lib/goethereum   ]] && { cex "systemctl start $ethg"; } }
 function ba  { [[ $(fs0 $ethb) ]] && { cex "systemctl start $ethb"; } }
 function va  {
-  if [[ $(fs0 $ethv) ]];then
-    if [[ -f $dtdi/vc_lock ]];then
-      if [[ -f $p0/slashing_protection.sqlite ]];then
-        echo $H|sudo -S cp $p0/slashing_protection.sqlite $vldt 2>/dev/null
-        sudo chown eth3:eth3 $vldt/slashing_protection.sqlite
-        sudo chmod 600 $vldt/slashing_protection.sqlite
-      fi
-    else
-      cex "systemctl start $ethv"
-      rm $dtdi/vc_slash
+  [[ $(fs0 $ethv) ]] || return                                                                                                                    # continue if inactive\|failed
+  if [[ -f $dtdi/vc_lock ]];then
+    if [[ -f $p0/slashing_protection.sqlite ]];then                                                                                               # slashing_protection
+      echo $H|sudo -S cp $p0/slashing_protection.sqlite $vldt 2>/dev/null
+      sudo chown eth3:eth3 $vldt/slashing_protection.sqlite
+      sudo chmod 600 $vldt/slashing_protection.sqlite
     fi
+  else
+    cex "systemctl start $ethv"
+    rm $dtdi/vc_slash
   fi
 }
 function pa { [[ $(fs0 $ethp) ]] && { cex "systemctl start $ethp"; } }
