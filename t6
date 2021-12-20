@@ -343,7 +343,7 @@ function fd { [[ $(fs0 $ethf loaded) ]] && { cex "systemctl disable $ethf";fcl;c
 [[ $1 = cpe ]] && { csh;psh;esh; }
 [[ $1 = glr ]] && { gb;[[ $ok != OK ]] && grs 0; }
 [[ $1 = blr ]] && { bb;[[ $ok != OK ]] && brs 0; }
-[[ $1 = bmc ]] && { bm;[[ $b4 -ne 0 ]] && brs $b4 PE ; }
+[[ $1 = bmc ]] && { bm;[[ $b4 -ne 0 ]] && brs $b4 PE; }
 [[ $1 = grs ]] && { grs ${2:-0}   ; }
 [[ $1 = srs ]] && { brs ${2:-0} RB; }
 [[ $1 = brs ]] && { brs ${2:-0} BN; }
