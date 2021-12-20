@@ -59,24 +59,17 @@ function bz { echo $((10*(9*zk+3*zz+zx+zw))); }                                 
 function bw { echo $((10*z1)); }                                                                                                                  # numerator processed blocks
 function br { echo $((90*z3)); }                                                                                                                  # numerator general errors
 function bu { echo $(($(nu5 200 $(bz) $z5)+$(nu5 100 $(bw) $z2)+$(nu5 100 $(br) $z4))); }                                                         # get restart idx
-function kb { echo ${v[15]}; }                                                                                                                    # get missing           paid err
-function zb { echo ${v[16]}; }                                                                                                                    # get failed target     paid err
-function xb { echo ${v[17]}; }                                                                                                                    # get failed head       paid err
-function wb { echo ${v[18]}; }                                                                                                                    # get sub-optimal delay paid err
 function bs { tail -n$1 $p2 2>/dev/null|cut -d' ' -f1|sort -u|wc -l; }                                                                            # get restart activity test
 function bk { cat       $p2 2>/dev/null                      |wc -l; }                                                                            # get line count
 function bf { sort -k10.1n; }                                                                                                                     # srt by penalty
 function bt { bf|grep -n $1|cut -d: -f1; }                                                                                                        # get ordered position
+function by { echo $H|sudo -S grep "attestation(s)$1" $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w; }                            # get paid activities
+function bn { z5=${1:-$(by ' success')};zk=${2:-$(by ' missing')};zz=${3:-$(by '.*target')};zx=${4:-$(by '.*head')};zw=${5:-$(by ' had')}; }      # set paid activities
 function bb {
   local e=$(echo $H|sudo -S grep "lighthouse.$bpid" $p4 2>/dev/null|tail -n3600)                                                                  # most recent beacon messages
-  z1=$(echo "$e"|grep 'rocessed block'|wc -l);z2=$(echo "$e"|grep 'block received'|wc -l)                                                         # processed blocks           (restart idx)
-  z3=$(echo "$e"|grep -v ' INFO '     |wc -l);z4=$(echo "$e"|grep ' INFO '        |wc -l)                                                         # general errors             (restart idx)
-  z5=$(echo $H|sudo -S grep 'attestation(s) success' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w)                               # denominator       paid     (restart idx)
-  zk=$(echo $H|sudo -S grep 'attestation(s) missing' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w)                               # missing           paid err (restart idx)
-  zz=$(echo $H|sudo -S grep 'attestation(s).*target' $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w)                               # failed target     paid err (restart idx)
-  zx=$(echo $H|sudo -S grep 'attestation(s).*head'   $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w)                               # failed head       paid err (restart idx)
-  zw=$(echo $H|sudo -S grep 'attestation(s) had'     $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w)                               # sub-optimal delay paid err (restart idx)
-  ok=OK;local g=$(bu);[[ ($g -ge 1 && $(bs $hors) -eq 1) || ($g -ge $l2rs && $(bs $l2rs) -eq 1) ]] && ok=BK                                       # OK/BK
+  z1=$(echo "$e"|grep 'rocessed block'|wc -l);z2=$(echo "$e"|grep 'block received'|wc -l)                                                         # processed blocks (restart idx)
+  z3=$(echo "$e"|grep -v ' INFO '     |wc -l);z4=$(echo "$e"|grep ' INFO '        |wc -l)                                                         # general errors   (restart idx)
+  bn;ok=OK;local g=$(bu);[[ ($g -ge 1 && $(bs $hors) -eq 1) || ($g -ge $l2rs && $(bs $l2rs) -eq 1) ]] && ok=BK                                    # paid activities  (restart idx) & OK/BK
 }
 function bl {                                                                                                                                     # beacon log report
   b5=$(nu4 "$(echo $H|sudo -S grep 'delay_ms: [0-9]' $p4 2>/dev/null|sed 's%.*delay_ms: *\([0-9]*\).*%\1%')")                                     # avg delays in beacon activities
@@ -183,7 +176,7 @@ function brl {                                                                  
   [[ -f ${p2}new ]] && rm ${p2}new;[[ -f ${p3}new ]] && rm ${p3}new
   unset v;while read -a v;do ok=${v[1]};dt=${v[3]}\ ${v[4]};nn=$(bx);nr=${v[6]}                                                                   # uncalculated vars
     if [[ ${v[0]} = BEAC ]];then
-      b5=${v[26]};b0=${v[13]};z1=${v[19]};z2=${v[20]};z3=${v[22]};z4=${v[23]};z5=${v[11]};zk=$(kb);zz=$(zb);zx=$(xb);zw=$(wb);blo                 # calculated output
+      b5=${v[26]};b0=${v[13]};z1=${v[19]};z2=${v[20]};z3=${v[22]};z4=${v[23]};bn ${v[11]} ${v[15]} ${v[16]} ${v[17]} ${v[18]};blo                 # calculated output
     else
       m=" $ok $(printf '%3i' ${v[2]}) $(dnn $dt $nn $nr)"                                                                                         # other lines
     fi;echo "${v[0]}$m" >> ${p2}new                                                                                                               # new beacon log output
