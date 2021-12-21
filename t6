@@ -86,6 +86,7 @@ function bm {
   [[ -f $p7         ]] && bm3;b6=$(tail -n$(($(bk)-o[1])) $p2 2>/dev/null|grep BEAC);[[ $b6 ]] && bm1 20;bm2                                      # set arrays from barqivo log & remaining beacon log
   [[ ${b2:-0} -eq 0 ]] && bo1;b3=$(nu6 "$(sed -Ee 's%BEAC +[0-9]+ +([0-9]+).+%\1%' $p3 2>/dev/null;echo $b2)")                                    # cur/avg homologous position
   b4=0;bmn ${a[$nn]} 20;[[ $b2 -le $b3 || $(bs $hors) -gt 1 ]] && b4=0;bmo;bno                                                                    # change configured peers & outputs
+  # WARN Timed out to a peer's request. Likely insufficient resources, reduce peer count, service: libp2p
 }
 function bh {
   tail -n${1:-$hors} $p2                                                                                                                          # beacon log report ($hors last lines)
