@@ -83,8 +83,7 @@ function bl {                                                                   
 }
 function bm {
   bm0;dt=$(dts);nn=$(bv);nr=$(bq)                                                                                                                 # ini vars
-  [[ -f $p7         ]] && bm3                                                                                                                     # set arrays from barqivo log
-  [[ -f $p2         ]] && bm1 "$(tail -n$(($(bk)-o[1])) $p2|grep BEAC)" 20;bm2                                                                    # sum paid err arrays from remaining beacon log
+  [[ -f $p7         ]] && bm3;b6=$(tail -n$(($(bk)-o[1])) $p2 2>/dev/null|grep BEAC);[[ $b6 ]] && bm1 20;bm2                                      # set arrays from barqivo log & remaining beacon log
   [[ ${b2:-0} -eq 0 ]] && bo1;b3=$(nu6 "$(sed -Ee 's%BEAC +[0-9]+ +([0-9]+).+%\1%' $p3 2>/dev/null;echo $b2)")                                    # cur/avg homologous position
   b4=0;bmn ${a[$nn]} 20;[[ $b2 -le $b3 || $(bs $hors) -gt 1 ]] && b4=0;bmo;bno                                                                    # change configured peers & outputs
 }
@@ -116,12 +115,12 @@ function bno {
 }
 function bm0 { unset o;o[1]=0;unset k;k[0]=0;unset z;z[0]=0;unset x;x[0]=0;unset w;w[0]=0;unset c;c[0]=0;unset a;a[0]=0;bm4 20; }                 # ini err/cnt/avg penalty arrays
 function bm1 {
-  local l=$(echo "$1"|grep "node$2:"|sed -Ee 's%.+erros: +([0-9]+) +([0-9]+) +([0-9]+) +([0-9]+).+%\1\t\2\t\3\t\4%')                              # obtain err data for current array
+  local l=$(echo "$b6"|grep "node$1:"|sed -Ee 's%.+erros: +([0-9]+) +([0-9]+) +([0-9]+) +([0-9]+).+%\1\t\2\t\3\t\4%')                             # obtain err data for current array
   if [[ $l ]];then
-    ((k[$2]+=$(echo "$l"|nu7 1)));((z[$2]+=$(echo "$l"|nu7 2)));((x[$2]+=$(echo "$l"|nu7 3)));((w[$2]+=$(echo "$l"|nu7 4)))                       # sum current paid err arrays
-    ((c[$2]+=$(echo "$l"|wc -l)))                                                                                                                 # sum current cnt  err arrays
+    ((k[$1]+=$(echo "$l"|nu7 1)));((z[$1]+=$(echo "$l"|nu7 2)));((x[$1]+=$(echo "$l"|nu7 3)));((w[$1]+=$(echo "$l"|nu7 4)))                       # sum current paid err arrays
+    ((c[$1]+=$(echo "$l"|wc -l)))                                                                                                                 # sum current cnt  err arrays
   fi
-  [[ $2 -lt 50 ]] && bm1 "$1" $(($2+5))                                                                                                           # recursively sum paid err arrays
+  [[ $1 -lt 50 ]] && bm1 $(($1+5))                                                                                                                # recursively sum paid err arrays
 }
 function bm2 {
   k[0]=$(($(bnk 50 '0' '+')));z[0]=$(($(bnz 50 '0' '+')));x[0]=$(($(bnx 50 '0' '+')));w[0]=$(($(bnw 50 '0' '+')));c[0]=$(($(bnc 50 '0' '+')))     # tot err/cnt arrays
@@ -189,7 +188,7 @@ function brl {                                                                  
     while read -a o;do
       d=${o[3]};h=$g;g=$(grep -n "$d $e" ${p2}new|cut -d: -f1);dt=${o[3]}\ ${o[4]};nn=$(bx ${o[5]});nr=${o[6]}                                    # beacon log position & uncalculated vars
       b2=$(head -n$g ${p2}new|grep "BEAC.*$e"|bt $d);((l+=b2));((n+=1));b3=$(nu3 $l/$n 5 1)                                                       # cur/avg homologous position
-      bm1 "$(head -n$g ${p2}new|tail -n$((g-h))|grep BEAC)" 20;bm2                                                                                # sum paid err arrays from interim beacon log
+      b6=$(head -n$g ${p2}new|tail -n$((g-h))|grep BEAC);bm1 20;bm2                                                                               # sum paid err arrays from interim beacon log
       b4=${o[18]};bmo;echo "${o[0]}$m" >> ${p3}new                                                                                                # new bmedias log output
     done <<< $(cat $p3)
   fi
