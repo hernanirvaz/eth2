@@ -74,7 +74,7 @@ function bb {
   bn;ok=OK;local g=$(bu);[[ ($g -ge 1 && $(bs $hors) -eq 1) || ($g -ge $l2rs && $(bs $l2rs) -eq 1) ]] && ok=BK                                    # paid activities  (restart idx) & OK/BK
 }
 function bl {                                                                                                                                     # beacon log report
-  b5=$(nu6 $(echo $H|sudo -S grep 'delay_ms: [0-9]' $p4 2>/dev/null|sed 's%.*delay_ms: *\([0-9]*\).*%\1%'))                                       # avg delays in beacon activities
+  b5=$(nu6 $(echo $H|sudo -S egrep 'delay_ms: +[0-9]' $p4 2>/dev/null|sed -Ee 's%.+delay_ms: +([0-9]+).+%\1%'))                                   # avg delays in beacon activities
   if [[ $b5 -gt 0 ]];then
     b0=$(echo $H|sudo -S grep 'published block' $p4 2>/dev/null|wc -l);dt=$(dts);nn=$(bv);nr=$(bq);bb;blo                                         # published blocks & get output
   else
@@ -85,8 +85,7 @@ function bm {
   bm0;dt=$(dts);nn=$(bv);nr=$(bq)                                                                                                                 # ini vars/arrays 
   [[ -f $p7         ]] && bm3;b6=$(tail -n$(($(bk)-o[1])) $p2 2>/dev/null|grep BEAC);[[ $b6 ]] && bm1 20;bm2                                      # set arrays from barqivo log & remaining beacon log
   [[ ${b2:-0} -eq 0 ]] && bo1;b3=$(nu6 $(sed -Ee 's%BEAC +[0-9]+ +([0-9]+).+%\1%' $p3 2>/dev/null))                                               # cur/avg homologous position
-  b4=0;bmn ${a[$nn]} 20;[[ $b2 -le $b3 || $(bs $hors) -gt 1 ]] && b4=0;bmo;bno                                                                    # change configured peers & outputs
-  # WARN Timed out to a peer's request. Likely insufficient resources, reduce peer count, service: libp2p
+  b4=0;bmn ${a[$nn]} 20;[[ $b2 -le $b3 || $(bs $hors) -gt 1 ]] && b4=0;b7=$(echo $H|sudo -S grep 'reduce peer' $p4 2>/dev/null|wc -l);bmo;bno     # change configured peers & outputs
 }
 function bh {
   tail -n${1:-$hors} $p2                                                                                                                          # beacon log report ($hors last lines)
@@ -104,10 +103,11 @@ function blo {
   m="$m $(printf '%2i' $zw) $(printf '%6i' $z1) $(printf '%3i' $z2) $(printf '%3i' $(bw)) $(printf '%4i' $z3) $(printf '%4i' $z4) $(printf '%4i' $(br))     delay: $(printf '%4i' $b5)"
 }
 function bmo {
-  #    0  1   2          3     4       5  6    7    8    9   10   11   12   13   14          15   16          17 18
-  # BEAC  6   2 2021-12-06 09:54 node40: 43 avg: 2.63 2.89 1.49 2.24 2.65 1.95 1.97 global_avg: 2.06 peer_change: 0
+  #    0  1   2          3     4       5  6    7    8    9   10   11   12   13   14          15   16                  17 18 19
+  # BEAC  5   8 2021-12-22 19:33 node45: 49 avg: 0.00 0.79 1.34 2.24 2.65 1.95 1.97 global_avg: 1.63 change_reduce_peer:  5  0
   m=" $(printf '%2i' $b3) $(printf '%3i' $b2) $(dnn $dt $nn $nr) avg: $(printf '%4.2f' ${a[50]}) $(printf '%4.2f' ${a[45]}) $(printf '%4.2f' ${a[40]})"
-  m="$m $(printf '%4.2f' ${a[35]}) $(printf '%4.2f' ${a[30]}) $(printf '%4.2f' ${a[25]}) $(printf '%4.2f' ${a[20]}) global_avg: $(printf '%4.2f' ${a[0]}) peer_change: $b4"
+  m="$m $(printf '%4.2f' ${a[35]}) $(printf '%4.2f' ${a[30]}) $(printf '%4.2f' ${a[25]}) $(printf '%4.2f' ${a[20]}) global_avg: $(printf '%4.2f' ${a[0]})"
+  m="$m change_reduce_peer: $(printf '%2i' $b4) $(printf '%2i' $b7)"
 }
 function bno {
   #    0   1          2     3    4 5 6 7 8 9 10 11   12 13 14 15 16 17 18 19   20 21 22 23 24 25 26 27   28 29 30 31 32 33 34 35   36 37 38 39 40 41 42 43
@@ -190,7 +190,7 @@ function brl {                                                                  
       d=${o[3]};h=$g;g=$(grep -n "$d $e" ${p2}new|cut -d: -f1);dt=${o[3]}\ ${o[4]};nn=$(bx ${o[5]});nr=${o[6]}                                    # beacon log position & uncalculated vars
       b2=$(head -n$g ${p2}new|grep "BEAC.*$e"|bt $d);((l+=b2));((n+=1));b3=$(nu3 $l/$n 5 1)                                                       # cur/avg homologous position
       b6=$(head -n$g ${p2}new|tail -n$((g-h))|grep BEAC);[[ $b6 ]] && bm1 20;bm2                                                                  # sum paid err arrays from interim beacon log
-      b4=${o[18]};bmo;echo "${o[0]}$m" >> ${p3}new                                                                                                # new bmedias log output
+      b4=${o[18]};b7=${o[19]};bmo;echo "${o[0]}$m" >> ${p3}new                                                                                                # new bmedias log output
     done <<< $(cat $p3)
   fi
 }
