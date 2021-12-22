@@ -5,12 +5,12 @@ source /home/eth/eth2/t1
 # utilities for commands/journal
 function nu0 { if [ ${1:-0} -eq $1 ] 2>/dev/null;then echo $1;else echo 0;fi; }                                                                   # get numeric output (must use [ ] test)
 function nu1 { echo "scale=$2;$1"|bc; }                                                                                                           # get arbitrary precision calculations
-function nu2 { sed 's%  *%+%g'|bc; }                                                                                                              # get sum list of numbers
+function nu2 { echo $@|sed -Ee 's% +%+%g'|bc; }                                                                                                   # get sum list of numbers
 function nu3 { printf ${4:-%.0f} $(nu1 $1*${3:-100} ${2:-0}); }                                                                                   # get arbitrary precision calculations formated
 function nu4 { if [[ $5 -ne 0  ]];then nu1 "($1*$pmis+$2*$pmat+$3*$pmah+$4*$pdly)/$5*$rate/$decp" 2;else echo 0;fi; }                             # get penalty
 function nu5 { if [[ $3 -gt $1 ]];then echo $(($2/$3))                                             ;else echo 0;fi; }                             # get targeted division
-function nu6 { if [[ $@        ]];then echo $(nu3 $(echo $@|nu2)/$(echo $@|wc -w) 5 1)             ;else echo 0;fi; }                             # get average from list of numbers
-function nu7 { echo $(cut -f$1)|nu2; }                                                                                                            # get sum specific list of numbers
+function nu6 { if [[ $@        ]];then echo $(nu3 $(nu2 $@)/$(echo $@|wc -w) 5 1)                  ;else echo 0;fi; }                             # get average from list of numbers
+function nu7 { nu2 $(cut -f$1); }                                                                                                                 # get sum specific list of numbers
 function cex { echo -e "${i}$1${f}";echo $H|sudo -S $1                      2>/dev/null     ; }                                                   # superuser-command (visible)
 function sex {                      echo $H|sudo -S $1                      2>/dev/null 1>&2; }                                                   # superuser-command (silent)
 function dmr { sex 'systemctl daemon-reload'                 ; }                                                                                  # daemon-reload
@@ -189,7 +189,6 @@ function brl {                                                                  
     while read -a o;do
       d=${o[3]};h=$g;g=$(grep -n "$d $e" ${p2}new|cut -d: -f1);dt=${o[3]}\ ${o[4]};nn=$(bx ${o[5]});nr=${o[6]}                                    # beacon log position & uncalculated vars
       b2=$(head -n$g ${p2}new|grep "BEAC.*$e"|bt $d);((l+=b2));((n+=1));b3=$(nu3 $l/$n 5 1)                                                       # cur/avg homologous position
-      echo $l/$n $(nu3 $l/$n 5 1)
       b6=$(head -n$g ${p2}new|tail -n$((g-h))|grep BEAC);[[ $b6 ]] && bm1 20;bm2                                                                  # sum paid err arrays from interim beacon log
       b4=${o[18]};bmo;echo "${o[0]}$m" >> ${p3}new                                                                                                # new bmedias log output
     done <<< $(cat $p3)
