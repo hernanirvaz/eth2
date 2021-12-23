@@ -4,13 +4,12 @@ source /home/eth/eth2/t1
 
 # utilities for commands/journal
 function nu0 { if [ ${1:-0} -eq $1 ] 2>/dev/null;then echo $1;else echo 0;fi; }                                                                   # get numeric output (must use [ ] test)
-function nu1 { echo "scale=$2;$1"|bc; }                                                                                                           # get arbitrary precision calculations
-function nu2 { echo $@|sed -Ee 's% +%+%g'|bc; }                                                                                                   # get sum list of numbers
+function nu1 { echo "scale=$2;$1"      |bc; }                                                                                                     # get arbitrary precision calculations
+function nu2 { echo 0$(printf '+%i' $@)|bc; }                                                                                                     # get sum list of numbers
 function nu3 { printf ${4:-%.0f} $(nu1 $1*${3:-100} ${2:-0}); }                                                                                   # get arbitrary precision calculations formated
 function nu4 { if [[ $5 -ne 0  ]];then nu1 "($1*$pmis+$2*$pmat+$3*$pmah+$4*$pdly)/$5*$rate/$decp" 2;else echo 0;fi; }                             # get penalty
 function nu5 { if [[ $3 -gt $1 ]];then echo $(($2/$3))                                             ;else echo 0;fi; }                             # get targeted division
-function nu6 { if [[ $@        ]];then echo $(nu3 $(nu2 $@)/$(echo $@|wc -w) 5 1)                  ;else echo 0;fi; }                             # get average from list of numbers
-# readarray e;[[ ${e[@]} ]] && echo $(echo 0$(printf "+%s" ${e[@]})) ${#e[@]};
+function nu6 { if [[ $@        ]];then echo $(nu3 $(nu2 $@)/$(echo $@|wc -w) 5 1)                  ;else echo 0;fi; }                             # get average of list of numbers
 function nu7 { nu2 $(cut -f$1); }                                                                                                                 # get sum specific list of numbers
 function cex { echo -e "${i}$1${f}";echo $H|sudo -S $1                      2>/dev/null     ; }                                                   # superuser-command (visible)
 function sex {                      echo $H|sudo -S $1                      2>/dev/null 1>&2; }                                                   # superuser-command (silent)
@@ -57,7 +56,7 @@ function grs {
 function bv { nu0 $(fs1 $ethb target-peers [0-9])                                                                         ; }                     # get configured peers
 function bq { nu0 $(echo $H|sudo -S grep 'lighthouse.*peers:' $p4 2>/dev/null|tail -n1|sed 's%.*peers: *\([0-9]*\).*%\1%'); }                     # get current    peers
 function bi { nu4 ${k[$1]} ${z[$1]} ${x[$1]} ${w[$1]} ${c[$1]}; }                                                                                 # get avg penalty from paid err arrays
-function bx { echo ${1:-${v[5]}}|sed 's%node\([0-9]*\):%\1%'; }                                                                                   # get peers from node tag
+function bx { echo $1|sed 's%node\([0-9]*\):%\1%'; }                                                                                              # get peers from node tag
 function bz { echo $((10*(9*zk+3*zz+zx+zw))); }                                                                                                   # numerator paid errors
 function bw { echo $((10*z1)); }                                                                                                                  # numerator processed blocks
 function br { echo $((90*z3)); }                                                                                                                  # numerator general errors
@@ -178,7 +177,7 @@ function brs {                                                                  
 }
 function brl {                                                                                                                                    # recalculate beacon/bmedias logs
   [[ -f ${p2}new ]] && rm ${p2}new;[[ -f ${p3}new ]] && rm ${p3}new
-  unset v;while read -a v;do ok=${v[1]};dt=${v[3]}\ ${v[4]};nn=$(bx);nr=${v[6]}                                                                   # uncalculated vars
+  unset v;while read -a v;do ok=${v[1]};dt=${v[3]}\ ${v[4]};nn=$(bx ${v[5]});nr=${v[6]}                                                           # uncalculated vars
     if [[ ${v[0]} = BEAC ]];then
       b5=${v[26]};b0=${v[13]};z1=${v[19]};z2=${v[20]};z3=${v[22]};z4=${v[23]};bn ${v[11]} ${v[15]} ${v[16]} ${v[17]} ${v[18]};blo                 # calculated output
     else
@@ -191,7 +190,7 @@ function brl {                                                                  
       d=${o[3]};h=$g;g=$(grep -n "$d $e" ${p2}new|cut -d: -f1);dt=${o[3]}\ ${o[4]};nn=$(bx ${o[5]});nr=${o[6]}                                    # beacon log position & uncalculated vars
       b2=$(head -n$g ${p2}new|grep "BEAC.*$e"|bt $d);((l+=b2));((n+=1));b3=$(nu3 $l/$n 5 1)                                                       # cur/avg homologous position
       b6=$(head -n$g ${p2}new|tail -n$((g-h))|grep BEAC);[[ $b6 ]] && bm1 20;bm2                                                                  # sum paid err arrays from interim beacon log
-      b4=${o[18]};b7=${o[19]};bmo;echo "${o[0]}$m" >> ${p3}new                                                                                                # new bmedias log output
+      b4=${o[18]};b7=${o[19]};bmo;echo "${o[0]}$m" >> ${p3}new                                                                                    # new bmedias log output
     done <<< $(cat $p3)
   fi
 }
