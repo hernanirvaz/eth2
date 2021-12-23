@@ -10,6 +10,7 @@ function nu3 { printf ${4:-%.0f} $(nu1 $1*${3:-100} ${2:-0}); }                 
 function nu4 { if [[ $5 -ne 0  ]];then nu1 "($1*$pmis+$2*$pmat+$3*$pmah+$4*$pdly)/$5*$rate/$decp" 2;else echo 0;fi; }                             # get penalty
 function nu5 { if [[ $3 -gt $1 ]];then echo $(($2/$3))                                             ;else echo 0;fi; }                             # get targeted division
 function nu6 { if [[ $@        ]];then echo $(nu3 $(nu2 $@)/$(echo $@|wc -w) 5 1)                  ;else echo 0;fi; }                             # get average from list of numbers
+# readarray e;[[ ${e[@]} ]] && echo $(echo 0$(printf "+%s" ${e[@]})) ${#e[@]};
 function nu7 { nu2 $(cut -f$1); }                                                                                                                 # get sum specific list of numbers
 function cex { echo -e "${i}$1${f}";echo $H|sudo -S $1                      2>/dev/null     ; }                                                   # superuser-command (visible)
 function sex {                      echo $H|sudo -S $1                      2>/dev/null 1>&2; }                                                   # superuser-command (silent)
