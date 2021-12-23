@@ -82,10 +82,10 @@ function bl {                                                                   
   fi
 }
 function bm {
-  bm0;dt=$(dts);nn=$(bv);nr=$(bq)                                                                                                                 # ini vars/arrays 
+  bm0;b4=0;b7=$(echo $H|sudo -S grep 'reduce peer' $p4 2>/dev/null|wc -l);dt=$(dts);nn=$(bv);nr=$(bq)                                             # ini vars/arrays 
   [[ -f $p7         ]] && bm3;b6=$(tail -n$(($(bk)-o[1])) $p2 2>/dev/null|grep BEAC);[[ $b6 ]] && bm1 20;bm2                                      # set arrays from barqivo log & remaining beacon log
   [[ ${b2:-0} -eq 0 ]] && bo1;b3=$(nu6 $(sed -Ee 's%BEAC +[0-9]+ +([0-9]+).+%\1%' $p3 2>/dev/null))                                               # cur/avg homologous position
-  b4=0;bmn ${a[$nn]} 20;[[ $b2 -le $b3 || $(bs $hors) -gt 1 ]] && b4=0;b7=$(echo $H|sudo -S grep 'reduce peer' $p4 2>/dev/null|wc -l);bmo;bno     # change configured peers & outputs
+  bmn ${a[$nn]} 20;[[ $b2 -le $b3 || $(bs $hors) -gt 1 || $b7 -eq 0 ]] && b4=0;bmo;bno                                                            # change configured peers & outputs
 }
 function bh {
   tail -n${1:-$hors} $p2                                                                                                                          # beacon log report ($hors last lines)
