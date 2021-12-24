@@ -24,11 +24,9 @@ function sst { echo "$1 $(printf '%6s' $(fs1 $2 Memory:)) $(dts) status: $(fs1 $
 function dnn { echo "$1 $2 $(printf 'node%02i:' $3) $(printf '%2i' $4)"            ; }                                                            # my date/nodes info (yyyy-dd-mm hh:mm node10: 7)
 function rd0 { cex "systemctl stop  $dnsd";sex 'systemctl stop  systemd-resolved'  ; }                                                            # DNS stop
 function rd1 { cex "systemctl start $dnsd";sex 'systemctl start systemd-resolved'  ; }                                                            # DNS start
-function chp {
-  local n=$(($2+$3))                                                                                                                              # new target peers [+|-]$2+$3
-  [[ $2 -ne 0 && $n -ge $4 && $n -le $5 ]] && { cp $p8/$1.service ~/$1.sav;sed "s%peers [0-9]*%peers $n%" ~/$1.sav > $p8/$1.service; }            # change configuration
-  resolvectl query smtp.gmail.com 2>/dev/null 1>&2;sex "systemctl stop $1";dmr                                                                    # stop/load service
-}
+function rd2 { cp $p8/$1.service $p0/$1.sav;sed "s%peers [0-9]*%peers $2%" $p0/$1.sav > $p8/$1.service; }                                         # change service configuration file
+function rd3 { resolvectl query smtp.gmail.com 2>/dev/null 1>&2;sex "systemctl stop $1";dmr; }                                                    # DNS force smpt stop/load service
+function chp { local n=$(($2+$3));[[ $2 -ne 0 && $n -ge $4 && $n -le $5 ]] && rd2 $1 $n;rd3 $1; }                                                 # change/stop/load service process
 function gv { nu0 $(fs1 $ethg maxpeers [0-9])                                        ; }                                                          # get configured peers
 function gq { nu0 $(geth attach "http://$cgth:8545" --exec net.peerCount 2>/dev/null); }                                                          # get current    peers
 function gy {       geth attach "http://$cgth:8545" --exec eth.syncing   2>/dev/null ; }                                                          # current syncing status
@@ -50,7 +48,7 @@ function gl {                                                                   
   fi
 }
 function grs {
-  chp $ethg $1 $(gv) 10 15                                                                                                                        # change config & stop/load geth
+  chp $ethg $1 $(gv) 10 15                                                                                                                        # change/stop/load geth
   sex "systemctl start $ethg";sleep 10s;echo "GETH RESTAR $(dnn $(dts) $(gv) $(gq))" >> $p5                                                       # start geth & geth log entry
 }
 function bv { nu0 $(fs1 $ethb target-peers [0-9])                                                                         ; }                     # get configured peers
@@ -161,7 +159,7 @@ function brs {                                                                  
     local l=$(echo $H|sudo -S grep "lighthouse.$bpid.* INFO " $p4 2>/dev/null|tail -n7|sed 's%.* INFO \([^ ]*\) .*%\1%'|sort -u)                  # last 7 unique INFO beacon lines
     if [[ $(echo "$l"|wc -l) -eq 2 && $(echo "$l"|head -n1) = New && $(echo "$l"|tail -n1) = Synced ]];then                                       # posicao ideal = only 2 INFO types
       ok=${2:-$ok}                                                                                                                                # ${PE|RB|BN|VC:-OK|BK}
-      chp $ethb $1 $(bv) 20 50;[[ $2 = VC ]] && sex "systemctl stop $ethv"                                                                        # change config & stop/load beacon [& stop validator]
+      chp $ethb $1 $(bv) 20 50;[[ $2 = VC ]] && sex "systemctl stop $ethv"                                                                        # change/stop/load beacon [& stop validator]
       if [[ $2 = RB ]];then
         echo "RSTR $ok $(printf '%3i' $n) $(dnn $(dts) $(bv) $(bq))" >> $p2                                                                       # reboot com beacon log entry before start
         rm -f $p0/beacon.restart.inicio;sex reboot
