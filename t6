@@ -49,7 +49,7 @@ function gl {                                                                   
 }
 function grs {
   rd4 $ethg $1 $(gv) 10 15                                                                                                                        # change/stop/load geth
-  sex "systemctl start $ethg";sleep 10s;echo "GETH RESTAR $(dnn $(dts) $(gv) $(gq))" >> $p5                                                       # start geth & geth log entry
+  sex "systemctl start $ethg";sleep 20s;echo "GETH RESTAR $(dnn $(dts) $(gv) $(gq))" >> $p5                                                       # start/log geth
 }
 function bv { nu0 $(fs1 $ethb target-peers [0-9])                                                                         ; }                     # get configured peers
 function bq { nu0 $(echo $H|sudo -S grep 'lighthouse.*peers:' $p4 2>/dev/null|tail -n1|sed 's%.*peers: *\([0-9]*\).*%\1%'); }                     # get current    peers
@@ -80,17 +80,18 @@ function bl {                                                                   
   fi
 }
 function bm {
-  bm0;b4=0;b7=$(echo $H|sudo -S grep 'reduce peer' $p4 2>/dev/null|wc -l);dt=$(dts);nn=$(bv);nr=$(bq)                                             # ini vars/arrays 
+  bm0;b4=0;b7=$(echo $H|sudo -S grep 'reduce peer' $p4 2>/dev/null|wc -l);dt=$(dts);nn=$(bv);nr=$(bq)                                             # ini arrays/vars
   [[ -f $p7         ]] && bm3;b6=$(tail -n$(($(bk)-o[1])) $p2 2>/dev/null|grep BEAC);[[ $b6 ]] && bm1 20;bm2                                      # set arrays from barqivo log & remaining beacon log
   [[ ${b2:-0} -eq 0 ]] && bo1;b3=$(nu6 $(sed -Ee 's%BEAC +[0-9]+ +([0-9]+).+%\1%' $p3 2>/dev/null))                                               # cur/avg homologous position
   bmn ${a[$nn]} 20;[[ $b2 -le $b3 || $(nu3 ${a[$nn]}) -le $(nu3 ${a[0]}) || $(bs $hors) -gt 1 ]] && b4=0;bmo;bno                                  # change configured peers & outputs
 }
 function bh {
-  tail -n${1:-$hors} $p2                                                                                                                          # beacon log report ($hors last lines)
-  [[ $1 ]] || { bo1;echo -e "BO$(printf '%5i' $(echo "$b1"|wc -l)) $(printf '%3i' $b2)";bo2; }                                                    # homologous report
-  [[ $1 ]] || { bl ;echo -e "BL$(printf '%9i' $(cat $p2 2>/dev/null|wc -l))\nBEAC$m"; }                                                           # beacon log current
-  [[ $1 ]] || { bm ;echo -e "BM$(printf '%5i' $(cat $p3 2>/dev/null|wc -l))\nBEAC$m"; }                                                           # medias report
-  [[ $1 ]] || { sst BEAC $ethb;sst VALI $ethv; }                                                                                                  # beacon/validator services status
+  tail -n${1:-$hors} $p2;[[ $1 ]] && return                                                                                                       # beacon log report ($hors last lines)
+  bo1;echo -e "BO$(printf '%5i' $(echo "$b1"|wc -l)) $(printf '%3i' $b2)";bo2                                                                     # homologous report
+  bl ;echo -e "BL$(printf '%9i' $(cat $p2 2>/dev/null|wc -l))\nBEAC$m"                                                                            # beacon log current
+  bm ;echo -e "BM$(printf '%5i' $(cat $p3 2>/dev/null|wc -l))\nBEAC$m"                                                                            # medias report
+  sst BEAC $ethb;sst VALI $ethv                                                                                                                   # beacon/validator service status
+  csh;psh;esh                                                                                                                                     # clock/cpu/system/eth info
 }
 function bmn { local g=$1;local n=$2;if [[ $(nu3 ${a[$n]}) -lt $(nu3 $g) ]];then b4=$((n-nn));g=${a[$n]};fi;[[ $n -lt 50 ]] && bmn $g $((n+5)); } # recursively compare avg with cur penalties
 function blo {
@@ -161,11 +162,11 @@ function brs {                                                                  
       ok=${2:-$ok}                                                                                                                                # ${PE|RB|BN|VC:-OK|BK}
       rd4 $ethb $1 $(bv) 20 50;[[ $2 = VC ]] && sex "systemctl stop $ethv"                                                                        # change/stop/load beacon [& stop validator]
       if [[ $2 = RB ]];then
-        echo "RSTR $ok $(printf '%3i' $n) $(dnn $(dts) $(bv) $(bq))" >> $p2                                                                       # reboot com beacon log entry before start
+        echo "RSTR $ok $(printf '%3i' $n) $(dnn $(dts) $(bv) $(bq))" >> $p2                                                                       # beacon log & reboot
         rm -f $p0/beacon.restart.inicio;sex reboot
       else
-        sex "systemctl start $ethb";[[ $2 = VC ]] && sex "systemctl start $ethv";sleep 10s                                                        # start beacon/validator
-        echo "RSTR $ok $(printf '%3i' $n) $(dnn $(dts) $(bv) $(bq))" >> $p2                                                                       # beacon log entry after start
+        sex "systemctl start $ethb";[[ $2 = VC ]] && sex "systemctl start $ethv";sleep 20s                                                        # start beacon/validator
+        echo "RSTR $ok $(printf '%3i' $n) $(dnn $(dts) $(bv) $(bq))" >> $p2                                                                       # beacon log
       fi
       rm -f $p0/beacon.restart.inicio
     fi
@@ -328,8 +329,8 @@ function fd { [[ $(fs0 $ethf loaded) ]] && { cex "systemctl disable $ethf";fcl;c
 [[ $1 = blf ]] && { bl;echo -e "BEAC$m" >> $p2; }
 [[ $1 = bmf ]] && { bm;echo -e "BEAC$m" >> $p3; }
 [[ $1 = bnf ]] && { bm;echo -e "BEAC$s" >> $p7; }
-[[ $1 = gh  ]] && { [[ -f $p5           ]] && { tail -n ${2:-$hors} $p5;gl;echo -e "GETH$m\n";sst GETH $ethg;csh;psh;esh; } }
-[[ $1 = bh  ]] && { [[ -f $p2           ]] && { bh $2;[[ $2 ]] || { csh;psh;esh; } } }
+[[ $1 = gh  ]] && { [[ -f $p5           ]] && { tail -n${2:-$hors} $p5;[[ $2 ]] || { gl;echo -e "GETH$m\n";sst GETH $ethg;csh;psh;esh; } } }
+[[ $1 = bh  ]] && { [[ -f $p2           ]] && bh $2; }
 [[ $1 = brl ]] && { [[ -f $p2           ]] && brl; }
 [[ $1 = bsl ]] && { [[ -f $p2 && -f $p7 ]] && bsl; }
 [[ $1 = bnl ]] && { bnl; }
