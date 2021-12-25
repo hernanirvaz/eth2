@@ -16,43 +16,42 @@ function sex {                      echo $H|sudo -S $1                      2>/d
 function dmr { sex 'systemctl daemon-reload'                 ; }                                                                                  # daemon-reload
 function jsh { cex "journalctl --no-hostname --no-full -f $1"; }                                                                                  # my journal   format
 function dts { date '+%Y-%m-%d %H:%M'; }                                                                                                          # my logs date format
-function fs0 { systemctl status $1 2>/dev/null|grep "${2:-inactive\|failed}"                                  ; }                                 # service status word test
-function fs1 { systemctl status $1 2>/dev/null|grep "${2:-Active:}"|sed "s%.*${2:-Active:} \(${3:-.}*\).*%\1%"; }                                 # service status word with data extraction
+function fs0 { systemctl status $1 2>/dev/null|grep "${2:-inactive\|failed}"                                   ; }                                # service status word test
+function fs1 { systemctl status $1 2>/dev/null|grep "${2:-Active:}"|sed "s%.*${2:-Active:} *\(${3:-.}*\).*%\1%"; }                                # service status word with data extraction
 function fs2 { echo $1|egrep '^[0-9]+$'       ; }                                                                                                 # integer test
 function fs3 { echo $1|egrep '^[0-9]+:[0-9]+$'; }                                                                                                 # hh:mm   test
+function fs4 { echo $H|sudo -S grep "${3:-lighthouse}.*$1" $p4 2>/dev/null|if [[ ${2:-0} -le 0 ]];then cat;else tail -n${2:-0};fi; }
 function sst { echo "$1 $(printf '%6s' $(fs1 $2 Memory:)) $(dts) status: $(fs1 $2)"; }                                                            # my services status
 function dnn { echo "$1 $2 $(printf 'node%02i:' $3) $(printf '%2i' $4)"            ; }                                                            # my date/nodes info (yyyy-dd-mm hh:mm node10: 7)
 function rd0 { cex "systemctl stop  $dnsd";sex 'systemctl stop  systemd-resolved'  ; }                                                            # DNS stop
 function rd1 { cex "systemctl start $dnsd";sex 'systemctl start systemd-resolved'  ; }                                                            # DNS start
-function rd2 { cp $p8/$1.service $p0/$1.sav;sed "s%peers [0-9]*%peers $2%" $p0/$1.sav > $p8/$1.service; }                                         # change service configuration file
+function rd2 { cp $p8/$1.service $p0/$1.sav;sed "s%peers *[0-9]*%peers $2%" $p0/$1.sav > $p8/$1.service; }                                        # change service configuration file
 function rd3 { resolvectl query smtp.gmail.com 2>/dev/null 1>&2;sex "systemctl stop $1";dmr; }                                                    # DNS force smpt stop/load service
 function rd4 { local n=$(($2+$3));[[ $2 -ne 0 && $n -ge $4 && $n -le $5 ]] && rd2 $1 $n;rd3 $1; }                                                 # change/stop/load service process
+# geth control commands
 function gv { nu0 $(fs1 $ethg maxpeers [0-9])                                        ; }                                                          # get configured peers
 function gq { nu0 $(geth attach "http://$cgth:8545" --exec net.peerCount 2>/dev/null); }                                                          # get current    peers
 function gy {       geth attach "http://$cgth:8545" --exec eth.syncing   2>/dev/null ; }                                                          # current syncing status
+function gi { echo $@|sed 's%.*highestBlock: *\([0-9]*\).*%\1%'; }
+function gc { echo $@|sed 's%.*currentBlock: *\([0-9]*\).*%\1%'; }
 function gb {
-  g0=$(echo $H|sudo -S grep 'mported new' $p4 2>/dev/null|wc -l)                                                                                  # new imported chain segments
-  ok=OK;[[ $g0 -eq $(grep sgs: $p5 2>/dev/null|tail -n1|sed 's%.*sgs: *\([0-9]*\).*%\1%') ]] && ok=BK                                             # OK/BK
+  g0=$(fs4 'mported new' 0 geth|wc -l);ok=OK;[[ $g0 -eq $(grep sgs: $p5 2>/dev/null|tail -n1|sed 's%.*sgs: *\([0-9]*\).*%\1%') ]] && ok=BK        # imported new chain segments & OK/BK
 }
 function gl {                                                                                                                                     # geth log report
-  if [[ $(fs0 $ethg running) ]];then local e=$(gy);gb
+  if [[ $(fs0 $ethg running) ]];then local e=$(gy);gb;m="$(dnn $(dts) $(gv) $(gq)) sgs: $(printf '%4i' $g0)"
     if [[ $(echo $e|grep false) ]];then
-      m=" $ok SYC $(dnn $(dts) $(gv) $(gq)) sgs: $(printf '%4i' $g0)"                                                                             # OK SYC (dnn) sgs: 6
+      m=" $ok SYC $m"                                                                                                                             # OK SYC (dnn) sgs: 5
     else
-      local g=$(echo $e|sed -Ee 's%.*highestBlock: *([0-9]+).*%\1%i')
-      local n=$(echo $e|sed -Ee 's%.*currentBlock: *([0-9]+).*%\1%i')
-      m=" $ok NSY $(dnn $(dts) $(gv) $(gq)) sgs: $(printf '%4i' $g0) blocks: $((g*1)) ($((g-n)))"                                                 # OK NSY (dnn) sgs: 5 blocks: 8 (6)
+      m=" $ok NSY $m blocks: $(($(gi $e)-$(gc $e)))"                                                                                              # OK NSY (dnn) sgs: 5 blocks: 8 (6)
     fi
   else
     m=" NOT HERE $(dts)"
   fi
 }
-function grs {
-  rd4 $ethg $1 $(gv) 10 15                                                                                                                        # change/stop/load geth
-  sex "systemctl start $ethg";sleep 20s;echo "GETH RESTAR $(dnn $(dts) $(gv) $(gq))" >> $p5                                                       # start/log geth
-}
+function grs { rd4 $ethg $1 $(gv) 10 15;sex "systemctl start $ethg";sleep 20s;echo "GETH RESTAR $(dnn $(dts) $(gv) $(gq))" >> $p5; }              # change/stop/load/start/log geth restart
+# beacon control commands
 function bv { nu0 $(fs1 $ethb target-peers [0-9])                                                                         ; }                     # get configured peers
-function bq { nu0 $(echo $H|sudo -S grep 'lighthouse.*peers:' $p4 2>/dev/null|tail -n1|sed 's%.*peers: *\([0-9]*\).*%\1%'); }                     # get current    peers
+function bq { nu0 $(fs4 peers: 1|sed 's%.*peers: *\([0-9]*\).*%\1%'); }                                                                           # get current    peers
 function bi { nu4 ${k[$1]} ${z[$1]} ${x[$1]} ${w[$1]} ${c[$1]}; }                                                                                 # get avg penalty from paid err arrays
 function bx { echo $1|sed 's%node\([0-9]*\):%\1%'; }                                                                                              # get peers from node tag
 function bz { echo $((10*(9*zk+3*zz+zx+zw))); }                                                                                                   # numerator paid errors
@@ -63,24 +62,23 @@ function bs { tail -n$1 $p2 2>/dev/null|cut -d' ' -f1|sort -u|wc -l; }          
 function bk { cat       $p2 2>/dev/null                      |wc -l; }                                                                            # get line count
 function bf { sort -k10.1n; }                                                                                                                     # srt by penalty
 function bt { bf|grep -n $1|cut -d: -f1; }                                                                                                        # get ordered position
-function by { echo $H|sudo -S grep "attestation(s)$1" $p4 2>/dev/null|sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w; }                            # get paid activities
+function by { fs4 "attestation(s)$1"|sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w; }                                                             # get paid activities
 function bn { z5=${1:-$(by ' success')};zk=${2:-$(by ' missing')};zz=${3:-$(by '.*target')};zx=${4:-$(by '.*head')};zw=${5:-$(by ' had')}; }      # set paid activities
 function bb {
-  local e=$(echo $H|sudo -S grep "lighthouse.$bpid" $p4 2>/dev/null|tail -n3600)                                                                  # most recent beacon messages
-  z1=$(echo "$e"|grep 'rocessed block'|wc -l);z2=$(echo "$e"|grep 'block received'|wc -l)                                                         # processed blocks (restart idx)
+  local e=$(fs4 $bpid 3600);z1=$(echo "$e"|grep 'rocessed block'|wc -l);z2=$(echo "$e"|grep 'block received'|wc -l)                               # processed blocks (restart idx)
   z3=$(echo "$e"|grep -v ' INFO '     |wc -l);z4=$(echo "$e"|grep ' INFO '        |wc -l)                                                         # general errors   (restart idx)
   bn;ok=OK;local g=$(bu);[[ ($g -ge 1 && $(bs $hors) -eq 1) || ($g -ge $l2rs && $(bs $l2rs) -eq 1) ]] && ok=BK                                    # paid activities  (restart idx) & OK/BK
 }
 function bl {                                                                                                                                     # beacon log report
-  b5=$(nu6 $(echo $H|sudo -S egrep 'delay_ms: +[0-9]' $p4 2>/dev/null|sed -Ee 's%.+delay_ms: +([0-9]+).+%\1%'))                                   # avg delays in beacon activities
+  b5=$(nu6 $(fs4 delay_ms:|sed 's%.*delay_ms: *\([0-9]*\).*%\1%'))                                                                                # avg delays in beacon activities
   if [[ $b5 -gt 0 ]];then
-    b0=$(echo $H|sudo -S grep 'published block' $p4 2>/dev/null|wc -l);dt=$(dts);nn=$(bv);nr=$(bq);bb;blo                                         # published blocks & get output
+    b0=$(fs4 'published block'|wc -l);dt=$(dts);nn=$(bv);nr=$(bq);bb;blo                                                                          # published blocks & get output
   else
     m=" NOT HERE $(dts)"
   fi
 }
 function bm {
-  bm0;b4=0;b7=$(echo $H|sudo -S grep 'reduce peer' $p4 2>/dev/null|wc -l);dt=$(dts);nn=$(bv);nr=$(bq)                                             # ini arrays/vars
+  bm0;b4=0;b7=$(fs4 'reduce peer'|wc -l);dt=$(dts);nn=$(bv);nr=$(bq)                                                                              # ini arrays/vars
   [[ -f $p7         ]] && bm3;b6=$(tail -n$(($(bk)-o[1])) $p2 2>/dev/null|grep BEAC);[[ $b6 ]] && bm1 20;bm2                                      # set arrays from barqivo log & remaining beacon log
   [[ ${b2:-0} -eq 0 ]] && bo1;b3=$(nu6 $(sed -Ee 's%BEAC +[0-9]+ +([0-9]+).+%\1%' $p3 2>/dev/null))                                               # cur/avg homologous position
   bmn ${a[$nn]} 20;[[ $b2 -le $b3 || $(nu3 ${a[$nn]}) -le $(nu3 ${a[0]}) || $(bs $hors) -gt 1 ]] && b4=0;bmo;bno                                  # change configured peers & outputs
@@ -157,7 +155,7 @@ function brs {                                                                  
   [[ -f $p0/beacon.restart.inicio ]] && return                                                                                                    # se restart flag existe exit
   touch $p0/beacon.restart.inicio;local n=0
   while [[ -f $p0/beacon.restart.inicio && $n -lt 300 ]]; do                                                                                      # procura posicao ideal restart
-    local l=$(echo $H|sudo -S grep "lighthouse.$bpid.* INFO " $p4 2>/dev/null|tail -n7|sed 's%.* INFO \([^ ]*\) .*%\1%'|sort -u)                  # last 7 unique INFO beacon lines
+    local l=$(fs4 "$bpid.* INFO " 7|sed 's%.* INFO \([^ ]*\) .*%\1%'|sort -u)                                                                     # last 7 unique INFO beacon lines
     if [[ $(echo "$l"|wc -l) -eq 2 && $(echo "$l"|head -n1) = New && $(echo "$l"|tail -n1) = Synced ]];then                                       # posicao ideal = only 2 INFO types
       ok=${2:-$ok}                                                                                                                                # ${PE|RB|BN|VC:-OK|BK}
       rd4 $ethb $1 $(bv) 20 50;[[ $2 = VC ]] && sex "systemctl stop $ethv"                                                                        # change/stop/load beacon [& stop validator]
