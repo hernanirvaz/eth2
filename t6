@@ -148,8 +148,7 @@ function brs {                                                                  
   while [[ -f $p0/beacon.restart.inicio && $n -lt 300 ]]; do                                                                                      # procura posicao ideal restart
     local l=$(fs4 "$bpid.* INFO " 7|sed 's%.* INFO \([^ ]*\) .*%\1%'|sort -u)                                                                     # last 7 unique INFO beacon words
     if [[ $(echo "$l"|wc -l) -eq 2 && $(echo "$l"|head -n1) = New && $(echo "$l"|tail -n1) = Synced ]];then                                       # posicao ideal = only 2 INFO types
-      ok=${2:-$ok}                                                                                                                                # ${PE|RB|BN|VC:-OK|BK}
-      rd4 $ethb $1 $(bv) 20 50;[[ $2 = VC ]] && sex "systemctl stop $ethv"                                                                        # change/stop/load beacon [& stop validator]
+      ok=${2:-$ok};rd4 $ethb $1 $(bv) 20 50;[[ $2 = VC ]] && sex "systemctl stop $ethv"                                                           # ${PE|RB|BN|VC:-OK|BK} & stop beacon/validator
       if [[ $2 = RB ]];then
         echo "RSTR $ok $(printf '%3i' $n) $(dnn $(dts) $(bv) $(bq))" >> $p2;rm -f $p0/beacon.restart.inicio;sex reboot                            # beacon log & reboot
       else
