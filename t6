@@ -144,8 +144,7 @@ function bo2 {                                                                  
   echo "$b1"|bf|head -n$g|tail -n$d                                                                                                               # filter homologous report
 }
 function brs {                                                                                                                                    # beacon/validator restart
-  [[ -f $p0/beacon.restart.inicio ]] && return                                                                                                    # se restart flag existe exit
-  touch $p0/beacon.restart.inicio;local n=0
+  [[ -f $p0/beacon.restart.inicio ]] && return;touch $p0/beacon.restart.inicio;local n=0                                                          # se restart flag existe exit
   while [[ -f $p0/beacon.restart.inicio && $n -lt 300 ]]; do                                                                                      # procura posicao ideal restart
     local l=$(fs4 "$bpid.* INFO " 7|sed 's%.* INFO \([^ ]*\) .*%\1%'|sort -u)                                                                     # last 7 unique INFO beacon words
     if [[ $(echo "$l"|wc -l) -eq 2 && $(echo "$l"|head -n1) = New && $(echo "$l"|tail -n1) = Synced ]];then                                       # posicao ideal = only 2 INFO types
