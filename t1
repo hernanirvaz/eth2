@@ -6,11 +6,11 @@ f="\e[25m\n"
 p0='/home/eth'
 p1='/etc/prometheus'
 p4='/var/log/syslog'
+p8='/etc/systemd/system'
 p5="$p0/geth.log"
 p2="$p0/beacon.log"
 p3="$p0/bmedias.log"
 p7="$p0/barqivo.log"
-p8='/etc/systemd/system'
 
 meeu="$(whoami)"
 cunm="$(uname -n)"
