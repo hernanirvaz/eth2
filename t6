@@ -152,8 +152,7 @@ function brs {                                                                  
       ok=${2:-$ok}                                                                                                                                # ${PE|RB|BN|VC:-OK|BK}
       rd4 $ethb $1 $(bv) 20 50;[[ $2 = VC ]] && sex "systemctl stop $ethv"                                                                        # change/stop/load beacon [& stop validator]
       if [[ $2 = RB ]];then
-        echo "RSTR $ok $(printf '%3i' $n) $(dnn $(dts) $(bv) $(bq))" >> $p2                                                                       # beacon log & reboot
-        rm -f $p0/beacon.restart.inicio;sex reboot
+        echo "RSTR $ok $(printf '%3i' $n) $(dnn $(dts) $(bv) $(bq))" >> $p2;rm -f $p0/beacon.restart.inicio;sex reboot                            # beacon log & reboot
       else
         sex "systemctl start $ethb";[[ $2 = VC ]] && sex "systemctl start $ethv";sleep 20s                                                        # start beacon/validator
         echo "RSTR $ok $(printf '%3i' $n) $(dnn $(dts) $(bv) $(bq))" >> $p2                                                                       # beacon log
