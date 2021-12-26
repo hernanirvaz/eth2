@@ -17,7 +17,6 @@ cunm="$(uname -n)"
 cust="$(uname -n|cut -c1-3)"
 ethg='eth-geth'
 ethb='eth-beacon'
-bpid=$(systemctl status $ethb 2>/dev/null|grep PID|sed 's%.*PID: *\([0-9]*\).*%\1%')
 ethv='eth-validator'
 ethp='prometheus'
 ethn='prometheus-node-exporter'
@@ -40,6 +39,7 @@ vnm3='vmi469069.contaboserver.net'
 dtdi="/var/lib/lighthouse"
 becn="$dtdi/beacon"
 vldt="$dtdi/validators"
+bpid=$(systemctl status $ethb 2>/dev/null|grep PID|sed 's%.*PID: *\([0-9]*\).*%\1%')
 
 rblk=22238623
 ratt=00019000

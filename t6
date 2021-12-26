@@ -11,9 +11,8 @@ function nu4 { if [[ $5 -ne 0  ]];then nu1 "($1*$pmis+$2*$pmat+$3*$pmah+$4*$pdly
 function nu5 { if [[ $3 -gt $1 ]];then echo $(($2/$3))                                             ;else echo 0;fi; }                             # get targeted division
 function nu6 { if [[ $@        ]];then echo $(nu3 $(nu2 $@)/$(echo $@|wc -w) 5 1)                  ;else echo 0;fi; }                             # get average of list of numbers
 function nu7 { nu2 $(cut -f$1); }                                                                                                                 # get sum specific list of numbers
-function cex { echo -e "${i}$1${f}";echo $H|sudo -S $1                      2>/dev/null     ; }                                                   # superuser-command (visible)
-function sex {                      echo $H|sudo -S $1                      2>/dev/null 1>&2; }                                                   # superuser-command (silent)
-function oex {                      echo $H|sudo -S $1                      2>/dev/null     ; }                                                   # superuser-command (stdout)
+function cex { echo -e "${i}${1^^}${f}";echo $H|sudo -S $1                      2>/dev/null     ; }                                               # superuser-command (visible)
+function sex {                          echo $H|sudo -S $1                      2>/dev/null 1>&2; }                                               # superuser-command (silent)
 function dmr { sex 'systemctl daemon-reload'                 ; }                                                                                  # daemon-reload
 function jsh { cex "journalctl --no-hostname --no-full -f $1"; }                                                                                  # my journal   format
 function dts { date '+%Y-%m-%d %H:%M'; }                                                                                                          # my logs date format
@@ -22,7 +21,6 @@ function fs1 { systemctl status $1 2>/dev/null|grep "${2:-Active:}"|sed "s%.*${2
 function fs2 { echo $1|egrep '^[0-9]+$'       ; }                                                                                                 # integer test
 function fs3 { echo $1|egrep '^[0-9]+:[0-9]+$'; }                                                                                                 # hh:mm   test
 function fs4 { echo $H|sudo -S grep "${3:-lighthouse}.*$1" $p4 2>/dev/null|if [[ ${2:-0} -le 0 ]];then cat;else tail -n${2:-0};fi; }
-function fs5 { oex "grep ${3:-lighthouse}.*$1 $p4"|if [[ ${2:-0} -le 0 ]];then cat;else tail -n${2:-0};fi; }
 function sst { echo "$1 $(printf '%6s' $(fs1 $2 Memory:)) $(dts) status: $(fs1 $2)"; }                                                            # my services status
 function dnn { echo "$1 $2 $(printf 'node%02i:' $3) $(printf '%2i' $4)"            ; }                                                            # my date/nodes info (yyyy-dd-mm hh:mm node10: 7)
 function rd0 { cex "systemctl stop  $dnsd";sex 'systemctl stop  systemd-resolved'  ; }                                                            # DNS stop
@@ -44,7 +42,7 @@ function gl {                                                                   
     local e=$(gy);gb;m="$(dnn $(dts) $(gv) $(gq)) sgs: $(printf '%4i' $g0)"
     if [[ $(echo $e|grep false) ]];then m=" $ok SYC $m";else m=" $ok NSY $m blocks: $(($(gi $e)-$(gc $e)))";fi                                    # OK NSY (dnn) sgs: 5 blocks: 8 (6)
   else
-    m=" NOT HERE $(dts)"
+    m=" NOT RUNNING $(dts)"
   fi
 }
 function grs { rd4 $ethg $1 $(gv) 10 15;sex "systemctl start $ethg";sleep 20s;echo "GETH RESTAR $(dnn $(dts) $(gv) $(gq))" >> $p5; }              # change/stop/load/start/log geth restart
@@ -61,16 +59,19 @@ function bs { tail -n$1 $p2 2>/dev/null|cut -d' ' -f1|sort -u|wc -l; }          
 function bk { cat       $p2 2>/dev/null                      |wc -l; }                                                                            # get line count
 function bf { sort -k10.1n; }                                                                                                                     # srt by penalty
 function bt { bf|grep -n $1|cut -d: -f1; }                                                                                                        # get ordered position
-function by { fs4 "attestation(s)$1"|sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w; }                                                             # get paid activities
-function bn { z5=${1:-$(by ' success')};zk=${2:-$(by ' missing')};zz=${3:-$(by '.*target')};zx=${4:-$(by '.*head')};zw=${5:-$(by ' had')}; }      # set paid activities
+function by { fs4 "attestation(s).*$1"|sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w; }                                                           # get paid activities
+function bn { z5=${1:-$(by success)};zk=${2:-$(by missing)};zz=${3:-$(by target)};zx=${4:-$(by head)};zw=${5:-$(by had)}; }                       # set paid activities
 function bb {
   local e=$(fs4 $bpid] 3600);z1=$(echo "$e"|grep 'rocessed block'|wc -l);z2=$(echo "$e"|grep 'block received'|wc -l)                              # processed blocks (restart idx)
   z3=$(echo "$e"|grep -v ' INFO '|wc -l);z4=$(echo "$e"|grep ' INFO '|wc -l)                                                                      # general errors   (restart idx)
   bn;ok=OK;local g=$(bu);[[ ($g -ge 1 && $(bs $hors) -eq 1) || ($g -ge $l2rs && $(bs $l2rs) -eq 1) ]] && ok=BK                                    # paid activities  (restart idx) & OK/BK
 }
 function bl {                                                                                                                                     # beacon log report
-  b5=$(nu6 $(fs4 delay_ms:|sed 's%.*delay_ms: *\([0-9]*\).*%\1%'))                                                                                # avg delays in beacon activities
-  if [[ $b5 -gt 0 ]];then b0=$(fs4 'published block'|wc -l);dt=$(dts);nn=$(bv);nr=$(bq);bb;blo;else m=" NOT HERE $(dts)";fi                       # published blocks & get output
+  if [[ $(fs0 $ethb running) ]];then
+    b0=$(fs4 'published block'|wc -l);b5=$(nu6 $(fs4 delay_ms:|sed 's%.*delay_ms: *\([0-9]*\).*%\1%'));dt=$(dts);nn=$(bv);nr=$(bq);bb;blo         # published blocks/avg delays & get output
+  else
+    m=" NOT RUNNING $(dts)"
+  fi
 }
 function bm {
   bm0;b4=0;b7=$(fs4 'reduce peer'|wc -l);dt=$(dts);nn=$(bv);nr=$(bq)                                                                              # ini arrays/vars
@@ -146,7 +147,7 @@ function bo2 {                                                                  
 function brs {                                                                                                                                    # beacon/validator restart
   [[ -f $p0/beacon.restart.inicio ]] && return;touch $p0/beacon.restart.inicio;local n=0                                                          # se restart flag existe exit
   while [[ -f $p0/beacon.restart.inicio && $n -lt 300 ]]; do                                                                                      # procura posicao ideal restart
-    local l=$(fs4 "$bpid.* INFO " 7|sed 's%.* INFO \([^ ]*\) .*%\1%'|sort -u)                                                                     # last 7 unique INFO beacon words
+    local l=$(fs4 "$bpid].* INFO " 7|sed 's%.* INFO \([^ ]*\).*%\1%'|sort -u)                                                                     # last 7 unique INFO beacon words
     if [[ $(echo "$l"|wc -l) -eq 2 && $(echo "$l"|head -n1) = New && $(echo "$l"|tail -n1) = Synced ]];then                                       # posicao ideal = only 2 INFO types
       ok=${2:-$ok};rd4 $ethb $1 $(bv) 20 50;[[ $2 = VC ]] && sex "systemctl stop $ethv"                                                           # ${PE|RB|BN|VC:-OK|BK} & stop beacon/validator
       if [[ $2 = RB ]];then
@@ -287,6 +288,13 @@ function va  {
 function pa { [[ $(fs0 $ethp) ]] && { cex "systemctl start $ethp"; } }
 function na { [[ $(fs0 $ethn) ]] && { cex "systemctl start $ethn"; } }
 function fa { [[ $(fs0 $ethf) ]] && { cex "systemctl start $ethf"; } }
+function wa {
+  if [[ $(echo $H|sudo -S ufw status 2>/dev/null|grep -i inactive) ]];then
+    echo -e "${i}UFW ENABLE${f}";sudo ufw enable <<< y                                                                                            # enable asks: Proceed with operation (y|n)?
+  else
+    echo -e "${i}FIREWALL ALREADY ACTIVE${f}"
+  fi
+}
 # para/disable goethereum/beacon/validator/prometheus/grafana
 function gp { [[ $(fs0 $ethg loaded) ]] && { cex "systemctl stop $ethg"; } }
 function bp { [[ $(fs0 $ethb loaded) ]] && { cex "systemctl stop $ethb"; } }
@@ -306,7 +314,7 @@ function fd { [[ $(fs0 $ethf loaded) ]] && { cex "systemctl disable $ethf";fcl;c
 [[ $1 = drs ]] && { echo RESET DNS;rd0;rd1; }
 [[ $1 = nrs ]] && { echo RESET DNS \& NETPLAN;cex 'netplan apply';rd0;rd1; }
 [[ $1 = nsh ]] && { nsh; }
-[[ $1 = trs ]] && { [[ $(fs0 systemd-timesyncd masked) ]] || { cex "systemctl restart systemd-timesyncd"; };csh; }
+[[ $1 = trs ]] && { [[ $(fs0 systemd-timesyncd masked) ]] || { cex 'systemctl restart systemd-timesyncd'; };csh; }
 [[ $1 = vcp ]] && { ssp; }
 [[ $1 = gl  ]] && { gl;echo -e "GETH$m"; }
 [[ $1 = glf ]] && { gl;echo -e "GETH$m" >> $p5; }
@@ -335,27 +343,27 @@ function fd { [[ $(fs0 $ethf loaded) ]] && { cex "systemctl disable $ethf";fcl;c
 # outros journal system/lighthouse
 [[ $1 = el  ]] && { echo $H|sudo -S grep -i 'geth\[\|lighthouse' $p4 2>/dev/null|if [[ $2 ]];then grep -i "[a-z]* [0-9]* $2";else grep -v ' INFO ';fi; }
 [[ $1 = sl  ]] && { echo $H|sudo -S grep -v 'geth\[\|lighthouse' $p4 2>/dev/null|if [[ $2 ]];then grep -i "[a-z]* [0-9]* $2";else grep -i 'error' ;fi; }
-[[ $1 = ws  ]] && { cex "ufw status numbered"; }
-[[ $1 = wa  ]] && if [[ $(oex 'ufw status'|grep -i inactive) ]];then echo -e "${i}ARRANCA FIREWALL${f}";sudo ufw enable;else echo -e "${i}FIREWALL JA ACTIVE${f}";fi
-[[ $1 = wpr ]] && { cex "ufw disable"; }
+[[ $1 = ws  ]] && { cex 'ufw status numbered'; }
+[[ $1 = wa  ]] && { wa; }
+[[ $1 = wpr ]] && { cex 'ufw disable'; }
 # journal
-[[ $1 = yj ]] && { jsh; }
-[[ $1 = ej ]] && { jsh "-u $ethg -u $ethb -u $ethv"; }
-[[ $1 = gj ]] && { jsh "-u $ethg"; }
-[[ $1 = bj ]] && { jsh "-u $ethb"; }
-[[ $1 = vj ]] && { jsh "-u $ethv"; }
-[[ $1 = sj ]] && { jsh "-u $dnsd"; }
+[[ $1 = yj  ]] && { jsh; }
+[[ $1 = ej  ]] && { jsh "-u $ethg -u $ethb -u $ethv"; }
+[[ $1 = gj  ]] && { jsh "-u $ethg"; }
+[[ $1 = bj  ]] && { jsh "-u $ethb"; }
+[[ $1 = vj  ]] && { jsh "-u $ethv"; }
+[[ $1 = sj  ]] && { jsh "-u $dnsd"; }
 # arranca
-[[ $1 = ga ]] && { dmr;ga; }
-[[ $1 = oa ]] && { dmr;oa; }
-[[ $1 = ba ]] && { dmr;ba; }
-[[ $1 = va ]] && { dmr;va; }
-[[ $1 = pa ]] && { dmr;pa; }
-[[ $1 = na ]] && { dmr;na; }
-[[ $1 = fa ]] && { dmr;fa; }
-[[ $1 = xa ]] && { dmr;xa; }
-[[ $1 = ra ]] && { dmr;ra; }
-[[ $1 = sa ]] && { dmr;sa; }
+[[ $1 = ga  ]] && { dmr;ga; }
+[[ $1 = oa  ]] && { dmr;oa; }
+[[ $1 = ba  ]] && { dmr;ba; }
+[[ $1 = va  ]] && { dmr;va; }
+[[ $1 = pa  ]] && { dmr;pa; }
+[[ $1 = na  ]] && { dmr;na; }
+[[ $1 = fa  ]] && { dmr;fa; }
+[[ $1 = xa  ]] && { dmr;xa; }
+[[ $1 = ra  ]] && { dmr;ra; }
+[[ $1 = sa  ]] && { dmr;sa; }
 # para & arranca & journal
 [[ $1 = gaj ]] && { dmr;ga;jsh "-u $ethg"; }
 [[ $1 = baj ]] && { dmr;ba;jsh "-u $ethb"; }
@@ -377,16 +385,16 @@ function fd { [[ $(fs0 $ethf loaded) ]] && { cex "systemctl disable $ethf";fcl;c
 [[ $1 = vea ]] && { ve;dmr;va;jsh "-u $ethv"; }
 [[ $1 = sea ]] && { se;sa;jsh "-u $dnsd"; }
 # enable
-[[ $1 = ge ]] && { ge; }
-[[ $1 = oe ]] && { oe; }
-[[ $1 = be ]] && { be; }
-[[ $1 = ve ]] && { ve; }
-[[ $1 = pe ]] && { pe; }
-[[ $1 = ne ]] && { ne; }
-[[ $1 = fe ]] && { fe; }
-[[ $1 = xe ]] && { xe; }
-[[ $1 = re ]] && { re; }
-[[ $1 = se ]] && { se; }
+[[ $1 = ge  ]] && { ge; }
+[[ $1 = oe  ]] && { oe; }
+[[ $1 = be  ]] && { be; }
+[[ $1 = ve  ]] && { ve; }
+[[ $1 = pe  ]] && { pe; }
+[[ $1 = ne  ]] && { ne; }
+[[ $1 = fe  ]] && { fe; }
+[[ $1 = xe  ]] && { xe; }
+[[ $1 = re  ]] && { re; }
+[[ $1 = se  ]] && { se; }
 # para
 [[ $1 = fpr ]] && { fp; }
 [[ $1 = npr ]] && { np; }
