@@ -33,15 +33,15 @@ function rd2 { cp $p8/$1.service $p0/$1.sav;sed "s%peers *[0-9]*%peers $2%" $p0/
 function rd3 { resolvectl query smtp.gmail.com 2>/dev/null 1>&2;sex "systemctl stop $1";dmr; }                                                    # DNS force smpt stop/load service
 function rd4 { local n=$(($2+$3));[[ $2 -ne 0 && $n -ge $4 && $n -le $5 ]] && rd2 $1 $n;rd3 $1; }                                                 # change/stop/load service process
 # geth control commands
-function gv { nu0 $(fs1 $ethg maxpeers [0-9])                                        ; }                                                          # get configured peers
-function gq { nu0 $(geth attach "http://$cgth:8545" --exec net.peerCount 2>/dev/null); }                                                          # get current    peers
-function gy {       geth attach "http://$cgth:8545" --exec eth.syncing   2>/dev/null ; }                                                          # current syncing status
-function gi { echo $@|sed 's%.*highestBlock: *\([0-9]*\).*%\1%'; }
-function gc { echo $@|sed 's%.*currentBlock: *\([0-9]*\).*%\1%'; }
-function gb {
+function gv  { nu0 $(fs1 $ethg maxpeers [0-9])                                        ; }                                                         # get configured peers
+function gq  { nu0 $(geth attach "http://$cgth:8545" --exec net.peerCount 2>/dev/null); }                                                         # get current    peers
+function gy  {       geth attach "http://$cgth:8545" --exec eth.syncing   2>/dev/null ; }                                                         # current syncing status
+function gi  { echo $@|sed 's%.*highestBlock: *\([0-9]*\).*%\1%'; }
+function gc  { echo $@|sed 's%.*currentBlock: *\([0-9]*\).*%\1%'; }
+function gb  {
   g0=$(fs4 'mported new' 0 geth|wc -l);ok=OK;[[ $g0 -eq $(grep sgs: $p5 2>/dev/null|tail -n1|sed 's%.*sgs: *\([0-9]*\).*%\1%') ]] && ok=BK        # imported new chain segments & OK/BK
 }
-function gl {                                                                                                                                     # geth log report
+function gl  {                                                                                                                                    # geth log report
   if [[ $(fs0 $ethg running) ]];then
     local e=$(gy);gb;m="$(dnn $(dts) $(gv) $(gq)) sgs: $(printf '%4i' $g0)"
     if [[ $(echo $e|grep false) ]];then m=" $ok SYC $m";else m=" $ok NSY $m blocks: $(($(gi $e)-$(gc $e)))";fi                                    # OK NSY (dnn) sgs: 5 blocks: 8 (6)
@@ -51,39 +51,39 @@ function gl {                                                                   
 }
 function grs { rd4 $ethg $1 $(gv) 10 15;sex "systemctl start $ethg";sleep 20s;echo "GETH RESTAR $(dnn $(dts) $(gv) $(gq))" >> $p5; }              # change/stop/load/start/log geth restart
 # beacon control commands
-function bv { nu0 $(fs1 $ethb target-peers [0-9])                   ; }                                                                           # get configured peers
-function bq { nu0 $(fs4 peers: 1|sed 's%.*peers: *\([0-9]*\).*%\1%'); }                                                                           # get current    peers
-function bi { nu4 ${k[$1]} ${z[$1]} ${x[$1]} ${w[$1]} ${c[$1]}; }                                                                                 # get avg penalty from paid err arrays
-function bx { echo $1|sed 's%node\([0-9]*\):%\1%'; }                                                                                              # get peers from node tag
-function bz { echo $((10*(9*zk+3*zz+zx+zw))); }                                                                                                   # numerator paid errors
-function bw { echo $((10*z1)); }                                                                                                                  # numerator processed blocks
-function br { echo $((90*z3)); }                                                                                                                  # numerator general errors
-function bu { echo $(($(nu5 200 $(bz) $z5)+$(nu5 100 $(bw) $z2)+$(nu5 100 $(br) $z4))); }                                                         # get restart idx
-function bs { tail -n$1 $p2 2>/dev/null|cut -d' ' -f1|sort -u|wc -l; }                                                                            # get restart activity test
-function bk { cat       $p2 2>/dev/null                      |wc -l; }                                                                            # get line count
-function bf { sort -k10.1n; }                                                                                                                     # srt by penalty
-function bt { bf|grep -n $1|cut -d: -f1; }                                                                                                        # get ordered position
-function by { fs4 "attestation(s).*$1"|sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w; }                                                           # get paid activities
-function bn { z5=${1:-$(by success)};zk=${2:-$(by missing)};zz=${3:-$(by target)};zx=${4:-$(by head)};zw=${5:-$(by had)}; }                       # set paid activities
-function bb {
+function bv  { nu0 $(fs1 $ethb target-peers [0-9])                   ; }                                                                          # get configured peers
+function bq  { nu0 $(fs4 peers: 1|sed 's%.*peers: *\([0-9]*\).*%\1%'); }                                                                          # get current    peers
+function bi  { nu4 ${k[$1]} ${z[$1]} ${x[$1]} ${w[$1]} ${c[$1]}; }                                                                                # get avg penalty from paid err arrays
+function bx  { echo $1|sed 's%node\([0-9]*\):%\1%'; }                                                                                             # get peers from node tag
+function bz  { echo $((10*(9*zk+3*zz+zx+zw))); }                                                                                                  # numerator paid errors
+function bw  { echo $((10*z1)); }                                                                                                                 # numerator processed blocks
+function br  { echo $((90*z3)); }                                                                                                                 # numerator general errors
+function bu  { echo $(($(nu5 200 $(bz) $z5)+$(nu5 100 $(bw) $z2)+$(nu5 100 $(br) $z4))); }                                                        # get restart idx
+function bs  { tail -n$1 $p2 2>/dev/null|cut -d' ' -f1|sort -u|wc -l; }                                                                           # get restart activity test
+function bk  { cat       $p2 2>/dev/null                      |wc -l; }                                                                           # get line count
+function bf  { sort -k10.1n; }                                                                                                                    # srt by penalty
+function bt  { bf|grep -n $1|cut -d: -f1; }                                                                                                       # get ordered position
+function by  { fs4 "attestation(s).*$1"|sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w; }                                                          # get paid activities
+function bn  { z5=${1:-$(by success)};zk=${2:-$(by missing)};zz=${3:-$(by target)};zx=${4:-$(by head)};zw=${5:-$(by had)}; }                      # set paid activities
+function bb  {
   local e=$(fs4 $bpid] 3600);z1=$(echo "$e"|grep 'rocessed block'|wc -l);z2=$(echo "$e"|grep 'block received'|wc -l)                              # processed blocks (restart idx)
   z3=$(echo "$e"|grep -v ' INFO '|wc -l);z4=$(echo "$e"|grep ' INFO '|wc -l)                                                                      # general errors   (restart idx)
   bn;ok=OK;local g=$(bu);[[ ($g -ge 1 && $(bs $hors) -eq 1) || ($g -ge $l2rs && $(bs $l2rs) -eq 1) ]] && ok=BK                                    # paid activities  (restart idx) & OK/BK
 }
-function bl {                                                                                                                                     # beacon log report
+function bl  {                                                                                                                                    # beacon log report
   if [[ $(fs0 $ethb running) ]];then
     b0=$(fs4 'published block'|wc -l);b5=$(nu6 $(fs4 delay_ms:|sed 's%.*delay_ms: *\([0-9]*\).*%\1%'));dt=$(dts);nn=$(bv);nr=$(bq);bb;blo         # published blocks/avg delays & get output
   else
     m=" NOT RUNNING $(dts)"
   fi
 }
-function bm {
+function bm  {
   bm0;b4=0;b8=$(fs4 'reduce peer'|wc -l);dt=$(dts);nn=$(bv);nr=$(bq)                                                                              # ini arrays/vars
   [[ -f $p7         ]] && bm3;b6=$(tail -n$(($(bk)-o[1])) $p2 2>/dev/null|grep BEAC);[[ $b6 ]] && bm1 20;bm2                                      # set arrays from barqivo log & remaining beacon log
   [[ ${b2:-0} -eq 0 ]] && bo1;b3=$(nu6 $(sed -Ee 's%BEAC +[0-9]+ +([0-9]+).+%\1%' $p3 2>/dev/null))                                               # cur/avg homologous position
   bm5 ${a[$nn]} 20;[[ $(nu3 ${a[$nn]}) -le $(nu3 ${a[0]}) || $(bs $hors) -gt 1 ]] && b4=0;bmo;bno                                                 # change configured peers & outputs
 }
-function bh {
+function bh  {
   tail -n${1:-$hors} $p2;[[ $1 ]] && return;bo1;echo -e "BO$(printf '%5i' $(echo "$b1"|wc -l)) $(printf '%3i' $b2)";bo2                           # beacon log/homologous report
   bl;echo -e "BL$(printf '%9i' $(cat $p2 2>/dev/null|wc -l))\nBEAC$m";bm;echo -e "BM$(printf '%5i' $(cat $p3 2>/dev/null|wc -l))\nBEAC$m"         # beacon/medias report
   sst BEAC $ethb;sst VALI $ethv;csh;psh;esh                                                                                                       # beacon/validator status & clock/cpu/system/eth info
@@ -192,19 +192,6 @@ function bnl {                                                                  
   [[ -f $p3 && -f ${p3}new ]] && { cp $p3 ${p3}sav;mv ${p3}new $p3; }
   [[ -f $p7 && -f ${p7}new ]] && { cp $p7 ${p7}sav;mv ${p7}new $p7; }
 }
-function ssp {
-  echo -e "${i}QUER MESMO TRANSFERIR VALIDATORS?${f}";read rsp
-  if [[ $rsp = sim && ! -f $dtdi/vc_slash && ! -f $dtdi/vc_lock && -f $dtdi/vc_keys ]];then
-    vp;vd
-    echo -e "${i}SAVE SLASHING PROTECTION DB${f}"
-    echo $H|sudo -S cp $vldt/slashing_protection.sqlite $p0 2>/dev/null;sudo chown eth:eth $p0/slashing_protection.sqlite
-    if [[ $cunm = $znm3 ]];then
-      scp $p0/slashing_protection.sqlite vpss:~         ;echo -e "${i}SAVED SLASHING PROTECTION DB IN vpss${f}"
-    else
-      scp $p0/slashing_protection.sqlite ztc3.fruga.pt:~;echo -e "${i}SAVED SLASHING PROTECTION DB IN ztc3${f}"
-    fi
-  fi
-}
 function nsh {                                                                                                                                    # routes & dns info
   echo -e "ROUTES\t\t$(ip route show|grep 'default via'|grep -v linkdown|cut -d' ' -f3)\nDNS\t\t$(resolvectl|grep 'Current DNS'|cut -d' ' -f6)"
   local v=0;for v in $(ip a|grep 'state UP'|cut -d: -f2);do echo -e "$v\t\t$(resolvectl dns|grep $v|cut -d' ' -f4-6)";done
@@ -285,10 +272,10 @@ function va  {
     rm $dtdi/vc_slash
   fi
 }
-function pa { [[ $(fs0 $ethp) ]] && { cex "systemctl start $ethp"; } }
-function na { [[ $(fs0 $ethn) ]] && { cex "systemctl start $ethn"; } }
-function fa { [[ $(fs0 $ethf) ]] && { cex "systemctl start $ethf"; } }
-function wa {
+function pa  { [[ $(fs0 $ethp) ]] && { cex "systemctl start $ethp"; } }
+function na  { [[ $(fs0 $ethn) ]] && { cex "systemctl start $ethn"; } }
+function fa  { [[ $(fs0 $ethf) ]] && { cex "systemctl start $ethf"; } }
+function wa  {
   if [[ $(echo $H|sudo -S ufw status 2>/dev/null|grep -i inactive) ]];then
     echo -e "${i}UFW ENABLE${f}";sudo ufw enable <<< y                                                                                            # enable asks: Proceed with operation (y|n)?
   else
@@ -296,18 +283,31 @@ function wa {
   fi
 }
 # para/disable goethereum/beacon/validator/prometheus/grafana
-function gp { [[ $(fs0 $ethg loaded) ]] && { cex "systemctl stop $ethg"; } }
-function bp { [[ $(fs0 $ethb loaded) ]] && { cex "systemctl stop $ethb"; } }
-function vp { [[ $(fs0 $ethv loaded) ]] && { cex "systemctl stop $ethv";touch $dtdi/vc_slash; } }
-function pp { [[ $(fs0 $ethp loaded) ]] && { cex "systemctl stop $ethp"; } }
-function np { [[ $(fs0 $ethn loaded) ]] && { cex "systemctl stop $ethn"; } }
-function fp { [[ $(fs0 $ethf loaded) ]] && { cex "systemctl stop $ethf"; } }
-function gd { cex "systemctl disable $ethg";gcl;cex 'ufw reload'; }
-function bd { cex "systemctl disable $ethb";bcl;cex 'ufw reload'; }
-function vd { cex "systemctl disable $ethv";vcl;cex 'ufw reload';touch $dtdi/vc_lock; }
-function pd { [[ $(fs0 $ethp loaded) ]] && { cex "systemctl disable $ethp"; } }
-function nd { [[ $(fs0 $ethn loaded) ]] && { cex "systemctl disable $ethn"; } }
-function fd { [[ $(fs0 $ethf loaded) ]] && { cex "systemctl disable $ethf";fcl;cex 'ufw reload'; } }
+function gp  { [[ $(fs0 $ethg loaded) ]] && { cex "systemctl stop $ethg"; } }
+function bp  { [[ $(fs0 $ethb loaded) ]] && { cex "systemctl stop $ethb"; } }
+function vp  { [[ $(fs0 $ethv loaded) ]] && { cex "systemctl stop $ethv";touch $dtdi/vc_slash; } }
+function pp  { [[ $(fs0 $ethp loaded) ]] && { cex "systemctl stop $ethp"; } }
+function np  { [[ $(fs0 $ethn loaded) ]] && { cex "systemctl stop $ethn"; } }
+function fp  { [[ $(fs0 $ethf loaded) ]] && { cex "systemctl stop $ethf"; } }
+function gd  { cex "systemctl disable $ethg";gcl;cex 'ufw reload'; }
+function bd  { cex "systemctl disable $ethb";bcl;cex 'ufw reload'; }
+function vd  { cex "systemctl disable $ethv";vcl;cex 'ufw reload';touch $dtdi/vc_lock; }
+function pd  { [[ $(fs0 $ethp loaded) ]] && { cex "systemctl disable $ethp"; } }
+function nd  { [[ $(fs0 $ethn loaded) ]] && { cex "systemctl disable $ethn"; } }
+function fd  { [[ $(fs0 $ethf loaded) ]] && { cex "systemctl disable $ethf";fcl;cex 'ufw reload'; } }
+function ssp {
+  echo -e "${i}QUER MESMO TRANSFERIR VALIDATORS?${f}";read rsp
+  if [[ $rsp = sim && ! -f $dtdi/vc_slash && ! -f $dtdi/vc_lock && -f $dtdi/vc_keys ]];then
+    vp;vd
+    echo -e "${i}SAVE SLASHING PROTECTION DB${f}"
+    echo $H|sudo -S cp $vldt/slashing_protection.sqlite $p0 2>/dev/null;sudo chown eth:eth $p0/slashing_protection.sqlite
+    if [[ $cunm = $znm3 ]];then
+      scp $p0/slashing_protection.sqlite vpss:~         ;echo -e "${i}SAVED SLASHING PROTECTION DB IN vpss${f}"
+    else
+      scp $p0/slashing_protection.sqlite ztc3.fruga.pt:~;echo -e "${i}SAVED SLASHING PROTECTION DB IN ztc3${f}"
+    fi
+  fi
+}
 
 [[ $1 = eip ]] && { curl -s4 "http://${2}:${3}@dyn.dns.he.net/nic/update?hostname=${2}" 2>/dev/null 1>&2; }
 [[ $1 = dsh ]] && { echo QUERY DNS;resolvectl query ${2:-smtp.gmail.com}; }
