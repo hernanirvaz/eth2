@@ -172,15 +172,14 @@ function brl {                                                                  
       m=" $ok $(printf '%3i' ${v[2]}) $(dnn $dt $nn $nr)"                                                                                         # other lines
     fi;echo "${v[0]}$m" >> ${p2}new                                                                                                               # new beacon log output
   done <<< $(cat $p2)
-  if [[ -f $p3 ]];then
-    bm0;local d='0000-00-00';local e='23:58';local l=0;local n=0;local h=0;local g=0
-    while read -a o;do
-      d=${o[3]};h=$g;g=$(grep -n "$d $e" ${p2}new|cut -d: -f1);dt=${o[3]}\ ${o[4]};nn=$(bx ${o[5]});nr=${o[6]}                                    # beacon log position & uncalculated vars
-      b2=$(head -n$g ${p2}new|grep "BEAC.*$e"|bt $d);((l+=b2));((n+=1));b3=$(nu3 $l/$n 5 1)                                                       # cur/avg homologous position
-      b6=$(head -n$g ${p2}new|tail -n$((g-h))|grep BEAC);[[ $b6 ]] && bm1 20;bm2                                                                  # sum paid err arrays from interim beacon log
-      b4=${o[18]};b8=${o[19]};bmo;echo "${o[0]}$m" >> ${p3}new                                                                                    # new bmedias log output
-    done <<< $(cat $p3)
-  fi
+  [[ ! -f $p3 ]] && return
+  bm0;local d='0000-00-00';local e='23:58';local l=0;local n=0;local h=0;local g=0
+  while read -a o;do
+    d=${o[3]};h=$g;g=$(grep -n "$d $e" ${p2}new|cut -d: -f1);dt=${o[3]}\ ${o[4]};nn=$(bx ${o[5]});nr=${o[6]}                                    # beacon log position & uncalculated vars
+    b2=$(head -n$g ${p2}new|grep "BEAC.*$e"|bt $d);((l+=b2));((n+=1));b3=$(nu3 $l/$n 5 1)                                                       # cur/avg homologous position
+    b6=$(head -n$g ${p2}new|tail -n$((g-h))|grep BEAC);[[ $b6 ]] && bm1 20;bm2                                                                  # sum paid err arrays from interim beacon log
+    b4=${o[18]};b8=${o[19]};bmo;echo "${o[0]}$m" >> ${p3}new                                                                                    # new bmedias log output
+  done <<< $(cat $p3)
 }
 function bsl {                                                                                                                                    # shrink beacon log using barqivo
   [[ -f ${p2}new ]] && rm ${p2}new;[[ -f ${p7}new ]] && rm ${p7}new
