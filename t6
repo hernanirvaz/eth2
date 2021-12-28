@@ -36,8 +36,8 @@ function rd4 { local n=$(($2+$3));[[ $2 -ne 0 && $n -ge $4 && $n -le $5 ]] && rd
 function gv  { nu0 $(fs1 $ethg maxpeers [0-9])                                        ; }                                                         # get configured peers
 function gq  { nu0 $(geth attach "http://$cgth:8545" --exec net.peerCount 2>/dev/null); }                                                         # get current    peers
 function gy  {       geth attach "http://$cgth:8545" --exec eth.syncing   2>/dev/null ; }                                                         # current syncing status
-function gi  { echo $@|sed 's%.*highestBlock: *\([0-9]*\).*%\1%'; }
-function gc  { echo $@|sed 's%.*currentBlock: *\([0-9]*\).*%\1%'; }
+function gi  { echo $@|sed 's%.*highestBlock: *\([0-9]*\).*%\1%'; }                                                                               # get highest geth block
+function gc  { echo $@|sed 's%.*currentBlock: *\([0-9]*\).*%\1%'; }                                                                               # get current geth block
 function gb  {
   g0=$(fs4 'mported new' 0 geth|wc -l);ok=OK;[[ $g0 -eq $(grep sgs: $p5 2>/dev/null|tail -n1|sed 's%.*sgs: *\([0-9]*\).*%\1%') ]] && ok=BK        # imported new chain segments & OK/BK
 }
@@ -54,17 +54,17 @@ function grs { rd4 $ethg $1 $(gv) 10 15;sex "systemctl start $ethg";sleep 20s;ec
 # beacon control commands
 function bv  { nu0 $(fs1 $ethb target-peers [0-9])                   ; }                                                                          # get configured peers
 function bq  { nu0 $(fs4 peers: 1|sed 's%.*peers: *\([0-9]*\).*%\1%'); }                                                                          # get current    peers
-function bi  { nu4 ${k[$1]} ${z[$1]} ${x[$1]} ${w[$1]} ${c[$1]}; }                                                                                # get avg penalty from paid err arrays
-function bx  { echo $1|sed 's%node\([0-9]*\):%\1%'; }                                                                                             # get peers from node tag
-function bz  { echo $((10*(9*zk+3*zz+zx+zw))); }                                                                                                  # numerator paid errors
-function bw  { echo $((10*z1)); }                                                                                                                 # numerator processed blocks
-function br  { echo $((90*z3)); }                                                                                                                 # numerator general errors
+function bi  { nu4 ${k[$1]} ${z[$1]} ${x[$1]} ${w[$1]} ${c[$1]}      ; }                                                                          # get avg penalty from paid err arrays
+function bx  { echo $1|sed 's%node\([0-9]*\):%\1%'                                     ; }                                                        # get peers from node tag
+function bz  { echo $((10*(9*zk+3*zz+zx+zw)))                                          ; }                                                        # get numerator paid errors
+function bw  { echo $((10*z1))                                                         ; }                                                        # get numerator processed blocks
+function br  { echo $((90*z3))                                                         ; }                                                        # get numerator general errors
 function bu  { echo $(($(nu5 200 $(bz) $z5)+$(nu5 100 $(bw) $z2)+$(nu5 100 $(br) $z4))); }                                                        # get restart idx
-function bs  { tail -n$1 $p2 2>/dev/null|cut -d' ' -f1|sort -u|wc -l; }                                                                           # get restart activity test
-function bk  { cat       $p2 2>/dev/null                      |wc -l; }                                                                           # get line count
-function bf  { sort -k10.1n; }                                                                                                                    # srt by penalty
-function bt  { bf|grep -n $1|cut -d: -f1; }                                                                                                       # get ordered position
-function by  { fs4 "attestation(s).*$1"|sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w; }                                                          # get paid activities
+function bs  { tail -n$1 $p2 2>/dev/null|cut -d' ' -f1|sort -u|wc -l                   ; }                                                        # get restart activity test
+function bk  { cat       $p2 2>/dev/null                      |wc -l                   ; }                                                        # get line count
+function bf  { sort -k10.1n                                                            ; }                                                        # srt by penalty
+function bt  { bf|grep -n $1|cut -d: -f1                                               ; }                                                        # get ordered position
+function by  { fs4 "attestation(s).*$1"|sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w  ; }                                                        # get paid activities
 function bn  { z5=${1:-$(by success)};zk=${2:-$(by missing)};zz=${3:-$(by target)};zx=${4:-$(by head)};zw=${5:-$(by had)}; }                      # set paid activities
 function bb  {
   local e=$(fs4 $bpid] 3600);z1=$(echo "$e"|grep 'rocessed block'|wc -l);z2=$(echo "$e"|grep 'block received'|wc -l)                              # processed blocks (restart idx)
@@ -81,7 +81,7 @@ function bl  {                                                                  
 function bm  {                                                                                                                                    # bmedias report
   bm0;b4=0;b8=$(fs4 'reduce peer'|wc -l);dt=$(dts);nn=$(bv);nr=$(bq)                                                                              # ini arrays/vars
   [[ -f $p7         ]] && bm3;b6=$(tail -n$(($(bk)-o[1])) $p2 2>/dev/null|grep BEAC);[[ $b6 ]] && bm1 20;bm2                                      # set arrays from barqivo log & remaining beacon log
-  [[ ${b2:-0} -eq 0 ]] && bo1;b3=$(nu6 $(sed -Ee 's%BEAC +[0-9]+ +([0-9]+).+%\1%' $p3 2>/dev/null))                                               # cur/avg homologous position
+  [[ ${b2:=0} -eq 0 ]] && bo1;b3=$(nu6 $(sed -Ee 's%BEAC +[0-9]+ +([0-9]+).+%\1%' $p3 2>/dev/null))                                               # cur/avg homologous position
   bm5 ${a[$nn]} 20;[[ $(nu3 ${a[$nn]}) -le $(nu3 ${a[0]}) || $(bs $hors) -gt 1 ]] && b4=0;bmo;bno                                                 # change configured peers & outputs
 }
 function bh  {                                                                                                                                    # beacon historic report
@@ -95,7 +95,7 @@ function bo1 {                                                                  
   local t=00:00;[[ $(fs2 $1) ]] && b2=$1;[[ $(fs2 $2) ]] && b2=$2;[[ $(fs3 $1) ]] && t=$1;[[ $(fs3 $2) ]] && t=$2                                 # homologous position/time forced
   local l=$(grep BEAC $p2|tail -n1|sed 's%.* \([0-9]*-[0-9]*-[0-9]*\) \([0-9]*:[0-9]*\).*%\1\t\2%')                                               # last yyyy-mm-dd hh:mm beacon log
   local d=$(echo "$l"|cut -f1);[[ $t = 00:00 ]] && t=$(echo "$l"|cut -f2);b1=$(grep "BEAC.*$t" $p2);[[ $b2 -eq 0 ]] && b2=$(echo "$b1"|bt $d)     # set homologous lines/position
-  local n=0;while [[ ${b2:-0} -eq 0 && $n -lt 50 ]];do ((n+=1));d=$(date -d "$n days ago $t" '+%Y-%m-%d');b2=$(echo "$b1"|bt $d);done             # search past homologous info (max 50 days)
+  local n=0;while [[ ${b2:=0} -eq 0 && $n -lt 50 ]];do ((n+=1));d=$(date -d "$n days ago $t" '+%Y-%m-%d');b2=$(echo "$b1"|bt $d);done             # search past homologous info (max 50 days)
 }
 function bo2 {                                                                                                                                    # homologous report
   [[ ! -f $p2 ]] && return;local g=${b2:-0};local d=${b2:-0}                                                                                      # init head/tail lines
@@ -193,7 +193,7 @@ function nsh {                                                                  
   echo -e "ROUTES\t\t$(ip route show|grep 'default via'|grep -v linkdown|cut -d' ' -f3)\nDNS\t\t$(resolvectl|grep 'Current DNS'|cut -d' ' -f6)"
   local v=0;for v in $(ip a|grep 'state UP'|cut -d: -f2);do echo -e "$v\t\t$(resolvectl dns|grep $v|cut -d' ' -f4-6)";done
 }
-function cpe {                                                                                                 
+function cpe {
   local e='NO';[[ $(timedatectl|grep synchronized:|sed 's%.*synchronized: \([a-z]*\).*%\1%') = yes ]] && e='OK'                                   # system clock info
   echo "CLCK $e $(printf '%3i' $(fs7 'check system clock'|wc -l)) $(dts) status: $(fs1 systemd-timesyncd)"
   [[ $1 = c ]] && return;local l=0;local n=0;local v=0                                                                                            # cpu info
