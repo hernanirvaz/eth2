@@ -24,6 +24,7 @@ ethf='grafana-server'
 plex='plexmediaserver'
 trrt='transmission-daemon'
 dnsd='named'
+sctl='systemctl'
 zip1='192.168.8.25'
 zip2='192.168.8.28'
 zip3='192.168.8.31'
@@ -39,7 +40,7 @@ vnm3='vmi469069.contaboserver.net'
 dtdi="/var/lib/lighthouse"
 becn="$dtdi/beacon"
 vldt="$dtdi/validators"
-bpid=$(systemctl status $ethb 2>/dev/null|grep PID|sed 's%.*PID: *\([0-9]*\).*%\1%')
+bpid=$($sctl status $ethb 2>/dev/null|grep PID|sed 's%.*PID: *\([0-9]*\).*%\1%')
 
 rblk=22238623
 ratt=00019000

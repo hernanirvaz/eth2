@@ -87,8 +87,8 @@ else
   # nao executa - nao acho ser necessario
   [ -f /etc/update-motd.d/97-overlayroot ] && sudo chmod -x /etc/update-motd.d/97-overlayroot
   sudo netplan apply
-  sudo systemctl restart systemd-resolved
-  sudo systemctl restart systemd-timesyncd
+  sudo $sctl restart systemd-resolved
+  sudo $sctl restart systemd-timesyncd
 fi
 
 if [ "$cunm" != "$znm1" ] && [ "$cunm" != "$vnm1" ]; then
