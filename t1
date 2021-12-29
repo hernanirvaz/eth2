@@ -11,6 +11,7 @@ p5="$p0/geth.log"
 p2="$p0/beacon.log"
 p3="$p0/bmedias.log"
 p7="$p0/barqivo.log"
+p9="$p0/beacon.restart.inicio"
 
 meeu="$(whoami)"
 cunm="$(uname -n)"
