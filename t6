@@ -65,11 +65,11 @@ function bf  { sort -k10.1n                                                     
 function bt  { echo "$b1"|bf|grep -n $1|cut -d: -f1                                    ; }                                                        # get homologous beacon lines position
 function bo  { echo "$b1"|wc -l                                                        ; }                                                        # get homologous beacon lines count
 function by  { fs4 "attestation(s).*$1"|sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w  ; }                                                        # get paid activities
-function bn  { z5=${1:-$(by success)};zk=${2:-$(by missing)};zz=${3:-$(by target)};zx=${4:-$(by head)};zw=${5:-$(by had)}; }                      # set paid activities
-function bb  {
-  local e=$(fs4 $bpid] 3600);z1=$(echo "$e"|grep 'rocessed block'|wc -l);z2=$(echo "$e"|grep 'block received'|wc -l)                              # processed blocks (restart idx)
-  z3=$(echo "$e"|grep -v ' INFO '|wc -l);z4=$(echo "$e"|grep ' INFO '|wc -l)                                                                      # general errors   (restart idx)
-  bn;ok=OK;local g=$(bu);[[ ($g -ge 1 && $(bs $hors) -eq 1) || ($g -ge $l2rs && $(bs $l2rs) -eq 1) ]] && ok=BK                                    # paid activities  (restart idx) & OK/BK
+function bb  { b9=$(fs4 $bpid] 3600);bn;local g=$(bu);[[ ($g -ge 1 && $(bs $hors) -eq 1) || ($g -ge $l2rs && $(bs $l2rs) -eq 1) ]] && ok=BK; }    # set restart idx vars/OK/BK
+function bn  {
+  z1=${1:-$(echo "$b9"|grep 'rocessed block'|wc -l)};z2=${2:-$(echo "$b9"|grep 'block received'|wc -l)}                                           # set processed blocks (restart idx)
+  z3=${3:-$(echo "$b9"|grep -v ' INFO '     |wc -l)};z4=${4:-$(echo "$b9"|grep ' INFO '        |wc -l)}                                           # set general errors   (restart idx)
+  z5=${5:-$(by success)};zk=${6:-$(by missing)};zz=${7:-$(by target)};zx=${8:-$(by head)};zw=${9:-$(by had)};ok=${10:-OK}                         # set paid activities & OK/BK
 }
 function bl  {                                                                                                                                    # beacon report
   if [[ $(rd0 $ethb running) ]];then
@@ -159,7 +159,7 @@ function brl {                                                                  
   [[ -f ${p2}new ]] && rm ${p2}new;[[ -f ${p3}new ]] && rm ${p3}new
   unset v;while read -a v;do ok=${v[1]};dt=${v[3]}\ ${v[4]};nn=$(bx ${v[5]});nr=${v[6]}                                                           # uncalculated vars
     if [[ ${v[0]} = BEAC ]];then
-      b0=${v[13]};b5=${v[26]};z1=${v[19]};z2=${v[20]};z3=${v[22]};z4=${v[23]};bn ${v[11]} ${v[15]} ${v[16]} ${v[17]} ${v[18]};blo                 #  BEAC lines calculated output
+      b0=${v[13]};b5=${v[26]};bn ${v[19]} ${v[20]} ${v[22]} ${v[23]} ${v[11]} ${v[15]} ${v[16]} ${v[17]} ${v[18]} ${v[1]};blo                     #  BEAC lines calculated output
     else
       m=" $ok $(printf '%3i' ${v[2]}) $(dnn $dt $nn $nr)"                                                                                         # !BEAC lines
     fi                                                                                                    ;echo "${v[0]}$m" >> ${p2}new           # beacon output
