@@ -73,7 +73,7 @@ function bb  {
 }
 function bl  {                                                                                                                                    # beacon report
   if [[ $(rd0 $ethb running) ]];then
-    b0=$(fs4 'published block'|wc -l);b5=$(nu6 $(fs4 delay_ms:|sed 's%.*delay_ms: *\([0-9]*\).*%\1%'));dt=$(dts);nn=$(bv);nr=$(bq);bb;blo         # published blocks/avg delays & get output
+    b0=$(fs4 'published block'|wc -l);b5=$(nu6 $(fs4 delay_ms:|sed 's%.*delay_ms: *\([0-9]*\).*%\1%'));dt=$(dts);nn=$(bv);nr=$(bq);bb;blo         # published blocks/avg delays (b0/b5) & get output
   else
     m=" NOT RUNNING $(dts)"
   fi
@@ -159,7 +159,7 @@ function brl {                                                                  
   [[ -f ${p2}new ]] && rm ${p2}new;[[ -f ${p3}new ]] && rm ${p3}new
   unset v;while read -a v;do ok=${v[1]};dt=${v[3]}\ ${v[4]};nn=$(bx ${v[5]});nr=${v[6]}                                                           # uncalculated vars
     if [[ ${v[0]} = BEAC ]];then
-      b5=${v[26]};b0=${v[13]};z1=${v[19]};z2=${v[20]};z3=${v[22]};z4=${v[23]};bn ${v[11]} ${v[15]} ${v[16]} ${v[17]} ${v[18]};blo                 #  BEAC lines calculated output
+      b0=${v[13]};b5=${v[26]};z1=${v[19]};z2=${v[20]};z3=${v[22]};z4=${v[23]};bn ${v[11]} ${v[15]} ${v[16]} ${v[17]} ${v[18]};blo                 #  BEAC lines calculated output
     else
       m=" $ok $(printf '%3i' ${v[2]}) $(dnn $dt $nn $nr)"                                                                                         # !BEAC lines
     fi                                                                                                    ;echo "${v[0]}$m" >> ${p2}new           # beacon output
