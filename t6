@@ -60,9 +60,10 @@ function bw  { echo $((10*z1))                                                  
 function br  { echo $((90*z3))                                                         ; }                                                        # get numerator general errors
 function bu  { echo $(($(nu5 200 $(bz) $z5)+$(nu5 100 $(bw) $z2)+$(nu5 100 $(br) $z4))); }                                                        # get restart idx
 function bs  { tail -n$1 $p2 2>/dev/null|cut -d' ' -f1|sort -u|wc -l                   ; }                                                        # get restart activity test
-function bk  { cat       $p2 2>/dev/null                      |wc -l                   ; }                                                        # get line count
-function bf  { sort -k10.1n                                                            ; }                                                        # srt by penalty
-function bt  { bf|grep -n $1|cut -d: -f1                                               ; }                                                        # get ordered position
+function bk  { cat       $p2 2>/dev/null                      |wc -l                   ; }                                                        # get beacon line count
+function bf  { sort -k10.1n                                                            ; }                                                        # srt beacon lines by penalty
+function bt  { echo "$b1"|bf|grep -n $1|cut -d: -f1                                    ; }                                                        # get homologous beacon lines position
+function bo  { echo "$b1"|wc -l                                                        ; }                                                        # get homologous beacon lines count
 function by  { fs4 "attestation(s).*$1"|sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w  ; }                                                        # get paid activities
 function bn  { z5=${1:-$(by success)};zk=${2:-$(by missing)};zz=${3:-$(by target)};zx=${4:-$(by head)};zw=${5:-$(by had)}; }                      # set paid activities
 function bb  {
@@ -85,7 +86,7 @@ function bm  {                                                                  
 }
 function bh  {                                                                                                                                    # historic report
   [[ ! -f $p2 ]] && return                                                                                                                        # beacon log must exist
-  tail -n${1:-$hors} $p2;[[ $1 ]] && return;bo1;echo -e "BO$(printf '%5i' $(echo "$b1"|wc -l)) $(printf '%3i' $b2)";bo2                           # beacon log/homologous report
+  tail -n${1:-$hors} $p2;[[ $1 ]] && return;bo1;echo -e "BO$(printf '%5i' $(bo)) $(printf '%3i' $b2)";bo2                                         # beacon log/homologous report
   bl;echo -e "BL$(printf '%9i' $(cat $p2 2>/dev/null|wc -l))\nBEAC$m";bm;echo -e "BM$(printf '%5i' $(cat $p3 2>/dev/null|wc -l))\nBEAC$m"         # beacon/medias report
   sst BEAC $ethb;sst VALI $ethv;cpe                                                                                                               # beacon/validator status & clock/cpu/system/eth info
 }
@@ -93,13 +94,13 @@ function bo1 {                                                                  
   b2=0;[[ ! -f $p2 ]] && return                                                                                                                   # beacon log must exist
   local t=00:00;[[ $(fs2 $1) ]] && b2=$1;[[ $(fs2 $2) ]] && b2=$2;[[ $(fs3 $1) ]] && t=$1;[[ $(fs3 $2) ]] && t=$2                                 # homologous position/time forced
   local l=$(grep BEAC $p2|tail -n1|sed 's%.* \([0-9]*-[0-9]*-[0-9]*\) \([0-9]*:[0-9]*\).*%\1\t\2%')                                               # last yyyy-mm-dd hh:mm beacon log
-  local d=$(echo "$l"|cut -f1);[[ $t = 00:00 ]] && t=$(echo "$l"|cut -f2);b1=$(grep "BEAC.*$t" $p2);[[ $b2 -eq 0 ]] && b2=$(echo "$b1"|bt $d)     # set homologous lines/position
-  local n=0;while [[ ${b2:=0} -eq 0 && $n -lt 50 ]];do ((n+=1));d=$(date -d "$n days ago $t" '+%Y-%m-%d');b2=$(echo "$b1"|bt $d);done             # search past homologous info (max 50 days)
+  local d=$(echo "$l"|cut -f1);[[ $t = 00:00 ]] && t=$(echo "$l"|cut -f2);b1=$(grep "BEAC.*$t" $p2);[[ $b2 -eq 0 ]] && b2=$(bt $d)                # set homologous lines/position (b1/b2)
+  local n=0;while [[ ${b2:=0} -eq 0 && $n -lt 50 ]];do ((n+=1));d=$(date -d "$n days ago $t" '+%Y-%m-%d');b2=$(bt $d);done                        # search past homologous info (max 50 days)
 }
 function bo2 {                                                                                                                                    # homologous report
   [[ ! -f $p2 ]] && return;local g=${b2:-0};local d=${b2:-0}                                                                                      # init head/tail lines
-  if [[ $(fs2 $1) ]];then g=$1;else if [[ $g -lt $l2rs && $(echo "$b1"|wc -l) -ge $l2rs ]];then d=$l2rs;g=$l2rs;fi;fi                             # ajust head lines
-  if [[ $(fs2 $1) ]];then d=$1;else if [[ $d -gt $hors                                  ]];then d=$hors        ;fi;fi                             # ajust tail lines
+  if [[ $(fs2 $1) ]];then g=$1;else if [[ $g -lt $l2rs && $(bo) -ge $l2rs ]];then d=$l2rs;g=$l2rs;fi;fi                                           # ajust head lines
+  if [[ $(fs2 $1) ]];then d=$1;else if [[ $d -gt $hors                    ]];then d=$hors        ;fi;fi                                           # ajust tail lines
   echo "$b1"|bf|head -n$g|tail -n$d                                                                                                               # order/filter homologous report
 }
 function blo {
@@ -165,7 +166,7 @@ function brl {                                                                  
   done <<< $(cat $p2)
   [[ ! -f $p3 ]] && return;bm0;local d='0000-00-00';local e='23:58';local l=0;local n=0;local h=0;local g=0;while read -a o;do
     d=${o[3]};h=$g;g=$(grep -n "$d $e" ${p2}new|cut -d: -f1);dt=${o[3]}\ ${o[4]};nn=$(bx ${o[5]});nr=${o[6]}                                      # beacon log position & uncalculated vars
-    b2=$(head -n$g ${p2}new|grep "BEAC.*$e"|bt $d);((l+=b2));((n+=1));b3=$(nu3 $l/$n 5 1)                                                         # cur/avg homologous position
+    b1=$(head -n$g ${p2}new|grep "BEAC.*$e");b2=$(bt $d);((l+=b2));((n+=1));b3=$(nu3 $l/$n 5 1)                                                   # cur/avg homologous position
     b6=$(head -n$g ${p2}new|tail -n$((g-h))|grep BEAC);[[ $b6 ]] && bm1 20;bm2;b4=${o[18]};b8=${o[19]};bmo;echo "${o[0]}$m" >> ${p3}new           # sum err arrays & bmedias output
   done <<< $(cat $p3)
 }
