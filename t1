@@ -51,7 +51,6 @@ pmah=00004500
 pdly=00000500
 decp=1000000000
 
-l2rs=5
 hors=24
 rate=4000
 if [[ $cust = hrv ]];then cgth=$zip1;else cgth=$vip1;fi
