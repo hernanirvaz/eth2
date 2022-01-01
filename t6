@@ -82,7 +82,7 @@ function bm  {                                                                  
   bm0;b4=0;b8=$(fs4 'reduce peer'|wc -l);dt=$(dts);nn=$(bv);nr=$(bq)                                                                              # ini arrays/vars
   [[ -f $p7         ]] && bm3;b6=$(tail -n$(($(bk)-o[1])) $p2 2>/dev/null|grep BEAC);[[ $b6 ]] && bm1 20;bm2                                      # set arrays from barqivo log & remaining beacon log
   [[ ${b2:=0} -eq 0 ]] && bo1;b3=$(nu6 $(sed -Ee 's%BEAC +[0-9]+ +([0-9]+).+%\1%' $p3 2>/dev/null))                                               # cur/avg homologous position
-  bm5 ${a[$nn]} 20;[[ $(nu3 ${a[$nn]}) -le $(nu3 ${a[0]}) || $(bs $hors) -gt 1 ]] && b4=0;bmo;bno                                                 # change configured peers & outputs
+  bm5 ${a[$nn]} 20;[[ $(bs $hors) -gt 1 ]] && b4=0;bmo;bno                                                                                        # change configured peers & outputs
 }
 function bh  {                                                                                                                                    # historic report
   [[ ! -f $p2 ]] && return                                                                                                                        # beacon log must exist
