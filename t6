@@ -103,9 +103,8 @@ function bo0 {                                                                  
   local n=0;while [[ ${b2:=0} -eq 0 && $n -lt 50 ]];do ((n+=1));d=$(date -d "$n days ago $t" '+%Y-%m-%d');b2=$(bo3 $d);done                                   # search past homologous info (max 50 days)
 }
 function bo1 {                                                                                                                                                # homologous report
-  [[ ! -f $p2 ]] && return;local g=${b2:-0};local d=${b2:-0}                                                                                                  # init head/tail lines
-  if [[ $(fs0 $1) ]];then g=$1;else if [[ $g -lt 5 && $(bo4) -ge 5 ]];then d=5;g=5;fi;fi                                                                      # ajust head lines
-  if [[ $(fs0 $1) ]];then d=$1;else if [[ $d -gt $hors             ]];then d=$hors;fi;fi;bo6|head -n$g|tail -n$d                                              # ajust tail lines & homologous report
+  [[ ! -f $p2 ]] && return;local g=${b2:-0};local d=${b2:-0};if [[ $(fs0 $1) ]];then g=$1;else if [[ $g -lt 5 && $(bo4) -ge 5 ]];then d=5;g=5;fi;fi           # ajust head lines
+  if [[ $(fs0 $1) ]];then d=$1;else if [[ $d -gt $hors ]];then d=$hors;fi;fi;bo6|head -n$g|tail -n$d                                                          # ajust tail lines & output
 }
 function bo2 { cat $2|grep "BEAC.*${1:-23:58}"; }                                                                                                             # get homologous beacon lines
 function bo3 { bo6|grep -n $1|cut -d: -f1     ; }                                                                                                             # get homologous beacon lines position
@@ -182,11 +181,9 @@ function bmo {
   m="$m $(printf '%4.2f' ${a[35]}) $(printf '%4.2f' ${a[30]}) $(printf '%4.2f' ${a[25]}) $(printf '%4.2f' ${a[20]}) global_avg: $(printf '%4.2f' ${a[0]})"
   m="$m crm_peers: $(printf '%2i' $b4) $(printf '%2i' $b5) $(printf '%2i' $nm)"
 }
-function bno {
-  #    0   1          2     3    4 5 6 7 8 9 10 11   12 13 14 15 16 17 18 19   20 21 22 23 24 25 26 27   28 29 30 31 32 33 34 35   36 37 38 39 40 41 42 43
-  # BEAC 620 2021-12-09 09:17 cnt: 0 0 0 0 0 11 11 mis: 22 22 22 22 22 22 22 mat: 33 33 33 33 33 33 33 mah: 44 44 44 44 44 44 44 dly: 55 55 55 55 55 55 55
-  s=" $(bk) $dt $(bnc 50 'cnt:' ' ') $(bnk 50 'mis:' ' ') $(bnz 50 'mat:' ' ') $(bnx 50 'mah:' ' ') $(bnw 50 'dly:' ' ')"
-}
+#    0   1          2     3    4 5 6 7 8 9 10 11   12 13 14 15 16 17 18 19   20 21 22 23 24 25 26 27   28 29 30 31 32 33 34 35   36 37 38 39 40 41 42 43
+# BEAC 620 2021-12-09 09:17 cnt: 0 0 0 0 0 11 11 mis: 22 22 22 22 22 22 22 mat: 33 33 33 33 33 33 33 mah: 44 44 44 44 44 44 44 dly: 55 55 55 55 55 55 55
+function bno { s=" $(bk) $dt $(bnc 50 'cnt:' ' ') $(bnk 50 'mis:' ' ') $(bnz 50 'mat:' ' ') $(bnx 50 'mah:' ' ') $(bnw 50 'dly:' ' ')"; }
 # Plex Media Server
 function rxw { cex "ufw$2 allow from 192.168.8.0/24 $1"; }
 function xop { cex 'ufw delete deny 32400             ';rxw 'to any port 32400 comment plex'; }
