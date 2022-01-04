@@ -19,6 +19,7 @@ function fs2 { echo $H|sudo -S grep -i 'geth\[\|lighthouse'   $p4 2>/dev/null; }
 function fs3 { echo $H|sudo -S grep -v 'geth\[\|lighthouse'   $p4 2>/dev/null; }                                                                              # get sys      syslog lines
 function fs4 { echo $H|sudo -S grep    "${3:-lighthouse}.*$1" $p4 2>/dev/null|if [[ ${2:-0} -le 0 ]];then cat;else tail -n${2:-0};fi; }                       # get tail     syslog lines
 function fs5 { echo $H|sudo -S grep    "$1"                   $p4 2>/dev/null; }                                                                              # get specific syslog lines
+function fs6 { fs4 ${2:-peers:} $1|sed "s%.*${2:-peers:} \([0-9]*\).*%\1%"; }                                                                                 # get peers    syslog lines
 function rd0 { $sctl status $1 2>/dev/null|grep "${2:-inactive\|failed}"                                   ; }                                                # service status word test
 function rd1 { $sctl status $1 2>/dev/null|grep "${2:-Active:}"|sed "s%.*${2:-Active:} *\(${3:-.}*\).*%\1%"; }                                                # service status word with data extraction
 function rd2 { cp $p8/$1.service $p0/$1.sav;sed "s%peers *[0-9]*%peers $2%" $p0/$1.sav > $p8/$1.service; }                                                    # change service configuration file
@@ -50,8 +51,6 @@ function gh  { [[ ! -f $p5 ]] && return;tail -n${1:-$hors} $p5;[[ $1 ]] && retur
 function grs { rd4 $ethg $1 $(gv) 10 15;sex "$sctl start $ethg";sleep 20s;echo "GETH RESTAR $(dnn $(dts) $(gv) $(gq))" >> $p5; }                              # change/stop/load/start/log geth restart
 # beacon control commands
 function bv  { nu0 $(rd1 $ethb target-peers [0-9])                                     ; }                                                                    # get configured peers
-function bq  { nu0 $(fs4 peers: 1|sed 's%.*peers: *\([0-9]*\).*%\1%')                  ; }                                                                    # get current    peers
-function bi  { nu0 $(fs4 peers: 0|sed 's%.*peers: *\([0-9]*\).*%\1%'|sort -n|head -n1) ; }                                                                    # get min        peers
 function bz  { echo $((10*(9*zk+3*zz+zx+zw)))                                          ; }                                                                    # get numerator paid errors
 function bw  { echo $((10*z1))                                                         ; }                                                                    # get numerator processed blocks
 function bf  { echo $((90*z3))                                                         ; }                                                                    # get numerator general errors
@@ -59,7 +58,7 @@ function bu  { echo $(($(nu5 200 $(bz) $z5)+$(nu5 100 $(bw) $z2)+$(nu5 100 $(bf)
 function bs  { tail -n$1 $p2 2>/dev/null|cut -d' ' -f1|sort -u|wc -l; }                                                                                       # get restart activity test
 function bk  { cat       $p2 2>/dev/null                      |wc -l; }                                                                                       # get beacon line count
 function bb  { l0=$(fs4 $bpid] 3600);bl1;local g=$(bu);[[ ($g -ge 1 && $(bs $hors) -eq 1) || ($g -ge 5 && $(bs 5) -eq 1) ]] && ok=BK; }                       # set ok (OK/BK)
-function bl  { if [[ $(rd0 $ethb running) ]];then bl2;dt=$(dts);nn=$(bv);nr=$(bq);bb;blo;else m=" NOT RUNNING $(dts)";fi; }                                   # beacon report
+function bl  { if [[ $(rd0 $ethb running) ]];then bl2;dt=$(dts);nn=$(bv);nr=$(fs6 1);bb;blo;else m=" NOT RUNNING $(dts)";fi; }                                # beacon report
 function bl0 { fs4 "attestation(s).*$1"|sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w; }                                                                      # get paid activities
 function bl1 {                                                                                                                                                # set restart idx vars
   z1=${1:-$(echo "$l0"|grep 'rocessed block'|wc -l)};z2=${2:-$(echo "$l0"|grep 'block received'|wc -l)}                                                       # set processed/received blocks
@@ -68,7 +67,7 @@ function bl1 {                                                                  
 }
 function bl2 { b0=${1:-$(fs4 'published block'|wc -l)};b1=${2:-$(nu6 $(fs4 delay_ms:|sed 's%.*delay_ms: *\([0-9]*\).*%\1%'))}; }                              # set published blocks/avg delays
 function bm  {                                                                                                                                                # bmedias report
-  bm0;b4=0;b5=$(fs4 reduce|wc -l);dt=$(dts);nn=$(bv);nr=$(bq);nm=$(bi);[[ -f $p7 ]] && bm5                                                                    # ini vars/arrays
+  bm0;b4=0;b5=$(fs4 reduce|wc -l);dt=$(dts);nn=$(bv);nr=$(fs6 1);nm=$(fs6 0|sort -n|head -n1);[[ -f $p7 ]] && bm5                                             # ini vars/arrays
   l3=$(tail -n$(($(bk)-o[1])) $p2 2>/dev/null|bm3);[[ $l3 ]] && bm1 20;bm2;[[ ${b2:=0} -eq 0 ]] && bo0                                                        # add beacon lines & homologous position
   b3=$(nu6 $(sed -Ee 's%BEAC +[0-9]+ +([0-9]+).+%\1%' $p3 2>/dev/null));bm6 20 ${a[$nn]};[[ $(bs $hors) -gt 1 || $b2 -lt 5 ]] && b4=0;bmo;bno                 # change configured peers & outputs
 }
@@ -125,7 +124,7 @@ function brs {                                                                  
     fi;sleep 3s;((n+=1))                                                                                                                                      # search max 200 times, every 3s
   done;rm -f $p9
 }
-function bro { echo "RSTR $ok $(printf '%3i' $1) $(dnn $(dts) $(bv) $(bq))" >> $p2; }                                                                         # log restart info
+function bro { echo "RSTR $ok $(printf '%3i' $1) $(dnn $(dts) $(bv) $(fs6 1))" >> $p2; }                                                                      # log restart info
 function brl {                                                                                                                                                # recalculate beacon/bmedias logs
   [[ -f ${p2}new ]] && rm ${p2}new;[[ -f ${p3}new ]] && rm ${p3}new
   unset v;while read -a v;do ok=${v[1]};dt=${v[3]}\ ${v[4]};nn=$(nu9 ${v[5]});nr=${v[6]}                                                                      # uncalculated vars
