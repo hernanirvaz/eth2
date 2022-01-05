@@ -19,10 +19,11 @@ if [ -x /usr/local/bin/lighthouse ]; then
     # how many peers it should try to find and maintain
     tarp=50 # default
     tarp=25 # less bandwidth/load for gossip - too low (<25) and block proposals start getting orphaned or even missed
-    bcnd="--http-address 127.0.0.1"
-    [ "$cunm" = "$znm2" ] && bcnd="--http-address $zip2"
-    [ "$cunm" = "$vnm1" ] && bcnd="--http-address $vip1"
-    [ "$cunm" = "$vnm2" ] && bcnd="--http-address $vip2"
+    http="--http-address 127.0.0.1"
+    [ "$cunm" = "$znm2" ] && http="--http-address $zip2"
+    [ "$cunm" = "$znm3" ] && http="--http-address $zip3"
+    [ "$cunm" = "$vnm1" ] && http="--http-address $vip1"
+    [ "$cunm" = "$vnm2" ] && http="--http-address $vip2"
     if [ "$B" = "mainnet" ]; then
       blkc=""
       endp="http://$zip1:8545,$E"
@@ -54,7 +55,7 @@ if [ -x /usr/local/bin/lighthouse ]; then
 		Group=$user
 		Restart=always
 		RestartSec=10
-		ExecStart=/usr/local/bin/lighthouse$blkc --datadir $dtdi bn --target-peers $tarp $bcnd --staking --eth1-endpoints $endp --subscribe-all-subnets --import-all-attestations
+		ExecStart=/usr/local/bin/lighthouse$blkc --datadir $dtdi bn --target-peers $tarp $http --staking --eth1-endpoints $endp --subscribe-all-subnets --import-all-attestations
 		ExecStopPost=/home/eth/eth2/t8mail BEACSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 		
 		[Install]
@@ -67,7 +68,12 @@ if [ -x /usr/local/bin/lighthouse ]; then
   fi
   if [ "$cunm" = "$znm2" ] || [ "$cunm" = "$vnm3" ]; then
     user="eth3"
-    vlcl="--beacon-nodes http://127.0.0.1:5052,https://1q1s6o6cB6Jysu7KKlbLUYiOdAM:8974468780164028652df958a69fbd30@eth2-beacon-mainnet.infura.io"
+    http="--beacon-nodes http://127.0.0.1"
+    [ "$cunm" = "$znm2" ] && http="--beacon-nodes http://$zip2"
+    [ "$cunm" = "$znm3" ] && http="--beacon-nodes http://$zip3"
+    [ "$cunm" = "$vnm1" ] && http="--beacon-nodes http://$vip1"
+    [ "$cunm" = "$vnm2" ] && http="--beacon-nodes http://$vip2"
+    vlcl="$http:5052,https://1q1s6o6cB6Jysu7KKlbLUYiOdAM:8974468780164028652df958a69fbd30@eth2-beacon-mainnet.infura.io"
     if [ "$B" = "mainnet" ]; then
       blkc=""
     else
@@ -155,32 +161,6 @@ else
       curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
     fi
     source ~/.cargo/env
-    if [ -f /etc/systemd/system/$etho.service ]; then
-      if [ -f ~/openethereum/README.md ]; then
-        cd ~/openethereum
-        make clean
-        cargo clean
-      else
-        cd ~
-        echo $H|sudo -S rm -rf ~/openethereum 2>/dev/null
-        git clone https://github.com/openethereum/openethereum
-        cd ~/openethereum
-      fi
-      git fetch
-      t=$(git rev-list --tags --max-count=1)
-      git checkout $(git describe --tags $t)
-      echo -e "${i}VAI COMPILAR OPEN ETHEREUM${f}"
-      cargo build --release --features final
-      if [ $? -eq 0  ] && [ -x ~/openethereum/target/release/openethereum ]; then
-        if [ -x /usr/local/bin/openethereum ]; then
-          echo $H|sudo -S cp /usr/local/bin/openethereum /usr/local/bin/openethereum.save 2>/dev/null
-        fi
-        echo $H|sudo -S cp ~/openethereum/target/release/openethereum /usr/local/bin 2>/dev/null
-        echo $H|sudo -S chmod 755 /usr/local/bin/openethereum 2>/dev/null
-      else
-        echo -e "${i}NAO EXISTE OPENETHEREUM COMPILADO PARA INSTALAR${f}"
-      fi
-    fi
     if [ -f /etc/systemd/system/$ethg.service ]; then
       if [ -f ~/lighthouse/README.md ]; then
         cd ~/lighthouse

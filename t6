@@ -22,9 +22,9 @@ function fs5 { echo $H|sudo -S grep    "$1"                   $p4 2>/dev/null; }
 function fs6 { fs4 ${2:-peers:} $1|sed "s%.*${2:-peers:} \([0-9]*\).*%\1%"; }                                                                                 # get peers    syslog lines
 function rd0 { $sctl status $1 2>/dev/null|grep "${2:-inactive\|failed}"                                   ; }                                                # service status word test
 function rd1 { $sctl status $1 2>/dev/null|grep "${2:-Active:}"|sed "s%.*${2:-Active:} *\(${3:-.}*\).*%\1%"; }                                                # service status word with data extraction
-function rd2 { cp $p8/$1.service $p0/$1.sav;sed "s%peers *[0-9]*%peers $2%" $p0/$1.sav > $p8/$1.service; }                                                    # change service configuration file
-function rd3 { resolvectl query smtp.gmail.com 2>/dev/null 1>&2;sex "$sctl stop $1";dmr; }                                                                    # DNS force smpt stop/load service
-function rd4 { local n=$(($2+$3));[[ $2 -ne 0 && $n -ge $4 && $n -le $5 ]] && rd2 $1 $n;rd3 $1; }                                                             # change/stop/load service process
+function rd2 { nn=$2;cp $p8/$1.service $p0/$1.sav;sed "s%peers *[0-9]*%peers $2%" $p0/$1.sav > $p8/$1.service; }                                              # change service configuration file
+function rd3 { resolvectl query smtp.gmail.com 2>/dev/null 1>&2;sex "$sctl stop $1";dmr                      ; }                                              # DNS force smpt stop/load service
+function rd4 { local n=$(($2+$3));nn=$3;[[ $2 -ne 0 && $n -ge $4 && $n -le $5 ]] && rd2 $1 $n;rd3 $1         ; }                                              # change/stop/load service process
 function rd5 { cex "$sctl stop $dnsd";sex "$sctl stop systemd-resolved";cex "$sctl start $dnsd";sex "$sctl start systemd-resolved"; }                         # DNS stop/start
 function cex { echo -e "${i}${1^^}${f}";echo $H|sudo -S $1 2>/dev/null     ; }                                                                                # superuser-command (visible)
 function sex {                          echo $H|sudo -S $1 2>/dev/null 1>&2; }                                                                                # superuser-command (silent)
@@ -48,7 +48,7 @@ function gl  {                                                                  
   fi
 }
 function gh  { [[ ! -f $p5 ]] && return;tail -n${1:-$hors} $p5;[[ $1 ]] && return;gl;echo -e "GETH$m\n";sst GETH $ethg;cpe; }                                 # geth historic report
-function grs { rd4 $ethg $1 $(gv) 10 15;sex "$sctl start $ethg";sleep 20s;echo "GETH RESTAR $(dnn $(dts) $(gv) $(gq))" >> $p5; }                              # change/stop/load/start/log geth restart
+function grs { rd4 $ethg $1 $(gv) 10 15;sex "$sctl start $ethg";sleep 20s;echo "GETH RESTAR $(dnn $(dts) $nn $(gq))" >> $p5; }                                # change/stop/load/start/log geth restart
 # beacon control commands
 function bv  { nu0 $(rd1 $ethb target-peers [0-9])                                     ; }                                                                    # get configured peers
 function bz  { echo $((10*(9*zk+3*zz+zx+zw)))                                          ; }                                                                    # get numerator paid errors
@@ -123,7 +123,7 @@ function brs {                                                                  
     fi;sleep 3s;((n+=1))                                                                                                                                      # search max 200 times, every 3s
   done;rm -f $p9
 }
-function bro { echo "RSTR $ok $(printf '%3i' $1) $(dnn $(dts) $(bv) $(fs6 1))" >> $p2; }                                                                      # log restart info
+function bro { echo "RSTR $ok $(printf '%3i' $1) $(dnn $(dts) $nn $(fs6 1))" >> $p2; }                                                                        # log restart info
 function brl {                                                                                                                                                # recalculate beacon/bmedias logs
   [[ -f ${p2}new ]] && rm ${p2}new;[[ -f ${p3}new ]] && rm ${p3}new
   unset v;while read -a v;do ok=${v[1]};dt=${v[3]}\ ${v[4]};nn=$(nu9 ${v[5]});nr=${v[6]}                                                                      # uncalculated vars
