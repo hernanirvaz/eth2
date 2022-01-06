@@ -9,12 +9,10 @@ function nu2 { echo 0$(printf '+%i' $@)|bc; }                                   
 function nu3 { printf ${4:-%.0f} $(nu1 $1*${3:-100} ${2:-0}); }                                                                                               # format arbitrary precision calculations
 function nu4 { if [[ $5 -ne 0  ]];then nu1 "($1*$pmis+$2*$pmat+$3*$pmah+$4*$pdly)/$5*$rate/$decp" 2;else echo 0;fi; }                                         # get penalty
 function nu5 { if [[ $3 -gt $1 ]];then echo $(($2/$3))                                             ;else echo 0;fi; }                                         # get targeted division
+function nu6 { if [[ $# -gt 0  ]];then echo $(nu3 $(nu2 $@)/$(echo $@|wc -w) 5 1)                  ;else echo 0;fi; }                                         # get average of numbers
 function nu7 { if [[ $1 -ne 0  ]];then echo $1                                                     ;else echo 1;fi; }                                         # get safe denominator
 function nu8 { nu2 $(echo "$l1"|cut -f$1); }                                                                                                                  # get sum specific list of numbers
 function nu9 { echo $1|sed 's%node\([0-9]*\):%\1%'; }                                                                                                         # get peers from node tag
-function np0 { if [[ $# -gt 0  ]];then echo $(nu3 $(nu2 $@)/$(echo $@|wc -w) 5 1)                  ;else echo 0;fi; }                                         # get average of numbers
-function np1 { echo $1; }                                                                                                                                     # get first  parm
-function npl { echo ${@:$#}; }                                                                                                                                # get last   parm
 function fs0 { echo $1|egrep '^[0-9]+$'       ; }                                                                                                             # integer test
 function fs1 { echo $1|egrep '^[0-9]+:[0-9]+$'; }                                                                                                             # hh:mm   test
 function fs2 { echo $H|sudo -S grep -i 'geth\[\|lighthouse'   $p4 2>/dev/null; }                                                                              # get eth      syslog lines
@@ -22,6 +20,7 @@ function fs3 { echo $H|sudo -S grep -v 'geth\[\|lighthouse'   $p4 2>/dev/null; }
 function fs4 { echo $H|sudo -S grep    "${3:-lighthouse}.*$1" $p4 2>/dev/null|if [[ ${2:-0} -le 0 ]];then cat;else tail -n${2:-0};fi; }                       # get tail     syslog lines
 function fs5 { echo $H|sudo -S grep    "$1"                   $p4 2>/dev/null; }                                                                              # get specific syslog lines
 function fs6 { fs4 ${2:-peers:} $1|sed "s%.*${2:-peers:} \([0-9]*\).*%\1%"; }                                                                                 # get peers    syslog lines
+function fs7 { if [[ $# -gt 0 ]];then echo $1$#${@:$#};else echo 0;fi; }                                                                                      # get first#last parms
 function rd0 { $sctl status $1 2>/dev/null|grep "${2:-inactive\|failed}"                                   ; }                                                # service status word test
 function rd1 { $sctl status $1 2>/dev/null|grep "${2:-Active:}"|sed "s%.*${2:-Active:} *\(${3:-.}*\).*%\1%"; }                                                # service status word with data extraction
 function rd2 { nn=$2;cp $p8/$1.service $p0/$1.sav;sed "s%peers *[0-9]*%peers $2%" $p0/$1.sav > $p8/$1.service; }                                              # change service configuration file
@@ -67,11 +66,11 @@ function bl1 {                                                                  
   z3=${3:-$(echo "$l0"|grep -v ' INFO '     |wc -l)};z4=${4:-$(echo "$l0"|grep    ' INFO '     |wc -l)}                                                       # set error/info         lines
   z5=${5:-$(bl0 success)};zk=${6:-$(bl0 missing)};zz=${7:-$(bl0 target)};zx=${8:-$(bl0 head)};zw=${9:-$(bl0 had)};ok=${10:-OK}                                # set success/erros      activities
 }
-function bl2 { b0=${1:-$(fs4 'published block'|wc -l)};b1=${2:-$(np0 $(fs4 delay_ms:|sed 's%.*delay_ms: *\([0-9]*\).*%\1%'))}; }                              # set published blocks/avg delays
+function bl2 { b0=${1:-$(fs4 'published block'|wc -l)};b1=${2:-$(nu6 $(fs4 delay_ms:|sed 's%.*delay_ms: *\([0-9]*\).*%\1%'))}; }                              # set published blocks/avg delays
 function bm  {                                                                                                                                                # bmedias report
   bm0;b4=0;b5=$(fs4 reduce|wc -l);dt=$(dts);nn=$(bv);nr=$(fs6 1);nm=$(fs6 0|sort -n|head -n1);[[ -f $p7 ]] && bm5                                             # ini vars/arrays
   l3=$(tail -n$(($(bk)-o[1])) $p2 2>/dev/null|bm3);[[ $l3 ]] && bm1 20;bm2;[[ ${b2:=0} -eq 0 ]] && bo0                                                        # add beacon lines & homologous position
-  b3=$(np0 $(sed -Ee 's%BEAC +[0-9]+ +([0-9]+).+%\1%' $p3 2>/dev/null));bm6 20 ${a[$nn]};[[ $(bs $hors) -gt 1 || $b2 -lt 5 ]] && b4=0;bmo;bno                 # change configured peers & outputs
+  b3=$(nu6 $(sed -Ee 's%BEAC +[0-9]+ +([0-9]+).+%\1%' $p3 2>/dev/null));bm6 20 ${a[$nn]};[[ $(bs $hors) -gt 1 || $b2 -lt 5 ]] && b4=0;bmo;bno                 # change configured peers & outputs
 }
 function bm0 { unset o;o[1]=0;unset k;k[0]=0;unset z;z[0]=0;unset x;x[0]=0;unset w;w[0]=0;unset c;c[0]=0;unset a;a[0]=0;bm7 20; }                             # ini err/cnt/avg penalty arrays
 function bm1 {
@@ -118,8 +117,8 @@ function bh  {                                                                  
   sst BEAC $ethb;sst VALI $ethv;cpe                                                                                                                           # beacon/validator/system status
 }
 function brs {                                                                                                                                                # beacon/validator restart
-  [[ -f $p9 ]] && return;touch $p9;local n=0;while [[ -f $p9 && $n -lt 300 ]];do local l=$(fs4 "$bpid].*INFO " 7|sed 's%.*O \([^ ]*\).*%\1%'|sort -u)         # search restart position
-  if [[ $(echo $l|wc -w) -eq 2 && $(np1 $l) = New && $(npl $l) = Synced ]];then                                                                               # ideal = only 2 INFO words (New/Synced)
+  [[ -f $p9 ]] && return;touch $p9;local n=0;while [[ -f $p9 && $n -lt 300 ]];do                                                                              # search restart position
+    if [[ $(fs7 $(fs4 "$bpid].*INFO " 7|sed 's%.*INFO \([^ ]*\).*%\1%'|sort -u)) = New2Synced ]];then                                                         # ideal = only 2 INFO words (New2Synced)
       ok=${2:-$ok};rd4 $ethb $1 $(bv) 20 50;[[ $2 = VC ]] && sex "$sctl stop $ethv";rm -f $p9                                                                 #         stop beacon/validator
       if [[ $2 = RB ]];then bro $n;sex reboot;else sex "$sctl start $ethb";[[ $2 = VC ]] && sex "$sctl start $ethv";sleep 20s;bro $n;fi                       # reboot/start beacon/validator
     fi;sleep 3s;((n+=1))                                                                                                                                      # search max 200 times, every 3s
