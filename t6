@@ -20,7 +20,6 @@ function fs3 { echo $H|sudo -S grep -v 'geth\[\|lighthouse'   $p4 2>/dev/null; }
 function fs4 { echo $H|sudo -S grep    "${3:-lighthouse}.*$1" $p4 2>/dev/null|if [[ ${2:-0} -le 0 ]];then cat;else tail -n${2:-0};fi; }                       # get tail     syslog lines
 function fs5 { echo $H|sudo -S grep    "$1"                   $p4 2>/dev/null; }                                                                              # get specific syslog lines
 function fs6 { fs4 ${2:-peers:} $1|sed "s%.*${2:-peers:} \([0-9]*\).*%\1%"; }                                                                                 # get peers    syslog lines
-function fs7 { if [[ $# -gt 0 ]];then echo $1$#${@:$#};else echo 0;fi; }                                                                                      # get first#last parms
 function rd0 { $sctl status $1 2>/dev/null|grep "${2:-inactive\|failed}"                                   ; }                                                # service status word test
 function rd1 { $sctl status $1 2>/dev/null|grep "${2:-Active:}"|sed "s%.*${2:-Active:} *\(${3:-.}*\).*%\1%"; }                                                # service status word with data extraction
 function rd2 { nn=$2;cp $p8/$1.service $p0/$1.sav;sed "s%peers *[0-9]*%peers $2%" $p0/$1.sav > $p8/$1.service; }                                              # change service configuration file
@@ -116,15 +115,16 @@ function bh  {                                                                  
   bl;echo -e "BL$(printf '%9i' $(cat $p2 2>/dev/null|wc -l))\nBEAC$m";bm;echo -e "BM$(printf '%5i' $(cat $p3 2>/dev/null|wc -l))\nBEAC$m"                     # beacon/medias report
   sst BEAC $ethb;sst VALI $ethv;cpe                                                                                                                           # beacon/validator/system status
 }
+function brt { echo ${1:-false}$#$2; }                                                                                                                        # get first2last parms
+function bro { echo "RSTR $ok $(printf '%3i' $1) $(dnn $(dts) $nn $(fs6 1))" >> $p2; }                                                                        # log restart info
 function brs {                                                                                                                                                # beacon/validator restart
   [[ -f $p9 ]] && return;touch $p9;local n=0;while [[ -f $p9 && $n -lt 300 ]];do                                                                              # search restart position
-    if [[ $(fs7 $(fs4 "$bpid].*INFO " 7|sed 's%.*INFO \([^ ]*\).*%\1%'|sort -u)) = New2Synced ]];then                                                         # ideal = only 2 INFO words (New2Synced)
+    if [[ $(brt $(fs4 "$bpid].*INFO " 7|sed 's%.*INFO \([^ ]*\).*%\1%'|sort -u)) = New2Synced ]];then                                                         # ideal = only 2 INFO words (New2Synced)
       ok=${2:-$ok};rd4 $ethb $1 $(bv) 20 50;[[ $2 = VC ]] && sex "$sctl stop $ethv";rm -f $p9                                                                 #         stop beacon/validator
       if [[ $2 = RB ]];then bro $n;sex reboot;else sex "$sctl start $ethb";[[ $2 = VC ]] && sex "$sctl start $ethv";sleep 20s;bro $n;fi                       # reboot/start beacon/validator
     fi;sleep 3s;((n+=1))                                                                                                                                      # search max 200 times, every 3s
   done;rm -f $p9
 }
-function bro { echo "RSTR $ok $(printf '%3i' $1) $(dnn $(dts) $nn $(fs6 1))" >> $p2; }                                                                        # log restart info
 function brl {                                                                                                                                                # recalculate beacon/bmedias logs
   [[ -f ${p2}new ]] && rm ${p2}new;[[ -f ${p3}new ]] && rm ${p3}new
   unset v;while read -a v;do ok=${v[1]};dt=${v[3]}\ ${v[4]};nn=$(nu9 ${v[5]});nr=${v[6]}                                                                      # uncalculated vars
