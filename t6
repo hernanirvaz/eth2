@@ -18,7 +18,7 @@ function fs2 { echo $H|sudo -S grep -i 'geth\[\|lighthouse'   $p4 2>/dev/null; }
 function fs3 { echo $H|sudo -S grep -v 'geth\[\|lighthouse'   $p4 2>/dev/null; }                                                                              # get sys      syslog lines
 function fs4 { echo $H|sudo -S grep    "${3:-lighthouse}.*$1" $p4 2>/dev/null|if [[ ${2:-0} -le 0 ]];then cat;else tail -n${2:-0};fi; }                       # get tail     syslog lines
 function fs5 { echo $H|sudo -S grep    "$1"                   $p4 2>/dev/null; }                                                                              # get specific syslog lines
-function fs6 { fs4 ${2:-peers:} $1|sed "s%.*${2:-peers:} \([0-9]*\).*%\1%"; }                                                                                 # get peers    syslog lines
+function fs6 { fs4 $1 $2|sed "s%.*$1 *\([0-9]*\).*%\1%"; }                                                                                                    # get peers    syslog lines
 function rd0 { $sctl status $1 2>/dev/null|grep "${2:-inactive\|failed}"                                   ; }                                                # service status word test
 function rd1 { $sctl status $1 2>/dev/null|grep "${2:-Active:}"|sed "s%.*${2:-Active:} *\(${3:-.}*\).*%\1%"; }                                                # service status word with data extraction
 function rd2 { nn=$2;cp $p8/$1.service $p0/$1.sav;sed "s%peers *[0-9]*%peers $2%" $p0/$1.sav > $p8/$1.service; }                                              # change service configuration file
@@ -57,16 +57,16 @@ function bu  { echo $(($(nu6 200 $(bz) $z5)+$(nu6 100 $(bw) $z2)+$(nu6 100 $(bf)
 function bs  { tail -n$1 $p2 2>/dev/null|cut -d' ' -f1|sort -u|wc -l; }                                                                                       # get restart activity test
 function bk  { cat       $p2 2>/dev/null                      |wc -l; }                                                                                       # get beacon line count
 function bb  { l0=$(fs4 $bpid] 3600);bl1;local g=$(bu);[[ ($g -ge 1 && $(bs $hors) -eq 1) || ($g -ge 5 && $(bs 5) -eq 1) ]] && ok=BK; }                       # set ok (OK/BK)
-function bl  { if [[ $(rd0 $ethb running) ]];then bl2;dt=$(dts);nn=$(bv);nr=$(fs6 1);bb;blo;else m=" NOT RUNNING $(dts)";fi; }                                # beacon report
+function bl  { if [[ $(rd0 $ethb running) ]];then bl2;dt=$(dts);nn=$(bv);nr=$(fs6 peers: 1);bb;blo;else m=" NOT RUNNING $(dts)";fi; }                         # beacon report
 function bl0 { fs4 "attestation(s).*$1"|sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w; }                                                                      # get paid activities
 function bl1 {                                                                                                                                                # set restart idx vars
   z1=${1:-$(echo "$l0"|grep 'rocessed block'|wc -l)};z2=${2:-$(echo "$l0"|grep 'block received'|wc -l)}                                                       # set processed/received blocks
   z3=${3:-$(echo "$l0"|grep -v ' INFO '     |wc -l)};z4=${4:-$(echo "$l0"|grep    ' INFO '     |wc -l)}                                                       # set error/info         lines
   z5=${5:-$(bl0 success)};zk=${6:-$(bl0 missing)};zz=${7:-$(bl0 target)};zx=${8:-$(bl0 head)};zw=${9:-$(bl0 had)};ok=${10:-OK}                                # set success/erros      activities
 }
-function bl2 { b0=${1:-$(fs4 'published block'|wc -l)};b1=${2:-$(nu5 $(fs4 delay_ms:|sed 's%.*delay_ms: *\([0-9]*\).*%\1%'))}; }                              # set published blocks/avg delays
+function bl2 { b0=${1:-$(fs4 'published block'|wc -l)};b1=${2:-$(nu5 $(fs6 delay_ms:))}; }                                                                    # set published blocks/avg delays
 function bm  {                                                                                                                                                # bmedias report
-  bm0;b4=0;b5=$(fs4 reduce|wc -l);dt=$(dts);nn=$(bv);nr=$(fs6 1);nm=$(fs6 0|sort -n|head -n1);[[ -f $p7 ]] && bm5                                             # ini vars/arrays
+  bm0;b4=0;b5=$(fs4 reduce|wc -l);dt=$(dts);nn=$(bv);nr=$(fs6 peers: 1);nm=$(fs6 peers:|sort -n|head -n1);[[ -f $p7 ]] && bm5                                 # ini vars/arrays
   l3=$(tail -n$(($(bk)-o[1])) $p2 2>/dev/null|bm3);[[ $l3 ]] && bm1 20;bm2;[[ ${b2:=0} -eq 0 ]] && bo0                                                        # add beacon lines & homologous position
   b3=$(nu5 $(sed -Ee 's%BEAC +[0-9]+ +([0-9]+).+%\1%' $p3 2>/dev/null));bm6 20 ${a[$nn]};[[ $(bs $hors) -gt 1 || $b2 -lt 5 ]] && b4=0;bmo;bno                 # change configured peers & outputs
 }
@@ -119,7 +119,7 @@ function bh  {                                                                  
   sst BEAC $ethb;sst VALI $ethv;cpe                                                                                                                           # beacon/validator/system status
 }
 function brt { echo ${1:-false}$#$2; }                                                                                                                        # get first2last parms
-function bro { echo "RSTR $ok $(printf '%3i' $1) $(dnn $(dts) $nn $(fs6 1))" >> $p2; }                                                                        # log restart info
+function bro { echo "RSTR $ok $(printf '%3i' $1) $(dnn $(dts) $nn $(fs6 peers: 1))" >> $p2; }                                                                 # log restart info
 function brs {                                                                                                                                                # beacon/validator restart
   [[ -f $p9 ]] && return;touch $p9;local n=0;while [[ -f $p9 && $n -lt 300 ]];do                                                                              # search restart position
     if [[ $(brt $(fs4 "$bpid].*INFO " 7|sed 's%.*INFO \([^ ]*\).*%\1%'|sort -u)) = New2Synced ]];then                                                         # ideal = only 2 INFO words (New2Synced)
