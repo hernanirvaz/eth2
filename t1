@@ -13,6 +13,13 @@ p3="$p0/bmedias.log"
 p7="$p0/barqivo.log"
 p9="$p0/beacon.restart.inicio"
 
+w0='systemctl'
+w1="$w0 status"
+w2="$w0 stop"
+w3="$w0 start"
+w4="$w0 enable"
+w5="$w0 disable"
+
 meeu="$(whoami)"
 cunm="$(uname -n)"
 cust="$(uname -n|cut -c1-3)"
@@ -25,7 +32,6 @@ ethf='grafana-server'
 plex='plexmediaserver'
 trrt='transmission-daemon'
 dnsd='named'
-sctl='systemctl'
 zip1='192.168.8.25'
 zip2='192.168.8.28'
 zip3='192.168.8.31'
