@@ -66,7 +66,7 @@ function bl1 {                                                                  
 function bl2 { b0=${1:-$(fs4 'published block'|wc -l)};b1=${2:-$(nu5 $(fs6 delay_ms:))}; }                                                                    # set published blocks/avg delays
 function bm  {                                                                                                                                                # bmedias report
   bm0;b4=0;b5=$(fs4 reduce|wc -l);dt=$(dts);nn=$(bv);nr=$(fs6 peers: 1);nm=$(fs6 peers:|sort -n|head -n1);[[ -f $p7 ]] && bm5                                 # ini vars/arrays
-  l3=$(tail -n$(($(bk)-o[1])) $p2 2>/dev/null|bm3);[[ $l3 ]] && bm1 20;bm2;[[ ${b2:=0} -eq 0 ]] && bo0                                                        # add beacon lines & homologous position
+  l3=$(tail -n$(($(bk)-o[1])) $p2 2>/dev/null|bm3);[[ $l3 ]] && bm1 20;bm2;[[ ${b2:-0} -eq 0 ]] && bo0                                                        # add beacon lines & homologous position
   b3=$(nu5 $(sed -Ee 's%BEAC +[0-9]+ +([0-9]+).+%\1%' $p3 2>/dev/null));bm6 20 ${a[$nn]};[[ $(bs $hors) -gt 1 || $b2 -le $b3 ]] && b4=0;bmo;bno               # change configured peers & outputs
 }
 function bm0 { unset o;o[1]=0;unset k;k[0]=0;unset z;z[0]=0;unset x;x[0]=0;unset w;w[0]=0;unset c;c[0]=0;unset a;a[0]=0;bm7 20; }                             # ini err/cnt/avg penalty arrays
@@ -99,20 +99,16 @@ function bnx { if [[ $1 -ge 20 ]];then bnx $(($1-5)) "$2$3${x[$1]}" "$3";else ec
 function bnw { if [[ $1 -ge 20 ]];then bnw $(($1-5)) "$2$3${w[$1]}" "$3";else echo "$2";fi; }                                                                 # sum recursively delay         err array
 function bnc { if [[ $1 -ge 20 ]];then bnc $(($1-5)) "$2$3${c[$1]}" "$3";else echo "$2";fi; }                                                                 # sum recursively               cnt array
 function bo0 {                                                                                                                                                # homologous lines/position
-  b2=0;[[ ! -f $p2 ]] && return;local t=00:00;[[ $(fs0 $1) ]] && b2=$1;[[ $(fs0 $2) ]] && b2=$2;[[ $(fs1 $1) ]] && t=$1;[[ $(fs1 $2) ]] && t=$2               # forced position/time
-  unset v;read -a v <<< $(bo2 . $p2|tail -n1);[[ $t = 00:00 ]] && t=${v[4]};l2=$(bo2 $t $p2);[[ $b2 -eq 0 ]] && b2=$(bo3 ${v[3]})                             # set homologous lines/position
+  b2=0;b6=0;[[ ! -f $p2 ]] && return;local t=00:00;[[ $(fs0 $1) ]] && b6=$1;[[ $(fs0 $2) ]] && b6=$2;[[ $(fs1 $1) ]] && t=$1;[[ $(fs1 $2) ]] && t=$2          # forced position/time
+  b2=$b6;unset v;read -a v <<< $(bo2 . $p2|tail -n1);[[ $t = 00:00 ]] && t=${v[4]};l2=$(bo2 $t $p2);[[ $b2 -eq 0 ]] && b2=$(bo3 ${v[3]})                      # set homologous lines/position
   local n=0;while [[ ${b2:=0} -eq 0 && $n -lt 50 ]];do ((n+=1));v[3]=$(date -d "$n days ago $t" '+%Y-%m-%d');b2=$(bo3 ${v[3]});done                           # search past homologous info (max 50 days)
 }
-function bo1 {                                                                                                                                                # homologous report
-  [[ ! -f $p2 ]] && return;local g=${b2:-0};local d=${b2:-0};if [[ $(fs0 $1) ]];then g=$1;else if [[ $g -lt 5 && $(bo4) -ge 5 ]];then d=5;g=5;fi;fi           # ajust head lines
-  if [[ $(fs0 $1) ]];then d=$1;else if [[ $d -gt $hors ]];then d=$hors;fi;fi;bo6|head -n$g|tail -n$d                                                          # ajust tail lines & output
-}
+function bo1 { [[ ! -f $p2 ]] && return;local g=${b2:-0};g=$((b6=0?g<5?5:g:g));bo4|head -n$g|tail -n$((g>hors?hors:g)); }                                     # homologous report
 function bo2 { cat $2|grep "BEAC.*${1:-23:58}"; }                                                                                                             # get homologous beacon lines
-function bo3 { bo6|grep -n $1|cut -d: -f1     ; }                                                                                                             # get homologous beacon lines position
-function bo4 { echo "$l2"|wc -l               ; }                                                                                                             # get homologous beacon lines count
-function bo6 { echo "$l2"|sort -k10.1n        ; }                                                                                                             # get homologous beacon lines sorted
+function bo3 { bo4|grep -n $1|cut -d: -f1     ; }                                                                                                             # get homologous beacon lines position
+function bo4 { echo "$l2"|sort -k10.1n        ; }                                                                                                             # get homologous beacon lines sorted
 function bh  {                                                                                                                                                # historic report
-  [[ ! -f $p2 ]] && return;tail -n${1:-$hors} $p2;[[ $1 ]] && return;bo0;echo -e "BO$(printf '%5i' $(bo4)) $(printf '%3i' $b2)";bo1                           # beacon/homologous report
+  [[ ! -f $p2 ]] && return;tail -n${1:-$hors} $p2;[[ $1 ]] && return;bo0;echo -e "BO$(printf '%5i' $(echo "$l2"|wc -l)) $(printf '%3i' $b2)";bo1              # beacon/homologous report
   bl;echo -e "BL$(printf '%9i' $(cat $p2 2>/dev/null|wc -l))\nBEAC$m";bm;echo -e "BM$(printf '%5i' $(cat $p3 2>/dev/null|wc -l))\nBEAC$m"                     # beacon/medias report
   sst BEAC $ethb;sst VALI $ethv;cpe                                                                                                                           # beacon/validator/system status
 }
@@ -299,7 +295,7 @@ function ssp {
 [[ $1 = bnf ]] && { bm;echo -e "BEAC$s" >> $p7; }
 [[ $1 = gh  ]] && { gh $2; }
 [[ $1 = bh  ]] && { bh $2; }
-[[ $1 = bo  ]] && { bo0 $2 $3;bo1 $2; }
+[[ $1 = bo  ]] && { bo0 $2 $3;bo1; }
 [[ $1 = brl ]] && { [[ -f $p2           ]] && brl; }
 [[ $1 = bsl ]] && { [[ -f $p2 && -f $p7 ]] && bsl; }
 [[ $1 = bnl ]] && { bnl; }
