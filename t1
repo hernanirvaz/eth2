@@ -47,7 +47,7 @@ vnm3='vmi469069.contaboserver.net'
 dtdi="/var/lib/lighthouse"
 becn="$dtdi/beacon"
 vldt="$dtdi/validators"
-bpid=$($w1 $ethb 2>/dev/null|grep PID|sed 's%.*PID: *\([0-9]*\).*%\1%')
+bpid=$($w1 $ethb 2>/dev/null|grep PID:|sed 's%.*PID: *\([0-9]*\).*%\1%')
 
 rblk=22238623
 ratt=00019000
