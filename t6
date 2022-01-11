@@ -312,7 +312,7 @@ function ssp {
 [[ $1 = gpa ]] && { gp;dmr;ga;jsh "-u $ethg"; }
 [[ $1 = bpa ]] && { bp;dmr;ba;jsh "-u $ethb"; }
 [[ $1 = vpa ]] && { vp;dmr;va;jsh "-u $ethv"; }
-[[ $1 = spa ]] && { sp;sa;jsh "-u $dnsd"; }
+[[ $1 = spa ]] && { sp;sa; }
 [[ $1 = gpd ]] && { gp;gd; }
 [[ $1 = opd ]] && { op;od; }
 [[ $1 = bpd ]] && { bp;bd; }
@@ -323,7 +323,8 @@ function ssp {
 [[ $1 = gea ]] && { ge;dmr;ga;jsh "-u $ethg"; }
 [[ $1 = bea ]] && { be;dmr;ba;jsh "-u $ethb"; }
 [[ $1 = vea ]] && { ve;dmr;va;jsh "-u $ethv"; }
-[[ $1 = sea ]] && { se;sa;jsh "-u $dnsd"; }
+[[ $1 = rea ]] && { re;ra; }
+[[ $1 = sea ]] && { se;sa; }
 # enable
 [[ $1 = ge  ]] && { ge; }
 [[ $1 = oe  ]] && { oe; }
