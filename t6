@@ -19,11 +19,11 @@ function gl  {                                                                  
 function gh  { [[ ! -f $p5 ]] && return;tail -n${1:-$hors} $p5;[[ $1 ]] && return;gl;echo -e "GETH$m\n";sst GETH $ethg;cpe; }                                 # geth historic report
 function grs { rd4 $ethg $1 $(gv) 10 15;sex "$w3 $ethg";sleep 20s;echo "GETH RESTAR $(dnn $(dts) $nn $(gq))" >> $p5; }                                        # change/stop/load/start/log geth restart
 # beacon control commands
-function bv  { nu0 $(rd1 $ethb target-peers [0-9])                                     ; }                                                                    # get configured peers
-function bz  { echo $((10*(9*zk+3*zz+zx+zw)))                                          ; }                                                                    # get numerator paid errors
-function bw  { echo $((10*z1))                                                         ; }                                                                    # get numerator processed blocks
-function bf  { echo $((90*z3))                                                         ; }                                                                    # get numerator general errors
-function bu  { echo $(($(nu6 200 $(bz) $z5)+$(nu6 100 $(bw) $z2)+$(nu6 100 $(bf) $z4))); }                                                                    # get restart idx
+function bv  { nu0 $(rd1 $ethb target-peers [0-9])                                  ; }                                                                       # get configured peers
+function bz  { echo $((10*(9*zk+3*zz+zx+zw)))                                       ; }                                                                       # get numerator paid errors
+function bw  { echo $((10*z1))                                                      ; }                                                                       # get numerator processed blocks
+function bf  { echo $((90*z3))                                                      ; }                                                                       # get numerator general errors
+function bu  { echo $(((z5>200?$(bz)/z5:0)+(z2>100?$(bw)/z2:0)+(z4>100?$(bf)/z4:0))); }                                                                       # get restart idx
 function bs  { tail -n$1 $p2 2>/dev/null|cut -d' ' -f1|sort -u|wc -l; }                                                                                       # get restart activity test
 function bk  { cat       $p2 2>/dev/null                      |wc -l; }                                                                                       # get beacon line count
 function bb  { l0=$(fs4 $bpid] 3600);bl1;local g=$(bu);[[ ($g -ge 1 && $(bs $hors) -eq 1) || ($g -ge 5 && $(bs 5) -eq 1) ]] && ok=BK; }                       # set ok (OK/BK)
@@ -129,7 +129,7 @@ function cpe {                                                                  
   local e=$(fs5 'ture/speed normal'|tail -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%')
   local d=$(fs5 'e above threshold'|head -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%')
   for v in $(sensors 2>/dev/null|grep 'Package\|Core'|sed 's%.*: *\([-+][0-9][0-9]*\.[0-9]*\).*%\1%');do n=$((n+1));l=$(nu1 $l$v 1);done
-  [[ $e ]] && e="normal: $e";[[ $d ]] && d="throttled: $d";echo "TEMP $(nu3 $l/$(nu7 $n) 1 1 %5.1fC) $(dts) $d $e"
+  [[ $e ]] && e="normal: $e";[[ $d ]] && d="throttled: $d";echo "TEMP $(nu3 $l/$((n==0?1:n)) 1 1 %5.1fC) $(dts) $d $e"
   [[ $1 = p ]] && return;local l=$(fs3|grep -i 'error' |wc -l);local n=$(fs2|grep -v ' INFO '|wc -l)                                                          # sys/eth errors info
   local e=$(fs3|grep -i 'error' |tail -n1|sed 's%.*hrv-zotac[0-9] *\(.*\)%\1%;s%:%%g;s%  *% %g'                                |cut -c1-53)
   local d=$(fs2|grep -v ' INFO '|tail -n1|sed 's%.*[0-9]*:[0-9]*:[0-9]*\.[0-9][0-9][0-9]]* *\(.*\)%\1%;s%:%%g;s%:%%g;s%  *% %g'|cut -c1-53)
