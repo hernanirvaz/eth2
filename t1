@@ -19,15 +19,15 @@ function rd0 { $w1 $1 2>/dev/null|grep "${2:-inactive\|failed}"                 
 function rd1 { $w1 $1 2>/dev/null|grep "${2:-Active:}"|sed "s%.*${2:-Active:} *\(${3:-.}*\).*%\1%"; }                                   # service status word with data extraction
 function rd2 { nn=$2;cp $p8/$1.service $p0/$1.sav;sed "s%peers *[0-9]*%peers $2%" $p0/$1.sav > $p8/$1.service; }                        # change service configuration file
 function rd3 { resolvectl query smtp.gmail.com 2>/dev/null 1>&2;sex "$w2 $1";dmr                             ; }                        # DNS force smpt stop/load service
-function rd4 { local n=$(($2+$3));nn=$3;[[ $2 -ne 0 && $n -ge $4 && $n -le $5 ]] && rd2 $1 $n;rd3 $1         ; }                        # change/stop/load service process
+function rd4 { local n=$(($2+$nn));[[ $2 -ne 0 && $n -ge $3 && $n -le $4 ]] && rd2 $1 $n;rd3 $1              ; }                        # change/stop/load service process
 function rd5 { cex "$w2 $dnsd";sex "$w2 systemd-resolved";cex "$w3 $dnsd";sex "$w3 systemd-resolved"; }                                 # DNS stop/start
 function cex { echo -e "${i}${1^^}${f}";echo $H|sudo -S $1 2>/dev/null     ; }                                                          # superuser-command (visible)
 function sex {                          echo $H|sudo -S $1 2>/dev/null 1>&2; }                                                          # superuser-command (silent)
 function dmr { sex "$w0 daemon-reload"                       ; }                                                                        # daemon-reload
 function jsh { cex "journalctl --no-hostname --no-full -f $1"; }                                                                        # my journal   format
-function dts { read d0 d1 <<< $(date '+%Y-%m-%d %H:%M');dt="$d0 $d1"                ; }                                                 # my logs date format
+function dts { read d0 d1 <<< ${1:-$(date '+%Y-%m-%d %H:%M')};dt="$d0 $d1"          ; }                                                 # my logs date format
 function sst { dts;echo "$1 $(printf '%6s' $(rd1 $2 Memory:)) $dt status: $(rd1 $2)"; }                                                 # GETH/BEAC/VALI status
-function dnn { echo $dt $(printf 'node%02i:' $1) $(printf '%2i' $2)                 ; }                                                 # date/nodes info
+function dnn { echo "$dt $(printf 'node%02i:' $nn) $(printf '%2i' $nr)"             ; }                                                 # date/nodes info
 
 i="\n\e[5m"
 f="\e[25m\n"
