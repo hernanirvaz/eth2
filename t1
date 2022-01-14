@@ -23,7 +23,7 @@ function rd4 { local n=$(($2+$3));nn=$3;[[ $2 -ne 0 && $n -ge $4 && $n -le $5 ]]
 function rd5 { cex "$w2 $dnsd";sex "$w2 systemd-resolved";cex "$w3 $dnsd";sex "$w3 systemd-resolved"; }                                 # DNS stop/start
 function cex { echo -e "${i}${1^^}${f}";echo $H|sudo -S $1 2>/dev/null     ; }                                                          # superuser-command (visible)
 function sex {                          echo $H|sudo -S $1 2>/dev/null 1>&2; }                                                          # superuser-command (silent)
-function dmr { sex "$w0 daemon-reload"                     ; }                                                                          # daemon-reload
+function dmr { sex "$w0 daemon-reload"                       ; }                                                                        # daemon-reload
 function jsh { cex "journalctl --no-hostname --no-full -f $1"; }                                                                        # my journal   format
 function dts { read d0 d1 <<< $(date '+%Y-%m-%d %H:%M');dt="$d0 $d1"                ; }                                                 # my logs date format
 function sst { dts;echo "$1 $(printf '%6s' $(rd1 $2 Memory:)) $dt status: $(rd1 $2)"; }                                                 # GETH/BEAC/VALI status

@@ -103,7 +103,8 @@ function brl {                                                                  
     fi                                                                      ;echo "${v[0]}$m" >> ${p2}new                                                     # new beacon output
   done <<< $(cat $p2)
   [[ ! -f $p3 ]] && return;bm0;local d=0000-00-00;local l=0;local n=0;local h=0;local g=0;while read -a o;do
-    d=${o[3]};h=$g;g=$(grep -n "$d 23:58" ${p2}new|cut -d: -f1);dt=${o[3]}\ ${o[4]};nn=${o[5]:4:2};nr=${o[6]};nm=${o[20]};b4=${o[18]};b5=${o[19]}             # beacon log position & uncalculated vars
+    d=${o[3]};h=$g;g=$(grep -n "$d 23:58" ${p2}new|cut -d: -f1);[[ $g ]] || continue                                                                          # beacon log position
+    dt=${o[3]}\ ${o[4]};nn=${o[5]:4:2};nr=${o[6]};nm=${o[20]};b4=${o[18]};b5=${o[19]}                                                                         # uncalculated vars
     l2=$(head -n$g ${p2}new|bo2 23:58);b2=$(bo3 $d);((l+=b2));((n+=1));b3=$(nu3 $l/$n 5 1)                                                                    # cur/avg homologous position
     l3=$(head -n$g ${p2}new|tail -n$((g-h))|bm3);[[ $l3 ]] && bm1 20;bm2;bmo;echo "${o[0]}$m" >> ${p3}new                                                     # sum err arrays & new bmedias output
   done <<< $(cat $p3)
