@@ -26,7 +26,7 @@ function bf  { echo $((90*z3))                                                  
 function bu  { echo $(((z5>200?$(bz)/z5:0)+(z2>100?$(bw)/z2:0)+(z4>100?$(bf)/z4:0))); }                                                                       # get restart idx
 function bs  { tail -n$1 $p2 2>/dev/null|cut -d' ' -f1|sort -u|wc -l; }                                                                                       # get restart activity test
 function bk  { cat       $p2 2>/dev/null                      |wc -l; }                                                                                       # get beacon line count
-function bb  { l0=$(fs0 $bpid] 3600);bl1;local g=$(bu);[[ ($g -ge 1 && $(bs $hors) -eq 1) || ($g -ge 5 && $(bs 5) -eq 1) ]] && ok=BK; }                       # set ok (OK/BK)
+function bb  { l0=$(fs0 $bpid] 3600);bl1;[[ (1 -eq $(bs $hors) && $(bu) -ge 1) || (1 -eq $(bs 5) && $(bu) -ge 5) ]] && ok=BK; }                               # set ok (OK/BK)
 function bfl { cat $2|grep "BEAC.*$1"; }                                                                                                                      # filter beacon lines
 function bl  { dts;if [[ $(rd0 $ethb running) ]];then bl2;bv;nr=$(fs4 peers: 1);bb;blo;else m=" NOT RUNNING $dt";fi; }                                        # beacon report
 function bl0 { fs0 "attestation(s).*$1"|sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w; }                                                                      # get paid activities
@@ -83,12 +83,12 @@ function bh  {                                                                  
   sst BEAC $ethb;sst VALI $ethv;cpe                                                                                                                           # beacon/validator/system status
 }
 function brt { echo ${1:-false}$#$2; }                                                                                                                        # get first2last parms
-function bro { dts;nr=$(fs4 peers: 1);echo "RSTR $ok $(printf '%3i' $1) $(dnn)" >> $p2; }                                                                     # log restart info
+function bro { dts;bb;nr=$(fs4 peers: 1);echo "$(printf 'R%03i' $1) ${2:-$ok} $(printf '%3i' $(bu)) $(dnn)" >> $p2; }                                         # log restart info
 function brs {                                                                                                                                                # beacon/validator restart
   [[ -f $p9 ]] && return;touch $p9;local n=0;while [[ -f $p9 && $n -lt 300 ]];do                                                                              # search restart position
     if [[ $(brt $(fs0 "$bpid].*INFO " 7|sed 's%.*INFO \([^ ]*\).*%\1%'|sort -u)) = New2Synced ]];then                                                         # ideal = only 2 INFO words (New2Synced)
-      ok=${2:-$ok};bv;rd4 $ethb $1 20 50;[[ $2 = VC ]] && sex "$w2 $ethv";rm -f $p9                                                                           #         stop beacon/validator
-      if [[ $2 = RB ]];then bro $n;sex reboot;else sex "$w3 $ethb";[[ $2 = VC ]] && sex "$w3 $ethv";sleep 20s;bro $n;fi                                       # reboot/start beacon/validator
+      bv;rd4 $ethb $1 20 50;[[ $2 = VC ]] && sex "$w2 $ethv";rm -f $p9                                                                                        #         stop beacon/validator
+      if [[ $2 = RB ]];then bro $n $2;sex reboot;else sex "$w3 $ethb";[[ $2 = VC ]] && sex "$w3 $ethv";sleep 20s;bro $n $2;fi                                 # reboot/start beacon/validator
     fi;sleep 3s;((n+=1))                                                                                                                                      # search max 200 times, every 3s
   done;rm -f $p9
 }
