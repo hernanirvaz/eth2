@@ -78,8 +78,8 @@ function bo1 { [[ ! -f $p2 ]] && return;local g=${b2:-0};g=$((b6==0?g<5?5:g:g));
 function bo2 { echo "$l2"|sort -k10.1n   ; }                                                                                                                  # get homologous beacon lines sorted
 function bo3 { bo2|grep -n $1|cut -d: -f1; }                                                                                                                  # get homologous beacon lines position
 function bh  {                                                                                                                                                # historic report
-  [[ ! -f $p2 ]] && return;tail -n${1:-$hors} $p2;[[ $1 ]] && return;bo0;echo -e "BO$(printf '%5i' $(echo "$l2"|wc -l)) $(printf '%3i' $b2)";bo1              # beacon/homologous report
-  bl;echo -e "BL$(printf '%5i' $(cat $p2|wc -l))\nBEAC$m";bm;echo -e "BM$(printf '%5i' $(cat $p3 2>/dev/null|wc -l))\nBEAC$m"                                 # beacon/medias report
+  [[ ! -f $p2 ]] && return;tail -n${1:-$hors} $p2;[[ $1 ]] && return;bo0;echo "BO$(printf '%5i' $(echo "$l2"|wc -l)) $(printf '%3i' $b2)";bo1                 # beacon/homologous report
+  bl;echo -e "BL$(printf '%9i' $(cat $p2|wc -l))\nBEAC$m";bm;echo -e "BM$(printf '%9i' $(cat $p3 2>/dev/null|wc -l))\nBEAC$m"                                 # beacon/medias report
   sst BEAC $ethb;sst VALI $ethv;cpe                                                                                                                           # beacon/validator/system status
 }
 function brt { echo ${1:-false}$#$2; }                                                                                                                        # get first2last parms
