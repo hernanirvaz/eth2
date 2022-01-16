@@ -22,7 +22,7 @@ function grs { gv;rd4 $ethg $1 10 15;sex "$w3 $ethg";sleep 20s;dts;gq;echo "GETH
 function bz  { echo $((10*(9*zk+3*zz+zx+zw)))                                       ; }                                                                       # get numerator paid errors
 function bw  { echo $((10*z1))                                                      ; }                                                                       # get numerator processed blocks
 function bf  { echo $((90*z3))                                                      ; }                                                                       # get numerator general errors
-function bu  { echo $(((z5>200?$(bz)/z5:0)+(z2>100?$(bw)/z2:0)+(z4>200?$(bf)/z4:0))); }                                                                       # get restart idx
+function bu  { echo $(((z5>200?$(bz)/z5:0)+(z2>100?$(bw)/z2:0)+(z4>900?$(bf)/z4:0))); }                                                                       # get restart idx
 function bs  { tail -n$1 $p2 2>/dev/null|cut -d' ' -f1|sort -u|wc -l; }                                                                                       # get restart activity test
 function bk  { cat       $p2 2>/dev/null                      |wc -l; }                                                                                       # get beacon line count
 function bv  { nn=$(nu0 $(rd1 $ethb target-peers [0-9])); }                                                                                                   # set configured peers
