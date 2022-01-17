@@ -1,33 +1,34 @@
 #!/bin/bash
 
 # utilities for commands/journal
-function nu0 { if [ ${1:-0} -eq $1 ] 2>/dev/null;then echo $1;else echo 0;fi; }                                                          # get numeric output (must use [ ] test)
-function nu1 { echo "scale=$2;$1"      |bc; }                                                                                            # get arbitrary precision calculations
-function nu2 { echo 0$(printf '+%i' $@)|bc; }                                                                                            # get sum list of numbers
-function nu3 { printf ${4:-%.0f} $(nu1 $1*${3:-100} ${2:-0}); }                                                                          # format arbitrary precision calculations
-function nu4 { if [[ $5 -ne 0  ]];then nu1 "($1*$pmis+$2*$pmat+$3*$pmah+$4*$pdly)/$5*$rate/$decp" 2;else echo 0;fi; }                    # get penalty
-function nu5 { if [[ $# -ne 0  ]];then nu3 $(nu2 $@)/$# 5 1                                        ;else echo 0;fi; }                    # get average of numbers
-function fs0 { echo $H|sudo -S grep    "${3:-lighthouse}.*$1" $p4 2>/dev/null|if [[ ${2:-0} -le 0 ]];then cat;else tail -n${2:-0};fi; }  # get tail     syslog lines
-function fs1 { echo $H|sudo -S grep    "$1"                   $p4 2>/dev/null; }                                                         # get specific syslog lines
-function fs2 { echo $H|sudo -S grep -i 'geth\[\|lighthouse'   $p4 2>/dev/null; }                                                         # get eth      syslog lines
-function fs3 { echo $H|sudo -S grep -v 'geth\[\|lighthouse'   $p4 2>/dev/null; }                                                         # get sys      syslog lines
-function fs4 { fs0 $1 $2|sed "s%.*$1 *\([0-9]*\).*%\1%"; }                                                                               # get peers    syslog lines
-function pt0 { until [[ $# -le 1 || $1 =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]];do shift;done;echo $1; }                                       # yyyy-mm-dd test
-function pt1 { until [[ $# -le 1 || $1 =~ ^[0-9]{2}:[0-9]{2}$          ]];do shift;done;echo $1; }                                       # hh:mm      test
-function pt2 { until [[ $# -le 1 || $1 =~ ^[0-9]+$                     ]];do shift;done;echo $1; }                                       # integer    test
-function rd0 { $w1 $1 2>/dev/null|grep "${2:-inactive\|failed}"                                   ; }                                    # service status word test
-function rd1 { $w1 $1 2>/dev/null|grep "${2:-Active:}"|sed "s%.*${2:-Active:} *\(${3:-.}*\).*%\1%"; }                                    # service status word with data extraction
-function rd2 { nn=$2;cp $p8/$1.service $p0/$1.sav;sed "s%peers *[0-9]*%peers $2%" $p0/$1.sav > $p8/$1.service; }                         # change service configuration file
-function rd3 { resolvectl query smtp.gmail.com 2>/dev/null 1>&2;sex "$w2 $1";dmr                             ; }                         # DNS force smpt stop/load service
-function rd4 { local n=$(($2+$nn));[[ $2 -ne 0 && $n -ge $3 && $n -le $4 ]] && rd2 $1 $n;rd3 $1              ; }                         # change/stop/load service process
-function rd5 { cex "$w2 $dnsd";sex "$w2 systemd-resolved";cex "$w3 $dnsd";sex "$w3 systemd-resolved"; }                                  # DNS stop/start
-function cex { echo -e "${i}${1^^}${f}";echo $H|sudo -S $1 2>/dev/null     ; }                                                           # superuser-command (visible)
-function sex {                          echo $H|sudo -S $1 2>/dev/null 1>&2; }                                                           # superuser-command (silent)
-function dmr { sex "$w0 daemon-reload"                       ; }                                                                         # daemon-reload
-function jsh { cex "journalctl --no-hostname --no-full -f $1"; }                                                                         # my journal   format
-function dts { read d0 d1 <<< ${1:-$(date '+%Y-%m-%d %H:%M')};dt="$d0 $d1"          ; }                                                  # my logs date format
-function sst { dts;echo "$1 $(printf '%6s' $(rd1 $2 Memory:)) $dt status: $(rd1 $2)"; }                                                  # GETH/BEAC/VALI status
-function dnn { echo "$dt $(printf 'node%02i:' $nn) $(printf '%2i' $nr)"             ; }                                                  # date/nodes info
+function nu0 { if [ ${1:-0} -eq $1 ] 2>/dev/null;then echo $1;else echo 0;fi; }                                                                               # get numeric output (must use [ ] test)
+function nu1 { echo "scale=$2;$1"      |bc; }                                                                                                                 # get arbitrary precision calculations
+function nu2 { echo 0$(printf '+%i' $@)|bc; }                                                                                                                 # get sum list of numbers
+function nu3 { printf ${4:-%.0f} $(nu1 $1*${3:-100} ${2:-0}); }                                                                                               # format arbitrary precision calculations
+function nu4 { if [[ $5 -ne 0  ]];then nu1 "($1*$pmis+$2*$pmat+$3*$pmah+$4*$pdly)/$5*$rate/$decp" 2;else echo 0;fi; }                                         # get penalty
+function nu5 { if [[ $# -ne 0  ]];then nu3 $(nu2 $@)/$# 5 1                                        ;else echo 0;fi; }                                         # get average of numbers
+function fs0 { echo $H|sudo -S grep    "${3:-lighthouse}.*$1" $p4 2>/dev/null|if [[ ${2:-0} -le 0 ]];then cat;else tail -n${2:-0};fi; }                       # get tail     syslog lines
+function fs1 { echo $H|sudo -S grep    "$1"                   $p4 2>/dev/null; }                                                                              # get specific syslog lines
+function fs2 { echo $H|sudo -S grep -i 'geth\[\|lighthouse'   $p4 2>/dev/null; }                                                                              # get eth      syslog lines
+function fs3 { echo $H|sudo -S grep -v 'geth\[\|lighthouse'   $p4 2>/dev/null; }                                                                              # get sys      syslog lines
+function fs4 { fs0 $1 $2|sed "s%.*$1 *\([0-9]*\).*%\1%"; }                                                                                                    # get peers    syslog lines
+function fs5 { grep "${2:-\w* *\w*}" $1 2>/dev/null|if [[ ${3:-0} -le 0 ]];then cat;else tail -n${3:-0};fi|sed "s%${2:-\w* *\w*} *\([0-9]*\).*%\1%"; }        # get list of numbers from log
+function pt0 { until [[ $# -le 1 || $1 =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]];do shift;done;echo $1; }                                                            # yyyy-mm-dd test
+function pt1 { until [[ $# -le 1 || $1 =~ ^[0-9]{2}:[0-9]{2}$          ]];do shift;done;echo $1; }                                                            # hh:mm      test
+function pt2 { until [[ $# -le 1 || $1 =~ ^[0-9]+$                     ]];do shift;done;echo $1; }                                                            # integer    test
+function rd0 { $w1 $1 2>/dev/null|grep "${2:-inactive\|failed}"                                   ; }                                                         # service status word test
+function rd1 { $w1 $1 2>/dev/null|grep "${2:-Active:}"|sed "s%.*${2:-Active:} *\(${3:-.}*\).*%\1%"; }                                                         # service status word with data extraction
+function rd2 { nn=$2;cp $p8/$1.service $p0/$1.sav;sed "s%peers *[0-9]*%peers $2%" $p0/$1.sav > $p8/$1.service; }                                              # change service configuration file
+function rd3 { resolvectl query smtp.gmail.com 2>/dev/null 1>&2;sex "$w2 $1";dmr                             ; }                                              # DNS force smpt stop/load service
+function rd4 { local n=$(($2+$nn));[[ $2 -ne 0 && $n -ge $3 && $n -le $4 ]] && rd2 $1 $n;rd3 $1              ; }                                              # change/stop/load service process
+function rd5 { cex "$w2 $dnsd";sex "$w2 systemd-resolved";cex "$w3 $dnsd";sex "$w3 systemd-resolved"; }                                                       # DNS stop/start
+function cex { echo -e "${i}${1^^}${f}";echo $H|sudo -S $1 2>/dev/null     ; }                                                                                # superuser-command (visible)
+function sex {                          echo $H|sudo -S $1 2>/dev/null 1>&2; }                                                                                # superuser-command (silent)
+function dmr { sex "$w0 daemon-reload"                       ; }                                                                                              # daemon-reload
+function jsh { cex "journalctl --no-hostname --no-full -f $1"; }                                                                                              # my journal   format
+function dts { read d0 d1 <<< ${1:-$(date '+%Y-%m-%d %H:%M')};dt="$d0 $d1"          ; }                                                                       # my logs date format
+function sst { dts;echo "$1 $(printf '%6s' $(rd1 $2 Memory:)) $dt status: $(rd1 $2)"; }                                                                       # GETH/BEAC/VALI status
+function dnn { echo "$dt $(printf 'node%02i:' $nn) $(printf '%2i' $nr)"             ; }                                                                       # date/nodes info
 
 i="\n\e[5m"
 f="\e[25m\n"
