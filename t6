@@ -8,7 +8,7 @@ function gq  { nr=$(nu0 $(geth attach "http://$cgth:8545" --exec net.peerCount 2
 function gy  {            geth attach "http://$cgth:8545" --exec eth.syncing   2>/dev/null  ; }                                                               # current syncing status
 function gi  { echo $@|sed 's%.*highestBlock: *\([0-9]*\).*%\1%'; }                                                                                           # get highest geth block
 function gc  { echo $@|sed 's%.*currentBlock: *\([0-9]*\).*%\1%'; }                                                                                           # get current geth block
-function gb  { g0=$(fs0 'mported new' 0 geth|wc -l);ok=OK;[[ $g0 -eq $(fs5 $p5 .*sgs: 1) ]] && ok=BK; }                                                       # imported new chain segments & OK/BK
+function gb  { g0=$(fs0 'mported new' 0 geth|wc -l);ok=OK;[[ $g0 -eq $(fs7 .*sgs: $p5 1) ]] && ok=BK; }                                                       # imported new chain segments & OK/BK
 function gl  {                                                                                                                                                # geth report
   dts;if [[ $(rd0 $ethg running) ]];then local e=$(gy);gb;gv;gq;m="$(dnn) sgs: $(printf '%4i' $g0)"
     if [[ $(echo $e|grep false) ]];then m=" $ok SYC $m";else m=" $ok NSY $m blocks: $(($(gi $e)-$(gc $e)))";fi                                                # OK SYC/NSY (dnn) sgs: 5 blocks: 8 (6)
@@ -28,14 +28,14 @@ function bk  { cat       $p2 2>/dev/null                      |wc -l; }         
 function bv  { nn=$(nu0 $(rd1 $ethb target-peers [0-9])); }                                                                                                   # set configured peers
 function bb  { l0=$(fs0 $bpid] 3600);bl1;bl5;[[ (1 -eq $(bs $hors) && $(bu) -ge 1) || (1 -eq $(bs 5) && $(bu) -ge 5) ]] && ok=BK; }                           # set ok (OK/BK)
 function bfl { cat $2|grep "BEAC.*$1"; }                                                                                                                      # filter beacon lines
-function bl  { dts;if [[ $(rd0 $ethb running) ]];then bl2;bv;nr=$(fs4 peers: 1);bb;blo;else m=" NOT RUNNING $dt";fi; }                                        # beacon report
+function bl  { dts;if [[ $(rd0 $ethb running) ]];then bl2;bv;nr=$(fs6 peers: 1);bb;blo;else m=" NOT RUNNING $dt";fi; }                                        # beacon report
 function bl0 { fs0 "attestation(s).*$1"|bl3; }                                                                                                                # get number of paid activities
 function bl1 {                                                                                                                                                # set restart idx vars
   z1=${1:-$(echo "$l0"|grep 'rocessed block'|wc -l)};z2=${2:-$(echo "$l0"|grep 'block received'|wc -l)}                                                       # set processed/received blocks
   z3=${3:-$(echo "$l0"|grep -v ' INFO '     |wc -l)};z4=${4:-$(echo "$l0"|grep    ' INFO '     |wc -l)}                                                       # set error/info         lines
   z5=${5:-$(bl0 success)};zk=${6:-$(bl0 missing)};zz=${7:-$(bl0 target)};zx=${8:-$(bl0 head)};zw=${9:-$(bl0 had)};ok=${10:-OK}                                # set success/erros      activities
 }
-function bl2 { b0=${1:-$(fs0 'published block'|wc -l)};b1=${2:-$(nu5 $(fs4 delay_ms:))}; }                                                                    # set published blocks/avg delays
+function bl2 { b0=${1:-$(fs0 'published block'|wc -l)};b1=${2:-$(nu5 $(fs6 delay_ms:))}; }                                                                    # set published blocks/avg delays
 function bl3 { sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w; }                                                                                               # get number of validators
 function bl4 { echo $H|sudo -S egrep "attestation\(s\).+(missing|target|head).+validators: +\[(\"[0-9]+\", +){17}\"[0-9]+\"\]" $p4 2>/dev/null|bl3; }         # get irrelevant paid activities
 function bl5 { local n=$(bl4);((n>0&&n%18==0)) && { ((zk-=n/3)); ((zz-=n/3)); ((zx-=n/3)); } }                                                                # del irrelevant paid activities
@@ -48,9 +48,9 @@ function blo {
   m="$m delay: $(printf '%3i' $b1)"
 }
 function bm  {                                                                                                                                                # bmedias report
-  bm0;b4=0;b5=$(fs0 reduce|wc -l);dts;bv;nr=$(fs4 peers: 1);nm=$(fs4 peers:|sort -n|head -n1);[[ -f $p7 ]] && bm4                                             # ini vars/arrays
+  bm0;b4=0;b5=$(fs0 reduce|wc -l);dts;bv;nr=$(fs6 peers: 1);nm=$(fs6 peers:|sort -n|head -n1);[[ -f $p7 ]] && bm4                                             # ini vars/arrays
   l3=$(tail -n$(($(bk)-o[1])) $p2 2>/dev/null|bfl);[[ $l3 ]] && bm1 20;bm2;[[ ${b2:-0} -eq 0 ]] && bo0                                                        # add beacon lines & homologous position
-  b3=$(nu5 $b2 $(fs5 $p3));bm5 20 ${a[$nn]};[[ $b2 -le $b3 || $(bs $hors) -gt 1 ]] && b4=0;bmo;bno                                                            # change configured peers & outputs
+  b3=$(nu5 $b2 $(fs5 '\w* *\w*' $p3));bm5 20 ${a[$nn]};[[ $b2 -le $b3 || $(bs $hors) -gt 1 ]] && b4=0;bmo;bno                                                            # change configured peers & outputs
 }
 function bm0 { unset o;o[1]=0;unset k;k[0]=0;unset z;z[0]=0;unset x;x[0]=0;unset w;w[0]=0;unset c;c[0]=0;unset a;a[0]=0;bm6 20; }                             # ini err/cnt/avg penalty arrays
 function bm1 {
@@ -104,7 +104,7 @@ function bh  {                                                                  
   sst BEAC $ethb;sst VALI $ethv;cpe                                                                                                                           # beacon/validator/system status
 }
 function brt { echo ${1:-false}$#$2; }                                                                                                                        # get first2last parms
-function bro { dts;bb;nr=$(fs4 peers: 1);echo "$(printf 'R%03i' $1) ${2:-$ok} $(printf '%3i' $(bu)) $(dnn)" >> $p2; }                                         # log restart info
+function bro { dts;bb;nr=$(fs6 peers: 1);echo "$(printf 'R%03i' $1) ${2:-$ok} $(printf '%3i' $(bu)) $(dnn)" >> $p2; }                                         # log restart info
 function brs {                                                                                                                                                # beacon/validator restart
   [[ -f $p9 ]] && return;touch $p9;local n=0;while [[ -f $p9 && $n -le 300 ]];do sleep 3s;((n+=1))                                                            # search max 200 times, every 3s
   if [[ $(brt $(fs0 "$bpid].*INFO " 7|sed 's%.*INFO \([^ ]*\).*%\1%'|sort -u)) = New2Synced ]];then                                                           # ideal = only 2 INFO words (New2Synced)

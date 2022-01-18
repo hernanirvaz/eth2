@@ -11,8 +11,10 @@ function fs0 { echo $H|sudo -S grep    "${3:-lighthouse}.*$1" $p4 2>/dev/null|if
 function fs1 { echo $H|sudo -S grep    "$1"                   $p4 2>/dev/null; }                                                                              # get specific syslog lines
 function fs2 { echo $H|sudo -S grep -i 'geth\[\|lighthouse'   $p4 2>/dev/null; }                                                                              # get eth      syslog lines
 function fs3 { echo $H|sudo -S grep -v 'geth\[\|lighthouse'   $p4 2>/dev/null; }                                                                              # get sys      syslog lines
-function fs4 { fs0 $1 $2|sed "s%.*$1 *\([0-9]*\).*%\1%"; }                                                                                                    # get peers    syslog lines
-function fs5 { grep "${2:-\w* *\w*}" $1 2>/dev/null|if [[ ${3:-0} -le 0 ]];then cat;else tail -n${3:-0};fi|sed "s%${2:-\w* *\w*} *\([0-9]*\).*%\1%"; }        # get list of numbers from log
+function fs4 { if [[ $1 ]];then grep "$1" $2 2>/dev/null;else cat $2 2>/dev/null;fi|if [[ ${3:-0} -le 0 ]];then cat;else tail -n${3:-0};fi; }                 # get filtered lines  from log
+function fs5 { sed "s%$1 *\([0-9]*\).*%\1%" $2 2>/dev/null; }                                                                                                 # get list of numbers from log
+function fs6 { fs0 $1 $2   |fs5 .*$1; }                                                                                                                       # get peers    syslog lines
+function fs7 { fs4 $1 $2 $3|fs5   $1; }                                                                                                                       # get number          from log
 function pt0 { until [[ $# -le 1 || $1 =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]];do shift;done;echo $1; }                                                            # yyyy-mm-dd test
 function pt1 { until [[ $# -le 1 || $1 =~ ^[0-9]{2}:[0-9]{2}$          ]];do shift;done;echo $1; }                                                            # hh:mm      test
 function pt2 { until [[ $# -le 1 || $1 =~ ^[0-9]+$                     ]];do shift;done;echo $1; }                                                            # integer    test
