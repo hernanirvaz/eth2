@@ -2,11 +2,13 @@
 
 # utilities for commands/journal
 function nu0 { if [ ${1:-0} -eq $1 ] 2>/dev/null;then echo $1;else echo 0;fi; }                                                                               # get numeric output (must use [ ] test)
-function nu1 { echo "scale=$2;$1"      |bc; }                                                                                                                 # get arbitrary precision calculations
-function nu2 { echo 0$(printf '+%i' $@)|bc; }                                                                                                                 # get sum list of numbers
-function nu3 { printf ${4:-%.0f} $(nu1 $1*${3:-100} ${2:-0}); }                                                                                               # format arbitrary precision calculations
-function nu4 { if [[ $5 -ne 0  ]];then nu1 "($1*$pmis+$2*$pmat+$3*$pmah+$4*$pdly)/$5*$rate/$decp" 2;else echo 0;fi; }                                         # get penalty
-function nu5 { if [[ $# -ne 0  ]];then nu3 $(nu2 $@)/$# 5 1                                        ;else echo 0;fi; }                                         # get average of numbers
+function nu1 { echo "scale=$2;$1"        |bc; }                                                                                                               # get arbitrary precision calculations
+function nu2 { echo 0$(printf '+%i' $@)  |bc; }                                                                                                               # get sum                list of numbers
+function nu3 { echo 0$(printf '+%i^2' $@)|bc; }                                                                                                               # get sum squares        list of numbers
+function nu4 { nu7 "sqrt(($(nu3 $@)-$(nu2 $@)^2/$#)/$#)" 4 1000; }                                                                                            # get standard deviation list of numbers
+function nu5 { if [[ $# -ne 0  ]];then nu7 $(nu2 $@)/$# 5 1                                        ;else echo 0;fi; }                                         # get average            list of numbers
+function nu6 { if [[ $5 -ne 0  ]];then nu1 "($1*$pmis+$2*$pmat+$3*$pmah+$4*$pdly)/$5*$rate/$decp" 2;else echo 0;fi; }                                         # get penalty
+function nu7 { printf ${4:-%.0f} $(nu1 $1*${3:-100} ${2:-0}); }                                                                                               # format arbitrary precision calculations
 function fs0 { echo $H|sudo -S grep    "${3:-lighthouse}.*$1" $p4 2>/dev/null|if [[ ${2:-0} -le 0 ]];then cat;else tail -n${2:-0};fi; }                       # get tail     syslog lines
 function fs1 { echo $H|sudo -S grep    "$1"                   $p4 2>/dev/null; }                                                                              # get specific syslog lines
 function fs2 { echo $H|sudo -S grep -i 'geth\[\|lighthouse'   $p4 2>/dev/null; }                                                                              # get eth      syslog lines
