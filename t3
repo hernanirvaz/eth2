@@ -3,11 +3,11 @@
 source /home/eth/eth2/t1
 
 if [ -x ~/lighthouse ] && [ ! -d ~/lighthouse ]; then
-  echo $H|sudo -S mv ~/lighthouse /usr/local/bin 2>/dev/null
-  echo $H|sudo -S chmod 755 /usr/local/bin/lighthouse 2>/dev/null
+  echo $H|sudo -S mv ~/lighthouse $s0 2>/dev/null
+  echo $H|sudo -S chmod 755 $s0/lighthouse 2>/dev/null
 fi
 
-if [ -x /usr/local/bin/lighthouse ]; then
+if [ -x $s0/lighthouse ]; then
   if [ ! -f /etc/systemd/system/$ethb.service ] && [ "$cunm" != "$znm1" ] && [ "$cunm" != "$vnm1" ]; then
     user="eth2"
     # slots per restore point after init can't be changed
@@ -55,7 +55,7 @@ if [ -x /usr/local/bin/lighthouse ]; then
 		Group=$user
 		Restart=always
 		RestartSec=10
-		ExecStart=/usr/local/bin/lighthouse$blkc --datadir $dtdi bn --target-peers $tarp $http --staking --eth1-endpoints $endp --subscribe-all-subnets --import-all-attestations
+		ExecStart=$s0/lighthouse$blkc --datadir $dtdi bn --target-peers $tarp $http --staking --eth1-endpoints $endp --subscribe-all-subnets --import-all-attestations
 		ExecStopPost=/home/eth/eth2/t8mail BEACSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 		
 		[Install]
@@ -127,7 +127,7 @@ if [ -x /usr/local/bin/lighthouse ]; then
 			Group=$user
 			Restart=always
 			RestartSec=10
-			ExecStart=/usr/local/bin/lighthouse$blkc --datadir $dtdi vc $vlcl
+			ExecStart=$s0/lighthouse$blkc --datadir $dtdi vc $vlcl
 			ExecStopPost=/home/eth/eth2/t8mail VALISTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 			
 			[Install]
@@ -155,7 +155,7 @@ else
       fi
     else
       echo -e "${i}INSTALAR DEPENDENCIAS RUST${f}"
-      echo $H|sudo -S apt install -y git gcc g++ make cmake pkg-config libssl-dev build-essential libudev-dev perl yasm 2>/dev/null
+      echo $H|sudo -S apt install -y git gcc g++ make cmake pkg-config llvm-dev libclang-dev clang libssl-dev build-essential libudev-dev perl yasm 2>/dev/null
       echo -e "${i}INSTALL RUST${f}"
       cd ~
       curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
@@ -185,11 +185,11 @@ else
         if [ "$cunm" = "$vnm1" ]; then
           scp ~/.cargo/bin/lighthouse vpss:~
         fi
-        if [ -x /usr/local/bin/lighthouse ]; then
-          echo $H|sudo -S cp /usr/local/bin/lighthouse /usr/local/bin/lighthouse.save 2>/dev/null
+        if [ -x $s0/lighthouse ]; then
+          echo $H|sudo -S cp $s0/lighthouse $s0/lighthouse.save 2>/dev/null
         fi
-        echo $H|sudo -S cp ~/.cargo/bin/lighthouse /usr/local/bin 2>/dev/null
-        echo $H|sudo -S chmod 755 /usr/local/bin/lighthouse 2>/dev/null
+        echo $H|sudo -S cp ~/.cargo/bin/lighthouse $s0 2>/dev/null
+        echo $H|sudo -S chmod 755 $s0/lighthouse 2>/dev/null
       else
         echo -e "${i}NAO EXISTE LIGHT COMPILADO PARA INSTALAR${f}"
       fi

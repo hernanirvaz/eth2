@@ -31,7 +31,7 @@ if [ "$(echo $H|sudo -S ufw status 2>/dev/null|grep -i inactive)" ]; then
   sudo chkrootkit  -q
 else
   echo -e "${i}FIREWALL $(echo $H|sudo -S ufw status 2>/dev/null|grep -i status|tr '[:lower:]' '[:upper:]')${f}"
-fi 
+fi
 
 if [[ -f /etc/systemd/system/$ethg.service || -f /etc/systemd/system/$ethb.service || -f /etc/systemd/system/$ethv.service ]]; then
   echo -e "${i}SERVER JA INSTALADO ANTES - LINUX UPDATE & SYSTEM CONFIGS SKIPPED${f}"
@@ -127,7 +127,7 @@ else
 		Group=$user
 		Restart=always
 		RestartSec=10
-		ExecStart=/usr/bin/geth$blkc --datadir $golb --http --http.addr $zip1 --maxpeers $maxp --cache $cach --ipcdisable
+		ExecStart=$s0/geth$blkc --datadir $golb --http --http.addr $zip1 --maxpeers $maxp --cache $cach --ipcdisable
 		ExecStopPost=/home/eth/eth2/t8mail GETHSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 		
 		[Install]

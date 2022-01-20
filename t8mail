@@ -8,7 +8,7 @@ function nv {
   git fetch --tags &>/dev/null
   t=$(git rev-list --tags --max-count=1)
   n=$(git describe --tags $t)
-  v=$(/usr/local/bin/lighthouse --version|grep -i lighthouse|sed -Ee 's%.*(v[0-9]+\.[0-9]+\.[0-9]+).*%\1%')
+  v=$($s0/lighthouse --version|grep -i lighthouse|sed -Ee 's%.*(v[0-9]+\.[0-9]+\.[0-9]+).*%\1%')
 }
 function si {
   [ "$cunm" = "$znm1" ] && p=$zip2

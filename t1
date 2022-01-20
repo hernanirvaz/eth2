@@ -37,6 +37,7 @@ function dnn { echo "$dt $(printf 'node%02i:' $nn) $(printf '%2i' $nr)"         
 i="\n\e[5m"
 f="\e[25m\n"
 
+s0='/usr/local/bin'
 p0='/home/eth'
 p1='/etc/prometheus'
 p4='/var/log/syslog'

@@ -5,73 +5,73 @@ source /home/eth/eth2/t1
 # linux  NO GETH STOP | NO GETH START | NO REBOOT
 # reboot    GETH STOP | NO GETH START |    REBOOT
 # geth      GETH STOP |    GETH START | NO REBOOT
-if [ "$1" = "linux" ] || [ "$1" = "reboot" ] || [ "$1" = "geth" ]; then
+if [[ $1 = linux || $1 = reboot || $1 = geth ]]; then
   echo -e "${i}FULL-UPGRADE${f}"
-  if [ "$1" = "reboot" ] || [ "$1" = "geth" ]; then t6 gpr; fi
-  echo $H|sudo -S apt update -y 2>/dev/null
+  if [[ $1 = reboot || $1 = geth ]]; then t6 gpr; fi
+  cex "apt update -y"
   sudo apt full-upgrade -y && sudo apt dist-upgrade -y
   sudo apt autoremove -y
   sudo apt autoclean
-  [ "$1" = "geth"   ] && { t6 gaj; }
-  [ "$1" = "reboot" ] && { sudo reboot; }
+  [[ $1 = geth   ]] && t6 gaj
+  [[ $1 = reboot ]] && sudo reboot
 fi
 
 # eth2 update
-if [ "$1" = "eth2" ]; then
-  if [ "$cunm" = "$znm1" ] || [ "$cunm" = "$vnm1" ]; then
-    if [ -x ~/.cargo/bin/rustup ]; then
-      echo -e "${i}UPDATE RUST${f}"
-      resolvectl query static.rust-lang.org
-      #rustup toolchain install 1.52.1
-      #rustup override set 1.52.1
-      #rustup override unset
-      rustup update stable
+[[ $1 != eth2 ]] && exit
+
+if [[ $cunm = $znm1 || $cunm = $vnm1 ]]; then
+  if [[ -x $p0/.cargo/bin/rustup ]]; then
+    echo -e "${i}UPDATE RUST${f}"
+    resolvectl query static.rust-lang.org 2>/dev/null 1>&2
+    #rustup toolchain install 1.52.1
+    #rustup override set 1.52.1
+    #rustup override unset
+    rustup update stable
+  fi
+  if [[ -f $p0/lighthouse/README.md ]]; then
+    cd $p0/lighthouse
+    make clean
+    cargo clean
+  else
+    cd $p0;cex "rm -rf $p0/lighthouse"
+    resolvectl query github.com 2>/dev/null 1>&2
+    git clone https://github.com/sigp/lighthouse.git
+    cd $p0/lighthouse
+  fi
+  resolvectl query github.com 2>/dev/null 1>&2
+  git fetch
+  if [[ $(echo $2|egrep 'v[0-9]+\.[0-9]+\.[0-9]+') ]]; then
+    v=$2
+  else
+    t=$(git rev-list --tags --max-count=1)
+    v=$(git describe --tags $t)
+  fi
+  git checkout $v
+  echo -e "${i}VAI COMPILAR LIGHT${f}"
+  make
+  if [[ $? -eq 0 && -x $p0/.cargo/bin/lighthouse ]]; then
+    if [[ $cunm = $znm1 ]]; then
+      scp $p0/.cargo/bin/lighthouse $zip2:~
+      scp $p0/.cargo/bin/lighthouse $zip3:~
+      #scp $p0/.cargo/bin/lighthouse $vip3:~
     fi
-    if [ -f ~/lighthouse/README.md ]; then
-      cd ~/lighthouse
-      make clean
-      cargo clean
-    else
-      cd ~
-      echo $H|sudo -S rm -rf ~/lighthouse 2>/dev/null
-      resolvectl query github.com
-      git clone https://github.com/sigp/lighthouse.git
-      cd ~/lighthouse
-    fi 
-    resolvectl query github.com
-    git fetch
-    if [ "$(echo \"$2\"|egrep 'v[0-9]+\.[0-9]+\.[0-9]+')" ]; then
-      v=$2
-    else
-      t=$(git rev-list --tags --max-count=1)
-      v=$(git describe --tags $t)
-    fi
-    git checkout $v
-    echo -e "${i}VAI COMPILAR LIGHT${f}"
-    make
-    if [ $? -eq 0  ] && [ -x ~/.cargo/bin/lighthouse ]; then
-      if [ "$cunm" = "$znm1" ]; then
-        scp ~/.cargo/bin/lighthouse $zip2:~
-        scp ~/.cargo/bin/lighthouse $zip3:~
-        scp ~/.cargo/bin/lighthouse $vip3:~
-      fi
-      if [ -x /usr/local/bin/lighthouse ]; then
-        echo $H|sudo -S cp /usr/local/bin/lighthouse /usr/local/bin/lighthouse.save 2>/dev/null
-        echo $H|sudo -S cp ~/.cargo/bin/lighthouse /usr/local/bin 2>/dev/null
-      fi
-    else
-      echo -e "${i}NAO EXISTE LIGHT COMPILADO PARA INSTALAR${f}"
+    if [[ -x $s0/lighthouse ]]; then
+      cex "cp $s0/lighthouse $s0/lighthouse.save"
+      cex "cp $p0/.cargo/bin/lighthouse $s0"
     fi
   else
-    if [ -x ~/lighthouse ]; then
-      echo $H|sudo -S cp /usr/local/bin/lighthouse /usr/local/bin/lighthouse.save 2>/dev/null
-      echo $H|sudo -S mv ~/lighthouse /usr/local/bin 2>/dev/null
-    else
-      echo -e "${i}NAO EXISTE LIGHT COMPILADO PARA INSTALAR${f}"
-    fi
+    echo -e "${i}NAO EXISTE LIGHT COMPILADO PARA INSTALAR${f}"
   fi
-  if [ -x /usr/local/bin/lighthouse ]; then
-    echo $H|sudo -S chmod 755 /usr/local/bin/lighthouse 2>/dev/null
-    echo -e "${i}NOVO LIGHT INSTALADO - PODE/DEVE VERIFICAR${f}"
+else
+  if [[ -x $p0/lighthouse ]]; then
+    cex "cp $s0/lighthouse $s0/lighthouse.save"
+    cex "mv $p0/lighthouse $s0"
+  else
+    echo -e "${i}NAO EXISTE LIGHT COMPILADO PARA INSTALAR${f}"
   fi
+fi
+
+if [[ -x $s0/lighthouse ]]; then
+  cex "chmod 755 $s0/lighthouse"
+  echo -e "${i}NOVO LIGHT INSTALADO - PODE/DEVE VERIFICAR${f}"
 fi
