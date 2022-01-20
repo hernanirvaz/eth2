@@ -53,7 +53,6 @@ if [[ $cunm = $znm1 || $cunm = $vnm1 ]]; then
     if [[ $cunm = $znm1 ]]; then
       scp $p0/.cargo/bin/lighthouse $zip2:~
       scp $p0/.cargo/bin/lighthouse $zip3:~
-      #scp $p0/.cargo/bin/lighthouse $vip3:~
     fi
     if [[ -x $s0/lighthouse ]]; then
       cex "cp $s0/lighthouse $s0/lighthouse.save"
