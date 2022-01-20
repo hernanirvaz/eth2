@@ -28,7 +28,7 @@ function bk  { cat       $p2 2>/dev/null                      |wc -l; }         
 function bv  { nn=$(nu0 $(rd1 $ethb target-peers [0-9])); }                                                                                                   # set configured peers
 function bb  { l0=$(fs0 $bpid] 3600);bl1;[[ (1 -eq $(bs $hors) && $(bu) -ge 1) || (1 -eq $(bs 5) && $(bu) -ge 5) ]] && ok=BK; }                               # set ok (OK/BK)
 function bfl { cat $2|grep "BEAC.*$1"; }                                                                                                                      # filter beacon lines
-function bl  { dts;if [[ $(rd0 $ethb running) ]];then bl2;bv;nr=$(fs6 peers: 1);bb;blo;else m=" NOT RUNNING $dt";fi; }                                        # beacon report
+function bl  { dts;if [[ $(rd0 $ethb running) ]];then bl2;bv;bnn $(fs6 peers:);bb;blo;else m=" NOT RUNNING $dt";fi; }                                         # beacon report
 function bl0 { fs0 "attestation(s).*$1"|bl3; }                                                                                                                # get number of paid activities
 function bl1 {                                                                                                                                                # set restart idx vars
   z1=${1:-$(echo "$l0"|grep 'rocessed block'|wc -l)};z2=${2:-$(echo "$l0"|grep 'block received'|wc -l)}                                                       # set processed/received blocks
@@ -48,7 +48,7 @@ function blo {
   m="$m delay: $(printf '%3i' $b1)"
 }
 function bm  {                                                                                                                                                # bmedias report
-  bm0;b4=0;b5=$(fs0 reduce|wc -l);dts;bv;bm7 $(fs6 peers:);[[ -f $p7 ]] && bm4                                                                                # ini vars/arrays
+  bm0;b4=0;b5=$(fs0 reduce|wc -l);dts;bv;bnn $(fs6 peers:);[[ -f $p7 ]] && bm4                                                                                # ini vars/arrays
   l3=$(tail -n$(($(bk)-o[1])) $p2 2>/dev/null|bfl);[[ $l3 ]] && bm1 20;bm2;[[ ${b2:-0} -eq 0 ]] && bo0                                                        # add beacon lines & homologous position
   b3=$(nu5 $b2 $(fs5 '\w* *\w*' $p3));bm5 20 ${a[$nn]};[[ $b2 -le $b3 || $(bs $hors) -gt 1 ]] && b4=0;bmo;bno                                                 # change configured peers & outputs
 }
@@ -65,7 +65,6 @@ function bm3 { nu6 ${k[$1]} ${z[$1]} ${x[$1]} ${w[$1]} ${c[$1]}                ;
 function bm4 { read -a o <<< $(tail -n1 $p7);bmk 20;bmz 20;bmx 20;bmw 20;bmc 20; }                                                                            # set err/cnt penalty arrays from barqivo
 function bm5 { local g=$2;if [[ $(nu7 ${a[$1]}) -lt $(nu7 $g) ]];then b4=$(($1-nn));g=${a[$1]};fi;[[ $1 -lt 50 ]] && bm5 $(($1+5)) $g; }                      # com recursively avg/cur penalties
 function bm6 { k[$1]=0;z[$1]=0;x[$1]=0;w[$1]=0;c[$1]=0;a[$1]=0                                   ;[[ $1 -lt 50 ]] && bm6 $(($1+5))   ; }                      # ini recursively penalty arrays
-function bm7 { nr=${@:$#};nm=$(printf '%i\n' $@|sort -n|head -n1);nd=$(nu4 $@); }                                                                             # cur/min/std peers in syslog
 function bkm { ((k[$1]+=$(nu2 $(echo "$l1"|cut -f1)))); }                                                                                                     # sum missing       err array
 function bzm { ((z[$1]+=$(nu2 $(echo "$l1"|cut -f2)))); }                                                                                                     # sum failed target err array
 function bxm { ((x[$1]+=$(nu2 $(echo "$l1"|cut -f3)))); }                                                                                                     # sum failed head   err array
@@ -104,8 +103,9 @@ function bh  {                                                                  
   bl;echo -e "BL$(printf '%9i' $(cat $p2|wc -l))\nBEAC$m";bm;echo -e "BM$(printf '%9i' $(cat $p3 2>/dev/null|wc -l))\nBEAC$m"                                 # beacon/medias report
   sst BEAC $ethb;sst VALI $ethv;cpe                                                                                                                           # beacon/validator/system status
 }
+function bnn { nr=${@:$#};nm=$(printf '%i\n' $@|sort -n|head -n1);nd=$(nu4 $@); }                                                                             # cur/min/std peers in syslog
 function brt { echo ${1:-false}$#$2; }                                                                                                                        # get first2last parms
-function bro { dts;bb;nr=$(fs6 peers: 1);echo "$(printf 'R%03i' $1) ${2:-$ok} $(printf '%3i' $(bu)) $(dnn)" >> $p2; }                                         # log restart info
+function bro { dts;bb;bnn $(fs6 peers:);echo "$(printf 'R%03i' $1) ${2:-$ok} $(printf '%3i' $(bu)) $(dnn)" >> $p2; }                                          # log restart info
 function brs {                                                                                                                                                # beacon/validator restart
   [[ -f $p9 ]] && return;touch $p9;local n=0;while [[ -f $p9 && $n -le 300 ]];do sleep 3s;((n+=1))                                                            # search max 200 times, every 3s
   if [[ $(brt $(fs0 "$bpid].*INFO " 7|sed 's%.*INFO \([^ ]*\).*%\1%'|sort -u)) = New2Synced ]];then                                                           # ideal = only 2 INFO words (New2Synced)
@@ -133,7 +133,7 @@ function bsl {                                                                  
   [[ -f ${p2}new ]] && rm ${p2}new;[[ -f ${p7}new ]] && rm ${p7}new;tail -n$(($(cat $p2|wc -l)-$(tail -n1 $p7|cut -d' ' -f2))) $p2 > ${p2}new                 # new beacon  log output
   head -n$(($(cat $p7|wc -l)-1)) $p7 > ${p7}new;tail -n1 $p7|sed 's%BEAC [0-9]*%BEAC 0%' >> ${p7}new                                                          # new barqivo log output
 }
-function bdt { local n=0;if [[ $(grep "RB ... $d0" $p2) ]];then n=18;else n=$(bl4);fi;((n>0&&n%18==0)) && bdl $d0; }                                          # testa delete beacon log day
+function bdt { local n=0;if [[ $nd -ge 900 ]];then n=18;else n=$(bl4);fi;((n>0&&n%18==0)) && bdl $d0; }                                                       # testa delete beacon log day
 function bdl { local d=$(pt0 $1 sai);[[ $d = sai ]] && return;cp $p2 ${p2}sav;grep -v $d ${p2}sav > $p2; }                                                    #       delete beacon log day
 function bnl {
   [[ -f $p2 && -f ${p2}new && ! -f ${p2}sav ]] && { cp $p2 ${p2}sav;mv ${p2}new $p2; }                                                                        # substitute new beacon  log
