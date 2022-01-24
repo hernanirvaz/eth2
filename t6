@@ -267,6 +267,7 @@ function ssp {
 [[ $1 = bn  ]] && { bm;echo -e "BEAC$s"; }
 [[ $1 = blf ]] && { bl;echo -e "BEAC$m" >> $p2;[[ ! -f ${p2}sav && $d1 = 23:58 ]] && bdt; }
 [[ $1 = bmf ]] && { bm;echo -e "BEAC$m" >> $p3; }
+[[ $1 = bpf ]] && { bm;echo -e "BEAC$m" >> $p3;if [[ $b4 -ne 0 ]];then sleep 7m;brs $b4 PE;fi; }
 [[ $1 = bnf ]] && { bm;echo -e "BEAC$s" >> $p7; }
 [[ $1 = gh  ]] && { gh $2; }
 [[ $1 = bh  ]] && { bh $2; }
@@ -278,7 +279,6 @@ function ssp {
 [[ $1 = cpe ]] && { cpe $2; }
 [[ $1 = glr ]] && { gb;[[ $ok != OK ]] && grs 0; }
 [[ $1 = blr ]] && { bb;[[ $ok != OK ]] && brs 0; }
-[[ $1 = bpc ]] && { bm;[[ $b4 -ne 0 ]] && brs $b4 PE; }
 [[ $1 = grs ]] && { grs ${2:-0}   ; }
 [[ $1 = srs ]] && { brs ${2:-0} RB; }
 [[ $1 = brs ]] && { brs ${2:-0} BN; }
@@ -397,7 +397,7 @@ if [[ ! $1 ]];then
   m="$m\nbrs [n]\t\t$ethb restart n=nodes to change"
   m="$m\nsrs [n]\t\tsystem restart n=nodes to change"
   m="$m\nlrs [n]\t\tlighthouse restart n=nodes to change"
-  m="$m\nbpc\t\t$ethb restart with nodes change"
+  m="$m\nbpf\t\t$ethb restart with nodes change"
   m="$m\nyj\t\tsystem journal"
   m="$m\nsl [s]\t\tlista system journal  s=TOTAL"
   m="$m\nel [s]\t\tlista geth,lighthouse s=TOTAL"
