@@ -5,7 +5,7 @@ source /home/eth/eth2/t1
 # cria link para tarefas
 [ -x ~/eth2/t ] || ln -s ~/eth2/t6 ~/eth2/t
 
-if [ "$(echo $H|sudo -S ufw status 2>/dev/null|grep -i inactive)" ]; then
+if [ "$(echo $H|sudo -S ufw status 2>$s3|grep -i inactive)" ]; then
   echo -e "${i}INIT FIREWALL${f}"
   sudo ufw default deny incoming
   sudo ufw default allow outgoing
@@ -30,14 +30,14 @@ if [ "$(echo $H|sudo -S ufw status 2>/dev/null|grep -i inactive)" ]; then
   sudo pip3 install speedtest-cli
   sudo chkrootkit  -q
 else
-  echo -e "${i}FIREWALL $(echo $H|sudo -S ufw status 2>/dev/null|grep -i status|tr '[:lower:]' '[:upper:]')${f}"
+  echo -e "${i}FIREWALL $(echo $H|sudo -S ufw status 2>$s3|grep -i status|tr '[:lower:]' '[:upper:]')${f}"
 fi
 
 if [[ -f /etc/systemd/system/$ethg.service || -f /etc/systemd/system/$ethb.service || -f /etc/systemd/system/$ethv.service ]]; then
   echo -e "${i}SERVER JA INSTALADO ANTES - LINUX UPDATE & SYSTEM CONFIGS SKIPPED${f}"
 else
   echo -e "${i}UPDATE LINUX${f}"
-  if [ "$(echo $H|sudo -S snap list 2>/dev/null)" ]; then
+  if [ "$(echo $H|sudo -S snap list 2>$s3)" ]; then
     sudo snap remove lxd
     sudo snap remove core18
     sudo snap remove snapd
@@ -95,7 +95,7 @@ if [ "$cunm" != "$znm1" ] && [ "$cunm" != "$vnm1" ]; then
   echo -e "${i}GETH & OPEN ETHEREUM NAO DEVE SER INSTALADOS AQUI - DEVE FAZER REBOOT${f}"
 else
   user="eth1"
-  if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
+  if ! id $user &>$s3;then sudo useradd --no-create-home --shell /bin/false $user;fi
   if [ -f /etc/systemd/system/$ethg.service ]; then
     echo -e "${i}GETH JA INSTALADO${f}"
   else

@@ -9,7 +9,7 @@ else
     echo -e "${i}PROMETHEUS JA INSTALADO${f}"
   else
     echo -e "${i}CONFIGURE PROMETHEUS${f}"
-    echo $H|sudo -S apt install -y prometheus prometheus-node-exporter 2>/dev/null
+    echo $H|sudo -S apt install -y prometheus prometheus-node-exporter 2>$s3
     t6 mpr
     cd ~
     cat <<-EOF > prometheus.yml

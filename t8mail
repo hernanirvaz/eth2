@@ -5,7 +5,7 @@ source /home/eth/eth2/t1
 function nu { u=0;[ -f /var/lib/update-notifier/updates-available ] && u=$(egrep '^[0-9]+  *update' /var/lib/update-notifier/updates-available|cut -d' ' -f1); }
 function nv {
   cd /home/eth/lighthouse
-  git fetch --tags &>/dev/null
+  git fetch --tags &>$s3
   t=$(git rev-list --tags --max-count=1)
   n=$(git describe --tags $t)
   v=$($s0/lighthouse --version|grep -i lighthouse|sed -Ee 's%.*(v[0-9]+\.[0-9]+\.[0-9]+).*%\1%')
@@ -27,7 +27,7 @@ function si {
 [ "$1" = "VALISTP" ] && { echo -e "Subject: VALI STOPPED $(uname -n) $(date --rfc-3339=seconds)\n\nSERVICE_RESULT=$2\nEXIT_CODE=$3\nEXIT_STATUS=$4\n"|ssmtp hernanilr@gmail.com; }
 [ "$1" = "BEACCHK" ] && { si;[ "$(nmap $p --open -Pn -p 5052|grep open)" ] || echo -e "Subject: BNAPI $p STOPPED\n\n"|ssmtp hernanilr@gmail.com; }
 [ "$1" = "VERSCHK" ] && { nv;[ "$n" = "$v"   ] || echo -e "Subject: OLD $v NEW $n IS OUT\n\n"|ssmtp hernanilr@gmail.com; }
-[ "$1" = "UPDTCHK" ] && { nu;[ "$u" -gt 0    ] && echo -e "Subject: $u UPDATES ON $(uname -n)\n\n$(apt list --upgradable 2>/dev/null)"|ssmtp hernanilr@gmail.com; }
+[ "$1" = "UPDTCHK" ] && { nu;[ "$u" -gt 0    ] && echo -e "Subject: $u UPDATES ON $(uname -n)\n\n$(apt list --upgradable 2>$s3)"|ssmtp hernanilr@gmail.com; }
 [ "$1" = "SPEDCHK" ] && { echo -e "Subject: SPEEDTEST ON $(uname -n)\n\n$(speedtest)"|ssmtp hernanilr@gmail.com; }
 [ "$1" = "SYNCCHK" ] && { echo -e "Subject: SYNCING ON $(uname -n)\n\n$(t6 gs)"|ssmtp hernanilr@gmail.com; }
 

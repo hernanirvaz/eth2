@@ -3,9 +3,9 @@
 source /home/eth/eth2/t1
 
 # geth control commands
-function gv  { nn=$(nu0 $(rd1 $ethg maxpeers [0-9]))                                        ; }                                                               # get configured peers
-function gq  { nr=$(nu0 $(geth attach "http://$cgth:8545" --exec net.peerCount 2>/dev/null)); }                                                               # get current    peers
-function gy  {            geth attach "http://$cgth:8545" --exec eth.syncing   2>/dev/null  ; }                                                               # current syncing status
+function gv  { nn=$(nu0 $(rd1 $ethg maxpeers [0-9]))                                  ; }                                                                     # get configured peers
+function gq  { nr=$(nu0 $(geth attach "http://$cgth:8545" --exec net.peerCount 2>$s3)); }                                                                     # get current    peers
+function gy  {            geth attach "http://$cgth:8545" --exec eth.syncing   2>$s3  ; }                                                                     # current syncing status
 function gi  { echo $@|sed 's%.*highestBlock: *\([0-9]*\).*%\1%'; }                                                                                           # get highest geth block
 function gc  { echo $@|sed 's%.*currentBlock: *\([0-9]*\).*%\1%'; }                                                                                           # get current geth block
 function gb  { g0=$(fs0 'mported new' 0 geth|wc -l);ok=OK;[[ $g0 -eq $(fs7 .*sgs: $p5 1) ]] && ok=BK; }                                                       # imported new chain segments & OK/BK
@@ -23,8 +23,8 @@ function bz  { echo $((10*(9*zk+3*zz+zx+zw)))                                   
 function bw  { echo $((10*z1))                                                      ; }                                                                       # get numerator processed blocks
 function bf  { echo $((90*z3))                                                      ; }                                                                       # get numerator general errors
 function bu  { echo $(((z5>200?$(bz)/z5:0)+(z2>300?$(bw)/z2:0)+(z4>999?$(bf)/z4:0))); }                                                                       # get restart idx
-function bs  { tail -n$1 $p2 2>/dev/null|cut -d' ' -f1|sort -u|wc -l; }                                                                                       # get restart activity test
-function bk  { cat       $p2 2>/dev/null                      |wc -l; }                                                                                       # get beacon line count
+function bs  { tail -n$1 $p2 2>$s3|cut -d' ' -f1|sort -u|wc -l; }                                                                                             # get restart activity test
+function bk  { cat       $p2 2>$s3                      |wc -l; }                                                                                             # get beacon line count
 function bv  { nn=$(nu0 $(rd1 $ethb target-peers [0-9])); }                                                                                                   # set configured peers
 function bb  { l0=$(fs0 $bpid] 3600);bl1;[[ (1 -eq $(bs $hors) && $(bu) -ge 1) || (1 -eq $(bs 5) && $(bu) -ge 5) ]] && ok=BK; }                               # set ok (OK/BK)
 function bfl { cat $2|grep "BEAC.*$1"; }                                                                                                                      # filter beacon lines
@@ -37,7 +37,7 @@ function bl1 {                                                                  
 }
 function bl2 { b0=${1:-$(fs0 'published block'|wc -l)};b1=${2:-$(nu5 $(fs6 delay_ms:))}; }                                                                    # set published blocks/avg delays
 function bl3 { sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w; }                                                                                               # get number of validators
-function bl4 { echo $H|sudo -S egrep "attestation\(s\).+(missing|target|head).+validators: +\[(\"[0-9]+\", +){17}\"[0-9]+\"\]" $p4 2>/dev/null|bl3; }         # get irrelevant paid activities
+function bl4 { echo $H|sudo -S egrep "attestation\(s\).+(missing|target|head).+validators: +\[(\"[0-9]+\", +){17}\"[0-9]+\"\]" $s1 2>$s3|bl3; }               # get irrelevant paid activities
 #function bl5 { local n=$(bl4);((n>0&&n%18==0)) && { ((zk-=n/3)); ((zz-=n/3)); ((zx-=n/3)); } }                                                               # del irrelevant paid activities
 #    0  1   2          3     4       5  6               7   8    9                 10   11  12 13    14 15 16  17 18 19  20  21  22   23   24     25  26
 # BEAC OK   0 2022-01-03 19:58 node50: 55 reward_penalty: 257 2.23 attestation_block: 3384 1310 0 erros: 0  7  93 17  0 581   0   8 3592  720 delay: 428
@@ -49,7 +49,7 @@ function blo {
 }
 function bm  {                                                                                                                                                # bmedias report
   bm0;b4=0;b5=$(fs0 reduce|wc -l);dts;bv;bnn $(fs6 peers:);[[ -f $p7 ]] && bm4                                                                                # ini vars/arrays
-  l3=$(tail -n$(($(bk)-o[1])) $p2 2>/dev/null|bfl);[[ $l3 ]] && bm1 20;bm2;[[ ${b2:-0} -eq 0 ]] && bo0                                                        # add beacon lines & homologous position
+  l3=$(tail -n$(($(bk)-o[1])) $p2 2>$s3|bfl);[[ $l3 ]] && bm1 20;bm2;[[ ${b2:-0} -eq 0 ]] && bo0                                                              # add beacon lines & homologous position
   b3=$(nu5 $b2 $(fs5 '\w* *\w*' $p3));bm5 20 ${a[$nn]};[[ $b2 -le $b3 || $(bs $hors) -gt 1 ]] && b4=0;bmo;bno                                                 # change configured peers & outputs
 }
 function bm0 { unset o;o[1]=0;unset k;k[0]=0;unset z;z[0]=0;unset x;x[0]=0;unset w;w[0]=0;unset c;c[0]=0;unset a;a[0]=0;bm6 20; }                             # ini err/cnt/avg penalty arrays
@@ -100,18 +100,19 @@ function bo2 { echo "$l2"|sort -k10.1n   ; }                                    
 function bo3 { bo2|grep -n $1|cut -d: -f1; }                                                                                                                  # get homologous beacon lines position
 function bh  {                                                                                                                                                # historic report
   [[ ! -f $p2 ]] && return;tail -n${1:-$hors} $p2;[[ $1 ]] && return;bo0;echo "BO$(printf '%5i' $(echo "$l2"|wc -l)) $(printf '%3i' $b2)";bo1                 # beacon/homologous report
-  bl;echo -e "BL$(printf '%9i' $(cat $p2|wc -l))\nBEAC$m";bm;echo -e "BM$(printf '%9i' $(cat $p3 2>/dev/null|wc -l))\nBEAC$m"                                 # beacon/medias report
+  bl;echo -e "BL$(printf '%9i' $(cat $p2|wc -l))\nBEAC$m";bm;echo -e "BM$(printf '%9i' $(cat $p3 2>$s3|wc -l))\nBEAC$m"                                       # beacon/medias report
   sst BEAC $ethb;sst VALI $ethv;cpe                                                                                                                           # beacon/validator/system status
 }
+function brw { [[ $1 ]] || return;touch $p4.s$1;sleep $1;rm $p4.s$1; }                                                                                        # sleep with file info
 function bnn { nr=${@:$#};nm=$(printf '%i\n' $@|sort -n|head -n1);nd=$(nu4 $@); }                                                                             # cur/min/std peers in syslog
 function brt { echo ${1:-false}$#$2; }                                                                                                                        # get first2last parms
 function bro { dts;bb;bnn $(fs6 peers:);echo "$(printf 'R%03i' $1) ${2:-$ok} $(printf '%3i' $(bu)) $(dnn)" >> $p2; }                                          # log restart info
 function brs {                                                                                                                                                # beacon/validator restart
-  [[ -f $p9 ]] && return;touch $p9;local n=0;while [[ -f $p9 && $n -le 300 ]];do sleep 3s;((n+=1))                                                            # search max 200 times, every 3s
+  [[ $(ls $p4.* 2>$s3) ]] && return;brw $3;touch $p4.ini;local n=0;while [[ -f $p4.ini && $n -le 300 ]];do sleep 3s;((n+=1))                                  # search max 200 times, every 3s
   if [[ $(brt $(fs0 "$bpid].*INFO " 7|sed 's%.*INFO \([^ ]*\).*%\1%'|sort -u)) = New2Synced ]];then                                                           # ideal = only 2 INFO words (New2Synced)
-    bv;rd4 $ethb $1 20 50;[[ $2 = VC ]] && sex "$w2 $ethv";rm -f $p9                                                                                          #         stop beacon/validator
-    if [[ $2 = RB ]];then bro $n $2;sex reboot;else sex "$w3 $ethb";[[ $2 = VC ]] && sex "$w3 $ethv";sleep 20s;bro $n $2;fi                                   # reboot/start beacon/validator
-  fi;done;rm -f $p9
+    bv;rd4 $ethb $1 20 50;[[ $2 = VC ]] && sex "$w2 $ethv";rm $p4.ini                                                                                         #         stop beacon/validator
+    if [[ $2 = RB ]];then bro $n $2;sex reboot;else sex "$w3 $ethb";[[ $2 = VC ]] && sex "$w3 $ethv";brw 20s;bro $n $2;fi                                     # reboot/start beacon/validator
+  fi;done;rm $p4.ini
 }
 function brh { head -n${1:-0} ${p2}new; }                                                                                                                     # new beacon head lines
 function brl {                                                                                                                                                # recalculate beacon/bmedias logs
@@ -150,7 +151,7 @@ function cpe {                                                                  
   [[ $1 = c ]] && return;local l=0;local n=0;local v=0                                                                                                        # cpu info
   local e=$(fs1 'ture/speed normal'|tail -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%')
   local d=$(fs1 'e above threshold'|head -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%')
-  for v in $(sensors 2>/dev/null|grep 'Package\|Core'|sed 's%.*: *\([-+][0-9][0-9]*\.[0-9]*\).*%\1%');do ((n+=1));l=$(nu1 $l$v 1);done
+  for v in $(sensors 2>$s3|grep 'Package\|Core'|sed 's%.*: *\([-+][0-9][0-9]*\.[0-9]*\).*%\1%');do ((n+=1));l=$(nu1 $l$v 1);done
   [[ $e ]] && e="normal: $e";[[ $d ]] && d="throttled: $d";echo "TEMP $(nu7 $l/$((n==0?1:n)) 1 1 %5.1fC) $dt $d $e"
   [[ $1 = p ]] && return;local l=$(fs3|grep -i 'error' |wc -l);local n=$(fs2|grep -v ' INFO '|wc -l)                                                          # sys/eth errors info
   local e=$(fs3|grep -i 'error' |tail -n1|sed 's%.*hrv-zotac[0-9] *\(.*\)%\1%;s%:%%g;s%  *% %g'                                |cut -c1-53)
@@ -207,7 +208,7 @@ function va  {
   [[ $(rd0 $ethv) ]] || return                                                                                                                                # continue if inactive\|failed
   if [[ -f $dtdi/vc_lock ]];then
     if [[ -f $p0/slashing_protection.sqlite ]];then                                                                                                           # slashing_protection
-      echo $H|sudo -S cp $p0/slashing_protection.sqlite $vldt 2>/dev/null
+      echo $H|sudo -S cp $p0/slashing_protection.sqlite $vldt 2>$s3
       sudo chown eth3:eth3 $vldt/slashing_protection.sqlite
       sudo chmod 600 $vldt/slashing_protection.sqlite
     fi
@@ -220,7 +221,7 @@ function pa  { [[ $(rd0 $ethp) ]] && { cex "$w3 $ethp"; } }
 function na  { [[ $(rd0 $ethn) ]] && { cex "$w3 $ethn"; } }
 function fa  { [[ $(rd0 $ethf) ]] && { cex "$w3 $ethf"; } }
 function wa  {
-  if [[ $(echo $H|sudo -S ufw status 2>/dev/null|grep -i inactive) ]];then
+  if [[ $(echo $H|sudo -S ufw status 2>$s3|grep -i inactive) ]];then
     echo -e "${i}UFW ENABLE${f}";sudo ufw enable <<< y                                                                                                        # enable asks: Proceed with operation (y|n)?
   else
     echo -e "${i}FIREWALL ALREADY ACTIVE${f}"
@@ -244,7 +245,7 @@ function ssp {
   if [[ $rsp = sim && ! -f $dtdi/vc_slash && ! -f $dtdi/vc_lock && -f $dtdi/vc_keys ]];then
     vp;vd
     echo -e "${i}SAVE SLASHING PROTECTION DB${f}"
-    echo $H|sudo -S cp $vldt/slashing_protection.sqlite $p0 2>/dev/null;sudo chown eth:eth $p0/slashing_protection.sqlite
+    echo $H|sudo -S cp $vldt/slashing_protection.sqlite $p0 2>$s3;sudo chown eth:eth $p0/slashing_protection.sqlite
     if [[ $cunm = $znm3 ]];then
       scp $p0/slashing_protection.sqlite vpss:~         ;echo -e "${i}SAVED SLASHING PROTECTION DB IN vpss${f}"
     else
@@ -253,12 +254,12 @@ function ssp {
   fi
 }
 
-[[ $1 = eip ]] && { curl -s4 "http://${3:-meo.fruga.pt}:$2@dyn.dns.he.net/nic/update?hostname=${3:-meo.fruga.pt}" 2>/dev/null 1>&2; }
+[[ $1 = eip ]] && { curl -s4 "http://${3:-meo.fruga.pt}:$2@dyn.dns.he.net/nic/update?hostname=${3:-meo.fruga.pt}" &>$s3; }
 [[ $1 = dsh ]] && { resolvectl query ${2:-smtp.gmail.com}; }
 [[ $1 = drs ]] && { rd5; }
 [[ $1 = nrs ]] && { cex 'netplan apply';rd5; }
 [[ $1 = nsh ]] && { nsh; }
-[[ $1 = trs ]] && { [[ $(rd0 systemd-timesyncd masked) ]] || { cex "$w0 restart systemd-timesyncd"; };cpe c; }
+[[ $1 = trs ]] && { [[ $(rd0 systemd-timesyncd masked) ]] || cex "$w0 restart systemd-timesyncd";cpe c; }
 [[ $1 = vcp ]] && { ssp; }
 [[ $1 = gl  ]] && { gl;echo -e "GETH$m"; }
 [[ $1 = glf ]] && { gl;echo -e "GETH$m" >> $p5; }
@@ -267,7 +268,7 @@ function ssp {
 [[ $1 = bn  ]] && { bm;echo -e "BEAC$s"; }
 [[ $1 = blf ]] && { bl;echo -e "BEAC$m" >> $p2;[[ ! -f ${p2}sav && $d1 = 23:58 ]] && bdt; }
 [[ $1 = bmf ]] && { bm;echo -e "BEAC$m" >> $p3; }
-[[ $1 = bpf ]] && { bm;echo -e "BEAC$m" >> $p3;if [[ $b4 -ne 0 ]];then sleep 7m;brs $b4 PE;fi; }
+[[ $1 = bpf ]] && { bm;echo -e "BEAC$m" >> $p3;if [[ $b4 -ne 0 ]];then brs $b4 PE 7m;fi; }
 [[ $1 = bnf ]] && { bm;echo -e "BEAC$s" >> $p7; }
 [[ $1 = gh  ]] && { gh $2; }
 [[ $1 = bh  ]] && { bh $2; }

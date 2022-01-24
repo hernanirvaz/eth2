@@ -22,7 +22,7 @@ fi
 if [[ $cunm = $znm1 || $cunm = $vnm1 ]]; then
   if [[ -x $p0/.cargo/bin/rustup ]]; then
     echo -e "${i}UPDATE RUST${f}"
-    resolvectl query static.rust-lang.org 2>/dev/null 1>&2
+    resolvectl query static.rust-lang.org &>$s3
     #rustup toolchain install 1.52.1
     #rustup override set 1.52.1
     #rustup override unset
@@ -34,11 +34,11 @@ if [[ $cunm = $znm1 || $cunm = $vnm1 ]]; then
     cargo clean
   else
     cd $p0;cex "rm -rf $p0/lighthouse"
-    resolvectl query github.com 2>/dev/null 1>&2
+    resolvectl query github.com &>$s3
     git clone https://github.com/sigp/lighthouse.git
     cd $p0/lighthouse
   fi
-  resolvectl query github.com 2>/dev/null 1>&2
+  resolvectl query github.com &>$s3
   git fetch
   if [[ $(echo $2|egrep 'v[0-9]+\.[0-9]+\.[0-9]+') ]]; then
     v=$2

@@ -3,8 +3,8 @@
 source /home/eth/eth2/t1
 
 if [ -x ~/lighthouse ] && [ ! -d ~/lighthouse ]; then
-  echo $H|sudo -S mv ~/lighthouse $s0 2>/dev/null
-  echo $H|sudo -S chmod 755 $s0/lighthouse 2>/dev/null
+  echo $H|sudo -S mv ~/lighthouse $s0 2>$s3
+  echo $H|sudo -S chmod 755 $s0/lighthouse 2>$s3
 fi
 
 if [ -x $s0/lighthouse ]; then
@@ -32,7 +32,7 @@ if [ -x $s0/lighthouse ]; then
       endp="$E"
     fi
     echo -e "${i}CONFIGURE BEACON${f}"
-    echo $H|sudo -S mkdir -p $becn 2>/dev/null
+    echo $H|sudo -S mkdir -p $becn 2>$s3
     sudo chmod 700 $becn
     sudo chown $meeu:$meeu $dtdi
     # IMPORTANTE LOCK VALIDATOR CLIENTE
@@ -40,7 +40,7 @@ if [ -x $s0/lighthouse ]; then
     #t6 vpr
     t6 bpr
     cd ~
-    if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
+    if ! id $user &>$s3;then sudo useradd --no-create-home --shell /bin/false $user;fi
     sudo chown $user:$user $becn
     # --slasher --validator-monitor-auto --subscribe-all-subnets --import-all-attestations --disable-upnp
     # --checkpoint-sync-url https://1q1s6o6cB6Jysu7KKlbLUYiOdAM:8974468780164028652df958a69fbd30@eth2-beacon-mainnet.infura.io
@@ -82,9 +82,9 @@ if [ -x $s0/lighthouse ]; then
     cd ~
     if [ ! -f $dtdi/vc_keys ] && [ -d $HOME/$D ] && [ "$(ls -A $HOME/$D)" ]; then
       echo -e "${i}IMPORT VALIDATOR KEYS & INIT SLASH PROTECTION${f}"
-      echo $H|sudo -S mkdir -p $dtdi 2>/dev/null
+      echo $H|sudo -S mkdir -p $dtdi 2>$s3
       sudo chown $meeu:$meeu $dtdi
-      if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
+      if ! id $user &>$s3;then sudo useradd --no-create-home --shell /bin/false $user;fi
       echo -e "STORE($K)\n"
       lighthouse$blkc --datadir $dtdi account validator import --directory $HOME/$D
       [ -f $vldt/validator_definitions.yml ] && touch $dtdi/vc_keys
@@ -98,7 +98,7 @@ if [ -x $s0/lighthouse ]; then
     fi
     if [ ! -f $dtdi/vc_slash ] && [ -f $dtdi/vc_lock ] && [ -f $dtdi/vc_keys ]; then
       echo -e "${i}COPIAR $vldt/slashing_protection.sqlite*${f}"
-      echo $H|sudo -S mkdir -p $vldt 2>/dev/null
+      echo $H|sudo -S mkdir -p $vldt 2>$s3
       sudo chown $meeu:$meeu $vldt
       if [ -f ~/slashing_protection.sqlite ]; then
         sudo rm $vldt/slashing_protection.sqlite $vldt/slashing_protection.sqlite-journal
@@ -112,8 +112,8 @@ if [ -x $s0/lighthouse ]; then
     fi
     if [ ! -f /etc/systemd/system/$ethv.service ] && [ -f $dtdi/vc_slash ] && [ -f $dtdi/vc_lock ] && [ -f $dtdi/vc_keys ]; then
       echo -e "${i}CONFIGURE VALIDATOR${f}"
-      echo $H|sudo -S mkdir -p $vldt 2>/dev/null
-      if ! id $user &>/dev/null;then sudo useradd --no-create-home --shell /bin/false $user;fi
+      echo $H|sudo -S mkdir -p $vldt 2>$s3
+      if ! id $user &>$s3;then sudo useradd --no-create-home --shell /bin/false $user;fi
       sudo chown -R $user:$user $vldt
       sudo chmod 700 $vldt
       cat <<-EOF > $ethv.service
@@ -155,7 +155,7 @@ else
       fi
     else
       echo -e "${i}INSTALAR DEPENDENCIAS RUST${f}"
-      echo $H|sudo -S apt install -y git gcc g++ make cmake pkg-config llvm-dev libclang-dev clang libssl-dev build-essential libudev-dev perl yasm 2>/dev/null
+      echo $H|sudo -S apt install -y git gcc g++ make cmake pkg-config llvm-dev libclang-dev clang libssl-dev build-essential libudev-dev perl yasm 2>$s3
       echo -e "${i}INSTALL RUST${f}"
       cd ~
       curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
@@ -168,7 +168,7 @@ else
         cargo clean
       else
         cd ~
-        echo $H|sudo -S rm -rf ~/lighthouse 2>/dev/null
+        echo $H|sudo -S rm -rf ~/lighthouse 2>$s3
         git clone https://github.com/sigp/lighthouse.git
         cd ~/lighthouse
       fi
@@ -186,10 +186,10 @@ else
           scp ~/.cargo/bin/lighthouse vpss:~
         fi
         if [ -x $s0/lighthouse ]; then
-          echo $H|sudo -S cp $s0/lighthouse $s0/lighthouse.save 2>/dev/null
+          echo $H|sudo -S cp $s0/lighthouse $s0/lighthouse.save 2>$s3
         fi
-        echo $H|sudo -S cp ~/.cargo/bin/lighthouse $s0 2>/dev/null
-        echo $H|sudo -S chmod 755 $s0/lighthouse 2>/dev/null
+        echo $H|sudo -S cp ~/.cargo/bin/lighthouse $s0 2>$s3
+        echo $H|sudo -S chmod 755 $s0/lighthouse 2>$s3
       else
         echo -e "${i}NAO EXISTE LIGHT COMPILADO PARA INSTALAR${f}"
       fi
