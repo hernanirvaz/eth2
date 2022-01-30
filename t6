@@ -96,7 +96,7 @@ function bo0 {                                                                  
   local n=0;while [[ ${b2:=0} -eq 0 && $n -lt 50 ]];do ((n+=1));v[3]=$(date -d "$n days ago $t" '+%Y-%m-%d');b2=$(bo3 ${v[3]});done                           # search past homologous info (max 50 days)
 }
 function bo1 { [[ ! -f $p2 ]] && return;local g=${b2:-0};g=$((b6==0?g<5?5:g:g));bo2|head -n$g|tail -n$((b6==0?g>hors?hors:g:g)); }                            # homologous report
-function bo2 { echo "$l2"|sort -k10.1n   ; }                                                                                                                  # get homologous beacon lines sorted
+function bo2 { echo "$l2"|sort -k10n -k4r; }                                                                                                                  # get homologous beacon lines sorted
 function bo3 { bo2|grep -n $1|cut -d: -f1; }                                                                                                                  # get homologous beacon lines position
 function bh  {                                                                                                                                                # historic report
   [[ ! -f $p2 ]] && return;tail -n${1:-$hors} $p2;[[ $1 ]] && return;bo0;echo "BO$(printf '%5i' $(echo "$l2"|wc -l)) $(printf '%3i' $b2)";bo1                 # beacon/homologous report
