@@ -133,7 +133,7 @@ function bsl {                                                                  
   [[ -f ${p2}new ]] && rm ${p2}new;[[ -f ${p7}new ]] && rm ${p7}new;tail -n$(($(cat $p2|wc -l)-$(tail -n1 $p7|cut -d' ' -f2))) $p2 > ${p2}new                 # new beacon  log output
   head -n$(($(cat $p7|wc -l)-1)) $p7 > ${p7}new;tail -n1 $p7|sed 's%BEAC [0-9]*%BEAC 0%' >> ${p7}new                                                          # new barqivo log output
 }
-function bdt { local n=0;if [[ $nd -ge 1500 ]];then n=18;else n=$(bl4);fi;((n>0&&n%18==0)) && bdl $d0; }                                                      # testa delete beacon log day
+function bdt { local n=$((nd+zk*100+zz*10));if [[ $n -ge 1500 ]];then n=18;else n=$(bl4);fi;((n>0&&n%18==0)) && bdl $d0; }                                    # testa delete beacon log day
 function bdl { local d=$(pt0 $1 sai);[[ $d = sai ]] && return;cp $p2 ${p2}sav;grep -v $d ${p2}sav > $p2; }                                                    #       delete beacon log day
 function bnl {
   [[ -f $p2 && -f ${p2}new && ! -f ${p2}sav ]] && { cp $p2 ${p2}sav;mv ${p2}new $p2; }                                                                        # substitute new beacon  log
