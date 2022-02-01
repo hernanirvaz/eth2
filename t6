@@ -48,7 +48,7 @@ function blo {
   m="$m delay: $(printf '%3i' $b1)"
 }
 function bm  {                                                                                                                                                # bmedias report
-  bm0;b4=0;b5=$(fs0 reduce|wc -l);dts;bv;bnn $(fs6 peers:);[[ -f $p7 ]] && bm4                                                                                # ini vars/arrays
+  bm0;b4=0;b5=$(fs0 reduce|wc -l);dts;bv;bnn $(fs6 peers:);[[ -f $p6 ]] && bm4                                                                                # ini vars/arrays
   l3=$(tail -n$(($(bk)-o[1])) $p2 2>$s3|bfl);[[ $l3 ]] && bm1 20;bm2;[[ ${b2:-0} -eq 0 ]] && bo0                                                              # add beacon lines & homologous position
   b3=$(nu5 $b2 $(fs5 '\w* *\w*' $p3));bm5 20 ${a[$nn]};[[ $b2 -le $b3 || $(bs $hors) -gt 1 ]] && b4=0;bmo;bno                                                 # change configured peers & outputs
 }
@@ -62,7 +62,7 @@ function bm2 {
   a[0]=$(bm3 0);a[20]=$(bm3 20);a[25]=$(bm3 25);a[30]=$(bm3 30);a[35]=$(bm3 35);a[40]=$(bm3 40);a[45]=$(bm3 45);a[50]=$(bm3 50)                               # avg penalty arrays
 }
 function bm3 { nu6 ${k[$1]} ${z[$1]} ${x[$1]} ${w[$1]} ${c[$1]}                ; }                                                                            # get penalty from paid err arrays
-function bm4 { read -a o <<< $(tail -n1 $p7);bmk 20;bmz 20;bmx 20;bmw 20;bmc 20; }                                                                            # set err/cnt penalty arrays from barqivo
+function bm4 { read -a o <<< $(tail -n1 $p6);bmk 20;bmz 20;bmx 20;bmw 20;bmc 20; }                                                                            # set err/cnt penalty arrays from barqivo
 function bm5 { local g=$2;if [[ $(nu7 ${a[$1]}) -lt $(nu7 $g) ]];then b4=$(($1-nn));g=${a[$1]};fi;[[ $1 -lt 50 ]] && bm5 $(($1+5)) $g; }                      # com recursively avg/cur penalties
 function bm6 { k[$1]=0;z[$1]=0;x[$1]=0;w[$1]=0;c[$1]=0;a[$1]=0                                   ;[[ $1 -lt 50 ]] && bm6 $(($1+5))   ; }                      # ini recursively penalty arrays
 function bkm { ((k[$1]+=$(nu2 $(echo "$l1"|cut -f1)))); }                                                                                                     # sum missing       err array
@@ -130,15 +130,15 @@ function brl {                                                                  
   done <<< $(cat $p3)
 }
 function bsl {                                                                                                                                                # shrink beacon log using barqivo
-  [[ -f ${p2}new ]] && rm ${p2}new;[[ -f ${p7}new ]] && rm ${p7}new;tail -n$(($(cat $p2|wc -l)-$(tail -n1 $p7|cut -d' ' -f2))) $p2 > ${p2}new                 # new beacon  log output
-  head -n$(($(cat $p7|wc -l)-1)) $p7 > ${p7}new;tail -n1 $p7|sed 's%BEAC [0-9]*%BEAC 0%' >> ${p7}new                                                          # new barqivo log output
+  [[ -f ${p2}new ]] && rm ${p2}new;[[ -f ${p6}new ]] && rm ${p6}new;tail -n$(($(cat $p2|wc -l)-$(tail -n1 $p6|cut -d' ' -f2))) $p2 > ${p2}new                 # new beacon  log output
+  head -n$(($(cat $p6|wc -l)-1)) $p6 > ${p6}new;tail -n1 $p6|sed 's%BEAC [0-9]*%BEAC 0%' >> ${p6}new                                                          # new barqivo log output
 }
 function bdt { local n=$((nd+zk*100+zz*10));if [[ $n -ge 1500 ]];then n=18;else n=$(bl4);fi;((n>0&&n%18==0)) && bdl $d0; }                                    # testa delete beacon log day
 function bdl { local d=$(pt0 $1 sai);[[ $d = sai ]] && return;cp $p2 ${p2}sav;grep -v $d ${p2}sav > $p2; }                                                    #       delete beacon log day
 function bnl {
   [[ -f $p2 && -f ${p2}new && ! -f ${p2}sav ]] && { cp $p2 ${p2}sav;mv ${p2}new $p2; }                                                                        # substitute new beacon  log
   [[ -f $p3 && -f ${p3}new && ! -f ${p3}sav ]] && { cp $p3 ${p3}sav;mv ${p3}new $p3; }                                                                        # substitute new bmedias log
-  [[ -f $p7 && -f ${p7}new && ! -f ${p7}sav ]] && { cp $p7 ${p7}sav;mv ${p7}new $p7; }                                                                        # substitute new barqivo log
+  [[ -f $p6 && -f ${p6}new && ! -f ${p6}sav ]] && { cp $p6 ${p6}sav;mv ${p6}new $p6; }                                                                        # substitute new barqivo log
 }
 function nsh {
   echo -e "ROUTES\t\t$(ip route show|grep 'default via'|grep -v linkdown|cut -d' ' -f3)\nDNS\t\t$(resolvectl|grep 'Current DNS'|cut -d' ' -f6)"               # routes
@@ -197,7 +197,7 @@ function fcl { cex 'ufw deny  3000/tcp                '; }
 # enable/arranca goethereum/beacon/validator/prometheus/grafana
 function ge  { gop;cex 'ufw reload';cex "$w4 $ethg"; }
 function be  { bop;cex 'ufw reload';cex "$w4 $ethb"; }
-function ve  { [[ ! -f $dtdi/vc_lock ]] && { vop;cex 'ufw reload';cex "$w4 $ethv"; } }
+function ve  { [[ ! -f $p1/vc_lock ]] && { vop;cex 'ufw reload';cex "$w4 $ethv"; } }
 function pe  { cex 'ufw reload';cex "$w4 $ethp"; }
 function ne  { cex 'ufw reload';cex "$w4 $ethn"; }
 function fe  { fop;cex 'ufw reload';cex "$w4 $ethf"; }
@@ -205,15 +205,15 @@ function ga  { [[ $(rd0 $ethg) ]] && [[ -d /var/lib/goethereum   ]] && { cex "$w
 function ba  { [[ $(rd0 $ethb) ]] && { cex "$w3 $ethb"; } }
 function va  {
   [[ $(rd0 $ethv) ]] || return                                                                                                                                # continue if inactive\|failed
-  if [[ -f $dtdi/vc_lock ]];then
+  if [[ -f $p1/vc_lock ]];then
     if [[ -f $p0/slashing_protection.sqlite ]];then                                                                                                           # slashing_protection
-      echo $H|sudo -S cp $p0/slashing_protection.sqlite $vldt 2>$s3
-      sudo chown eth3:eth3 $vldt/slashing_protection.sqlite
-      sudo chmod 600 $vldt/slashing_protection.sqlite
+      echo $H|sudo -S cp $p0/slashing_protection.sqlite $p8 2>$s3
+      sudo chown eth3:eth3 $p8/slashing_protection.sqlite
+      sudo chmod 600 $p8/slashing_protection.sqlite
     fi
   else
     cex "$w3 $ethv"
-    rm $dtdi/vc_slash
+    rm $p1/vc_slash
   fi
 }
 function pa  { [[ $(rd0 $ethp) ]] && { cex "$w3 $ethp"; } }
@@ -229,22 +229,22 @@ function wa  {
 # para/disable goethereum/beacon/validator/prometheus/grafana
 function gp  { [[ $(rd0 $ethg loaded) ]] && { cex "$w2 $ethg"; } }
 function bp  { [[ $(rd0 $ethb loaded) ]] && { cex "$w2 $ethb"; } }
-function vp  { [[ $(rd0 $ethv loaded) ]] && { cex "$w2 $ethv";touch $dtdi/vc_slash; } }
+function vp  { [[ $(rd0 $ethv loaded) ]] && { cex "$w2 $ethv";touch $p1/vc_slash; } }
 function pp  { [[ $(rd0 $ethp loaded) ]] && { cex "$w2 $ethp"; } }
 function np  { [[ $(rd0 $ethn loaded) ]] && { cex "$w2 $ethn"; } }
 function fp  { [[ $(rd0 $ethf loaded) ]] && { cex "$w2 $ethf"; } }
 function gd  { cex "$w5 $ethg";gcl;cex 'ufw reload'; }
 function bd  { cex "$w5 $ethb";bcl;cex 'ufw reload'; }
-function vd  { cex "$w5 $ethv";vcl;cex 'ufw reload';touch $dtdi/vc_lock; }
+function vd  { cex "$w5 $ethv";vcl;cex 'ufw reload';touch $p1/vc_lock; }
 function pd  { [[ $(rd0 $ethp loaded) ]] && { cex "$w5 $ethp"; } }
 function nd  { [[ $(rd0 $ethn loaded) ]] && { cex "$w5 $ethn"; } }
 function fd  { [[ $(rd0 $ethf loaded) ]] && { cex "$w5 $ethf";fcl;cex 'ufw reload'; } }
 function ssp {
   echo -e "${i}QUER MESMO TRANSFERIR VALIDATORS?${f}";read rsp
-  if [[ $rsp = sim && ! -f $dtdi/vc_slash && ! -f $dtdi/vc_lock && -f $dtdi/vc_keys ]];then
+  if [[ $rsp = sim && ! -f $p1/vc_slash && ! -f $p1/vc_lock && -f $p1/vc_keys ]];then
     vp;vd
     echo -e "${i}SAVE SLASHING PROTECTION DB${f}"
-    echo $H|sudo -S cp $vldt/slashing_protection.sqlite $p0 2>$s3;sudo chown eth:eth $p0/slashing_protection.sqlite
+    echo $H|sudo -S cp $p8/slashing_protection.sqlite $p0 2>$s3;sudo chown eth:eth $p0/slashing_protection.sqlite
     if [[ $cunm = $znm3 ]];then
       scp $p0/slashing_protection.sqlite vpss:~         ;echo -e "${i}SAVED SLASHING PROTECTION DB IN vpss${f}"
     else
@@ -268,12 +268,12 @@ function ssp {
 [[ $1 = blf ]] && { bl;echo -e "BEAC$m" >> $p2;[[ ! -f ${p2}sav && $d1 = 23:58 ]] && bdt; }
 [[ $1 = bmf ]] && { bm;echo -e "BEAC$m" >> $p3; }
 [[ $1 = bpf ]] && { bm;echo -e "BEAC$m" >> $p3;if [[ $b4 -ne 0 ]];then brs $b4 PE 7m;fi; }
-[[ $1 = bnf ]] && { bm;echo -e "BEAC$s" >> $p7; }
+[[ $1 = bnf ]] && { bm;echo -e "BEAC$s" >> $p6; }
 [[ $1 = gh  ]] && { gh $2; }
 [[ $1 = bh  ]] && { bh $2; }
 [[ $1 = bo  ]] && { bo0 $2 $3;bo1; }
 [[ $1 = brl ]] && { [[ -f $p2                  ]] && brl; }
-[[ $1 = bsl ]] && { [[ -f $p2 &&   -f ${p7}    ]] && bsl; }
+[[ $1 = bsl ]] && { [[ -f $p2 &&   -f ${p6}    ]] && bsl; }
 [[ $1 = bdl ]] && { [[ -f $p2 && ! -f ${p2}sav ]] && bdl $2; }
 [[ $1 = bnl ]] && { bnl; }
 [[ $1 = cpe ]] && { cpe $2; }
@@ -286,6 +286,7 @@ function ssp {
 # lista servicos & portas
 [[ $1 = lp  ]] && { netstat -tulpn; }
 # outros journal system/lighthouse
+[[ $1 = nl  ]] && { fs8|if [[ $2 ]];then grep -i               "$2";else grep -v ' INFO ';fi; }
 [[ $1 = el  ]] && { fs2|if [[ $2 ]];then grep -i "[a-z]* [0-9]* $2";else grep -v ' INFO ';fi; }
 [[ $1 = sl  ]] && { fs3|if [[ $2 ]];then grep -i "[a-z]* [0-9]* $2";else grep -i 'error' ;fi; }
 [[ $1 = ws  ]] && { cex 'ufw status numbered'; }
@@ -399,8 +400,9 @@ if [[ ! $1 ]];then
   m="$m\nlrs [n]\t\tlighthouse restart n=nodes to change"
   m="$m\nbpf\t\t$ethb restart with nodes change"
   m="$m\nyj\t\tsystem journal"
-  m="$m\nsl [s]\t\tlista system journal  s=TOTAL"
-  m="$m\nel [s]\t\tlista geth,lighthouse s=TOTAL"
+  m="$m\nsl [hh:mm]\tsystem journal  log lines"
+  m="$m\nel [hh:mm]\tgeth/lighthouse log lines"
+  m="$m\nnl [hh:mm]\tbeacon node     log lines"
   m="$m\nbrl\t\trecalculate beacon/bmedias logs"
   m="$m\nbsl\t\tshrink beacon log using barqivo"
   m="$m\nbdl yyyy-mm-dd\tdelete beacon log day"

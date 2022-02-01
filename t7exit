@@ -13,10 +13,10 @@ if [ -x $s0/lighthouse ]; then
     blkc="--testnet $B"
   fi
   echo -e "${i}EXIT VALIDATORS${f}"
-  if [ -f $vldt/validator_definitions.yml ]; then
+  if [ -f $p8/validator_definitions.yml ]; then
     echo -e "${i}STORE($K) WALLET($W)${f}"
-    for kst in $(ls $vldt/*.json)
-    do echo lighthouse $blkc --datadir $dtdi account validator exit --keystore $kst
+    for kst in $(ls $p8/*.json)
+    do echo lighthouse $blkc --datadir $p1 account validator exit --keystore $kst
     done
   else
     echo -e "${i}\nCHAVES AINDA NAO FORAM IMPORTADAS${f}"

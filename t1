@@ -17,12 +17,13 @@ function fs4 { if [[ $1 ]];then grep "$1" $2 2>$s3;else cat $2 2>$s3;fi|if [[ ${
 function fs5 { sed "s%$1 *\([0-9]*\).*%\1%" $2 2>$s3; }                                                                                                       # get list of numbers from log
 function fs6 { fs0 $1 $2   |fs5 .*$1; }                                                                                                                       # get peers    syslog lines
 function fs7 { fs4 $1 $2 $3|fs5   $1; }                                                                                                                       # get number          from log
+function fs8 { local n=${1:-0};((n<5)) && fs8 $((n+1));local e="$p7/logs/beacon.log";((n>0)) && e="$e.$n";echo $H|sudo -S cat $e 2>$s3; }                     # get beacon   intern lines
 function pt0 { until [[ $# -le 1 || $1 =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]];do shift;done;echo $1; }                                                            # yyyy-mm-dd test
 function pt1 { until [[ $# -le 1 || $1 =~ ^[0-9]{2}:[0-9]{2}$          ]];do shift;done;echo $1; }                                                            # hh:mm      test
 function pt2 { until [[ $# -le 1 || $1 =~ ^[0-9]+$                     ]];do shift;done;echo $1; }                                                            # integer    test
 function rd0 { $w1 $1 2>$s3|grep "${2:-inactive\|failed}"                                   ; }                                                               # service status word test
 function rd1 { $w1 $1 2>$s3|grep "${2:-Active:}"|sed "s%.*${2:-Active:} *\(${3:-.}*\).*%\1%"; }                                                               # service status word with data extraction
-function rd2 { nn=$2;cp $p8/$1.service $p0/$1.sav;sed "s%peers *[0-9]*%peers $2%" $p0/$1.sav > $p8/$1.service; }                                              # change service configuration file
+function rd2 { nn=$2;cp $s4/$1.service $p0/$1.sav;sed "s%peers *[0-9]*%peers $2%" $p0/$1.sav > $s4/$1.service; }                                              # change service configuration file
 function rd3 { resolvectl query smtp.gmail.com &>$s3;sex "$w2 $1";dmr                                        ; }                                              # DNS force smpt stop/load service
 function rd4 { local n=$(($2+$nn));[[ $2 -ne 0 && $n -ge $3 && $n -le $4 ]] && rd2 $1 $n;rd3 $1              ; }                                              # change/stop/load service process
 function rd5 { cex "$w2 $dnsd";sex "$w2 systemd-resolved";cex "$w3 $dnsd";sex "$w3 systemd-resolved"; }                                                       # DNS stop/start
@@ -40,15 +41,18 @@ f="\e[25m\n"
 
 s0='/usr/local/bin'
 s1='/var/log/syslog'
+s2='/etc/prometheus'
 s3='/dev/null'
+s4='/etc/systemd/system'
 p0='/home/eth'
-p1='/etc/prometheus'
-p8='/etc/systemd/system'
+p1='/var/lib/lighthouse'
 p5="$p0/geth.log"
 p2="$p0/beacon.log"
 p3="$p0/bmedias.log"
-p7="$p0/barqivo.log"
+p6="$p0/barqivo.log"
 p4="$p0/beacon.restart"
+p7="$p1/beacon"
+p8="$p1/validators"
 
 w0='systemctl'
 w1="$w0 status"
@@ -81,9 +85,6 @@ vip3='164.68.107.45'
 vnm1='vmi471826.contaboserver.net'
 vnm2='vmi506976.contaboserver.net'
 vnm3='vmi469069.contaboserver.net'
-dtdi="/var/lib/lighthouse"
-becn="$dtdi/beacon"
-vldt="$dtdi/validators"
 bpid=$(rd1 $ethb PID: [0-9])
 
 rblk=22238623
