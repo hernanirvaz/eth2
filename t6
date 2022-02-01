@@ -111,7 +111,7 @@ function brs {                                                                  
   if [[ $(brt $(fs0 "$bpid].*INFO " 7|sed 's%.*INFO \([^ ]*\).*%\1%'|sort -u)) = New2Synced ]];then                                                           # ideal = only 2 INFO words (New2Synced)
     bv;rd4 $ethb $1 20 50;[[ $2 = VC ]] && sex "$w2 $ethv";rm $p4.ini                                                                                         #         stop beacon/validator
     if [[ $2 = RB ]];then bro $n $2;sex reboot;else sex "$w3 $ethb";[[ $2 = VC ]] && sex "$w3 $ethv";brw 20s;bro $n $2;fi                                     # reboot/start beacon/validator
-  fi;done;rm $p4.ini
+  fi;done;rm -f $p4.ini
 }
 function brh { head -n${1:-0} ${p2}new; }                                                                                                                     # new beacon head lines
 function brl {                                                                                                                                                # recalculate beacon/bmedias logs
