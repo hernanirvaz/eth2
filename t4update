@@ -55,7 +55,7 @@ if [[ $cunm = $znm1 || $cunm = $vnm1 ]]; then
       scp $p0/.cargo/bin/lighthouse $zip3:~
     fi
     if [[ -x $s0/lighthouse ]]; then
-      cex "cp $s0/lighthouse $s0/lighthouse.save"
+      sex "cp $s0/lighthouse $s0/lighthouse.sav"
       cex "cp $p0/.cargo/bin/lighthouse $s0"
     fi
   else
@@ -63,7 +63,7 @@ if [[ $cunm = $znm1 || $cunm = $vnm1 ]]; then
   fi
 else
   if [[ -x $p0/lighthouse ]]; then
-    cex "cp $s0/lighthouse $s0/lighthouse.save"
+    sex "cp $s0/lighthouse $s0/lighthouse.sav"
     cex "mv $p0/lighthouse $s0"
   else
     echo -e "${i}NAO EXISTE LIGHT COMPILADO PARA INSTALAR${f}"
@@ -71,6 +71,7 @@ else
 fi
 
 if [[ -x $s0/lighthouse ]]; then
-  cex "chmod 755 $s0/lighthouse"
+  sex "chmod 755 $s0/lighthouse*"
+  sex "chown eth:eth $s0/lighthouse*"
   echo -e "${i}NOVO LIGHT INSTALADO - PODE/DEVE VERIFICAR${f}"
 fi
