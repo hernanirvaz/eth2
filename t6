@@ -266,7 +266,7 @@ function ssp {
 [[ $1 = bn  ]] && { bm;echo -e "BEAC$s"; }
 [[ $1 = blf ]] && { bl;echo -e "BEAC$m" >> $p2;[[ ! -f ${p2}sav && $d1 = 23:58 && $(bi) -ge 1500 ]] && bdl $d0; }
 [[ $1 = bmf ]] && { bm;echo -e "BEAC$m" >> $p3; }
-[[ $1 = bpf ]] && { bm;echo -e "BEAC$m" >> $p3;if [[ $b4 -ne 0 ]];then brs $b4 PE 7m;fi; }
+[[ $1 = bpf ]] && { bm;echo -e "BEAC$m" >> $p3;[[ ! -f ${p2}sav && $b4 -ne 0 ]] && brs $b4 PE 7m; }
 [[ $1 = bnf ]] && { bm;echo -e "BEAC$s" >> $p6; }
 [[ $1 = gh  ]] && { gh $2; }
 [[ $1 = bh  ]] && { bh $2; }
