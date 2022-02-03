@@ -18,12 +18,13 @@ if [ -x $s0/lighthouse ]; then
     sprp=2048 # Yearly Disk Usage   6.4GB default use disk space for slasher (256GB) -> more income
     # how many peers it should try to find and maintain
     tarp=50 # default
-    tarp=25 # less bandwidth/load for gossip - too low (<25) and block proposals start getting orphaned or even missed
-    http="--http-address 127.0.0.1"
-    [ "$cunm" = "$znm2" ] && http="--http-address $zip2"
-    [ "$cunm" = "$znm3" ] && http="--http-address $zip3"
-    [ "$cunm" = "$vnm1" ] && http="--http-address $vip1"
-    [ "$cunm" = "$vnm2" ] && http="--http-address $vip2"
+    tarp=20 # less bandwidth/load for gossip - too low (<20) and block proposals start getting orphaned or even missed
+    http=''                          # default
+    http=' --http-address 127.0.0.1' # equivalent empty
+    [ "$cunm" = "$znm2" ] && http=" --http-address $zip2"
+    [ "$cunm" = "$znm3" ] && http=" --http-address $zip3"
+    [ "$cunm" = "$vnm1" ] && http=" --http-address $vip1"
+    [ "$cunm" = "$vnm2" ] && http=" --http-address $vip2"
     if [ "$B" = "mainnet" ]; then
       blkc=""
       endp="http://$zip1:8545,$E"
@@ -42,8 +43,14 @@ if [ -x $s0/lighthouse ]; then
     cd ~
     if ! id $user &>$s3;then sudo useradd --no-create-home --shell /bin/false $user;fi
     sudo chown $user:$user $p7
-    # --slasher --validator-monitor-auto --subscribe-all-subnets --import-all-attestations --disable-upnp
-    # --checkpoint-sync-url https://1q1s6o6cB6Jysu7KKlbLUYiOdAM:8974468780164028652df958a69fbd30@eth2-beacon-mainnet.infura.io
+    othe=''
+    # othe="$othe --slasher --disable-upnp"
+    othe="$othe --validator-monitor-auto"
+    # redundant beacon nodes
+    # othe="$othe --subscribe-all-subnets --import-all-attestations"
+    # syncing from a recent finalized checkpoint
+    # othe="$othe --checkpoint-sync-url https://1q1s6o6cB6Jysu7KKlbLUYiOdAM:8974468780164028652df958a69fbd30@eth2-beacon-mainnet.infura.io"
+    # othe="$othe --checkpoint-sync-url http://192.168.8.31:5052"
     cat <<-EOF > $ethb.service
 		[Unit]
 		Description=eth2 beacon service
@@ -55,7 +62,7 @@ if [ -x $s0/lighthouse ]; then
 		Group=$user
 		Restart=always
 		RestartSec=10
-		ExecStart=$s0/lighthouse$blkc --datadir $p1 bn --target-peers $tarp $http --staking --eth1-endpoints $endp --subscribe-all-subnets --import-all-attestations
+		ExecStart=$s0/lighthouse$blkc --datadir $p1 bn --target-peers $tarp$http --staking --eth1-endpoints $endp$othe
 		ExecStopPost=/home/eth/eth2/t8mail BEACSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 		
 		[Install]
