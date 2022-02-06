@@ -3,8 +3,8 @@
 source /home/eth/eth2/t1
 
 # geth control commands
-function gv  { nn=$(nu0 $(rd1 $ethg maxpeers [0-9]))                                  ; }                                                                     # get configured peers
-function gq  { nr=$(nu0 $(geth attach "http://$cgth:8545" --exec net.peerCount 2>$s3)); }                                                                     # get current    peers
+function gv  { nn=$(nu0 $(rd1 $ethg maxpeers [0-9]))                                  ; }                                                                     # set configured peers
+function gq  { nr=$(nu0 $(geth attach "http://$cgth:8545" --exec net.peerCount 2>$s3)); }                                                                     # set current    peers
 function gy  {            geth attach "http://$cgth:8545" --exec eth.syncing   2>$s3  ; }                                                                     # current syncing status
 function gi  { echo $@|sed 's%.*highestBlock: *\([0-9]*\).*%\1%'; }                                                                                           # get highest geth block
 function gc  { echo $@|sed 's%.*currentBlock: *\([0-9]*\).*%\1%'; }                                                                                           # get current geth block
@@ -26,10 +26,10 @@ function bu  { echo $(((z5>200?$(bz)/z5:0)+(z2>300?$(bw)/z2:0)+(z4>999?$(bf)/z4:
 function bi  { echo $((nd+zk*100+zz*10))                                            ; }                                                                       # get delete day idx
 function bs  { tail -n$1 $p2 2>$s3|cut -d' ' -f1|sort -u|wc -l; }                                                                                             # get restart activity test
 function bk  { cat       $p2 2>$s3                      |wc -l; }                                                                                             # get beacon line count
-function bv  { nn=$(nu0 $(rd1 $ethb target-peers [0-9])); }                                                                                                   # set configured peers
+function bv  { nu0 $(rd1 $ethb target-peers [0-9]); }                                                                                                         # get configured peers
 function bb  { l0=$(fs0 $bpid] 3600);bl1;bl2;[[ (1 -eq $(bs $hors) && $(bu) -ge 1) || (1 -eq $(bs 5) && $(bu) -ge 5) ]] && ok=BK; }                           # set ok (OK/BK)
 function bfl { cat $2|grep "BEAC.*$1"; }                                                                                                                      # filter beacon lines
-function bl  { dts;if [[ $(rd0 $ethb running) ]];then bl3;bv;bnn $(fs6 peers:);bb;blo;else m=" NOT RUNNING $dt";fi; }                                         # beacon report
+function bl  { dts;if [[ $(rd0 $ethb running) ]];then bl3;nn=$(bv);bnn $(fs6 peers:);bb;blo;else m=" NOT RUNNING $dt";fi; }                                   # beacon report
 function bl0 { fs0 "attestation(s).*$1"|bl5; }                                                                                                                # get number of paid activities
 function bl1 {                                                                                                                                                # set restart idx vars
   z1=${1:-$(echo "$l0"|grep 'rocessed block'|wc -l)};z2=${2:-$(echo "$l0"|grep 'block received'|wc -l)}                                                       # set processed/received blocks
@@ -48,7 +48,7 @@ function blo {
   m="$m delay: $(printf '%3i' $b1)"
 }
 function bm  {                                                                                                                                                # bmedias report
-  bm0;b4=0;b5=$(fs0 reduce|wc -l);dts;bv;bnn $(fs6 peers:);bl2;[[ -f $p6 ]] && bm4                                                                            # ini vars/arrays
+  bm0;b4=0;b5=$(fs0 reduce|wc -l);dts;nn=$(bv);bnn $(fs6 peers:);bl2;[[ -f $p6 ]] && bm4                                                                      # ini vars/arrays
   l3=$(tail -n$(($(bk)-o[1])) $p2 2>$s3|bfl);[[ $l3 ]] && bm1 20;bm2;[[ ${b2:-0} -eq 0 ]] && bo0                                                              # add beacon lines & homologous position
   b3=$(nu5 $b2 $(fs5 '\w* *\w*' $p3));bm5 20 ${a[$nn]};[[ $b2 -le $b3 || $(bs $hors) -gt 1 ]] && b4=0;bmo;bno                                                 # change configured peers & outputs
 }
@@ -90,14 +90,15 @@ function bmo {
 #    0   1          2     3    4 5 6 7 8 9 10 11   12 13 14 15 16 17 18 19   20 21 22 23 24 25 26 27   28 29 30 31 32 33 34 35   36 37 38 39 40 41 42 43
 # BEAC 620 2021-12-09 09:17 cnt: 0 0 0 0 0 11 11 mis: 22 22 22 22 22 22 22 mat: 33 33 33 33 33 33 33 mah: 44 44 44 44 44 44 44 dly: 55 55 55 55 55 55 55
 function bno { s=" $(bk) $dt $(bnc 50 'cnt:' ' ') $(bnk 50 'mis:' ' ') $(bnz 50 'mat:' ' ') $(bnx 50 'mah:' ' ') $(bnw 50 'dly:' ' ')"; }
-function bo0 {                                                                                                                                                # homologous lines/position
-  b2=0;b6=0;[[ ! -f $p2 ]] && return;local t=$(pt1 $1 $2 00:00);b6=$(pt2 $1 $2 $b6)                                                                           # forced position/time
-  b2=$b6;unset v;read -a v <<< $(bfl . $p2|tail -n1);[[ $t = 00:00 ]] && t=${v[4]};l2=$(bfl $t $p2);[[ $b2 -eq 0 ]] && b2=$(bo3 ${v[3]})                      # set homologous lines/position
-  local n=0;while [[ ${b2:=0} -eq 0 && $n -lt 50 ]];do ((n+=1));v[3]=$(date -d "$n days ago $t" '+%Y-%m-%d');b2=$(bo3 ${v[3]});done                           # search past homologous info (max 50 days)
+function bo0 {
+  b6=0;b2=0;[[ ! -f $p2 ]] && return                                                                                                                          # ini homologous lines/position
+  local t=$(pt1 $1 $2 00:00);b6=$(pt2 $1 $2 $b6);b2=$b6;unset v;read -a v <<< $(bfl . $p2|tail -n1);[[ $t = 00:00 ]] && t=${v[4]};l2=$(bfl $t $p2)            # set homologous lines/position
+  local n=0;while [[ ${b2:=0} -eq 0 && $n -lt 50 ]];do b2=$(bo3 ${v[3]});((n+=1));v[3]=$(date -d "$n days ago $t" '+%Y-%m-%d');done                           # search past homologous info (max 50 days)
 }
 function bo1 { [[ ! -f $p2 ]] && return;local g=${b2:-0};g=$((b6==0?g<5?5:g:g));bo2|head -n$g|tail -n$((b6==0?g>hors?hors:g:g)); }                            # homologous report
 function bo2 { echo "$l2"|sort -k10n -k4r; }                                                                                                                  # get homologous beacon lines sorted
 function bo3 { bo2|grep -n $1|cut -d: -f1; }                                                                                                                  # get homologous beacon lines position
+function bon { nn=${1:-$(bv)};l2=$(bfl 23:58 $p2);bo2|grep $(printf 'node%02i:' $nn); }                                                                       # homologous nodes report
 function bh  {                                                                                                                                                # historic report
   [[ ! -f $p2 ]] && return;tail -n${1:-$hors} $p2;[[ $1 ]] && return;bo0;echo "BO$(printf '%5i' $(echo "$l2"|wc -l)) $(printf '%3i' $b2)";bo1                 # beacon/homologous report
   bl;echo -e "BL$(printf '%9i' $(cat $p2|wc -l))\nBEAC$m";bm;echo -e "BM$(printf '%9i' $(cat $p3 2>$s3|wc -l))\nBEAC$m"                                       # beacon/medias report
@@ -109,7 +110,7 @@ function bro { dts;bb;bnn $(fs6 peers:);echo "$(printf 'R%03i' $1) ${2:-$ok} $(p
 function brs {                                                                                                                                                # beacon/validator restart
   [[ $(ls $p4.* 2>$s3) ]] && return;brw $3;touch $p4.ini;local n=0;while [[ -f $p4.ini && $n -le 200 ]];do brw 5s;((n+=1))                                    # search max 200 times, every 5s
   if [[ $(brt $(fs0 "$bpid].*INFO " 7|sed 's%.*INFO \([^ ]*\).*%\1%'|sort -u)) = New2Synced ]];then                                                           # ideal = only 2 INFO words (New2Synced)
-    bv;rd4 $ethb $1 20 50;[[ $2 = VC ]] && sex "$w2 $ethv";rm $p4.ini                                                                                         #         stop beacon/validator
+    nn=$(bv);rd4 $ethb $1 20 50;[[ $2 = VC ]] && sex "$w2 $ethv";rm $p4.ini                                                                                   #         stop beacon/validator
     if [[ $2 = RB ]];then bro $n $2;sex reboot;else sex "$w3 $ethb";[[ $2 = VC ]] && sex "$w3 $ethv";brw 20s;bro $n $2;fi                                     # reboot/start beacon/validator
   fi;done;rm -f $p4.ini
 }
@@ -274,6 +275,7 @@ function ssp {
 [[ $1 = brl ]] && { [[ -f $p2                  ]] && brl; }
 [[ $1 = bsl ]] && { [[ -f $p2 &&   -f ${p6}    ]] && bsl; }
 [[ $1 = bdl ]] && { [[ -f $p2 && ! -f ${p2}sav ]] && bdl $2; }
+[[ $1 = bon ]] && { [[ -f $p2                  ]] && bon $2; }
 [[ $1 = bnl ]] && { bnl; }
 [[ $1 = cpe ]] && { cpe $2; }
 [[ $1 = glr ]] && { gb;[[ $ok != OK ]] && grs 0; }
@@ -405,6 +407,7 @@ if [[ ! $1 ]];then
   m="$m\nbrl\t\trecalculate beacon/bmedias logs"
   m="$m\nbsl\t\tshrink beacon log using barqivo"
   m="$m\nbdl yyyy-mm-dd\tdelete beacon log day"
+  m="$m\nbon [nodes]\thomologous nodes report"
   m="$m\nbnl\t\treplace logs with new versions"
   m="$m\nbl[f]\t\tbeacon log report"
   m="$m\nbm[f]\t\tmedias report"
