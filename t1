@@ -21,6 +21,7 @@ function fs8 { local n=${1:-0};((n<5)) && fs8 $((n+1));local e="$p7/logs/beacon.
 function pt0 { until [[ $# -le 1 || $1 =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]];do shift;done;echo $1; }                                                            # yyyy-mm-dd test
 function pt1 { until [[ $# -le 1 || $1 =~ ^[0-9]{2}:[0-9]{2}$          ]];do shift;done;echo $1; }                                                            # hh:mm      test
 function pt2 { until [[ $# -le 1 || $1 =~ ^[0-9]+$                     ]];do shift;done;echo $1; }                                                            # integer    test
+function pt3 { until [[ $# -le 1 || $1 =~ ^[a-z]+$                     ]];do shift;done;echo $1; }                                                            # string     test
 function rd0 { $w1 $1 2>$s3|grep "${2:-inactive\|failed}"                                   ; }                                                               # service status word test
 function rd1 { $w1 $1 2>$s3|grep "${2:-Active:}"|sed "s%.*${2:-Active:} *\(${3:-.}*\).*%\1%"; }                                                               # service status word with data extraction
 function rd2 { nn=$2;cp $s4/$1.service $p0/$1.sav;sed "s%peers *[0-9]*%peers $2%" $p0/$1.sav > $s4/$1.service; }                                              # change service configuration file
