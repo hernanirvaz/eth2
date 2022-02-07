@@ -92,17 +92,16 @@ function bmo {
 # BEAC 620 2021-12-09 09:17 cnt: 0 0 0 0 0 11 11 mis: 22 22 22 22 22 22 22 mat: 33 33 33 33 33 33 33 mah: 44 44 44 44 44 44 44 dly: 55 55 55 55 55 55 55
 function bno { s=" $(bk) $dt $(bnc 50 'cnt:' ' ') $(bnk 50 'mis:' ' ') $(bnz 50 'mat:' ' ') $(bnx 50 'mah:' ' ') $(bnw 50 'dly:' ' ')"; }
 function bo0 {
-  b2=${b6:=0};unset v;read -a v <<< $(bff|tail -n1);local n=0;local t=${1:-00:00};[[ $t = 00:00 ]] && t=${v[4]};l2=$(bff $t)                                  # set homologous lines/position
-  while [[ ${b2:=0} -eq 0 && $n -lt 50 ]];do b2=$(bo3 ${v[3]});((n+=1));v[3]=$(date -d "$n days ago $t" '+%Y-%m-%d');done                                     # search past homologous info (max 50 days)
+  unset v;read -a v <<< $(bff|tail -n1);local n=0;local t=${1:-00:00};[[ $t = 00:00 ]] && t=${v[4]};l2=$(bff $t);b6=0                                         # set homologous lines
+  while [[ ${b2:=0} -eq 0 && $n -lt 500 ]];do b2=$(bo3 ${v[3]});((n+=1));v[3]=$(date -d "$n days ago $t" '+%Y-%m-%d');done                                    # set homologous position
 }
-function bo1 { [[ ${1:-s} = n ]] && b6=$(bo5);local g=$b2;g=$((b6==0?g<5?5:g:g));bo2|head -n$g|tail -n$((b6==0?g>hors?hors:g:g)); }                           # homologous report
+function bo1 { bo2|head -n$((b6>b2?b6:b2<5?5:b2))|tail -n$((b6>0?b6:b2>hors?hors:b2<5?5:b2)); }                                                               # homologous report
 function bo2 { echo "$l2"|sort -k10n -k4r; }                                                                                                                  # get homologous beacon lines sorted
 function bo3 { bo2|grep -n $1|cut -d: -f1; }                                                                                                                  # get homologous beacon lines position
 function bo4 { nn=${1:-$(bv)};l2=$(bff 23:58);bo2|grep $(printf 'node%02i:' $nn); }                                                                           # homologous nodes report
-function bo5 { echo "$l2"|wc -l; }                                                                                                                            # get homologous beacon lines count
-function bo  { [[ -f $p2 ]] || return;b6=$(pt2 $@ 0);bo0 $(pt1 $@ 00:00);bo1 $(pt3 $@ s); }                                                                   # homologous report
+function bo  { [[ -f $p2 ]] || return;bo0 $(pt1 $@ 00:00);if [[ $(pt3 $@ s) = n ]];then b6=$b2;else b6=$(pt2 $@ 0);fi;bo1; }                                  # homologous report
 function bh  {                                                                                                                                                # historic report
-  [[ -f $p2 ]] || return;tail -n${1:-$hors} $p2;[[ $1 ]] && return;bo0;echo "BO$(printf '%5i' $(bo5)) $(printf '%3i' $b2)";bo1                                # beacon/homologous report
+  [[ -f $p2 ]] || return;tail -n${1:-$hors} $p2;[[ $1 ]] && return;bo0;echo "BO$(printf '%5i' $(echo "$l2"|wc -l)) $(printf '%3i' $b2)";bo1                   # beacon/homologous report
   bl;echo -e "BL$(printf '%9i' $(cat $p2|wc -l))\nBEAC$m";bm;echo -e "BM$(printf '%9i' $(cat $p3 2>$s3|wc -l))\nBEAC$m"                                       # beacon/medias report
   sst BEAC $ethb;sst VALI $ethv;cpe                                                                                                                           # beacon/validator/system status
 }
@@ -271,8 +270,8 @@ function ssp {
 [[ $1 = bmf ]] && { bm;echo -e "BEAC$m" >> $p3; }
 [[ $1 = bpf ]] && { bm;echo -e "BEAC$m" >> $p3;[[ ! -f ${p2}sav && $b4 -ne 0 ]] && brs $b4 PE 7m; }
 [[ $1 = bnf ]] && { bm;echo -e "BEAC$s" >> $p6; }
-[[ $1 = gh  ]] && { gh $2   ; }
-[[ $1 = bh  ]] && { bh $2   ; }
+[[ $1 = gh  ]] && { gh $2      ; }
+[[ $1 = bh  ]] && { bh $2      ; }
 [[ $1 = bo  ]] && { bo $2 $3 $4; }
 [[ $1 = bon ]] && { [[ -f $p2 ]] && bo4 $2; }
 [[ $1 = brl ]] && { [[ -f $p2 ]] && brl   ; }
