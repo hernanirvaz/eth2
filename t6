@@ -105,14 +105,14 @@ function bh  {                                                                  
   sst BEAC $ethb;sst VALI $ethv;cpe                                                                                                                           # beacon/validator/system status
 }
 function brw { [[ $1 ]] || return;touch $p4.s$1;sleep $1;rm $p4.s$1; }                                                                                        # sleep with file info
-function brt { echo ${1:-false}$#$2; }                                                                                                                        # get first2last parms
+function brt { echo ${1:-false}$#$2; }                                                                                                                        # get first#secound verbs
+function brp { [[ $(brt $(fs0 "$bpid].*INFO " ${1:-7}|sed 's%.*INFO \([^ ]*\).*%\1%'|sort -u)) = New2Synced ]] && echo sim; }                                 # testa ideal log position
 function bro { dts;bb;bnn $(fs6 peers:);echo "$(printf 'R%03i' $1) ${2:-$ok} $(printf '%3i' $(bu)) $(dnn)" >> $p2; }                                          # log restart info
 function brs {                                                                                                                                                # beacon/validator restart
-  [[ $(ls $p4.* 2>$s3) ]] && return;brw $3;touch $p4.ini;local n=0;while [[ -f $p4.ini && $n -le 200 ]];do brw 5s;((n+=1))                                    # search max 200 times, every 5s
-  if [[ $(brt $(fs0 "$bpid].*INFO " 7|sed 's%.*INFO \([^ ]*\).*%\1%'|sort -u)) = New2Synced ]];then                                                           # ideal = only 2 INFO words (New2Synced)
-    nn=$(bv);rd4 $ethb $1 20 50;[[ $2 = VC ]] && sex "$w2 $ethv";rm $p4.ini                                                                                   #         stop beacon/validator
+  [[ $(ls $p4.* 2>$s3) ]] && return;brw $3;[[ $(brp) ]] && brw 20s;touch $p4.ini;local n=0;while [[ -f $p4.ini && $n -le 200 ]];do                            # search max 200 times, every 5s
+  if [[ $(brp) ]];then nn=$(bv);rd4 $ethb $1 20 50                 ;[[ $2 = VC ]] && sex "$w2 $ethv";rm $p4.ini                                               #         stop beacon/validator
     if [[ $2 = RB ]];then bro $n $2;sex reboot;else sex "$w3 $ethb";[[ $2 = VC ]] && sex "$w3 $ethv";brw 20s;bro $n $2;fi                                     # reboot/start beacon/validator
-  fi;done;rm -f $p4.ini
+  fi;brw 5s;((n+=1));done;rm -f $p4.ini
 }
 function brh { head -n${1:-0} ${p2}new; }                                                                                                                     # new beacon head lines
 function brl {                                                                                                                                                # recalculate beacon/bmedias logs
