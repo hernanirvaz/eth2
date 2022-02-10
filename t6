@@ -33,7 +33,7 @@ function jsh { cex "journalctl --no-hostname --no-full -f $1"; }                
 function dnn { echo "$dt $(printf 'node%02i:' $nn) $(printf '%2i' $nr)"             ; }                                                                       # date/nodes info
 function spc { nn=$2;cp $s4/$1.service $p0/$1.sav;sed "s%peers *[0-9]*%peers $2%" $p0/$1.sav > $s4/$1.service; }                                              # service configuration change
 function spp { resolvectl query smtp.gmail.com &>$s3;sex "$w2 $1";dmr                                        ; }                                              # service process stop/load
-function snp { local n=$(($2+$nn));[[ $2 -ne 0 && $n -ge $3 && $n -le $4 ]] && spc $1 $n;spp $1              ; }                                              # service node change/stop/load
+function snp { local n=$(($2+nn));(($2!=0&&n>=$3&&n<=$4)) && spc $1 $n;spp $1                                ; }                                              # service node change/stop/load
 
 # geth control commands
 function gv  { nn=$(nu0 $(sse $ethg maxpeers [0-9]))                                  ; }                                                                     # set configured peers
@@ -66,7 +66,7 @@ function bff { grep "BEAC.*$1" $p2; }                                           
 function bl  { dts;if [[ $(sst $ethb running) ]];then bl3;nn=$(bv);bnn $(fs6 peers:);bb;blo;else m=" NOT RUNNING $dt";fi; }                                   # beacon report
 function bl0 { fs0 "attestation(s).*$1"|bl5; }                                                                                                                # get number of paid activities
 function bl1 {                                                                                                                                                # set restart idx vars
-  z1=${1:-$(echo "$l0"|grep 'rocessed block'|wc -l)};z2=${2:-$(echo "$l0"|grep 'block received'|wc -l)};z3=${3:-$(echo "$l0"|grep -v ' INFO '     |wc -l)}    # set processed/received blocks,error lines
+  z1=${1:-$(echo "$l0"|grep 'rocessed block'|wc -l)};z2=${2:-$(echo "$l0"|grep 'block received'|wc -l)};z3=${3:-$(echo "$l0"|grep -v ' INFO ' |wc -l)}        # set processed/received blocks,error lines
   z4=${4:-$(echo "$l0"|grep    ' INFO '     |wc -l)};z5=${5:-$(bl0 success)};zw=${6:-$(bl0 had)};ok=${7:-OK}                                                  # set info lines,success/had activities
 }
 function bl2 { zk=${1:-$(bl0 missing)};zz=${2:-$(bl0 target)};zx=${3:-$(bl0 head)}; }                                                                         # set missing/target/head activities
@@ -88,7 +88,7 @@ function bm  {                                                                  
 function bm0 { zk=0;zz=0;zx=0;unset o;o[1]=0;unset k;k[0]=0;unset z;z[0]=0;unset x;x[0]=0;unset w;w[0]=0;unset c;c[0]=0;unset a;a[0]=0;bm6 20; }              # ini err/cnt/avg penalty arrays
 function bm1 {
   l1=$(echo "$l3"|grep "node$1:"|sed -Ee 's%.+erros: +([0-9]+) +([0-9]+) +([0-9]+) +([0-9]+).+%\1\t\2\t\3\t\4%')                                              # set paid errors for current array
-  [[ $l1 ]] && { bkm $1;bzm $1;bxm $1;bwm $1;bcm $1; };[[ $1 -lt 50 ]] && bm1 $(($1+5))                                                                       # recursively sum paid err arrays
+  [[ $l1 ]] && { bkm $1;bzm $1;bxm $1;bwm $1;bcm $1; };(($1<50)) && bm1 $(($1+5))                                                                             # recursively sum paid err arrays
 }
 function bm2 {
   k[0]=$(($(bnk 50 '0' '+')));z[0]=$(($(bnz 50 '0' '+')));x[0]=$(($(bnx 50 '0' '+')));w[0]=$(($(bnw 50 '0' '+')));c[0]=$(($(bnc 50 '0' '+')))                 # tot err/cnt arrays
@@ -103,16 +103,16 @@ function bzm { ((z[$1]+=$(nu2 $(echo "$l1"|cut -f2)))); }                       
 function bxm { ((x[$1]+=$(nu2 $(echo "$l1"|cut -f3)))); }                                                                                                     # sum failed head   err array
 function bwm { ((w[$1]+=$(nu2 $(echo "$l1"|cut -f4)))); }                                                                                                     # sum delay         err array
 function bcm { ((c[$1]+=      $(echo "$l1"|wc  -l ) )); }                                                                                                     # sum               cnt array
-function bmk { local g=${2:-19};k[$1]=${o[$g]};[[ $1 -lt 50 ]] && bmk $(($1+5)) $((g-1))  ; }                                                                 # set recursively missing       err array
-function bmz { local g=${2:-27};z[$1]=${o[$g]};[[ $1 -lt 50 ]] && bmz $(($1+5)) $((g-1))  ; }                                                                 # set recursively failed target err array
-function bmx { local g=${2:-35};x[$1]=${o[$g]};[[ $1 -lt 50 ]] && bmx $(($1+5)) $((g-1))  ; }                                                                 # set recursively failed head   err array
-function bmw { local g=${2:-43};w[$1]=${o[$g]};[[ $1 -lt 50 ]] && bmw $(($1+5)) $((g-1))  ; }                                                                 # set recursively delay         err array
-function bmc { local g=${2:-11};c[$1]=${o[$g]};[[ $1 -lt 50 ]] && bmc $(($1+5)) $((g-1))  ; }                                                                 # set recursively               cnt array
-function bnk { if [[ $1 -ge 20 ]];then bnk $(($1-5)) "$2$3${k[$1]}" "$3";else echo "$2";fi; }                                                                 # sum recursively missing       err array
-function bnz { if [[ $1 -ge 20 ]];then bnz $(($1-5)) "$2$3${z[$1]}" "$3";else echo "$2";fi; }                                                                 # sum recursively failed target err array
-function bnx { if [[ $1 -ge 20 ]];then bnx $(($1-5)) "$2$3${x[$1]}" "$3";else echo "$2";fi; }                                                                 # sum recursively failed head   err array
-function bnw { if [[ $1 -ge 20 ]];then bnw $(($1-5)) "$2$3${w[$1]}" "$3";else echo "$2";fi; }                                                                 # sum recursively delay         err array
-function bnc { if [[ $1 -ge 20 ]];then bnc $(($1-5)) "$2$3${c[$1]}" "$3";else echo "$2";fi; }                                                                 # sum recursively               cnt array
+function bmk { local g=${2:-19};k[$1]=${o[$g]};(($1<50)) && bmk $(($1+5)) $((g-1)); }                                                                         # set recursively missing       err array
+function bmz { local g=${2:-27};z[$1]=${o[$g]};(($1<50)) && bmz $(($1+5)) $((g-1)); }                                                                         # set recursively failed target err array
+function bmx { local g=${2:-35};x[$1]=${o[$g]};(($1<50)) && bmx $(($1+5)) $((g-1)); }                                                                         # set recursively failed head   err array
+function bmw { local g=${2:-43};w[$1]=${o[$g]};(($1<50)) && bmw $(($1+5)) $((g-1)); }                                                                         # set recursively delay         err array
+function bmc { local g=${2:-11};c[$1]=${o[$g]};(($1<50)) && bmc $(($1+5)) $((g-1)); }                                                                         # set recursively               cnt array
+function bnk { if (($1>=20));then bnk $(($1-5)) "$2$3${k[$1]}" "$3";else echo "$2";fi; }                                                                      # sum recursively missing       err array
+function bnz { if (($1>=20));then bnz $(($1-5)) "$2$3${z[$1]}" "$3";else echo "$2";fi; }                                                                      # sum recursively failed target err array
+function bnx { if (($1>=20));then bnx $(($1-5)) "$2$3${x[$1]}" "$3";else echo "$2";fi; }                                                                      # sum recursively failed head   err array
+function bnw { if (($1>=20));then bnw $(($1-5)) "$2$3${w[$1]}" "$3";else echo "$2";fi; }                                                                      # sum recursively delay         err array
+function bnc { if (($1>=20));then bnc $(($1-5)) "$2$3${c[$1]}" "$3";else echo "$2";fi; }                                                                      # sum recursively               cnt array
 #    0  1   2          3     4       5  6               7    8    9   10   11   12   13   14          15   16          17 18 19 20     21
 # BEAC  7  14 2022-01-19 12:02 node45: 49 median_penalty: 1.16 1.09 1.34 2.24 2.65 1.95 1.95 all_median: 1.40 crmd_peers:  0  4 45 670363
 function bmo {
