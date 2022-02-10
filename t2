@@ -3,9 +3,9 @@
 source /home/eth/eth2/t1
 
 # cria link para tarefas
-[ -x ~/eth2/t ] || ln -s ~/eth2/t6 ~/eth2/t
+[[ -x $p0/eth2/t ]] || ln -s $p0/eth2/t6 $p0/eth2/t
 
-if [ "$(echo $H|sudo -S ufw status 2>$s3|grep -i inactive)" ]; then
+if [[ $(echo $H|sudo -S ufw status 2>$s3|grep -i inactive) ]]; then
   echo -e "${i}INIT FIREWALL${f}"
   sudo ufw default deny incoming
   sudo ufw default allow outgoing
@@ -33,11 +33,11 @@ else
   echo -e "${i}FIREWALL $(echo $H|sudo -S ufw status 2>$s3|grep -i status|tr '[:lower:]' '[:upper:]')${f}"
 fi
 
-if [[ -f /etc/systemd/system/$ethg.service || -f /etc/systemd/system/$ethb.service || -f /etc/systemd/system/$ethv.service ]]; then
+if [[ -f $s4/$ethg.service || -f $s4/$ethb.service || -f $s4/$ethv.service ]]; then
   echo -e "${i}SERVER JA INSTALADO ANTES - LINUX UPDATE & SYSTEM CONFIGS SKIPPED${f}"
 else
   echo -e "${i}UPDATE LINUX${f}"
-  if [ "$(echo $H|sudo -S snap list 2>$s3)" ]; then
+  if [[ $(echo $H|sudo -S snap list 2>$s3) ]]; then
     sudo snap remove lxd
     sudo snap remove core18
     sudo snap remove snapd
@@ -51,7 +51,7 @@ else
 
   echo -e "${i}LINUX SYSTEM CONFIGS${f}"
   sudo timedatectl set-ntp on
-  if [ "$cust" = "hrv" ]; then
+  if [[ $cust = hrv ]]; then
     sudo timedatectl set-timezone Europe/Lisbon
     sed -e 's%^ *#NTP=.*$%NTP="ntp02.oal.ul.pt ntp04.oal.ul.pt time.google.com time.cloudflare.com time.facebook.com"%i' /etc/systemd/timesyncd.conf > ~/timesyncd.save
     sed -e 's%^ *ENABLED=.*$%ENABLED=0%i' /etc/default/motd-news > ~/motd-new.save
@@ -85,23 +85,23 @@ else
   sudo chmod 644 /etc/apt/apt.conf.d/*
   sudo chmod 755 /etc/update-motd.d/*
   # nao executa - nao acho ser necessario
-  [ -f /etc/update-motd.d/97-overlayroot ] && sudo chmod -x /etc/update-motd.d/97-overlayroot
+  [[ -f /etc/update-motd.d/97-overlayroot ]] && sudo chmod -x /etc/update-motd.d/97-overlayroot
   sudo netplan apply
   sudo $sctl restart systemd-resolved
   sudo $sctl restart systemd-timesyncd
 fi
 
-if [ "$cunm" != "$znm1" ] && [ "$cunm" != "$vnm1" ]; then
+if [[ $cunm != $znm1 && $cunm != $vnm1 ]]; then
   echo -e "${i}GETH & OPEN ETHEREUM NAO DEVE SER INSTALADOS AQUI - DEVE FAZER REBOOT${f}"
 else
   user="eth1"
   if ! id $user &>$s3;then sudo useradd --no-create-home --shell /bin/false $user;fi
-  if [ -f /etc/systemd/system/$ethg.service ]; then
+  if [[ -f $s4/$ethg.service ]]; then
     echo -e "${i}GETH JA INSTALADO${f}"
   else
     echo -e "${i}INSTALAR GETH${f}"
     golb="/var/lib/goethereum"
-    if [ "$B" = "mainnet" ]; then
+    if [[ $B = mainnet ]]; then
       blkc=''
       cach=4096 # default full node
       cach=1024 # default
@@ -128,12 +128,12 @@ else
 		Restart=always
 		RestartSec=10
 		ExecStart=$s0/geth$blkc --datadir $golb --http --http.addr $zip1 --maxpeers $maxp --cache $cach --ipcdisable
-		ExecStopPost=/home/eth/eth2/t8mail GETHSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
+		ExecStopPost=$p0/eth2/t8mail GETHSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 		
 		[Install]
 		WantedBy=multi-user.target
 		EOF
-    sudo mv $ethg.service /etc/systemd/system/$ethg.service
-    sudo chmod 644 /etc/systemd/system/$ethg.service
+    sudo mv $ethg.service $s4/$ethg.service
+    sudo chmod 644 $s4/$ethg.service
   fi
 fi

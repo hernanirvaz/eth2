@@ -2,10 +2,10 @@
 
 source /home/eth/eth2/t1
 
-if [ "$cunm" != "$znm3" ] && [ "$cunm" != "$vnm2" ]; then
+if [[ $cunm != $znm3 && $cunm != $vnm2 ]]; then
   echo -e "${i}MONITOR NAO DEVE SER INSTALADO - DEVE FICAR ONDE FICA O MAIN BEACON${f}"
 else
-  if [ -f $s2/prometheus.yml ]; then
+  if [[ -f $s2/prometheus.yml ]]; then
     echo -e "${i}PROMETHEUS JA INSTALADO${f}"
   else
     echo -e "${i}CONFIGURE PROMETHEUS${f}"
