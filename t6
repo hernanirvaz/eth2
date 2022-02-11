@@ -24,8 +24,6 @@ function pt0 { until [[ $# -le 1 || $1 =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]];do shi
 function pt1 { until [[ $# -le 1 || $1 =~ ^[0-9]{2}:[0-9]{2}$          ]];do shift;done;echo $1; }                                                            # hh:mm      test
 function pt2 { until [[ $# -le 1 || $1 =~ ^[0-9]+$                     ]];do shift;done;echo $1; }                                                            # integer    test
 function pt3 { until [[ $# -le 1 || $1 =~ ^[a-z]+$                     ]];do shift;done;echo $1; }                                                            # string     test
-function cex { echo -e "${i}${1^^}${f}";echo $H|sudo -S $1 2>$s3; }                                                                                           # superuser-command (visible)
-function sex {                          echo $H|sudo -S $1 &>$s3; }                                                                                           # superuser-command (silent)
 function dts { read d0 d1 <<< ${1:-$(date '+%Y-%m-%d %H:%M')};dt="$d0 $d1"          ; }                                                                       # set date/time         vars
 function bnn { nr=${@:$#};nm=$(printf '%i\n' $@|sort -n|head -n1);nd=$(nu4 $@)      ; }                                                                       # set cur/min/std peers vars
 function dmr { sex "$w0 daemon-reload"                       ; }                                                                                              # daemon-reload
