@@ -24,11 +24,11 @@ function pt0 { until [[ $# -le 1 || $1 =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]];do shi
 function pt1 { until [[ $# -le 1 || $1 =~ ^[0-9]{2}:[0-9]{2}$          ]];do shift;done;echo $1; }                                                            # hh:mm      test
 function pt2 { until [[ $# -le 1 || $1 =~ ^[0-9]+$                     ]];do shift;done;echo $1; }                                                            # integer    test
 function pt3 { until [[ $# -le 1 || $1 =~ ^[a-z]+$                     ]];do shift;done;echo $1; }                                                            # string     test
-function dts { read d0 d1 <<< ${1:-$(date '+%Y-%m-%d %H:%M')};dt="$d0 $d1"          ; }                                                                       # set date/time         vars
-function bnn { nr=${@:$#};nm=$(printf '%i\n' $@|sort -n|head -n1);nd=$(nu4 $@)      ; }                                                                       # set cur/min/std peers vars
+function dts { read d0 d1 <<< ${1:-$(date '+%F %H:%M')};dt="$d0 $d1"          ; }                                                                             # set date/time         vars
+function bnn { nr=${@:$#};nm=$(printf '%i\n' $@|sort -n|head -n1);nd=$(nu4 $@); }                                                                             # set cur/min/std peers vars
+function dnn { echo "$dt $(printf 'node%02i:' $nn) $(printf '%2i' $nr)"       ; }                                                                             # get date/nodes info
 function dmr { sex "$w0 daemon-reload"                       ; }                                                                                              # daemon-reload
 function jsh { cex "journalctl --no-hostname --no-full -f $1"; }                                                                                              # my journal   format
-function dnn { echo "$dt $(printf 'node%02i:' $nn) $(printf '%2i' $nr)"             ; }                                                                       # date/nodes info
 function spc { nn=$2;cp $s4/$1.service $p0/$1.sav;sed "s%peers *[0-9]*%peers $2%" $p0/$1.sav > $s4/$1.service; }                                              # service configuration change
 function spp { resolvectl query smtp.gmail.com &>$s3;sex "$w2 $1";dmr                                        ; }                                              # service process stop/load
 function snp { local n=$(($2+nn));(($2!=0&&n>=$3&&n<=$4)) && spc $1 $n;spp $1                                ; }                                              # service node change/stop/load
@@ -81,7 +81,7 @@ function blo {
 function bm  {                                                                                                                                                # bmedias report
   bm0;b4=0;b5=$(fs0 reduce|wc -l);dts;nn=$(bv);bnn $(fs6 peers:);bl2;[[ -f $p6 ]] && bm4                                                                      # ini vars/arrays
   l3=$(tail -n$(($(bk)-o[1])) $p2 2>$s3|bfl);[[ $l3 ]] && bm1 20;bm2;[[ ${b2:=0} -eq 0 && -f $p2 ]] && bo0                                                    # add beacon lines & homologous position
-  b3=$(nu5 $b2 $(fs5 '\w* *\w*' $p3));bm5 20 ${a[$nn]};[[ $b2 -lt $b3 || $(bs $hors) -gt 1 ]] && b4=0;bmo;bno                                                 # change configured peers & outputs
+  b3=$(nu5 $b2 $(fs5 '\w* *\w*' $p3));bm5 20 ${a[$nn]};[[ $b2 -lt $b3 || $(date +%w) -gt 0 || $(bs $hors) -gt 1 ]] && b4=0;bmo;bno                            # change configured peers & outputs
 }
 function bm0 { zk=0;zz=0;zx=0;unset o;o[1]=0;unset k;k[0]=0;unset z;z[0]=0;unset x;x[0]=0;unset w;w[0]=0;unset c;c[0]=0;unset a;a[0]=0;bm6 20; }              # ini err/cnt/avg penalty arrays
 function bm1 {
@@ -123,7 +123,7 @@ function bmo {
 function bno { s=" $(bk) $dt $(bnc 50 'cnt:' ' ') $(bnk 50 'mis:' ' ') $(bnz 50 'mat:' ' ') $(bnx 50 'mah:' ' ') $(bnw 50 'dly:' ' ')"; }
 function bo0 {
   unset v;read -a v <<< $(bff|tail -n1);local n=0;local t=${1:-00:00};[[ $t = 00:00 ]] && t=${v[4]};l2=$(bff $t);b6=0                                         # set homologous lines
-  while [[ ${b2:=0} -eq 0 && $n -lt 500 ]];do b2=$(bo3 ${v[3]});((n+=1));v[3]=$(date -d "$n days ago $t" '+%Y-%m-%d');done                                    # set homologous position
+  while [[ ${b2:=0} -eq 0 && $n -lt 500 ]];do b2=$(bo3 ${v[3]});((n+=1));v[3]=$(date -d "$n days ago $t" +%F);done                                            # set homologous position
 }
 function bo1 { bo2|head -n$((b6>b2?b6:b2<5?5:b2))|tail -n$((b6>0?b6:b2>hors?hors:b2<5?5:b2)); }                                                               # homologous report
 function bo2 { echo "$l2"|sort -k10n -k4r; }                                                                                                                  # get homologous beacon lines sorted
