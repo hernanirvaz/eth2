@@ -94,7 +94,7 @@ function bm2 {
 }
 function bm3 { nu6 ${k[$1]} ${z[$1]} ${x[$1]} ${w[$1]} ${c[$1]}                ; }                                                                            # get penalty from paid err arrays
 function bm4 { read -a o <<< $(tail -n1 $p6);bmk 20;bmz 20;bmx 20;bmw 20;bmc 20; }                                                                            # set err/cnt penalty arrays from barqivo
-function bm5 { local g=$2;if [[ $(nu7 ${a[$1]}) -lt $(nu7 $g) ]];then b4=$(($1-nn));g=${a[$1]};fi;[[ $1 -lt 50 ]] && bm5 $(($1+5)) $g; }                      # set recursively peer change -> min penalties
+function bm5 { local g=$2;if [[ $(nu7 ${a[$1]}) -lt $(nu7 $g) ]];then b4=$(($1-nn));g=${a[$1]};fi;[[ $1 -lt 50 ]] && bm5 $(($1+5)) $g; }                      # set recursively peer change <- min penalties
 function bm6 { k[$1]=0;z[$1]=0;x[$1]=0;w[$1]=0;c[$1]=0;a[$1]=0                                   ;[[ $1 -lt 50 ]] && bm6 $(($1+5))   ; }                      # ini recursively penalty arrays
 function bct { (( b4 != 0 && b2 >= b3 && $(date +%w) == 0 && $(bs $hors) == 1 )); }                                                                           # change configured peers test
 function bkm { ((k[$1]+=$(nu2 $(echo "$l1"|cut -f1)))); }                                                                                                     # sum missing       err array
@@ -166,6 +166,7 @@ function bsl {                                                                  
   [[ -f $p2 && -f $p6 ]] || return;rm -f ${p2}s;tail -n$(($(cat $p2|wc -l)-$(tail -n1 $p6|cut -d' ' -f2))) $p2 > ${p2}s                                       # new beacon  log output
   rm -f ${p6}s;head -n$(($(cat $p6|wc -l)-1)) $p6 > ${p6}s;tail -n1 $p6|sed 's%BEAC [0-9]*%BEAC 0%' >> ${p6}s                                                 # new barqivo log output
 }
+function bdt { [[ $d1 = 23:58 && $(bi) -ge 1500 ]]; }                                                                                                         # delete beacon log day test
 function bdl { local d=$(pt0 $1 sai);[[ -f $p2 && $d != sai ]] || return;cp $p2 ${p2}o;grep -v $d ${p2}o > $p2;grep $d ${p2}o > ${p2}d; }                     # delete beacon log day
 function nsh {
   echo -e "ROUTES\t\t$(ip route show|grep 'default via'|grep -v linkdown|cut -d' ' -f3)\nDNS\t\t$(resolvectl|grep 'Current DNS'|cut -d' ' -f6)"               # routes
@@ -293,9 +294,8 @@ function ssp {
 [[ $1 = bl  ]] && { bl;echo -e "BEAC$m"; }
 [[ $1 = bm  ]] && { bm;echo -e "BEAC$m"; }
 [[ $1 = bn  ]] && { bm;echo -e "BEAC$s"; }
-[[ $1 = blf ]] && { bl;echo -e "BEAC$m" >> $p2;[[ $d1 = 23:58 && $(bi) -ge 1500 ]] && bdl $d0; }
-[[ $1 = bmf ]] && { bm;echo -e "BEAC$m" >> $p3; }
-[[ $1 = bpf ]] && { bm;echo -e "BEAC$m" >> $p3;bct && brs $b4 PE 7m; }
+[[ $1 = blf ]] && { bl;echo -e "BEAC$m" >> $p2;bdt && bdl $d0      ; }
+[[ $1 = bmf ]] && { bm;echo -e "BEAC$m" >> $p3;bct && brs $b4 PE 7m; }
 [[ $1 = bnf ]] && { bm;echo -e "BEAC$s" >> $p6; }
 [[ $1 = gh  ]] && { gh $2      ; }
 [[ $1 = bh  ]] && { bh $2      ; }
@@ -426,7 +426,6 @@ if [[ ! $1 ]];then
   m="$m\nbrs [n]\t\t$ethb restart n=nodes to change"
   m="$m\nsrs [n]\t\tsystem restart n=nodes to change"
   m="$m\nlrs [n]\t\tlighthouse restart n=nodes to change"
-  m="$m\nbpf\t\t$ethb restart with nodes change"
   m="$m\nyj\t\tsystem journal"
   m="$m\nsl [hh:mm]\tsystem journal  log lines"
   m="$m\nel [hh:mm]\tgeth/lighthouse log lines"
@@ -436,9 +435,9 @@ if [[ ! $1 ]];then
   m="$m\nbdl yyyy-mm-dd\tdelete beacon log day"
   m="$m\nbo\t\thomologous report"
   m="$m\nbon [nodes]\thomologous nodes report"
-  m="$m\nbl[f]\t\tbeacon log report"
-  m="$m\nbm[f]\t\tmedias report"
-  m="$m\nbn[f]\t\tarqivo report"
+  m="$m\nbl[f]\t\tbeacon report [file add & delete log day]"
+  m="$m\nbm[f]\t\tmedias report [file add & $ethb nodes change/restart]"
+  m="$m\nbn[f]\t\tarqivo report [file add]"
   m="$m\nbh\t\thistoric report"
   m="$m\nws\t\tfirewall status"
   m="$m\nwa\t\tfirewall arranca"
