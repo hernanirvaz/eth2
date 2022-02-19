@@ -51,7 +51,7 @@ function gh  { [[ -f $p5 ]] || return;tail -n${1:-$hors} $p5;[[ $1 ]] && return;
 function grs { gv;snp $ethg $1 10 15;sex "$w3 $ethg";sleep 20s;dts;gq;echo "GETH RESTAR $(dnn)" >> $p5; }                                                     # change/stop/load/start/log geth
 # beacon control commands
 function bz  { echo $((10*(9*zk+3*zz+zx+zw)))                                       ; }                                                                       # get numerator paid errors
-function bw  { echo $((40*z1))                                                      ; }                                                                       # get numerator processed blocks
+function bw  { echo $((10*z1))                                                      ; }                                                                       # get numerator processed blocks
 function bf  { echo $((90*z3))                                                      ; }                                                                       # get numerator general errors
 function bu  { echo $(((z5>300?$(bz)/z5:0)+(z2>300?$(bw)/z2:0)+(z4>999?$(bf)/z4:0))); }                                                                       # get restart idx
 function bi  { echo $((nd+zk*100+zz*10+zx))                                         ; }                                                                       # get delete day idx
