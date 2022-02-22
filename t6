@@ -96,7 +96,7 @@ function bm3 { nu6 ${k[$1]} ${z[$1]} ${x[$1]} ${w[$1]} ${c[$1]}                ;
 function bm4 { read -a o <<< $(tail -n1 $p6);bmk 20;bmz 20;bmx 20;bmw 20;bmc 20; }                                                                            # set err/cnt penalty arrays from barqivo
 function bm5 { local g=$2;if [[ ${a[$1]} -lt $g ]];then b4=$(($1-nn));g=${a[$1]};fi;[[ $1 -lt 50 ]] && bm5 $(($1+5)) $g; }                                    # set recursively peer change <- min penalties
 function bm6 { k[$1]=0;z[$1]=0;x[$1]=0;w[$1]=0;c[$1]=0;a[$1]=0                     ;[[ $1 -lt 50 ]] && bm6 $(($1+5))   ; }                                    # ini recursively penalty arrays
-function bct { (( b4 != 0 && b2 > b3 && $(date +%w) == 1 && $(bs $hors) == 1 )); }                                                                            # change configured peers test
+function bct { (( b4 != 0 && b2 > b3 && $(date +%w) == 2 && $(bs $hors) == 1 )); }                                                                            # change configured peers test
 function bkm { ((k[$1]+=$(nu2 $(echo "$l1"|cut -f1)))); }                                                                                                     # sum missing       err array
 function bzm { ((z[$1]+=$(nu2 $(echo "$l1"|cut -f2)))); }                                                                                                     # sum failed target err array
 function bxm { ((x[$1]+=$(nu2 $(echo "$l1"|cut -f3)))); }                                                                                                     # sum failed head   err array
