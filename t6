@@ -166,7 +166,7 @@ function bsl {                                                                  
   [[ -f $p2 && -f $p6 ]] || return;rm -f ${p2}s;tail -n$(($(cat $p2|wc -l)-$(tail -n1 $p6|cut -d' ' -f2))) $p2 > ${p2}s                                       # new beacon  log output
   rm -f ${p6}s;head -n$(($(cat $p6|wc -l)-1)) $p6 > ${p6}s;tail -n1 $p6|sed 's%BEAC [0-9]*%BEAC 0%' >> ${p6}s                                                 # new barqivo log output
 }
-function bdt { [[ $d1 = 23:58 && $(bi) -ge 1500 ]]; }                                                                                                         # delete beacon log day test
+function bdt { [[ $d1 =~ 23:5[89] && $(bi) -ge 1500 ]]; }                                                                                                     # delete beacon log day test
 function bdl { local d=$(pt0 $1 sai);[[ -f $p2 && $d != sai ]] || return;cp $p2 ${p2}o;grep -v $d ${p2}o > $p2;grep $d ${p2}o > ${p2}d; }                     # delete beacon log day
 function nsh {
   echo -e "ROUTES\t\t$(ip route show|grep 'default via'|grep -v linkdown|cut -d' ' -f3)\nDNS\t\t$(resolvectl|grep 'Current DNS'|cut -d' ' -f6)"               # routes
@@ -294,8 +294,8 @@ function ssp {
 [[ $1 = bl  ]] && { bl;echo -e "BEAC$m"; }
 [[ $1 = bm  ]] && { bm;echo -e "BEAC$m"; }
 [[ $1 = bn  ]] && { bm;echo -e "BEAC$s"; }
-[[ $1 = blf ]] && { bl;echo -e "BEAC$m" >> $p2;bdt && bdl $d0      ; }
-[[ $1 = bmf ]] && { bm;echo -e "BEAC$m" >> $p3;bct && brs $b4 PE 7m; }
+[[ $1 = blf ]] && { bl;echo -e "BEAC$m" >> $p2;bdt && bdl $d0; }
+[[ $1 = bmf ]] && { bm;bdt || echo -e "BEAC$m" >> $p3;bct && brs $b4 PE 7m; }
 [[ $1 = bnf ]] && { bm;echo -e "BEAC$s" >> $p6; }
 [[ $1 = gh  ]] && { gh $2      ; }
 [[ $1 = bh  ]] && { bh $2      ; }
