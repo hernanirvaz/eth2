@@ -70,13 +70,13 @@ function bl1 {                                                                  
 function bl2 { zk=${1:-$(bl0 missing)};zz=${2:-$(bl0 target)};zx=${3:-$(bl0 head)}; }                                                                         # set missing/target/head activities
 function bl3 { b0=${1:-$(fs0 'published block'|wc -l)};b1=${2:-$(nu5 $(fs6 delay_ms:))}; }                                                                    # set published blocks/avg delays
 function bl5 { sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w; }                                                                                               # get number of validators
-#    0  1   2          3     4       5  6               7    8    9                 10   11  12 13   14 15 16  17 18 19  20  21 22   23   24     25  26
-# BEAC OK   0 2022-02-17 23:40 node45: 48 reward_penalty: 3037 2315 attestation_block: 3996 1340 0 erro: 0  6 102 14  0 352   0  4 3596  360 delay: 332
+#    0  1   2          3     4       5  6               7    8    9                  10   11  12 13  14 15 16  17 18 19  20  21 22   23   24     25  26
+# BEAC OK   0 2022-02-17 23:40 node45: 48 reward_penalty: 3037 2315 attestation_blocks: 3996 1340 0 err: 0  6 102 14  0 352   0  4 3596  360 delay: 332
 function blo {
-  m=" $ok $(printf '%3i' $(bu)) $(dnn) reward_penalty: $(nu7 "($z5*$ratt+$b0*$rblk)*$rate/$decp" 10 2 %4.0f) $(printf '%4i' $(nu6 $zk $zz $zx $zw 1))"
-  m="$m attestation_block: $(printf '%4i' $z5) $(printf '%4i' $(bz)) $(printf '%1i' $b0) erro: $(printf '%1i' $zk) $(printf '%2i' $zz) $(printf '%3i' $zx)"
-  m="$m $(printf '%2i' $zw) $(printf '%2i' $z1) $(printf '%3i' $z2) $(printf '%3i' $(bw)) $(printf '%2i' $z3) $(printf '%4i' $z4) $(printf '%4i' $(bf))"
-  m="$m delay: $(printf '%3i' $b1)"
+  m=" $ok $(printf '%3i' $(bu)) $(dnn) reward_penalty: $(nu7 "($z5*$ratt+$b0*$rblk)*$rate/$decp" 10 2 %4.0f)"
+  m="$m $(printf '%4i' $(nu6 $zk $zz $zx $zw 1)) attestation_blocks: $(printf '%4i' $z5) $(printf '%4i' $(bz)) $(printf '%1i' $b0)"
+  m="$m err: $(printf '%1i' $zk) $(printf '%2i' $zz) $(printf '%3i' $zx) $(printf '%2i' $zw) $(printf '%2i' $z1) $(printf '%3i' $z2)"
+  m="$m $(printf '%3i' $(bw)) $(printf '%2i' $z3) $(printf '%4i' $z4) $(printf '%4i' $(bf)) delay: $(printf '%3i' $b1)"
 }
 function bm  {                                                                                                                                                # bmedias report
   bm0;b4=0;b5=$(fs0 reduce|wc -l);dts;nn=$(bv);bnn $(fs6 peers:);bl2;[[ -f $p6 ]] && bm4                                                                      # ini vars/arrays
@@ -85,7 +85,7 @@ function bm  {                                                                  
 }
 function bm0 { zk=0;zz=0;zx=0;unset o;o[1]=0;unset k;k[0]=0;unset z;z[0]=0;unset x;x[0]=0;unset w;w[0]=0;unset c;c[0]=0;unset a;a[0]=0;bm6 20; }              # ini err/cnt/avg penalty arrays
 function bm1 {
-  l1=$(echo "$l3"|grep "node$1:"|sed -Ee 's%.+erro: +([0-9]+) +([0-9]+) +([0-9]+) +([0-9]+).+%\1\t\2\t\3\t\4%')                                               # set paid errors for current array
+  l1=$(echo "$l3"|grep "node$1:"|sed -Ee 's%.+err: +([0-9]+) +([0-9]+) +([0-9]+) +([0-9]+).+%\1\t\2\t\3\t\4%')                                                # set paid errors for current array
   [[ $l1 ]] && { bkm $1;bzm $1;bxm $1;bwm $1;bcm $1; };(($1<50)) && bm1 $(($1+5))                                                                             # recursively sum paid err arrays
 }
 function bm2 {
