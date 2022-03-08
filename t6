@@ -292,11 +292,11 @@ function ssp {
 [[ $1 = trs ]] && { [[ $(sst systemd-timesyncd masked) ]] || cex "$w0 restart systemd-timesyncd";cpe c; }
 [[ $1 = vcp ]] && { ssp; }
 [[ $1 = gl  ]] && { gl;echo -e "GETH$m"; }
-[[ $1 = glf ]] && { gl;echo -e "GETH$m" >> $p5; }
+[[ $1 = glf ]] && { gl;echo -e "GETH$m" >> $p5;[[ $ok != OK ]] && grs 0; }
 [[ $1 = bl  ]] && { bl;echo -e "BEAC$m"; }
 [[ $1 = bm  ]] && { bm;echo -e "BEAC$m"; }
 [[ $1 = bn  ]] && { bm;echo -e "BEAC$s"; }
-[[ $1 = blf ]] && { bl;echo -e "BEAC$m" >> $p2;bdt && bdl $d0; }
+[[ $1 = blf ]] && { bl;echo -e "BEAC$m" >> $p2;bdt && bdl $d0;[[ $ok != OK ]] && brs 0; }
 [[ $1 = bmf ]] && { bm;bdt || echo -e "BEAC$m" >> $p3;bct && brs $b4 $(brb PE) 7m; }
 [[ $1 = bnf ]] && { bm;echo -e "BEAC$s" >> $p6; }
 [[ $1 = gh  ]] && { gh $2      ; }
@@ -307,8 +307,6 @@ function ssp {
 [[ $1 = brl ]] && { brl; }
 [[ $1 = bsl ]] && { bsl; }
 [[ $1 = cpe ]] && { cpe $2; }
-[[ $1 = glr ]] && { gb;[[ $ok != OK ]] && grs 0; }
-[[ $1 = blr ]] && { bb;[[ $ok != OK ]] && brs 0; }
 [[ $1 = grs ]] && { grs ${2:-0}   ; }
 [[ $1 = srs ]] && { brs ${2:-0} RB; }
 [[ $1 = brs ]] && { brs ${2:-0} BN; }
