@@ -15,6 +15,7 @@ s1='/var/log/syslog'
 s2='/etc/prometheus'
 s3='/dev/null'
 s4='/etc/systemd/system'
+s5='/var/run/reboot-required'
 p0='/home/eth'
 p1='/var/lib/lighthouse'
 p5="$p0/geth.log"

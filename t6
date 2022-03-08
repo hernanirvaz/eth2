@@ -135,6 +135,7 @@ function bh  {                                                                  
   bl;echo -e "BL$(printf '%9i' $(cat $p2|wc -l))\nBEAC$m";bm;echo -e "BM$(printf '%9i' $(cat $p3 2>$s3|wc -l))\nBEAC$m"                                       # beacon/medias report
   sso BEAC $ethb;sso VALI $ethv;cpe                                                                                                                           # beacon/validator/system status
 }
+function brb { if [[ -f $s5 ]];then echo RB;else echo $1;fi; }                                                                                                # get system needs reboot
 function brw { [[ $1 ]] || return;touch $p4.s$1;sleep $1;rm $p4.s$1; }                                                                                        # sleep with file info
 function brt { echo ${1:-false}$#$2; }                                                                                                                        # get first#secound verbs
 function brp { [[ $(brt $(fs0 "$bpid].*INFO " ${1:-7}|sed 's%.*INFO \([^ ]*\).*%\1%'|sort -u)) = New2Synced ]] && echo sim; }                                 # testa ideal log position
@@ -296,7 +297,7 @@ function ssp {
 [[ $1 = bm  ]] && { bm;echo -e "BEAC$m"; }
 [[ $1 = bn  ]] && { bm;echo -e "BEAC$s"; }
 [[ $1 = blf ]] && { bl;echo -e "BEAC$m" >> $p2;bdt && bdl $d0; }
-[[ $1 = bmf ]] && { bm;bdt || echo -e "BEAC$m" >> $p3;bct && brs $b4 PE 7m; }
+[[ $1 = bmf ]] && { bm;bdt || echo -e "BEAC$m" >> $p3;bct && brs $b4 $(brb PE) 7m; }
 [[ $1 = bnf ]] && { bm;echo -e "BEAC$s" >> $p6; }
 [[ $1 = gh  ]] && { gh $2      ; }
 [[ $1 = bh  ]] && { bh $2      ; }
