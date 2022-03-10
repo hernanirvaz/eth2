@@ -32,6 +32,7 @@ function jsh { cex "journalctl --no-hostname --no-full -f $1"; }                
 function spc { nn=$2;cp $s4/$1.service $p0/$1.sav;sed "s%peers *[0-9]*%peers $2%" $p0/$1.sav > $s4/$1.service; }                                              # service configuration change
 function spp { resolvectl query smtp.gmail.com &>$s3;sex "$w2 $1";dmr                                        ; }                                              # service process stop/load
 function snp { local n=$(($2+nn));(($2!=0&&n>=$3&&n<=$4)) && spc $1 $n;spp $1                                ; }                                              # service node change/stop/load
+function srb { [[ -f $s5 ]]; }                                                                                                                                # system needs reboot test
 
 # geth control commands
 function gv  { nn=$(nu0 $(sse $ethg maxpeers [0-9]))                                  ; }                                                                     # set configured peers
@@ -135,10 +136,10 @@ function bh  {                                                                  
   bl;echo -e "BL$(printf '%9i' $(cat $p2|wc -l))\nBEAC$m";bm;echo -e "BM$(printf '%9i' $(cat $p3 2>$s3|wc -l))\nBEAC$m"                                       # beacon/medias report
   sso BEAC $ethb;sso VALI $ethv;cpe                                                                                                                           # beacon/validator/system status
 }
-function brb { if [[ -f $s5 ]];then echo RB;else echo $1;fi; }                                                                                                # get system needs reboot
 function brw { [[ $1 ]] || return;touch $p4.s$1;sleep $1;rm $p4.s$1; }                                                                                        # sleep with file info
-function brt { echo ${1:-false}$#$2; }                                                                                                                        # get first#secound verbs
-function brp { [[ $(brt $(fs0 "$bpid].*INFO " ${1:-7}|sed 's%.*INFO \([^ ]*\).*%\1%'|sort -u)) = New2Synced ]] && echo sim; }                                 # testa ideal log position
+function brb { if srb;then echo RB;else echo $1;fi; }                                                                                                         # get reboot/other tag
+function brv { echo ${1:-false}$#$2; }                                                                                                                        # get first#secound verbs
+function brp { [[ $(brv $(fs0 "$bpid].*INFO " ${1:-7}|sed 's%.*INFO \([^ ]*\).*%\1%'|sort -u)) = New2Synced ]] && echo sim; }                                 # testa ideal log position
 function bro { dts;bb;bnn $(fs6 peers:);echo "$(printf 'R%03i' $1) ${2:-$ok} $(printf '%3i' $(bu)) $(dnn)" >> $p2; }                                          # log restart info
 function brs {                                                                                                                                                # beacon/validator restart
   [[ $(ls $p4.* 2>$s3) ]] && return;brw $3;[[ $(brp) ]] && brw 25s;touch $p4.ini;local n=0;while [[ -f $p4.ini && $n -le 200 ]];do                            # search max 200 times, every 5s
@@ -292,7 +293,7 @@ function ssp {
 [[ $1 = trs ]] && { [[ $(sst systemd-timesyncd masked) ]] || cex "$w0 restart systemd-timesyncd";cpe c; }
 [[ $1 = vcp ]] && { ssp; }
 [[ $1 = gl  ]] && { gl;echo -e "GETH$m"; }
-[[ $1 = glf ]] && { gl;echo -e "GETH$m" >> $p5;[[ $ok != OK ]] && grs 0; }
+[[ $1 = glf ]] && { gl;echo -e "GETH$m" >> $p5;if srb;then ok=OK;echo "GETH REBOOT $(dnn)" >> $p5;sex reboot;fi;[[ $ok != OK ]] && grs 0; }
 [[ $1 = bl  ]] && { bl;echo -e "BEAC$m"; }
 [[ $1 = bm  ]] && { bm;echo -e "BEAC$m"; }
 [[ $1 = bn  ]] && { bm;echo -e "BEAC$s"; }
