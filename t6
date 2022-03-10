@@ -49,20 +49,22 @@ function gl  {                                                                  
   fi
 }
 function gh  { [[ -f $p5 ]] || return;tail -n${1:-$hors} $p5;[[ $1 ]] && return;gl;echo -e "GETH$m\n";sso GETH $ethg;cpe; }                                   # geth historic report
-function grs { gv;snp $ethg $1 10 15;sex "$w3 $ethg";sleep 20s;dts;gq;echo "GETH RESTAR $(dnn)" >> $p5; }                                                     # change/stop/load/start/log geth
+function glt { tail -n$1 $p5 2>$s3|cut -d' ' -f1|sort -u|wc -l; }                                                                                             # get geth   restart activity test
+function grt { [[ $(glt 6) -eq 1 ]] && srb; }                                                                                                                 # geth system reboot test
+function grs { gv;snp $ethg $1 10 15;sex "$w3 $ethg";sleep 20s;dts;gq;echo "RSTR SERVIC $(dnn)" >> $p5; }                                                     # change/stop/load/start/log geth
 # beacon control commands
 function bz  { echo $((10*(9*zk+3*zz+zx+zw)))                                       ; }                                                                       # get numerator paid errors
 function bw  { echo $((10*z1))                                                      ; }                                                                       # get numerator processed blocks
 function bf  { echo $((90*z3))                                                      ; }                                                                       # get numerator general errors
 function bu  { echo $(((z5>300?$(bz)/z5:0)+(z2>300?$(bw)/z2:0)+(z4>999?$(bf)/z4:0))); }                                                                       # get restart idx
 function bi  { echo $((nd+zk*100+zz*10+zx))                                         ; }                                                                       # get delete day idx
-function bs  { tail -n$1 $p2 2>$s3|cut -d' ' -f1|sort -u|wc -l; }                                                                                             # get restart activity test
 function bk  { cat       $p2 2>$s3                      |wc -l; }                                                                                             # get beacon line count
 function bv  { nu0 $(sse $ethb target-peers [0-9]); }                                                                                                         # get configured peers
-function bb  { l0=$(fs0 $bpid] 3600);bl1;bl2;[[ (1 -eq $(bs $hors) && $(bu) -ge 1) || (1 -eq $(bs 5) && $(bu) -ge 5) ]] && ok=BK; }                           # set ok (OK/BK)
+function bb  { l0=$(fs0 $bpid] 3600);bl1;bl2;[[ (1 -eq $(blt $hors) && $(bu) -ge 1) || (1 -eq $(blt 5) && $(bu) -ge 5) ]] && ok=BK; }                         # set ok (OK/BK)
 function bfl { grep "BEAC.*$1"    ; }                                                                                                                         # filter beacon lines
 function bff { grep "BEAC.*$1" $p2; }                                                                                                                         # filter beacon log
 function bl  { dts;if [[ $(sst $ethb running) ]];then bl3;nn=$(bv);bnn $(fs6 peers:);bb;blo;else m=" NOT RUNNING $dt";fi; }                                   # beacon report
+function blt { tail -n$1 $p2 2>$s3|cut -d' ' -f1|sort -u|wc -l; }                                                                                             # get beacon restart activity test
 function bl0 { fs0 "attestation(s).*$1"|bl5; }                                                                                                                # get number of paid activities
 function bl1 {                                                                                                                                                # set restart idx vars
   z1=${1:-$(echo "$l0"|grep 'rocessed block'|wc -l)};z2=${2:-$(echo "$l0"|grep 'block received'|wc -l)};z3=${3:-$(echo "$l0"|grep -v ' INFO ' |wc -l)}        # set processed/received blocks,error lines
@@ -169,7 +171,7 @@ function bsl {                                                                  
 }
 function bit { [[ $(bi) -ge 1500 ]]; }                                                                                                                        # peers standard deviation test
 function bdt { [[ $d1 =~ 23:5[89] ]] && bit; }                                                                                                                # delete beacon log day test
-function bct { [[ $b4 -ne 0 && $b2 -ge $b3 && $(date +%w) -eq 5 && $(bs $hors) -eq 1 ]] && ! bit; }                                                           # change configured peers test
+function bct { [[ $b4 -ne 0 && $b2 -ge $b3 && $(date +%w) -eq 5 && $(blt $hors) -eq 1 ]] && ! bit; }                                                          # change configured peers test
 function bdl { local d=$(pt0 $1 sai);[[ -f $p2 && $d != sai ]] || return;cp $p2 ${p2}o;grep -v $d ${p2}o > $p2;grep $d ${p2}o > ${p2}d; }                     # delete beacon log day
 function nsh {
   echo -e "ROUTES\t\t$(ip route show|grep 'default via'|grep -v linkdown|cut -d' ' -f3)\nDNS\t\t$(resolvectl|grep 'Current DNS'|cut -d' ' -f6)"               # routes
@@ -293,7 +295,7 @@ function ssp {
 [[ $1 = trs ]] && { [[ $(sst systemd-timesyncd masked) ]] || cex "$w0 restart systemd-timesyncd";cpe c; }
 [[ $1 = vcp ]] && { ssp; }
 [[ $1 = gl  ]] && { gl;echo -e "GETH$m"; }
-[[ $1 = glf ]] && { gl;echo -e "GETH$m" >> $p5;if srb;then ok=OK;echo "GETH REBOOT $(dnn)" >> $p5;sex reboot;fi;[[ $ok != OK ]] && grs 0; }
+[[ $1 = glf ]] && { gl;echo -e "GETH$m" >> $p5;if grt;then ok=OK;echo "RSTR SYSTEM $(dnn)" >> $p5;sex reboot;fi;[[ $ok != OK ]] && grs 0; }
 [[ $1 = bl  ]] && { bl;echo -e "BEAC$m"; }
 [[ $1 = bm  ]] && { bm;echo -e "BEAC$m"; }
 [[ $1 = bn  ]] && { bm;echo -e "BEAC$s"; }
