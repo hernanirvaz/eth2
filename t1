@@ -66,8 +66,11 @@ pmat=00018800
 pmah=00004500
 pdly=00000500
 decp=1000000000
-
 hors=24
 rate=4000
+bpri=20
+bprs=10
+bprf=80
+
 if [[ $cust = hrv ]];then cgth=$zip1;else cgth=$vip1;fi
 [[ $rate -eq 0 ]] && rate=$(curl -sX GET 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=ETH&convert=EUR&CMC_PRO_API_KEY=3ae5f3df-bd71-489d-a9dd-b626995fba31'|sed 's%.*price.:\([0-9]*\.[0-9]*\).*%\1%')
