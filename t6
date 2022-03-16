@@ -107,12 +107,12 @@ function bmz { local g=${2:-27};z[$1]=${o[$g]};(($1<$bprf)) && bmz $(($1+$bprs))
 function bmx { local g=${2:-35};x[$1]=${o[$g]};(($1<$bprf)) && bmx $(($1+$bprs)) $((g-1)); }                                                                  # set recursively failed head   err array
 function bmw { local g=${2:-43};w[$1]=${o[$g]};(($1<$bprf)) && bmw $(($1+$bprs)) $((g-1)); }                                                                  # set recursively delay         err array
 function bmc { local g=${2:-11};c[$1]=${o[$g]};(($1<$bprf)) && bmc $(($1+$bprs)) $((g-1)); }                                                                  # set recursively               cnt array
-function bma { if (($1>=$bpri));then bma $(($1-$bprs)) "$2  $(printf '%4i' ${a[$1]})";else echo "$2";fi; }                                                    # sum recursively penalty       avg array
-function bnk { if (($1>=$bpri));then bnk $(($1-$bprs)) "${2:-0}${3:-+}${k[$1]}" "$3" ;else echo "$2";fi; }                                                    # sum recursively missing       err array
-function bnz { if (($1>=$bpri));then bnz $(($1-$bprs)) "${2:-0}${3:-+}${z[$1]}" "$3" ;else echo "$2";fi; }                                                    # sum recursively failed target err array
-function bnx { if (($1>=$bpri));then bnx $(($1-$bprs)) "${2:-0}${3:-+}${x[$1]}" "$3" ;else echo "$2";fi; }                                                    # sum recursively failed head   err array
-function bnw { if (($1>=$bpri));then bnw $(($1-$bprs)) "${2:-0}${3:-+}${w[$1]}" "$3" ;else echo "$2";fi; }                                                    # sum recursively delay         err array
-function bnc { if (($1>=$bpri));then bnc $(($1-$bprs)) "${2:-0}${3:-+}${c[$1]}" "$3" ;else echo "$2";fi; }                                                    # sum recursively               cnt array
+function bma { if (($1>=$bpri));then bma $(($1-$bprs)) "$2 $(printf '%4i' ${a[$1]})";else echo "$2";fi; }                                                     # sum recursively penalty       avg array
+function bnk { if (($1>=$bpri));then bnk $(($1-$bprs)) "${2:-0}${3:-+}${k[$1]}" "$3";else echo "$2";fi; }                                                     # sum recursively missing       err array
+function bnz { if (($1>=$bpri));then bnz $(($1-$bprs)) "${2:-0}${3:-+}${z[$1]}" "$3";else echo "$2";fi; }                                                     # sum recursively failed target err array
+function bnx { if (($1>=$bpri));then bnx $(($1-$bprs)) "${2:-0}${3:-+}${x[$1]}" "$3";else echo "$2";fi; }                                                     # sum recursively failed head   err array
+function bnw { if (($1>=$bpri));then bnw $(($1-$bprs)) "${2:-0}${3:-+}${w[$1]}" "$3";else echo "$2";fi; }                                                     # sum recursively delay         err array
+function bnc { if (($1>=$bpri));then bnc $(($1-$bprs)) "${2:-0}${3:-+}${c[$1]}" "$3";else echo "$2";fi; }                                                     # sum recursively               cnt array
 #    0  1   2          3     4       5  6               7    8    9   10   11   12   13   14          15   16           17  18 19 20   21
 # BEAC  2   2 2022-02-17 23:40 node45: 48 median_penalty:    0 1298    0    0    0    0    0 all_median: 1298 ucrmd_peers: -25  0 45  667
 function bmo {
