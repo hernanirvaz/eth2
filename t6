@@ -186,7 +186,7 @@ function cpe {                                                                  
   [[ $1 = p ]] && return;local l=$(fs3|grep -i 'error' |wc -l);local n=$(fs2|grep -v ' INFO '|wc -l)
   local e=$(fs3|grep -i 'error' |tail -n1|sed 's%.*hrv-zotac[0-9] *\(.*\)%\1%;s%:%%g;s%  *% %g'                                |cut -c1-53)
   local d=$(fs2|grep -v ' INFO '|tail -n1|sed 's%.*[0-9]*:[0-9]*:[0-9]*\.[0-9][0-9][0-9]]* *\(.*\)%\1%;s%:%%g;s%:%%g;s%  *% %g'|cut -c1-53)
-  m="ERRO $(printf '%2i' $l) $(printf '%3i' $n) $dt";[[ $l -gt 0 ]] && m="$m sys: $e";[[ $n -gt 0 ]] && m="$m eth2: $d";echo "$m"                             # sys/eth errors info
+  m="ERRO $(printf '%2i' $l) $(printf '%3i' $n) $dt";[[ $l -gt 0 ]] && m="$m system: $e";[[ $n -gt 0 ]] && m="$m ethrum: $d";echo "$m"                        # sys/eth errors info
 }
 # Plex Media Server
 function rxw { cex "ufw$2 allow from 192.168.8.0/24 $1"; }
