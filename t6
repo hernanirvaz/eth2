@@ -57,7 +57,7 @@ function bz  { echo $((10*(9*zk+3*zz+zx+zw)))                                   
 function bw  { echo $((10*z1))                                                      ; }                                                                       # get numerator processed blocks
 function bf  { echo $((90*z3))                                                      ; }                                                                       # get numerator general errors
 function bu  { echo $(((z5>300?$(bz)/z5:0)+(z2>300?$(bw)/z2:0)+(z4>999?$(bf)/z4:0))); }                                                                       # get restart idx
-function bi  { echo $((nd+zk*200+zz*10+zx))                                         ; }                                                                       # get delete day idx
+function bi  { echo $((nd+zk*200+zz*20+zx))                                         ; }                                                                       # get delete day idx
 function bk  { cat $p2 2>$s3|wc -l; }                                                                                                                         # get beacon line count
 function bv  { nu0 $(sse $ethb target-peers [0-9]); }                                                                                                         # get configured peers
 function bb  { l0=$(fs0 $bpid] 3600);bl1;bl2;[[ (1 -eq $(blt $hors) && $(bu) -ge 1) || (1 -eq $(blt 5) && $(bu) -ge 5) ]] && ok=BK; }                         # set ok (OK/BK)
@@ -167,7 +167,7 @@ function bsl {                                                                  
   [[ -f $p2 && -f $p6 ]] || return;rm -f ${p2}s;tail -n$(($(cat $p2|wc -l)-$(tail -n1 $p6|cut -d' ' -f2))) $p2 > ${p2}s                                       # new beacon  log output
   rm -f ${p6}s;head -n$(($(cat $p6|wc -l)-1)) $p6 > ${p6}s;tail -n1 $p6|sed 's%BEAC [0-9]*%BEAC 0%' >> ${p6}s                                                 # new barqivo log output
 }
-function bit { [[ $(bi) -ge 1500 ]]; }                                                                                                                        # peers standard deviation test
+function bit { [[ $(bi) -ge 2000 ]]; }                                                                                                                        # peers standard deviation test
 function bdt { [[ $d1 =~ 23:5[89] ]] && bit; }                                                                                                                # delete beacon log day test
 function bct { [[ $b4 -ne 0 && $b2 -ge $b3 && $(date +%w) -eq 5 && $(blt $hors) -eq 1 ]] && ! bit; }                                                          # change configured peers test
 function bdl { local d=$(pt0 $1 sai);[[ -f $p2 && $d != sai ]] || return;cp $p2 ${p2}o;grep -v $d ${p2}o > $p2;grep $d ${p2}o > ${p2}d; }                     # delete beacon log day
