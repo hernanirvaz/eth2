@@ -58,7 +58,7 @@ function bw  { echo $((10*z1))                                                  
 function bf  { echo $((90*z3))                                                      ; }                                                                       # get numerator general errors
 function bu  { echo $(((z5>300?$(bz)/z5:0)+(z2>300?$(bw)/z2:0)+(z4>999?$(bf)/z4:0))); }                                                                       # get restart idx
 function bi  { echo $((nd+zk*200+zz*20+zx))                                         ; }                                                                       # get delete day idx
-function bq  { echo 1                                                               ; }                                                                       # get change configured peers weekday
+function bq  { echo 2                                                               ; }                                                                       # get change configured peers weekday
 function bk  { cat $p2 2>$s3|wc -l; }                                                                                                                         # get beacon line count
 function bv  { nu0 $(sse $ethb target-peers [0-9]); }                                                                                                         # get configured peers
 function bb  { l0=$(fs0 $bpid] 3600);bl1;bl2;[[ (1 -eq $(blt $hors) && $(bu) -ge 1) || (1 -eq $(blt 5) && $(bu) -ge 5) ]] && ok=BK; }                         # set ok (OK/BK)
