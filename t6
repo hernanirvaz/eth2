@@ -58,6 +58,7 @@ function bw  { echo $((10*z1))                                                  
 function bf  { echo $((90*z3))                                                      ; }                                                                       # get numerator general errors
 function bu  { echo $(((z5>300?$(bz)/z5:0)+(z2>300?$(bw)/z2:0)+(z4>999?$(bf)/z4:0))); }                                                                       # get restart idx
 function bi  { echo $((nd+zk*200+zz*20+zx))                                         ; }                                                                       # get delete day idx
+function bq  { echo 1                                                               ; }                                                                       # get change configured peers weekday
 function bk  { cat $p2 2>$s3|wc -l; }                                                                                                                         # get beacon line count
 function bv  { nu0 $(sse $ethb target-peers [0-9]); }                                                                                                         # get configured peers
 function bb  { l0=$(fs0 $bpid] 3600);bl1;bl2;[[ (1 -eq $(blt $hors) && $(bu) -ge 1) || (1 -eq $(blt 5) && $(bu) -ge 5) ]] && ok=BK; }                         # set ok (OK/BK)
@@ -84,7 +85,7 @@ function blo {
 function bm  {                                                                                                                                                # bmedias report
   bm0;b4=0;b5=$(fs0 reduce|wc -l);dts;nn=$(bv);bnn $(fs6 peers:);bl2;[[ -f $p6 ]] && bm4                                                                      # ini vars/arrays
   l3=$(tail -n$(($(bk)-o[1])) $p2 2>$s3|bfl);[[ $l3 ]] && bm1;bm2;[[ ${b2:=0} -eq 0 && -f $p2 ]] && bo0                                                       # add beacon lines & homologous position
-  b3=$(nu5 $b2 $(fs5 '\w* *\w*' $p3));bm5 ${a[$nn]};if bct;then b7='chrmd_peers:';else b7='ucrmd_peers:';fi;bmo;bno                                           # [un]change configured peers & outputs
+  b3=$(nu5 $b2 $(fs5 '\w* *\w*' $p3));bm5 ${a[$nn]};if bct;then b7=c;else b7=u;fi;b7="rmd$b7$(bq)$(date +%w)_peers:";bmo;bno                                  # [un]change configured peers & outputs
 }
 function bm0 { zk=0;zz=0;zx=0;unset o;o[1]=0;unset k;k[0]=0;unset z;z[0]=0;unset x;x[0]=0;unset w;w[0]=0;unset c;c[0]=0;unset a;a[0]=0;bm6; }                 # ini err/cnt/avg penalty arrays
 function bm1 {
@@ -117,7 +118,7 @@ function bnw { local g=${3:-$bpri};if ((g<=bprf));then bnw "${1:-0}${2:-+}${w[$g
 # BEAC  2   2 2022-02-17 23:40 node45: 48 median_penalty:    0 1298    0    0    0    0    0 all_median: 1298 ucrmd_peers: -25  0 45  667
 function bmo {
   m=" $(printf '%2i' $b3) $(printf '%3i' $b2) $(dnn) $(bma 'median_penalty:') all_median: $(printf '%4i' ${a[0]})"
-  m="$m $b7 $(printf '%3i' $b4) $(printf '%2i' $b5) $(printf '%2i' $nm) $(printf '%4i' $(bi))"
+  m="$m $b7 $(printf '%2i' $b5) $(printf '%2i' $nm) $(printf '%4i' $(bi)) $(printf '%3i' $b4)"
 }
 #    0   1          2     3    4 5 6 7 8 9 10 11   12 13 14 15 16 17 18 19   20 21 22 23 24 25 26 27   28 29 30 31 32 33 34 35   36 37 38 39 40 41 42 43
 # BEAC 682 2022-03-16 11:03 cnt: 4 7 0 0 0 10 10 mis: 20 20 20 20 20 20 20 mat: 14 45 30 30 30 30 30 mah: 94 68 40 40 40 40 40 dly: 79 09 50 50 50 50 50
@@ -169,7 +170,7 @@ function bsl {                                                                  
 }
 function bit { [[ $(bi) -ge 2000 ]]; }                                                                                                                        # peers standard deviation test
 function bdt { [[ $d1 =~ 23:5[89] ]] && bit; }                                                                                                                # delete beacon log day test
-function bct { [[ $b4 -ne 0 && $b2 -ge $b3 && $(date +%w) -eq 1 && $(blt $hors) -eq 1 ]] && ! bit; }                                                          # change configured peers test
+function bct { [[ $b4 -ne 0 && $b2 -ge $b3 && $(date +%w) -eq $(bq) && $(blt $hors) -eq 1 ]] && ! bit; }                                                      # change configured peers test
 function bdl { local d=$(pt0 $1 sai);[[ -f $p2 && $d != sai ]] || return;cp $p2 ${p2}o;grep -v $d ${p2}o > $p2;grep $d ${p2}o > ${p2}d; }                     # delete beacon log day
 function nsh {
   echo -e "ROUTES\t\t$(ip route show|grep 'default via'|grep -v linkdown|cut -d' ' -f3)\nDNS\t\t$(resolvectl|grep 'Current DNS'|cut -d' ' -f6)"               # routes
