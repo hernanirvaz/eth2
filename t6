@@ -169,7 +169,7 @@ function bsl {                                                                  
   [[ -f $p2 && -f $p6 ]] || return;rm -f ${p2}s;tail -n$(($(cat $p2|wc -l)-$(tail -n1 $p6|cut -d' ' -f2))) $p2 > ${p2}s                                       # new beacon  log output
   rm -f ${p6}s;head -n$(($(cat $p6|wc -l)-1)) $p6 > ${p6}s;tail -n1 $p6|sed 's%BEAC [0-9]*%BEAC 0%' >> ${p6}s                                                 # new barqivo log output
 }
-function bit { [[ $(bi) -ge 1500 ]]; }                                                                                                                        # peers standard deviation test
+function bit { [[ $(bi) -ge 2000 ]]; }                                                                                                                        # peers standard deviation test
 function bdt { [[ $d1 =~ 23:5[89] ]] && bit; }                                                                                                                # delete beacon log day test
 function bct { [[ $b4 -ne 0 && $b2 -ge $b3 && $(date +%w) -eq $(bq) && $(blt $hors) -eq 1 ]] && ! bit; }                                                      # change configured peers test
 function bdl { local d=$(pt0 $1 sai);[[ -f $p2 && $d != sai ]] || return;cp $p2 ${p2}o;grep -v $d ${p2}o > $p2;grep $d ${p2}o > ${p2}d; }                     # delete beacon log day
