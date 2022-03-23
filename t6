@@ -298,7 +298,7 @@ function ssp {
 [[ $1 = bl  ]] && { bl;echo -e "BEAC$m"; }
 [[ $1 = bm  ]] && { bm;echo -e "BEAC$m"; }
 [[ $1 = bn  ]] && { bm;echo -e "BEAC$s"; }
-[[ $1 = blf ]] && { bl;echo -e "BEAC$m" >> $p2;bdt && bdl $d0;[[ $ok != OK ]] && brs 0;[[ $(fs3|grep usb|wc -l) -gt 20 ]] && sex "$p0/eth2/t8usbstop"; }
+[[ $1 = blf ]] && { bl;echo -e "BEAC$m" >> $p2;bdt && bdl $d0;[[ $ok != OK ]] && brs 0;[[ $(fs3|grep usb|wc -l) -gt 20 ]] && sex "$p0/eth2/t8usb stop"; }
 [[ $1 = bmf ]] && { bm;bdt || echo -e "BEAC$m" >> $p3;bct && brs $b4 $(brb PE) 7m; }
 [[ $1 = bnf ]] && { bm;echo -e "BEAC$s" >> $p6; }
 [[ $1 = gh  ]] && { gh $2      ; }
