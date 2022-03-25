@@ -145,7 +145,7 @@ function brp { [[ $(brv $(fs0 "$bpid].*INFO " ${1:-7}|sed 's%.*INFO \([^ ]*\).*%
 function brt { local n=$(date +%M);((n==18||n==38||n==58)); }                                                                                                 # testa ideal time position
 function bro { dts;bb;bnn $(fs6 peers:);echo "$(printf 'R%03i' $1) ${2:-$ok} $(printf '%3i' $(bu)) $(dnn)" >> $p2; }                                          # log restart info
 function brs {                                                                                                                                                # beacon/validator restart
-  [[ $(ls $p4.* 2>$s3) ]] && return;brw $3;brt && brw 1m;brp && brw 25s;touch $p4.ini;local n=0;while [[ -f $p4.ini && $n -le 200 ]];do                       # search max 200 times, every 5s
+  [[ $(ls $p4.* 2>$s3) ]] && return;brw $3;brt && brw 1m;brp && brw 25s;touch $p4.ini;local n=0;while [[ -f $p4.ini && $n -le 300 ]];do                       # search max 300 times, every 5s
   if brp;then nn=$(bv);snp $ethb $1 $bpri $bprf                    ;[[ $2 = VC ]] && sex "$w2 $ethv";rm $p4.ini                                               #         stop beacon/validator
     if [[ $2 = RB ]];then bro $n $2;sex reboot;else sex "$w3 $ethb";[[ $2 = VC ]] && sex "$w3 $ethv";brw 20s;bro $n $2;fi                                     # reboot/start beacon/validator
   fi;brw 5s;((n+=1));done;rm -f $p4.ini
