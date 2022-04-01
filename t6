@@ -173,7 +173,7 @@ function bsl {                                                                  
 }
 function bit { [[ $(bi) -ge 2500 ]]; }                                                                                                                        # peers standard deviation test
 function bdt { [[ $d1 =~ 23:5[89] ]] && bit; }                                                                                                                # delete beacon log day test
-function bct { [[ $b4 -ne 0 && $b2 -ge $b3 && $(date +%w) -eq $bcpw && $(blt $hors) -eq 1 ]] && ! bit; }                                                      # change configured peers test
+function bct { [[ $b4 -ne 0 && $b3 -ge $b3 && $(date +%w) -eq $bcpw && $(blt $hors) -eq 1 ]] && ! bit; }                                                      # change configured peers test
 function bdl { local d=$(pt0 $1 sai);[[ -f $p2 && $d != sai ]] || return;cp $p2 ${p2}o;grep -v $d ${p2}o > $p2;grep $d ${p2}o > ${p2}d; }                     # delete beacon log day
 function nsh {
   echo -e "ROUTES\t\t$(ip route show|grep 'default via'|grep -v linkdown|cut -d' ' -f3)\nDNS\t\t$(resolvectl|grep 'Current DNS'|cut -d' ' -f6)"               # routes
