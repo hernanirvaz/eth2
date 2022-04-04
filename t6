@@ -138,8 +138,7 @@ function bon { [[ -f $p2 ]] || return;nn=$(pt2 $1 $(bv));l2=$(bff 23:58);bo1|gre
 function bo  { [[ -f $p2 ]] || return;bo0 $(pt1 $@ 00:00);if [[ $(pt3 $@ s) = n ]];then b6=$b2;else b6=$(pt2 $@ 0);fi;bo6; }                                  # homologous report
 function bh  {                                                                                                                                                # historic report
   [[ -f $p2 ]] || return;tail -n${1:-$hors} $p2;[[ $1 ]] && return;bo0;echo "BO$(printf '%5i' $(echo "$l2"|wc -l)) $(printf '%3i' $b2)";bo6                   # beacon/homologous report
-  bl;echo -e "BL$(printf '%9i' $(cat $p2|wc -l))\nBEAC$m";bm;echo -e "BM$(printf '%9i' $(cat $p3 2>$s3|wc -l))\nBEAC$m"                                       # beacon/medias report
-  sso BEAC $ethb;sso VALI $ethv;cpe                                                                                                                           # beacon/validator/system status
+  bl;echo -e "BL$(printf '%9i' $(cat $p2|wc -l))\nBEAC$m";bm;echo -e "BM$(printf '%9i' $(cat $p3 2>$s3|wc -l))\nBEAC$m";sso BEAC $ethb;sso VALI $ethv;cpe     # beacon/medias/services/system report
 }
 function brw { [[ $1 ]] || return;touch $p4.s$1;sleep $1;rm $p4.s$1; }                                                                                        # sleep with file info
 function brb { if srb;then echo RB;else echo $1;fi; }                                                                                                         # get reboot/other tag
@@ -175,7 +174,7 @@ function bsl {                                                                  
 }
 function bst { [[ $(bi) -ge 2500 ]]; }                                                                                                                        # peers standard deviation test
 function bht { [[ $b2 -gt $b3 ]]; }                                                                                                                           # homologous/avg position test
-function btt { [[ $d1 =~ 23:5[89] ]]; }                                                                                                                       # time  test
+function btt { [[ $d1 =~ 23:5[89] ]]; }                                                                                                                       # time test
 function bdt { btt && bht && bst; }                                                                                                                           # delete beacon log day test
 function bct { [[ $(date +%w) -eq $bcpw && $b4 -ne 0 ]] && bht && [[ $(bl6 $hors) -eq 1 ]] && ! bst; }                                                        # change configured peers test
 function bdl { local d=$(pt0 $1 sai);[[ -f $p2 && $d != sai ]] || return;cp $p2 ${p2}o;grep -v $d ${p2}o > $p2;grep $d ${p2}o > ${p2}d; }                     # delete beacon log day
