@@ -13,14 +13,14 @@ function nu6 { if [[ $5 -gt 0 ]];then nu7 "($1*$pmis+$2*$pmat+$3*$pmah+$4*$pdly)
 function nu7 { printf ${4:-%.0f} $(nu1 $1*${2:-1} ${3:-1}); }                                                                                                 # format arbitrary precision calculations
 function fs0 { echo $H|sudo -S grep    "${3:-lighthouse}.*$1" $s1 2>$s3|if [[ ${2:-0} -le 0 ]];then cat;else tail -n${2:-0};fi; }                             # get tail     syslog lines
 function fs1 { echo $H|sudo -S grep    "$1"                   $s1 2>$s3; }                                                                                    # get specific syslog lines
-function fs2 { echo $H|sudo -S grep -i 'geth\[\|lighthouse'   $s1 2>$s3; }                                                                                    # get eth      syslog lines
-function fs3 { echo $H|sudo -S grep -v 'geth\[\|lighthouse'   $s1 2>$s3; }                                                                                    # get sys      syslog lines
+function fs2 { echo $H|sudo -S grep -i $o3 $s1 2>$s3; }                                                                                                       # get eth      syslog lines
+function fs3 { echo $H|sudo -S grep -v $o3 $s1 2>$s3; }                                                                                                       # get sys      syslog lines
 function fs4 { if [[ $1 ]];then grep "$1" $2 2>$s3;else cat $2 2>$s3;fi|if [[ ${3:-0} -le 0 ]];then cat;else tail -n${3:-0};fi; }                             # get filtered lines  from log
 function fs5 { sed "s%$1 *\([0-9]*\).*%\1%" $2 2>$s3; }                                                                                                       # get list of numbers from log
 function fs6 { fs0 $1 $2   |fs5 .*$1; }                                                                                                                       # get peers    syslog lines
 function fs7 { fs4 $1 $2 $3|fs5   $1; }                                                                                                                       # get number          from log
-function fs8 { local n=${1:-0};((n<5)) && fs8 $((n+1));local e="$p7/logs/beacon.log";((n>0)) && e="$e.$n";echo $H|sudo -S cat $e 2>$s3; }                     # get beacon   intern lines
-function fs9 { local n=${1:-0};((n<7)) && fs9 $((n+1));local e="$s1";((n>0)) && e="$e.$n";echo $H|sudo -S grep -i 'geth\[\|lighthouse' $e 2>$s3; }            # get all eth  syslog lines
+function rl0 { local n=${1:-0};((n<5)) && rl0 $((n+1));local e="$p7/logs/beacon.log";((n>0)) && e="$e.$n";echo $H|sudo -S cat $e 2>$s3; }                     # get beacon   intern lines
+function rl1 { local n=${1:-0};((n<7)) && rl1 $((n+1));local e="$s1";((n>0)) && e="$e.$n";echo $H|sudo -S grep -i $o3 $e 2>$s3; }                             # get all eth  syslog lines
 function pt0 { until [[ $# -le 1 || $1 =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]];do shift;done;echo $1; }                                                            # yyyy-mm-dd test
 function pt1 { until [[ $# -le 1 || $1 =~ ^[0-9]{2}:[0-9]{2}$          ]];do shift;done;echo $1; }                                                            # hh:mm      test
 function pt2 { until [[ $# -le 1 || $1 =~ ^[0-9]+$                     ]];do shift;done;echo $1; }                                                            # integer    test
@@ -36,23 +36,23 @@ function snp { local n=$(($2+nn));(($2!=0&&n>=$3&&n<=$4)) && spc $1 $n;spp $1   
 function srb { [[ -f $s5 ]]; }                                                                                                                                # system needs reboot test
 
 # geth control commands
-function gv  { nn=$(nu0 $(sse $ethg maxpeers [0-9]))                                  ; }                                                                     # set configured peers
+function gv  { nn=$(nu0 $(sse $n0 maxpeers [0-9]))                                    ; }                                                                     # set configured peers
 function gq  { nr=$(nu0 $(geth attach "http://$cgth:8545" --exec net.peerCount 2>$s3)); }                                                                     # set current    peers
 function gy  {            geth attach "http://$cgth:8545" --exec eth.syncing   2>$s3  ; }                                                                     # current syncing status
 function gi  { echo $@|sed 's%.*highestBlock: *\([0-9]*\).*%\1%'; }                                                                                           # get highest geth block
 function gc  { echo $@|sed 's%.*currentBlock: *\([0-9]*\).*%\1%'; }                                                                                           # get current geth block
 function gb  { g0=$(fs0 'mported new' 0 geth|wc -l);ok=OK;[[ $g0 -eq $(fs7 .*sgs: $p5 1) ]] && ok=BK; }                                                       # imported new chain segments & OK/BK
 function gl  {                                                                                                                                                # geth report
-  dts;if [[ $(sst $ethg running) ]];then local e=$(gy);gb;gv;gq;m="$(dnn) sgs: $(printf '%4i' $g0)"
+  dts;if [[ $(sst $n0 running) ]];then local e=$(gy);gb;gv;gq;m="$(dnn) sgs: $(printf '%4i' $g0)"
     if [[ $(echo $e|grep false) ]];then m=" $ok SYC $m";else m=" $ok NSY $m blocks: $(($(gi $e)-$(gc $e)))";fi                                                # OK SYC/NSY (dnn) sgs: 5 blocks: 8 (6)
   else
     m=" NOT RUNNING $dt"
   fi
 }
-function gh  { [[ -f $p5 ]] || return;tail -n${1:-$hors} $p5;[[ $1 ]] && return;gl;echo -e "GETH$m\n";sso GETH $ethg;cpe; }                                   # geth historic report
+function gh  { [[ -f $p5 ]] || return;tail -n${1:-$hors} $p5;[[ $1 ]] && return;gl;echo -e "GETH$m\n";sso GETH $n0;cpe; }                                     # geth historic report
 function glt { tail -n$1 $p5 2>$s3|cut -d' ' -f1|sort -u|wc -l; }                                                                                             # get geth   restart activity test
 function grt { [[ $(glt 6) -eq 1 ]] && srb; }                                                                                                                 # geth system reboot test
-function grs { gv;snp $ethg $1 10 15;sex "$w3 $ethg";sleep 20s;dts;gq;echo "RSTR SERVIC $(dnn)" >> $p5; }                                                     # change/stop/load/start/log geth
+function grs { gv;snp $n0 $1 10 15;sex "$w3 $n0";sleep 20s;dts;gq;echo "RSTR SERVIC $(dnn)" >> $p5; }                                                         # change/stop/load/start/log geth
 # beacon control commands
 function bz  { echo $((10*(9*zk+3*zz+zx+zw)))                                       ; }                                                                       # get numerator paid errors
 function bw  { echo $((10*z1))                                                      ; }                                                                       # get numerator processed blocks
@@ -60,11 +60,11 @@ function bf  { echo $((90*z3))                                                  
 function bu  { echo $(((z5>300?$(bz)/z5:0)+(z2>300?$(bw)/z2:0)+(z4>999?$(bf)/z4:0))); }                                                                       # get restart idx
 function bi  { echo $((nd+zk*200+zz*20+zx))                                         ; }                                                                       # get delete day idx
 function bk  { cat $p2 2>$s3|wc -l; }                                                                                                                         # get beacon line count
-function bv  { nu0 $(sse $ethb target-peers [0-9]); }                                                                                                         # get configured peers
+function bv  { nu0 $(sse $n1 target-peers [0-9]); }                                                                                                           # get configured peers
 function bb  { l0=$(fs0 $bpid] 3600);bl1;bl2;[[ (1 -eq $(bl6 $hors) && $(bu) -ge 1) || (1 -eq $(bl6 5) && $(bu) -ge 5) ]] && ok=BK; }                         # set ok (OK/BK)
 function bfl { grep "BEAC.*$1"    ; }                                                                                                                         # filter beacon lines
 function bff { grep "BEAC.*$1" $p2; }                                                                                                                         # filter beacon log
-function bl  { dts;if [[ $(sst $ethb running) ]];then bl3;nn=$(bv);bnn $(fs6 peers:);bb;blo;else m=" NOT RUNNING $dt";fi; }                                   # beacon report
+function bl  { dts;if [[ $(sst $n1 running) ]];then bl3;nn=$(bv);bnn $(fs6 peers:);bb;blo;else m=" NOT RUNNING $dt";fi; }                                     # beacon report
 function bl0 { fs0 "attestation(s).*$1"|bl5; }                                                                                                                # get number of paid activities
 function bl1 {                                                                                                                                                # set restart idx vars
   z1=${1:-$(echo "$l0"|grep 'rocessed block'|wc -l)};z2=${2:-$(echo "$l0"|grep 'block received'|wc -l)};z3=${3:-$(echo "$l0"|grep -v ' INFO ' |wc -l)}        # set processed/received blocks,error lines
@@ -138,7 +138,7 @@ function bon { [[ -f $p2 ]] || return;nn=$(pt2 $1 $(bv));l2=$(bff 23:58);bo1|gre
 function bo  { [[ -f $p2 ]] || return;bo0 $(pt1 $@ 00:00);if [[ $(pt3 $@ s) = n ]];then b6=$b2;else b6=$(pt2 $@ 0);fi;bo6; }                                  # homologous report
 function bh  {                                                                                                                                                # historic report
   [[ -f $p2 ]] || return;tail -n${1:-$hors} $p2;[[ $1 ]] && return;bo0;echo "BO$(printf '%5i' $(echo "$l2"|wc -l)) $(printf '%3i' $b2)";bo6                   # beacon/homologous report
-  bl;echo -e "BL$(printf '%9i' $(cat $p2|wc -l))\nBEAC$m";bm;echo -e "BM$(printf '%9i' $(cat $p3 2>$s3|wc -l))\nBEAC$m";sso BEAC $ethb;sso VALI $ethv;cpe     # beacon/medias/services/system report
+  bl;echo -e "BL$(printf '%9i' $(cat $p2|wc -l))\nBEAC$m";bm;echo -e "BM$(printf '%9i' $(cat $p3 2>$s3|wc -l))\nBEAC$m";sso BEAC $n1;sso VALI $n3;cpe         # beacon/medias/services/system report
 }
 function brw { [[ $1 ]] || return;touch $p4.s$1;sleep $1;rm $p4.s$1; }                                                                                        # sleep with file info
 function brb { if srb;then echo RB;else echo $1;fi; }                                                                                                         # get reboot/other tag
@@ -148,8 +148,8 @@ function bmt { local n=$(date +%M);((n==18||n==38||n==58)); }                   
 function bro { dts;bb;bnn $(fs6 peers:);echo "$(printf 'R%03i' $1) ${2:-$ok} $(printf '%3i' $(bu)) $(dnn)" >> $p2; }                                          # log restart info
 function brs {                                                                                                                                                # beacon/validator restart
   [[ $(ls $p4.* 2>$s3) ]] && return;brw $3;bmt && brw 1m;bpt && brw 25s;touch $p4.ini;local n=0;while [[ -f $p4.ini && $n -le 300 ]];do                       # search max 300 times, every 5s
-  if bpt;then nn=$(bv);snp $ethb $1 $bpri $bprf                    ;[[ $2 = VC ]] && sex "$w2 $ethv";rm $p4.ini                                               #         stop beacon/validator
-    if [[ $2 = RB ]];then bro $n $2;sex reboot;else sex "$w3 $ethb";[[ $2 = VC ]] && sex "$w3 $ethv";brw 20s;bro $n $2;fi                                     # reboot/start beacon/validator
+  if bpt;then nn=$(bv);snp $n1 $1 $bpri $bprf                    ;[[ $2 = VC ]] && sex "$w2 $n3";rm $p4.ini                                                   #         stop beacon/validator
+    if [[ $2 = RB ]];then bro $n $2;sex reboot;else sex "$w3 $n1";[[ $2 = VC ]] && sex "$w3 $n3";brw 20s;bro $n $2;fi                                         # reboot/start beacon/validator
   fi;brw 5s;((n+=1));done;rm -f $p4.ini
 }
 function brh { head -n${1:-0} ${p2}r; }                                                                                                                       # new beacon head lines
@@ -199,24 +199,24 @@ function cpe {                                                                  
 function rxw { cex "ufw$2 allow from 192.168.8.0/24 $1"; }
 function xop { cex 'ufw delete deny 32400             ';rxw 'to any port 32400 comment plex'; }
 function xcl { cex 'ufw        deny 32400 comment plex';rxw 'to any port 32400 '   ' delete'; }
-function xe  { xop;cex 'ufw reload';cex "$w4 $plex"; }
-function xa  { [[ $(sst $plex       ) ]] && { cex "$w3 $plex"; } }
-function xp  { [[ $(sst $plex loaded) ]] && { cex "$w2 $plex"; } }
-function xd  { cex "$w5 $plex";xcl;cex 'ufw reload'; }
+function xe  { xop;cex 'ufw reload';cex "$w4 $o0"; }
+function xa  { [[ $(sst $o0       ) ]] && { cex "$w3 $o0"; } }
+function xp  { [[ $(sst $o0 loaded) ]] && { cex "$w2 $o0"; } }
+function xd  { cex "$w5 $o0";xcl;cex 'ufw reload'; }
 # Transmission BitTorrent Daemon
 function rop { cex 'ufw allow 51413 comment torrent';rxw 'to any port 9091 comment torrent'; }
 function rcl { cex 'ufw deny  51413 comment torrent';rxw 'to any port 9091'       ' delete'; }
-function re  { rop;cex 'ufw reload';cex "$w4 $trrt"; }
-function ra  { [[ $(sst $trrt       ) ]] && { cex "$w3 $trrt"; } }
-function rp  { [[ $(sst $trrt loaded) ]] && { cex "$w2 $trrt"; } }
-function rd  { cex "$w5 $trrt";rcl;cex 'ufw reload'; }
+function re  { rop;cex 'ufw reload';cex "$w4 $o1"; }
+function ra  { [[ $(sst $o1       ) ]] && { cex "$w3 $o1"; } }
+function rp  { [[ $(sst $o1 loaded) ]] && { cex "$w2 $o1"; } }
+function rd  { cex "$w5 $o1";rcl;cex 'ufw reload'; }
 # Bind9
 function sop { cex 'ufw delete deny 53            ';rxw 'to any port 53 comment dns'; }
 function scl { cex 'ufw        deny 53 comment dns';rxw 'to any port 53 '  ' delete'; }
-function se  { sop;cex 'ufw reload';cex "$w4 $dnsd"; }
-function sa  { [[ $(sst $dnsd disabled) ]] || { [[ $(sst $dnsd) ]] && cex "$w3 $dnsd"; } }
-function sp  { [[ $(sst $dnsd loaded  ) ]] && { cex "$w2 $dnsd"; } }
-function sd  { cex "$w5 $dnsd";scl;cex 'ufw reload'; }
+function se  { sop;cex 'ufw reload';cex "$w4 $o2"; }
+function sa  { [[ $(sst $o2 disabled) ]] || { [[ $(sst $o2) ]] && cex "$w3 $o2"; } }
+function sp  { [[ $(sst $o2 loaded  ) ]] && { cex "$w2 $o2"; } }
+function sd  { cex "$w5 $o2";scl;cex 'ufw reload'; }
 # open/close goethereum/beacon/validator/grafana
 function gfw { if [[ $cust = hrv ]];then cex "ufw$2 allow from $zip2 $1";cex "ufw$2 allow from $zip3 $1";else cex "ufw$2 allow from $vip1 $1";cex "ufw$2 allow from $vip3 $1";fi; }
 function gop { cex 'ufw allow 30303 comment eth1';cex 'ufw delete deny 8545              ';gfw 'to any port 8545 comment geapi'; }
@@ -233,16 +233,16 @@ function vcl { cex 'ufw        deny 5064 comment vcmet';`# vfw 'to any port 5064
 function fop { cex 'ufw allow 3000/tcp comment grafana'; }
 function fcl { cex 'ufw deny  3000/tcp                '; }
 # enable/arranca goethereum/beacon/validator/prometheus/grafana
-function ge  { gop;cex 'ufw reload';cex "$w4 $ethg"; }
-function be  { bop;cex 'ufw reload';cex "$w4 $ethb"; }
-function ve  { [[ -f $p1/vc_lock ]] || { vop;cex 'ufw reload';cex "$w4 $ethv"; } }
-function pe  { cex 'ufw reload';cex "$w4 $ethp"; }
-function ne  { cex 'ufw reload';cex "$w4 $ethn"; }
-function fe  { fop;cex 'ufw reload';cex "$w4 $ethf"; }
-function ga  { [[ $(sst $ethg) ]] && [[ -d /var/lib/goethereum   ]] && { cex "$w3 $ethg"; } }
-function ba  { [[ $(sst $ethb) ]] && { cex "$w3 $ethb"; } }
+function ge  { gop;cex 'ufw reload';cex "$w4 $n0"; }
+function be  { bop;cex 'ufw reload';cex "$w4 $n1"; }
+function ve  { [[ -f $p1/vc_lock ]] || { vop;cex 'ufw reload';cex "$w4 $n3"; } }
+function pe  { cex 'ufw reload';cex "$w4 $n4"; }
+function ne  { cex 'ufw reload';cex "$w4 $n5"; }
+function fe  { fop;cex 'ufw reload';cex "$w4 $n6"; }
+function ga  { [[ $(sst $n0) ]] && [[ -d /var/lib/goethereum   ]] && { cex "$w3 $n0"; } }
+function ba  { [[ $(sst $n1) ]] && { cex "$w3 $n1"; } }
 function va  {
-  [[ $(sst $ethv) ]] || return                                                                                                                                # continue if inactive\|failed
+  [[ $(sst $n3) ]] || return                                                                                                                                  # continue if inactive\|failed
   if [[ -f $p1/vc_lock ]];then
     if [[ -f $p0/slashing_protection.sqlite ]];then                                                                                                           # slashing_protection
       echo $H|sudo -S cp $p0/slashing_protection.sqlite $p8 2>$s3
@@ -250,13 +250,13 @@ function va  {
       sudo chmod 600 $p8/slashing_protection.sqlite
     fi
   else
-    cex "$w3 $ethv"
+    cex "$w3 $n3"
     rm $p1/vc_slash
   fi
 }
-function pa  { [[ $(sst $ethp) ]] && { cex "$w3 $ethp"; } }
-function na  { [[ $(sst $ethn) ]] && { cex "$w3 $ethn"; } }
-function fa  { [[ $(sst $ethf) ]] && { cex "$w3 $ethf"; } }
+function pa  { [[ $(sst $n4) ]] && { cex "$w3 $n4"; } }
+function na  { [[ $(sst $n5) ]] && { cex "$w3 $n5"; } }
+function fa  { [[ $(sst $n6) ]] && { cex "$w3 $n6"; } }
 function wa  {
   if [[ $(echo $H|sudo -S ufw status 2>$s3|grep -i inactive) ]];then
     echo -e "${i}UFW ENABLE${f}";sudo ufw enable <<< y                                                                                                        # enable asks: Proceed with operation (y|n)?
@@ -265,19 +265,19 @@ function wa  {
   fi
 }
 # para/disable goethereum/beacon/validator/prometheus/grafana
-function gp  { [[ $(sst $ethg loaded) ]] && { cex "$w2 $ethg"; } }
-function bp  { [[ $(sst $ethb loaded) ]] && { cex "$w2 $ethb"; } }
-function vp  { [[ $(sst $ethv loaded) ]] && { cex "$w2 $ethv";touch $p1/vc_slash; } }
-function pp  { [[ $(sst $ethp loaded) ]] && { cex "$w2 $ethp"; } }
-function np  { [[ $(sst $ethn loaded) ]] && { cex "$w2 $ethn"; } }
-function fp  { [[ $(sst $ethf loaded) ]] && { cex "$w2 $ethf"; } }
-function gd  { cex "$w5 $ethg";gcl;cex 'ufw reload'; }
-function bd  { cex "$w5 $ethb";bcl;cex 'ufw reload'; }
-function vd  { cex "$w5 $ethv";vcl;cex 'ufw reload';touch $p1/vc_lock; }
-function pd  { [[ $(sst $ethp loaded) ]] && { cex "$w5 $ethp"; } }
-function nd  { [[ $(sst $ethn loaded) ]] && { cex "$w5 $ethn"; } }
-function fd  { [[ $(sst $ethf loaded) ]] && { cex "$w5 $ethf";fcl;cex 'ufw reload'; } }
-function dpa { cex "$w2 $dnsd";sex "$w2 systemd-resolved";cex "$w3 $dnsd";sex "$w3 systemd-resolved"; }                                                       # DNS stop/start
+function gp  { [[ $(sst $n0 loaded) ]] && { cex "$w2 $n0"; } }
+function bp  { [[ $(sst $n1 loaded) ]] && { cex "$w2 $n1"; } }
+function vp  { [[ $(sst $n3 loaded) ]] && { cex "$w2 $n3";touch $p1/vc_slash; } }
+function pp  { [[ $(sst $n4 loaded) ]] && { cex "$w2 $n4"; } }
+function np  { [[ $(sst $n5 loaded) ]] && { cex "$w2 $n5"; } }
+function fp  { [[ $(sst $n6 loaded) ]] && { cex "$w2 $n6"; } }
+function gd  { cex "$w5 $n0";gcl;cex 'ufw reload'; }
+function bd  { cex "$w5 $n1";bcl;cex 'ufw reload'; }
+function vd  { cex "$w5 $n3";vcl;cex 'ufw reload';touch $p1/vc_lock; }
+function pd  { [[ $(sst $n4 loaded) ]] && { cex "$w5 $n4"; } }
+function nd  { [[ $(sst $n5 loaded) ]] && { cex "$w5 $n5"; } }
+function fd  { [[ $(sst $n6 loaded) ]] && { cex "$w5 $n6";fcl;cex 'ufw reload'; } }
+function dpa { cex "$w2 $o2";sex "$w2 systemd-resolved";cex "$w3 $o2";sex "$w3 systemd-resolved"; }                                                           # DNS stop/start
 function ssp {
   echo -e "${i}QUER MESMO TRANSFERIR VALIDATORS?${f}";read rsp
   if [[ $rsp = sim && ! -f $p1/vc_slash && ! -f $p1/vc_lock && -f $p1/vc_keys ]];then
@@ -324,18 +324,18 @@ function ssp {
 # outros journal system/lighthouse
 [[ $1 = sl  ]] && { fs3|if [[ $2 ]];then grep -i "[a-z]* [0-9]* $2";else grep -i 'error' ;fi; }
 [[ $1 = el  ]] && { fs2|if [[ $2 ]];then grep -i "[a-z]* [0-9]* $2";else grep -v ' INFO ';fi; }
-[[ $1 = ll  ]] && { fs9|if [[ $2 ]];then grep -i "[a-z]* [0-9]* $2";else grep -v ' INFO ';fi; }
-[[ $1 = nl  ]] && { fs8|if [[ $2 ]];then grep -i               "$2";else grep -v ' INFO ';fi; }
+[[ $1 = ll  ]] && { rl1|if [[ $2 ]];then grep -i "[a-z]* [0-9]* $2";else grep -v ' INFO ';fi; }
+[[ $1 = nl  ]] && { rl0|if [[ $2 ]];then grep -i               "$2";else grep -v ' INFO ';fi; }
 [[ $1 = ws  ]] && { cex 'ufw status numbered'; }
 [[ $1 = wa  ]] && { wa; }
 [[ $1 = wpr ]] && { cex 'ufw disable'; }
 # journal
 [[ $1 = yj  ]] && { jsh; }
-[[ $1 = ej  ]] && { jsh "-u $ethg -u $ethb -u $ethv"; }
-[[ $1 = gj  ]] && { jsh "-u $ethg"; }
-[[ $1 = bj  ]] && { jsh "-u $ethb"; }
-[[ $1 = vj  ]] && { jsh "-u $ethv"; }
-[[ $1 = sj  ]] && { jsh "-u $dnsd"; }
+[[ $1 = ej  ]] && { jsh "-u $n0 -u $n1 -u $n3"; }
+[[ $1 = gj  ]] && { jsh "-u $n0"; }
+[[ $1 = bj  ]] && { jsh "-u $n1"; }
+[[ $1 = vj  ]] && { jsh "-u $n3"; }
+[[ $1 = sj  ]] && { jsh "-u $o2"; }
 # arranca
 [[ $1 = ga  ]] && { dmr;ga; }
 [[ $1 = oa  ]] && { dmr;oa; }
@@ -348,13 +348,13 @@ function ssp {
 [[ $1 = ra  ]] && { dmr;ra; }
 [[ $1 = sa  ]] && { dmr;sa; }
 # para & arranca & journal
-[[ $1 = gaj ]] && { dmr;ga;jsh "-u $ethg"; }
-[[ $1 = baj ]] && { dmr;ba;jsh "-u $ethb"; }
-[[ $1 = vaj ]] && { dmr;va;jsh "-u $ethv"; }
-[[ $1 = saj ]] && { dmr;sa;jsh "-u $dnsd"; }
-[[ $1 = gpa ]] && { gp;dmr;ga;jsh "-u $ethg"; }
-[[ $1 = bpa ]] && { bp;dmr;ba;jsh "-u $ethb"; }
-[[ $1 = vpa ]] && { vp;dmr;va;jsh "-u $ethv"; }
+[[ $1 = gaj ]] && { dmr;ga;jsh "-u $n0"; }
+[[ $1 = baj ]] && { dmr;ba;jsh "-u $n1"; }
+[[ $1 = vaj ]] && { dmr;va;jsh "-u $n3"; }
+[[ $1 = saj ]] && { dmr;sa;jsh "-u $o2"; }
+[[ $1 = gpa ]] && { gp;dmr;ga;jsh "-u $n0"; }
+[[ $1 = bpa ]] && { bp;dmr;ba;jsh "-u $n1"; }
+[[ $1 = vpa ]] && { vp;dmr;va;jsh "-u $n3"; }
 [[ $1 = spa ]] && { sp;sa; }
 [[ $1 = gpd ]] && { gp;gd; }
 [[ $1 = opd ]] && { op;od; }
@@ -363,9 +363,9 @@ function ssp {
 [[ $1 = xpd ]] && { xp;xd; }
 [[ $1 = rpd ]] && { rp;rd; }
 [[ $1 = spd ]] && { sp;sd; }
-[[ $1 = gea ]] && { ge;dmr;ga;jsh "-u $ethg"; }
-[[ $1 = bea ]] && { be;dmr;ba;jsh "-u $ethb"; }
-[[ $1 = vea ]] && { ve;dmr;va;jsh "-u $ethv"; }
+[[ $1 = gea ]] && { ge;dmr;ga;jsh "-u $n0"; }
+[[ $1 = bea ]] && { be;dmr;ba;jsh "-u $n1"; }
+[[ $1 = vea ]] && { ve;dmr;va;jsh "-u $n3"; }
 [[ $1 = rea ]] && { re;ra; }
 [[ $1 = sea ]] && { se;sa; }
 # enable
@@ -404,16 +404,16 @@ function ssp {
 
 if [[ ! $1 ]];then
   m="primeira letra"
-  m="$m\ne\t\t$ethg $ethb $ethv"
-  m="$m\ng\t\t$ethg"
-  m="$m\nb\t\t$ethb"
-  m="$m\nv\t\t$ethv"
-  m="$m\np\t\t$ethp"
-  m="$m\nn\t\t$ethn"
-  m="$m\nf\t\t$ethf"
-  m="$m\nx\t\t$plex"
-  m="$m\nr\t\t$trrt"
-  m="$m\ns\t\t$dnsd"
+  m="$m\ne\t\t$n0 $n1 $n3"
+  m="$m\ng\t\t$n0"
+  m="$m\nb\t\t$n1"
+  m="$m\nv\t\t$n3"
+  m="$m\np\t\t$n4"
+  m="$m\nn\t\t$n5"
+  m="$m\nf\t\t$n6"
+  m="$m\nx\t\t$o0"
+  m="$m\nr\t\t$o1"
+  m="$m\ns\t\t$o2"
   m="$m\nsegunda letra"
   m="$m\na[j]\t\tarranca\t[& journal]"
   m="$m\ne\t\tenable"
@@ -425,14 +425,14 @@ if [[ ! $1 ]];then
   m="$m\nea\t\tenable\t& arranca\t& journal"
   m="$m\noutros"
   if [[ $cunm = $znm3 ]];then
-    m="$m\nvcp\t\t$ethv copy to $vnm3 server"
+    m="$m\nvcp\t\t$n3 copy to $vnm3 server"
   else
-    m="$m\nvcp\t\t$ethv copy to $znm3 server"
+    m="$m\nvcp\t\t$n3 copy to $znm3 server"
   fi
   m="$m\ngl[f]\t\tgeth log report"
   m="$m\ngh\t\tgeth historic report"
-  m="$m\ngrs [n]\t\t$ethg restart n=nodes to change"
-  m="$m\nbrs [n]\t\t$ethb restart n=nodes to change"
+  m="$m\ngrs [n]\t\t$n0 restart n=nodes to change"
+  m="$m\nbrs [n]\t\t$n1 restart n=nodes to change"
   m="$m\nsrs [n]\t\tsystem restart n=nodes to change"
   m="$m\nlrs [n]\t\tlighthouse restart n=nodes to change"
   m="$m\nyj\t\tsystem journal"
@@ -446,7 +446,7 @@ if [[ ! $1 ]];then
   m="$m\nbo\t\thomologous report"
   m="$m\nbon [nodes]\thomologous nodes report"
   m="$m\nbl[f]\t\tbeacon report [file add & delete log day]"
-  m="$m\nbm[f]\t\tmedias report [file add & $ethb nodes change/restart]"
+  m="$m\nbm[f]\t\tmedias report [file add & $n1 nodes change/restart]"
   m="$m\nbn[f]\t\tarqivo report [file add]"
   m="$m\nbh\t\thistoric report"
   m="$m\nws\t\tfirewall status"

@@ -8,7 +8,7 @@ if [[ -x $p0/lighthouse && ! -d $p0/lighthouse ]]; then
 fi
 
 if [[ -x $s0/lighthouse ]]; then
-  if [[ ! -f $s4/$ethb.service && $cunm != $znm1 && $cunm != $vnm1 ]]; then
+  if [[ ! -f $s4/$n1.service && $cunm != $znm1 && $cunm != $vnm1 ]]; then
     user="eth2"
     # slots per restore point after init can't be changed
     sprp=1024 # Yearly Disk Usage  12.8GB
@@ -51,7 +51,7 @@ if [[ -x $s0/lighthouse ]]; then
     # syncing from a recent finalized checkpoint
     # othe="$othe --checkpoint-sync-url https://1q1s6o6cB6Jysu7KKlbLUYiOdAM:8974468780164028652df958a69fbd30@eth2-beacon-mainnet.infura.io"
     # othe="$othe --checkpoint-sync-url http://192.168.8.31:5052"
-    cat <<-EOF > $ethb.service
+    cat <<-EOF > $n1.service
 		[Unit]
 		Description=eth2 beacon service
 		Wants=network-online.target
@@ -68,8 +68,8 @@ if [[ -x $s0/lighthouse ]]; then
 		[Install]
 		WantedBy=multi-user.target
 		EOF
-    sudo mv $ethb.service $s4/$ethb.service
-    sudo chmod 644 $s4/$ethb.service
+    sudo mv $n1.service $s4/$n1.service
+    sudo chmod 644 $s4/$n1.service
   else
     echo -e "${i}BEACON JA CONFIGURADO${f}"
   fi
@@ -117,13 +117,13 @@ if [[ -x $s0/lighthouse ]]; then
       sudo chown $user:$user $p8
       sudo chmod 700 $p8
     fi
-    if [[ ! -f $s4/$ethv.service && -f $p1/vc_slash && -f $p1/vc_lock && -f $p1/vc_keys ]]; then
+    if [[ ! -f $s4/$n3.service && -f $p1/vc_slash && -f $p1/vc_lock && -f $p1/vc_keys ]]; then
       echo -e "${i}CONFIGURE VALIDATOR${f}"
       echo $H|sudo -S mkdir -p $p8 2>$s3
       if ! id $user &>$s3;then sudo useradd --no-create-home --shell /bin/false $user;fi
       sudo chown -R $user:$user $p8
       sudo chmod 700 $p8
-      cat <<-EOF > $ethv.service
+      cat <<-EOF > $n3.service
 			[Unit]
 			Description=eth2 validator service
 			Wants=network-online.target
@@ -140,8 +140,8 @@ if [[ -x $s0/lighthouse ]]; then
 			[Install]
 			WantedBy=multi-user.target
 			EOF
-      sudo mv $ethv.service $s4/$ethv.service
-      sudo chmod 644 $s4/$ethv.service
+      sudo mv $n3.service $s4/$n3.service
+      sudo chmod 644 $s4/$n3.service
       echo -e "${i}VALIDATOR CONFIGURADO VERIFICAR TUDO (LOCK & SLASH DB)${f}"
     else
       echo -e "${i}VALIDATOR JA CONFIGURADO OR LOCKED ($p1/vc_lock)${f}"
@@ -168,7 +168,7 @@ else
       curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
     fi
     source $p0/.cargo/env
-    if [[ -f $s4/$ethg.service ]]; then
+    if [[ -f $s4/$n0.service ]]; then
       if [[ -f $p0/lighthouse/README.md ]]; then
         cd $p0/lighthouse
         make clean

@@ -33,7 +33,7 @@ else
   echo -e "${i}FIREWALL $(echo $H|sudo -S ufw status 2>$s3|grep -i status|tr '[:lower:]' '[:upper:]')${f}"
 fi
 
-if [[ -f $s4/$ethg.service || -f $s4/$ethb.service || -f $s4/$ethv.service ]]; then
+if [[ -f $s4/$n0.service || -f $s4/$n1.service || -f $s4/$n3.service ]]; then
   echo -e "${i}SERVER JA INSTALADO ANTES - LINUX UPDATE & SYSTEM CONFIGS SKIPPED${f}"
 else
   echo -e "${i}UPDATE LINUX${f}"
@@ -96,7 +96,7 @@ if [[ $cunm != $znm1 && $cunm != $vnm1 ]]; then
 else
   user="eth1"
   if ! id $user &>$s3;then sudo useradd --no-create-home --shell /bin/false $user;fi
-  if [[ -f $s4/$ethg.service ]]; then
+  if [[ -f $s4/$n0.service ]]; then
     echo -e "${i}GETH JA INSTALADO${f}"
   else
     echo -e "${i}INSTALAR GETH${f}"
@@ -116,7 +116,7 @@ else
     sudo apt install -y software-properties-common geth
     sudo mkdir -p $golb
     sudo chown -R $user:$user $golb
-    cat <<-EOF > $ethg.service
+    cat <<-EOF > $n0.service
 		[Unit]
 		Description=eth1 geth service
 		Wants=network-online.target
@@ -133,7 +133,7 @@ else
 		[Install]
 		WantedBy=multi-user.target
 		EOF
-    sudo mv $ethg.service $s4/$ethg.service
-    sudo chmod 644 $s4/$ethg.service
+    sudo mv $n0.service $s4/$n0.service
+    sudo chmod 644 $s4/$n0.service
   fi
 fi
