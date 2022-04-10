@@ -72,7 +72,7 @@ rate=4000
 bpri=20                                                                                                                                                       # min    configured peers
 bprs=10                                                                                                                                                       # step   configured peers
 bprf=80                                                                                                                                                       # max    configured peers
-bcpw=5                                                                                                                                                        # change configured peers weekday
+bcpw=6                                                                                                                                                        # change configured peers weekday
 
 if [[ $cust = hrv ]];then cgth=$zip1;else cgth=$vip1;fi
 [[ $rate -eq 0 ]] && rate=$(curl -sX GET 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=ETH&convert=EUR&CMC_PRO_API_KEY=3ae5f3df-bd71-489d-a9dd-b626995fba31'|sed 's%.*price.:\([0-9]*\.[0-9]*\).*%\1%')
