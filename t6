@@ -64,7 +64,7 @@ function bv  { nu0 $(sse $n1 target-peers [0-9]); }                             
 function bb  { l0=$(fs0 $bpid] 3600);bl1;bl2;[[ (1 -eq $(bl6 $hors) && $(bu) -ge 1) || (1 -eq $(bl6 5) && $(bu) -ge 5) ]] && ok=BK; }                         # set ok (OK/BK)
 function bfl { grep "BEAC.*$1"    ; }                                                                                                                         # filter beacon lines
 function bff { grep "BEAC.*$1" $p2; }                                                                                                                         # filter beacon log
-function bl  { dts;if [[ $(sst $n1 running) ]];then bl3;nn=$(bv);bnn $(fs6 peers:);bb;blo;else m=" NOT RUNNING $dt";fi; }                                     # beacon report
+function bl  { dts;if [[ $(sst $n1 running) ]];then bl3;nn=$(bv);bnn $nn $(fs6 peers:);bb;blo;else m=" NOT RUNNING $dt";fi; }                                 # beacon report
 function bl0 { fs0 "attestation(s).*$1"|bl5; }                                                                                                                # get number of paid activities
 function bl1 {                                                                                                                                                # set restart idx vars
   z1=${1:-$(echo "$l0"|grep 'rocessed block'|wc -l)};z2=${2:-$(echo "$l0"|grep 'block received'|wc -l)};z3=${3:-$(echo "$l0"|grep -v ' INFO ' |wc -l)}        # set processed/received blocks,error lines
