@@ -24,7 +24,7 @@ function pt1 { until [[ $# -le 1 || $1 =~ ^[0-9]{2}:[0-9]{2}$          ]];do shi
 function pt2 { until [[ $# -le 1 || $1 =~ ^[0-9]+$                     ]];do shift;done;echo $1; }                                                            # integer    test
 function pt3 { until [[ $# -le 1 || $1 =~ ^[a-z]+$                     ]];do shift;done;echo $1; }                                                            # string     test
 function dts { read d0 d1 <<< ${1:-$(date '+%F %H:%M')};dt="$d0 $d1"          ; }                                                                             # set date/time         vars
-function bnn { nr=$(nu3 $(printf '%i\n' $@|tail -n30));nm=$(printf '%i\n' $@|sort -n|head -n1);nd=$(nu2 $@); }                                                # set cur/min/std peers vars
+function bnn { nr=${@:$#};nm=$(printf '%i\n' $@|sort -n|head -n1);nd=$(nu2 $@); }                                                                             # set cur/min/std peers vars
 function dnn { echo "$dt $(printf 'node%02i:' $nn) $(printf '%2i' $nr)"       ; }                                                                             # get date/nodes info
 function dmr { sex "$w0 daemon-reload"                       ; }                                                                                              # daemon-reload
 function jsh { cex "journalctl --no-hostname --no-full -f $1"; }                                                                                              # my journal   format
