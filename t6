@@ -174,7 +174,6 @@ function bst { [[ $(bi) -ge 3000 ]]; }                                          
 function bht { [[ $b2 -gt $b3 ]]; }                                                                                                                           # homologous/avg position test
 function btt { [[ $d1 =~ 23:5[89] ]]; }                                                                                                                       # time test
 function bbt { [[ $(grep $d0 ${p2} 2>$s3|wc -l) -gt 0 ]]; }                                                                                                   # exists beacon log day test
-function bdt { btt && bht && bst; }                                                                                                                           # delete beacon log day test
 function bct { [[ $(date +%w) -eq $bcpw && $b4 -ne 0 ]] && bht && [[ $(bl6 $hors) -eq 1 ]] && ! bst; }                                                        # change configured peers test
 function bdl { local d=$(pt0 $1 sai);[[ -f $p2 && $d != sai ]] || return;cp $p2 ${p2}o;grep -v $d ${p2}o > $p2;grep $d ${p2}o > ${p2}d; }                     # delete beacon log day
 function nsh {
@@ -290,6 +289,7 @@ function ssp {
     fi
   fi
 }
+function umt { [[ $(fs3|grep usb|wc -l) -gt 20 ]]; }                                                                                                          # usb messages test
 
 [[ $1 = eip ]] && { curl -s4 "http://${3:-meo.fruga.pt}:$2@dyn.dns.he.net/nic/update?hostname=${3:-meo.fruga.pt}" &>$s3; }
 [[ $1 = dsh ]] && { resolvectl query ${2:-smtp.gmail.com}; }
@@ -303,7 +303,7 @@ function ssp {
 [[ $1 = bl  ]] && { bl;echo -e "BEAC$m"; }
 [[ $1 = bm  ]] && { bm;echo -e "BEAC$m"; }
 [[ $1 = bn  ]] && { bm;echo -e "BEAC$s"; }
-[[ $1 = blf ]] && { bl;echo -e "BEAC$m" >> $p2;btt && bo5;bdt && bdl $d0;[[ $ok != OK ]] && brs 0;[[ $(fs3|grep usb|wc -l) -gt 20 ]] && sex "$p0/eth2/t8usb stop"; }
+[[ $1 = blf ]] && { bl;echo -e "BEAC$m" >> $p2;btt && bo5;btt && bht && bst && bdl $d0;[[ $ok != OK ]] && brs 0;umt && sex "$p0/eth2/t8usb stop"; }           # beacon log/delete day/restart & usb stop
 [[ $1 = bmf ]] && { bm;bbt && echo -e "BEAC$m" >> $p3;bct && brs $b4 $(brb PE) 3m; }
 [[ $1 = bnf ]] && { bm;echo -e "BEAC$s" >> $p6; }
 [[ $1 = gh  ]] && { gh $2      ; }
