@@ -170,7 +170,7 @@ function bsl {                                                                  
   [[ -f $p2 && -f $p6 ]] || return;rm -f ${p2}s;tail -n$(($(cat $p2|wc -l)-$(tail -n1 $p6|cut -d' ' -f2))) $p2 > ${p2}s                                       # new beacon  log output
   rm -f ${p6}s;head -n$(($(cat $p6|wc -l)-1)) $p6 > ${p6}s;tail -n1 $p6|sed 's%BEAC [0-9]*%BEAC 0%' >> ${p6}s                                                 # new barqivo log output
 }
-function bst { [[ $(bi) -ge 3000 ]]; }                                                                                                                        # peers standard deviation test
+function bst { [[ $(bi) -ge 4000 ]]; }                                                                                                                        # peers standard deviation test
 function bht { [[ $b2 -gt $b3 ]]; }                                                                                                                           # homologous/avg position test
 function btt { [[ $d1 =~ 23:5[89] ]]; }                                                                                                                       # time test
 function bbt { [[ $(grep $d0 ${p2} 2>$s3|wc -l) -gt 0 ]]; }                                                                                                   # exists beacon log day test
