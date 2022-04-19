@@ -148,7 +148,7 @@ function brs {                                                                  
   [[ $(ls $p4.* 2>$s3) ]] && return;brw $3;bmt && brw 1m;bpt && brw 25s;touch $p4.ini;local n=0;while [[ -f $p4.ini && $n -le 300 ]];do                       # search max 300 times, every 5s
   if bpt;then nn=$(bv);snp $n1 $1 $bpri $bprf                    ;[[ $2 = VC ]] && sex "$w2 $n3";rm $p4.ini                                                   #         stop beacon/validator
     if [[ $2 = RB ]];then bro $n $2;sex reboot;else sex "$w3 $n1";[[ $2 = VC ]] && sex "$w3 $n3";brw 20s;bro $n $2;fi                                         # reboot/start beacon/validator
-  fi;brw 5s;((n+=1));done;rm -f $p4.ini
+  fi;brw 6s;((n+=1));done;rm -f $p4.ini
 }
 function brh { head -n${1:-0} ${p2}r; }                                                                                                                       # new beacon head lines
 function brl {                                                                                                                                                # recalculate beacon/bmedias logs
