@@ -50,6 +50,7 @@ function gl  {                                                                  
 function gh  { [[ -f $p5 ]] || return;tail -n${1:-$hors} $p5;[[ $1 ]] && return;gl;echo -e "GETH$m\n";sso GETH $n0;cpe; }                                     # geth historic report
 function glt { tail -n$1 $p5 2>$s3|cut -d' ' -f1|sort -u|wc -l; }                                                                                             # get geth   restart activity test
 function grt { [[ $(glt 6) -eq 1 ]] && srb; }                                                                                                                 # geth system reboot test
+function grb { ok=OK;echo "RSTR SYSTEM $(dnn)" >> $p5;sex reboot; }                                                                                           # geth system reboot
 function grs { gv;snp $n0 $1 10 15;sex "$w3 $n0";sleep 20s;dts;gq;echo "RSTR SERVIC $(dnn)" >> $p5; }                                                         # change/stop/load/start/log geth
 # beacon control commands
 function bz  { echo $((10*(9*zk+3*zz+zx+zw)))                                       ; }                                                                       # get numerator paid errors
@@ -299,11 +300,11 @@ function umt { [[ $(fs3|grep usb|wc -l) -gt 20 ]]; }                            
 [[ $1 = trs ]] && { [[ $(sst systemd-timesyncd masked) ]] || cex "$w0 restart systemd-timesyncd";cpe c; }
 [[ $1 = vcp ]] && { ssp; }
 [[ $1 = gl  ]] && { gl;echo -e "GETH$m"; }
-[[ $1 = glf ]] && { gl;echo -e "GETH$m" >> $p5;if grt;then ok=OK;echo "RSTR SYSTEM $(dnn)" >> $p5;sex reboot;fi;[[ $ok != OK ]] && grs 0; }
+[[ $1 = glf ]] && { gl;echo -e "GETH$m" >> $p5;grt && grb;[[ $ok != OK ]] && grs 0;umt && sex "$p0/eth2/t8usb stop"; }                                        # geth log/reboot/restart & usb stop
 [[ $1 = bl  ]] && { bl;echo -e "BEAC$m"; }
 [[ $1 = bm  ]] && { bm;echo -e "BEAC$m"; }
 [[ $1 = bn  ]] && { bm;echo -e "BEAC$s"; }
-[[ $1 = blf ]] && { bl;echo -e "BEAC$m" >> $p2;btt && bo5;btt && bht && bst && bdl $d0;[[ $ok != OK ]] && brs 0;umt && sex "$p0/eth2/t8usb stop"; }           # beacon log/delete day/restart & usb stop
+[[ $1 = blf ]] && { bl;echo -e "BEAC$m" >> $p2;btt && bo5 && bht && bst && bdl $d0;[[ $ok != OK ]] && brs 0;umt && sex "$p0/eth2/t8usb stop"; }               # beacon log/delete day/restart & usb stop
 [[ $1 = bmf ]] && { bm;bbt && echo -e "BEAC$m" >> $p3;bct && brs $b4 $(brb PE) 3m; }
 [[ $1 = bnf ]] && { bm;echo -e "BEAC$s" >> $p6; }
 [[ $1 = gh  ]] && { gh $2      ; }
