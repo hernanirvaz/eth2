@@ -290,7 +290,7 @@ function ssp {
     fi
   fi
 }
-function umt { [[ $(fs3|grep usb|wc -l) -gt 20 ]]; }                                                                                                          # usb messages test
+function umt { [[ $(cat $s6) -eq 1 && $(fs3|grep usb|wc -l) -gt 20 ]]; }                                                                                      # usb messages test
 
 [[ $1 = eip ]] && { curl -s4 "http://${3:-meo.fruga.pt}:$2@dyn.dns.he.net/nic/update?hostname=${3:-meo.fruga.pt}" &>$s3; }
 [[ $1 = dsh ]] && { resolvectl query ${2:-smtp.gmail.com}; }
