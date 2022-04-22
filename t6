@@ -48,7 +48,7 @@ function gl  {                                                                  
   fi
 }
 function gh  { [[ -f $p5 ]] || return;tail -n${1:-$hors} $p5;[[ $1 ]] && return;gl;echo -e "GETH$m\n";sso GETH $n0;cpe; }                                     # geth historic report
-function glt { tail -n$1 $p5 2>$s3|cut -d' ' -f1|sort -u|wc -l; }                                                                                             # get geth   restart activity test
+function glt { tail -n$1 $p5 2>$s3|cut -d' ' -f1|sort -u|wc -l; }                                                                                             # get geth restart activity test
 function grt { [[ $(glt 6) -eq 1 ]] && srb; }                                                                                                                 # geth system reboot test
 function grb { ok=OK;echo "RSTR SYSTEM $(dnn)" >> $p5;sex reboot; }                                                                                           # geth system reboot
 function grs { gv;snp $n0 $1 10 15;sex "$w3 $n0";sleep 20s;dts;gq;echo "RSTR SERVIC $(dnn)" >> $p5; }                                                         # change/stop/load/start/log geth
@@ -176,6 +176,7 @@ function bht { [[ $b2 -gt $b3 ]]; }                                             
 function btt { [[ $d1 =~ 23:5[89] ]]; }                                                                                                                       # time test
 function bbt { [[ $(grep $d0 ${p2} 2>$s3|wc -l) -gt 0 ]]; }                                                                                                   # exists beacon log day test
 function bct { [[ $(date +%w) -eq $bcpw && $b4 -ne 0 ]] && bht && [[ $(bl6 $hors) -eq 1 ]] && ! bst; }                                                        # change configured peers test
+function brt { srb && [[ $(($(date '+%s')-$(date -r $s5 '+%s'))) -ge 86400 ]]; }                                                                              # UNSED day old system reboot test
 function bdl { local d=$(pt0 $1 sai);[[ -f $p2 && $d != sai ]] || return;cp $p2 ${p2}o;grep -v $d ${p2}o > $p2;grep $d ${p2}o > ${p2}d; }                     # delete beacon log day
 function nsh {
   echo -e "ROUTES\t\t$(ip route show|grep 'default via'|grep -v linkdown|cut -d' ' -f3)\nDNS\t\t$(resolvectl|grep 'Current DNS'|cut -d' ' -f6)"               # routes
