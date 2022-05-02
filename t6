@@ -31,7 +31,9 @@ function jsh { cex "journalctl --no-hostname --no-full -f $1"; }                
 function spc { nn=$2;cp $s4/$1.service $p0/$1.sav;sed "s%peers *[0-9]*%peers $2%" $p0/$1.sav > $s4/$1.service; }                                              # service configuration change
 function spp { resolvectl query smtp.gmail.com &>$s3;sex "$w2 $1";dmr                                        ; }                                              # service process stop/load
 function snp { local n=$(($2+nn));(($2!=0&&n>=$3&&n<=$4)) && spc $1 $n;spp $1                                ; }                                              # service node change/stop/load
-function srb { [[ -f $s5 ]]; }                                                                                                                                # system needs reboot test
+function srt { [[ -f $s5 ]]; }                                                                                                                                # system needs reboot test
+function sot { srt && [[ $(($(date +%s)-$(date -r $s5 +%s))) -ge 86400 ]]; }                                                                                  # day old system reboot test
+function stt { [[ $d1 =~ 23:5[89] ]]; }                                                                                                                       # time test
 
 # geth control commands
 function gv  { nn=$(nu0 $(sse $n0 maxpeers [0-9]))                                    ; }                                                                     # set configured peers
@@ -48,16 +50,16 @@ function gl  {                                                                  
   fi
 }
 function gh  { [[ -f $p5 ]] || return;tail -n${1:-$hors} $p5;[[ $1 ]] && return;gl;echo -e "GETH$m\n";sso GETH $n0;cpe; }                                     # geth historic report
-function glt { tail -n$1 $p5 2>$s3|cut -d' ' -f1|sort -u|wc -l; }                                                                                             # get geth   restart activity test
-function grt { [[ $(glt 6) -eq 1 ]] && srb; }                                                                                                                 # geth system reboot test
+function glt { tail -n$1 $p5 2>$s3|cut -d' ' -f1|sort -u|wc -l; }                                                                                             # get geth restart activity test
+function grt { [[ $(glt 6) -eq 1 ]] && srt; }                                                                                                                 # geth system reboot test
 function grb { ok=OK;echo "RSTR SYSTEM $(dnn)" >> $p5;sex reboot; }                                                                                           # geth system reboot
 function grs { gv;snp $n0 $1 10 15;sex "$w3 $n0";sleep 20s;dts;gq;echo "RSTR SERVIC $(dnn)" >> $p5; }                                                         # change/stop/load/start/log geth
 # beacon control commands
-function bz  { echo $((10*(9*zk+3*zz+zx+zw)))                                       ; }                                                                       # get numerator paid errors
+function bz  { echo $((10*(9*zk+2*zz+zx+zw)))                                       ; }                                                                       # get numerator paid errors
 function bw  { echo $((10*z1))                                                      ; }                                                                       # get numerator processed blocks
 function bf  { echo $((90*z3))                                                      ; }                                                                       # get numerator general errors
-function bu  { echo $(((z5>300?$(bz)/z5:0)+(z2>300?$(bw)/z2:0)+(z4>999?$(bf)/z4:0))); }                                                                       # get restart idx
 function bi  { echo $((nd+zk*200+zz*20+zx))                                         ; }                                                                       # get delete day idx
+function bu  { echo $(((z5>400?$(bz)/z5:0)+(z2>300?$(bw)/z2:0)+(z4>999?$(bf)/z4:0))); }                                                                       # get restart idx
 function bk  { cat $p2 2>$s3|wc -l; }                                                                                                                         # get beacon line count
 function bv  { nu0 $(sse $n1 target-peers [0-9]); }                                                                                                           # get configured peers
 function bb  { l0=$(fs0 $bpid] 3600);bl1;bl2;[[ (1 -eq $(bl6 $hors) && $(bu) -ge 1) || (1 -eq $(bl6 5) && $(bu) -ge 5) ]] && ok=BK; }                         # set ok (OK/BK)
@@ -140,7 +142,7 @@ function bh  {                                                                  
   bl;echo -e "BL$(printf '%9i' $(cat $p2|wc -l))\nBEAC$m";bm;echo -e "BM$(printf '%9i' $(cat $p3 2>$s3|wc -l))\nBEAC$m";sso BEAC $n1;sso VALI $n3;cpe         # beacon/medias/services/system report
 }
 function brw { [[ $1 ]] || return;touch $p4.s$1;sleep $1;rm $p4.s$1; }                                                                                        # sleep with file info
-function brb { if srb;then echo RB;else echo $1;fi; }                                                                                                         # get reboot/other tag
+function brb { if srt;then echo RB;else echo $1;fi; }                                                                                                         # get reboot/other tag
 function brv { echo ${1:-false}$#$2; }                                                                                                                        # get first#secound verbs
 function bpt { [[ $(brv $(fs0 "$bpid].*INFO " ${1:-7}|sed 's%.*INFO \([^ ]*\).*%\1%'|sort -u)) = New2Synced ]]; }                                             # ideal position test
 function bmt { local n=$(date +%M);((n==18||n==38||n==58)); }                                                                                                 # ideal minute test
@@ -171,11 +173,12 @@ function bsl {                                                                  
   [[ -f $p2 && -f $p6 ]] || return;rm -f ${p2}s;tail -n$(($(cat $p2|wc -l)-$(tail -n1 $p6|cut -d' ' -f2))) $p2 > ${p2}s                                       # new beacon  log output
   rm -f ${p6}s;head -n$(($(cat $p6|wc -l)-1)) $p6 > ${p6}s;tail -n1 $p6|sed 's%BEAC [0-9]*%BEAC 0%' >> ${p6}s                                                 # new barqivo log output
 }
-function bst { [[ $(bi) -ge 4000 ]]; }                                                                                                                        # peers standard deviation test
+function bnt { [[ $b4 -ne 0 ]]; }                                                                                                                             # peers need change test
 function bht { [[ $b2 -gt $b3 ]]; }                                                                                                                           # homologous/avg position test
-function btt { [[ $d1 =~ 23:5[89] ]]; }                                                                                                                       # time test
+function bst { [[ $(bi) -ge 4000 ]]; }                                                                                                                        # peers standard deviation test
+function bgt { bnt && bht && ! bst; }                                                                                                                         # group peers can change test
 function bbt { [[ $(grep $d0 ${p2} 2>$s3|wc -l) -gt 0 ]]; }                                                                                                   # exists beacon log day test
-function bct { [[ $(date +%w) -eq $bcpw && $b4 -ne 0 ]] && bht && [[ $(bl6 $hors) -eq 1 ]] && ! bst; }                                                        # change configured peers test
+function bct { [[ $(date +%w) -eq $bcpw && $(bl6 $hors) -eq 1 ]] && ( bgt || sot ); }                                                                         # change configured peers test
 function bdl { local d=$(pt0 $1 sai);[[ -f $p2 && $d != sai ]] || return;cp $p2 ${p2}o;grep -v $d ${p2}o > $p2;grep $d ${p2}o > ${p2}d; }                     # delete beacon log day
 function nsh {
   echo -e "ROUTES\t\t$(ip route show|grep 'default via'|grep -v linkdown|cut -d' ' -f3)\nDNS\t\t$(resolvectl|grep 'Current DNS'|cut -d' ' -f6)"               # routes
@@ -304,7 +307,7 @@ function umt { [[ $(cat $s6) -eq 1 && $(fs3|grep usb|wc -l) -gt 20 ]]; }        
 [[ $1 = bl  ]] && { bl;echo -e "BEAC$m"; }
 [[ $1 = bm  ]] && { bm;echo -e "BEAC$m"; }
 [[ $1 = bn  ]] && { bm;echo -e "BEAC$s"; }
-[[ $1 = blf ]] && { bl;echo -e "BEAC$m" >> $p2;btt && bo5 && bht && bst && bdl $d0;[[ $ok != OK ]] && brs 0;umt && sex "$p0/eth2/t8usb stop"; }               # beacon log/delete day/restart & usb stop
+[[ $1 = blf ]] && { bl;echo -e "BEAC$m" >> $p2;stt && bo5 && bht && bst && bdl $d0;[[ $ok != OK ]] && brs 0;umt && sex "$p0/eth2/t8usb stop"; }               # beacon log/delete day/restart & usb stop
 [[ $1 = bmf ]] && { bm;bbt && echo -e "BEAC$m" >> $p3;bct && brs $b4 $(brb PE) 3m; }
 [[ $1 = bnf ]] && { bm;echo -e "BEAC$s" >> $p6; }
 [[ $1 = gh  ]] && { gh $2      ; }
