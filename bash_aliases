@@ -23,7 +23,7 @@ alias vp='eth2cp "vpsl";eth2cp "vpss"'
 alias zp='eth2cp "ztc1"         ;eth2cp "ztc2"         ;eth2cp "ztc3"'
 alias rp='eth2cp "ztc3.fruga.pt";eth2cp "ztc1.fruga.pt";eth2cp "ztc2.fruga.pt"'
 
-alias rq='eth2rq;eth2rq changelogs.ubuntu.com;eth2rq ppa.launchpad.net;eth2rq github.com;eth2rq speedtest.net'
+alias rq='eth2rq;eth2rq changelogs.ubuntu.com;eth2rq ppa.launchpad.net;eth2rq github.com;eth2rq meo.fruga.pt'
 alias rs='sudo netplan apply;sudo systemctl restart systemd-resolved;rq'
 alias sr='eth2sr;eth2sf;cat ${1:-/etc/netplan/01-network-manager-all.yaml}'
 alias xx='exit'
