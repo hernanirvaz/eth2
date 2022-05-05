@@ -51,7 +51,7 @@ function gl  {                                                                  
 }
 function gh  { [[ -f $p5 ]] || return;tail -n${1:-$hors} $p5;[[ $1 ]] && return;gl;echo -e "GETH$m\n";sso GETH $n0;cpe; }                                     # geth historic report
 function glt { tail -n$1 $p5 2>$s3|cut -d' ' -f1|sort -u|wc -l; }                                                                                             # get geth restart activity test
-function grt { [[ $(glt 6) -eq 1 ]] && srt; }                                                                                                                 # geth system reboot test
+function grt { [[ $(glt 6) -eq 1 ]] && sot; }                                                                                                                 # geth system reboot test
 function grb { ok=OK;echo "RSTR SYSTEM $(dnn)" >> $p5;sex reboot; }                                                                                           # geth system reboot
 function grs { gv;snp $n0 $1 10 15;sex "$w3 $n0";sleep 20s;dts;gq;echo "RSTR SERVIC $(dnn)" >> $p5; }                                                         # change/stop/load/start/log geth
 # beacon control commands
@@ -322,6 +322,7 @@ function umt { [[ $(cat $s6) -eq 1 && $(fs3|grep usb|wc -l) -gt 20 ]]; }        
 [[ $1 = srs ]] && { brs ${2:-0} RB; }
 [[ $1 = brs ]] && { brs ${2:-0} BN; }
 [[ $1 = lrs ]] && { brs ${2:-0} VC; }
+[[ $1 = urs ]] && { sot && sex reboot; }
 # lista servicos & portas
 [[ $1 = lp  ]] && { netstat -tulpn; }
 # outros journal system/lighthouse
@@ -438,6 +439,7 @@ if [[ ! $1 ]];then
   m="$m\nbrs [n]\t\t$n1 restart n=nodes to change"
   m="$m\nsrs [n]\t\tsystem restart n=nodes to change"
   m="$m\nlrs [n]\t\tlighthouse restart n=nodes to change"
+  m="$m\nurs\t\treboot if system needs it after one day"
   m="$m\nyj\t\tsystem journal"
   m="$m\nsl [hh:mm]\tsystem journal  log lines"
   m="$m\nel [hh:mm]\tgeth/lighthouse log lines"
