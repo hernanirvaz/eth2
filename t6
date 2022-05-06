@@ -32,7 +32,7 @@ function spc { nn=$2;cp $s4/$1.service $p0/$1.sav;sed "s%peers *[0-9]*%peers $2%
 function spp { resolvectl query smtp.gmail.com &>$s3;sex "$w2 $1";dmr                                        ; }                                              # service process stop/load
 function snp { local n=$(($2+nn));(($2!=0&&n>=$3&&n<=$4)) && spc $1 $n;spp $1                                ; }                                              # service node change/stop/load
 function srt { [[ -f $s5 ]]; }                                                                                                                                # system needs reboot test
-function sot { srt && [[ $(($(date +%s)-$(date -r $s5 +%s))) -ge 86400 ]]; }                                                                                  # day old system reboot test
+function sot { srt && [[ $(($(date +%s)-$(date -r $s5 +%s))) -ge 259200 ]]; }                                                                                 # 3 days old system reboot test
 function stt { [[ $d1 =~ 23:5[89] ]]; }                                                                                                                       # time test
 
 # geth control commands
