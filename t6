@@ -87,7 +87,7 @@ function bcc { if bct       ;then echo c;else echo _;fi; }                      
 function bdc { if bht && bst;then echo d;else echo _;fi; }                                                                                                    # get delete beacon log day   char
 function bm  {                                                                                                                                                # bmedias report
   bm0;b4=0;b5=$(fs0 reduce|wc -l);dts;nn=$(bv);bnn $(fs6 peers:);bl2;[[ -f $p6 ]] && bm4;l3=$(tail -n$(($(bk)-o[1])) $p2 2>$s3|bfl);[[ $l3 ]] && bm1;bm2      # ini vars/arrays & add beacon lines
-  bo4;bm5 ${a[$nn]};b7="rm$(bdc)$(bcc)$bcpw$(date +%w)_peers:";bmo;bno                                                                                        # homologous/avg position & outputs
+  bo4;bm5 ${a[$nn]};b7="rm$(bdc)$(bcc)$(date +%w)_peers:";bmo;bno                                                                                             # homologous/avg position & outputs
 }
 function bm0 { zk=0;zz=0;zx=0;unset o;o[1]=0;unset k;k[0]=0;unset z;z[0]=0;unset x;x[0]=0;unset w;w[0]=0;unset c;c[0]=0;unset a;a[0]=0;bm6; }                 # ini err/cnt/avg penalty arrays
 function bm1 {
@@ -180,7 +180,7 @@ function bht { [[ $b2 -gt $b3 ]]; }                                             
 function bst { [[ $(bi) -ge 4000 ]]; }                                                                                                                        # peers standard deviation test
 function bgt { bnt && bht && ! bst; }                                                                                                                         # group peers can change test
 function bbt { [[ $(grep $d0 ${p2} 2>$s3|wc -l) -gt 0 ]]; }                                                                                                   # exists beacon log day test
-function bct { [[ $(date +%w) =~ [0-6] && $(bl6 $hors) -eq 1 ]] && ( bgt || sot ); }                                                                          # change configured peers test
+function bct { [[ $(bl6 $hors) -eq 1 ]] && ( bgt || sot ); }                                                                                                  # change configured peers test
 function bdl { local d=$(pt0 $1 sai);[[ -f $p2 && $d != sai ]] || return;cp $p2 ${p2}o;grep -v $d ${p2}o > $p2;grep $d ${p2}o > ${p2}d; }                     # delete beacon log day
 function nsh {
   echo -e "ROUTES\t\t$(ip route show|grep 'default via'|grep -v linkdown|cut -d' ' -f3)\nDNS\t\t$(resolvectl|grep 'Current DNS'|cut -d' ' -f6)"               # routes
@@ -325,7 +325,7 @@ function umt { [[ $(cat $s6) -eq 1 && $(fs3|grep usb|wc -l) -gt 20 ]]; }        
 [[ $1 = srs ]] && { brs ${2:-0} RB; }
 [[ $1 = brs ]] && { brs ${2:-0} BN; }
 [[ $1 = lrs ]] && { brs ${2:-0} VC; }
-[[ $1 = urs ]] && { sot 1/2 && sex reboot; }                                                                                                                    # day old system reboot needs
+[[ $1 = urs ]] && { sot 1/2 && sex reboot; }                                                                                                                  # day old system reboot needs
 # lista servicos & portas
 [[ $1 = lp  ]] && { netstat -tulpn; }
 # outros journal system/lighthouse
