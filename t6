@@ -32,7 +32,7 @@ function spc { nn=$2;cp $s4/$1.service $p0/$1.sav;sed "s%peers *[0-9]*%peers $2%
 function spp { resolvectl query smtp.gmail.com &>$s3;sex "$w2 $1";dmr                                        ; }                                              # service process stop/load
 function snp { local n=$(($2+nn));(($2!=0&&n>=$3&&n<=$4)) && spc $1 $n;spp $1                                ; }                                              # service node change/stop/load
 function srt { [[ -f $s5 ]]; }                                                                                                                                # system needs reboot test
-function sot { srt && [[ $(($(date +%s)-$(date -r $s5 +%s))) -ge $((60*60*24*${1:-2})) ]]; }                                                                  # days old system reboot test
+function sot { srt && [[ $(($(date +%s)-$(date -r $s5 +%s))) -ge $((60*60*24*${1:-1})) ]]; }                                                                  # day old system reboot test
 function stt { [[ $d1 =~ 23:5[89] ]]; }                                                                                                                       # time test
 
 # geth control commands
@@ -51,7 +51,7 @@ function gl  {                                                                  
 }
 function gh  { [[ -f $p5 ]] || return;tail -n${1:-$hors} $p5;[[ $1 ]] && return;gl;echo -e "GETH$m\n";sso GETH $n0;cpe; }                                     # geth historic report
 function glt { tail -n$1 $p5 2>$s3|cut -d' ' -f1|sort -u|wc -l; }                                                                                             # get geth restart activity test
-function grt { [[ $(glt 6) -eq 1 ]] && sot 1; }                                                                                                               # 2 days old system reboot test
+function grt { [[ $(glt 6) -eq 1 ]] && sot 1/2; }                                                                                                             # 12 hours old system reboot test
 function grb { ok=OK;echo "RSTR SYSTEM $(dnn)" >> $p5;sex reboot; }                                                                                           # geth system reboot
 function grs { gv;snp $n0 $1 10 15;sex "$w3 $n0";sleep 20s;dts;gq;echo "RSTR SERVIC $(dnn)" >> $p5; }                                                         # change/stop/load/start/log geth
 # beacon control commands
@@ -325,7 +325,7 @@ function umt { [[ $(cat $s6) -eq 1 && $(fs3|grep usb|wc -l) -gt 20 ]]; }        
 [[ $1 = srs ]] && { brs ${2:-0} RB; }
 [[ $1 = brs ]] && { brs ${2:-0} BN; }
 [[ $1 = lrs ]] && { brs ${2:-0} VC; }
-[[ $1 = urs ]] && { sot 1/2 && sex reboot; }                                                                                                                  # day old system reboot needs
+[[ $1 = urs ]] && { sot 1/4 && sex reboot; }                                                                                                                  # 6 hours old system reboot needs
 # lista servicos & portas
 [[ $1 = lp  ]] && { netstat -tulpn; }
 # outros journal system/lighthouse
