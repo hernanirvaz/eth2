@@ -325,7 +325,7 @@ function umt { [[ $(cat $s6) -eq 1 && $(fs3|grep usb|wc -l) -gt 20 ]]; }        
 [[ $1 = srs ]] && { brs ${2:-0} RB; }
 [[ $1 = brs ]] && { brs ${2:-0} BN; }
 [[ $1 = lrs ]] && { brs ${2:-0} VC; }
-[[ $1 = urs ]] && { sot 1/4 && sex reboot; }                                                                                                                  # 6 hours old system reboot needs
+[[ $1 = urs ]] && { sot ${2:-1/4} && sex reboot; }                                                                                                            # 6 hours old system reboot needs
 # lista servicos & portas
 [[ $1 = lp  ]] && { netstat -tulpn; }
 # outros journal system/lighthouse
