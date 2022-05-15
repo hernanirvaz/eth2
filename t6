@@ -32,7 +32,8 @@ function spc { nn=$2;cp $s4/$1.service $p0/$1.sav;sed "s%peers *[0-9]*%peers $2%
 function spp { resolvectl query smtp.gmail.com &>$s3;sex "$w2 $1";dmr                                        ; }                                              # service process stop/load
 function snp { local n=$(($2+nn));(($2!=0&&n>=$3&&n<=$4)) && spc $1 $n;spp $1                                ; }                                              # service node change/stop/load
 function srt { [[ -f $s5 ]]; }                                                                                                                                # system needs reboot test
-function sot { srt && [[ $(($(date +%s)-$(date -r $s5 +%s))) -ge $((60*60*${1:-12})) ]]; }                                                                    # 12 hours old system reboot test
+function sra { if srt;then echo $(($(date +%s)-$(date -r $s5 +%s)));else echo 0;fi }                                                                          # system reboot age (secounds)
+function sot { [[ $(sra) -ge $((60*60*${1:-12})) ]]; }                                                                                                        # 12 hours old system reboot test
 function stt { [[ $d1 =~ 23:5[89] ]]; }                                                                                                                       # time test
 
 # geth control commands
@@ -197,7 +198,8 @@ function cpe {                                                                  
   [[ $1 = p ]] && return;local l=$(fs3|grep -i 'error' |wc -l);local n=$(fs2|grep -v ' INFO '|wc -l)
   local e=$(fs3|grep -i 'error' |tail -n1|sed 's%.*hrv-zotac[0-9] *\(.*\)%\1%;s%:%%g;s%  *% %g'                                |cut -c1-53)
   local d=$(fs2|grep -v ' INFO '|tail -n1|sed 's%.*[0-9]*:[0-9]*:[0-9]*\.[0-9][0-9][0-9]]* *\(.*\)%\1%;s%:%%g;s%:%%g;s%  *% %g'|cut -c1-53)
-  m="ERRO $(printf '%2i' $l) $(printf '%3i' $n) $dt";[[ $l -gt 0 ]] && m="$m system: $e";[[ $n -gt 0 ]] && m="$m ethrum: $d";echo "$m"                        # sys/eth errors info
+  m="ERRO $(printf '%2i' $l) $(printf '%3i' $n) $dt";[[ $l -gt 0 ]] && m="$m system: $e";[[ $n -gt 0 ]] && m="$m ethrum: $d"                                  # sys/eth errors info
+  srt && m="$m reboot: $(($(sra)/60/60))";echo "$m"                                                                                                           # reboot age info
 }
 # Plex Media Server
 function rxw { cex "ufw$2 allow from 192.168.8.0/24 $1"; }
@@ -438,11 +440,11 @@ if [[ ! $1 ]];then
   fi
   m="$m\ngl[f]\t\tgeth log report"
   m="$m\ngh\t\tgeth historic report"
-  m="$m\ngrs [n]\t\t$n0 restart n=nodes to change"
-  m="$m\nbrs [n]\t\t$n1 restart n=nodes to change"
+  m="$m\ngrs [n]\t\t$n0 restart n nodes to change"
+  m="$m\nbrs [n]\t\t$n1 restart n nodes to change"
   m="$m\nsrs [n]\t\tsystem restart n=nodes to change"
   m="$m\nlrs [n]\t\tlighthouse restart n=nodes to change"
-  m="$m\nurs\t\treboot if system needs it after one day"
+  m="$m\nurs [h]\t\treboot if system needs it after h hours"
   m="$m\nyj\t\tsystem journal"
   m="$m\nsl [hh:mm]\tsystem journal  log lines"
   m="$m\nel [hh:mm]\tgeth/lighthouse log lines"
