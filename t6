@@ -47,7 +47,7 @@ function gl  {                                                                  
   dts;if [[ $(sst $n0 running) ]];then local e=$(gy);gb;gv;gq;m="$(dnn) sgs: $(printf '%4i' $g0)"
     if [[ $(echo $e|grep false) ]];then m=" $ok SYC $m";else m=" $ok NSY $m blocks: $(($(gi $e)-$(gc $e)))";fi                                                # OK SYC/NSY (dnn) sgs: 5 blocks: 8 (6)
   else
-    m=" NOT RUNNING $dt"
+    m=" NOT ON $dt"
   fi
 }
 function gh  { [[ -f $p5 ]] || return;tail -n${1:-$hors} $p5;[[ $1 ]] && return;gl;echo -e "GETH$m\n";sso GETH $n0;cpe; }                                     # geth historic report
