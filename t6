@@ -178,8 +178,8 @@ function bsl {                                                                  
 }
 function bnt { [[ $b4 -ne 0 ]]; }                                                                                                                             # peers need change test
 function bht { [[ $b2 -gt $b3 ]]; }                                                                                                                           # homologous/avg position test
-function bst { [[ $(bi) -ge 4000 ]]; }                                                                                                                        # peers standard deviation test
-function bgt { bnt && bht && ! bst; }                                                                                                                         # group peers can change test
+function bst { [[ $(bi) -ge 2500 ]]; }                                                                                                                        # peers standard deviation test
+function bgt { bnt && bht && ! bst; }                                                                                                                         # peers change global test
 function bbt { [[ $(grep $d0 ${p2} 2>$s3|wc -l) -gt 0 ]]; }                                                                                                   # exists beacon log day test
 function bct { local n=$((nn-5));[[ $nm -ge $n && $(bl6 $hors) -eq 1 ]] && ( bgt || sot ); }                                                                  # change configured peers test
 function bdl { local d=$(pt0 $1 sai);[[ -f $p2 && $d != sai ]] || return;cp $p2 ${p2}o;grep -v $d ${p2}o > $p2;grep $d ${p2}o > ${p2}d; }                     # delete beacon log day
