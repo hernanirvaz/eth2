@@ -318,7 +318,8 @@ function umt { [[ $(cat $s6) -eq 1 && $(fs3|grep usb|wc -l) -gt 20 ]]; }        
 [[ $1 = bh  ]] && { bh $2      ; }
 [[ $1 = bo  ]] && { bo $2 $3 $4; }
 [[ $1 = bon ]] && { bon $2; }
-[[ $1 = boa && -f $p2 ]] && { read -a v <<< $(bff|tail -n1);l2=$(bff $(pt1 $2 ${v[4]}));boa; }
+[[ $1 = boc && -f $p2 ]] && { read -a v <<< $(bff|tail -n1);l2=$(bff $(pt1 $2 ${v[4]}));boa; }
+[[ $1 = bol && -f $p2 ]] && { l2=$(bff 23:58);boa; }
 [[ $1 = bdl ]] && { bdl $2; }
 [[ $1 = brl ]] && { brl; }
 [[ $1 = bsl ]] && { bsl; }
@@ -455,7 +456,7 @@ if [[ ! $1 ]];then
   m="$m\nbdl yyyy-mm-dd\tdelete beacon log day"
   m="$m\nbo\t\thomologous report"
   m="$m\nbon [nodes]\thomologous nodes report"
-  m="$m\nboa\t\tall homologous nodes report"
+  m="$m\nbo[cl]\t\tall homologous nodes report at [current|last] time"
   m="$m\nbl[f]\t\tbeacon report [file add & delete log day]"
   m="$m\nbm[f]\t\tmedias report [file add & $n1 nodes change/restart]"
   m="$m\nbn[f]\t\tarqivo report [file add]"
