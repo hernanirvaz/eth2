@@ -4,8 +4,9 @@
 function cex { echo -e "${i}${1^^}${f}";echo $H|sudo -S $1 2>$s3; }                                                                                           # superuser-command (visible)
 function sex {                          echo $H|sudo -S $1 &>$s3; }                                                                                           # superuser-command (silent)
 function sst { $w1 $1 2>$s3|grep "${2:-inactive\|failed}"                                   ; }                                                               # service status word test
-function sse { $w1 $1 2>$s3|grep "${2:-Active:}"|sed "s%.*${2:-Active:} *\(${3:-.}*\).*%\1%"; }                                                               # service status word with data extraction
-function sso { dts;echo "$1 $(printf '%6s' $(sse $2 Memory:)) $dt status: $(sse $2)"        ; }                                                               # service status output
+function sse { $w1 $1 2>$s3|grep "${2:-Active:}"|sed "s%.*${2:-Active:} *\(${3:-.}*\).*%\1%"; }                                                               # service status word with 1 data extraction
+function sss { $w1 $1 2>$s3|grep Active:|sed 's%.*Active: *\(.*\)%\1%;s% *since.*;%;%'      ; }                                                               # service status word with 2 data extraction
+function sso { dts;echo "$1 $(printf '%6s' $(sse $2 Memory:)) $dt status: $(sss $2)"        ; }                                                               # service status output
 
 i="\n\e[5m"
 f="\e[25m\n"
