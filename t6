@@ -463,7 +463,7 @@ if [[ ! $1 ]];then
   m="$m\nbrl\t\trecalculate beacon/bmedias logs"
   m="$m\nbsl\t\tshrink beacon log using barqivo"
   m="$m\nbdl yyyy-mm-dd\tdelete beacon log day"
-  m="$m\nbo\t\thomologous report"
+  m="$m\nbo  [lines]\thomologous report [with max lines]"
   m="$m\nbon [nodes]\thomologous nodes report"
   m="$m\nbo[cl]\t\tall homologous nodes report at [current|last] time"
   m="$m\nbl[f]\t\tbeacon report [file add & delete log day]"
