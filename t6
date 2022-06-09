@@ -195,7 +195,7 @@ function nsh {
 }
 function cpe {                                                                                                                                                # system status
   local e='NO';[[ $(timedatectl|grep synchronized:|sed 's%.*synchronized: \([a-z]*\).*%\1%') = yes ]] && e='OK';dts
-  echo "CLCK $e $(printf '%3i' $(fs1 'check system clock'|wc -l)) $dt status: $(sss systemd-timesyncd)"                                                       # CLCK info
+  m=$(sss systemd-timesyncd);[[ $(echo $m|grep dead) ]] && m=$(sss ntp);echo "CLCK $e $(printf '%3i' $(fs0 clock|wc -l)) $dt status: $m"                      # CLCK info
   [[ $1 = c ]] && return;local l=0;local n=0;local v=0
   local e=$(fs1 'ture/speed normal'|tail -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%')
   local d=$(fs1 'e above threshold'|head -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%')
