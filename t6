@@ -199,8 +199,8 @@ function cpe {                                                                  
   [[ $1 = c ]] && return;local l=0;local n=0;local v=0
   local e=$(fs1 'ture/speed normal'|tail -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%')
   local d=$(fs1 'e above threshold'|head -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%')
-  for v in $(sensors 2>$s3|grep 'Package\|Core'|sed 's%.*: *\([-+][0-9][0-9]*\.[0-9]*\).*%\1%');do ((n+=1));l=$(nu1 $l$v 1);done
-  [[ $e ]] && e="normal: $e";[[ $d ]] && d="throttled: $d";echo "TEMP $(nu5 $l/$((n==0?1:n)) 1 2 %5.1fC) $dt $d $e"                                           # TEMP cpu info
+  for v in $(sensors 2>$s3|grep 'Package\|Core'|sed 's%.*: *\([-+][0-9][0-9]*\.[0-9]*\).*%\1%');do ((n+=1));l=$(nu1 $l$v 1);done;v=$(fs1 throttled|wc -l)
+  [[ $e ]] && e="normal: $e";[[ $d ]] && d="throttled: $d";echo "TEMP $(nu5 $l/$((n==0?1:n)) 1 2 %2.0fC)$(printf '%3i' $v) $dt $d $e"                         # TEMP cpu info
   [[ $1 = p ]] && return;local l=$(fs3|grep -i 'error' |wc -l);local n=$(fs2|grep -v ' INFO '|wc -l)
   local e=$(fs3|grep -i 'error' |tail -n1|sed 's%.*hrv-zotac[0-9] *\(.*\)%\1%;s%:%%g;s%  *% %g'                                |cut -c1-53)
   local d=$(fs2|grep -v ' INFO '|tail -n1|sed 's%.*[0-9]*:[0-9]*:[0-9]*\.[0-9][0-9][0-9]]* *\(.*\)%\1%;s%:%%g;s%:%%g;s%  *% %g'|cut -c1-53)
