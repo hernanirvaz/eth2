@@ -320,7 +320,7 @@ function pas { umt && sex "$p0/eth2/t8par usbstop";tht && sex "$p0/eth2/t8par cp
 [[ $1 = bl  ]] && { bl;echo -e "BEAC$m"; }
 [[ $1 = bm  ]] && { bm;bmo;echo -e "BEAC$m"; }
 [[ $1 = bn  ]] && { bm;bno;echo -e "BEAC$m"; }
-[[ $1 = blf ]] && { bl;echo -e "BEAC$m" >> $p2;stt && bo5 && bht && bst && bdl $d0;[[ $ok != OK ]] && brs 0;umt && sex "$p0/eth2/t8par usbstop"; }            # beacon log/delete day/restart & parameter set
+[[ $1 = blf ]] && { bl;echo -e "BEAC$m" >> $p2;stt && bo5 && bht && bst && bdl $d0;[[ $ok != OK ]] && brs 0;pas; }                                            # beacon log/delete day/restart & parameter set
 [[ $1 = bmf ]] && { bm;bms;bbt && echo -e "BEAC$m" >> $p3;bct && brs $b4 $(brb PE) 2m; }
 [[ $1 = bnf ]] && { bm;bno;echo -e "BEAC$m" >> $p6; }
 [[ $1 = gh  ]] && { gh $2      ; }
