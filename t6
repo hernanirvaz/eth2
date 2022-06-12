@@ -305,8 +305,9 @@ function ssp {
   fi
 }
 function umt { [[ $(cat $s6) -eq 1 && $(fs3|grep usb |wc -l) -gt 10 ]]; }                                                                                     # usb messages test
-function tht { [[ $(cat $s7) -eq 0 && $(fs1 throttled|wc -l) -gt 20 ]]; }                                                                                     # cpu throttled test
-function pas { umt && sex "$p0/eth2/t8par usbstop";tht && sex "$p0/eth2/t8par cpunoturbo"; }                                                                  # usb/cpu parameter set
+function t0t { [[ $(cat $s7) -eq 0 && $(fs1 throttled|wc -l) -gt 50 ]]; }                                                                                     # cpu no turbo test
+function t1t { [[ $(cat $s7) -eq 1 && $(fs1 throttled|wc -l) -le 50 ]]; }                                                                                     # cpu    turbo test
+function pas { umt && sex "$p0/eth2/t8par usbstop";t0t && sex "$p0/eth2/t8par cpunoturbo"; }                                                                  # usb/cpu parameter set
 
 [[ $1 = eip ]] && { curl -s4 "https://${3:-meo.fruga.pt}:$2@dyn.dns.he.net/nic/update?hostname=${3:-meo.fruga.pt}" &>$s3; }
 [[ $1 = dsh ]] && { resolvectl query ${2:-smtp.gmail.com}; }
