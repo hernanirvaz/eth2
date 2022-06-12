@@ -1,7 +1,0 @@
-#!/bin/bash
-
-source /home/eth/eth2/t1
-
-[[ $1 = start ]] && echo 1 > $s6
-[[ $1 = stop  ]] && echo 0 > $s6
-[[ $1         ]] || cat $s6

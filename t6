@@ -314,11 +314,11 @@ function umt { [[ $(cat $s6) -eq 1 && $(fs3|grep usb|wc -l) -gt 20 ]]; }        
 [[ $1 = trs ]] && { [[ $(sst systemd-timesyncd masked) ]] || cex "$w0 restart systemd-timesyncd";cpe c; }
 [[ $1 = vcp ]] && { ssp; }
 [[ $1 = gl  ]] && { gl;echo -e "GETH$m"; }
-[[ $1 = glf ]] && { gl;echo -e "GETH$m" >> $p5;grt && grb;[[ $ok != OK ]] && grs 0;umt && sex "$p0/eth2/t8usb stop"; }                                        # geth log/reboot/restart & usb stop
+[[ $1 = glf ]] && { gl;echo -e "GETH$m" >> $p5;grt && grb;[[ $ok != OK ]] && grs 0;umt && sex "$p0/eth2/t8par usbstop"; }                                     # geth log/reboot/restart & usb stop
 [[ $1 = bl  ]] && { bl;echo -e "BEAC$m"; }
 [[ $1 = bm  ]] && { bm;bmo;echo -e "BEAC$m"; }
 [[ $1 = bn  ]] && { bm;bno;echo -e "BEAC$m"; }
-[[ $1 = blf ]] && { bl;echo -e "BEAC$m" >> $p2;stt && bo5 && bht && bst && bdl $d0;[[ $ok != OK ]] && brs 0;umt && sex "$p0/eth2/t8usb stop"; }               # beacon log/delete day/restart & usb stop
+[[ $1 = blf ]] && { bl;echo -e "BEAC$m" >> $p2;stt && bo5 && bht && bst && bdl $d0;[[ $ok != OK ]] && brs 0;umt && sex "$p0/eth2/t8par usbstop"; }            # beacon log/delete day/restart & usb stop
 [[ $1 = bmf ]] && { bm;bms;bbt && echo -e "BEAC$m" >> $p3;bct && brs $b4 $(brb PE) 2m; }
 [[ $1 = bnf ]] && { bm;bno;echo -e "BEAC$m" >> $p6; }
 [[ $1 = gh  ]] && { gh $2      ; }
@@ -337,7 +337,7 @@ function umt { [[ $(cat $s6) -eq 1 && $(fs3|grep usb|wc -l) -gt 20 ]]; }        
 [[ $1 = srs ]] && { brs ${2:-0} RB; }
 [[ $1 = brs ]] && { brs ${2:-0} BN; }
 [[ $1 = lrs ]] && { brs ${2:-0} VC; }
-[[ $1 = urs ]] && { sot ${2:-3} && sex reboot;umt && sex "$p0/eth2/t8usb stop"; }                                                                             # system reboot needs & usb stop
+[[ $1 = urs ]] && { sot ${2:-3} && sex reboot;umt && sex "$p0/eth2/t8par usbstop"; }                                                                          # system reboot needs & usb stop
 # lista servicos & portas
 [[ $1 = lp  ]] && { netstat -tulpn; }
 # outros journal system/lighthouse

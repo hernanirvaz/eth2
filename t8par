@@ -1,0 +1,9 @@
+#!/bin/bash
+
+source /home/eth/eth2/t1
+
+[[ $1 = usbstart ]] && echo 1 > $s6
+[[ $1 = usbstop  ]] && echo 0 > $s6
+[[ $1 = cpustart ]] && echo 1 > $s7
+[[ $1 = cpustop  ]] && echo 0 > $s7
+[[ $1            ]] || { echo "USB $(cat $s6)";echo "CPU $(cat $s7)"; }
