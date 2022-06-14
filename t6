@@ -205,8 +205,8 @@ function cpe {                                                                  
   local e=$(fs3|grep -i 'error' |tail -n1|sed 's%.*hrv-zotac[0-9] *\(.*\)%\1%;s%:%%g;s%  *% %g'                                |cut -c1-53)
   local d=$(fs2|grep -v ' INFO '|tail -n1|sed 's%.*[0-9]*:[0-9]*:[0-9]*\.[0-9][0-9][0-9]]* *\(.*\)%\1%;s%:%%g;s%:%%g;s%  *% %g'|cut -c1-53)
   m="ERRO $(printf '%2i' $l) $(printf '%3i' $n) $dt";[[ $l -gt 0 ]] && m="$m system: $e";[[ $n -gt 0 ]] && m="$m ethrum: $d"                                  # sys/eth errors info
-  m="$m\nUPLD        $dt uptime: $(uptime|sed 's% [0-9]*:[0-9]*:[0-9]* %%;s%[0-9]*:[0-9]*,%%;s%[0-9]* user,%%;s%[0-9]* users,%%'|sed 's%  *% %g')"            # uptime & load info
-  srt && m="$m reboot: $(($(sra)/60/60)) hours ago";echo -e "$m"                                                                                              # reboot age info (hours)
+  m="$m\nINFO        $dt uptime: $(uptime|sed 's% [0-9]*:[0-9]*:[0-9]* %%;s%[0-9]*:[0-9]*,%%;s%[0-9]* user,%%;s%[0-9]* users,%%'|sed 's%  *% %g')"            # uptime/load info
+  m="$m, no turbo: $(cat $s7)";srt && m="$m reboot: $(($(sra)/60/60)) hours ago";echo -e "$m"                                                                 # no_turbo/reboot age info
 }
 # Plex Media Server
 function rxw { cex "ufw$2 allow from 192.168.8.0/24 $1"; }
