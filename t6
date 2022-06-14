@@ -306,7 +306,7 @@ function ssp {
 }
 function umt { [[ $(cat $s6) -eq 1 && $(fs3|grep usb |wc -l) -gt 10 ]]; }                                                                                     # usb messages test
 function t0t { [[ $(cat $s7) -eq 0 && $(fs1 throttled|wc -l) -gt 50 ]]; }                                                                                     # cpu no turbo test
-function t1t { [[ $(cat $s7) -eq 1 && $(fs1 throttled|wc -l) -le 50 ]]; }                                                                                     # cpu    turbo test
+function t1t { [[ $(cat $s7) -eq 2 && $(fs1 throttled|wc -l) -le 50 ]]; }                                                                                     # cpu    turbo test
 function pas { umt && sex "$p0/eth2/t8par usbstop";t0t && sex "$p0/eth2/t8par cpunoturbo";t1t && sex "$p0/eth2/t8par cputurbo"; }                             # usb/cpu parameter set
 
 [[ $1 = eip ]] && { curl -s4 "https://${3:-meo.fruga.pt}:$2@dyn.dns.he.net/nic/update?hostname=${3:-meo.fruga.pt}" &>$s3; }
