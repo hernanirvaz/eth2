@@ -51,8 +51,8 @@ if [[ $cunm = $znm1 || $cunm = $vnm1 ]]; then
   make
   if [[ $? -eq 0 && -x $p0/.cargo/bin/lighthouse ]]; then
     if [[ $cunm = $znm1 ]]; then
-      scp $p0/.cargo/bin/lighthouse $zip2:~
-      scp $p0/.cargo/bin/lighthouse $zip3:~
+      scp $p0/.cargo/bin/lighthouse zip2:~
+      scp $p0/.cargo/bin/lighthouse zip3:~
     fi
     if [[ -x $s0/lighthouse ]]; then
       sex "cp $s0/lighthouse $s0/lighthouse.sav"
