@@ -308,7 +308,7 @@ function ssp {
 }
 function umt { [[ $(cat $s6) -eq 1 && $(fs3|grep usb|wc -l) -gt 10 ]]; }                                                                                      # usb messages test
 function t0t { [[ $(cat $s7) -eq 0 && $(fs8) -gt 10 ]]; }                                                                                                     # cpu no turbo recomended test
-function t1t { [[ $(cat $s7) -eq 2 && $(fs8) -le 10 ]]; }                                                                                                     # cpu    turbo recomended test
+function t1t { [[ $(cat $s7) -eq 1 && $(fs8) -le 10 ]]; }                                                                                                     # cpu    turbo recomended test
 function t2t { [[ $(cat $s7) -eq 1 ]]; }                                                                                                                      # cpu no turbo            test
 function pas { umt && sex "$p0/eth2/t8par usbstop";t0t && sex "$p0/eth2/t8par cpunoturbo";t1t && sex "$p0/eth2/t8par cputurbo"; }                             # set usb/cpu parameters
 function paf { t2t && sex "$p0/eth2/t8par cputurbo"; }                                                                                                        # set turbo   parameter
