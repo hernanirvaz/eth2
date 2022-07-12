@@ -210,7 +210,7 @@ function cpe {                                                                  
   m="$m\nINFO        $dt uptime:"
   m="$m$(uptime|sed 's%[0-9]*:[0-9]*:[0-9]*%%;s%[0-9]*:[0-9]*,%%;s%[0-9]* users*,%%;s% average\([^,]*\).*%\1%;s%  *% %g')"                                    # uptime/load info
   if [[ $(cat $s6) -eq 0 ]];then m="$m, usb off";else m="$m, usb on";fi;if [[ $(cat $s7) -eq 1 ]];then m="$m, turbo off";else m="$m, turbo on";fi             # usb/turbo info
-  srt && m="$m, reboot $(($(sra)/60/60)) hours ago";[[ $(lg1) -ge 0 ]] && m="$m, sync committee on";echo -e "$m"                                              # reboot/committee info
+  srt && m="$m, reboot $(($(sra)/60/60)) hours ago";[[ $(lg1) -gt 0 ]] && m="$m, sync committee on";echo -e "$m"                                              # reboot/committee info
 }
 # Plex Media Server
 function rxw { cex "ufw$2 allow from 192.168.8.0/24 $1"; }
