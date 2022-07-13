@@ -47,13 +47,13 @@ function gi  { echo $@|sed 's%.*highestBlock: *\([0-9]*\).*%\1%'; }             
 function gc  { echo $@|sed 's%.*currentBlock: *\([0-9]*\).*%\1%'; }                                                                                           # get current geth block
 function gb  { g0=$(fs0 'mported new' 0 geth|wc -l);ok=OK;[[ $g0 -eq $(fs7 .*sgs: $p5 1) ]] && ok=BK; }                                                       # imported new chain segments & OK/BK
 function gl  {                                                                                                                                                # geth report
-  dts;if [[ $(sst $n0 running) ]];then local e=$(gy);gb;gv;gq;m="$(dnn) sgs: $(printf '%4i' $g0)"
-    if [[ $(echo $e|grep false) ]];then m=" $ok SYC $m";else m=" $ok NSY $m blocks: $(($(gi $e)-$(gc $e)))";fi                                                # OK SYC/NSY (dnn) sgs: 5 blocks: 8 (6)
+  dts;ok=OK;if [[ $(sst $n0 running) ]];then local e=$(gy);gb;gv;gq;m="$(dnn) sgs: $(printf '%4i' $g0)"
+    if [[ $(echo $e|grep false) ]];then m="GETH $ok SYC $m";else m="GETH $ok NSY $m blocks: $(($(gi $e)-$(gc $e)))";fi                                        # OK SYC/NSY (dnn) sgs: 5 blocks: 8 (6)
   else
-    m=" NOT ON $dt"
+    m="GSRV NOT ON $dt"
   fi
 }
-function gh  { [[ -f $p5 ]] || return;tail -n${1:-$hors} $p5;[[ $1 ]] && return;gl;echo -e "GETH$m\n";sso GETH $n0;cpe; }                                     # geth historic report
+function gh  { [[ -f $p5 ]] || return;tail -n${1:-$hors} $p5;[[ $1 ]] && return;gl;echo -e "$m\n";sso GETH $n0;cpe; }                                         # geth historic report
 function glt { tail -n$1 $p5 2>$s3|cut -d' ' -f1|sort -u|wc -l; }                                                                                             # get geth restart activity test
 function grt { [[ $(glt 6) -eq 1 ]] && sot 6; }                                                                                                               # 6 hours old system reboot test
 function grb { ok=OK;echo "RSTR SYSTEM $(dnn)" >> $p5;sex reboot; }                                                                                           # geth system reboot
@@ -69,7 +69,7 @@ function bv  { nu0 $(sse $n1 target-peers [0-9]); }                             
 function bb  { l0=$(fs0 $bpid] 3600);bl1;bl2;[[ $(lg1) -eq 0 && ((1 -eq $(bl6 $hors) && $(bu) -ge 1) || (1 -eq $(bl6 5) && $(bu) -ge 5)) ]] && ok=BK; }       # set ok (OK/BK)
 function bfl { grep "BEAC.*$1"    ; }                                                                                                                         # filter beacon lines
 function bff { grep "BEAC.*$1" $p2; }                                                                                                                         # filter beacon log
-function bl  { dts;if [[ $(sst $n1 running) ]];then bl3;nn=$(bv);bnn $(fs6 peers:);bb;blo;else m=" NOT RUNNING $dt";fi; }                                     # beacon report
+function bl  { dts;ok=OK;if [[ $(sst $n1 running) ]];then bl3;nn=$(bv);bnn $(fs6 peers:);bb;blo;else m=" NOT ON $dt";fi; }                                    # beacon report
 function bl0 { fs0 "attestation(s).*$1"|bl5; }                                                                                                                # get number of paid activities
 function bl1 {                                                                                                                                                # set restart idx vars
   z1=${1:-$(echo "$l0"|grep 'rocessed block'|wc -l)};z2=${2:-$(echo "$l0"|grep 'block received'|wc -l)};z3=${3:-$(echo "$l0"|grep -v ' INFO ' |wc -l)}        # set processed/received blocks,error lines
@@ -323,8 +323,8 @@ function paf { t2t && sex "$p0/eth2/t8par cputurbo"; }                          
 [[ $1 = nsh ]] && { nsh; }
 [[ $1 = trs ]] && { [[ $(sst systemd-timesyncd masked) ]] || cex "$w0 restart systemd-timesyncd";cpe c; }
 [[ $1 = vcp ]] && { ssp; }
-[[ $1 = gl  ]] && { gl;echo -e "GETH$m"; }
-[[ $1 = glf ]] && { gl;echo -e "GETH$m" >> $p5;grt && grb;[[ $ok != OK ]] && grs 0;pas; }                                                                     # geth log/reboot/restart & parameter set
+[[ $1 = gl  ]] && { gl;echo -e "$m"; }
+[[ $1 = glf ]] && { gl;echo -e "$m" >> $p5;grt && grb;[[ $ok != OK ]] && grs 0;pas; }                                                                         # geth log/reboot/restart & parameter set
 [[ $1 = bl  ]] && { bl;echo -e "BEAC$m"; }
 [[ $1 = bm  ]] && { bm;bmo;echo -e "BEAC$m"; }
 [[ $1 = bn  ]] && { bm;bno;echo -e "BEAC$m"; }
