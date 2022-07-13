@@ -36,7 +36,7 @@ function spp { resolvectl query smtp.gmail.com &>$s3;sex "$w2 $1";dmr           
 function snp { local n=$(($2+nn));(($2!=0&&n>=$3&&n<=$4)) && spc $1 $n;spp $1                                ; }                                              # service node change/stop/load
 function srt { [[ -f $s5 ]]; }                                                                                                                                # system needs reboot test
 function sra { if srt;then echo $(($(date +%s)-$(date -r $s5 +%s)));else echo 0;fi }                                                                          # system reboot age (secounds)
-function sot { [[ $(sra) -ge $((60*60*${1:-12})) ]]; }                                                                                                        # 12 hours old system reboot test
+function sot { [[ $(sra) -ge $((60*60*${1:-24})) ]]; }                                                                                                        # 24 hours old system reboot test
 function stt { [[ $d1 =~ 23:5[89] ]]; }                                                                                                                       # time test
 
 # geth control commands
