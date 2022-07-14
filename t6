@@ -11,15 +11,16 @@ function nu4 { if [[ $5 -gt 0 ]];then nu5 "($1*$pmis+$2*$pmat+$3*$pmah+$4*$pdly)
 function nu5 { printf ${4:-%.0f} $(nu1 $1*${2:-1} ${3:-1}); }                                                                                                 # format arbitrary precision calculations
 function fs0 { echo $H|sudo -S grep    "${3:-lighthouse}.*$1" $s1 2>$s3|if [[ ${2:-0} -le 0 ]];then cat;else tail -n${2:-0};fi; }                             # get tail     syslog lines
 function fs1 { echo $H|sudo -S grep    "$1"                   $s1 2>$s3; }                                                                                    # get specific syslog lines
-function fs2 { echo $H|sudo -S grep -i $o3 $s1 2>$s3; }                                                                                                       # get eth      syslog lines
-function fs3 { echo $H|sudo -S grep -v $o3 $s1 2>$s3; }                                                                                                       # get sys      syslog lines
+function fs2 { echo $H|sudo -S grep -i $o3                    $s1 2>$s3; }                                                                                    # get eth      syslog lines
+function fs3 { echo $H|sudo -S grep -v $o3                    $s1 2>$s3; }                                                                                    # get sys      syslog lines
 function fs4 { if [[ $1 ]];then grep "$1" $2 2>$s3;else cat $2 2>$s3;fi|if [[ ${3:-0} -le 0 ]];then cat;else tail -n${3:-0};fi; }                             # get filtered lines  from log
 function fs5 { sed "s%$1 *\([0-9]*\).*%\1%" $2 2>$s3; }                                                                                                       # get list of numbers from log
 function fs6 { fs0 $1 $2   |fs5 .*$1; }                                                                                                                       # get peers    syslog lines
 function fs7 { fs4 $1 $2 $3|fs5   $1; }                                                                                                                       # get number          from log
-function lg0 { echo $H|sudo -S grep -i 'core.*cpu.*throttled' $s1 2>$s3|wc -l; }                                                                              # get # cpu clock throttled
-function lg1 { fs0 INFO 40|grep sync_committee                         |wc -l; }                                                                              # get # committee messages
-function lg2 { fs3|grep usb|grep -i error                              |wc -l; }                                                                              # get # usb errors
+function lg0 { fs1 $o4|wc -l; }                                                                                                                               # get # cpu clock throttled
+function lg1 { fs1 $o5|wc -l; }                                                                                                                               # get # cpu clock normal
+function lg2 { fs3|grep usb|grep -i error     |wc -l; }                                                                                                       # get # usb errors
+function lg3 { fs0 INFO 40|grep sync_committee|wc -l; }                                                                                                       # get # committee messages
 function rl0 { local n=${1:-0};((n<5)) && rl0 $((n+1));local e="$p7/logs/beacon.log";((n>0)) && e="$e.$n";echo $H|sudo -S cat $e 2>$s3; }                     # get beacon   intern lines
 function rl1 { local n=${1:-0};((n<7)) && rl1 $((n+1));local e="$s1";((n>0)) && e="$e.$n";echo $H|sudo -S grep -i $o3 $e 2>$s3; }                             # get all eth  syslog lines
 function pt0 { until [[ $# -le 1 || $1 =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]];do shift;done;echo $1; }                                                            # yyyy-mm-dd test
@@ -66,7 +67,7 @@ function bi  { echo $((nd+zk*300+zz*20+zx))                                     
 function bu  { echo $(((z5>400?$(bz)/z5:0)+(z2>300?$(bw)/z2:0)+(z4>999?$(bf)/z4:0))); }                                                                       # get restart idx
 function bk  { cat $p2 2>$s3|wc -l; }                                                                                                                         # get beacon line count
 function bv  { nu0 $(sse $n1 target-peers [0-9]); }                                                                                                           # get configured peers
-function bb  { l0=$(fs0 $bpid] 3600);bl1;bl2;[[ $(lg1) -eq 0 && ((1 -eq $(bl6 $hors) && $(bu) -ge 1) || (1 -eq $(bl6 5) && $(bu) -ge 5)) ]] && ok=BK; }       # set ok (OK/BK)
+function bb  { l0=$(fs0 $bpid] 3600);bl1;bl2;[[ $(lg3) -eq 0 && ((1 -eq $(bl6 $hors) && $(bu) -ge 1) || (1 -eq $(bl6 5) && $(bu) -ge 5)) ]] && ok=BK; }       # set ok (OK/BK)
 function bfl { grep "BEAC.*$1"    ; }                                                                                                                         # filter beacon lines
 function bff { grep "BEAC.*$1" $p2; }                                                                                                                         # filter beacon log
 function bl  { dts;ok=OK;if [[ $(sst $n1 running) ]];then bl3;nn=$(bv);bnn $(fs6 peers:);bb;blo;else m="BSRV NOT ON $dt";fi; }                                # beacon report
@@ -194,7 +195,7 @@ function bht { [[ $b2 -gt $b3 ]]; }                                             
 function bst { [[ $(bi) -ge 2500 ]]; }                                                                                                                        # peers standard deviation test
 function bgt { bnt && bht && ! bst; }                                                                                                                         # peers change global test
 function bbt { [[ $(grep $d0 ${p2} 2>$s3|wc -l) -gt 0 ]]; }                                                                                                   # exists beacon log day test
-function bct { local n=$((nn-5));[[ $nm -ge $n && $(lg1) -eq 0 && $(bl6 $hors) -eq 1 ]] && ( bgt || sot ); }                                                  # change configured peers test
+function bct { local n=$((nn-5));[[ $nm -ge $n && $(lg3) -eq 0 && $(bl6 $hors) -eq 1 ]] && ( bgt || sot ); }                                                  # change configured peers test
 function bdl { local d=$(pt0 $1 sai);[[ -f $p2 && $d != sai ]] || return;cp $p2 ${p2}o;grep -v $d ${p2}o > $p2;grep $d ${p2}o > ${p2}d; }                     # delete beacon log day
 function nsh {
   echo -e "ROUTES\t\t$(ip route show|grep 'default via'|grep -v linkdown|cut -d' ' -f3)\nDNS\t\t$(resolvectl|grep 'Current DNS'|cut -d' ' -f6)"               # routes
@@ -204,18 +205,19 @@ function cpe {                                                                  
   local e='NO';[[ $(timedatectl|grep synchronized:|sed 's%.*synchronized: \([a-z]*\).*%\1%') = yes ]] && e='OK';dts
   m=$(sss systemd-timesyncd);[[ $(echo $m|grep dead) ]] && m=$(sss ntp);echo "CLCK $e $(printf '%3i' $(fs0 clock|wc -l)) $dt status: $m"                      # CLCK info
   [[ $1 = c ]] && return;local l=0;local n=0;local v=0
-  local e=$(fs1 'ture/speed normal'|tail -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%')
-  local d=$(fs1 'e above threshold'|head -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%')
-  local v=0;for v in $(sensors 2>$s3|grep 'Package\|Core'|sed 's%.*: *\([-+][0-9][0-9]*\.[0-9]*\).*%\1%');do ((n+=1));l=$(nu1 $l$v 1);done;v=$(lg0)
-  [[ $e ]] && e="normal: $e";[[ $d ]] && d="throttled: $d";echo "TEMP $(nu5 $l/$((n==0?1:n)) 1 2 %2.0fC)$(printf '%3i' $v) $dt $d $e"                         # TEMP cpu info
-  [[ $1 = p ]] && return;local l=$(fs3|grep -i 'error' |wc -l);local n=$(fs2|grep -v ' INFO '|wc -l)
+  local e=$(fs1 $o5|tail -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%')
+  local d=$(fs1 $o4|head -n1|sed 's%.* \([0-9]*:[0-9]*:[0-9]*\).*%\1%')
+  local v=0;for v in $(sensors 2>$s3|grep 'Package\|Core'|sed 's%.*: *\([-+][0-9][0-9]*\.[0-9]*\).*%\1%');do ((n+=1));l=$(nu1 $l$v 1);done
+  [[ $e ]] && e="normal: $e";[[ $d ]] && d="throttled: $d";echo "TEMP $(nu5 $l/$((n==0?1:n)) 1 2 %2.0fC)$(printf '%3i' $(lg0)) $dt $d $e"                     # TEMP cpu info
+  [[ $1 = p ]] && return
+  m="INFO $(printf '%3i' $(lg2))$(printf '%3i' $(lg1)) $dt"                                                                                                   # usb/cpu erros count
+  m="$m uptime:$(uptime|sed 's%[0-9]*:[0-9]*:[0-9]*%%;s%[0-9]*:[0-9]*,%%;s%[0-9]* users*,%%;s% average\([^,]*\).*%\1%;s%  *% %g')"                            # uptime/load info
+  if [[ $(cat $s6) -eq 0 ]];then e=off;else e=on;fi;if [[ $(cat $s7) -eq 1 ]];then d=off;else d=on;fi;echo "$m, usb $e, turbo $d"                             # usb/turbo info
+  local l=$(fs3|grep -i 'error' |wc -l);local n=$(fs2|grep -v ' INFO '|wc -l)
   local e=$(fs3|grep -i 'error' |tail -n1|sed 's%.*hrv-zotac[0-9] *\(.*\)%\1%;s%:%%g;s%  *% %g'                                |cut -c1-53)
   local d=$(fs2|grep -v ' INFO '|tail -n1|sed 's%.*[0-9]*:[0-9]*:[0-9]*\.[0-9][0-9][0-9]]* *\(.*\)%\1%;s%:%%g;s%:%%g;s%  *% %g'|cut -c1-53)
   m="ERRO $(printf '%3i' $l)$(printf '%3i' $n) $dt";[[ $l -gt 0 ]] && m="$m system: $e";[[ $n -gt 0 ]] && m="$m ethrum: $d";echo -e "$m"                      # sys/eth errors info
-  m="INFO $(printf '%3i' $(lg2))    $dt"                                                                                                                      # usb erros count
-  m="$m uptime:$(uptime|sed 's%[0-9]*:[0-9]*:[0-9]*%%;s%[0-9]*:[0-9]*,%%;s%[0-9]* users*,%%;s% average\([^,]*\).*%\1%;s%  *% %g')"                            # uptime/load info
-  if [[ $(cat $s6) -eq 0 ]];then e=off;else e=on;fi;if [[ $(cat $s7) -eq 1 ]];then d=off;else d=on;fi;echo "$m, usb $e, turbo $d"                             # usb/turbo info
-  m='';srt && m="$m, reboot $(($(sra)/60/60)) hours ago";[[ $(lg1) -gt 0 ]] && m="$m, committee on";[[ $m ]] && echo "INFO        $dt${m#*,}"                 # reboot/committee info
+  m='';srt && m="$m, reboot $(($(sra)/60/60)) hours ago";[[ $(lg3) -gt 0 ]] && m="$m, committee on";[[ $m ]] && echo "INFO        $dt${m#*,}"                 # reboot/committee info
 }
 # Plex Media Server
 function rxw { cex "ufw$2 allow from 192.168.8.0/24 $1"; }
@@ -314,10 +316,10 @@ function ssp {
   fi
 }
 function umt { [[ $(cat $s6) -eq 1 && $(lg2) -gt 10 ]]; }                                                                                                     # usb messages test
-function t0t { [[ $(cat $s7) -eq 0 && $(lg0) -gt 10 ]]; }                                                                                                     # cpu no turbo recomended test
-function t1t { [[ $(cat $s7) -eq 1 && $(lg0) -le 10 ]]; }                                                                                                     # cpu    turbo recomended test
+function t0t { [[ $(cat $s7) -eq 0 && $(lg0) -gt $(lg1) ]]; }                                                                                                 # cpu no turbo recomended test
+function t1t { [[ $(cat $s7) -eq 1 && $(lg0) -le $(lg1) ]]; }                                                                                                 # cpu    turbo recomended test
 function t2t { [[ $(cat $s7) -eq 1 ]]; }                                                                                                                      # cpu no turbo            test
-function pas { umt && sex "$p0/eth2/t8par usbstop";t0t && sex "$p0/eth2/t8par cpunoturbo";t1t && sex "$p0/eth2/t8par cputurbo"; }                             # set usb/cpu parameters
+function pas { umt && sex "$p0/eth2/t8par usbstop";t1t && sex "$p0/eth2/t8par cputurbo";t0t && sex "$p0/eth2/t8par cpunoturbo"; }                             # set usb/cpu parameters
 function paf { t2t && sex "$p0/eth2/t8par cputurbo"; }                                                                                                        # set turbo   parameter
 
 [[ $1 = eip ]] && { curl -s4 "https://${3:-meo.fruga.pt}:$2@dyn.dns.he.net/nic/update?hostname=${3:-meo.fruga.pt}" &>$s3; }
