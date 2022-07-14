@@ -45,8 +45,7 @@ o0='plexmediaserver'
 o1='transmission-daemon'
 o2='named'
 o3='geth\[\|lighthouse'
-o4='Core.*temperature.*throttled'
-o5='Core.*temperature.*normal'
+o4='Core.*temperature'
 
 meeu="$(whoami)"
 cunm="$(uname -n)"
