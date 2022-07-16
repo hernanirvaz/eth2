@@ -21,16 +21,17 @@ if [[ -x $s0/lighthouse ]]; then
     tarp=20 # less bandwidth/load for gossip - too low (<20) and block proposals start getting orphaned or even missed
     http=''                          # default
     http=' --http-address 127.0.0.1' # equivalent empty
+    http=" --http-address $zip3"
     [[ $cunm = $znm2 ]] && http=" --http-address $zip2"
     [[ $cunm = $znm3 ]] && http=" --http-address $zip3"
     [[ $cunm = $vnm1 ]] && http=" --http-address $vip1"
     [[ $cunm = $vnm2 ]] && http=" --http-address $vip2"
     if [[ $B = mainnet ]]; then
-      blkc=""
-      endp="http://$zip1:8545,$E"
+      blkc=''
+      epge=" --eth1-endpoints http://$zip1:8545 --execution-endpoints http://$zip1:8551 --jwt-secrets $p7/jwt" # MERGE
     else
       blkc=" --testnet $B"
-      endp="$E"
+      epge=" --eth1-endpoints $E --jwt-secrets $p7/jwt"
     fi
     echo -e "${i}CONFIGURE BEACON${f}"
     echo $H|sudo -S mkdir -p $p7 2>$s3
@@ -51,6 +52,7 @@ if [[ -x $s0/lighthouse ]]; then
     # syncing from a recent finalized checkpoint
     # othe="$othe --checkpoint-sync-url https://1q1s6o6cB6Jysu7KKlbLUYiOdAM:8974468780164028652df958a69fbd30@eth2-beacon-mainnet.infura.io"
     # othe="$othe --checkpoint-sync-url http://192.168.8.31:5052"
+    # MERGE --execution-endpoints $epge --jwt-secrets $p7/jwt
     cat <<-EOF > $n1.service
 		[Unit]
 		Description=eth2 beacon service
@@ -62,7 +64,7 @@ if [[ -x $s0/lighthouse ]]; then
 		Group=$user
 		Restart=always
 		RestartSec=10
-		ExecStart=$s0/lighthouse$blkc --datadir $p1 bn --target-peers $tarp$http --staking --eth1-endpoints $endp$othe
+		ExecStart=$s0/lighthouse$blkc --datadir $p1 bn --target-peers $tarp$http --staking$epge$othe
 		ExecStopPost=$p0/eth2/t8mail BEACSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 		
 		[Install]
@@ -75,12 +77,14 @@ if [[ -x $s0/lighthouse ]]; then
   fi
   if [[ $cunm = $znm2 || $cunm = $vnm3 ]]; then
     user="eth3"
-    http="--beacon-nodes http://127.0.0.1"
-    [[ $cunm = $znm2 ]] && http="--beacon-nodes http://$zip2"
-    [[ $cunm = $znm3 ]] && http="--beacon-nodes http://$zip3"
-    [[ $cunm = $vnm1 ]] && http="--beacon-nodes http://$vip1"
-    [[ $cunm = $vnm2 ]] && http="--beacon-nodes http://$vip2"
-    vlcl="$http:5052,https://1q1s6o6cB6Jysu7KKlbLUYiOdAM:8974468780164028652df958a69fbd30@eth2-beacon-mainnet.infura.io"
+    http="http://127.0.0.1"
+    [[ $cunm = $znm2 ]] && http="http://$zip2"
+    [[ $cunm = $znm3 ]] && http="http://$zip3"
+    [[ $cunm = $vnm1 ]] && http="http://$vip1"
+    [[ $cunm = $vnm2 ]] && http="http://$vip2"
+    vlcl="--beacon-nodes $http:5052,https://1q1s6o6cB6Jysu7KKlbLUYiOdAM:8974468780164028652df958a69fbd30@eth2-beacon-mainnet.infura.io"
+    # MERGE --suggested-fee-recipient 0x5fbd22c7bca7bd640af691cadfd2747a5769ab33
+    vlcl="--beacon-nodes $http:5052 --suggested-fee-recipient 0x5fbd22c7bca7bd640af691cadfd2747a5769ab33"
     if [[ $B = mainnet ]]; then
       blkc=""
     else

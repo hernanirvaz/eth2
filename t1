@@ -21,13 +21,14 @@ s6='/sys/bus/usb/devices/1-0\:1.0/authorized'
 s7='/sys/devices/system/cpu/intel_pstate/no_turbo'
 p0='/home/eth'
 p1='/var/lib/lighthouse'
-p5="$p0/geth.log"
 p2="$p0/beacon.log"
 p3="$p0/bmedias.log"
+p5="$p0/geth.log"
 p6="$p0/barqivo.log"
 p4="$p0/beacon.restart"
 p7="$p1/beacon"
 p8="$p1/validators"
+p9="/var/lib/goethereum"
 
 w0='systemctl'
 w1="$w0 status"

@@ -243,16 +243,14 @@ function se  { sop;cex 'ufw reload';cex "$w4 $o2"; }
 function sa  { [[ $(sst $o2 disabled) ]] || { [[ $(sst $o2) ]] && cex "$w3 $o2"; } }
 function sp  { [[ $(sst $o2 loaded  ) ]] && { cex "$w2 $o2"; } }
 function sd  { cex "$w5 $o2";scl;cex 'ufw reload'; }
-# open/close goethereum/beacon/validator/grafana
-function gfw { if [[ $cust = hrv ]];then cex "ufw$2 allow from $zip2 $1";cex "ufw$2 allow from $zip3 $1";else cex "ufw$2 allow from $vip1 $1";cex "ufw$2 allow from $vip3 $1";fi; }
-function gop { cex 'ufw allow 30303 comment eth1';cex 'ufw delete deny 8545              ';gfw 'to any port 8545 comment geapi'; }
-function gcl { cex 'ufw deny  30303 comment eth1';cex 'ufw        deny 8545 comment geapi';gfw 'to any port 8545'     ' delete'; }
+# open/close geth/beacon/validator/grafana
+function gfw { if [[ $cust = hrv ]];then cex "ufw$2 allow from 192.168.8.0/24 $1";else cex "ufw$2 allow from $vip1 $1";cex "ufw$2 allow from $vip3 $1";fi; }
+function gop { cex 'ufw allow 30303 comment eth1';gfw 'to any port 8545 comment geapi';gfw 'to any port 8551 comment gejwt';cex 'ufw delete deny 8545';cex 'ufw delete deny 8551'; }
+function gcl { cex 'ufw deny  30303 comment eth1';cex 'ufw    deny 8545 comment geapi';cex 'ufw    deny 8551 comment gejwt';gfw 'to any port 8545' ' delete';gfw 'to any port 8551' ' delete'; }
 function ofw { if [[ $cust = hrv ]];then cex "ufw$2 allow from $zip2 $1";cex "ufw$2 allow from $zip3 $1";else cex "ufw$2 allow from $vip1 $1";cex "ufw$2 allow from $vip3 $1";fi; }
-function oop { cex 'ufw allow 30303 comment eth1';cex 'ufw delete deny 8545              ';gfw 'to any port 8545 comment oeapi'; }
-function ocl { cex 'ufw deny  30303 comment eth1';cex 'ufw        deny 8545 comment oeapi';gfw 'to any port 8545'     ' delete'; }
 function bfw { if [[ $cust = hrv ]];then cex "ufw$2 allow from 192.168.8.0/24 $1";else cex "ufw$2 allow from $vip3 $1";fi; }
-function bop { cex 'ufw allow 9000 comment eth2';cex 'ufw delete deny 5052              ';bfw 'to any port 5052 comment bnapi'; }
-function bcl { cex 'ufw deny  9000 comment eth2';cex 'ufw        deny 5052 comment bnapi';bfw 'to any port 5052'     ' delete'; }
+function bop { cex 'ufw allow 9000 comment eth2';bfw 'to any port 5052 comment bnapi';bfw 'to any port 8551 comment bnjwt';cex 'ufw delete deny 5052';cex 'ufw delete deny 8551'; }
+function bcl { cex 'ufw deny  9000 comment eth2';cex 'ufw    deny 5052 comment bnapi';cex 'ufw    deny 8551 comment bnjwt';bfw 'to any port 5052' ' delete';bfw 'to any port 8551' ' delete'; }
 function vfw { if [[ $cust = hrv ]];then cex "ufw$2 allow from $zip1 $1";else cex "ufw$2 allow from $vip1 $1";fi; }
 function vop { cex 'ufw delete deny 5064              ';`# vfw 'to any port 5064 comment vcmet'` ; }
 function vcl { cex 'ufw        deny 5064 comment vcmet';`# vfw 'to any port 5064'     ' delete'` ; }
@@ -323,7 +321,10 @@ function t1t { [[ $(cat $s7) -eq 1 && $(lg0) -le 10 ]]; }                       
 function t2t { [[ $(cat $s7) -eq 1 ]]; }                                                                                                                      # cpu no turbo            test
 function pas { umt && sex "$p0/eth2/t8par usbstop";t1t && sex "$p0/eth2/t8par cputurbo";t0t && sex "$p0/eth2/t8par cpunoturbo"; }                             # set usb/cpu parameters
 function paf { t2t && sex "$p0/eth2/t8par cputurbo"; }                                                                                                        # set turbo   parameter
+function jw0 { openssl rand -hex 32|tr -d '\n'|tee jwt 1>$s3;chmod 644 jwt;scp jwt ztc2:~;scp jwt ztc3:~;sex "chown eth1:eth1 jwt";sex "mv jwt $p9/geth"; }
+function jw1 { sex "chown eth2:eth2 jwt";sex "mv jwt $p7"; }
 
+[[ $1 = jwt ]] && { [[ $cunm = hrv-zotac1 ]] && jw0;[[ -d $p7 ]] && jw1; }
 [[ $1 = eip ]] && { curl -s4 "https://${3:-meo.fruga.pt}:$2@dyn.dns.he.net/nic/update?hostname=${3:-meo.fruga.pt}" &>$s3; }
 [[ $1 = dsh ]] && { resolvectl query ${2:-smtp.gmail.com}; }
 [[ $1 = drs ]] && { dpa; }

@@ -100,7 +100,6 @@ else
     echo -e "${i}GETH JA INSTALADO${f}"
   else
     echo -e "${i}INSTALAR GETH${f}"
-    golb="/var/lib/goethereum"
     if [[ $B = mainnet ]]; then
       blkc=''
       cach=4096 # default full node
@@ -114,8 +113,9 @@ else
     sudo add-apt-repository -y ppa:ethereum/ethereum
     sudo apt update -y
     sudo apt install -y software-properties-common geth
-    sudo mkdir -p $golb
-    sudo chown -R $user:$user $golb
+    sudo mkdir -p $p9
+    sudo chown -R $user:$user $p9
+    # MERGE geth --authrpc.addr $zip1 --authrpc.port 8551 --authrpc.vhosts "*" --authrpc.jwtsecret $p9/geth/jwt
     cat <<-EOF > $n0.service
 		[Unit]
 		Description=eth1 geth service
@@ -127,7 +127,7 @@ else
 		Group=$user
 		Restart=always
 		RestartSec=10
-		ExecStart=$s0/geth$blkc --datadir $golb --http --http.addr $zip1 --maxpeers $maxp --cache $cach
+		ExecStart=$s0/geth$blkc --datadir $p9 --http --http.addr $zip1 --maxpeers $maxp --authrpc.addr $zip1 --authrpc.port 8551 --authrpc.vhosts '*' --authrpc.jwtsecret $p9/geth/jwt
 		ExecStopPost=$p0/eth2/t8mail GETHSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 		
 		[Install]
