@@ -321,11 +321,17 @@ function t1t { [[ $(cat $s7) -eq 1 && $(lg0) -le 10 ]]; }                       
 function t2t { [[ $(cat $s7) -eq 1 ]]; }                                                                                                                      # cpu no turbo            test
 function pas { umt && sex "$p0/eth2/t8par usbstop";t1t && sex "$p0/eth2/t8par cputurbo";t0t && sex "$p0/eth2/t8par cpunoturbo"; }                             # set usb/cpu parameters
 function paf { t2t && sex "$p0/eth2/t8par cputurbo"; }                                                                                                        # set turbo   parameter
-function jw0 { openssl rand -hex 32|tr -d '\n'|tee jwt 1>$s3;[[ -f jwt ]] && { chmod 644 jwt;jw3 ztc2;jw3 ztc3;jw1 eth1 $p9/geth; } }
+function jw0 { openssl rand -hex 32|tr -d '\n'|tee jwt 1>$s3;[[ -f jwt ]] && jw4; }
 function jw1 { sex "chown $1:$1 jwt";sex "mv jwt $2"; }
 function jw3 { scp jwt $1:~;ssh $1 "export H=$H;eth2/t6 jwt"; }
+function jw4 { chmod 644 jwt;jw3 ztc2;jw3 ztc3;jw1 eth1 $p9/geth; }
+function sr0 { cp $s4/$n0.service $n0.sav;sed "s%peers *\([0-9]*\)%peers \1 --authrpc.addr $zip1 --authrpc.jwtsecret $p9/geth/jwt%" $n0.sav > $n0.jwt;sr9 $n0; }
+function sr1 { cp $s4/$n1.service $n1.sav;sed "s%eth1-endpoints *\(.*:8545\)[^ ]*%eth1-endpoints \1 --execution-endpoints http://$zip1:8551 --jwt-secrets $p7/jwt%" $n1.sav > $n1.jwt;sr9 $n1; }
+function sr3 { cp $s4/$n3.service $n3.sav;sed "s%beacon-nodes *\(.*:5052\)[^ ]*%beacon-nodes \1,http://192.168.8.28:5052 --suggested-fee-recipient 0x5fbd22c7bca7bd640af691cadfd2747a5769ab33%" $n3.sav > $n3.jwt;sr9 $n3; }
+function sr9 { chmod 644 $1.jwt;sex "mv $1.jwt $s4/$1.jwt"; }
 
 [[ $1 = jwt ]] && { [[ -d $p9/geth ]] && jw0;[[ -d $p7 && -f jwt ]] && jw1 eth2 $p7; }
+[[ $1 = srv ]] && { [[ -f $s4/$n0.service ]] && sr0;[[ -f $s4/$n1.service ]] && sr1;[[ -f $s4/$n3.service ]] && sr3; }
 [[ $1 = eip ]] && { curl -s4 "https://${3:-meo.fruga.pt}:$2@dyn.dns.he.net/nic/update?hostname=${3:-meo.fruga.pt}" &>$s3; }
 [[ $1 = dsh ]] && { resolvectl query ${2:-smtp.gmail.com}; }
 [[ $1 = drs ]] && { dpa; }
