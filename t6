@@ -321,10 +321,11 @@ function t1t { [[ $(cat $s7) -eq 1 && $(lg0) -le 10 ]]; }                       
 function t2t { [[ $(cat $s7) -eq 1 ]]; }                                                                                                                      # cpu no turbo            test
 function pas { umt && sex "$p0/eth2/t8par usbstop";t1t && sex "$p0/eth2/t8par cputurbo";t0t && sex "$p0/eth2/t8par cpunoturbo"; }                             # set usb/cpu parameters
 function paf { t2t && sex "$p0/eth2/t8par cputurbo"; }                                                                                                        # set turbo   parameter
-function jw0 { openssl rand -hex 32|tr -d '\n'|tee jwt 1>$s3;chmod 644 jwt;scp jwt ztc2:~;scp jwt ztc3:~;sex "chown eth1:eth1 jwt";sex "mv jwt $p9/geth"; }
-function jw1 { sex "chown eth2:eth2 jwt";sex "mv jwt $p7"; }
+function jw0 { openssl rand -hex 32|tr -d '\n'|tee jwt 1>$s3;[[ -f jwt ]] && { chmod 644 jwt;jw3 ztc2;jw3 ztc3;jw1 eth1 $p9/geth; } }
+function jw1 { sex "chown $1:$1 jwt";sex "mv jwt $2"; }
+function jw3 { scp jwt $1:~;ssh $1 "export H=$H;eth2/t6 jwt"; }
 
-[[ $1 = jwt ]] && { [[ $cunm = hrv-zotac1 ]] && jw0;[[ -d $p7 ]] && jw1; }
+[[ $1 = jwt ]] && { [[ -d $p9/geth ]] && jw0;[[ -d $p7 && -f jwt ]] && jw1 eth2 $p7; }
 [[ $1 = eip ]] && { curl -s4 "https://${3:-meo.fruga.pt}:$2@dyn.dns.he.net/nic/update?hostname=${3:-meo.fruga.pt}" &>$s3; }
 [[ $1 = dsh ]] && { resolvectl query ${2:-smtp.gmail.com}; }
 [[ $1 = drs ]] && { dpa; }
