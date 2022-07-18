@@ -26,10 +26,6 @@ if [[ -x $s0/lighthouse ]]; then
     [[ $cunm = $znm3 ]] && http=" --http-address $zip3"
     [[ $cunm = $vnm1 ]] && http=" --http-address $vip1"
     [[ $cunm = $vnm2 ]] && http=" --http-address $vip2"
-    # external eth1-endpoints before MERGE
-    # https://eth-mainnet.alchemyapi.io/v2/vzq1DD3EX7ipGuKck4440uRuccDdVvTm
-    # https://mainnet.infura.io/v3/65be3572c577449f86d92b2e69cd6b06
-    # https://mainnet.infura.io/v3/2c680650de0443cf8ab433565e47a42d
     if [[ $B = mainnet ]]; then
       blkc=''
       epge=" --eth1-endpoints http://$zip1:8545 --execution-endpoints http://$zip1:8551 --jwt-secrets $p7/jwt" # MERGE
