@@ -83,8 +83,8 @@ if [[ -x $s0/lighthouse ]]; then
     user="eth3"
     # external beacon-nodes before MERGE
     # https://1q1s6o6cB6Jysu7KKlbLUYiOdAM:8974468780164028652df958a69fbd30@eth2-beacon-mainnet.infura.io
-    # MERGE --suggested-fee-recipient 0x5fbd22c7bca7bd640af691cadfd2747a5769ab33
-    vlcl="--beacon-nodes http://$zip3:5052,http://$zip2:5052 --suggested-fee-recipient 0x5fbd22c7bca7bd640af691cadfd2747a5769ab33"
+    # MERGE --suggested-fee-recipient $a0
+    vlcl="--beacon-nodes http://$zip3:5052,http://$zip2:5052 --suggested-fee-recipient $a0"
     if [[ $B = mainnet ]]; then
       blkc=""
     else
