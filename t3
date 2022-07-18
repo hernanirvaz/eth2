@@ -26,6 +26,10 @@ if [[ -x $s0/lighthouse ]]; then
     [[ $cunm = $znm3 ]] && http=" --http-address $zip3"
     [[ $cunm = $vnm1 ]] && http=" --http-address $vip1"
     [[ $cunm = $vnm2 ]] && http=" --http-address $vip2"
+    # external eth1-endpoints before MERGE
+    # https://eth-mainnet.alchemyapi.io/v2/vzq1DD3EX7ipGuKck4440uRuccDdVvTm
+    # https://mainnet.infura.io/v3/65be3572c577449f86d92b2e69cd6b06
+    # https://mainnet.infura.io/v3/2c680650de0443cf8ab433565e47a42d
     if [[ $B = mainnet ]]; then
       blkc=''
       epge=" --eth1-endpoints http://$zip1:8545 --execution-endpoints http://$zip1:8551 --jwt-secrets $p7/jwt" # MERGE
@@ -77,14 +81,10 @@ if [[ -x $s0/lighthouse ]]; then
   fi
   if [[ $cunm = $znm2 || $cunm = $vnm3 ]]; then
     user="eth3"
-    http="http://127.0.0.1"
-    [[ $cunm = $znm2 ]] && http="http://$zip2"
-    [[ $cunm = $znm3 ]] && http="http://$zip3"
-    [[ $cunm = $vnm1 ]] && http="http://$vip1"
-    [[ $cunm = $vnm2 ]] && http="http://$vip2"
-    vlcl="--beacon-nodes $http:5052,https://1q1s6o6cB6Jysu7KKlbLUYiOdAM:8974468780164028652df958a69fbd30@eth2-beacon-mainnet.infura.io"
+    # external beacon-nodes before MERGE
+    # https://1q1s6o6cB6Jysu7KKlbLUYiOdAM:8974468780164028652df958a69fbd30@eth2-beacon-mainnet.infura.io
     # MERGE --suggested-fee-recipient 0x5fbd22c7bca7bd640af691cadfd2747a5769ab33
-    vlcl="--beacon-nodes $http:5052 --suggested-fee-recipient 0x5fbd22c7bca7bd640af691cadfd2747a5769ab33"
+    vlcl="--beacon-nodes http://$zip3:5052,http://$zip2:5052 --suggested-fee-recipient 0x5fbd22c7bca7bd640af691cadfd2747a5769ab33"
     if [[ $B = mainnet ]]; then
       blkc=""
     else
