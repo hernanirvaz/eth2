@@ -47,6 +47,7 @@ o1='transmission-daemon'
 o2='named'
 o3='geth\[\|lighthouse'
 o4='Core.*temperature'
+a0='--suggested-fee-recipient 0x82f6E45b47c5C03F8D52dDDa03B3F65897Cd5AB2'
 
 meeu="$(whoami)"
 cunm="$(uname -n)"
@@ -54,9 +55,13 @@ cust="$(uname -n|cut -c1-3)"
 zip1='192.168.8.25'
 zip2='192.168.8.28'
 zip3='192.168.8.31'
+zip4='192.168.8.34'
+zip5='192.168.8.37'
 znm1='hrv-zotac1'
 znm2='hrv-zotac2'
 znm3='hrv-zotac3'
+znm4='hrv-zotac4'
+znm5='hrv-zotac5'
 vip1='207.180.214.8'
 vip2='173.249.42.190'
 vip3='164.68.107.45'
@@ -77,8 +82,6 @@ rate=4000
 bpri=20                                                                                                                                                       # min    configured peers
 bprs=10                                                                                                                                                       # step   configured peers
 bprf=80                                                                                                                                                       # max    configured peers
-
-a0='0x82f6E45b47c5C03F8D52dDDa03B3F65897Cd5AB2'                                                                                                               # mm-cld
 
 if [[ $cust = hrv ]];then cgth=$zip1;else cgth=$vip1;fi
 [[ $rate -eq 0 ]] && rate=$(curl -sX GET 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=ETH&convert=EUR&CMC_PRO_API_KEY=3ae5f3df-bd71-489d-a9dd-b626995fba31'|sed 's%.*price.:\([0-9]*\.[0-9]*\).*%\1%')
