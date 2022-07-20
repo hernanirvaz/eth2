@@ -319,8 +319,8 @@ function umt { [[ $(cat $s6) -eq 1 && $(lg2) -gt 10 ]]; }                       
 function t0t { [[ $(cat $s7) -eq 0 && $(lg0) -gt 20 ]]; }                                                                                                     # cpu no turbo recomended test
 function t1t { [[ $(cat $s7) -eq 1 && $(lg0) -le 10 ]]; }                                                                                                     # cpu    turbo recomended test
 function t2t { [[ $(cat $s7) -eq 1 ]]; }                                                                                                                      # cpu no turbo            test
-function pas { umt && sex "$p0/eth2/t8par usbstop";t1t && sex "$p0/eth2/t8par cputurbo";t0t && sex "$p0/eth2/t8par cpunoturbo"; }                             # set usb/cpu parameters
-function paf { t2t && sex "$p0/eth2/t8par cputurbo"; }                                                                                                        # set turbo   parameter
+function pas { umt && sex "$p0/eth2/t9par usbstop";t1t && sex "$p0/eth2/t9par cputurbo";t0t && sex "$p0/eth2/t9par cpunoturbo"; }                             # set usb/cpu parameters
+function paf { t2t && sex "$p0/eth2/t9par cputurbo"; }                                                                                                        # set turbo   parameter
 function jw0 { openssl rand -hex 32|tr -d '\n'|tee jwt 1>$s3;[[ -f jwt ]] && jw4; }
 function jw1 { sex "cp jwt $2";sex "chown $1:$1 $2/jwt"; }
 function jw3 { scp jwt $1:~;ssh $1 "export H=$H;eth2/t6 jwt"; }
