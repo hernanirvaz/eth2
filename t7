@@ -2,95 +2,44 @@
 
 import json
 import math
-from datetime import datetime, timedelta
-
 import requests
+from datetime import datetime, timedelta
 
 SLOTS_PER_EPOCH = 32
 SECONDS_PER_SLOT = 12
 
-def main(validators_indices, eth2_api_url="http://192.168.8.31:5052/eth/v1/"):
+def main(vidx=[11766,11767,11770,11771,11772,11773,11774,11775,11776,11777,11778,11779,11780,11782,11783,11784,11786,11788], url="http://192.168.8.31:5052/eth/v1/"):
     def api_get(endpoint):
-        return requests.get(f"{eth2_api_url}{endpoint}").json()
-
+        return requests.get(f"{url}{endpoint}").json()
     def api_post(endpoint, data):
-        return requests.post(f"{eth2_api_url}{endpoint}", data).json()
+        return requests.post(f"{url}{endpoint}", data).json()
 
     head_slot = int(api_get("beacon/headers/head")["data"]["header"]["message"]["slot"])
     epoch = head_slot // SLOTS_PER_EPOCH
-
-    cur_epoch_data = api_post(f"validator/duties/attester/{epoch}", json.dumps(validators_indices))[
-        "data"
-    ]
-    next_epoch_data = api_post(
-        f"validator/duties/attester/{epoch + 1}", json.dumps(validators_indices)
-    )["data"]
-
-    genesis_timestamp = 1606824023
-
+    ced = api_post(f"validator/duties/attester/{epoch}", json.dumps(vidx))["data"]
+    ned = api_post(f"validator/duties/attester/{epoch + 1}", json.dumps(vidx))["data"]
     attestation_duties = {}
-    for d in (*cur_epoch_data, *next_epoch_data):
+    for d in (*ced, *ned):
         attestation_duties.setdefault(int(d["slot"]), []).append(d["validator_index"])
     attestation_duties = {k: v for k, v in sorted(attestation_duties.items()) if k > head_slot}
-
-    # Also insert (still unknown) attestation duties at epoch after next,
-    # assuming worst case of having to attest at its first slot
     first_slot_epoch_p2 = (epoch + 2) * SLOTS_PER_EPOCH
     attestation_duties[first_slot_epoch_p2] = []
-
-    # print(f"Calculating attestation slots and gaps for validators:")
-    # print(f"  {validators_indices}")
-
-    # print("\nUpcoming voting slots and gaps")
-    # print("(Gap in seconds)")
-    # print("(slot/epoch - time range - validators)")
-    # print("*" * 80)
-
     prev_end_time = datetime.now()
     longest_gap = timedelta(seconds=0)
     gap_time_range = (None, None)
-
     for slot, validators in attestation_duties.items():
-        slot_start = datetime.fromtimestamp(genesis_timestamp + slot * SECONDS_PER_SLOT)
+        slot_start = datetime.fromtimestamp(1606824023 + slot * SECONDS_PER_SLOT)
         slot_end = slot_start + timedelta(seconds=SECONDS_PER_SLOT)
-
         gap = slot_start - prev_end_time
-        # print(f"Gap - {math.floor((slot_start - prev_end_time).total_seconds())} seconds")
-
         if validators:
-            nana = 0
-            # print(
-            #     f"  {slot}/{slot // SLOTS_PER_EPOCH}"
-            #     f" - {slot_start.strftime('%H:%M:%S')} until {slot_end.strftime('%H:%M:%S')}"
-            #     f" - [{', '.join(validators)}]"
-            # )
+            nado = 0
         else:
             assert slot % SLOTS_PER_EPOCH == 0
-
         if gap > longest_gap:
             longest_gap = gap
             gap_time_range = (prev_end_time, slot_start)
-
         prev_end_time = slot_end
-
-    # print("\nLongest gap (first):")
-    # print("*" * 80)
-    print(
-        f"{longest_gap.total_seconds()} seconds"
-        f" ({int(longest_gap.total_seconds()) // SECONDS_PER_SLOT} slots),"
-        f" from {gap_time_range[0].strftime('%H:%M:%S')}"
-        f" until {gap_time_range[1].strftime('%H:%M:%S')}"
-    )
-
+    print(f"{gap_time_range[0].strftime('%H:%M:%S')}")
 
 if __name__ == "__main__":
-    import argparse
-
-    parser = argparse.ArgumentParser(
-        description="Show validator duties of current and next epoch to find largest gap."
-    )
-    parser.add_argument("indices", metavar="index", type=int, nargs="+", help="validator indices")
-
-    args = parser.parse_args()
-
-    main(args.indices)
+    main()

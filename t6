@@ -159,12 +159,21 @@ function bh0 {
 function brw { [[ $1 ]] || return;touch $p4.s$1;sleep $1;rm $p4.s$1; }                                                                                        # sleep with file info
 function brb { if srt;then echo RB;else echo $1;fi; }                                                                                                         # get reboot/other tag
 function brv { echo ${1:-false}$#$2; }                                                                                                                        # get first#secound verbs
-function bpt { [[ $(brv $(fs0 "$bpid].*INFO " ${1:-7}|sed 's%.*INFO \([^ ]*\).*%\1%'|sort -u)) = New2Synced ]]; }                                             # ideal position test
 function bmt { local n=$(date +%M);((n==18||n==38||n==58)); }                                                                                                 # ideal minute test
 function bro { dts;bb;bnn $(fs6 peers:);echo "$(printf 'R%03i' $1) ${2:-$ok} $(printf '%3i' $(bu)) $(dnn)" >> $p2; }                                          # log restart info
-function brs {                                                                                                                                                # beacon/validator restart
-  [[ $(ls $p4.* 2>$s3) ]] && return;brw $3;bmt && brw 1m;bpt && brw 25s;paf;touch $p4.ini;local n=0;while [[ -f $p4.ini && $n -le 300 ]];do                   # search max 300 times, every 5s
-  if bpt;then nn=$(bv);snp $n1 $1 $bpri $bprf                    ;[[ $2 = VC ]] && sex "$w2 $n3";rm $p4.ini                                                   #         stop beacon/validator
+function b0t { [[ $(brv $(fs0 "$bpid].*INFO " ${1:-7}|sed 's%.*INFO \([^ ]*\).*%\1%'|sort -u)) = New2Synced ]]; }                                             # ideal position test
+function b1t { [[ $(date -d$(fs0 "$bpid].*INFO " 1|cut -d' ' -f3) '+%s') -gt $(date -d$1 '+%s') ]]; }                                                         # ideal position test (based on time)
+function b0r {                                                                                                                                                # beacon/validator restart
+  [[ $(ls $p4.* 2>$s3) ]] && return;brw $3;bmt && brw 1m;b0t && brw 25s;paf;touch $p4.ini;local n=0
+  while [[ -f $p4.ini && $n -le 300 ]];do                                                                                                                     # search max 300 times, every 5s
+  if b0t;then nn=$(bv);snp $n1 $1 $bpri $bprf                    ;[[ $2 = VC ]] && sex "$w2 $n3";rm $p4.ini                                                   #         stop beacon/validator
+    if [[ $2 = RB ]];then bro $n $2;sex reboot;else sex "$w3 $n1";[[ $2 = VC ]] && sex "$w3 $n3";brw 20s;bro $n $2;fi                                         # reboot/start beacon/validator
+  fi;brw 6s;((n+=1));done;rm -f $p4.ini
+}
+function b1r {                                                                                                                                                # beacon/validator gap restart
+  [[ $(ls $p4.* 2>$s3) ]] && return;brw $3;bmt && brw 1m;paf;touch $p4.ini;local n=0;local t=$($p0/eth2/t7)
+  while [[ -f $p4.ini && $n -le 300 ]];do                                                                                                                     # search max 300 times, every 5s
+  if b1t $t;then nn=$(bv);snp $n1 $1 $bpri $bprf                 ;[[ $2 = VC ]] && sex "$w2 $n3";rm $p4.ini                                                   #         stop beacon/validator
     if [[ $2 = RB ]];then bro $n $2;sex reboot;else sex "$w3 $n1";[[ $2 = VC ]] && sex "$w3 $n3";brw 20s;bro $n $2;fi                                         # reboot/start beacon/validator
   fi;brw 6s;((n+=1));done;rm -f $p4.ini
 }
@@ -195,9 +204,9 @@ function bsl {                                                                  
 function bnt { [[ $b4 -ne 0 ]]; }                                                                                                                             # peers need change test
 function bht { [[ $b2 -gt $b3 ]]; }                                                                                                                           # homologous/avg position test
 function bst { [[ $(bi) -ge 2500 ]]; }                                                                                                                        # peers standard deviation test
-function bgt { bnt && bht && ! bst; }                                                                                                                         # peers change global test
+function btt { bnt && bht && ! bst; }                                                                                                                         # peers change global test
 function bbt { [[ $(grep $d0 ${p2} 2>$s3|wc -l) -gt 0 ]]; }                                                                                                   # exists beacon log day test
-function bct { local n=$((nn-5));[[ $nm -ge $n && $(lg1) -eq 0 && $(bl6 $hors) -eq 1 ]] && ( bgt || sot ); }                                                  # change configured peers test
+function bct { local n=$((nn-5));[[ $nm -ge $n && $(lg1) -eq 0 && $(bl6 $hors) -eq 1 ]] && ( btt || sot ); }                                                  # change configured peers test
 function bdl { local d=$(pt0 $1 sai);[[ -f $p2 && $d != sai ]] || return;cp $p2 ${p2}o;grep -v $d ${p2}o > $p2;grep $d ${p2}o > ${p2}d; }                     # delete beacon log day
 function nsh {
   echo -e "ROUTES\t\t$(ip route show|grep 'default via'|grep -v linkdown|cut -d' ' -f3)\nDNS\t\t$(resolvectl|grep 'Current DNS'|cut -d' ' -f6)"               # routes
@@ -344,8 +353,8 @@ function sr9 { chmod 644 $1.jwt;sex "mv $1.jwt $s4/$1.jwt"; }
 [[ $1 = bl  ]] && { bl0;echo "$m"; }
 [[ $1 = bm  ]] && { bm0;bmo;echo "$m"; }
 [[ $1 = bn  ]] && { bm0;bno;echo "$m"; }
-[[ $1 = blf ]] && { bl0;echo "$m" >> $p2;stt && bo5 && bht && bst && bdl $d0;[[ $ok != OK ]] && brs 0;pas; }                                                  # beacon log/delete day/restart & parameter set
-[[ $1 = bmf ]] && { bm0;bms;bbt && echo "$m" >> $p3;bct && brs $b4 $(brb PE) 2m; }
+[[ $1 = blf ]] && { bl0;echo "$m" >> $p2;stt && bo5 && bht && bst && bdl $d0;[[ $ok != OK ]] && b1r 0;pas; }                                                  # beacon log/delete day/restart & parameter set
+[[ $1 = bmf ]] && { bm0;bms;bbt && echo "$m" >> $p3;bct && b1r $b4 $(brb PE) 2m; }
 [[ $1 = bnf ]] && { bm0;bno;echo -e "$m" >> $p6; }
 [[ $1 = gh  ]] && { gh0 $2; }
 [[ $1 = bh  ]] && { bh0 $2; }
@@ -360,9 +369,9 @@ function sr9 { chmod 644 $1.jwt;sex "mv $1.jwt $s4/$1.jwt"; }
 [[ $1 = bsl ]] && { bsl; }
 [[ $1 = cpe ]] && { cpe $2; }
 [[ $1 = grs ]] && { grs ${2:-0}   ; }
-[[ $1 = srs ]] && { brs ${2:-0} RB; }
-[[ $1 = brs ]] && { brs ${2:-0} BN; }
-[[ $1 = lrs ]] && { brs ${2:-0} VC; }
+[[ $1 = srs ]] && { b1r ${2:-0} RB; }
+[[ $1 = brs ]] && { b1r ${2:-0} BN; }
+[[ $1 = lrs ]] && { b1r ${2:-0} VC; }
 [[ $1 = urs ]] && { sot ${2:-3} && sex reboot;pas; }                                                                                                          # system reboot needs & parameter set
 # lista servicos & portas
 [[ $1 = lp  ]] && { netstat -tulpn; }
