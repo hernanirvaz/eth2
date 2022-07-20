@@ -1,9 +1,0 @@
-#!/bin/bash
-
-source /home/eth/eth2/t1
-
-[[ $1 = usbstart   ]] && echo 1 > $s6
-[[ $1 = usbstop    ]] && echo 0 > $s6
-[[ $1 = cpunoturbo ]] && echo 1 > $s7
-[[ $1 = cputurbo   ]] && echo 0 > $s7
-[[ $1              ]] || { echo "USB_BUS10_ON $(cat $s6)";echo "NO_TURBO_CPU $(cat $s7)"; }
