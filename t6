@@ -164,18 +164,18 @@ function bro { dts;bb;bnn $(fs6 peers:);echo "$(printf 'R%03i' $1) ${2:-$ok} $(p
 function b0t { [[ $(brv $(fs0 "$bpid].*INFO " ${1:-7}|sed 's%.*INFO \([^ ]*\).*%\1%'|sort -u)) = New2Synced ]]; }                                             # ideal position test
 function b1t { [[ $(date -d$(fs0 "$bpid].*INFO " 1|cut -d' ' -f3) '+%s') -gt $(($(date -d$1 '+%s')+6)) ]]; }                                                  # ideal position test (based on time)
 function b0r {                                                                                                                                                # beacon/validator restart
-  [[ $(ls $p4.* 2>$s3) ]] && return;brw $3;bmt && brw 1m;b0t && brw 25s;paf;touch $p4.ini;local n=0
+  [[ $(ls $p4.* 2>$s3) ]] && return;brw $3;bmt && brw 1m;b0t && brw 25s;paf;local n=0;touch $p4.ini
   while [[ -f $p4.ini && $n -le 200 ]];do                                                                                                                     # search max 200 times, every 6s
   if b0t;then nn=$(bv);snp $n1 $1 $bpri $bprf                    ;[[ $2 = VC ]] && sex "$w2 $n3";rm $p4.ini                                                   #         stop beacon/validator
     if [[ $2 = RB ]];then bro $n $2;sex reboot;else sex "$w3 $n1";[[ $2 = VC ]] && sex "$w3 $n3";brw 20s;bro $n $2;fi                                         # reboot/start beacon/validator
   fi;brw 6s;((n+=1));done;rm -f $p4.ini
 }
 function b1r {                                                                                                                                                # beacon/validator gap restart
-  [[ $(ls $p4.* 2>$s3) ]] && return;brw $3;bmt && brw 1m;paf;touch $p4.ini;local n=0;local t=$($p0/eth2/t7)
-  while [[ -f $p4.ini && $n -le 200 ]];do                                                                                                                     # search max 200 times, every 6s
-  if b1t $t;then nn=$(bv);snp $n1 $1 $bpri $bprf                 ;[[ $2 = VC ]] && sex "$w2 $n3";rm $p4.ini                                                   #         stop beacon/validator
+  [[ $(ls $p4.* 2>$s3) ]] && return;brw $3;bmt && brw 1m;paf;local n=0;local t=$($p0/eth2/t7);local e=$p4.$(echo $t|tr -d :);touch $e
+  while [[ -f $e && $n -le 200 ]];do                                                                                                                          # search max 200 times, every 6s
+  if b1t $t;then nn=$(bv);snp $n1 $1 $bpri $bprf                 ;[[ $2 = VC ]] && sex "$w2 $n3";rm $e                                                        #         stop beacon/validator
     if [[ $2 = RB ]];then bro $n $2;sex reboot;else sex "$w3 $n1";[[ $2 = VC ]] && sex "$w3 $n3";brw 20s;bro $n $2;fi                                         # reboot/start beacon/validator
-  fi;brw 6s;((n+=1));done;rm -f $p4.ini
+  fi;brw 6s;((n+=1));done;rm -f $e
 }
 function brh { head -n${1:-0} ${p2}r; }                                                                                                                       # new beacon head lines
 function brl {                                                                                                                                                # recalculate beacon/bmedias logs
