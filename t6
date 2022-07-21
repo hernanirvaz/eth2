@@ -60,7 +60,7 @@ function grt { [[ $(glt 6) -eq 1 ]] && sot 6; }                                 
 function grb { ok=OK;echo "RSTR SYSTEM $(dnn)" >> $p5;sex reboot; }                                                                                           # geth system reboot
 function grs { gv;snp $n0 $1 10 15;sex "$w3 $n0";sleep 20s;dts;gq;echo "RSTR SERVIC $(dnn)" >> $p5; }                                                         # change/stop/load/start/log geth
 # beacon control commands
-function bz  { echo $((10*(9*zk+2*zz+zx+zw)))                                       ; }                                                                       # get numerator paid errors
+function bz  { echo $((10*(5*zk+2*zz+zx+zw)))                                       ; }                                                                       # get numerator paid errors
 function bw  { echo $((10*z1))                                                      ; }                                                                       # get numerator processed blocks
 function bf  { echo $((90*z3))                                                      ; }                                                                       # get numerator general errors
 function bi  { echo $((nd+zk*300+zz*20+zx))                                         ; }                                                                       # get delete day idx
@@ -152,7 +152,7 @@ function bon { [[ -f $p2 ]] || return;nn=$(pt2 $1 $(bv));l2=$(bff 23:58);bo7 $nn
 function boa { local g=${1:-$bpri};echo "BO$(printf '%5i' $(bo7 $g|wc -l)) $(printf '%3i' $g)";bo7 $g;((g<bprf)) && boa $((g+bprs)); }                        # recursively show homologous nodes report
 function bh0 {
   [[ -f $p2 ]] || return;tail -n${1:-$hors} $p2;[[ $1 ]] && return                                                                                            # last beacon            report
-  boi;echo -e "BO$(printf '%5i' $(echo "$l2"|wc -l)) $(printf '%3i' $b2)$(printf '%91s')x9 x2  x1 x1";bo6                                                     # homologous             report
+  boi;echo -e "BO$(printf '%5i' $(echo "$l2"|wc -l)) $(printf '%3i' $b2)$(printf '%91s')x5 x2  x1 x1";bo6                                                     # homologous             report
   bl0;echo -e "BL$(printf '%9i' $(cat $p2|wc -l))\n$m";bm0                                                                                                    # current beacon         report
   bmo;echo -e "BM$(printf '%9i' $(cat $p3 2>$s3|wc -l))$(printf '%46s')i20  i30  i40  i50  i60  i70  i80\n$m";sso BEAC $n1;sso VALI $n3;cpe                   # medias/services/system report
 }
