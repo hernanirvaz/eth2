@@ -164,9 +164,12 @@ function bro { dts;bb;bnn $(fs6 peers:);[[ -f $p2 ]] && echo "$(printf 'R%03i' $
 function b0t { [[ $(brv $(fs0 "$bpid].*INFO " ${1:-7}|sed 's%.*INFO \([^ ]*\).*%\1%'|sort -u)) = New2Synced ]]; }                                             # ideal position test
 function b1t { [[ $(date '+%s') -gt $(ssu $1 8) ]]; }                                                                                                         # ideal position test (based on time)
 function bsf { [[ ${1:-0} -gt 0 ]] || return;touch $p4.s$1s;sleep $1s;rm -f $p4.s$1s; }                                                                       # sleep with file info
-function bsw { while :;do local t=$($p0/eth2/t7);if [[ $(echo "$t"|cut -f2) -le ${1:-30} ]];then bsf $(sft $(echo "$t"|cut -f1));else break;fi;done; }        # sleep while small gap
+function bsw { while :;do local t=$(sng);if [[ $(sf2 $t) -le ${1:-30} ]];then bsf $(sft $(sf1 $t));else break;fi;done; }                                      # sleep while small gap
 function ssu { echo $((${2:-0}+$(date -d$1 '+%s'))); }                                                                                                        # get sum secounds + time
-function sft { echo $(($(ssu $1)-$(date '+%s'))); }                                                                                                           # get seconds to future time
+function sft { local t=$(($(ssu $1)-$(date '+%s')));if [[ $t -gt 1 ]];then echo $t;else echo 1;fi; }                                                          # get seconds to future time
+function sf1 { echo ${1:-$(date '+%H:%M:%S')}; }                                                                                                              # get filterd t7 parm 1
+function sf2 { echo ${2:-99}; }                                                                                                                               # get filterd t7 parm 2
+function sng { $p0/eth2/t7 2>$s3; }                                                                                                                           # get next gap
 function b0r {                                                                                                                                                # beacon/validator restart
   [[ $(ls $p4.* 2>$s3) ]] && return;bsf $3;bmt && bsf 60;b0t && bsf 25;paf;local n=0;touch $p4.ini
   while [[ -f $p4.ini && $n -le 200 ]];do                                                                                                                     # search max 200 times, every 6s
@@ -175,7 +178,7 @@ function b0r {                                                                  
   fi;bsf 6;((n+=1));done;rm -f $p4.ini
 }
 function b1r {                                                                                                                                                # beacon/validator gap restart
-  [[ $(ls $p4.* 2>$s3) ]] && return;bsf $3;[[ $2 = RB ]] && bsw 60;paf;local n=0;local t=$($p0/eth2/t7|cut -f1);local e=$p4.$(echo $t|tr -d :);touch $e
+  [[ $(ls $p4.* 2>$s3) ]] && return;bsf $3;[[ $2 = RB ]] && bsw 60;paf;local n=0;local t=$(sf1 $(sng));local e=$p4.$(echo $t|tr -d :);touch $e
   while [[ -f $e && $n -le 200 ]];do                                                                                                                          # search max 200 times, every 6s
   if b1t $t;then nn=$(bv);snp $n1 $1 $bpri $bprf                 ;[[ $2 = VC ]] && sex "$w2 $n3";rm $e                                                        #         stop beacon/validator
     if [[ $2 = RB ]];then bro $n $2;sex reboot;else sex "$w3 $n1";[[ $2 = VC ]] && sex "$w3 $n3";bsf 20;bro $n $2;fi                                          # reboot/start beacon/validator
