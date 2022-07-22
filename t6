@@ -92,6 +92,7 @@ function bcc { if bct       ;then echo c;else echo _;fi; }                      
 function bdc { if bht && bst;then echo d;else echo _;fi; }                                                                                                    # get delete beacon log day   char
 function bmi { zk=0;zz=0;zx=0;unset o;o[1]=0;unset k;k[0]=0;unset z;z[0]=0;unset x;x[0]=0;unset w;w[0]=0;unset c;c[0]=0;unset a;a[0]=0;bm6; }                 # ini err/cnt/avg penalty arrays
 function bm0 {                                                                                                                                                # bmedias report
+  [[ -f $p2 ]] || return
   bmi;b4=0;b5=$(fs0 reduce|wc -l);dts;nn=$(bv);bnn $(fs6 peers:);bl2;[[ -f $p6 ]] && bm4;l3=$(tail -n$(($(bk)-o[1])) $p2 2>$s3|bfl);[[ $l3 ]] && bm1;bm2      # ini vars/arrays & add beacon lines
   bo4;bm5 ${a[$nn]};b7="rm$(bdc)$(bcc)$(date +%w)_peers:"                                                                                                     # homologous/avg position & outputs
 }
@@ -361,7 +362,7 @@ function sr9 { chmod 644 $1.jwt;sex "mv $1.jwt $s4/$1.jwt"; }
 [[ $1 = bnf ]] && { bm0;bno;echo -e "$m" >> $p6; }
 [[ $1 = gh  ]] && { gh0 $2; }
 [[ $1 = bh  ]] && { bh0 $2; }
-[[ $1 = bhs ]] && { bm0;bms;echo "$m";sso BEAC $n1;sso VALI $n3;cpe; }                                                                                        # lighthouse services & system report
+[[ $1 = bhs ]] && { bm0;bms;[[ -f $p2 ]] && echo "$m";sso BEAC $n1;[[ $(sst $n3 loaded) ]] && sso VALI $n3;cpe; }                                             # lighthouse services & system report
 [[ $1 = ghs ]] && { sso GETH $n0;cpe; }                                                                                                                       # geth service & system report
 [[ $1 = bo  ]] && { bo0 $2 $3 $4; }
 [[ $1 = bon ]] && { bon $2; }
