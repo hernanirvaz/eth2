@@ -58,7 +58,7 @@ function gl0 {                                                                  
 function glt { tail -n$1 $p5 2>$s3|cut -d' ' -f1|sort -u|wc -l; }                                                                                             # get geth restart activity test
 function grt { [[ $(glt 6) -eq 1 ]] && sot 6; }                                                                                                               # 6 hours old system reboot test
 function grb { ok=OK;echo "RSTR SYSTEM $(dnn)" >> $p5;sex reboot; }                                                                                           # geth system reboot
-function grs { gv;snp $n0 $1 10 15;sex "$w3 $n0";sleep 20s;dts;gq;echo "RSTR SERVIC $(dnn)" >> $p5; }                                                         # change/stop/load/start/log geth
+function grs { gv;snp $n0 $1 10 50;sex "$w3 $n0";sleep 20s;dts;gq;[[ -f $p5 ]] && echo "RSTR SERVIC $(dnn)" >> $p5; }                                         # change/stop/load/start/log geth
 # beacon control commands
 function bz  { echo $((10*(5*zk+2*zz+zx+zw)))                                       ; }                                                                       # get numerator paid errors
 function bw  { echo $((10*z1))                                                      ; }                                                                       # get numerator processed blocks
@@ -156,26 +156,29 @@ function bh0 {
   bl0;echo -e "BL$(printf '%9i' $(cat $p2|wc -l))\n$m";bm0                                                                                                    # current beacon         report
   bmo;echo -e "BM$(printf '%9i' $(cat $p3 2>$s3|wc -l))$(printf '%46s')i20  i30  i40  i50  i60  i70  i80\n$m";sso BEAC $n1;sso VALI $n3;cpe                   # medias/services/system report
 }
-function brw { [[ $1 ]] || return;touch $p4.s$1;sleep $1;rm $p4.s$1; }                                                                                        # sleep with file info
 function brb { if srt;then echo RB;else echo $1;fi; }                                                                                                         # get reboot/other tag
 function brv { echo ${1:-false}$#$2; }                                                                                                                        # get first#secound verbs
 function bmt { local n=$(date +%M);((n==18||n==38||n==58)); }                                                                                                 # ideal minute test
-function bro { dts;bb;bnn $(fs6 peers:);echo "$(printf 'R%03i' $1) ${2:-$ok} $(printf '%3i' $(bu)) $(dnn)" >> $p2; }                                          # log restart info
+function bro { dts;bb;bnn $(fs6 peers:);[[ -f $p2 ]] && echo "$(printf 'R%03i' $1) ${2:-$ok} $(printf '%3i' $(bu)) $(dnn)" >> $p2; }                          # log restart info
 function b0t { [[ $(brv $(fs0 "$bpid].*INFO " ${1:-7}|sed 's%.*INFO \([^ ]*\).*%\1%'|sort -u)) = New2Synced ]]; }                                             # ideal position test
-function b1t { [[ $(date -d$(fs0 "$bpid].*INFO " 1|cut -d' ' -f3) '+%s') -gt $(($(date -d$1 '+%s')+6)) ]]; }                                                  # ideal position test (based on time)
+function b1t { [[ $(date '+%s') -gt $(ssu $1 8) ]]; }                                                                                                         # ideal position test (based on time)
+function bsf { [[ ${1:-0} -gt 0 ]] || return;touch $p4.s$1s;sleep $1s;rm -f $p4.s$1s; }                                                                       # sleep with file info
+function bsw { while :;do local t=$($p0/eth2/t7);if [[ $(echo "$t"|cut -f2) -le ${1:-30} ]];then bsf $(sft $(echo "$t"|cut -f1));else break;fi;done; }        # sleep while small gap
+function ssu { echo $((${2:-0}+$(date -d$1 '+%s'))); }                                                                                                        # get sum secounds + time
+function sft { echo $(($(ssu $1)-$(date '+%s'))); }                                                                                                           # get seconds to future time
 function b0r {                                                                                                                                                # beacon/validator restart
-  [[ $(ls $p4.* 2>$s3) ]] && return;brw $3;bmt && brw 1m;b0t && brw 25s;paf;local n=0;touch $p4.ini
+  [[ $(ls $p4.* 2>$s3) ]] && return;bsf $3;bmt && bsf 60;b0t && bsf 25;paf;local n=0;touch $p4.ini
   while [[ -f $p4.ini && $n -le 200 ]];do                                                                                                                     # search max 200 times, every 6s
   if b0t;then nn=$(bv);snp $n1 $1 $bpri $bprf                    ;[[ $2 = VC ]] && sex "$w2 $n3";rm $p4.ini                                                   #         stop beacon/validator
-    if [[ $2 = RB ]];then bro $n $2;sex reboot;else sex "$w3 $n1";[[ $2 = VC ]] && sex "$w3 $n3";brw 20s;bro $n $2;fi                                         # reboot/start beacon/validator
-  fi;brw 6s;((n+=1));done;rm -f $p4.ini
+    if [[ $2 = RB ]];then bro $n $2;sex reboot;else sex "$w3 $n1";[[ $2 = VC ]] && sex "$w3 $n3";bsf 20;bro $n $2;fi                                          # reboot/start beacon/validator
+  fi;bsf 6;((n+=1));done;rm -f $p4.ini
 }
 function b1r {                                                                                                                                                # beacon/validator gap restart
-  [[ $(ls $p4.* 2>$s3) ]] && return;brw $3;bmt && brw 1m;paf;local n=0;local t=$($p0/eth2/t7);local e=$p4.$(echo $t|tr -d :);touch $e
+  [[ $(ls $p4.* 2>$s3) ]] && return;bsf $3;[[ $2 = RB ]] && bsw 60;paf;local n=0;local t=$($p0/eth2/t7|cut -f1);local e=$p4.$(echo $t|tr -d :);touch $e
   while [[ -f $e && $n -le 200 ]];do                                                                                                                          # search max 200 times, every 6s
   if b1t $t;then nn=$(bv);snp $n1 $1 $bpri $bprf                 ;[[ $2 = VC ]] && sex "$w2 $n3";rm $e                                                        #         stop beacon/validator
-    if [[ $2 = RB ]];then bro $n $2;sex reboot;else sex "$w3 $n1";[[ $2 = VC ]] && sex "$w3 $n3";brw 20s;bro $n $2;fi                                         # reboot/start beacon/validator
-  fi;brw 6s;((n+=1));done;rm -f $e
+    if [[ $2 = RB ]];then bro $n $2;sex reboot;else sex "$w3 $n1";[[ $2 = VC ]] && sex "$w3 $n3";bsf 20;bro $n $2;fi                                          # reboot/start beacon/validator
+  fi;bsf $(sft $t);((n+=1));done;rm -f $e
 }
 function brh { head -n${1:-0} ${p2}r; }                                                                                                                       # new beacon head lines
 function brl {                                                                                                                                                # recalculate beacon/bmedias logs
@@ -335,8 +338,8 @@ function jw1 { sex "cp jwt $2";sex "chown $1:$1 $2/jwt"; }
 function jw3 { scp jwt $1:~;ssh $1 "export H=$H;eth2/t6 jwt"; }
 function jw4 { chmod 644 jwt;jw3 ztc2;jw3 ztc3;jw1 eth1 $p9/geth; }
 function sr0 { cp $s4/$n0.service $n0.sav;sed "s%peers *\([0-9]*\)%peers \1 --authrpc.addr $zip1 --authrpc.jwtsecret $p9/geth/jwt%" $n0.sav > $n0.jwt;sr9 $n0; }
-function sr1 { cp $s4/$n1.service $n1.sav;sed "s%eth1-endpoints *\([^,]*:8545\)[^ ]*%eth1-endpoints \1 --execution-endpoints http://$zip1:8551 --jwt-secrets $p7/jwt $a0%" $n1.sav > $n1.jwt;sr9 $n1; }
-function sr3 { cp $s4/$n3.service $n3.sav;sed "s%beacon-nodes *\([^,]*:5052\)[^ ]*%beacon-nodes \1,http://$zip2:5052 $a0%" $n3.sav > $n3.jwt;sr9 $n3; }
+function sr1 { cp $s4/$n1.service $n1.sav;sed "s%--eth1-endpoints *\([^,]*:8545\)[^ ]*%--execution-endpoint http://$zip1:8551 --execution-jwt $p7/jwt --suggested-fee-recipient $a0%" $n1.sav > $n1.jwt;sr9 $n1; }
+function sr3 { cp $s4/$n3.service $n3.sav;sed "s%beacon-nodes *\([^,]*:5052\)[^ ]*%beacon-nodes \1,http://$zip2:5052 --suggested-fee-recipient $a0%" $n3.sav > $n3.jwt;sr9 $n3; }
 function sr9 { chmod 644 $1.jwt;sex "mv $1.jwt $s4/$1.jwt"; }
 
 [[ $1 = jwt ]] && { [[ -d $p9/geth ]] && jw0;[[ -d $p7 && -f jwt ]] && jw1 eth2 $p7;[[ -f jwt ]] && sex "rm jwt"; }
@@ -354,7 +357,7 @@ function sr9 { chmod 644 $1.jwt;sex "mv $1.jwt $s4/$1.jwt"; }
 [[ $1 = bm  ]] && { bm0;bmo;echo "$m"; }
 [[ $1 = bn  ]] && { bm0;bno;echo "$m"; }
 [[ $1 = blf ]] && { bl0;echo "$m" >> $p2;stt && bo5 && bht && bst && bdl $d0;[[ $ok != OK ]] && b1r 0;pas; }                                                  # beacon log/delete day/restart & parameter set
-[[ $1 = bmf ]] && { bm0;bms;bbt && echo "$m" >> $p3;bct && b1r $b4 $(brb PE) 2m; }
+[[ $1 = bmf ]] && { bm0;bms;bbt && echo "$m" >> $p3;bct && b1r $b4 $(brb PE) 120; }
 [[ $1 = bnf ]] && { bm0;bno;echo -e "$m" >> $p6; }
 [[ $1 = gh  ]] && { gh0 $2; }
 [[ $1 = bh  ]] && { bh0 $2; }

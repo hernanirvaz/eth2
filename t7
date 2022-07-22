@@ -39,7 +39,11 @@ def main(vidx=[11766,11767,11770,11771,11772,11773,11774,11775,11776,11777,11778
             longest_gap = gap
             gap_time_range = (prev_end_time, slot_start)
         prev_end_time = slot_end
-    print(f"{gap_time_range[0].strftime('%H:%M:%S')}")
+    # f"{longest_gap.total_seconds()} seconds"
+    # f" ({int(longest_gap.total_seconds()) // SECONDS_PER_SLOT} slots),"
+    # f" from {gap_time_range[0].strftime('%H:%M:%S')}"
+    # f" until {gap_time_range[1].strftime('%H:%M:%S')}"
+    print(f"{gap_time_range[0].strftime('%H:%M:%S')}\t{int(longest_gap.total_seconds())}")
 
 if __name__ == "__main__":
     main()
