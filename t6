@@ -41,7 +41,7 @@ function sot { [[ $(sra) -ge $((60*60*${1:-24})) ]]; }                          
 function stt { [[ $d1 =~ 23:5[89] ]]; }                                                                                                                       # time test
 
 # geth control commands
-function gv  { nn=$(nu0 $(sse $n0 maxpeers [0-9]))                                    ; }                                                                     # set configured peers
+function gv  { nn=$(nu0 $(ss1 $n0 maxpeers [0-9]))                                    ; }                                                                     # set configured peers
 function gq  { nr=$(nu0 $(geth attach --exec net.peerCount "http://$cgth:8545" 2>$s3)); }                                                                     # set current    peers
 function gy  {            geth attach --exec eth.syncing   "http://$cgth:8545" 2>$s3  ; }                                                                     # current syncing status
 function gi  { echo $@|sed 's%.*highestBlock: *\([0-9]*\).*%\1%'; }                                                                                           # get highest geth block
@@ -66,7 +66,7 @@ function bf  { echo $((90*z3))                                                  
 function bi  { echo $((nd+zk*300+zz*20+zx))                                         ; }                                                                       # get delete day idx
 function bu  { echo $(((z5>400?$(bz)/z5:0)+(z2>300?$(bw)/z2:0)+(z4>999?$(bf)/z4:0))); }                                                                       # get restart idx
 function bk  { cat $p2 2>$s3|wc -l; }                                                                                                                         # get beacon line count
-function bv  { nu0 $(sse $n1 target-peers [0-9]); }                                                                                                           # get configured peers
+function bv  { nu0 $(ss1 $n1 target-peers [0-9]); }                                                                                                           # get configured peers
 function bb  { l0=$(fs0 $bpid] 3600);bl1;bl2;[[ $(lg1) -eq 0 && ((1 -eq $(bl6 $hors) && $(bu) -ge 1) || (1 -eq $(bl6 5) && $(bu) -ge 5)) ]] && ok=BK; }       # set ok (OK/BK)
 function bfl { grep "BEAC.*$1"    ; }                                                                                                                         # filter beacon lines
 function bff { grep "BEAC.*$1" $p2; }                                                                                                                         # filter beacon log
@@ -158,31 +158,33 @@ function bh0 {
   bmo;echo -e "BM$(printf '%9i' $(cat $p3 2>$s3|wc -l))$(printf '%46s')i20  i30  i40  i50  i60  i70  i80\n$m";sso BEAC $n1;sso VALI $n3;cpe                   # medias/services/system report
 }
 function brb { if srt;then echo RB;else echo $1;fi; }                                                                                                         # get reboot/other tag
-function brv { echo ${1:-false}$#$2; }                                                                                                                        # get first#secound verbs
-function bmt { local n=$(date +%M);((n==18||n==38||n==58)); }                                                                                                 # ideal minute test
 function bro { dts;bb;bnn $(fs6 peers:);[[ -f $p2 ]] && echo "$(printf 'R%03i' $1) ${2:-$ok} $(printf '%3i' $(bu)) $(dnn)" >> $p2; }                          # log restart info
+function brv { echo ${1:-false}$#$2; }                                                                                                                        # get first#secound verbs
 function b0t { [[ $(brv $(fs0 "$bpid].*INFO " ${1:-7}|sed 's%.*INFO \([^ ]*\).*%\1%'|sort -u)) = New2Synced ]]; }                                             # ideal position test
-function b1t { [[ $(date '+%s') -gt $(ssu $1 8) ]]; }                                                                                                         # ideal position test (based on time)
+function b1t { [[ $(date '+%s') -ge $(sss $1 8) ]]; }                                                                                                         # ideal position test (based on time)
+function b2t { local m=$(date +%M);((m==18||m==38||m==58)); }                                                                                                 # ideal minute test
 function bsf { [[ ${1:-0} -gt 0 ]] || return;touch $p4.s$1s;sleep $1s;rm -f $p4.s$1s; }                                                                       # sleep with file info
-function bsw { while :;do local t=$(sng);if [[ $(sf2 $t) -le ${1:-30} ]];then bsf $(sft $(sf1 $t));else break;fi;done; }                                      # sleep while small gap
-function ssu { echo $((${2:-0}+$(date -d$1 '+%s'))); }                                                                                                        # get sum secounds + time
-function sft { local t=$(($(ssu $1)-$(date '+%s')));if [[ $t -gt 1 ]];then echo $t;else echo 1;fi; }                                                          # get seconds to future time
+function bsw { while :;do local t=$(sng);if [[ $(sf2 $t) -le $1 ]];then bsf $(ssf $t);else break;fi;done; }                                                   # sleep while small gap
+function sss { echo $((${2:-0}+$(date -d$1 '+%s'))); }                                                                                                        # get sum secounds + time
+function ssf { local n=$(($(sss $1)-$(date '+%s')));if [[ $n -gt 1 ]];then echo $n;else echo 1;fi; }                                                          # get seconds to future time
 function sf1 { echo ${1:-$(date '+%H:%M:%S')}; }                                                                                                              # get filterd t7 parm 1
 function sf2 { echo ${2:-99}; }                                                                                                                               # get filterd t7 parm 2
 function sng { $p0/eth2/t7 2>$s3; }                                                                                                                           # get next gap
+function snm { echo $((61-$(date '+%S'))); }                                                                                                                  # get secounds to next minute
 function b0r {                                                                                                                                                # beacon/validator restart
-  [[ $(ls $p4.* 2>$s3) ]] && return;bsf $3;bmt && bsf 60;b0t && bsf 25;paf;local n=0;touch $p4.ini
+  [[ $(ls $p4.* 2>$s3) ]] && return;bsf $3;b2t && bsf $(snm);b0t && bsf 25;touch $p4.ini;local n=0;paf
   while [[ -f $p4.ini && $n -le 200 ]];do                                                                                                                     # search max 200 times, every 6s
   if b0t;then nn=$(bv);snp $n1 $1 $bpri $bprf                    ;[[ $2 = VC ]] && sex "$w2 $n3";rm $p4.ini                                                   #         stop beacon/validator
     if [[ $2 = RB ]];then bro $n $2;sex reboot;else sex "$w3 $n1";[[ $2 = VC ]] && sex "$w3 $n3";bsf 20;bro $n $2;fi                                          # reboot/start beacon/validator
   fi;bsf 6;((n+=1));done;rm -f $p4.ini
 }
 function b1r {                                                                                                                                                # beacon/validator gap restart
-  [[ $(ls $p4.* 2>$s3) ]] && return;bsf $3;[[ $2 = RB ]] && bsw 60;paf;local n=0;local t=$(sf1 $(sng));local e=$p4.$(echo $t|tr -d :);touch $e
-  while [[ -f $e && $n -le 200 ]];do                                                                                                                          # search max 200 times, every 6s
+  [[ $(ls $p4.* 2>$s3) ]] && return;bsf $3;b2t && bsf $(snm)     ;[[ $2 = VC ]] && bsw 50;[[ $2 = RB ]] && bsw 60;local t=$(sng)
+  [[ $(ssf $t) -le 10  ]] && return;local e=$p4.$(sf1 $t|tr -d :);touch $e;local n=0;paf
+  while [[ -f $e ]];do ((n+=$(ssf $t)));bsf $(ssf $t)
   if b1t $t;then nn=$(bv);snp $n1 $1 $bpri $bprf                 ;[[ $2 = VC ]] && sex "$w2 $n3";rm $e                                                        #         stop beacon/validator
     if [[ $2 = RB ]];then bro $n $2;sex reboot;else sex "$w3 $n1";[[ $2 = VC ]] && sex "$w3 $n3";bsf 20;bro $n $2;fi                                          # reboot/start beacon/validator
-  fi;bsf $(sft $t);((n+=1));done;rm -f $e
+  fi;done;rm -f $e
 }
 function brh { head -n${1:-0} ${p2}r; }                                                                                                                       # new beacon head lines
 function brl {                                                                                                                                                # recalculate beacon/bmedias logs
@@ -221,7 +223,7 @@ function nsh {
 }
 function cpe {                                                                                                                                                # system status
   local e='NO';[[ $(timedatectl|grep synchronized:|sed 's%.*synchronized: \([a-z]*\).*%\1%') = yes ]] && e='OK';dts
-  m=$(sss systemd-timesyncd);[[ $(echo $m|grep dead) ]] && m=$(sss ntp);echo "CLCK $e $(printf '%3i' $(fs0 clock|wc -l)) $dt status: $m"                      # CLCK info
+  m=$(ss2 systemd-timesyncd);[[ $(echo $m|grep dead) ]] && m=$(ss2 ntp);echo "CLCK $e $(printf '%3i' $(fs0 clock|wc -l)) $dt status: $m"                      # CLCK info
   [[ $1 = c ]] && return;local l=0;local n=0;local v=0
   local d=$(fs8|grep throttled|head -n1|sed 's%.* \([0-9]*:[0-9]*\):[0-9]*.*%\1%')
   local e=$(fs8|grep normal   |tail -n1|sed 's%.* \([0-9]*:[0-9]*\):[0-9]*.*%\1%')
