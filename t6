@@ -159,21 +159,31 @@ function bh0 {
 }
 function brb { if srt;then echo RB;else echo $1;fi; }                                                                                                         # get reboot/other tag
 function bro { dts;bb;bnn $(fs6 peers:);[[ -f $p2 ]] && echo "$(printf 'R%03i' $1) ${2:-$ok} $(printf '%3i' $(bu)) $(dnn)" >> $p2; }                          # log restart info
-function nu6 { echo ${1##+(0)}; }                                                                                                                             # get integer without leading zeros
-function b1t { [[ $(date '+%s') -ge $(bss $1 8) ]]; }                                                                                                         # ideal position test (based on time)
-function b3t { local m=$(nu6 $(date -d$1 +%M));((m==18||m==38||m==58)); }                                                                                     # ideal minute test
-function bsf { [[ ${1:-0} -gt 0 ]] || return;touch $p4.s$1s;sleep $1s;rm -f $p4.s$1s; }                                                                       # sleep with file info
-function bsw { while :;do local t=$(bng);if [[ $(bf2 $t) -le $1 ]] || b3t $t;then bsf $(brt $t);else break;fi;done; }                                         # sleep while small gap or wrong minute
-function bss { echo $((${2:-0}+$(date -d$1 '+%s'))); }                                                                                                        # get sum secounds + time
-function brt { local n=$(($(bss $1)-$(date '+%s')));if [[ $n -gt 1 ]];then echo $n;else echo 1;fi; }                                                          # get seconds remaining to future time
-function bf1 { echo ${1:-$(date '+%H:%M:%S')}; }                                                                                                              # get filterd t7 parm 1
+function blz { echo ${1##+(0)}; }                                                                                                                             # get integer without leading zeros
+function b1t { [[ $(date +%s) -ge $(bss $1 6) ]]; }                                                                                                           # ideal position test (based on time)
+function b2t { local n=$(blz $(date -d$1 +%M));((n==18||n==38||n==58)); }                                                                                     # ideal minute test
+function btg { echo $(date -d@${1:-0} +%M:%S|tr -d :)t$(date -d@$(($(date +%s)+${1:-0})) +%H:%M:%S|tr -d :); }                                                # get end file sleep tag
+function bss { echo $((${2:-0}+$(date -d$1 +%s))); }                                                                                                          # get sum secounds + time
+function brt { local n=$(($(bss $1)-$(date +%s)));if [[ $n -gt 2 ]];then echo $n;else echo 2;fi; }                                                            # get seconds remaining to future time
+function bf1 { echo ${1:-$(date +%H:%M:%S)}; }                                                                                                                # get filterd t7 parm 1
 function bf2 { echo ${2:-99}; }                                                                                                                               # get filterd t7 parm 2
 function bng { $p0/eth2/t7 2>$s3; }                                                                                                                           # get next gap
+function bsf { [[ ${1:-0} -gt 0 ]] || return;local e=$p4.s$(btg $1);touch $e;sleep $1s;rm -f $e; }                                                            # sleep with file info
+function bsw { while :;do local t=$(bng);if [[ $(bf2 $t) -le $1 ]];then bsf $(brt $t);else break;fi;done; }                                                   # sleep while small gap or wrong minute
+# function bsf { [[ ${1:-0} -gt 0 ]] || return;local e=$p4.s$(btg $1);echo $(bf1) s$(btg $1);touch $e;sleep $1s;rm -f $e; }
+# function bsw { while :;do local t=$(bng);echo $(bf1) $(bf2 $t) -le $1;if [[ $(bf2 $t) -le $1 ]];then bsf $(brt $t);else echo $(bf1) break;break;fi;done; }
+# function b0r {
+#   [[ $(ls $p4.* 2>$s3) ]] && return;local n=${1:-90};bsw $n;local t=$(bng)
+#   [[ $(brt $t) -le 10  ]] && return;local e=$p4.i$(btg);echo $(bf1) i$(btg);touch $e;local n=0
+#   while [[ -f $e ]];do ((n+=$(brt $t)));echo $(bf1) while $(bf2 $t) $n;bsf $(brt $t)
+#     if b1t $t;then rm $e;echo $(bf1) work;else echo $(bf1) continue;fi
+#   done;rm -f $e
+# }
 function b1r {                                                                                                                                                # beacon/validator gap restart
-  [[ $(ls $p4.* 2>$s3) ]] && return;bsf $3;local n=30;[[ $2 = VC ]] && n=50;[[ $2 = RB ]] && n=60;bsw $n;local t=$(bng)
-  [[ $(brt $t) -le 10  ]] && return;local e=$p4.$(bf1 $t|tr -d :);touch $e;local n=0;paf
+  [[ $(ls $p4.* 2>$s3) ]] && return;bsf $3;local n=30;[[ $2 = VC ]] && n=60;[[ $2 = RB ]] && n=90;bsw $n;local t=$(bng)
+  [[ $(brt $t) -le 10  ]] && return;local e=$p4.i$(btg);touch $e;local n=0;paf
   while [[ -f $e ]];do ((n+=$(brt $t)));bsf $(brt $t)
-  if b1t $t;then nn=$(bv);snp $n1 $1 $bpri $bprf                 ;[[ $2 = VC ]] && sex "$w2 $n3";rm $e                                                        #         stop beacon/validator
+  if b1t $t;then rm $e;nn=$(bv);snp $n1 $1 $bpri $bprf           ;[[ $2 = VC ]] && sex "$w2 $n3"                                                              #         stop beacon/validator
     if [[ $2 = RB ]];then bro $n $2;sex reboot;else sex "$w3 $n1";[[ $2 = VC ]] && sex "$w3 $n3";bsf 20;bro $n $2;fi                                          # reboot/start beacon/validator
   fi;done;rm -f $e
 }
