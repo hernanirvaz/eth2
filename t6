@@ -18,9 +18,8 @@ function fs5 { sed "s%$1 *\([0-9]*\).*%\1%" $2 2>$s3; }                         
 function fs6 { fs0 $1 $2   |fs5 .*$1; }                                                                                                                       # get peers    syslog lines
 function fs7 { fs4 $1 $2 $3|fs5   $1; }                                                                                                                       # get number          from log
 function fs8 { fs3|tail -n300|grep $o4; }                                                                                                                     # get tail cpu syslog lines
-function lg0 { fs8|wc -l; }                                                                                                                                   # get # temperature messages
-function lg1 { fs0 INFO 40|grep sync_committee|wc -l; }                                                                                                       # get # committee messages
-function lg2 { fs3|grep usb|grep -i error     |wc -l; }                                                                                                       # get # usb errors
+function lg0 { fs8                       |wc -l; }                                                                                                            # get # temperature messages
+function lg1 { fs3|grep usb|grep -i error|wc -l; }                                                                                                            # get # usb errors
 function rl0 { local n=${1:-0};((n<5)) && rl0 $((n+1));local e="$p7/logs/beacon.log";((n>0)) && e="$e.$n";echo $H|sudo -S cat $e 2>$s3; }                     # get beacon   intern lines
 function rl1 { local n=${1:-0};((n<7)) && rl1 $((n+1));local e="$s1";((n>0)) && e="$e.$n";echo $H|sudo -S grep -i $o3 $e 2>$s3; }                             # get all eth  syslog lines
 function pt0 { until [[ $# -le 1 || $1 =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]];do shift;done;echo $1; }                                                            # yyyy-mm-dd test
@@ -67,7 +66,7 @@ function bi  { echo $((nd+zk*300+zz*20+zx))                                     
 function bu  { echo $(((z5>400?$(bz)/z5:0)+(z2>300?$(bw)/z2:0)+(z4>999?$(bf)/z4:0))); }                                                                       # get restart idx
 function bk  { cat $p2 2>$s3|wc -l; }                                                                                                                         # get beacon line count
 function bv  { nu0 $(ss1 $n1 target-peers [0-9]); }                                                                                                           # get configured peers
-function bb  { l0=$(fs0 $bpid] 3600);bl1;bl2;[[ $(lg1) -eq 0 && ((1 -eq $(bl6 $hors) && $(bu) -ge 1) || (1 -eq $(bl6 5) && $(bu) -ge 5)) ]] && ok=BK; }       # set ok (OK/BK)
+function bb  { l0=$(fs0 $bpid] 3600);bl1;bl2;[[ (1 -eq $(bl6 $hors) && $(bu) -ge 1) || (1 -eq $(bl6 5) && $(bu) -ge 5) ]] && ok=BK; }                         # set ok (OK/BK)
 function bfl { grep "BEAC.*$1"    ; }                                                                                                                         # filter beacon lines
 function bff { grep "BEAC.*$1" $p2; }                                                                                                                         # filter beacon log
 function bl0 { dts;ok=OK;if [[ $(sst $n1 running) ]];then bl3;nn=$(bv);bnn $(fs6 peers:);bb;blo;else m="BSRV NOT ON $dt";fi; }                                # beacon report
@@ -170,18 +169,21 @@ function bf2 { echo ${2:-99}; }                                                 
 function bng { $p0/eth2/t7 2>$s3; }                                                                                                                           # get next gap
 function bsf { [[ ${1:-0} -gt 0 ]] || return;local e=$p4.s$(btg $1);touch $e;sleep $1s;rm -f $e; }                                                            # sleep with file info
 function bsw { while :;do local t=$(bng);if [[ $(bf2 $t) -le $1 ]];then bsf $(brt $t);else break;fi;done; }                                                   # sleep while small gap or wrong minute
-# function bsf { [[ ${1:-0} -gt 0 ]] || return;local e=$p4.s$(btg $1);echo $(bf1) s$(btg $1);touch $e;sleep $1s;rm -f $e; }
-# function bsw { while :;do local t=$(bng);echo $(bf1) $(bf2 $t) -le $1;if [[ $(bf2 $t) -le $1 ]];then bsf $(brt $t);else echo $(bf1) break;break;fi;done; }
-# function b0r {
-#   [[ $(ls $p4.* 2>$s3) ]] && return;local n=${1:-90};bsw $n;local t=$(bng)
-#   [[ $(brt $t) -le 10  ]] && return;local e=$p4.i$(btg);echo $(bf1) i$(btg);touch $e;local n=0
-#   while [[ -f $e ]];do ((n+=$(brt $t)));echo $(bf1) while $(bf2 $t) $n;bsf $(brt $t)
-#     if b1t $t;then rm $e;echo $(bf1) work;else echo $(bf1) continue;fi
-#   done;rm -f $e
-# }
+function bsc { echo $H|sudo -S grep lighthouse.*INFO $s1 2>$s3|tail -n40|grep sync_committee|wc -l; }                                                         # get # committee messages
+: '
+function bsf { [[ ${1:-0} -gt 0 ]] || return;local e=$p4.s$(btg $1);echo $(bf1) s$(btg $1);touch $e;sleep $1s;rm -f $e; }
+function bsw { while :;do local t=$(bng);echo $(bf1) $(bf2 $t) -le $1;if [[ $(bf2 $t) -le $1 ]];then bsf $(brt $t);else echo $(bf1) break;break;fi;done; }
+function b0r {
+  [[ $(ls $p4.* 2>$s3) || $(bsc) -gt 0 ]] && return;local n=${1:-90};bsw $n;local t=$(bng)
+  [[ $(brt $t) -le 10                  ]] && return;local e=$p4.i$(btg);echo $(bf1) i$(btg);touch $e;local n=0
+  while [[ -f $e ]];do ((n+=$(brt $t)));echo $(bf1) while $(bf2 $t) $n;bsf $(brt $t)
+    if b1t $t;then rm $e;echo $(bf1) work;else echo $(bf1) continue;fi
+  done;rm -f $e
+}
+# '
 function b1r {                                                                                                                                                # beacon/validator gap restart
-  [[ $(ls $p4.* 2>$s3) ]] && return;bsf $3;local n=30;[[ $2 = VC ]] && n=60;[[ $2 = RB ]] && n=90;bsw $n;local t=$(bng)
-  [[ $(brt $t) -le 10  ]] && return;local e=$p4.i$(btg);touch $e;local n=0;paf
+  [[ $(ls $p4.* 2>$s3) || $(bsc) -gt 0 ]] && return;bsf $3;local n=30;[[ $2 = VC ]] && n=60;[[ $2 = RB ]] && n=90;bsw $n;local t=$(bng)
+  [[ $(brt $t) -le 10                  ]] && return;local e=$p4.i$(btg);touch $e;local n=0;paf
   while [[ -f $e ]];do ((n+=$(brt $t)));bsf $(brt $t)
   if b1t $t;then rm $e;nn=$(bv);snp $n1 $1 $bpri $bprf           ;[[ $2 = VC ]] && sex "$w2 $n3"                                                              #         stop beacon/validator
     if [[ $2 = RB ]];then bro $n $2;sex reboot;else sex "$w3 $n1";[[ $2 = VC ]] && sex "$w3 $n3";bsf 20;bro $n $2;fi                                          # reboot/start beacon/validator
@@ -216,7 +218,7 @@ function bht { [[ $b2 -gt $b3 ]]; }                                             
 function bst { [[ $(bi) -ge 2500 ]]; }                                                                                                                        # peers standard deviation test
 function btt { bnt && bht && ! bst; }                                                                                                                         # peers change global test
 function bbt { [[ $(grep $d0 ${p2} 2>$s3|wc -l) -gt 0 ]]; }                                                                                                   # exists beacon log day test
-function bct { local n=$((nn-5));[[ $nm -ge $n && $(lg1) -eq 0 && $(bl6 $hors) -eq 1 ]] && ( btt || sot ); }                                                  # change configured peers test
+function bct { local n=$((nn-5));[[ $nm -ge $n && $(bl6 $hors) -eq 1 ]] && ( btt || sot ); }                                                                  # change configured peers test
 function bdl { local d=$(pt0 $1 sai);[[ -f $p2 && $d != sai ]] || return;cp $p2 ${p2}o;grep -v $d ${p2}o > $p2;grep $d ${p2}o > ${p2}d; }                     # delete beacon log day
 function nsh {
   echo -e "ROUTES\t\t$(ip route show|grep 'default via'|grep -v linkdown|cut -d' ' -f3)\nDNS\t\t$(resolvectl|grep 'Current DNS'|cut -d' ' -f6)"               # routes
@@ -231,14 +233,14 @@ function cpe {                                                                  
   local v=0;for v in $(sensors 2>$s3|grep 'Package\|Core'|sed 's%.*: *\([-+][0-9][0-9]*\.[0-9]*\).*%\1%');do ((n+=1));l=$(nu1 $l$v 1);done
   [[ $d ]] && d="throttled: $d";[[ $e ]] && e="normal: $e";echo "TEMP $(nu5 $l/$((n==0?1:n)) 1 2 %2.0fC)$(printf '%3i' $(lg0)) $dt $d $e"                     # TEMP cpu info
   [[ $1 = p ]] && return
-  m="INFO$(printf '%3i' $(lg2))     $dt"                                                                                                                      # usb/cpu erros count
+  m="INFO$(printf '%3i' $(lg1))     $dt"                                                                                                                      # usb/cpu erros count
   m="$m uptime:$(uptime|sed 's%[0-9]*:[0-9]*:[0-9]*%%;s%[0-9]*:[0-9]*,%%;s%[0-9]* users*,%%;s% average\([^,]*\).*%\1%;s%  *% %g')"                            # uptime/load info
   if [[ $(cat $s6) -eq 0 ]];then e=off;else e=on;fi;if [[ $(cat $s7) -eq 1 ]];then d=off;else d=on;fi;echo "$m, usb $e, turbo $d"                             # usb/turbo info
   local l=$(fs3|grep -i 'error' |wc -l);local n=$(fs2|grep -v ' INFO '|wc -l)
   local e=$(fs3|grep -i 'error' |tail -n1|sed 's%.*hrv-zotac[0-9] *\(.*\)%\1%;s%:%%g;s%  *% %g'                                |cut -c1-53)
   local d=$(fs2|grep -v ' INFO '|tail -n1|sed 's%.*[0-9]*:[0-9]*:[0-9]*\.[0-9][0-9][0-9]]* *\(.*\)%\1%;s%:%%g;s%:%%g;s%  *% %g'|cut -c1-53)
   m="ERRO$(printf '%3i' $l) $(printf '%3i' $n) $dt";[[ $l -gt 0 ]] && m="$m system: $e";[[ $n -gt 0 ]] && m="$m ethrum: $d";(( l+n )) && echo -e "$m"         # sys/eth errors info
-  m='';srt && m="$m, reboot $(($(sra)/60/60)) hours ago";[[ $(lg1) -gt 0 ]] && m="$m, committee on";[[ $m ]] && echo "INFO        $dt${m#*,}"                 # reboot/committee info
+  m='';srt && m="$m, reboot $(($(sra)/60/60)) hours ago";[[ $(bsc) -gt 0 ]] && m="$m, committee on";[[ $m ]] && echo "INFO        $dt${m#*,}"                 # reboot/committee info
 }
 # Plex Media Server
 function rxw { cex "ufw$2 allow from 192.168.8.0/24 $1"; }
@@ -334,7 +336,7 @@ function ssp {
     fi
   fi
 }
-function umt { [[ $(cat $s6) -eq 1 && $(lg2) -gt 10 ]]; }                                                                                                     # usb messages test
+function umt { [[ $(cat $s6) -eq 1 && $(lg1) -gt 10 ]]; }                                                                                                     # usb messages test
 function t0t { [[ $(cat $s7) -eq 0 && $(lg0) -gt 20 ]]; }                                                                                                     # cpu no turbo recomended test
 function t1t { [[ $(cat $s7) -eq 1 && $(lg0) -le 10 ]]; }                                                                                                     # cpu    turbo recomended test
 function t2t { [[ $(cat $s7) -eq 1 ]]; }                                                                                                                      # cpu no turbo            test
