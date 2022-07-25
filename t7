@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 SLOTS_PER_EPOCH = 32
 SECONDS_PER_SLOT = 12
 
-def main(vidx=[11766,11767,11770,11771,11772,11773,11774,11775,11776,11777,11778,11779,11780,11782,11783,11784,11786,11788], url="http://192.168.8.31:5052/eth/v1/"):
+def main(vidx=[11766,11767,11770,11771,11772,11773,11774,11775,11776,11777,11778,11779,11780,11782,11783,11784,11786,11788], url="http://192.168.8.28:5052/eth/v1/"):
     def api_get(endpoint):
         return requests.get(f"{url}{endpoint}").json()
     def api_post(endpoint, data):
