@@ -162,18 +162,18 @@ function bpt { [[ $(date +%s) -ge $(bss $1 6) ]]; }                             
 function btg { echo $(date -d@${1:-0} +%M:%S|tr -d :)t$(date -d@$(($(date +%s)+${1:-0})) +%H:%M:%S|tr -d :); }                                                # get end file sleep tag
 function bss { echo $((${2:-0}+$(date -d$(bf1 $1) +%s))); }                                                                                                   # get sum secounds + time
 function bfn { local n=$(($(bss $1)-$(date +%s)));echo $((n>3?n:3)); }                                                                                        # get min seconds to future
-function bmn { local n=${1:-12};echo $((n>360?360:n<12?12:n)); }                                                                                              # get max/min seconds to future (12x30/12)
+function bmn { local n=${1:-24};echo $((n>360?360:n<24?24:n)); }                                                                                              # get max/min seconds to future (12x30/24)
 function bf1 { echo ${1:-$(date +%H:%M:%S)}; }                                                                                                                # get filterd t7 parm 1
-function bf2 { echo ${2:-12}; }                                                                                                                               # get filterd t7 parm 2
+function bf2 { echo ${2:-24}; }                                                                                                                               # get filterd t7 parm 2
 function bng { $p0/eth2/t7 2>$s3; }                                                                                                                           # get next gap
 function bsc { echo $H|sudo -S grep lighthouse.$bpid].*INFO $s1 2>$s3|tail -n99|grep sync_committee|wc -l; }                                                  # get # committee messages
 function bsf { [[ ${1:-0} -gt 0 ]] || return;local e=$p4.s$(btg $1);touch $e;sleep $1s;rm -f $e; }                                                            # sleep with file info
-function bsw { while :;do local t=$(bng);if [[ $(bf2 $t) -le ${1:-36} || ${2:-12} -ge $(bfn $t) ]];then bsf $(bmn $(bfn $t));else break;fi;done; }            # sleep while small (gap or remaining) time
+function bsw { while :;do local t=$(bng);if [[ $(bf2 $t) -le ${1:-36} || ${2:-24} -ge $(bfn $t) ]];then bsf $(bmn $(bfn $t));else break;fi;done; }            # sleep while small (gap or remaining) time
 : '
 function bsf { [[ ${1:-0} -gt 0 ]] || return;local e=$p4.s$(btg $1);echo $(bf1) t$(btg $1) s$1;touch $e;sleep $1s;rm -f $e; }
-function bsw { while :;do local t=$(bng);echo $(bf1) $(bf2 $t) -le ${1:-36} or ${2:-12} -ge $(bfn $t);if [[ $(bf2 $t) -le ${1:-36} || ${2:-12} -ge $(bfn $t) ]];then bsf $(bmn $(bfn $t));else echo $(bf1) break t$(btg $(bfn $t)) s$(bfn $t);break;fi;done; }
+function bsw { while :;do local t=$(bng);echo $(bf1) $(bf2 $t) -le ${1:-36} or ${2:-24} -ge $(bfn $t);if [[ $(bf2 $t) -le ${1:-36} || ${2:-24} -ge $(bfn $t) ]];then bsf $(bmn $(bfn $t));else echo $(bf1) break t$(btg $(bfn $t)) s$(bfn $t);break;fi;done; }
 function b0r {
-  [[ $(ls $p4.* 2>$s3) || $(bsc) -gt 0 ]] && return;local n=${1:-36};[[ $2 = VC ]] && n=60;[[ $2 = RB ]] && n=84;bsw $n;local t=$(bng)
+  [[ $(ls $p4.* 2>$s3) || $(bsc) -gt 0 ]] && return;bsf $3;local n=${4:-36};[[ $2 = VC ]] && n=60;[[ $2 = RB ]] && n=84;bsw $n;local t=$(bng)
   local e=$p4.i$(btg);echo $(bf1) i$(btg);touch $e;local n=0;while [[ -f $e ]];do ((n+=$(bfn $t)));echo $(bf1) while $(bf2 $t) n=$n;bsf $(bfn $t)
   if bpt $t;then rm $e;echo $(bf1) work;else echo $(bf1) continue;fi
   done;rm -f $e
@@ -181,7 +181,7 @@ function b0r {
 # '
 # slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144
 function b1r {                                                                                                                                                # beacon/validator gap restart
-  [[ $(ls $p4.* 2>$s3) || $(bsc) -gt 0 ]] && return;bsf $3;local n=36;[[ $2 = VC ]] && n=60;[[ $2 = RB ]] && n=84;bsw $n;local t=$(bng)
+  [[ $(ls $p4.* 2>$s3) || $(bsc) -gt 0 ]] && return;bsf $3;local n=${4:-36};[[ $2 = VC ]] && n=60;[[ $2 = RB ]] && n=84;bsw $n;local t=$(bng)
   local e=$p4.i$(btg);touch $e;local n=0;paf;while [[ -f $e ]];do ((n+=$(bfn $t)));bsf $(bfn $t)
   if bpt $t;then rm $e;nn=$(bv);snp $n1 $1 $bpri $bprf           ;[[ $2 = VC ]] && sex "$w2 $n3"                                                              #         stop beacon/validator
     if [[ $2 = RB ]];then bro $n $2;sex reboot;else sex "$w3 $n1";[[ $2 = VC ]] && sex "$w3 $n3";bsf 20;bro $n $2;fi                                          # reboot/start beacon/validator
