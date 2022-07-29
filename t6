@@ -240,48 +240,54 @@ function cpe {                                                                  
   m="ERRO$(printf '%3i' $l) $(printf '%3i' $n) $dt";[[ $l -gt 0 ]] && m="$m system: $e";[[ $n -gt 0 ]] && m="$m ethrum: $d";(( l+n )) && echo -e "$m"         # sys/eth errors info
   m='';srt && m="$m, reboot $(($(sra)/60/60)) hours ago";[[ $(bsc) -gt 0 ]] && m="$m, committee on";[[ $m ]] && echo "INFO        $dt${m#*,}"                 # reboot/committee info
 }
+function uf1 { cex "ufw allow from $2 to any port $1 comment $3"; }
+function uf2 { cex "ufw allow $1 comment $2"; }
+function uf3 { cex "ufw deny  $1 comment $2"; }
+function uf4 { cex "ufw delete allow from $2 to any port $1"; }
+function uf5 { cex "ufw delete deny $1"; }
 # Plex Media Server
-function rxw { cex "ufw$2 allow from 192.168.8.0/24 $1"; }
-function xop { cex 'ufw delete deny 32400             ';rxw 'to any port 32400 comment plex'; }
-function xcl { cex 'ufw        deny 32400 comment plex';rxw 'to any port 32400 '   ' delete'; }
-function xe  { xop;cex 'ufw reload';cex "$w4 $o0"; }
+function xop { uf5 32400     ;uf1 32400 192.168.8.0/24 plex; }
+function xcl { uf3 32400 plex;uf4 32400 192.168.8.0/24; }
+function xe  { xop;sex 'ufw reload';cex "$w4 $o0"; }
 function xa  { [[ $(sst $o0       ) ]] && { cex "$w3 $o0"; } }
 function xp  { [[ $(sst $o0 loaded) ]] && { cex "$w2 $o0"; } }
-function xd  { cex "$w5 $o0";xcl;cex 'ufw reload'; }
+function xd  { cex "$w5 $o0";xcl;sex 'ufw reload'; }
 # Transmission BitTorrent Daemon
-function rop { cex 'ufw allow 51413 comment torrent';rxw 'to any port 9091 comment torrent'; }
-function rcl { cex 'ufw deny  51413 comment torrent';rxw 'to any port 9091'       ' delete'; }
-function re  { rop;cex 'ufw reload';cex "$w4 $o1"; }
+function rop { uf2 51413 torrent;uf5 9091        ;uf1 9091 192.168.8.0/24 torrent; }
+function rcl { uf3 51413 torrent;uf3 9091 torrent;uf4 9091 192.168.8.0/24; }
+function re  { rop;sex 'ufw reload';cex "$w4 $o1"; }
 function ra  { [[ $(sst $o1       ) ]] && { cex "$w3 $o1"; } }
 function rp  { [[ $(sst $o1 loaded) ]] && { cex "$w2 $o1"; } }
-function rd  { cex "$w5 $o1";rcl;cex 'ufw reload'; }
+function rd  { cex "$w5 $o1";rcl;sex 'ufw reload'; }
 # Bind9
-function sop { cex 'ufw delete deny 53            ';rxw 'to any port 53 comment dns'; }
-function scl { cex 'ufw        deny 53 comment dns';rxw 'to any port 53 '  ' delete'; }
-function se  { sop;cex 'ufw reload';cex "$w4 $o2"; }
+function sop { uf5 53    ;uf1 53 192.168.8.0/24 dns; }
+function scl { uf3 53 dns;uf4 53 192.168.8.0/24; }
+function se  { sop;sex 'ufw reload';cex "$w4 $o2"; }
 function sa  { [[ $(sst $o2 disabled) ]] || { [[ $(sst $o2) ]] && cex "$w3 $o2"; } }
 function sp  { [[ $(sst $o2 loaded  ) ]] && { cex "$w2 $o2"; } }
-function sd  { cex "$w5 $o2";scl;cex 'ufw reload'; }
+function sd  { cex "$w5 $o2";scl;sex 'ufw reload'; }
 # open/close geth/beacon/validator/grafana
-function gfw { if [[ $cust = hrv ]];then cex "ufw$2 allow from 192.168.8.0/24 $1";else cex "ufw$2 allow from $vip1 $1";cex "ufw$2 allow from $vip3 $1";fi; }
-function gop { cex 'ufw allow 30303 comment eth1';gfw 'to any port 8545 comment geapi';gfw 'to any port 8551 comment gejwt';cex 'ufw delete deny 8545';cex 'ufw delete deny 8551'; }
-function gcl { cex 'ufw deny  30303 comment eth1';cex 'ufw    deny 8545 comment geapi';cex 'ufw    deny 8551 comment gejwt';gfw 'to any port 8545' ' delete';gfw 'to any port 8551' ' delete'; }
-function ofw { if [[ $cust = hrv ]];then cex "ufw$2 allow from $zip2 $1";cex "ufw$2 allow from $zip3 $1";else cex "ufw$2 allow from $vip1 $1";cex "ufw$2 allow from $vip3 $1";fi; }
-function bfw { if [[ $cust = hrv ]];then cex "ufw$2 allow from 192.168.8.0/24 $1";else cex "ufw$2 allow from $vip3 $1";fi; }
-function bop { cex 'ufw allow 9000 comment eth2';bfw 'to any port 5052 comment bnapi';bfw 'to any port 8551 comment bnjwt';cex 'ufw delete deny 5052';cex 'ufw delete deny 8551'; }
-function bcl { cex 'ufw deny  9000 comment eth2';cex 'ufw    deny 5052 comment bnapi';cex 'ufw    deny 8551 comment bnjwt';bfw 'to any port 5052' ' delete';bfw 'to any port 8551' ' delete'; }
-function vfw { if [[ $cust = hrv ]];then cex "ufw$2 allow from $zip1 $1";else cex "ufw$2 allow from $vip1 $1";fi; }
-function vop { cex 'ufw delete deny 5064              ';`# vfw 'to any port 5064 comment vcmet'` ; }
-function vcl { cex 'ufw        deny 5064 comment vcmet';`# vfw 'to any port 5064'     ' delete'` ; }
-function fop { cex 'ufw allow 3000/tcp comment grafana'; }
-function fcl { cex 'ufw deny  3000/tcp                '; }
+function gfo { if [[ $cust = hrv ]];then uf1 $1 192.168.8.0/24 $2;else uf1 $1 $vip1 $2;uf1 $1 $vip3 $2;fi; }
+function gfc { if [[ $cust = hrv ]];then uf4 $1 192.168.8.0/24   ;else uf4 $1 $vip1   ;uf4 $1 $vip3   ;fi; }
+function gop { uf2 30303 ecp2p;gfo 8545 ecapi;gfo 8551 ecjwt;uf5 8545;uf5 8551; }
+function gcl { uf3 30303 ecp2p;uf3 8545 ecapi;uf3 8551 ecjwt;gfc 8545;gfc 8551; }
+function bfo { if [[ $cust = hrv ]];then uf1 $1 192.168.8.0/24 $2;else uf1 $1 $vip3 $2;fi; }
+function bfc { if [[ $cust = hrv ]];then uf4 $1 192.168.8.0/24   ;else uf4 $1 $vip3   ;fi; }
+function bop { uf2 9000 bnp2p;bfo 5052 bnapi;bfo 8551 bnjwt;uf5 5052;uf5 8551; }
+function bcl { uf3 9000 bnp2p;uf3 5052 bnapi;uf3 8551 bnjwt;bfc 5052;bfc 8551; }
+function vfo { if [[ $cust = hrv ]];then uf1 $1 192.168.8.0/24 $2;else uf1 $1 $vip1 $2;fi; }
+function vfc { if [[ $cust = hrv ]];then uf4 $1 192.168.8.0/24   ;else uf4 $1 $vip1   ;fi; }
+function vop { vfo 5064 vcapi;uf5 5064; }
+function vcl { uf3 5064 vcapi;vfc 5064; }
+function fop { uf2 3000/tcp grafana; }
+function fcl { uf3 3000/tcp; }
 # enable/arranca goethereum/beacon/validator/prometheus/grafana
-function ge  { gop;cex 'ufw reload';cex "$w4 $n0"; }
-function be  { bop;cex 'ufw reload';cex "$w4 $n1"; }
-function ve  { [[ -f $p1/vc_lock ]] || { vop;cex 'ufw reload';cex "$w4 $n3"; } }
-function pe  { cex 'ufw reload';cex "$w4 $n4"; }
-function ne  { cex 'ufw reload';cex "$w4 $n5"; }
-function fe  { fop;cex 'ufw reload';cex "$w4 $n6"; }
+function ge  { gop;sex 'ufw reload';cex "$w4 $n0"; }
+function be  { bop;sex 'ufw reload';cex "$w4 $n1"; }
+function ve  { [[ -f $p1/vc_lock ]] || { vop;sex 'ufw reload';cex "$w4 $n3"; } }
+function pe  { sex 'ufw reload';cex "$w4 $n4"; }
+function ne  { sex 'ufw reload';cex "$w4 $n5"; }
+function fe  { fop;sex 'ufw reload';cex "$w4 $n6"; }
 function ga  { [[ $(sst $n0) ]] && [[ -d /var/lib/goethereum   ]] && { cex "$w3 $n0"; } }
 function ba  { [[ $(sst $n1) ]] && { cex "$w3 $n1"; } }
 function va  {
@@ -314,12 +320,12 @@ function vp  { [[ $(sst $n3 loaded) ]] && { cex "$w2 $n3";touch $p1/vc_slash; } 
 function pp  { [[ $(sst $n4 loaded) ]] && { cex "$w2 $n4"; } }
 function np  { [[ $(sst $n5 loaded) ]] && { cex "$w2 $n5"; } }
 function fp  { [[ $(sst $n6 loaded) ]] && { cex "$w2 $n6"; } }
-function gd  { cex "$w5 $n0";gcl;cex 'ufw reload'; }
-function bd  { cex "$w5 $n1";bcl;cex 'ufw reload'; }
-function vd  { cex "$w5 $n3";vcl;cex 'ufw reload';touch $p1/vc_lock; }
+function gd  { cex "$w5 $n0";gcl;sex 'ufw reload'; }
+function bd  { cex "$w5 $n1";bcl;sex 'ufw reload'; }
+function vd  { cex "$w5 $n3";vcl;sex 'ufw reload';touch $p1/vc_lock; }
 function pd  { [[ $(sst $n4 loaded) ]] && { cex "$w5 $n4"; } }
 function nd  { [[ $(sst $n5 loaded) ]] && { cex "$w5 $n5"; } }
-function fd  { [[ $(sst $n6 loaded) ]] && { cex "$w5 $n6";fcl;cex 'ufw reload'; } }
+function fd  { [[ $(sst $n6 loaded) ]] && { cex "$w5 $n6";fcl;sex 'ufw reload'; } }
 function dpa { cex "$w2 $o2";sex "$w2 systemd-resolved";cex "$w3 $o2";sex "$w3 systemd-resolved"; }                                                           # DNS stop/start
 function ssp {
   echo -e "${i}QUER MESMO TRANSFERIR VALIDATORS?${f}";read rsp
