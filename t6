@@ -266,7 +266,7 @@ function se  { sop;sex 'ufw reload';cex "$w4 $o2"; }
 function sa  { [[ $(sst $o2 disabled) ]] || { [[ $(sst $o2) ]] && cex "$w3 $o2"; } }
 function sp  { [[ $(sst $o2 loaded  ) ]] && { cex "$w2 $o2"; } }
 function sd  { cex "$w5 $o2";scl;sex 'ufw reload'; }
-# open/close geth/beacon/validator/grafana
+# geth/beacon/validator
 function gfo { if [[ $cust = hrv ]];then uf1 $1 192.168.8.0/24 $2;else uf1 $1 $vip1 $2;uf1 $1 $vip3 $2;fi; }
 function gfc { if [[ $cust = hrv ]];then uf4 $1 192.168.8.0/24   ;else uf4 $1 $vip1   ;uf4 $1 $vip3   ;fi; }
 function gop { uf2 30303 ecp2p;gfo 8545 ecapi;gfo 8551 ecjwt;uf5 8545;uf5 8551; }
@@ -279,15 +279,13 @@ function vfo { if [[ $cust = hrv ]];then uf1 $1 192.168.8.0/24 $2;else uf1 $1 $v
 function vfc { if [[ $cust = hrv ]];then uf4 $1 192.168.8.0/24   ;else uf4 $1 $vip1   ;fi; }
 function vop { vfo 5064 vcapi;uf5 5064; }
 function vcl { uf3 5064 vcapi;vfc 5064; }
-function fop { uf2 3000/tcp grafana; }
-function fcl { uf3 3000/tcp; }
 # enable/arranca goethereum/beacon/validator/prometheus/grafana
 function ge  { gop;sex 'ufw reload';cex "$w4 $n0"; }
 function be  { bop;sex 'ufw reload';cex "$w4 $n1"; }
 function ve  { [[ -f $p1/vc_lock ]] || { vop;sex 'ufw reload';cex "$w4 $n3"; } }
 function pe  { sex 'ufw reload';cex "$w4 $n4"; }
 function ne  { sex 'ufw reload';cex "$w4 $n5"; }
-function fe  { fop;sex 'ufw reload';cex "$w4 $n6"; }
+function fe  { uf2 3000/tcp grafana;sex 'ufw reload';cex "$w4 $n6"; }
 function ga  { [[ $(sst $n0) ]] && [[ -d /var/lib/goethereum   ]] && { cex "$w3 $n0"; } }
 function ba  { [[ $(sst $n1) ]] && { cex "$w3 $n1"; } }
 function va  {
@@ -325,7 +323,7 @@ function bd  { cex "$w5 $n1";bcl;sex 'ufw reload'; }
 function vd  { cex "$w5 $n3";vcl;sex 'ufw reload';touch $p1/vc_lock; }
 function pd  { [[ $(sst $n4 loaded) ]] && { cex "$w5 $n4"; } }
 function nd  { [[ $(sst $n5 loaded) ]] && { cex "$w5 $n5"; } }
-function fd  { [[ $(sst $n6 loaded) ]] && { cex "$w5 $n6";fcl;sex 'ufw reload'; } }
+function fd  { [[ $(sst $n6 loaded) ]] && { cex "$w5 $n6";uf3 3000/tcp;sex 'ufw reload'; } }
 function dpa { cex "$w2 $o2";sex "$w2 systemd-resolved";cex "$w3 $o2";sex "$w3 systemd-resolved"; }                                                           # DNS stop/start
 function ssp {
   echo -e "${i}QUER MESMO TRANSFERIR VALIDATORS?${f}";read rsp
