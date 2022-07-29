@@ -17,7 +17,7 @@ function fs4 { if [[ $1 ]];then grep "$1" $2 2>$s3;else cat $2 2>$s3;fi|if [[ ${
 function fs5 { sed "s%$1 *\([0-9]*\).*%\1%" $2 2>$s3; }                                                                                                       # get list of numbers from log
 function fs6 { fs0 $1 $2   |fs5 .*$1; }                                                                                                                       # get peers    syslog lines
 function fs7 { fs4 $1 $2 $3|fs5   $1; }                                                                                                                       # get number          from log
-function fs8 { fs3|tail -n300|grep $o4; }                                                                                                                     # get tail cpu syslog lines
+function fs8 { fs3|tail -n300|grep Core.*temperature; }                                                                                                       # get tail cpu syslog lines
 function lg0 { fs8                       |wc -l; }                                                                                                            # get # temperature messages
 function lg1 { fs3|grep usb|grep -i error|wc -l; }                                                                                                            # get # usb errors
 function rl0 { local n=${1:-0};((n<5)) && rl0 $((n+1));local e="$p7/logs/beacon.log";((n>0)) && e="$e.$n";echo $H|sudo -S cat $e 2>$s3; }                     # get beacon   intern lines

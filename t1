@@ -46,7 +46,6 @@ o0='plexmediaserver'
 o1='transmission-daemon'
 o2='named'
 o3='geth\[\|lighthouse'
-o4='Core.*temperature'
 a0='0x82f6E45b47c5C03F8D52dDDa03B3F65897Cd5AB2'
 
 meeu="$(whoami)"
