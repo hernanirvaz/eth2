@@ -229,9 +229,9 @@ function cpe {                                                                  
   local d=$(fs8|grep throttled|head -n1|sed 's%.* \([0-9]*:[0-9]*\):[0-9]*.*%\1%')
   local e=$(fs8|grep normal   |tail -n1|sed 's%.* \([0-9]*:[0-9]*\):[0-9]*.*%\1%')
   local v=0;for v in $(sensors 2>$s3|grep 'Package\|Core'|sed 's%.*: *\([-+][0-9][0-9]*\.[0-9]*\).*%\1%');do ((n+=1));l=$(nu1 $l$v 1);done
-  [[ $d ]] && d="throttled: $d";[[ $e ]] && e="normal: $e";echo "TEMP $(nu5 $l/$((n==0?1:n)) 1 2 %2.0fC)$(printf '%3i' $(lg0)) $dt $d $e"                     # TEMP cpu info
+  [[ $d ]] && d="throttled: $d";[[ $e ]] && e="normal: $e";echo "TEMP $(nu5 $l/$((n==0?1:n)) 1 2 %5.1fC) $dt $d $e"                                           # TEMP cpu info
   [[ $1 = p ]] && return
-  m="INFO$(printf '%3i' $(lg1))     $dt"                                                                                                                      # usb/cpu erros count
+  m="INFO$(printf '%3i' $(lg1)) $(printf '%3i' $(lg0)) $dt"                                                                                                   # usb/cpu erros count
   m="$m uptime:$(uptime|sed 's%[0-9]*:[0-9]*:[0-9]*%%;s%[0-9]*:[0-9]*,%%;s%[0-9]* users*,%%;s% average\([^,]*\).*%\1%;s%  *% %g')"                            # uptime/load info
   if [[ $(cat $s6) -eq 0 ]];then e=off;else e=on;fi;if [[ $(cat $s7) -eq 1 ]];then d=off;else d=on;fi;echo "$m, usb $e, turbo $d"                             # usb/turbo info
   local l=$(fs3|grep -i 'error' |wc -l);local n=$(fs2|grep -v ' INFO '|wc -l)
