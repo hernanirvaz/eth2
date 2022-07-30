@@ -392,7 +392,9 @@ function sr9 { chmod 644 $1.jwt;sex "mv $1.jwt $s4/$1.jwt"; }
 [[ $1 = nl  ]] && { rl0|if [[ $2 ]];then grep -i               "$2";else grep -v ' INFO ';fi; }
 [[ $1 = ws  ]] && { cex 'ufw status numbered'; }
 [[ $1 = wa  ]] && { wa; }
+[[ $1 = we  ]] && { yex 'ufw enable'; }
 [[ $1 = wpr ]] && { cex 'ufw disable'; }
+[[ $1 = wds ]] && { cex 'ufw disable'; }
 # journal
 [[ $1 = yj  ]] && { jsh; }
 [[ $1 = ej  ]] && { jsh "-u $n0 -u $n1 -u $n3"; }

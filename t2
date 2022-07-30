@@ -13,7 +13,7 @@ if [[ $(pex 'ufw status'|grep -i inactive) ]]; then
   [[ $cunm = $znm2 ]] && { uf6 2022/tcp nssh;uf1 123/udp 192.168.8.0/24 ntp; }
   [[ $cunm = $znm3 ]] && { uf6 2020/tcp nssh;uf1 53      192.168.8.0/24 dns; }
   [[ $cunm = $znm4 ]] && { uf6 2024/tcp nssh; }
-  cex 'ufw enable'
+  yex 'ufw enable'
   cex 'ufw status numbered'
   tex 'ROOTKIT SCANNER'
   cex 'apt install chkrootkit -y'
