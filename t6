@@ -46,7 +46,7 @@ function gy  {            geth attach --exec eth.syncing   "http://$cgth:8545" 2
 function gi  { echo $@|sed 's%.*highestBlock: *\([0-9]*\).*%\1%'; }                                                                                           # get highest geth block
 function gc  { echo $@|sed 's%.*currentBlock: *\([0-9]*\).*%\1%'; }                                                                                           # get current geth block
 function gb  { g0=$(fs0 'mported new' 0 geth|wc -l);ok=OK;[[ $g0 -eq $(fs7 .*sgs: $p5 1) ]] && ok=BK; }                                                       # imported new chain segments & OK/BK
-function gh0 { [[ -f $p5 ]] || return;tail -n${1:-$hors} $p5;[[ $1 ]] && return;gl0;nex "$m\n";sso GETH $n0;cpe; }                                        # geth historic report
+function gh0 { [[ -f $p5 ]] || return;tail -n${1:-$hors} $p5;[[ $1 ]] && return;gl0;nex "$m\n";sso GETH $n0;cpe; }                                            # geth historic report
 function gl0 {                                                                                                                                                # geth report
   dts;ok=OK;if [[ $(sst $n0 running) ]];then local e=$(gy);gb;gv;gq;m="$(dnn) sgs: $(printf '%4i' $g0)"
     if [[ $(echo $e|grep false) ]];then m="GETH $ok SYC $m";else m="GETH $ok NSY $m blocks: $(($(gi $e)-$(gc $e)))";fi                                        # OK SYC/NSY (dnn) sgs: 5 blocks: 8 (6)
@@ -220,8 +220,8 @@ function bbt { [[ $(grep $d0 ${p2} 2>$s3|wc -l) -gt 0 ]]; }                     
 function bct { local n=$((nn-5));[[ $nm -ge $n && $(bl6 $hors) -eq 1 ]] && ( btt || sot ); }                                                                  # change configured peers test
 function bdl { local d=$(pt0 $1 sai);[[ -f $p2 && $d != sai ]] || return;cp $p2 ${p2}o;grep -v $d ${p2}o > $p2;grep $d ${p2}o > ${p2}d; }                     # delete beacon log day
 function nsh {
-  nex "ROUTES\t\t$(ip route show|grep 'default via'|grep -v linkdown|cut -d' ' -f3)\nDNS\t\t$(resolvectl|grep 'Current DNS'|cut -d' ' -f6)"               # routes
-  local v=0;for v in $(ip a|grep 'state UP'|cut -d: -f2);do nex "$v\t\t$(resolvectl dns|grep $v|cut -d' ' -f4-6)";done                                    # dns info
+  nex "ROUTES\t\t$(ip route show|grep 'default via'|grep -v linkdown|cut -d' ' -f3)\nDNS\t\t$(resolvectl|grep 'Current DNS'|cut -d' ' -f6)"                   # routes
+  local v=0;for v in $(ip a|grep 'state UP'|cut -d: -f2);do nex "$v\t\t$(resolvectl dns|grep $v|cut -d' ' -f4-6)";done                                        # dns info
 }
 function cpe {                                                                                                                                                # system status
   local e='NO';[[ $(timedatectl|grep synchronized:|sed 's%.*synchronized: \([a-z]*\).*%\1%') = yes ]] && e='OK';dts
@@ -238,7 +238,7 @@ function cpe {                                                                  
   local l=$(fs3|grep -i 'error' |wc -l);local n=$(fs2|grep -v ' INFO '|wc -l)
   local e=$(fs3|grep -i 'error' |tail -n1|sed 's%.*hrv-zotac[0-9] *\(.*\)%\1%;s%:%%g;s%  *% %g'                                |cut -c1-53)
   local d=$(fs2|grep -v ' INFO '|tail -n1|sed 's%.*[0-9]*:[0-9]*:[0-9]*\.[0-9][0-9][0-9]]* *\(.*\)%\1%;s%:%%g;s%:%%g;s%  *% %g'|cut -c1-53)
-  m="ERRO$(printf '%3i' $l) $(printf '%3i' $n) $dt";[[ $l -gt 0 ]] && m="$m system: $e";[[ $n -gt 0 ]] && m="$m ethrum: $d";(( l+n )) && echo "$m"         # sys/eth errors info
+  m="ERRO$(printf '%3i' $l) $(printf '%3i' $n) $dt";[[ $l -gt 0 ]] && m="$m system: $e";[[ $n -gt 0 ]] && m="$m ethrum: $d";(( l+n )) && echo "$m"            # sys/eth errors info
   m='';srt && m="$m, reboot $(($(sra)/60/60)) hours ago";[[ $(bsc) -gt 0 ]] && m="$m, committee on";[[ $m ]] && echo "INFO        $dt${m#*,}"                 # reboot/committee info
 }
 # Plex Media Server
@@ -302,7 +302,7 @@ function na  { [[ $(sst $n5) ]] && { cex "$w3 $n5"; } }
 function fa  { [[ $(sst $n6) ]] && { cex "$w3 $n6"; } }
 function wa  {
   if [[ $(pex 'ufw status'|grep -i inactive) ]];then
-    tex "UFW ENABLE";sudo ufw enable <<< y                                                                                                        # enable asks: Proceed with operation (y|n)?
+    yex 'ufw enable'                                                                                                                                          # enable asks: Proceed with operation (y|n)?
   else
     tex "FIREWALL ALREADY ACTIVE"
   fi

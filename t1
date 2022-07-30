@@ -7,6 +7,7 @@ function nex { echo -e "$1"; }                                                  
 function cex { tex "$1";echo $H|sudo -S $1 2>$s3; }                                                                                                           # superuser-command (visible)
 function pex {          echo $H|sudo -S $1 2>$s3; }                                                                                                           # superuser-command (pipe)
 function sex {          echo $H|sudo -S $1 &>$s3; }                                                                                                           # superuser-command (silent)
+function yex { tex "$1";echo $H|sudo -S $1 <<< y &>$s3; }                                                                                                     # superuser-command (yes & visible)
 function sst { $w1 $1 2>$s3|grep "${2:-inactive\|failed}"                                   ; }                                                               # service status word test
 function ss1 { $w1 $1 2>$s3|grep "${2:-Active:}"|sed "s%.*${2:-Active:} *\(${3:-.}*\).*%\1%"; }                                                               # service status word with 1 data extraction
 function ss2 { $w1 $1 2>$s3|grep Active:|sed 's%.*Active: *\(.*\)%\1%;s% *since.*;%;%'      ; }                                                               # service status word with 2 data extraction
