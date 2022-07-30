@@ -2,20 +2,20 @@
 
 source /home/eth/eth2/t1
 
-if [ "$(uname -n)" = "hrv-zen" ]; then
+if [[ $(uname -n) = hrv-zen ]]; then
   cli="eth2.0-deposit-cli/validator_keys"
   bs1="/media/eth/cs1"
   bs2="/media/eth/cs2"
   cs1="$bs1/validator_keys"
   cs2="$bs2/validator_keys"
   lng="spanish"
-  if [ "$B" = "mainnet" ];then nmv=18;else nmv=3;fi 
-  if [ -d ~/$D ] && [ "$(ls -A ~/$D)" ]; then
-    echo -e "${i}CHAVES ESTAO PRONTAS${f}"
-  elif [ -d ~/$cli ] && [ "$(ls -A ~/$cli)" ]; then
-    if [ -d $bs1 ]; then
-      if  [ -d $cs1 ]; then
-        echo -e "${i}ARQUIVO OFFLINE $cs1 JA EXISTE${f}"
+  if [[ $B = mainnet ]];then nmv=18;else nmv=3;fi 
+  if [[ -d ~/$D && $(ls -A ~/$D) ]]; then
+    tex 'CHAVES ESTAO PRONTAS'
+  elif [[ -d ~/$cli && $(ls -A ~/$cli) ]]; then
+    if [[ -d $bs1 ]]; then
+      if [[ -d $cs1 ]]; then
+        tex "ARQUIVO OFFLINE $cs1 JA EXISTE"
       else
         cp -R ~/$cli $cs1
         sudo chown -R eu:eu $cs1
@@ -23,11 +23,11 @@ if [ "$(uname -n)" = "hrv-zen" ]; then
         sudo chmod 644 $cs1/*
       fi
     else
-      echo -e "${i}ARQUIVO OFFLINE $bs1 NAO ESTA MONTADO${f}"
+      tex "ARQUIVO OFFLINE $bs1 NAO ESTA MONTADO"
     fi
-    if [ -d $bs2 ]; then
-      if  [ -d $cs2 ]; then
-        echo -e "${i}ARQUIVO OFFLINE $cs2 JA EXISTE${f}"
+    if [[ -d $bs2 ]]; then
+      if  [[ -d $cs2 ]]; then
+        tex "ARQUIVO OFFLINE $cs2 JA EXISTE"
       else
         cp -R ~/$cli $cs2
         sudo chown -R eu:eu $cs2
@@ -35,27 +35,27 @@ if [ "$(uname -n)" = "hrv-zen" ]; then
         sudo chmod 644 $cs2/*
       fi
     else
-      echo -e "${i}ARQUIVO OFFLINE $bs2 NAO ESTA MONTADO${f}"
+      tex "ARQUIVO OFFLINE $bs2 NAO ESTA MONTADO"
     fi
     cp -R ~/$cli ~
-    echo -e "${i}CHAVES FORAM ARQUIVADAS - VERIFICAR AQUIVO OFFLINE${f}"
-  elif [ -f ~/eth2.0-deposit-cli/README.md ]; then
+    tex 'CHAVES FORAM ARQUIVADAS - VERIFICAR AQUIVO OFFLINE'
+  elif [[ -f ~/eth2.0-deposit-cli/README.md ]]; then
     cd ~/eth2.0-deposit-cli
-    echo -e "${i}PARA GERAR $nmv NOVAS CHAVES CHAIN $B${f}"
-    echo -e "STORE($K)"
-    echo -e "${i}PARA GERAR $nmv NOVAS CHAVES CHAIN $B${f}"
+    tex "PARA GERAR $nmv NOVAS CHAVES CHAIN $B"
+    nex "STORE($K)"
+    tex "PARA GERAR $nmv NOVAS CHAVES CHAIN $B"
     # if keystores lost to recover keys use ./deposit.sh existing-mnemonic
     ./deposit.sh new-mnemonic --num_validators $nmv --mnemonic_language $lng --chain $B
-    echo -e "${i}para ARQUIVAR CHAVES executar de novo - OFFLINE & com USB INSTALADOS${f}"
+    tex 'para ARQUIVAR CHAVES executar de novo - OFFLINE & com USB INSTALADOS'
   else
-    echo -e "${i}INSTALAR SCRIPT CHAVES${f}"
+    tex 'INSTALAR SCRIPT CHAVES'
     sudo apt install -y python3-pip python3-testresources git
     cd ~
     git clone https://github.com/ethereum/eth2.0-deposit-cli.git
     cd ~/eth2.0-deposit-cli
     sudo ./deposit.sh install
-    echo -e "${i}para GERAR CHAVES executar de novo - OFFLINE${f}"
+    tex 'para GERAR CHAVES executar de novo - OFFLINE'
   fi
 else
-  echo -e "${i}TEM DE ESTAR HOME${f}"
+  tex 'TEM DE ESTAR HOME'
 fi

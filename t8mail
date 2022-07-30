@@ -4,8 +4,8 @@ source /home/eth/eth2/t1
 
 function nu { u=0;[[ -f /var/lib/update-notifier/updates-available ]] && u=$(egrep '^[0-9]+  *update' /var/lib/update-notifier/updates-available|cut -d' ' -f1); }
 
-[[ $1 = GETHSTP ]] && { echo -e "Subject: GETH STOPPED $(date '+%F %H:%M')\n\n$(uname -n)\nSERVICE_RESULT=$2\nEXIT_CODE=$3\nEXIT_STATUS=$4\n"|ssmtp hernanilr@gmail.com; }
-[[ $1 = BEACSTP ]] && { echo -e "Subject: BEAC STOPPED $(date '+%F %H:%M')\n\n$(uname -n)\nSERVICE_RESULT=$2\nEXIT_CODE=$3\nEXIT_STATUS=$4\n"|ssmtp hernanilr@gmail.com; }
-[[ $1 = VALISTP ]] && { echo -e "Subject: VALI STOPPED $(date '+%F %H:%M')\n\n$(uname -n)\nSERVICE_RESULT=$2\nEXIT_CODE=$3\nEXIT_STATUS=$4\n"|ssmtp hernanilr@gmail.com; }
+[[ $1 = GETHSTP ]] && { nex "Subject: GETH STOPPED $(date '+%F %H:%M')\n\n$(uname -n)\nSERVICE_RESULT=$2\nEXIT_CODE=$3\nEXIT_STATUS=$4\n"|ssmtp hernanilr@gmail.com; }
+[[ $1 = BEACSTP ]] && { nex "Subject: BEAC STOPPED $(date '+%F %H:%M')\n\n$(uname -n)\nSERVICE_RESULT=$2\nEXIT_CODE=$3\nEXIT_STATUS=$4\n"|ssmtp hernanilr@gmail.com; }
+[[ $1 = VALISTP ]] && { nex "Subject: VALI STOPPED $(date '+%F %H:%M')\n\n$(uname -n)\nSERVICE_RESULT=$2\nEXIT_CODE=$3\nEXIT_STATUS=$4\n"|ssmtp hernanilr@gmail.com; }
 
-[[ $1 = UPDTCHK ]] && { nu;[[ $u -gt 0 ]] && echo -e "Subject: $u UPDATES ON $(uname -n)\n\n$(apt list --upgradable 2>$s3)"|ssmtp hernanilr@gmail.com; }
+[[ $1 = UPDTCHK ]] && { nu;[[ $u -gt 0 ]] && nex "Subject: $u UPDATES ON $(uname -n)\n\n$(apt list --upgradable 2>$s3)"|ssmtp hernanilr@gmail.com; }

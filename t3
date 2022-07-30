@@ -3,8 +3,8 @@
 source /home/eth/eth2/t1
 
 if [[ -x $p0/lighthouse && ! -d $p0/lighthouse ]]; then
-  echo $H|sudo -S mv ~/lighthouse $s0 2>$s3
-  echo $H|sudo -S chmod 755 $s0/lighthouse 2>$s3
+  sex "mv ~/lighthouse $s0"
+  sex "chmod 755 $s0/lighthouse"
 fi
 
 if [[ -x $s0/lighthouse ]]; then
@@ -33,8 +33,8 @@ if [[ -x $s0/lighthouse ]]; then
       blkc=" --testnet $B"
       epge=" --eth1-endpoints $E --jwt-secrets $p7/jwt"
     fi
-    echo -e "${i}CONFIGURE BEACON${f}"
-    echo $H|sudo -S mkdir -p $p7 2>$s3
+    tex "CONFIGURE BEACON"
+    sex "mkdir -p $p7"
     sudo chmod 700 $p7
     sudo chown $meeu:$meeu $p1
     # IMPORTANTE LOCK VALIDATOR CLIENTE
@@ -73,7 +73,7 @@ if [[ -x $s0/lighthouse ]]; then
     sudo mv $n1.service $s4/$n1.service
     sudo chmod 644 $s4/$n1.service
   else
-    echo -e "${i}BEACON JA CONFIGURADO${f}"
+    tex "BEACON JA CONFIGURADO"
   fi
   if [[ $cunm = $znm2 || $cunm = $vnm3 ]]; then
     user="eth3"
@@ -88,24 +88,24 @@ if [[ -x $s0/lighthouse ]]; then
     fi
     cd ~
     if [[ ! -f $p1/vc_keys && -d $HOME/$D && $(ls -A $HOME/$D) ]]; then
-      echo -e "${i}IMPORT VALIDATOR KEYS & INIT SLASH PROTECTION${f}"
-      echo $H|sudo -S mkdir -p $p1 2>$s3
+      tex "IMPORT VALIDATOR KEYS & INIT SLASH PROTECTION"
+      sex "mkdir -p $p1"
       sudo chown $meeu:$meeu $p1
       if ! id $user &>$s3;then sudo useradd --no-create-home --shell /bin/false $user;fi
-      echo -e "STORE($K)\n"
+      nex "STORE($K)\n"
       lighthouse$blkc --datadir $p1 account validator import --directory $HOME/$D
       [[ -f $p8/validator_definitions.yml ]] && touch $p1/vc_keys
     fi
     if [[ ! -f $p1/vc_lock && -f $p1/vc_keys ]]; then
-      echo -e "${i}BLOQUEAR VALIDATOR EXECUTE${f}"
-      echo -e "sudo chmod 777 $p8"
-      echo -e "sudo chmod 666 $p8/slashing_protection.sqlite*"
-      echo -e "t6 vpr;t6 vds"
+      tex "BLOQUEAR VALIDATOR EXECUTE"
+      nex "sudo chmod 777 $p8"
+      nex "sudo chmod 666 $p8/slashing_protection.sqlite*"
+      nex "t6 vpr;t6 vds"
       touch $p1/vc_lock
     fi
     if [[ ! -f $p1/vc_slash && -f $p1/vc_lock && -f $p1/vc_keys ]]; then
-      echo -e "${i}COPIAR $p8/slashing_protection.sqlite*${f}"
-      echo $H|sudo -S mkdir -p $p8 2>$s3
+      tex "COPIAR $p8/slashing_protection.sqlite*"
+      sex "mkdir -p $p8"
       sudo chown $meeu:$meeu $p8
       if [[ -f $p0/slashing_protection.sqlite ]]; then
         sudo rm $p8/slashing_protection.sqlite $p8/slashing_protection.sqlite-journal
@@ -118,8 +118,8 @@ if [[ -x $s0/lighthouse ]]; then
       sudo chmod 700 $p8
     fi
     if [[ ! -f $s4/$n3.service && -f $p1/vc_slash && -f $p1/vc_lock && -f $p1/vc_keys ]]; then
-      echo -e "${i}CONFIGURE VALIDATOR${f}"
-      echo $H|sudo -S mkdir -p $p8 2>$s3
+      tex "CONFIGURE VALIDATOR"
+      sex "mkdir -p $p8"
       if ! id $user &>$s3;then sudo useradd --no-create-home --shell /bin/false $user;fi
       sudo chown -R $user:$user $p8
       sudo chmod 700 $p8
@@ -142,28 +142,28 @@ if [[ -x $s0/lighthouse ]]; then
 			EOF
       sudo mv $n3.service $s4/$n3.service
       sudo chmod 644 $s4/$n3.service
-      echo -e "${i}VALIDATOR CONFIGURADO VERIFICAR TUDO (LOCK & SLASH DB)${f}"
+      tex "VALIDATOR CONFIGURADO VERIFICAR TUDO (LOCK & SLASH DB)"
     else
-      echo -e "${i}VALIDATOR JA CONFIGURADO OR LOCKED ($p1/vc_lock)${f}"
+      tex "VALIDATOR JA CONFIGURADO OR LOCKED ($p1/vc_lock)"
     fi
   else
-    echo -e "${i}VALIDATOR NAO DEVE SER INSTALADO AQUI${f}"
+    tex "VALIDATOR NAO DEVE SER INSTALADO AQUI"
   fi
 else
   if [[ $cunm = $znm1 || $cunm = $vnm1 ]]; then
     if [[ -x $p0/.cargo/bin/rustup ]]; then
       if [[ $1 ]]; then
-        echo -e "${i}RUST OVERRIDE SET $1${f}"
+        tex "RUST OVERRIDE SET $1"
         rustup override set $1
       else
-        echo -e "${i}UPDATE RUST${f}"
+        tex "UPDATE RUST"
         source ~/.cargo/env
         rustup update
       fi
     else
-      echo -e "${i}INSTALAR DEPENDENCIAS RUST${f}"
-      echo $H|sudo -S apt install -y git gcc g++ make cmake pkg-config llvm-dev libclang-dev clang libssl-dev build-essential libudev-dev perl yasm 2>$s3
-      echo -e "${i}INSTALL RUST${f}"
+      tex "INSTALAR DEPENDENCIAS RUST"
+      cex "apt install -y git gcc g++ make cmake pkg-config llvm-dev libclang-dev clang libssl-dev build-essential libudev-dev perl yasm"
+      tex "INSTALL RUST"
       cd $p0
       curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
     fi
@@ -175,14 +175,14 @@ else
         cargo clean
       else
         cd $p0
-        echo $H|sudo -S rm -rf $p0/lighthouse 2>$s3
+        sex "rm -rf $p0/lighthouse"
         git clone https://github.com/sigp/lighthouse.git
         cd $p0/lighthouse
       fi
       git fetch
       t=$(git rev-list --tags --max-count=1)
       git checkout $(git describe --tags $t)
-      echo -e "${i}VAI COMPILAR LIGHT${f}"
+      tex "VAI COMPILAR LIGHT"
       make
       if [[ $? -eq 0 && -x $p0/.cargo/bin/lighthouse ]]; then
         if [[ $cunm = $znm1 ]]; then
@@ -193,15 +193,15 @@ else
           scp $p0/.cargo/bin/lighthouse vpss:~
         fi
         if [[ -x $s0/lighthouse ]]; then
-          echo $H|sudo -S cp $s0/lighthouse $s0/lighthouse.save 2>$s3
+          sex "cp $s0/lighthouse $s0/lighthouse.save"
         fi
-        echo $H|sudo -S cp ~/.cargo/bin/lighthouse $s0 2>$s3
-        echo $H|sudo -S chmod 755 $s0/lighthouse 2>$s3
+        sex "cp ~/.cargo/bin/lighthouse $s0"
+        sex "chmod 755 $s0/lighthouse"
       else
-        echo -e "${i}NAO EXISTE LIGHT COMPILADO PARA INSTALAR${f}"
+        tex "NAO EXISTE LIGHT COMPILADO PARA INSTALAR"
       fi
     fi
   else
-    echo -e "${i}RUST NAO DEVE SER INSTALADO AQUI${f}"
+    tex "RUST NAO DEVE SER INSTALADO AQUI"
   fi
 fi

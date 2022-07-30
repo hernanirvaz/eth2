@@ -2,120 +2,84 @@
 
 source /home/eth/eth2/t1
 
-# cria link para tarefas
 [[ -x $p0/eth2/t ]] || ln -s $p0/eth2/t6 $p0/eth2/t
 
-if [[ $(echo $H|sudo -S ufw status 2>$s3|grep -i inactive) ]]; then
-  echo -e "${i}INIT FIREWALL${f}"
-  sudo ufw default deny incoming
-  sudo ufw default allow outgoing
-  sudo ufw deny 22/tcp comment oldssh
-  sudo ufw deny 53 comment dns
-  # sudo ufw allow 43/tcp comment whois
-  # sudo ufw allow 123 comment ntp
-  sudo ufw deny 30303 comment eth1
-  sudo ufw deny 32400 comment plex
-  sudo ufw deny 51413 comment torrent
-  sudo ufw deny 9000 comment eth2
-  sudo ufw deny 8545 comment geapi
-  sudo ufw deny 5052 comment bnapi
-  sudo ufw deny 5064 comment vcmet
-  sudo ufw deny 9090/tcp comment prometheus
-  sudo ufw deny 3000/tcp comment grafana
-  sudo ufw allow 2020/tcp comment newssh
-  sudo ufw enable
-  sudo ufw status numbered
-  echo -e "${i}ROOTKIT SCANNER${f}"
-  sudo apt install -y chkrootkit
-  sudo pip3 install speedtest-cli
-  sudo chkrootkit  -q
+if [[ $(pex 'ufw status'|grep -i inactive) ]]; then
+  tex 'INIT FIREWALL'
+  cex 'ufw default deny incoming'
+  cex 'ufw default allow outgoing'
+  uf3 22/tcp ossh
+  [[ $cunm = $znm1 ]] && { uf6 2021/tcp nssh;uf1 53      192.168.8.0/24 dns; }
+  [[ $cunm = $znm2 ]] && { uf6 2022/tcp nssh;uf1 123/udp 192.168.8.0/24 ntp; }
+  [[ $cunm = $znm3 ]] && { uf6 2020/tcp nssh;uf1 53      192.168.8.0/24 dns; }
+  [[ $cunm = $znm4 ]] && { uf6 2024/tcp nssh; }
+  cex 'ufw enable'
+  cex 'ufw status numbered'
+  tex 'ROOTKIT SCANNER'
+  cex 'apt install chkrootkit -y'
+  cex 'chkrootkit -q'
 else
-  echo -e "${i}FIREWALL $(echo $H|sudo -S ufw status 2>$s3|grep -i status|tr '[:lower:]' '[:upper:]')${f}"
+  tex "FIREWALL $(pex 'ufw status'|grep -i status|tr -d :)"
 fi
 
 if [[ -f $s4/$n0.service || -f $s4/$n1.service || -f $s4/$n3.service ]]; then
-  echo -e "${i}SERVER JA INSTALADO ANTES - LINUX UPDATE & SYSTEM CONFIGS SKIPPED${f}"
+  tex 'SERVER JA INSTALADO ANTES - LINUX UPDATE & SYSTEM CONFIGS SKIPPED'
 else
-  echo -e "${i}UPDATE LINUX${f}"
-  if [[ $(echo $H|sudo -S snap list 2>$s3) ]]; then
-    sudo snap remove lxd
-    sudo snap remove core18
-    sudo snap remove snapd
-    sudo apt purge snapd
+  tex 'UPDATE LINUX'
+  if [[ $(pex 'snap list') ]]; then
+    cex 'snap remove lxd'
+    cex 'snap remove core18'
+    cex 'snap remove snapd'
+    cex 'apt purge snapd'
   fi
   t4update linux
 
-  echo -e "${i}UNATTENDED UPGRADES${f}"
-  sudo apt install unattended-upgrades apt-listchanges landscape-common update-notifier-common python3-pip net-tools -y
-  sudo dpkg-reconfigure -plow unattended-upgrades
+  tex 'UNATTENDED UPGRADES'
+  cex 'apt install unattended-upgrades apt-listchanges landscape-common update-notifier-common python3-pip net-tools -y'
+  cex 'dpkg-reconfigure -plow unattended-upgrades'
 
-  echo -e "${i}LINUX SYSTEM CONFIGS${f}"
-  sudo timedatectl set-ntp on
+  tex 'LINUX SYSTEM CONFIGS'
+  cex 'timedatectl set-ntp on'
   if [[ $cust = hrv ]]; then
-    sudo timedatectl set-timezone Europe/Lisbon
-    sed -e 's%^ *#NTP=.*$%NTP="ntp02.oal.ul.pt ntp04.oal.ul.pt time.google.com time.cloudflare.com time.facebook.com"%i' /etc/systemd/timesyncd.conf > ~/timesyncd.save
-    sed -e 's%^ *ENABLED=.*$%ENABLED=0%i' /etc/default/motd-news > ~/motd-new.save
-    sed -e 's%-wait-online *$%-wait-online --ignore=enp2s0 --ignore=wlo1%i' /lib/systemd/system/systemd-networkd-wait-online.service > ~/snwo.save
-    sed -e 's%^.*UseDNS *=.*$%UseDNS=false%i' /etc/systemd/networkd.conf > ~/ntwd.save;echo 'UseDNS=false' >> ~/ntwd.save
-    sudo mv ~/motd-new.save /etc/default/motd-news
-    sudo mv ~/snwo.save /lib/systemd/system/systemd-networkd-wait-online.service
-    sudo mv ~/ntwd.save /etc/systemd/networkd.conf
-    sudo chown root:root /etc/default/motd-news
-    sudo chown root:root /lib/systemd/system/systemd-networkd-wait-online.service
-    sudo chown root:root /etc/systemd/networkd.conf
-    sudo chmod 644 /etc/default/motd-news
-    sudo chmod 644 /lib/systemd/system/systemd-networkd-wait-online.service
-    sudo chmod 644 /etc/systemd/networkd.conf
+    cex 'timedatectl set-timezone Europe/Lisbon'
+    cc1 $c0 's%^ *#*NTP=.*$%NTP="192.168.8.28 ntp02.oal.ul.pt ntp04.oal.ul.pt time.google.com time.cloudflare.com time.facebook.com"%i' .conf
+    cc1 $c1 's%^ *ENABLED=.*$%ENABLED=0%i'                                                                                       ;cc0 $c1
+    cc1 $c2 "s%-wait-online *$%-wait-online $(iig $(idw))%i" .service                                                            ;cc0 $c2
   else
-    sudo timedatectl set-timezone Europe/Berlin
-    sed -e 's%^ *#NTP=.*$%NTP="time.google.com time.cloudflare.com time.facebook.com"%i' /etc/systemd/timesyncd.conf > ~/timesyncd.save
+    cex 'timedatectl set-timezone Europe/Berlin'
+    cc1 $c0 's%^ *#*NTP=.*$%NTP="time.google.com time.cloudflare.com time.facebook.com"%i' .conf
   fi
-  sed -e 's%^ */* *Unattended-Upgrade::Mail .*$%Unattended-Upgrade::Mail "hernanilr@gmail.com";%i' /etc/apt/apt.conf.d/50unattended-upgrades > ~/t5-upg.save
-  sed -e 's%^ *printf%# printf%i' /etc/update-motd.d/00-header > ~/t0-hea.save
-  sed -e 's%^ *printf%# printf%i' /etc/update-motd.d/10-help-text > ~/t1-hel.save
-  echo 'printf "Welcome to %s %s (%s %s %s)\n" "$(uname -n|cut -d. -f1)" "$DISTRIB_DESCRIPTION" "$(uname -o)" "$(uname -r)" "$(uname -m)"' >> ~/t0-hea.save
-  sudo mv ~/timesyncd.save /etc/systemd/timesyncd.conf
-  sudo mv ~/t0-hea.save /etc/update-motd.d/00-header
-  sudo mv ~/t1-hel.save /etc/update-motd.d/10-help-text
-  sudo mv ~/t5-upg.save /etc/apt/apt.conf.d/50unattended-upgrades
-  sudo chown root:root /etc/systemd/timesyncd.conf
-  sudo chown root:root /etc/apt/apt.conf.d/*
-  sudo chown root:root /etc/update-motd.d/*
-  sudo chmod 644 /etc/systemd/timesyncd.conf
-  sudo chmod 644 /etc/apt/apt.conf.d/*
-  sudo chmod 755 /etc/update-motd.d/*
-  # nao executa - nao acho ser necessario
-  [[ -f /etc/update-motd.d/97-overlayroot ]] && sudo chmod -x /etc/update-motd.d/97-overlayroot
-  sudo netplan apply
-  sudo $sctl restart systemd-resolved
-  sudo $sctl restart systemd-timesyncd
+  cc0 $c0
+  cc1 $c3 's%^ */* *Unattended-Upgrade::Mail .*$%Unattended-Upgrade::Mail "hernanilr@gmail.com";%i'                              ;cc0 $c3
+  cc1 $c4 's%^ *printf%# printf%i'
+  cc2 $c4 'printf "Welcome to %s %s (%s %s %s)\n" "$(uname -n)" "$DISTRIB_DESCRIPTION" "$(uname -o)" "$(uname -r)" "$(uname -m)"';cc0 $c4 755
+  cc1 $c5 's%^ *printf%# printf%i'                                                                                               ;cc0 $c5 755
+  cex "chmod -x $c6" # nao executa - nao acho ser necessario
+  cex 'netplan apply'
+  [[ $cunm = $znm2 ]] || cex "$w0 restart systemd-timesyncd"
 fi
 
 if [[ $cunm != $znm1 && $cunm != $vnm1 ]]; then
-  echo -e "${i}GETH & OPEN ETHEREUM NAO DEVE SER INSTALADOS AQUI - DEVE FAZER REBOOT${f}"
+  tex 'GETH & OPEN ETHEREUM NAO DEVE SER INSTALADOS AQUI - DEVE FAZER REBOOT'
 else
-  user="eth1"
+  user='eth1'
   if ! id $user &>$s3;then sudo useradd --no-create-home --shell /bin/false $user;fi
   if [[ -f $s4/$n0.service ]]; then
-    echo -e "${i}GETH JA INSTALADO${f}"
+    tex 'GETH JA INSTALADO'
   else
-    echo -e "${i}INSTALAR GETH${f}"
+    tex 'INSTALAR GETH'
     if [[ $B = mainnet ]]; then
       blkc=''
-      cach=4096 # default full node
-      cach=1024 # default
-      maxp=10
+      maxp=50
     else
       blkc=' --goerli'
-      cach=1024 # default
       maxp=50   # default
     fi
-    sudo add-apt-repository -y ppa:ethereum/ethereum
-    sudo apt update -y
-    sudo apt install -y software-properties-common geth
-    sudo mkdir -p $p9
-    sudo chown -R $user:$user $p9
-    # MERGE geth --authrpc.addr $zip1 --authrpc.port 8551 --authrpc.vhosts '*' --authrpc.jwtsecret $p9/geth/jwt
+    cex 'add-apt-repository -y ppa:ethereum/ethereum'
+    cex 'apt update -y'
+    cex 'apt install -y software-properties-common ethereum'
+    cex "mkdir -p $p9"
+    cex "chown -R $user:$user $p9"
     cat <<-EOF > $n0.service
 		[Unit]
 		Description=eth1 geth service
@@ -133,7 +97,7 @@ else
 		[Install]
 		WantedBy=multi-user.target
 		EOF
-    sudo mv $n0.service $s4/$n0.service
-    sudo chmod 644 $s4/$n0.service
+    cex "mv $n0.service $s4/$n0.service"
+    cex "chmod 644 $s4/$n0.service"
   fi
 fi

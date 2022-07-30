@@ -3,13 +3,13 @@
 source /home/eth/eth2/t1
 
 if [[ $cunm != $znm3 && $cunm != $vnm2 ]]; then
-  echo -e "${i}MONITOR NAO DEVE SER INSTALADO - DEVE FICAR ONDE FICA O MAIN BEACON${f}"
+  tex "MONITOR NAO DEVE SER INSTALADO - DEVE FICAR ONDE FICA O MAIN BEACON"
 else
   if [[ -f $s2/prometheus.yml ]]; then
-    echo -e "${i}PROMETHEUS JA INSTALADO${f}"
+    tex "PROMETHEUS JA INSTALADO"
   else
-    echo -e "${i}CONFIGURE PROMETHEUS${f}"
-    echo $H|sudo -S apt install -y prometheus prometheus-node-exporter 2>$s3
+    tex "CONFIGURE PROMETHEUS"
+    cex "apt install -y prometheus prometheus-node-exporter"
     t6 mpr
     cd ~
     cat <<-EOF > prometheus.yml
@@ -36,7 +36,7 @@ else
 		      - targets: ['$vip3:5064', 'localhost:5064']
 		EOF
     sudo mv prometheus.yml $s2/prometheus.yml
-    echo -e "${i}CONFIGURE GRAFANA${f}"
+    tex "CONFIGURE GRAFANA"
     wget -q -O - https://packages.grafana.com/gpg.key | sudo apt-key add -
     sudo add-apt-repository -y "deb https://packages.grafana.com/oss/deb stable main"
     sudo apt update -y
@@ -44,8 +44,8 @@ else
     t6 me
     t6 ma
   fi
-  echo -e "\nConfigure Grafana Login admin:admin http://$(uname -n):3000 & Change password $V & DATASOURCE URL http://127.0.0.1:9090\n"
-  echo -e "Import some dashboards from the dashboards directory in https://github.com/sigp/lighthouse-metrics"
-  echo -e "In the Grafana UI, go to Dashboards -> Manage -> Import -> Upload .json file."
-  echo -e "The Summary.json dashboard is a good place to start.\n"
+  nex "\nConfigure Grafana Login admin:admin http://$(uname -n):3000 & Change password $V & DATASOURCE URL http://127.0.0.1:9090\n"
+  nex "Import some dashboards from the dashboards directory in https://github.com/sigp/lighthouse-metrics"
+  nex "In the Grafana UI, go to Dashboards -> Manage -> Import -> Upload .json file."
+  nex "The Summary.json dashboard is a good place to start.\n"
 fi

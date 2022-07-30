@@ -6,14 +6,14 @@ source /home/eth/eth2/t1
 # reboot    GETH STOP | NO GETH START |    REBOOT
 # geth      GETH STOP |    GETH START | NO REBOOT
 if [[ $1 = linux || $1 = reboot || $1 = geth ]]; then
-  echo -e "${i}FULL-UPGRADE${f}"
-  if [[ $1 = reboot || $1 = geth ]]; then t6 gpr; fi
-  cex "apt update -y"
+  tex 'FULL-UPGRADE'
+  [[ $1 = reboot || $1 = geth ]] && t6 gpr
+  cex 'apt update -y'
   sudo apt full-upgrade -y && sudo apt dist-upgrade -y
-  sudo apt autoremove -y
-  sudo apt autoclean
+  cex 'apt autoremove -y'
+  cex 'apt autoclean'
   [[ $1 = geth   ]] && t6 gaj
-  [[ $1 = reboot ]] && sudo reboot
+  [[ $1 = reboot ]] && cex 'reboot'
 fi
 
 # eth2 update
@@ -21,7 +21,7 @@ fi
 
 if [[ $cunm = $znm1 || $cunm = $vnm1 ]]; then
   if [[ -x $p0/.cargo/bin/rustup ]]; then
-    echo -e "${i}UPDATE RUST${f}"
+    tex "UPDATE RUST"
     resolvectl query static.rust-lang.org &>$s3
     #rustup toolchain install 1.52.1
     #rustup override set 1.52.1
@@ -47,7 +47,7 @@ if [[ $cunm = $znm1 || $cunm = $vnm1 ]]; then
     v=$(git describe --tags $t)
   fi
   git checkout $v
-  echo -e "${i}VAI COMPILAR LIGHT${f}"
+  tex "VAI COMPILAR LIGHT"
   make
   if [[ $? -eq 0 && -x $p0/.cargo/bin/lighthouse ]]; then
     if [[ $cunm = $znm1 ]]; then
@@ -59,19 +59,19 @@ if [[ $cunm = $znm1 || $cunm = $vnm1 ]]; then
       cex "cp $p0/.cargo/bin/lighthouse $s0"
     fi
   else
-    echo -e "${i}NAO EXISTE LIGHT COMPILADO PARA INSTALAR${f}"
+    tex "NAO EXISTE LIGHT COMPILADO PARA INSTALAR"
   fi
 else
   if [[ -x $p0/lighthouse ]]; then
     sex "cp $s0/lighthouse $s0/lighthouse.sav"
     cex "mv $p0/lighthouse $s0"
   else
-    echo -e "${i}NAO EXISTE LIGHT COMPILADO PARA INSTALAR${f}"
+    tex "NAO EXISTE LIGHT COMPILADO PARA INSTALAR"
   fi
 fi
 
 if [[ -x $s0/lighthouse ]]; then
   sex "chmod 755 $s0/lighthouse*"
   sex "chown eth:eth $s0/lighthouse*"
-  echo -e "${i}NOVO LIGHT INSTALADO - PODE/DEVE VERIFICAR${f}"
+  tex "NOVO LIGHT INSTALADO - PODE/DEVE VERIFICAR"
 fi
