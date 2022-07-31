@@ -17,9 +17,6 @@ function uf3 { cex "ufw deny  $1 comment $2"; }                                 
 function uf4 { cex "ufw delete allow from $2 to any port $1"; }                                                                                               # delete open  port from IP
 function uf5 { cex "ufw delete deny $1"; }                                                                                                                    # delete close port from Anywhere
 function uf6 { cex "ufw allow $1 comment $2";cex "ufw limit $1 comment $2"; }                                                                                 # limit  open  port from Anywhere
-function zs0 { pex "grep ${3:-lighthouse}.*$1 $s1"|if [[ ${2:-0} -le 0 ]];then cat;else tail -n${2:-0};fi; }                             # get specific syslog lines
-function zs2 { pex "grep -i $o3 $s1"; }                                                                                    # get eth      syslog lines
-function zs3 { pex "grep -v $o3 $s1"; }                                                                                    # get sys      syslog lines
 
 s0='/usr/local/bin'
 s1='/var/log/syslog'
