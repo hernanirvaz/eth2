@@ -3,8 +3,9 @@
 source /home/eth/eth2/t1
 
 if [[ -x $p0/lighthouse && ! -d $p0/lighthouse ]]; then
-  sex "mv ~/lighthouse $s0"
-  sex "chmod 755 $s0/lighthouse"
+  sex "mv $p0/lighthouse $s0"
+  sex "chmod 755 $s0/lighthouse*"
+  sex "chown eth:eth $s0/lighthouse*"
 fi
 
 if [[ -x $s0/lighthouse ]]; then
@@ -17,38 +18,38 @@ if [[ -x $s0/lighthouse ]]; then
     sprp=128  # Yearly Disk Usage 102.4GB
     sprp=2048 # Yearly Disk Usage   6.4GB default use disk space for slasher (256GB) -> more income
     # how many peers it should try to find and maintain
-    tarp=50 # default
     tarp=20 # less bandwidth/load for gossip - too low (<20) and block proposals start getting orphaned or even missed
+    tarp=50 # default
     http=''                          # default
     http=' --http-address 127.0.0.1' # equivalent empty
-    http=" --http-address $zip3"
     [[ $cunm = $znm2 ]] && http=" --http-address $zip2"
     [[ $cunm = $znm3 ]] && http=" --http-address $zip3"
+    [[ $cunm = $znm4 ]] && http=" --http-address $zip4"
     [[ $cunm = $vnm1 ]] && http=" --http-address $vip1"
     [[ $cunm = $vnm2 ]] && http=" --http-address $vip2"
     if [[ $B = mainnet ]]; then
       blkc=''
       epge=" --eth1-endpoints http://$zip1:8545 --execution-endpoints http://$zip1:8551 --jwt-secrets $p7/jwt" # MERGE
+      epge=" --eth1-endpoints http://$zip1:8545,https://eth-mainnet.alchemyapi.io/v2/vzq1DD3EX7ipGuKck4440uRuccDdVvTm,https://mainnet.infura.io/v3/65be3572c577449f86d92b2e69cd6b06,https://mainnet.infura.io/v3/2c680650de0443cf8ab433565e47a42d"
     else
       blkc=" --testnet $B"
       epge=" --eth1-endpoints $E --jwt-secrets $p7/jwt"
+      epge=" --eth1-endpoints $E"
     fi
     tex 'CONFIGURE BEACON'
     sex "mkdir -p $p7"
-    sudo chmod 700 $p7
-    sudo chown $meeu:$meeu $p1
+    sex "chmod 700 $p7"
+    sex "chown $meeu:$meeu $p1"
     # IMPORTANTE LOCK VALIDATOR CLIENTE
     touch $p1/vc_lock
-    #t6 vpr
-    t6 bpr
     cd ~
     if ! id $user &>$s3;then sudo useradd --no-create-home --shell /bin/false $user;fi
-    sudo chown $user:$user $p7
+    sex "chown $user:$user $p7"
     othe=''
     # othe="$othe --slasher --disable-upnp"
-    othe="$othe --validator-monitor-auto"
+    # othe="$othe --validator-monitor-auto"
     # redundant beacon nodes
-    # othe="$othe --subscribe-all-subnets --import-all-attestations"
+    othe="$othe --subscribe-all-subnets --import-all-attestations"
     # syncing from a recent finalized checkpoint
     # othe="$othe --checkpoint-sync-url https://1q1s6o6cB6Jysu7KKlbLUYiOdAM:8974468780164028652df958a69fbd30@eth2-beacon-mainnet.infura.io"
     othe="$othe --checkpoint-sync-url http://192.168.8.31:5052"
@@ -70,12 +71,12 @@ if [[ -x $s0/lighthouse ]]; then
 		[Install]
 		WantedBy=multi-user.target
 		EOF
-    sudo mv $n1.service $s4/$n1.service
-    sudo chmod 644 $s4/$n1.service
+    sex "mv $n1.service $s4/$n1.service"
+    sex "chmod 644 $s4/$n1.service"
   else
     tex 'BEACON JA CONFIGURADO'
   fi
-  if [[ $cunm = $znm2 || $cunm = $vnm3 ]]; then
+  if [[ $cunm = $znm3 || $cunm = $vnm3 ]]; then
     user="eth3"
     # external beacon-nodes before MERGE
     # https://1q1s6o6cB6Jysu7KKlbLUYiOdAM:8974468780164028652df958a69fbd30@eth2-beacon-mainnet.infura.io
@@ -90,7 +91,7 @@ if [[ -x $s0/lighthouse ]]; then
     if [[ ! -f $p1/vc_keys && -d $HOME/$D && $(ls -A $HOME/$D) ]]; then
       tex 'IMPORT VALIDATOR KEYS & INIT SLASH PROTECTION'
       sex "mkdir -p $p1"
-      sudo chown $meeu:$meeu $p1
+      sex "chown $meeu:$meeu $p1"
       if ! id $user &>$s3;then sudo useradd --no-create-home --shell /bin/false $user;fi
       nex "STORE($K)\n"
       lighthouse$blkc --datadir $p1 account validator import --directory $HOME/$D
@@ -98,31 +99,31 @@ if [[ -x $s0/lighthouse ]]; then
     fi
     if [[ ! -f $p1/vc_lock && -f $p1/vc_keys ]]; then
       tex 'BLOQUEAR VALIDATOR EXECUTE'
+      nex "t6 vpr;t6 vds"
       nex "sudo chmod 777 $p8"
       nex "sudo chmod 666 $p8/slashing_protection.sqlite*"
-      nex "t6 vpr;t6 vds"
       touch $p1/vc_lock
     fi
     if [[ ! -f $p1/vc_slash && -f $p1/vc_lock && -f $p1/vc_keys ]]; then
       tex "COPIAR $p8/slashing_protection.sqlite*"
       sex "mkdir -p $p8"
-      sudo chown $meeu:$meeu $p8
+      sex "chown $meeu:$meeu $p8"
       if [[ -f $p0/slashing_protection.sqlite ]]; then
-        sudo rm $p8/slashing_protection.sqlite $p8/slashing_protection.sqlite-journal
-        cp ~/slashing_protection.sqlite $p8
+        sex "rm $p8/slashing_protection.sqlite $p8/slashing_protection.sqlite-journal"
+        sex "cp $p0/slashing_protection.sqlite $p8"
         [[ -f $p8/slashing_protection.sqlite ]] && touch $p1/vc_slash
-        chmod 600 $p8/slashing_protection.sqlite
-        chown $user:$user $p8/slashing_protection.sqlite
+        sex "chmod 600 $p8/slashing_protection.sqlite"
+        sex "chown $user:$user $p8/slashing_protection.sqlite"
       fi
-      sudo chown $user:$user $p8
-      sudo chmod 700 $p8
+      sex "chown $user:$user $p8"
+      sex "chmod 700 $p8"
     fi
     if [[ ! -f $s4/$n3.service && -f $p1/vc_slash && -f $p1/vc_lock && -f $p1/vc_keys ]]; then
       tex 'CONFIGURE VALIDATOR'
       sex "mkdir -p $p8"
       if ! id $user &>$s3;then sudo useradd --no-create-home --shell /bin/false $user;fi
-      sudo chown -R $user:$user $p8
-      sudo chmod 700 $p8
+      sex "chown -R $user:$user $p8"
+      sex "chmod 700 $p8"
       cat <<-EOF > $n3.service
 			[Unit]
 			Description=eth2 validator service
@@ -140,8 +141,8 @@ if [[ -x $s0/lighthouse ]]; then
 			[Install]
 			WantedBy=multi-user.target
 			EOF
-      sudo mv $n3.service $s4/$n3.service
-      sudo chmod 644 $s4/$n3.service
+      sex "mv $n3.service $s4/$n3.service"
+      sex "chmod 644 $s4/$n3.service"
       tex 'VALIDATOR CONFIGURADO VERIFICAR TUDO (LOCK & SLASH DB)'
     else
       tex "VALIDATOR JA CONFIGURADO OR LOCKED ($p1/vc_lock)"

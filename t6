@@ -286,8 +286,8 @@ function va  {
   if [[ -f $p1/vc_lock ]];then
     if [[ -f $p0/slashing_protection.sqlite ]];then                                                                                                           # slashing_protection
       cex "cp $p0/slashing_protection.sqlite $p8"
-      sudo chown eth3:eth3 $p8/slashing_protection.sqlite
-      sudo chmod 600 $p8/slashing_protection.sqlite
+      sex "chown eth3:eth3 $p8/slashing_protection.sqlite"
+      sex "chmod 600 $p8/slashing_protection.sqlite"
     fi
   else
     cex "$w3 $n3"
@@ -323,12 +323,10 @@ function ssp {
   if [[ $rsp = sim && ! -f $p1/vc_slash && ! -f $p1/vc_lock && -f $p1/vc_keys ]];then
     vp;vd
     tex 'SAVE SLASHING PROTECTION DB'
-    cex "cp $p8/slashing_protection.sqlite $p0";sudo chown eth:eth $p0/slashing_protection.sqlite
-    if [[ $cunm = $znm3 ]];then
-      scp $p0/slashing_protection.sqlite vpss:~         ;tex 'SAVED SLASHING PROTECTION DB IN vpss'
-    else
-      scp $p0/slashing_protection.sqlite ztc3.fruga.pt:~;tex 'SAVED SLASHING PROTECTION DB IN ztc3.fruga.pt'
-    fi
+    sex "cp $p8/slashing_protection.sqlite $p0"
+    sex "chown eth:eth $p0/slashing_protection.sqlite"
+    scp $p0/slashing_protection.sqlite $2:~
+    tex 'SAVED SLASHING PROTECTION DB IN $2'
   fi
 }
 function umt { [[ $(cat $s6) -eq 1 && $(fs6) -gt 10 ]]; }                                                                                                     # usb messages test
@@ -354,7 +352,7 @@ function sr9 { chmod 644 $1.jwt;sex "mv $1.jwt $s4/$1.jwt"; }
 [[ $1 = nrs ]] && { cex 'netplan apply';dpa; }
 [[ $1 = nsh ]] && { nsh; }
 [[ $1 = trs ]] && { [[ $(sst systemd-timesyncd masked) ]] || cex "$w0 restart systemd-timesyncd";cpe c; }
-[[ $1 = vcp ]] && { ssp; }
+[[ $1 = vcp ]] && { [[ $2 ]] && ssp $2; }
 [[ $1 = gl  ]] && { gl0;nex "$m"; }
 [[ $1 = glf ]] && { gl0;nex "$m" >> $p5;grt && grb;[[ $ok != OK ]] && grs 0;pas; }                                                                            # geth log/reboot/restart & parameter set
 [[ $1 = bl  ]] && { bl0;nex "$m"; }
@@ -487,11 +485,7 @@ if [[ ! $1 ]];then
   m="$m\npa\t\tpara\t& arranca\t& journal"
   m="$m\nea\t\tenable\t& arranca\t& journal"
   m="$m\noutros"
-  if [[ $cunm = $znm3 ]];then
-    m="$m\nvcp\t\t$n3 copy to $vnm3 server"
-  else
-    m="$m\nvcp\t\t$n3 copy to $znm3 server"
-  fi
+  m="$m\nvcp url\t\t$n3 copy to server url"
   m="$m\ngl[f]\t\tgeth log report"
   m="$m\ngh[s]\t\tgeth historic report [summary]"
   m="$m\ngrs [n]\t\t$n0 restart n nodes to change"
