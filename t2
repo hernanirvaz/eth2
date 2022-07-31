@@ -65,8 +65,8 @@ else
   [[ $cunm = $znm2 ]] || cex "$w0 restart systemd-timesyncd"
 fi
 
-if [[ $cunm != $znm1 && $cunm != $vnm1 ]]; then
-  tex 'GETH & OPEN ETHEREUM NAO DEVE SER INSTALADOS AQUI - DEVE FAZER REBOOT'
+if [[ $cunm != $znm1 && $cunm != $znm4 && $cunm != $vnm1 ]]; then
+  tex 'GETH NAO DEVE SER INSTALADO AQUI - DEVE FAZER REBOOT'
 else
   user='eth1'
   if ! id $user &>$s3;then sudo useradd --no-create-home --shell /bin/false $user;fi
