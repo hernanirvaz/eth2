@@ -2,9 +2,9 @@
 
 source /home/eth/eth2/t1
 
-function cc0 { uex "chown ${2:-root:root} $1";uex "chmod ${3:-644} $1"; }
-function cc1 { local f="$(basename $1 $3).save";sed  -e "$2" $1 > ~/$f;uex "mv $f $1"; }
-function cc2 { local f="$(basename $1 $3).save";echo -e "$2"   >> ~/$f;uex "mv $f $1"; }
+function cc0 { sex "chmod ${2:-644} $1";sex "chown ${3:-root:root} $1"; }
+function cc1 { local f="$(basename $1 $3).save";sed  -e "$2" $1 > ~/$f;sex "mv $f $1"; }
+function cc2 { local f="$(basename $1 $3).save";echo -e "$2"   >> ~/$f;sex "mv $f $1"; }
 function idw { ip link show|grep -i down|cut -d' ' -f2|tr -d :; }
 function iig { local m='';until [[ $# -lt 1 ]];do m="$m --ignore=$1";shift;done;echo $m; }
 
@@ -84,8 +84,8 @@ else
     cex 'add-apt-repository -y ppa:ethereum/ethereum'
     cex 'apt update -y'
     cex 'apt install -y software-properties-common ethereum'
-    cex "mkdir -p $p9"
-    cex "chown -R $user:$user $p9"
+    sex "mkdir -p $p9"
+    sex "chown -R $user:$user $p9"
     cat <<-EOF > $n0.service
 		[Unit]
 		Description=eth1 geth service
@@ -103,7 +103,7 @@ else
 		[Install]
 		WantedBy=multi-user.target
 		EOF
-    cex "mv $n0.service $s4/$n0.service"
-    cex "chmod 644 $s4/$n0.service"
+    sex "mv $n0.service $s4/$n0.service"
+    sex "chmod 644 $s4/$n0.service"
   fi
 fi
