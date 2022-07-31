@@ -2,15 +2,13 @@
 
 source /home/eth/eth2/t1
 
-# utilities for commands/journal
 function nu0 { if [ ${1:-0} -eq $1 ] 2>$s3;then echo $1;else echo 0;fi; }                                                                                     # get numeric output (must use [ ] test)
 function nu1 { echo "scale=$2;$1"|bc; }                                                                                                                       # get arbitrary precision calculations
 function nu2 { if [[ $# -gt 0 ]];then nu5 "sqrt(((0$(printf '+%i^2' $@))-(0$(printf '+%i' $@))^2/$#)/$#)" 1000 5;else echo 0;fi; }                            # get standard deviation list of numbers
 function nu3 { if [[ $# -gt 0 ]];then nu5 "(0$(printf '+%i' $@))/$#"                                            ;else echo 0;fi; }                            # get average            list of numbers
 function nu4 { if [[ $5 -gt 0 ]];then nu5 "($1*$pmis+$2*$pmat+$3*$pmah+$4*$pdly)/$5*$rate/$decp"          1000 5;else echo 0;fi; }                            # get penalty
 function nu5 { printf ${4:-%.0f} $(nu1 $1*${2:-1} ${3:-1}); }                                                                                                 # format arbitrary precision calculations
-function fs0 { echo $H|sudo -S grep    "${3:-lighthouse}.*$1" $s1 2>$s3|if [[ ${2:-0} -le 0 ]];then cat;else tail -n${2:-0};fi; }                             # get tail     syslog lines
-function fs1 { echo $H|sudo -S grep    "$1"                   $s1 2>$s3; }                                                                                    # get specific syslog lines
+function fs0 { echo $H|sudo -S grep    "${3:-lighthouse}.*$1" $s1 2>$s3|if [[ ${2:-0} -le 0 ]];then cat;else tail -n${2:-0};fi; }                             # get specific syslog lines
 function fs2 { echo $H|sudo -S grep -i $o3                    $s1 2>$s3; }                                                                                    # get eth      syslog lines
 function fs3 { echo $H|sudo -S grep -v $o3                    $s1 2>$s3; }                                                                                    # get sys      syslog lines
 function fs4 { if [[ $1 ]];then grep "$1" $2 2>$s3;else cat $2 2>$s3;fi|if [[ ${3:-0} -le 0 ]];then cat;else tail -n${3:-0};fi; }                             # get filtered lines  from log
@@ -56,8 +54,8 @@ function gl0 {                                                                  
 }
 function glt { tail -n$1 $p5 2>$s3|cut -d' ' -f1|sort -u|wc -l; }                                                                                             # get geth restart activity test
 function grt { [[ $(glt 6) -eq 1 ]] && sot 6; }                                                                                                               # 6 hours old system reboot test
-function grb { ok=OK;echo "RSTR SYSTEM $(dnn)" >> $p5;sex reboot; }                                                                                           # geth system reboot
-function grs { gv;snp $n0 $1 10 50;sex "$w3 $n0";sleep 20s;dts;gq;[[ -f $p5 ]] && echo "RSTR SERVIC $(dnn)" >> $p5; }                                         # change/stop/load/start/log geth
+function grb { ok=OK;nex "RSTR SYSTEM $(dnn)" >> $p5;sex reboot; }                                                                                            # geth system reboot
+function grs { gv;snp $n0 $1 10 50;sex "$w3 $n0";sleep 20s;dts;gq;[[ -f $p5 ]] && nex "RSTR SERVIC $(dnn)" >> $p5; }                                          # change/stop/load/start/log geth
 # beacon control commands
 function bz  { echo $((10*(5*zk+2*zz+zx+zw)))                                       ; }                                                                       # get numerator paid errors
 function bw  { echo $((10*z1))                                                      ; }                                                                       # get numerator processed blocks
@@ -158,7 +156,7 @@ function bh0 {
   bmo;nex "BM$(printf '%9i' $(bml))$(printf '%46s')i20  i30  i40  i50  i60  i70  i80\n$m";sso BEAC $n1;sso VALI $n3;cpe                                       # medias/services/system report
 }
 function brb { if srt;then echo RB;else echo $1;fi; }                                                                                                         # get reboot/other tag
-function bro { dts;bb;bnn $(fs6 peers:);[[ -f $p2 ]] && echo "$(printf 'R%03i' $1) ${2:-$ok} $(printf '%3i' $(bu)) $(dnn)" >> $p2; }                          # log restart info
+function bro { dts;bb;bnn $(fs6 peers:);[[ -f $p2 ]] && nex "$(printf 'R%03i' $1) ${2:-$ok} $(printf '%3i' $(bu)) $(dnn)" >> $p2; }                           # log restart info
 function bpt { [[ $(date +%s) -ge $(bss $1 6) ]]; }                                                                                                           # ideal position test (based on time)
 function btg { echo $(date -d@${1:-0} +%M:%S|tr -d :)t$(date -d@$(($(date +%s)+${1:-0})) +%H:%M:%S|tr -d :); }                                                # get end file sleep tag
 function bss { echo $((${2:-0}+$(date -d$(bf1 $1) +%s))); }                                                                                                   # get sum secounds + time
@@ -167,7 +165,7 @@ function bmn { local n=${1:-24};echo $((n>360?360:n<24?24:n)); }                
 function bf1 { echo ${1:-$(date +%H:%M:%S)}; }                                                                                                                # get filterd t7 parm 1
 function bf2 { echo ${2:-24}; }                                                                                                                               # get filterd t7 parm 2
 function bng { $p0/eth2/t7 2>$s3; }                                                                                                                           # get next gap
-function bsc { echo $H|sudo -S grep lighthouse.$bpid].*INFO $s1 2>$s3|tail -n99|grep sync_committee|wc -l; }                                                  # get # committee messages
+function bsc { pex "grep lighthouse.$bpid].*INFO $s1"|tail -n99|grep sync_committee|wc -l; }                                                                  # get # committee messages
 function bsf { [[ ${1:-0} -gt 0 ]] || return;local e=$p4.s$(btg $1);touch $e;sleep $1s;rm -f $e; }                                                            # sleep with file info
 function bsw { while :;do local t=$(bng);if [[ $(bf2 $t) -le ${1:-36} || ${2:-24} -ge $(bfn $t) ]];then bsf $(bmn $(bfn $t));else break;fi;done; }            # sleep while small (gap or remaining) time
 : '
@@ -200,12 +198,12 @@ function brl {                                                                  
       else
         m="${v[0]} $ok $(printf '%3i' ${v[2]}) $(dnn)"                                                                                                        # restart lines
       fi
-    fi                                                                                           ;echo "$m" >> ${p2}r                                         # new beacon output
+    fi                                                                                           ;nex "$m" >> ${p2}r                                          # new beacon output
   done <<< $(cat $p2)
   [[ -f $p3 ]] || return;rm -f ${p3}r;bmi;local d=0000-00-00;local l=0;local n=0;local h=0;local g=0;while read -a o;do
     d=${o[3]};h=$g;g=$(grep -n "$d 23:58" ${p2}r|cut -d: -f1);[[ ${g:=$h} -le $h ]] && continue;dts $d\ ${o[4]};nn=${o[5]:4:2}                                # get next beacon log position
     nr=${o[6]};nm=${o[13]};nd=${o[14]};l2=$(brh $g|bfl 23:58);bo2 $d;((l+=b2));((n+=1));b3=$(nu5 $l/$n)                                                       # cur/avg homologous position
-    l3=$(brh $g|tail -n$((g-h))|bfl);[[ $l3 ]] && bm1;bm2;b4=${o[15]};b5=${o[12]};b7=${o[11]};bms;echo "$m" >> ${p3}r                                         # sum err arrays & new medias output
+    l3=$(brh $g|tail -n$((g-h))|bfl);[[ $l3 ]] && bm1;bm2;b4=${o[15]};b5=${o[12]};b7=${o[11]};bms;nex "$m" >> ${p3}r                                          # sum err arrays & new medias output
   done <<< $(cat $p3)
 }
 function bsl {                                                                                                                                                # shrink beacon log using barqivo
@@ -225,21 +223,21 @@ function nsh {
 }
 function cpe {                                                                                                                                                # system status
   local e='NO';[[ $(timedatectl|grep synchronized:|sed 's%.*synchronized: \([a-z]*\).*%\1%') = yes ]] && e='OK';dts
-  m=$(ss2 systemd-timesyncd);[[ $(echo $m|grep dead) ]] && m=$(ss2 ntp);echo "CLCK $e $(printf '%3i' $(fs0 clock|wc -l)) $dt status: $m"                      # CLCK info
+  m=$(ss2 systemd-timesyncd);[[ $(echo $m|grep dead) ]] && m=$(ss2 ntp);nex "CLCK $e $(printf '%3i' $(fs0 clock|wc -l)) $dt status: $m"                       # CLCK info
   [[ $1 = c ]] && return;local l=0;local n=0;local v=0
   local d=$(fs8|grep throttled|head -n1|sed 's%.* \([0-9]*:[0-9]*\):[0-9]*.*%\1%')
   local e=$(fs8|grep normal   |tail -n1|sed 's%.* \([0-9]*:[0-9]*\):[0-9]*.*%\1%')
   local v=0;for v in $(sensors 2>$s3|grep 'Package\|Core'|sed 's%.*: *\([-+][0-9][0-9]*\.[0-9]*\).*%\1%');do ((n+=1));l=$(nu1 $l$v 1);done
-  [[ $d ]] && d="throttled: $d";[[ $e ]] && e="normal: $e";echo "TEMP $(nu5 $l/$((n==0?1:n)) 1 2 %5.1fC) $dt $d $e"                                           # TEMP cpu info
+  [[ $d ]] && d="throttled: $d";[[ $e ]] && e="normal: $e";nex "TEMP $(nu5 $l/$((n==0?1:n)) 1 2 %5.1fC) $dt $d $e"                                            # TEMP cpu info
   [[ $1 = p ]] && return
   m="INFO$(printf '%3i' $(lg1)) $(printf '%3i' $(lg0)) $dt"                                                                                                   # usb/cpu erros count
   m="$m uptime:$(uptime|sed 's%[0-9]*:[0-9]*:[0-9]*%%;s%[0-9]*:[0-9]*,%%;s%[0-9]* users*,%%;s% average\([^,]*\).*%\1%;s%  *% %g')"                            # uptime/load info
-  if [[ $(cat $s6) -eq 0 ]];then e=off;else e=on;fi;if [[ $(cat $s7) -eq 1 ]];then d=off;else d=on;fi;echo "$m, usb $e, turbo $d"                             # usb/turbo info
+  if [[ $(cat $s6) -eq 0 ]];then e=off;else e=on;fi;if [[ $(cat $s7) -eq 1 ]];then d=off;else d=on;fi;nex "$m, usb $e, turbo $d"                              # usb/turbo info
   local l=$(fs3|grep -i 'error' |wc -l);local n=$(fs2|grep -v ' INFO '|wc -l)
   local e=$(fs3|grep -i 'error' |tail -n1|sed 's%.*hrv-zotac[0-9] *\(.*\)%\1%;s%:%%g;s%  *% %g'                                |cut -c1-53)
   local d=$(fs2|grep -v ' INFO '|tail -n1|sed 's%.*[0-9]*:[0-9]*:[0-9]*\.[0-9][0-9][0-9]]* *\(.*\)%\1%;s%:%%g;s%:%%g;s%  *% %g'|cut -c1-53)
-  m="ERRO$(printf '%3i' $l) $(printf '%3i' $n) $dt";[[ $l -gt 0 ]] && m="$m system: $e";[[ $n -gt 0 ]] && m="$m ethrum: $d";(( l+n )) && echo "$m"            # sys/eth errors info
-  m='';srt && m="$m, reboot $(($(sra)/60/60)) hours ago";[[ $(bsc) -gt 0 ]] && m="$m, committee on";[[ $m ]] && echo "INFO        $dt${m#*,}"                 # reboot/committee info
+  m="ERRO$(printf '%3i' $l) $(printf '%3i' $n) $dt";[[ $l -gt 0 ]] && m="$m system: $e";[[ $n -gt 0 ]] && m="$m ethrum: $d";(( l+n )) && nex "$m"             # sys/eth errors info
+  m='';srt && m="$m, reboot $(($(sra)/60/60)) hours ago";[[ $(bsc) -gt 0 ]] && m="$m, committee on";[[ $m ]] && nex "INFO        $dt${m#*,}"                  # reboot/committee info
 }
 # Plex Media Server
 function xop { uf5 32400     ;uf1 32400 192.168.8.0/24 plex; }
@@ -304,7 +302,7 @@ function wa  {
   if [[ $(pex 'ufw status'|grep -i inactive) ]];then
     yex 'ufw enable'                                                                                                                                          # enable asks: Proceed with operation (y|n)?
   else
-    tex "FIREWALL ALREADY ACTIVE"
+    tex 'FIREWALL ALREADY ACTIVE'
   fi
 }
 # para/disable goethereum/beacon/validator/prometheus/grafana
@@ -322,15 +320,15 @@ function nd  { [[ $(sst $n5 loaded) ]] && { cex "$w5 $n5"; } }
 function fd  { [[ $(sst $n6 loaded) ]] && { cex "$w5 $n6";uf3 3000/tcp;sex 'ufw reload'; } }
 function dpa { cex "$w2 $o2";sex "$w2 systemd-resolved";cex "$w3 $o2";sex "$w3 systemd-resolved"; }                                                           # DNS stop/start
 function ssp {
-  tex "QUER MESMO TRANSFERIR VALIDATORS?";read rsp
+  tex 'QUER MESMO TRANSFERIR VALIDATORS?';read rsp
   if [[ $rsp = sim && ! -f $p1/vc_slash && ! -f $p1/vc_lock && -f $p1/vc_keys ]];then
     vp;vd
-    tex "SAVE SLASHING PROTECTION DB"
+    tex 'SAVE SLASHING PROTECTION DB'
     cex "cp $p8/slashing_protection.sqlite $p0";sudo chown eth:eth $p0/slashing_protection.sqlite
     if [[ $cunm = $znm3 ]];then
-      scp $p0/slashing_protection.sqlite vpss:~         ;tex "SAVED SLASHING PROTECTION DB IN vpss"
+      scp $p0/slashing_protection.sqlite vpss:~         ;tex 'SAVED SLASHING PROTECTION DB IN vpss'
     else
-      scp $p0/slashing_protection.sqlite ztc3.fruga.pt:~;tex "SAVED SLASHING PROTECTION DB IN ztc3"
+      scp $p0/slashing_protection.sqlite ztc3.fruga.pt:~;tex 'SAVED SLASHING PROTECTION DB IN ztc3.fruga.pt'
     fi
   fi
 }
@@ -358,17 +356,17 @@ function sr9 { chmod 644 $1.jwt;sex "mv $1.jwt $s4/$1.jwt"; }
 [[ $1 = nsh ]] && { nsh; }
 [[ $1 = trs ]] && { [[ $(sst systemd-timesyncd masked) ]] || cex "$w0 restart systemd-timesyncd";cpe c; }
 [[ $1 = vcp ]] && { ssp; }
-[[ $1 = gl  ]] && { gl0;echo "$m"; }
-[[ $1 = glf ]] && { gl0;echo "$m" >> $p5;grt && grb;[[ $ok != OK ]] && grs 0;pas; }                                                                           # geth log/reboot/restart & parameter set
-[[ $1 = bl  ]] && { bl0;echo "$m"; }
-[[ $1 = bm  ]] && { bm0;bmo;echo "$m"; }
-[[ $1 = bn  ]] && { bm0;bno;echo "$m"; }
-[[ $1 = blf ]] && { bl0;echo "$m" >> $p2;stt && bo5 && bht && bst && bdl $d0;[[ $ok != OK ]] && b1r 0;pas; }                                                  # beacon log/delete day/restart & parameter set
-[[ $1 = bmf ]] && { bm0;bms;bbt && echo "$m" >> $p3;bct && b1r $b4 $(brb PE) 120; }
-[[ $1 = bnf ]] && { bm0;bno;echo "$m" >> $p6; }
+[[ $1 = gl  ]] && { gl0;nex "$m"; }
+[[ $1 = glf ]] && { gl0;nex "$m" >> $p5;grt && grb;[[ $ok != OK ]] && grs 0;pas; }                                                                            # geth log/reboot/restart & parameter set
+[[ $1 = bl  ]] && { bl0;nex "$m"; }
+[[ $1 = bm  ]] && { bm0;bmo;nex "$m"; }
+[[ $1 = bn  ]] && { bm0;bno;nex "$m"; }
+[[ $1 = blf ]] && { bl0;nex "$m" >> $p2;stt && bo5 && bht && bst && bdl $d0;[[ $ok != OK ]] && b1r 0;pas; }                                                   # beacon log/delete day/restart & parameter set
+[[ $1 = bmf ]] && { bm0;bms;bbt && nex "$m" >> $p3;bct && b1r $b4 $(brb PE) 120; }
+[[ $1 = bnf ]] && { bm0;bno;nex "$m" >> $p6; }
 [[ $1 = gh  ]] && { gh0 $2; }
 [[ $1 = bh  ]] && { bh0 $2; }
-[[ $1 = bhs ]] && { bm0;bms;[[ -f $p2 ]] && echo "$m";sso BEAC $n1;[[ $(sst $n3 loaded) ]] && sso VALI $n3;cpe; }                                             # lighthouse services & system report
+[[ $1 = bhs ]] && { bm0;bms;[[ -f $p2 ]] && nex "$m";sso BEAC $n1;[[ $(sst $n3 loaded) ]] && sso VALI $n3;cpe; }                                              # lighthouse services & system report
 [[ $1 = ghs ]] && { sso GETH $n0;cpe; }                                                                                                                       # geth service & system report
 [[ $1 = bo  ]] && { bo0 $2 $3 $4; }
 [[ $1 = bon ]] && { bon $2; }

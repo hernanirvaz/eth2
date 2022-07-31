@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# utilities for commands/journal
 function tex { echo -e "\n\e[5m${1^^}\e[25m\n"; }                                                                                                             # output text flash
 function uex { echo -e "${1^^}"; }                                                                                                                            # output text upper
 function nex { echo -e "$1"; }                                                                                                                                # output text normal
@@ -18,11 +17,9 @@ function uf3 { cex "ufw deny  $1 comment $2"; }                                 
 function uf4 { cex "ufw delete allow from $2 to any port $1"; }                                                                                               # delete open  port from IP
 function uf5 { cex "ufw delete deny $1"; }                                                                                                                    # delete close port from Anywhere
 function uf6 { cex "ufw allow $1 comment $2";cex "ufw limit $1 comment $2"; }                                                                                 # limit  open  port from Anywhere
-function cc0 { uex "chown ${2:-root:root} $1";uex "chmod ${3:-644} $1"; }
-function cc1 { local f="$(basename $1 $3).save";sed  -e "$2" $1 > ~/$f;uex "mv $f $1"; }
-function cc2 { local f="$(basename $1 $3).save";echo -e "$2"   >> ~/$f;uex "mv $f $1"; }
-function idw { ip link show|grep -i down|cut -d' ' -f2|tr -d :; }
-function iig { local m='';until [[ $# -lt 1 ]];do m="$m --ignore=$1";shift;done;echo $m; }
+function zs0 { pex "grep ${3:-lighthouse}.*$1 $s1"|if [[ ${2:-0} -le 0 ]];then cat;else tail -n${2:-0};fi; }                             # get specific syslog lines
+function zs2 { pex "grep -i $o3 $s1"; }                                                                                    # get eth      syslog lines
+function zs3 { pex "grep -v $o3 $s1"; }                                                                                    # get sys      syslog lines
 
 s0='/usr/local/bin'
 s1='/var/log/syslog'

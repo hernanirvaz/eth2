@@ -2,25 +2,25 @@
 
 source /home/eth/eth2/t1
 
-tex "WARNING: WARNING: THIS IS AN IRREVERSIBLE OPERATION"
-tex "WARNING: WITHDRAWING STAKED ETH WILL NOT BE POSSIBLE UNTIL ETH1/ETH2 MERGE"
-tex "Exit my validator"
+tex 'WARNING: WARNING: THIS IS AN IRREVERSIBLE OPERATION'
+tex 'WARNING: WITHDRAWING STAKED ETH WILL NOT BE POSSIBLE UNTIL THE MERGE'
+tex 'Exit my validator'
 if [[ -x $s0/lighthouse ]]; then
   if [[ $B = mainnet ]]; then
     blkc=""
   else
     blkc="--testnet $B"
   fi
-  tex "EXIT VALIDATORS"
+  tex 'EXIT VALIDATORS'
   if [[ -f $p8/validator_definitions.yml ]]; then
     tex "STORE($K) WALLET($W)"
     for kst in $(ls $p8/*.json)
     do nex "lighthouse $blkc --datadir $p1 account validator exit --keystore $kst"
     done
   else
-    tex "\nCHAVES AINDA NAO FORAM IMPORTADAS"
+    tex '\nCHAVES AINDA NAO FORAM IMPORTADAS'
   fi
-  tex "LIGTH: CONFIGURE VALIDATOR"
+  tex 'LIGTH: CONFIGURE VALIDATOR'
 else
-  tex "NAO EXISTEM VALIDATORS TO EXIT"
+  tex 'NAO EXISTEM VALIDATORS TO EXIT'
 fi

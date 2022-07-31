@@ -33,7 +33,7 @@ if [[ -x $s0/lighthouse ]]; then
       blkc=" --testnet $B"
       epge=" --eth1-endpoints $E --jwt-secrets $p7/jwt"
     fi
-    tex "CONFIGURE BEACON"
+    tex 'CONFIGURE BEACON'
     sex "mkdir -p $p7"
     sudo chmod 700 $p7
     sudo chown $meeu:$meeu $p1
@@ -73,7 +73,7 @@ if [[ -x $s0/lighthouse ]]; then
     sudo mv $n1.service $s4/$n1.service
     sudo chmod 644 $s4/$n1.service
   else
-    tex "BEACON JA CONFIGURADO"
+    tex 'BEACON JA CONFIGURADO'
   fi
   if [[ $cunm = $znm2 || $cunm = $vnm3 ]]; then
     user="eth3"
@@ -88,7 +88,7 @@ if [[ -x $s0/lighthouse ]]; then
     fi
     cd ~
     if [[ ! -f $p1/vc_keys && -d $HOME/$D && $(ls -A $HOME/$D) ]]; then
-      tex "IMPORT VALIDATOR KEYS & INIT SLASH PROTECTION"
+      tex 'IMPORT VALIDATOR KEYS & INIT SLASH PROTECTION'
       sex "mkdir -p $p1"
       sudo chown $meeu:$meeu $p1
       if ! id $user &>$s3;then sudo useradd --no-create-home --shell /bin/false $user;fi
@@ -97,7 +97,7 @@ if [[ -x $s0/lighthouse ]]; then
       [[ -f $p8/validator_definitions.yml ]] && touch $p1/vc_keys
     fi
     if [[ ! -f $p1/vc_lock && -f $p1/vc_keys ]]; then
-      tex "BLOQUEAR VALIDATOR EXECUTE"
+      tex 'BLOQUEAR VALIDATOR EXECUTE'
       nex "sudo chmod 777 $p8"
       nex "sudo chmod 666 $p8/slashing_protection.sqlite*"
       nex "t6 vpr;t6 vds"
@@ -118,7 +118,7 @@ if [[ -x $s0/lighthouse ]]; then
       sudo chmod 700 $p8
     fi
     if [[ ! -f $s4/$n3.service && -f $p1/vc_slash && -f $p1/vc_lock && -f $p1/vc_keys ]]; then
-      tex "CONFIGURE VALIDATOR"
+      tex 'CONFIGURE VALIDATOR'
       sex "mkdir -p $p8"
       if ! id $user &>$s3;then sudo useradd --no-create-home --shell /bin/false $user;fi
       sudo chown -R $user:$user $p8
@@ -142,12 +142,12 @@ if [[ -x $s0/lighthouse ]]; then
 			EOF
       sudo mv $n3.service $s4/$n3.service
       sudo chmod 644 $s4/$n3.service
-      tex "VALIDATOR CONFIGURADO VERIFICAR TUDO (LOCK & SLASH DB)"
+      tex 'VALIDATOR CONFIGURADO VERIFICAR TUDO (LOCK & SLASH DB)'
     else
       tex "VALIDATOR JA CONFIGURADO OR LOCKED ($p1/vc_lock)"
     fi
   else
-    tex "VALIDATOR NAO DEVE SER INSTALADO AQUI"
+    tex 'VALIDATOR NAO DEVE SER INSTALADO AQUI'
   fi
 else
   if [[ $cunm = $znm1 || $cunm = $vnm1 ]]; then
@@ -156,14 +156,14 @@ else
         tex "RUST OVERRIDE SET $1"
         rustup override set $1
       else
-        tex "UPDATE RUST"
+        tex 'UPDATE RUST'
         source ~/.cargo/env
         rustup update
       fi
     else
-      tex "INSTALAR DEPENDENCIAS RUST"
-      cex "apt install -y git gcc g++ make cmake pkg-config llvm-dev libclang-dev clang libssl-dev build-essential libudev-dev perl yasm"
-      tex "INSTALL RUST"
+      tex 'INSTALAR DEPENDENCIAS RUST'
+      cex 'apt install -y git gcc g++ make cmake pkg-config llvm-dev libclang-dev clang libssl-dev build-essential libudev-dev perl yasm'
+      tex 'INSTALL RUST'
       cd $p0
       curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
     fi
@@ -182,7 +182,7 @@ else
       git fetch
       t=$(git rev-list --tags --max-count=1)
       git checkout $(git describe --tags $t)
-      tex "VAI COMPILAR LIGHT"
+      tex 'VAI COMPILAR LIGHT'
       make
       if [[ $? -eq 0 && -x $p0/.cargo/bin/lighthouse ]]; then
         if [[ $cunm = $znm1 ]]; then
@@ -198,10 +198,10 @@ else
         sex "cp ~/.cargo/bin/lighthouse $s0"
         sex "chmod 755 $s0/lighthouse"
       else
-        tex "NAO EXISTE LIGHT COMPILADO PARA INSTALAR"
+        tex 'NAO EXISTE LIGHT COMPILADO PARA INSTALAR'
       fi
     fi
   else
-    tex "RUST NAO DEVE SER INSTALADO AQUI"
+    tex 'RUST NAO DEVE SER INSTALADO AQUI'
   fi
 fi

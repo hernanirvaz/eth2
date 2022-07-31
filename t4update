@@ -21,7 +21,7 @@ fi
 
 if [[ $cunm = $znm1 || $cunm = $vnm1 ]]; then
   if [[ -x $p0/.cargo/bin/rustup ]]; then
-    tex "UPDATE RUST"
+    tex 'UPDATE RUST'
     resolvectl query static.rust-lang.org &>$s3
     #rustup toolchain install 1.52.1
     #rustup override set 1.52.1
@@ -47,7 +47,7 @@ if [[ $cunm = $znm1 || $cunm = $vnm1 ]]; then
     v=$(git describe --tags $t)
   fi
   git checkout $v
-  tex "VAI COMPILAR LIGHT"
+  tex 'VAI COMPILAR LIGHT'
   make
   if [[ $? -eq 0 && -x $p0/.cargo/bin/lighthouse ]]; then
     if [[ $cunm = $znm1 ]]; then
@@ -59,19 +59,19 @@ if [[ $cunm = $znm1 || $cunm = $vnm1 ]]; then
       cex "cp $p0/.cargo/bin/lighthouse $s0"
     fi
   else
-    tex "NAO EXISTE LIGHT COMPILADO PARA INSTALAR"
+    tex 'NAO EXISTE LIGHT COMPILADO PARA INSTALAR'
   fi
 else
   if [[ -x $p0/lighthouse ]]; then
     sex "cp $s0/lighthouse $s0/lighthouse.sav"
     cex "mv $p0/lighthouse $s0"
   else
-    tex "NAO EXISTE LIGHT COMPILADO PARA INSTALAR"
+    tex 'NAO EXISTE LIGHT COMPILADO PARA INSTALAR'
   fi
 fi
 
 if [[ -x $s0/lighthouse ]]; then
   sex "chmod 755 $s0/lighthouse*"
   sex "chown eth:eth $s0/lighthouse*"
-  tex "NOVO LIGHT INSTALADO - PODE/DEVE VERIFICAR"
+  tex 'NOVO LIGHT INSTALADO - PODE/DEVE VERIFICAR'
 fi
