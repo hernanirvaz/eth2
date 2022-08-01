@@ -73,7 +73,7 @@ function bl1 {                                                                  
   z4=${4:-$(echo "$l0"|grep    ' INFO '     |wc -l)};z5=${5:-$(bl7 success)};ok=${6:-OK}                                                                      # set info lines,success/had activities
 }
 function bl2 { zk=${1:-$(bl7 missing)};zz=${2:-$(bl7 target)};zx=${3:-$(bl7 head)};zw=${4:-$(bl7 had)}; }                                                     # set missing/target/head activities
-function bl3 { b0=${1:-$(fs0 published.block|wc -l)};b1=${2:-$(nu3 $(fs4 delay_ms:))}; }                                                                      # set published blocks/avg delays
+function bl3 { b0=${1:-$(fs0 Valid.block|wc -l)};b1=${2:-$(nu3 $(fs4 delay_ms:))}; }                                                                          # set published blocks/avg delays
 function bl5 { sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w; }                                                                                               # get number of validators
 function bl6 { tail -n$1 $p2 2>$s3|cut -d' ' -f1|sort -u|wc -l; }                                                                                             # get beacon restart activity
 function bl7 { fs0 attestation.s.*$1|bl5; }                                                                                                                   # get number of paid activities

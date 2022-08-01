@@ -16,8 +16,8 @@ if [[ $1 = linux || $1 = reboot || $1 = geth ]]; then
   [[ $1 = reboot ]] && cex 'reboot'
 fi
 
-# eth2 update
-[[ $1 != eth2 ]] && exit
+# cl update
+[[ $1 != cl ]] && exit
 
 if [[ $cunm = $znm1 || $cunm = $vnm1 ]]; then
   if [[ -x $p0/.cargo/bin/rustup ]]; then
