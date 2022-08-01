@@ -11,9 +11,9 @@ function iig { local m='';until [[ $# -lt 1 ]];do m="$m --ignore=$1";shift;done;
 [[ -x $p0/eth2/t ]] || ln -s $p0/eth2/t6 $p0/eth2/t
 
 if [[ $(pex 'ufw status'|grep -i inactive) ]]; then
-  tex 'INIT FIREWALL'
-  cex 'ufw default deny incoming'
-  cex 'ufw default allow outgoing'
+  uex 'INIT FIREWALL'
+  sex 'ufw default deny incoming'
+  sex 'ufw default allow outgoing'
   uf3 22/tcp ossh
   [[ $cunm = $znm1 ]] && { uf6 2021/tcp nssh;uf1 53      192.168.8.0/24 dns; }
   [[ $cunm = $znm2 ]] && { uf6 2022/tcp nssh;uf1 123/udp 192.168.8.0/24 ntp; }
@@ -21,17 +21,17 @@ if [[ $(pex 'ufw status'|grep -i inactive) ]]; then
   [[ $cunm = $znm4 ]] && { uf6 2024/tcp nssh; }
   yex 'ufw enable'
   cex 'ufw status numbered'
-  tex 'ROOTKIT SCANNER'
+  uex 'ROOTKIT SCANNER'
   cex 'apt install chkrootkit -y'
   cex 'chkrootkit -q'
 else
-  tex "FIREWALL $(pex 'ufw status'|grep -i status|tr -d :)"
+  uex "FIREWALL $(pex 'ufw status'|grep -i status|tr -d :)"
 fi
 
 if [[ -f $s4/$n0.service || -f $s4/$n1.service || -f $s4/$n3.service ]]; then
-  tex 'SERVER JA INSTALADO ANTES - LINUX UPDATE & SYSTEM CONFIGS SKIPPED'
+  uex 'SERVER JA INSTALADO ANTES - LINUX UPDATE & SYSTEM CONFIGS SKIPPED'
 else
-  tex 'UPDATE LINUX'
+  uex 'UPDATE LINUX'
   if [[ $(pex 'snap list') ]]; then
     cex 'snap remove lxd'
     cex 'snap remove core18'
@@ -40,11 +40,11 @@ else
   fi
   t4update linux
 
-  tex 'UNATTENDED UPGRADES'
+  uex 'UNATTENDED UPGRADES'
   cex 'apt install unattended-upgrades apt-listchanges landscape-common update-notifier-common python3-pip net-tools -y'
-  cex 'dpkg-reconfigure -plow unattended-upgrades'
+  sudo dpkg-reconfigure -plow unattended-upgrades
 
-  tex 'LINUX SYSTEM CONFIGS'
+  uex 'LINUX SYSTEM CONFIGS'
   cex 'timedatectl set-ntp on'
   if [[ $cust = hrv ]]; then
     cex 'timedatectl set-timezone Europe/Lisbon'
@@ -60,20 +60,20 @@ else
   cc1 $c4 's%^ *printf%# printf%i'
   cc2 $c4 'printf "Welcome to %s %s (%s %s %s)\n" "$(uname -n)" "$DISTRIB_DESCRIPTION" "$(uname -o)" "$(uname -r)" "$(uname -m)"';cc0 $c4 755
   cc1 $c5 's%^ *printf%# printf%i'                                                                                               ;cc0 $c5 755
-  cex "chmod -x $c6" # nao executa - nao acho ser necessario
-  cex 'netplan apply'
+  sex "chmod -x $c6" # nao executa - nao acho ser necessario
+  sex 'netplan apply'
   [[ $cunm = $znm2 ]] || cex "$w0 restart systemd-timesyncd"
 fi
 
 if [[ $cunm != $znm1 && $cunm != $znm4 && $cunm != $vnm1 ]]; then
-  tex 'GETH NAO DEVE SER INSTALADO AQUI - DEVE FAZER REBOOT'
+  uex 'GETH NAO DEVE SER INSTALADO AQUI - DEVE FAZER REBOOT'
 else
   user='eth1'
   if ! id $user &>$s3;then sudo useradd --no-create-home --shell /bin/false $user;fi
   if [[ -f $s4/$n0.service ]]; then
-    tex 'GETH JA INSTALADO'
+    uex 'GETH JA INSTALADO'
   else
-    tex 'INSTALAR GETH'
+    uex 'INSTALAR GETH'
     if [[ $B = mainnet ]]; then
       blkc=''
       maxp=50

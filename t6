@@ -301,7 +301,7 @@ function wa  {
   if [[ $(pex 'ufw status'|grep -i inactive) ]];then
     yex 'ufw enable'                                                                                                                                          # enable asks: Proceed with operation (y|n)?
   else
-    tex 'FIREWALL ALREADY ACTIVE'
+    uex 'FIREWALL ALREADY ACTIVE'
   fi
 }
 # para/disable goethereum/beacon/validator/prometheus/grafana
@@ -319,14 +319,14 @@ function nd  { [[ $(sst $n5 loaded) ]] && { cex "$w5 $n5"; } }
 function fd  { [[ $(sst $n6 loaded) ]] && { cex "$w5 $n6";uf3 3000/tcp;sex 'ufw reload'; } }
 function dpa { cex "$w2 $o2";sex "$w2 systemd-resolved";cex "$w3 $o2";sex "$w3 systemd-resolved"; }                                                           # DNS stop/start
 function ssp {
-  tex 'QUER MESMO TRANSFERIR VALIDATORS?';read rsp
+  uex 'QUER MESMO TRANSFERIR VALIDATORS?';read rsp
   if [[ $rsp = sim && ! -f $p1/vc_slash && ! -f $p1/vc_lock && -f $p1/vc_keys ]];then
     vp;vd
-    tex 'SAVE SLASHING PROTECTION DB'
+    uex 'SAVE SLASHING PROTECTION DB'
     sex "cp $p8/slashing_protection.sqlite $p0"
     sex "chown eth:eth $p0/slashing_protection.sqlite"
     scp $p0/slashing_protection.sqlite $2:~
-    tex 'SAVED SLASHING PROTECTION DB IN $2'
+    uex 'SAVED SLASHING PROTECTION DB IN $2'
   fi
 }
 function umt { [[ $(cat $s6) -eq 1 && $(fs6) -gt 10 ]]; }                                                                                                     # usb messages test
