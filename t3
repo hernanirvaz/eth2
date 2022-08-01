@@ -50,6 +50,7 @@ if [[ -x $s0/lighthouse ]]; then
     # othe="$othe --validator-monitor-auto"
     # redundant beacon nodes
     othe="$othe --subscribe-all-subnets --import-all-attestations"
+    othe="$othe --disable-upnp"
     # syncing from a recent finalized checkpoint
     # othe="$othe --checkpoint-sync-url https://1q1s6o6cB6Jysu7KKlbLUYiOdAM:8974468780164028652df958a69fbd30@eth2-beacon-mainnet.infura.io"
     othe="$othe --checkpoint-sync-url http://192.168.8.28:5052"

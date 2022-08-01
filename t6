@@ -239,46 +239,46 @@ function cpe {                                                                  
   m='';srt && m="$m, reboot $(($(sra)/60/60)) hours ago";[[ $(bsc) -gt 0 ]] && m="$m, committee on";[[ $m ]] && swn "INFO        $dt${m#*,}"                  # reboot/committee info
 }
 # Plex Media Server
-function xop { uf5 32400     ;uf1 32400 192.168.8.0/24 plex; }
-function xcl { uf3 32400 plex;uf4 32400 192.168.8.0/24; }
+function xop { wdc 32400     ;waf 32400 192.168.8.0/24 plex; }
+function xcl { wce 32400 plex;wdf 32400 192.168.8.0/24; }
 function xe  { xop;sex 'ufw reload';cex "$w4 $o0"; }
 function xa  { [[ $(sst $o0       ) ]] && { cex "$w3 $o0"; } }
 function xp  { [[ $(sst $o0 loaded) ]] && { cex "$w2 $o0"; } }
 function xd  { cex "$w5 $o0";xcl;sex 'ufw reload'; }
 # Transmission BitTorrent Daemon
-function rop { uf2 51413 torrent;uf5 9091        ;uf1 9091 192.168.8.0/24 torrent; }
-function rcl { uf3 51413 torrent;uf3 9091 torrent;uf4 9091 192.168.8.0/24; }
+function rop { wae 51413 torrent;wdc 9091        ;waf 9091 192.168.8.0/24 torrent; }
+function rcl { wce 51413 torrent;wce 9091 torrent;wdf 9091 192.168.8.0/24; }
 function re  { rop;sex 'ufw reload';cex "$w4 $o1"; }
 function ra  { [[ $(sst $o1       ) ]] && { cex "$w3 $o1"; } }
 function rp  { [[ $(sst $o1 loaded) ]] && { cex "$w2 $o1"; } }
 function rd  { cex "$w5 $o1";rcl;sex 'ufw reload'; }
 # Bind9
-function sop { uf5 53    ;uf1 53 192.168.8.0/24 dns; }
-function scl { uf3 53 dns;uf4 53 192.168.8.0/24; }
+function sop { wdc 53    ;waf 53 192.168.8.0/24 dns; }
+function scl { wce 53 dns;wdf 53 192.168.8.0/24; }
 function se  { sop;sex 'ufw reload';cex "$w4 $o2"; }
 function sa  { [[ $(sst $o2 disabled) ]] || { [[ $(sst $o2) ]] && cex "$w3 $o2"; } }
 function sp  { [[ $(sst $o2 loaded  ) ]] && { cex "$w2 $o2"; } }
 function sd  { cex "$w5 $o2";scl;sex 'ufw reload'; }
 # geth/beacon/validator
-function gfo { if [[ $cust = hrv ]];then uf1 $1 192.168.8.0/24 $2;else uf1 $1 $vip1 $2;uf1 $1 $vip3 $2;fi; }
-function gfc { if [[ $cust = hrv ]];then uf4 $1 192.168.8.0/24   ;else uf4 $1 $vip1   ;uf4 $1 $vip3   ;fi; }
-function gop { uf2 30303 ecp2p;gfo 8545 ecapi;gfo 8551 ecjwt;uf5 8545;uf5 8551; }
-function gcl { uf3 30303 ecp2p;uf3 8545 ecapi;uf3 8551 ecjwt;gfc 8545;gfc 8551; }
-function bfo { if [[ $cust = hrv ]];then uf1 $1 192.168.8.0/24 $2;else uf1 $1 $vip3 $2;fi; }
-function bfc { if [[ $cust = hrv ]];then uf4 $1 192.168.8.0/24   ;else uf4 $1 $vip3   ;fi; }
-function bop { uf2 9000 bnp2p;bfo 5052 bnapi;bfo 8551 bnjwt;uf5 5052;uf5 8551; }
-function bcl { uf3 9000 bnp2p;uf3 5052 bnapi;uf3 8551 bnjwt;bfc 5052;bfc 8551; }
-function vfo { if [[ $cust = hrv ]];then uf1 $1 192.168.8.0/24 $2;else uf1 $1 $vip1 $2;fi; }
-function vfc { if [[ $cust = hrv ]];then uf4 $1 192.168.8.0/24   ;else uf4 $1 $vip1   ;fi; }
-function vop { vfo 5064 vcapi;uf5 5064; }
-function vcl { uf3 5064 vcapi;vfc 5064; }
+function gfo { if [[ $cust = hrv ]];then waf $1 192.168.8.0/24 $2;else waf $1 $vip1 $2;waf $1 $vip3 $2;fi; }
+function gfc { if [[ $cust = hrv ]];then wdf $1 192.168.8.0/24   ;else wdf $1 $vip1   ;wdf $1 $vip3   ;fi; }
+function gop { wae 30303 ecp2p;gfo 8545 ecapi;gfo 8551 ecjwt;wdc 8545;wdc 8551; }
+function gcl { wce 30303 ecp2p;wce 8545 ecapi;wce 8551 ecjwt;gfc 8545;gfc 8551; }
+function bfo { if [[ $cust = hrv ]];then waf $1 192.168.8.0/24 $2;else waf $1 $vip3 $2;fi; }
+function bfc { if [[ $cust = hrv ]];then wdf $1 192.168.8.0/24   ;else wdf $1 $vip3   ;fi; }
+function bop { wae 9000 bnp2p;bfo 5052 bnapi;bfo 8551 bnjwt;wdc 5052;wdc 8551; }
+function bcl { wce 9000 bnp2p;wce 5052 bnapi;wce 8551 bnjwt;bfc 5052;bfc 8551; }
+function vfo { if [[ $cust = hrv ]];then waf $1 192.168.8.0/24 $2;else waf $1 $vip1 $2;fi; }
+function vfc { if [[ $cust = hrv ]];then wdf $1 192.168.8.0/24   ;else wdf $1 $vip1   ;fi; }
+function vop { vfo 5064 vcapi;wdc 5064; }
+function vcl { wce 5064 vcapi;vfc 5064; }
 # enable/arranca goethereum/beacon/validator/prometheus/grafana
 function ge  { gop;sex 'ufw reload';cex "$w4 $n0"; }
 function be  { bop;sex 'ufw reload';cex "$w4 $n1"; }
 function ve  { [[ -f $p1/vc_lock ]] || { vop;sex 'ufw reload';cex "$w4 $n3"; } }
-function pe  { sex 'ufw reload';cex "$w4 $n4"; }
+function pe  { waf 9090/tcp 192.168.8.0/24 prometheus;sex 'ufw reload';cex "$w4 $n4"; }
 function ne  { sex 'ufw reload';cex "$w4 $n5"; }
-function fe  { uf2 3000/tcp grafana;sex 'ufw reload';cex "$w4 $n6"; }
+function fe  { waf 3000/tcp 192.168.8.0/24 grafana;sex 'ufw reload';cex "$w4 $n6"; }
 function ga  { [[ $(sst $n0) ]] && [[ -d /var/lib/goethereum   ]] && { cex "$w3 $n0"; } }
 function ba  { [[ $(sst $n1) ]] && { cex "$w3 $n1"; } }
 function va  {
@@ -314,9 +314,9 @@ function fp  { [[ $(sst $n6 loaded) ]] && { cex "$w2 $n6"; } }
 function gd  { cex "$w5 $n0";gcl;sex 'ufw reload'; }
 function bd  { cex "$w5 $n1";bcl;sex 'ufw reload'; }
 function vd  { cex "$w5 $n3";vcl;sex 'ufw reload';touch $p1/vc_lock; }
-function pd  { [[ $(sst $n4 loaded) ]] && { cex "$w5 $n4"; } }
+function pd  { [[ $(sst $n4 loaded) ]] && { cex "$w5 $n4";wdf 9090/tcp 192.168.8.0/24;sex 'ufw reload'; } }
 function nd  { [[ $(sst $n5 loaded) ]] && { cex "$w5 $n5"; } }
-function fd  { [[ $(sst $n6 loaded) ]] && { cex "$w5 $n6";uf3 3000/tcp;sex 'ufw reload'; } }
+function fd  { [[ $(sst $n6 loaded) ]] && { cex "$w5 $n6";wdf 3000/tcp 192.168.8.0/24;sex 'ufw reload'; } }
 function dpa { cex "$w2 $o2";sex "$w2 systemd-resolved";cex "$w3 $o2";sex "$w3 systemd-resolved"; }                                                           # DNS stop/start
 function ssp {
   swu 'QUER MESMO TRANSFERIR VALIDATORS?';read rsp
