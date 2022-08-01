@@ -36,7 +36,7 @@ if [[ -x $s0/lighthouse ]]; then
       epge=" --eth1-endpoints $E --jwt-secrets $p7/jwt"
       epge=" --eth1-endpoints $E"
     fi
-    uex 'CONFIGURE BEACON'
+    swu 'CONFIGURE BEACON'
     sex "mkdir -p $p7"
     sex "chmod 700 $p7"
     sex "chown $meeu:$meeu $p1"
@@ -74,7 +74,7 @@ if [[ -x $s0/lighthouse ]]; then
     sex "mv $n1.service $s4/$n1.service"
     sex "chmod 644 $s4/$n1.service"
   else
-    uex 'BEACON JA CONFIGURADO'
+    swu 'BEACON JA CONFIGURADO'
   fi
   if [[ $cunm = $znm3 || $cunm = $vnm3 ]]; then
     user="eth3"
@@ -89,26 +89,26 @@ if [[ -x $s0/lighthouse ]]; then
     fi
     cd ~
     if [[ ! -f $p1/vc_keys && -d $HOME/$D && $(ls -A $HOME/$D) ]]; then
-      uex 'IMPORT VALIDATOR KEYS & INIT SLASH PROTECTION'
+      swu 'IMPORT VALIDATOR KEYS & INIT SLASH PROTECTION'
       sex "mkdir -p $p1"
       sex "chown $meeu:$meeu $p1"
       if ! id $user &>$s3;then sudo useradd --no-create-home --shell /bin/false $user;fi
-      nex "STORE($K)\n"
+      swn "STORE($K)\n"
       lighthouse$blkc --datadir $p1 account validator import --directory $HOME/$D
       [[ -f $p8/validator_definitions.yml ]] && touch $p1/vc_keys
     fi
     if [[ ! -f $p1/vc_lock && -f $p1/vc_keys ]]; then
-      uex 'BLOQUEAR VALIDATOR EXECUTE'
-      nex "t6 vpr;t6 vds"
-      nex "sudo chmod 777 $p8"
-      nex "sudo chmod 666 $p8/slashing_protection.sqlite*"
+      swu 'BLOQUEAR VALIDATOR EXECUTE'
+      swn "t6 vpr;t6 vds"
+      swn "sudo chmod 777 $p8"
+      swn "sudo chmod 666 $p8/slashing_protection.sqlite*"
       touch $p1/vc_lock
     fi
     if [[ ! -f $p1/vc_slash && -f $p1/vc_lock && -f $p1/vc_keys ]]; then
       sex "mkdir -p $p8"
       sex "chown $meeu:$meeu $p8"
       if [[ -f $p0/slashing_protection.sqlite ]]; then
-        uex "COPIAR $p8/slashing_protection.sqlite*"
+        swu "COPIAR $p8/slashing_protection.sqlite*"
         sex "rm $p8/slashing_protection.sqlite $p8/slashing_protection.sqlite-journal"
         sex "cp $p0/slashing_protection.sqlite $p8"
         [[ -f $p8/slashing_protection.sqlite ]] && touch $p1/vc_slash
@@ -119,7 +119,7 @@ if [[ -x $s0/lighthouse ]]; then
       sex "chmod 700 $p8"
     fi
     if [[ ! -f $s4/$n3.service && -f $p1/vc_slash && -f $p1/vc_lock && -f $p1/vc_keys ]]; then
-      uex 'CONFIGURE VALIDATOR'
+      swu 'CONFIGURE VALIDATOR'
       sex "mkdir -p $p8"
       if ! id $user &>$s3;then sudo useradd --no-create-home --shell /bin/false $user;fi
       sex "chown -R $user:$user $p8"
@@ -143,28 +143,28 @@ if [[ -x $s0/lighthouse ]]; then
 			EOF
       sex "mv $n3.service $s4/$n3.service"
       sex "chmod 644 $s4/$n3.service"
-      uex 'VALIDATOR CONFIGURADO VERIFICAR TUDO (LOCK & SLASH DB)'
+      swu 'VALIDATOR CONFIGURADO VERIFICAR TUDO (LOCK & SLASH DB)'
     else
-      nex "VALIDATOR JA CONFIGURADO OR LOCKED ($p1/vc_lock)"
+      swn "VALIDATOR JA CONFIGURADO OR LOCKED ($p1/vc_lock)"
     fi
   else
-    uex 'VALIDATOR NAO DEVE SER INSTALADO AQUI'
+    swu 'VALIDATOR NAO DEVE SER INSTALADO AQUI'
   fi
 else
   if [[ $cunm = $znm1 || $cunm = $vnm1 ]]; then
     if [[ -x $p0/.cargo/bin/rustup ]]; then
       if [[ $1 ]]; then
-        nex "RUST OVERRIDE SET $1"
+        swn "RUST OVERRIDE SET $1"
         rustup override set $1
       else
-        uex 'UPDATE RUST'
+        swu 'UPDATE RUST'
         source ~/.cargo/env
         rustup update
       fi
     else
-      uex 'INSTALAR DEPENDENCIAS RUST'
+      swu 'INSTALAR DEPENDENCIAS RUST'
       cex 'apt install git gcc g++ make cmake pkg-config llvm-dev libclang-dev clang libssl-dev build-essential libudev-dev perl yasm -y'
-      uex 'INSTALL RUST'
+      swu 'INSTALL RUST'
       cd $p0
       curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
     fi
@@ -183,7 +183,7 @@ else
       git fetch
       t=$(git rev-list --tags --max-count=1)
       git checkout $(git describe --tags $t)
-      uex 'VAI COMPILAR LIGHT'
+      swu 'VAI COMPILAR LIGHT'
       make
       if [[ $? -eq 0 && -x $p0/.cargo/bin/lighthouse ]]; then
         if [[ $cunm = $znm1 ]]; then
@@ -199,10 +199,10 @@ else
         sex "cp ~/.cargo/bin/lighthouse $s0"
         sex "chmod 755 $s0/lighthouse"
       else
-        uex 'NAO EXISTE LIGHT COMPILADO PARA INSTALAR'
+        swu 'NAO EXISTE LIGHT COMPILADO PARA INSTALAR'
       fi
     fi
   else
-    uex 'RUST NAO DEVE SER INSTALADO AQUI'
+    swu 'RUST NAO DEVE SER INSTALADO AQUI'
   fi
 fi

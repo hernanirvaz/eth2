@@ -1,22 +1,22 @@
 #!/bin/bash
 
-function tex { echo -e "\n\e[5m${1^^}\e[25m\n"; }                                                                                                             # output text flash
-function uex { echo -e "${1^^}"; }                                                                                                                            # output text upper
-function nex { echo -e "$1"; }                                                                                                                                # output text normal
-function cex { tex "$1";echo $H|sudo -S $1 2>$s3; }                                                                                                           # superuser-command (visible)
+function swb { echo -e "\n\e[5m${1^^}\e[25m\n"; }                                                                                                             # show flash
+function swu { echo -e "${1^^}"; }                                                                                                                            # show upper
+function swn { echo -e "$1"; }                                                                                                                                # show normal
+function cex { swb "$1";echo $H|sudo -S $1 2>$s3; }                                                                                                           # superuser-command (visible)
+function yex { swb "$1";echo $H|sudo -S $1 <<< y &>$s3; }                                                                                                     # superuser-command (visible & yes)
 function pex {          echo $H|sudo -S $1 2>$s3; }                                                                                                           # superuser-command (pipe)
 function sex {          echo $H|sudo -S $1 &>$s3; }                                                                                                           # superuser-command (silent)
-function yex { tex "$1";echo $H|sudo -S $1 <<< y &>$s3; }                                                                                                     # superuser-command (yes & visible)
 function sst { $w1 $1 2>$s3|grep "${2:-inactive\|failed}"                                   ; }                                                               # service status word test
 function ss1 { $w1 $1 2>$s3|grep "${2:-Active:}"|sed "s%.*${2:-Active:} *\(${3:-.}*\).*%\1%"; }                                                               # service status word with 1 data extraction
 function ss2 { $w1 $1 2>$s3|grep Active:|sed 's%.*Active: *\(.*\)%\1%;s% *since.*;%;%'      ; }                                                               # service status word with 2 data extraction
 function sso { dts;echo "$1 $(printf '%6s' $(ss1 $2 Memory:)) $dt status: $(ss2 $2)"        ; }                                                               # service status output
-function uf1 { cex "ufw allow from $2 to any port $1 comment $3"; }                                                                                           #        open  port from IP
-function uf2 { cex "ufw allow $1 comment $2"; }                                                                                                               #        open  port from Anywhere
-function uf3 { cex "ufw deny  $1 comment $2"; }                                                                                                               #        close port from Anywhere
-function uf4 { cex "ufw delete allow from $2 to any port $1"; }                                                                                               # delete open  port from IP
-function uf5 { cex "ufw delete deny $1"; }                                                                                                                    # delete close port from Anywhere
-function uf6 { cex "ufw allow $1 comment $2";cex "ufw limit $1 comment $2"; }                                                                                 # limit  open  port from Anywhere
+function uf1 { cex "ufw allow from $2 to any port $1 comment $3"; }                                                                                           # allow prt frm lan
+function uf2 { cex "ufw allow $1 comment $2"; }                                                                                                               # allow prt frm *
+function uf3 { cex "ufw deny  $1 comment $2"; }                                                                                                               # deny  prt frm *
+function uf4 { cex "ufw delete allow from $2 to any port $1"; }                                                                                               # allow prt frm lan
+function uf5 { cex "ufw delete deny $1"; }                                                                                                                    # deny  prt frm *
+function uf6 { cex "ufw allow $1 comment $2";cex "ufw limit $1 comment $2"; }                                                                                 # allow prt frm * (limit <6 within 30s)
 
 s0='/usr/local/bin'
 s1='/var/log/syslog'

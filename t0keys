@@ -11,11 +11,11 @@ if [[ $cunm = hrv-zen ]]; then
   lng="spanish"
   if [[ $B = mainnet ]];then nmv=18;else nmv=3;fi 
   if [[ -d ~/$D && $(ls -A ~/$D) ]]; then
-    uex 'CHAVES ESTAO PRONTAS'
+    swu 'CHAVES ESTAO PRONTAS'
   elif [[ -d ~/$cli && $(ls -A ~/$cli) ]]; then
     if [[ -d $bs1 ]]; then
       if [[ -d $cs1 ]]; then
-        uex "ARQUIVO OFFLINE $cs1 JA EXISTE"
+        swu "ARQUIVO OFFLINE $cs1 JA EXISTE"
       else
         cp -R ~/$cli $cs1
         sex "chown -R eu:eu $cs1"
@@ -23,11 +23,11 @@ if [[ $cunm = hrv-zen ]]; then
         sex "chmod 644 $cs1/*"
       fi
     else
-      uex "ARQUIVO OFFLINE $bs1 NAO ESTA MONTADO"
+      swu "ARQUIVO OFFLINE $bs1 NAO ESTA MONTADO"
     fi
     if [[ -d $bs2 ]]; then
       if  [[ -d $cs2 ]]; then
-        uex "ARQUIVO OFFLINE $cs2 JA EXISTE"
+        swu "ARQUIVO OFFLINE $cs2 JA EXISTE"
       else
         cp -R ~/$cli $cs2
         sex "chown -R eu:eu $cs2"
@@ -35,27 +35,27 @@ if [[ $cunm = hrv-zen ]]; then
         sex "chmod 644 $cs2/*"
       fi
     else
-      uex "ARQUIVO OFFLINE $bs2 NAO ESTA MONTADO"
+      swu "ARQUIVO OFFLINE $bs2 NAO ESTA MONTADO"
     fi
     cp -R ~/$cli ~
-    uex 'CHAVES FORAM ARQUIVADAS - VERIFICAR AQUIVO OFFLINE'
+    swu 'CHAVES FORAM ARQUIVADAS - VERIFICAR AQUIVO OFFLINE'
   elif [[ -f ~/eth2.0-deposit-cli/README.md ]]; then
     cd ~/eth2.0-deposit-cli
-    tex "PARA GERAR $nmv NOVAS CHAVES CHAIN $B"
-    nex "STORE($K)"
-    tex "PARA GERAR $nmv NOVAS CHAVES CHAIN $B"
+    swb "PARA GERAR $nmv NOVAS CHAVES CHAIN $B"
+    swn "STORE($K)"
+    swb "PARA GERAR $nmv NOVAS CHAVES CHAIN $B"
     # if keystores lost to recover keys use ./deposit.sh existing-mnemonic
     ./deposit.sh new-mnemonic --num_validators $nmv --mnemonic_language $lng --chain $B
-    uex 'para ARQUIVAR CHAVES executar de novo - OFFLINE & com USB INSTALADOS'
+    swu 'para ARQUIVAR CHAVES executar de novo - OFFLINE & com USB INSTALADOS'
   else
-    uex 'INSTALAR SCRIPT CHAVES'
+    swu 'INSTALAR SCRIPT CHAVES'
     cex 'apt install python3-pip python3-testresources git -y'
     cd ~
     git clone https://github.com/ethereum/eth2.0-deposit-cli.git
     cd ~/eth2.0-deposit-cli
     cex './deposit.sh install'
-    uex 'para GERAR CHAVES executar de novo - OFFLINE'
+    swu 'para GERAR CHAVES executar de novo - OFFLINE'
   fi
 else
-  uex 'TEM DE ESTAR hrv-zen'
+  swu 'TEM DE ESTAR hrv-zen'
 fi
