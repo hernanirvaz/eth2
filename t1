@@ -17,9 +17,6 @@ function pde { cex "ufw $3 deny $1 comment $2"; }                               
 function pai { cex "ufw $4 allow from $2 to any port ${1/\// proto } comment $3"; }                                                                           # allow prt frm ip
 function pae { cex "ufw $3 allow $1 comment $2"; }                                                                                                            # allow prt
 function ple { cex "ufw $3 limit $1 comment $2"; }                                                                                                            # limit prt (<6 within 30s)
-function cc0 { sex "chmod ${2:-644} $1";sex "chown ${3:-root:root} $1"; }                                                                                     # chmod/chown file
-function cc1 { local f="$(basename $1 $3).sav";sed  -e "$2" $1 > ~/$f;sex "mv $f $1"; }                                                                       # edit        file with sav
-function cc2 { local f="$(basename $1 $3).sav";echo -e "$2"   >> ~/$f;sex "mv $f $1"; }                                                                       # add line to file with sav
 
 s0='/usr/local/bin'
 s1='/var/log/syslog'
