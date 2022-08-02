@@ -11,12 +11,12 @@ if [[ $(pex 'ufw status'|grep -i inactive) ]]; then
   swu 'INIT FIREWALL'
   cex 'ufw default deny incoming'
   cex 'ufw default allow outgoing'
-  wce 22/tcp ossh                                                                                                                                             # deny old    ssh
-  wci 192.168.8.254 224.0.0.1 router                                                                                                                          # router lan multicasting
-  [[ $cunm = $znm1 ]] && { wal 2021/tcp nssh;waf 53      192.168.8.0/24 dns; }                                                                                # allow/limit ssh;allow lan dns
-  [[ $cunm = $znm2 ]] && { wal 2022/tcp nssh;waf 123/udp 192.168.8.0/24 ntp; }                                                                                # allow/limit ssh;allow lan ntp
-  [[ $cunm = $znm3 ]] && { wal 2023/tcp nssh;waf 53      192.168.8.0/24 dns; }                                                                                # allow/limit ssh;allow lan dns
-  [[ $cunm = $znm4 ]] && { wal 2024/tcp nssh; }                                                                                                               # allow/limit ssh
+  pde 22/tcp ossh                                                                                                                                             # deny old    ssh
+  idi 192.168.8.0/24 224.0.0.1 multicast                                                                                                                      # lan multicasting
+  [[ $cunm = $znm1 ]] && { ple 2021/tcp nssh; }                                                                                                               # limit ssh
+  [[ $cunm = $znm2 ]] && { ple 2022/tcp nssh;pai 123/udp 192.168.8.0/24 ntp; }                                                                                # limit ssh;allow ntp
+  [[ $cunm = $znm3 ]] && { ple 2023/tcp nssh; }                                                                                                               # limit ssh
+  [[ $cunm = $znm4 ]] && { ple 2024/tcp nssh; }                                                                                                               # limit ssh
   sex 'ufw reload'
   yex 'ufw enable'
   cex 'ufw status numbered'

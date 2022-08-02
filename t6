@@ -239,43 +239,43 @@ function cpe {                                                                  
   m='';srt && m="$m, reboot $(($(sra)/60/60)) hours ago";[[ $(bsc) -gt 0 ]] && m="$m, committee on";[[ $m ]] && swn "INFO        $dt${m#*,}"                  # reboot/committee info
 }
 # Plex Media Server
-function xop { wce 32400 plex delete;waf 32400 192.168.8.0/24 plex       ; }
-function xcl { wce 32400 plex       ;waf 32400 192.168.8.0/24 plex delete; }
+function xop { pde 32400 plex delete;pai 32400 192.168.8.0/24 plex       ;ide 192.168.8.0/24 1900/udp ssdp/upnp       ; }
+function xcl { pde 32400 plex       ;pai 32400 192.168.8.0/24 plex delete;ide 192.168.8.0/24 1900/udp ssdp/upnp delete; }
 function xe  { xop;sex 'ufw reload';cex "$w4 $o0"; }
 function xa  { [[ $(sst $o0       ) ]] && { cex "$w3 $o0"; } }
 function xp  { [[ $(sst $o0 loaded) ]] && { cex "$w2 $o0"; } }
 function xd  { cex "$w5 $o0";xcl;sex 'ufw reload'; }
 # Transmission BitTorrent Daemon
-function rop { wae 51413 torrent;wce 9091 torrent delete;waf 9091 192.168.8.0/24 torrent       ; }
-function rcl { wce 51413 torrent;wce 9091 torrent       ;waf 9091 192.168.8.0/24 torrent delete; }
+function rop { pae 51413 torrent;pde 9091 torrent delete;pai 9091 192.168.8.0/24 torrent       ; }
+function rcl { pde 51413 torrent;pde 9091 torrent       ;pai 9091 192.168.8.0/24 torrent delete; }
 function re  { rop;sex 'ufw reload';cex "$w4 $o1"; }
 function ra  { [[ $(sst $o1       ) ]] && { cex "$w3 $o1"; } }
 function rp  { [[ $(sst $o1 loaded) ]] && { cex "$w2 $o1"; } }
 function rd  { cex "$w5 $o1";rcl;sex 'ufw reload'; }
 # Bind9
-function sop { wce 53 dns delete;waf 53 192.168.8.0/24 dns       ; }
-function scl { wce 53 dns       ;waf 53 192.168.8.0/24 dns delete; }
+function sop { pai 53 192.168.8.0/24 dns       ; }
+function scl { pai 53 192.168.8.0/24 dns delete; }
 function se  { sop;sex 'ufw reload';cex "$w4 $o2"; }
 function sa  { [[ $(sst $o2 disabled) ]] || { [[ $(sst $o2) ]] && cex "$w3 $o2"; } }
 function sp  { [[ $(sst $o2 loaded  ) ]] && { cex "$w2 $o2"; } }
 function sd  { cex "$w5 $o2";scl;sex 'ufw reload'; }
 # geth/beacon/validator
-function gfw { if [[ $cust = hrv ]];then waf $1 192.168.8.0/24 $2 $3;else waf $1 $vip1 $2 $3;waf $1 $vip3 $2 $3;fi; }
-function gop { wae 30303 ecp2p;wce 8545 ecapi delete;wce 8551 ecjwt delete;gfw 8545 ecapi       ;gfw 8551 ecjwt       ; }
-function gcl { wce 30303 ecp2p;wce 8545 ecapi       ;wce 8551 ecjwt       ;gfw 8545 ecapi delete;gfw 8551 ecjwt delete; }
-function bfw { if [[ $cust = hrv ]];then waf $1 192.168.8.0/24 $2 $3;else waf $1 $vip3 $2 $3;fi; }
-function bop { wae 9000 bnp2p;wce 5052 bnapi delete;wce 8551 bnjwt delete;bfw 5052 bnapi       ;bfw 8551 bnjwt       ; }
-function bcl { wce 9000 bnp2p;wce 5052 bnapi       ;wce 8551 bnjwt       ;bfw 5052 bnapi delete;bfw 8551 bnjwt delete; }
-function vfw { if [[ $cust = hrv ]];then waf $1 192.168.8.0/24 $2 $3;else waf $1 $vip1 $2 $3;fi; }
-function vop { vfw 5064 vcapi       ;wce 5064 vcapi delete; }
-function vcl { vfw 5064 vcapi delete;wce 5064 vcapi       ; }
+function gfw { if [[ $cust = hrv ]];then pai $1 192.168.8.0/24 $2 $3;else pai $1 $vip1 $2 $3;pai $1 $vip3 $2 $3;fi; }
+function gop { pae 30303 ecp2p;pde 8545 ecapi delete;pde 8551 ecjwt delete;gfw 8545 ecapi       ;gfw 8551 ecjwt       ; }
+function gcl { pde 30303 ecp2p;pde 8545 ecapi       ;pde 8551 ecjwt       ;gfw 8545 ecapi delete;gfw 8551 ecjwt delete; }
+function bfw { if [[ $cust = hrv ]];then pai $1 192.168.8.0/24 $2 $3;else pai $1 $vip3 $2 $3;fi; }
+function bop { pae 9000 bnp2p;pde 5052 bnapi delete;pde 8551 bnjwt delete;bfw 5052 bnapi       ;bfw 8551 bnjwt       ; }
+function bcl { pde 9000 bnp2p;pde 5052 bnapi       ;pde 8551 bnjwt       ;bfw 5052 bnapi delete;bfw 8551 bnjwt delete; }
+function vfw { if [[ $cust = hrv ]];then pai $1 192.168.8.0/24 $2 $3;else pai $1 $vip1 $2 $3;fi; }
+function vop { vfw 5064 vcapi       ;pde 5064 vcapi delete; }
+function vcl { vfw 5064 vcapi delete;pde 5064 vcapi       ; }
 # enable/arranca goethereum/beacon/validator/prometheus/grafana
 function ge  { gop;sex 'ufw reload';cex "$w4 $n0"; }
 function be  { bop;sex 'ufw reload';cex "$w4 $n1"; }
 function ve  { [[ -f $p1/vc_lock ]] || { vop;sex 'ufw reload';cex "$w4 $n3"; } }
-function pe  { waf 9090/tcp 192.168.8.0/24 prometheus;sex 'ufw reload';cex "$w4 $n4"; }
+function pe  { pai 9090/tcp 192.168.8.0/24 prometheus;sex 'ufw reload';cex "$w4 $n4"; }
 function ne  { sex 'ufw reload';cex "$w4 $n5"; }
-function fe  { waf 3000/tcp 192.168.8.0/24 grafana   ;sex 'ufw reload';cex "$w4 $n6"; }
+function fe  { pai 3000/tcp 192.168.8.0/24 grafana   ;sex 'ufw reload';cex "$w4 $n6"; }
 function ga  { [[ $(sst $n0) ]] && [[ -d /var/lib/goethereum   ]] && { cex "$w3 $n0"; } }
 function ba  { [[ $(sst $n1) ]] && { cex "$w3 $n1"; } }
 function va  {
@@ -311,9 +311,9 @@ function fp  { [[ $(sst $n6 loaded) ]] && { cex "$w2 $n6"; } }
 function gd  { cex "$w5 $n0";gcl;sex 'ufw reload'; }
 function bd  { cex "$w5 $n1";bcl;sex 'ufw reload'; }
 function vd  { cex "$w5 $n3";vcl;sex 'ufw reload';touch $p1/vc_lock; }
-function pd  { [[ $(sst $n4 loaded) ]] && { cex "$w5 $n4";waf 9090/tcp 192.168.8.0/24 prometheus delete;sex 'ufw reload'; } }
+function pd  { [[ $(sst $n4 loaded) ]] && { cex "$w5 $n4";pai 9090/tcp 192.168.8.0/24 prometheus delete;sex 'ufw reload'; } }
 function nd  { [[ $(sst $n5 loaded) ]] && { cex "$w5 $n5"; } }
-function fd  { [[ $(sst $n6 loaded) ]] && { cex "$w5 $n6";waf 3000/tcp 192.168.8.0/24 grafana    delete;sex 'ufw reload'; } }
+function fd  { [[ $(sst $n6 loaded) ]] && { cex "$w5 $n6";pai 3000/tcp 192.168.8.0/24 grafana    delete;sex 'ufw reload'; } }
 function dpa { cex "$w2 $o2";sex "$w2 systemd-resolved";cex "$w3 $o2";sex "$w3 systemd-resolved"; }                                                           # DNS stop/start
 function ssp {
   swu 'QUER MESMO TRANSFERIR VALIDATORS?';read rsp
@@ -388,6 +388,7 @@ function sr9 { chmod 644 $1.jwt;sex "mv $1.jwt $s4/$1.jwt"; }
 [[ $1 = we  ]] && { yex 'ufw enable'; }
 [[ $1 = wpr ]] && { cex 'ufw disable'; }
 [[ $1 = wds ]] && { cex 'ufw disable'; }
+[[ $1 = wl  ]] && { fs2|grep UFW; }
 # journal
 [[ $1 = yj  ]] && { jsh; }
 [[ $1 = ej  ]] && { jsh "-u $n0 -u $n1 -u $n3"; }
