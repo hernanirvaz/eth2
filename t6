@@ -239,8 +239,8 @@ function cpe {                                                                  
   m='';srt && m="$m, reboot $(($(sra)/60/60)) hours ago";[[ $(bsc) -gt 0 ]] && m="$m, committee on";[[ $m ]] && swn "INFO        $dt${m#*,}"                  # reboot/committee info
 }
 # Plex Media Server
-function xop { pde 32400 plex delete;pai 32400 192.168.8.0/24 plex       ;ide 192.168.8.0/24 1900/udp ssdp/upnp       ; }
-function xcl { pde 32400 plex       ;pai 32400 192.168.8.0/24 plex delete;ide 192.168.8.0/24 1900/udp ssdp/upnp delete; }
+function xop { pde 32400 plex delete;pai 32400 192.168.8.0/24 plex       ;ide 192.168.8.0/24 1900/udp plex/upnp       ; }
+function xcl { pde 32400 plex       ;pai 32400 192.168.8.0/24 plex delete;ide 192.168.8.0/24 1900/udp plex/upnp delete; }
 function xe  { xop;sex 'ufw reload';cex "$w4 $o0"; }
 function xa  { [[ $(sst $o0       ) ]] && { cex "$w3 $o0"; } }
 function xp  { [[ $(sst $o0 loaded) ]] && { cex "$w2 $o0"; } }
@@ -427,6 +427,7 @@ function sr9 { chmod 644 $1.jwt;sex "mv $1.jwt $s4/$1.jwt"; }
 [[ $1 = vea ]] && { ve;dmr;va;jsh "-u $n3"; }
 [[ $1 = rea ]] && { re;ra; }
 [[ $1 = sea ]] && { se;sa; }
+[[ $1 = xea ]] && { xe;xa; }
 # enable
 [[ $1 = ge  ]] && { ge; }
 [[ $1 = oe  ]] && { oe; }
