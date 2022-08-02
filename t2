@@ -12,6 +12,7 @@ if [[ $(pex 'ufw status'|grep -i inactive) ]]; then
   cex 'ufw default deny incoming'
   cex 'ufw default allow outgoing'
   wce 22/tcp ossh                                                                                                                                             # deny old    ssh
+  wci 192.168.8.254 224.0.0.1 router                                                                                                                          # router lan multicasting
   [[ $cunm = $znm1 ]] && { wal 2021/tcp nssh;waf 53      192.168.8.0/24 dns; }                                                                                # allow/limit ssh;allow lan dns
   [[ $cunm = $znm2 ]] && { wal 2022/tcp nssh;waf 123/udp 192.168.8.0/24 ntp; }                                                                                # allow/limit ssh;allow lan ntp
   [[ $cunm = $znm3 ]] && { wal 2023/tcp nssh;waf 53      192.168.8.0/24 dns; }                                                                                # allow/limit ssh;allow lan dns

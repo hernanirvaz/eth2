@@ -11,12 +11,11 @@ function sst { $w1 $1 2>$s3|grep "${2:-inactive\|failed}"                       
 function ss1 { $w1 $1 2>$s3|grep "${2:-Active:}"|sed "s%.*${2:-Active:} *\(${3:-.}*\).*%\1%"; }                                                               # service status word with 1 data extraction
 function ss2 { $w1 $1 2>$s3|grep Active:|sed 's%.*Active: *\(.*\)%\1%;s% *since.*;%;%'      ; }                                                               # service status word with 2 data extraction
 function sso { dts;echo "$1 $(printf '%6s' $(ss1 $2 Memory:)) $dt status: $(ss2 $2)"        ; }                                                               # service status output
-function waf { cex "ufw allow from $2 to any port ${1/\// proto } comment $3"; }                                                                              # allow prt frm lan
-function wdf { cex "ufw delete allow from $2 to any port ${1/\// proto }"; }                                                                                  # allow prt frm lan delete
-function wae { cex "ufw allow $1 comment $2"; }                                                                                                               # allow prt frm *
-function wce { cex "ufw deny  $1 comment $2"; }                                                                                                               # deny  prt frm *
-function wdc { cex "ufw delete deny $1"; }                                                                                                                    # deny  prt frm *   delete
-function wal { cex "ufw allow $1 comment $2";cex "ufw limit $1 comment $2"; }                                                                                 # allow prt frm * (limit <6 within 30s)
+function wci { cex "ufw $4 deny from $1 to $2 comment $3"; }                                                                                                  # deny from ip to ip
+function waf { cex "ufw $4 allow from $2 to any port ${1/\// proto } comment $3"; }                                                                           # allow prt frm lan
+function wae { cex "ufw $3 allow $1 comment $2"; }                                                                                                            # allow prt frm *
+function wce { cex "ufw $3 deny  $1 comment $2"; }                                                                                                            # deny  prt frm *
+function wal { cex "ufw $3 limit $1 comment $2"; }                                                                                                            # limit prt frm * (<6 within 30s)
 function cc0 { sex "chmod ${2:-644} $1";sex "chown ${3:-root:root} $1"; }                                                                                     # chmod/chown file
 function cc1 { local f="$(basename $1 $3).sav";sed  -e "$2" $1 > ~/$f;sex "mv $f $1"; }                                                                       # edit        file with sav
 function cc2 { local f="$(basename $1 $3).sav";echo -e "$2"   >> ~/$f;sex "mv $f $1"; }                                                                       # add line to file with sav
