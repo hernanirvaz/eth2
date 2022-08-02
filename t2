@@ -71,12 +71,11 @@ fi
 if [[ $cunm != $znm1 && $cunm != $znm4 && $cunm != $vnm1 ]]; then
   swu 'GETH NAO DEVE SER INSTALADO AQUI - DEVE FAZER REBOOT'
 else
-  user='eth1'
-  if ! id $user &>$s3;then sudo useradd --no-create-home --shell /bin/false $user;fi
   if [[ -f $s4/$n0.service ]]; then
     swu 'GETH JA INSTALADO'
   else
     swu 'INSTALAR GETH'
+    sua eth1                                                                                                                                                  # useradd
     if [[ $B = mainnet ]]; then
       blkc=''
       maxp=50

@@ -17,6 +17,7 @@ function pde { cex "ufw $3 deny $1 comment $2"; }                               
 function pai { cex "ufw $4 allow from $2 to any port ${1/\// proto } comment $3"; }                                                                           # allow prt frm ip
 function pae { cex "ufw $3 allow $1 comment $2"; }                                                                                                            # allow prt
 function ple { cex "ufw $3 limit $1 comment $2"; }                                                                                                            # limit prt (<6 within 30s)
+function sau { user=$1;id $1 &>$s3 || sex "useradd --no-create-home --shell /bin/false $user"; }                                                              # system useradd
 
 s0='/usr/local/bin'
 s1='/var/log/syslog'

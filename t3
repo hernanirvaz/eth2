@@ -10,7 +10,6 @@ fi
 
 if [[ -x $s0/lighthouse ]]; then
   if [[ ! -f $s4/$n1.service && $cunm != $znm1 && $cunm != $vnm1 ]]; then
-    user="eth2"
     # slots per restore point after init can't be changed
     sprp=1024 # Yearly Disk Usage  12.8GB
     sprp=512  # Yearly Disk Usage  25.6GB
@@ -43,7 +42,7 @@ if [[ -x $s0/lighthouse ]]; then
     # IMPORTANTE LOCK VALIDATOR CLIENTE
     touch $p1/vc_lock
     cd ~
-    if ! id $user &>$s3;then sudo useradd --no-create-home --shell /bin/false $user;fi
+    sua eth2                                                                                                                                                  # useradd
     sex "chown $user:$user $p7"
     othe=''
     # othe="$othe --slasher --disable-upnp"
@@ -78,7 +77,7 @@ if [[ -x $s0/lighthouse ]]; then
     swu 'BEACON JA CONFIGURADO'
   fi
   if [[ $cunm = $znm3 || $cunm = $vnm3 ]]; then
-    user="eth3"
+    sua eth3                                                                                                                                                  # useradd
     # external beacon-nodes before MERGE
     # https://1q1s6o6cB6Jysu7KKlbLUYiOdAM:8974468780164028652df958a69fbd30@eth2-beacon-mainnet.infura.io
     # MERGE --suggested-fee-recipient $a0
@@ -93,7 +92,6 @@ if [[ -x $s0/lighthouse ]]; then
       swu 'IMPORT VALIDATOR KEYS & INIT SLASH PROTECTION'
       sex "mkdir -p $p1"
       sex "chown $meeu:$meeu $p1"
-      if ! id $user &>$s3;then sudo useradd --no-create-home --shell /bin/false $user;fi
       swn "STORE($K)\n"
       lighthouse$blkc --datadir $p1 account validator import --directory $HOME/$D
       [[ -f $p8/validator_definitions.yml ]] && touch $p1/vc_keys
@@ -122,7 +120,6 @@ if [[ -x $s0/lighthouse ]]; then
     if [[ ! -f $s4/$n3.service && -f $p1/vc_slash && -f $p1/vc_lock && -f $p1/vc_keys ]]; then
       swu 'CONFIGURE VALIDATOR'
       sex "mkdir -p $p8"
-      if ! id $user &>$s3;then sudo useradd --no-create-home --shell /bin/false $user;fi
       sex "chown -R $user:$user $p8"
       sex "chmod 700 $p8"
       cat <<-EOF > $n3.service
