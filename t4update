@@ -72,7 +72,6 @@ else
 fi
 
 if [[ -x $s0/lighthouse ]]; then
-  sex "chmod 755 $s0/lighthouse*"
-  sex "chown eth:eth $s0/lighthouse*"
+  cmw $s0/lighthouse 755 eth
   swu 'NOVO LIGHT INSTALADO - PODE/DEVE VERIFICAR'
 fi

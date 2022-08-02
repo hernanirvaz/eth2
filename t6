@@ -283,8 +283,7 @@ function va  {
   if [[ -f $p1/vc_lock ]];then
     if [[ -f $p0/slashing_protection.sqlite ]];then                                                                                                           # slashing_protection
       cex "cp $p0/slashing_protection.sqlite $p8"
-      sex "chown eth3:eth3 $p8/slashing_protection.sqlite"
-      sex "chmod 600 $p8/slashing_protection.sqlite"
+      cmw $p8/slashing_protection.sqlite 600 eth3
     fi
   else
     cex "$w3 $n3"
@@ -362,7 +361,7 @@ function sr9 { chmod 644 $1.jwt;sex "mv $1.jwt $s4/$1.jwt"; }
 [[ $1 = gh  ]] && { gh0 $2; }
 [[ $1 = bh  ]] && { bh0 $2; }
 [[ $1 = bhs ]] && { bm0;bms;[[ -f $p2 ]] && swn "$m";sso BEAC $n1;[[ $(sst $n3 loaded) ]] && sso VALI $n3;cpe; }                                              # lighthouse services & system report
-[[ $1 = ghs ]] && { sso GETH $n0;cpe; }                                                                                                                       # geth service & system report
+[[ $1 = ghs ]] && { gl0;swn "$m";sso GETH $n0;cpe; }                                                                                                          # geth service & system report
 [[ $1 = bo  ]] && { bo0 $2 $3 $4; }
 [[ $1 = bon ]] && { bon $2; }
 [[ $1 = boc && -f $p2 ]] && { read -a v <<< $(bff|tail -n1);l2=$(bff $(pt1 $2 ${v[4]}));boa; }

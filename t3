@@ -4,8 +4,7 @@ source /home/eth/eth2/t1
 
 if [[ -x $p0/lighthouse && ! -d $p0/lighthouse ]]; then
   sex "mv $p0/lighthouse $s0"
-  sex "chmod 755 $s0/lighthouse*"
-  sex "chown eth:eth $s0/lighthouse*"
+  cmw $s0/lighthouse 755 eth
 fi
 
 if [[ -x $s0/lighthouse ]]; then
@@ -37,13 +36,12 @@ if [[ -x $s0/lighthouse ]]; then
     fi
     swu 'CONFIGURE BEACON'
     sex "mkdir -p $p7"
-    sex "chmod 700 $p7"
-    sex "chown $meeu:$meeu $p1"
+    cmw $p1 755 $meeu
     # IMPORTANTE LOCK VALIDATOR CLIENTE
     touch $p1/vc_lock
     cd ~
     sua eth2                                                                                                                                                  # useradd
-    sex "chown $user:$user $p7"
+    cmw $p7 700 $user
     othe=''
     # othe="$othe --slasher --disable-upnp"
     # othe="$othe --validator-monitor-auto"
@@ -71,8 +69,7 @@ if [[ -x $s0/lighthouse ]]; then
 		[Install]
 		WantedBy=multi-user.target
 		EOF
-    sex "mv $n1.service $s4/$n1.service"
-    sex "chmod 644 $s4/$n1.service"
+    sex "mv $n1.service $s4/$n1.service";cmw $s4/$n1.service 644
   else
     swu 'BEACON JA CONFIGURADO'
   fi
@@ -91,7 +88,7 @@ if [[ -x $s0/lighthouse ]]; then
     if [[ ! -f $p1/vc_keys && -d $HOME/$D && $(ls -A $HOME/$D) ]]; then
       swu 'IMPORT VALIDATOR KEYS & INIT SLASH PROTECTION'
       sex "mkdir -p $p1"
-      sex "chown $meeu:$meeu $p1"
+      cmw $p1 755 $meeu
       swn "STORE($K)\n"
       lighthouse$blkc --datadir $p1 account validator import --directory $HOME/$D
       [[ -f $p8/validator_definitions.yml ]] && touch $p1/vc_keys
@@ -105,23 +102,20 @@ if [[ -x $s0/lighthouse ]]; then
     fi
     if [[ ! -f $p1/vc_slash && -f $p1/vc_lock && -f $p1/vc_keys ]]; then
       sex "mkdir -p $p8"
-      sex "chown $meeu:$meeu $p8"
+      cmw $p8 700 $meeu
       if [[ -f $p0/slashing_protection.sqlite ]]; then
         swu "COPIAR $p8/slashing_protection.sqlite*"
         sex "rm $p8/slashing_protection.sqlite $p8/slashing_protection.sqlite-journal"
         sex "cp $p0/slashing_protection.sqlite $p8"
         [[ -f $p8/slashing_protection.sqlite ]] && touch $p1/vc_slash
-        sex "chmod 600 $p8/slashing_protection.sqlite"
-        sex "chown $user:$user $p8/slashing_protection.sqlite"
+        cmw $p8/slashing_protection.sqlite 600 $user
       fi
-      sex "chown $user:$user $p8"
-      sex "chmod 700 $p8"
+      cmw $p8 700 $user
     fi
     if [[ ! -f $s4/$n3.service && -f $p1/vc_slash && -f $p1/vc_lock && -f $p1/vc_keys ]]; then
       swu 'CONFIGURE VALIDATOR'
       sex "mkdir -p $p8"
-      sex "chown -R $user:$user $p8"
-      sex "chmod 700 $p8"
+      cmw $p8 700 $user
       cat <<-EOF > $n3.service
 			[Unit]
 			Description=eth2 validator service
@@ -139,8 +133,7 @@ if [[ -x $s0/lighthouse ]]; then
 			[Install]
 			WantedBy=multi-user.target
 			EOF
-      sex "mv $n3.service $s4/$n3.service"
-      sex "chmod 644 $s4/$n3.service"
+      sex "mv $n3.service $s4/$n3.service";cmw $s4/$n3.service 644
       swu 'VALIDATOR CONFIGURADO VERIFICAR TUDO (LOCK & SLASH DB)'
     else
       swn "VALIDATOR JA CONFIGURADO OR LOCKED ($p1/vc_lock)"
@@ -195,7 +188,7 @@ else
           sex "cp $s0/lighthouse $s0/lighthouse.save"
         fi
         sex "cp ~/.cargo/bin/lighthouse $s0"
-        sex "chmod 755 $s0/lighthouse"
+        cmw $s0/lighthouse 755
       else
         swu 'NAO EXISTE LIGHT COMPILADO PARA INSTALAR'
       fi
