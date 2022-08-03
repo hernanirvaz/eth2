@@ -77,7 +77,7 @@ else
   # othe="$othe --checkpoint-sync-url https://1q1s6o6cB6Jysu7KKlbLUYiOdAM:8974468780164028652df958a69fbd30@eth2-beacon-mainnet.infura.io"
   othe="$othe --checkpoint-sync-url http://192.168.8.28:5052"
   # MERGE --execution-endpoints $epge --jwt-secrets $p7/jwt
-  swu 'CONFIGURE BEACON';sex "mkdir -p $p7";cmw $p1 755 $meeu;sua eth2;cmw $p7 700 $user;touch $p1/vc_lock;cd ~                                               # IMPORTANTE LOCK VALIDATOR CLIENTE
+  swu 'CONFIGURE BEACON';sex "mkdir -p $p7";cmw $p1 755 $meeu;sau eth2;cmw $p7 700 $user;touch $p1/vc_lock;cd ~                                               # IMPORTANTE LOCK VALIDATOR CLIENTE
   cat <<-EOF > $n1.service
 	[Unit]
 	Description=beacon service
@@ -109,7 +109,7 @@ else
   else
     blkc=" --testnet $B"
   fi
-  sua eth3;cd ~
+  sau eth3;cd ~
   if [[ ! -f $p1/vc_keys && -d $HOME/$D && $(ls -A $HOME/$D) ]]; then
     swu 'IMPORT VALIDATOR KEYS & INIT SLASH PROTECTION';sex "mkdir -p $p1";cmw $p1 755 $meeu
     swn "STORE($K)\n";lighthouse$blkc --datadir $p1 account validator import --directory $HOME/$D;[[ -f $p8/validator_definitions.yml ]] && touch $p1/vc_keys
