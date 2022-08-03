@@ -10,100 +10,65 @@ function idw { ip link show|grep -i down|cut -d' ' -f2|tr -d :; }               
 [[ -x $p0/eth2/t ]] || ln -s $p0/eth2/t6 $p0/eth2/t
 
 if [[ $(pex 'ufw status'|grep -i inactive) ]]; then
-  swu 'INIT FIREWALL'
-  cex 'ufw default deny incoming'
-  cex 'ufw default allow outgoing'
-  pde 22/tcp ossh                                                                                                                                             # deny old    ssh
-  idi 192.168.8.0/24 224.0.0.1 multicast                                                                                                                      # lan multicasting
+  swu 'INIT FIREWALL';cex 'ufw default deny incoming';cex 'ufw default allow outgoing'                                                                        # base ufw
+  pde 22/tcp ossh;idi 192.168.8.0/24 224.0.0.1 multicast                                                                                                      # deny  ssh/multicasting
   [[ $cunm = $znm1 ]] && { ple 2021/tcp nssh; }                                                                                                               # limit ssh
   [[ $cunm = $znm2 ]] && { ple 2022/tcp nssh;pai 123/udp 192.168.8.0/24 ntp; }                                                                                # limit ssh;allow ntp
   [[ $cunm = $znm3 ]] && { ple 2023/tcp nssh; }                                                                                                               # limit ssh
   [[ $cunm = $znm4 ]] && { ple 2024/tcp nssh; }                                                                                                               # limit ssh
-  sex 'ufw reload'
-  yex 'ufw enable'
-  cex 'ufw status numbered'
+  sex 'ufw reload';yex 'ufw enable'                                                                                                                           # reload/enable
 else
-  swu "FIREWALL $(pex 'ufw status'|grep -i status|tr -d :)"
+  cex 'ufw status numbered'                                                                                                                                   # show
 fi
 
-if [[ -f $s4/$n0.service || -f $s4/$n1.service || -f $s4/$n3.service ]]; then
-  swu 'SERVER JA INSTALADO ANTES - LINUX UPDATE & SYSTEM CONFIGS SKIPPED'
+[[ -f $s4/$n0.service || -f $s4/$n1.service || -f $s4/$n3.service ]] && exit                                                                                  # ec/cl instalados -> exit
+# NOT SURE [[ $(pex 'snap list') ]] && { sex 'snap remove lxd';sex 'snap remove core18';sex 'snap remove snapd';cex 'apt purge snapd'; }
+swu 'UPDATE LINUX'       ;t4update linux
+swu 'ROOTKIT SCANNER'    ;sex 'apt install chkrootkit -y';cex 'chkrootkit'
+swu 'UNATTENDED UPGRADES';cex 'apt install unattended-upgrades apt-listchanges landscape-common update-notifier-common python3-pip net-tools -y'
+sudo dpkg-reconfigure -plow unattended-upgrades
+swu 'LINUX CONFIGS'      ;sex 'timedatectl set-ntp on'
+if [[ $cust = hrv ]]; then
+  sex 'timedatectl set-timezone Europe/Lisbon'
+  cc1 $c0 's%^ *#*NTP=.*$%NTP=192.168.8.28 ntp02.oal.ul.pt ntp04.oal.ul.pt time.google.com time.cloudflare.com time.facebook.com%i' .conf                   # my timesyncd servers
+  cc1 $c1 's%^ *ENABLED=.*$%ENABLED=0%i'                                                         ;cmw $c1 644 root                                          # motd-news disable
+  cc1 $c2 "s%-wait-online *$%-wait-online $(iig $(idw))%i" .service                              ;cmw $c2 644 root                                          # ignore down interfaces
 else
-  swu 'UPDATE LINUX'
-  if [[ $(pex 'snap list') ]]; then
-    cex 'snap remove lxd'
-    cex 'snap remove core18'
-    cex 'snap remove snapd'
-    cex 'apt purge snapd'
-  fi
-  t4update linux
+  sex 'timedatectl set-timezone Europe/Berlin'
+  cc1 $c0 's%^ *#*NTP=.*$%NTP=time.google.com time.cloudflare.com time.facebook.com%i' .conf                                                                # other timesyncd servers
+fi;cmw $c0 644 root
+cc1 $c3 's%^ */* *Unattended-Upgrade::Mail .*$%Unattended-Upgrade::Mail "hernanilr@gmail.com";%i';cmw $c3 644 root                                          # unattended-upgrades email
+cc1 $c4 's%^ *printf%# printf%i'                                                                                                                            # header delete
+cc2 $c4 'printf "Welcome to %s %s\\n" "$(uname -n)" "$DISTRIB_DESCRIPTION"'                      ;cmw $c4 755 root                                          # header add my motd
+cc1 $c5 's%^ *printf%# printf%i'                                                                 ;cmw $c5 755 root                                          # help-text delete
+[[ -x $c6 ]] && sex "chmod -x $c6"                                                                                                                          # overlayroot unexecute
+sex 'netplan apply';sex "$w0 restart systemd-timesyncd"
 
-  swu 'ROOTKIT SCANNER'
-  sex 'apt install chkrootkit -y'
-  cex 'chkrootkit'
-
-  swu 'UNATTENDED UPGRADES'
-  cex 'apt install unattended-upgrades apt-listchanges landscape-common update-notifier-common python3-pip net-tools -y'
-  sudo dpkg-reconfigure -plow unattended-upgrades
-
-  swu 'LINUX SYSTEM CONFIGS'
-  cex 'timedatectl set-ntp on'
-  if [[ $cust = hrv ]]; then
-    cex 'timedatectl set-timezone Europe/Lisbon'
-    cc1 $c0 's%^ *#*NTP=.*$%NTP=192.168.8.28 ntp02.oal.ul.pt ntp04.oal.ul.pt time.google.com time.cloudflare.com time.facebook.com%i' .conf                   # timesyncd servers
-    cc1 $c1 's%^ *ENABLED=.*$%ENABLED=0%i'                                                         ;cmw $c1 644 root                                          # motd-news disable
-    cc1 $c2 "s%-wait-online *$%-wait-online $(iig $(idw))%i" .service                              ;cmw $c2 644 root                                          # ignore down interfaces
-  else
-    cex 'timedatectl set-timezone Europe/Berlin'
-    cc1 $c0 's%^ *#*NTP=.*$%NTP=time.google.com time.cloudflare.com time.facebook.com%i' .conf                                                                # timesyncd servers
-  fi
-  cmw $c0 644 root                                                                                                                                            # timesyncd permissions
-  cc1 $c3 's%^ */* *Unattended-Upgrade::Mail .*$%Unattended-Upgrade::Mail "hernanilr@gmail.com";%i';cmw $c3 644 root                                          # unattended-upgrades email
-  cc1 $c4 's%^ *printf%# printf%i'                                                                                                                            # header delete
-  cc2 $c4 'printf "Welcome to %s %s\\n" "$(uname -n)" "$DISTRIB_DESCRIPTION"'                      ;cmw $c4 755 root                                          # header add my motd
-  cc1 $c5 's%^ *printf%# printf%i'                                                                 ;cmw $c5 755 root                                          # help-text delete
-  [[ -x $c6 ]] && sex "chmod -x $c6"                                                                                                                          # overlayroot unexecute
-  sex 'netplan apply'
-  [[ $cunm = $znm2 ]] || sex "$w0 restart systemd-timesyncd"
-fi
-
-if [[ $cunm != $znm1 && $cunm != $znm4 && $cunm != $vnm1 ]]; then
-  swu 'GETH NAO DEVE SER INSTALADO AQUI - DEVE FAZER REBOOT'
+[[ $cunm = $znm1 || $cunm = $znm4 || $cunm = $vnm1 ]] || exit                                                                                               # ec here
+swu 'INSTALAR GETH';sex 'add-apt-repository -y ppa:ethereum/ethereum';sex 'apt update -y';cex 'apt install -y software-properties-common ethereum'          # install execution client
+sex "mkdir -p $p9";sua eth1;cmw $p9 755 $user                                                                                                               # create dir & user for ec
+if [[ $B = mainnet ]]; then
+  blkc=''
+  maxp=50
 else
-  if [[ -f $s4/$n0.service ]]; then
-    swu 'GETH JA INSTALADO'
-  else
-    swu 'INSTALAR GETH'
-    sua eth1                                                                                                                                                  # useradd
-    if [[ $B = mainnet ]]; then
-      blkc=''
-      maxp=50
-    else
-      blkc=' --goerli'
-      maxp=50   # default
-    fi
-    sex 'add-apt-repository -y ppa:ethereum/ethereum'
-    sex 'apt update -y'
-    cex 'apt install -y software-properties-common ethereum'
-    sex "mkdir -p $p9"
-    sex "chown -R $user:$user $p9"
-    cat <<-EOF > $n0.service
-		[Unit]
-		Description=eth1 geth service
-		Wants=network-online.target
-		After=network-online.target
-		
-		[Service]
-		User=$user
-		Group=$user
-		Restart=always
-		RestartSec=10
-		ExecStart=$s0/geth$blkc --datadir $p9 --http --http.addr $zip1 --maxpeers $maxp --authrpc.addr $zip1 --authrpc.jwtsecret $p9/geth/jwt
-		ExecStopPost=$p0/eth2/t8mail GETHSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
-		
-		[Install]
-		WantedBy=multi-user.target
-		EOF
-    sex "mv $n0.service $s4/$n0.service";cmw $s4/$n0.service 644
-  fi
+  blkc=' --goerli'
+  maxp=50   # default
 fi
+cat <<-EOF > $n0.service
+[Unit]
+Description=geth service
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=$user
+Group=$user
+Restart=always
+RestartSec=10
+ExecStart=$s0/geth$blkc --datadir $p9 --http --http.addr $zip1 --maxpeers $maxp --authrpc.addr $zip1 --authrpc.jwtsecret $p9/geth/jwt
+ExecStopPost=$p0/eth2/t8mail GETHSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
+
+[Install]
+WantedBy=multi-user.target
+EOF
+sex "mv $n0.service $s4/$n0.service";cmw $s4/$n0.service 644

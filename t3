@@ -54,7 +54,7 @@ if [[ -x $s0/lighthouse ]]; then
     # MERGE --execution-endpoints $epge --jwt-secrets $p7/jwt
     cat <<-EOF > $n1.service
 		[Unit]
-		Description=eth2 beacon service
+		Description=beacon service
 		Wants=network-online.target
 		After=network-online.target
 		
@@ -118,7 +118,7 @@ if [[ -x $s0/lighthouse ]]; then
       cmw $p8 700 $user
       cat <<-EOF > $n3.service
 			[Unit]
-			Description=eth2 validator service
+			Description=validator service
 			Wants=network-online.target
 			After=network-online.target
 			

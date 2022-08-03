@@ -387,7 +387,7 @@ function sr9 { chmod 644 $1.jwt;sex "mv $1.jwt $s4/$1.jwt"; }
 [[ $1 = we  ]] && { yex 'ufw enable'; }
 [[ $1 = wpr ]] && { cex 'ufw disable'; }
 [[ $1 = wds ]] && { cex 'ufw disable'; }
-[[ $1 = wl  ]] && { fs2|grep UFW; }
+[[ $1 = wl  ]] && { fs2|grep UFW|if [[ $2 ]];then grep -v $2;else cat;fi; }
 # journal
 [[ $1 = yj  ]] && { jsh; }
 [[ $1 = ej  ]] && { jsh "-u $n0 -u $n1 -u $n3"; }
