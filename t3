@@ -2,10 +2,7 @@
 
 source /home/eth/eth2/t1
 
-if [[ -x $p0/lighthouse && ! -d $p0/lighthouse ]]; then
-  sex "mv $p0/lighthouse $s0"
-  cmw $s0/lighthouse 755 eth
-fi
+[[ -x $p0/lighthouse && ! -d $p0/lighthouse ]] && { sex "mv $p0/lighthouse $s0";cmw $s0/lighthouse 755 eth; }
 [[ -f $s4/$n1.service || -f $s4/$n3.service ]] && exit                                                                                                        # cl ja instalado -> exit
 if [[ $cunm = $znm1 || $cunm = $vnm1 ]];then                                                                                                                  # rust here
   if [[ -x $p0/.cargo/bin/rustup ]]; then
