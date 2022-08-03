@@ -1,24 +1,22 @@
 #!/bin/bash
 
-function swb { echo -e "\n\e[5m${1^^}\e[25m\n"; }                                                                                                             # show flash
-function swu { echo -e "${1^^}"; }                                                                                                                            # show upper
-function swn { echo -e "$1"; }                                                                                                                                # show normal
-function sau { user=$1;id $1 &>$s3 || sex "useradd --no-create-home --shell /bin/false $user"; }                                                              # system useradd
-function cmw { [[ $2 ]] && sex "chmod $2 $1";[[ $3 ]] && sex "chown $3:$3 $1"; }                                                                              # chmod/chown file
-function cex { swb "$1";echo $H|sudo -S $1       2>$s3; }                                                                                                     # superuser-command (visible)
-function yex { swb "$1";echo $H|sudo -S $1 <<< y &>$s3; }                                                                                                     # superuser-command (visible & yes)
-function pex {          echo $H|sudo -S $1       2>$s3; }                                                                                                     # superuser-command (pipe)
-function sex {          echo $H|sudo -S $1       &>$s3; }                                                                                                     # superuser-command (silent)
-function sst { $w1 $1 2>$s3|grep "${2:-inactive\|failed}"                                ; }                                                                  # service status word test
-function ss1 { $w1 $1 2>$s3|grep $2     |sed "s%.*$2 *\(${3:-.}*\).*%\1%"                ; }                                                                  # service status word - 1 extraction
-function ss2 { $w1 $1 2>$s3|grep Active:|sed "s%.*Active: *\(.*\)%\1%;s% *since.*;%; $1%"; }                                                                  # service status word - 2 extraction
-function sso { dts;echo "$1 $(printf '%6s' $(ss1 $2 Memory:)) $dt status: $(ss2 $2)"     ; }                                                                  # service status output
-function idi { cex "ufw $4 deny from $1 to $2 comment $3"; }                                                                                                  # deny  frm ip to ip
-function ide { cex "ufw $4 deny from $1 port ${2/\// proto } comment $3"; }                                                                                   # deny  frm ip/prt 
-function pde { cex "ufw $3 deny $1 comment $2"; }                                                                                                             # deny  prt
-function pai { cex "ufw $4 allow from $2 to any port ${1/\// proto } comment $3"; }                                                                           # allow prt frm ip
-function pae { cex "ufw $3 allow $1 comment $2"; }                                                                                                            # allow prt
-function ple { cex "ufw $3 limit $1 comment $2"; }                                                                                                            # limit prt (<6 within 30s)
+w0='systemctl'
+w1="$w0 status"
+w2="$w0 stop"
+w3="$w0 start"
+w4="$w0 enable"
+w5="$w0 disable"
+n0='eth-geth'
+n1='eth-beacon'
+n3='eth-validator'
+n4='prometheus'
+n5='prometheus-node-exporter'
+n6='grafana-server'
+o0='plexmediaserver'
+o1='transmission-daemon'
+o2='named'
+o3='geth\[\|lighthouse'
+a0='0x82f6E45b47c5C03F8D52dDDa03B3F65897Cd5AB2'
 
 meeu="$(whoami)"
 cunm="$(uname -n)"
@@ -37,7 +35,7 @@ vip3='164.68.107.45'
 vnm1='vmi471826.contaboserver.net'
 vnm2='vmi506976.contaboserver.net'
 vnm3='vmi469069.contaboserver.net'
-bpid=$(ss1 $n1 PID: [0-9])
+cgth=$zip1;[[ $cunm = $znm4 ]] && cgth=$zip1;[[ $cunm = $vnm1 ]] && cgth=$vip1
 
 s0='/usr/local/bin'
 s1='/var/log/syslog'
@@ -67,24 +65,27 @@ c5='/etc/update-motd.d/10-help-text'
 c6='/etc/grub.d/30_os-prober'
 c7='/etc/update-motd.d/97-overlayroot'
 
-w0='systemctl'
-w1="$w0 status"
-w2="$w0 stop"
-w3="$w0 start"
-w4="$w0 enable"
-w5="$w0 disable"
-n0='eth-geth'
-n1='eth-beacon'
-n3='eth-validator'
-n4='prometheus'
-n5='prometheus-node-exporter'
-n6='grafana-server'
-o0='plexmediaserver'
-o1='transmission-daemon'
-o2='named'
-o3='geth\[\|lighthouse'
-a0='0x82f6E45b47c5C03F8D52dDDa03B3F65897Cd5AB2'
+function swb { echo -e "\n\e[5m${1^^}\e[25m\n"; }                                                                                                             # show flash
+function swu { echo -e "${1^^}"; }                                                                                                                            # show upper
+function swn { echo -e "$1"; }                                                                                                                                # show normal
+function sau { user=$1;id $1 &>$s3 || sex "useradd --no-create-home --shell /bin/false $user"; }                                                              # system useradd
+function cmw { [[ $2 ]] && sex "chmod $2 $1";[[ $3 ]] && sex "chown $3:$3 $1"; }                                                                              # chmod/chown file
+function cex { swb "$1";echo $H|sudo -S $1       2>$s3; }                                                                                                     # superuser-command (visible)
+function yex { swb "$1";echo $H|sudo -S $1 <<< y &>$s3; }                                                                                                     # superuser-command (visible & yes)
+function pex {          echo $H|sudo -S $1       2>$s3; }                                                                                                     # superuser-command (pipe)
+function sex {          echo $H|sudo -S $1       &>$s3; }                                                                                                     # superuser-command (silent)
+function sst { $w1 $1 2>$s3|grep "${2:-inactive\|failed}"                                ; }                                                                  # service status word test
+function ss1 { $w1 $1 2>$s3|grep $2     |sed "s%.*$2 *\(${3:-.}*\).*%\1%"                ; }                                                                  # service status word - 1 extraction
+function ss2 { $w1 $1 2>$s3|grep Active:|sed "s%.*Active: *\(.*\)%\1%;s% *since.*;%; $1%"; }                                                                  # service status word - 2 extraction
+function sso { dts;echo "$1 $(printf '%6s' $(ss1 $2 Memory:)) $dt status: $(ss2 $2)"     ; }                                                                  # service status output
+function idi { cex "ufw $4 deny from $1 to $2 comment $3"; }                                                                                                  # deny  frm ip to ip
+function ide { cex "ufw $4 deny from $1 port ${2/\// proto } comment $3"; }                                                                                   # deny  frm ip/prt
+function pde { cex "ufw $3 deny $1 comment $2"; }                                                                                                             # deny  prt
+function pai { cex "ufw $4 allow from $2 to any port ${1/\// proto } comment $3"; }                                                                           # allow prt frm ip
+function pae { cex "ufw $3 allow $1 comment $2"; }                                                                                                            # allow prt
+function ple { cex "ufw $3 limit $1 comment $2"; }                                                                                                            # limit prt (<6 within 30s)
 
+bpid=$(ss1 $n1 PID: [0-9])
 rblk=22238623
 ratt=00019000
 pmis=00010000
@@ -97,6 +98,4 @@ rate=4000
 bpri=20                                                                                                                                                       # min    configured peers
 bprs=10                                                                                                                                                       # step   configured peers
 bprf=80                                                                                                                                                       # max    configured peers
-
-if [[ $cust = hrv ]];then cgth=$zip1;else cgth=$vip1;fi
 [[ $rate -eq 0 ]] && rate=$(curl -sX GET 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=ETH&convert=EUR&CMC_PRO_API_KEY=3ae5f3df-bd71-489d-a9dd-b626995fba31'|sed 's%.*price.:\([0-9]*\.[0-9]*\).*%\1%')
