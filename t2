@@ -7,10 +7,9 @@ function cc2 { local f="$(basename $1 $3).sav";cp $1 $f;echo -e "$2"   >> $f;sex
 function iig { local f=;until [[ $# -lt 1 ]];do f="$f --ignore=$1";shift;done;echo $f; }                                                                      # get list of ignore flags
 function idw { ip link show|grep -i down|cut -d' ' -f2|tr -d :; }                                                                                             # get down interfaces
 
-[[ -x $p0/eth2/t ]] || ln -s $p0/eth2/t6 $p0/eth2/t
-
+[[ -x $p0/eth2/t ]] || ln -s $p0/eth2/t6 $p0/eth2/t                                                                                                           # link base commands
 if [[ $(pex 'ufw status'|grep -i inactive) ]]; then
-  swu 'INIT FIREWALL';cex 'ufw default deny incoming';cex 'ufw default allow outgoing'                                                                        # base ufw
+  swu 'INIT FIREWALL';sex 'ufw default deny incoming';sex 'ufw default allow outgoing'                                                                        # base ufw
   pde 22/tcp ossh;idi 192.168.8.0/24 224.0.0.1 multicast                                                                                                      # deny  ssh/multicasting
   [[ $cunm = $znm1 ]] && { ple 2021/tcp nssh; }                                                                                                               # limit ssh
   [[ $cunm = $znm2 ]] && { ple 2022/tcp nssh;pai 123/udp 192.168.8.0/24 ntp; }                                                                                # limit ssh;allow ntp
@@ -20,9 +19,7 @@ if [[ $(pex 'ufw status'|grep -i inactive) ]]; then
 else
   cex 'ufw status numbered'                                                                                                                                   # show
 fi
-
 [[ -f $s4/$n0.service || -f $s4/$n1.service || -f $s4/$n3.service ]] && exit                                                                                  # ec/cl instalados -> exit
-# NOT SURE [[ $(pex 'snap list') ]] && { sex 'snap remove lxd';sex 'snap remove core18';sex 'snap remove snapd';cex 'apt purge snapd'; }
 swu 'UPDATE LINUX'       ;t4update linux
 swu 'ROOTKIT SCANNER'    ;sex 'apt install chkrootkit -y';cex 'chkrootkit'
 swu 'UNATTENDED UPGRADES';cex 'apt install unattended-upgrades apt-listchanges landscape-common update-notifier-common python3-pip net-tools -y'

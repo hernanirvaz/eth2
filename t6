@@ -220,6 +220,7 @@ function nsh {
   swn "ROUTES\t\t$(ip route show|grep 'default via'|grep -v linkdown|cut -d' ' -f3)\nDNS\t\t$(resolvectl|grep 'Current DNS'|cut -d' ' -f6)"                   # routes
   local v=0;for v in $(ip a|grep 'state UP'|cut -d: -f2);do swn "$v\t\t$(resolvectl dns|grep $v|cut -d' ' -f4-6)";done                                        # dns info
 }
+function wst { echo $@|sed 's%[^: ]*: *%%g;s%,[^,]*(routed)%%;s% (incoming),% <<%;s% (outgoing)% >>%'; }
 function cpe {                                                                                                                                                # system status
   local e='NO';[[ $(timedatectl|grep synchronized:|sed 's%.*synchronized: \([a-z]*\).*%\1%') = yes ]] && e='OK';dts
   m=$(ss2 systemd-timesyncd);[[ $(echo $m|grep dead) ]] && m=$(ss2 ntp);swn "CLCK $e $(printf '%3i' $(fs0 clock|wc -l)) $dt status: $m"                       # CLCK info
@@ -229,9 +230,10 @@ function cpe {                                                                  
   local v=0;for v in $(sensors 2>$s3|grep 'Package\|Core'|sed 's%.*: *\([-+][0-9][0-9]*\.[0-9]*\).*%\1%');do ((n+=1));l=$(nu1 $l$v 1);done
   [[ $d ]] && d="throttled: $d";[[ $e ]] && e="normal: $e";swn "TEMP $(nu5 $l/$((n==0?1:n)) 1 2 %5.1fC) $dt $d $e"                                            # TEMP cpu info
   [[ $1 = p ]] && return
+  if [[ $(cat $s6) -eq 0 ]];then e=off;else e=on;fi;if [[ $(cat $s7) -eq 1 ]];then d=off;else d=on;fi                                                         # usb/cpu current state
   m="INFO$(printf '%3i' $(fs6)) $(printf '%3i' $(fs5)) $dt"                                                                                                   # usb/cpu erros count
   m="$m uptime:$(uptime|sed 's%[0-9]*:[0-9]*:[0-9]*%%;s%[0-9]*:[0-9]*,%%;s%[0-9]* users*,%%;s% average\([^,]*\).*%\1%;s%  *% %g')"                            # uptime/load info
-  if [[ $(cat $s6) -eq 0 ]];then e=off;else e=on;fi;if [[ $(cat $s7) -eq 1 ]];then d=off;else d=on;fi;swn "$m, usb $e, turbo $d"                              # usb/turbo info
+  m="$m, usb $e, turbo $d, ufw: $(wst $(pex 'ufw status verbose'|grep -i 'status:\|default:'))";swn "$m"                                                      # usb/cpu/ufw info
   local l=$(fs2|grep -i 'error' |wc -l);local n=$(fs1|grep -v ' INFO '|wc -l)
   local e=$(fs2|grep -i 'error' |tail -n1|sed 's%.*hrv-zotac[0-9] *\(.*\)%\1%;s%:%%g;s%  *% %g'                                |cut -c1-53)
   local d=$(fs1|grep -v ' INFO '|tail -n1|sed 's%.*[0-9]*:[0-9]*:[0-9]*\.[0-9][0-9][0-9]]* *\(.*\)%\1%;s%:%%g;s%:%%g;s%  *% %g'|cut -c1-53)
