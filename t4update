@@ -15,9 +15,7 @@ if [[ $1 = linux || $1 = reboot || $1 = geth ]]; then
   [[ $1 = geth   ]] && t6 gaj
   [[ $1 = reboot ]] && cex 'reboot'
 fi
-
 [[ $1 != cl ]] && exit
-
 if [[ $cunm = $znm1 || $cunm = $vnm1 ]]; then
   if [[ -x $p0/.cargo/bin/rustup ]]; then
     swu 'UPDATE RUST'
@@ -38,39 +36,23 @@ if [[ $cunm = $znm1 || $cunm = $vnm1 ]]; then
     cd $p0/lighthouse
   fi
   resolvectl query github.com &>$s3
-  git fetch
-  if [[ $(echo $2|egrep 'v[0-9]+\.[0-9]+\.[0-9]+') ]]; then
-    v=$2
-  else
-    t=$(git rev-list --tags --max-count=1)
-    v=$(git describe --tags $t)
-  fi
-  git checkout $v
-  swu 'VAI COMPILAR LIGHT'
-  make
+  git fetch;if [[ $(echo $2|egrep 'v[0-9]+\.[0-9]+\.[0-9]+') ]];then v=$2;else t=$(git rev-list --tags --max-count=1);v=$(git describe --tags $t);fi
+  git checkout $v;swu 'VAI COMPILAR LIGHT';make
   if [[ $? -eq 0 && -x $p0/.cargo/bin/lighthouse ]]; then
     if [[ $cunm = $znm1 ]]; then
       scp $p0/.cargo/bin/lighthouse ztc2:~
       scp $p0/.cargo/bin/lighthouse ztc3:~
       scp $p0/.cargo/bin/lighthouse ztc4:~
     fi
-    if [[ -x $s0/lighthouse ]]; then
-      sex "cp $s0/lighthouse $s0/lighthouse.sav"
-      sex "cp $p0/.cargo/bin/lighthouse $s0"
+    if [[ $cunm = $vnm1 ]]; then
+      scp $p0/.cargo/bin/lighthouse vpss:~
     fi
+    [[ -x $s0/lighthouse ]] && sex "cp $s0/lighthouse $s0/lighthouse.sav";sex "cp $p0/.cargo/bin/lighthouse $s0"
   else
-    swu 'NAO EXISTE LIGHT COMPILADO PARA INSTALAR'
+    swu 'NAO EXISTE LIGHT COMPILADO'
   fi
 else
-  if [[ -x $p0/lighthouse ]]; then
-    sex "cp $s0/lighthouse $s0/lighthouse.sav"
-    sex "mv $p0/lighthouse $s0"
-  else
-    swu 'NAO EXISTE LIGHT COMPILADO PARA INSTALAR'
-  fi
+  if [[ -x $p0/lighthouse ]];then sex "cp $s0/lighthouse $s0/lighthouse.sav";sex "mv $p0/lighthouse $s0";else swu 'NAO EXISTE LIGHT COMPILADO';fi
 fi
 
-if [[ -x $s0/lighthouse ]]; then
-  cmw $s0/lighthouse 755 eth
-  swu 'NOVO LIGHT INSTALADO - PODE/DEVE VERIFICAR'
-fi
+[[ -x $s0/lighthouse ]] && { cmw $s0/lighthouse 755 eth;swu 'NOVO LIGHT INSTALADO - PODE/DEVE VERIFICAR'; }
