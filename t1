@@ -44,7 +44,8 @@ c2='/lib/systemd/system/systemd-networkd-wait-online.service'
 c3='/etc/apt/apt.conf.d/50unattended-upgrades'
 c4='/etc/update-motd.d/00-header'
 c5='/etc/update-motd.d/10-help-text'
-c6='/etc/update-motd.d/97-overlayroot'
+c6='/etc/grub.d/30_os-prober'
+c7='/etc/update-motd.d/97-overlayroot'
 
 w0='systemctl'
 w1="$w0 status"
