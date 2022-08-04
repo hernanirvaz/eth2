@@ -2,57 +2,24 @@
 
 source /home/eth/eth2/t1
 
-# linux  NO GETH STOP | NO GETH START | NO REBOOT
-# reboot    GETH STOP | NO GETH START |    REBOOT
-# geth      GETH STOP |    GETH START | NO REBOOT
-if [[ $1 = linux || $1 = reboot || $1 = geth ]]; then
+if [[ $1 = linux || $1 = reboot || $1 = el ]]; then
   swu 'FULL-UPGRADE'
-  [[ $1 = reboot || $1 = geth ]] && t6 gpr
-  cex 'apt update -y'
-  sudo apt full-upgrade -y && sudo apt dist-upgrade -y
-  cex 'apt autoremove -y'
-  sudo apt autoclean
-  [[ $1 = geth   ]] && t6 gaj
+  [[ $1 = reboot || $1 = el ]] && t6 gpr
+  cex 'apt update -y'    ;sudo apt full-upgrade -y && sudo apt dist-upgrade -y
+  cex 'apt autoremove -y';sudo apt autoclean
+  [[ $1 = el     ]] && t6 gaj
   [[ $1 = reboot ]] && cex 'reboot'
 fi
-[[ $1 != cl ]] && exit
-if [[ $cunm = $znm1 || $cunm = $vnm1 ]]; then
-  if [[ -x $p0/.cargo/bin/rustup ]]; then
-    swu 'UPDATE RUST'
-    resolvectl query static.rust-lang.org &>$s3
-    #rustup toolchain install 1.52.1
-    #rustup override set 1.52.1
-    #rustup override unset
-    rustup update stable
-  fi
+[[ $1 = cl || $1 = cp ]] || exit
+if [[ $1 = cl && ($cunm = $znm1 || $cunm = $vnm1) ]]; then
+  [[ -x $p0/.cargo/bin/rustup ]] && { swu 'UPDATE RUST';rustup update stable; }
   if [[ -f $p0/lighthouse/README.md ]]; then
-    cd $p0/lighthouse
-    make clean
-    cargo clean
+    cd $p0/lighthouse;make clean;cargo clean                                                                                                                  # clean compile dirs
   else
-    cd $p0;cex "rm -rf $p0/lighthouse"
-    resolvectl query github.com &>$s3
-    git clone https://github.com/sigp/lighthouse.git
-    cd $p0/lighthouse
+    cd $p0;sex "rm -rf $p0/lighthouse";git clone https://github.com/sigp/lighthouse.git;cd $p0/lighthouse                                                     # get new git
   fi
-  resolvectl query github.com &>$s3
   git fetch;if [[ $(echo $2|egrep 'v[0-9]+\.[0-9]+\.[0-9]+') ]];then v=$2;else t=$(git rev-list --tags --max-count=1);v=$(git describe --tags $t);fi
   git checkout $v;swu 'VAI COMPILAR LIGHT';make
-  if [[ $? -eq 0 && -x $p0/.cargo/bin/lighthouse ]]; then
-    if [[ $cunm = $znm1 ]]; then
-      scp $p0/.cargo/bin/lighthouse ztc2:~
-      scp $p0/.cargo/bin/lighthouse ztc3:~
-      scp $p0/.cargo/bin/lighthouse ztc4:~
-    fi
-    if [[ $cunm = $vnm1 ]]; then
-      scp $p0/.cargo/bin/lighthouse vpss:~
-    fi
-    [[ -x $s0/lighthouse ]] && sex "cp $s0/lighthouse $s0/lighthouse.sav";sex "cp $p0/.cargo/bin/lighthouse $s0"
-  else
-    swu 'NAO EXISTE LIGHT COMPILADO'
-  fi
-else
-  if [[ -x $p0/lighthouse ]];then sex "cp $s0/lighthouse $s0/lighthouse.sav";sex "mv $p0/lighthouse $s0";else swu 'NAO EXISTE LIGHT COMPILADO';fi
+  [[ $? -eq 0 && -x $p0/.cargo/bin/lighthouse ]] || swb 'ERRO COMPILAR ERRO'
 fi
-
-[[ -x $s0/lighthouse ]] && { cmw $s0/lighthouse 755 eth;swu 'NOVO LIGHT INSTALADO - PODE/DEVE VERIFICAR'; }
+lwr                                                                                                                                                           # propagate & install lighthouse  
