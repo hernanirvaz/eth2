@@ -12,11 +12,12 @@ n3='eth-validator'
 n4='prometheus'
 n5='prometheus-node-exporter'
 n6='grafana-server'
+n7='systemd-timesyncd'
 o0='plexmediaserver'
 o1='transmission-daemon'
 o2='named'
 o3='geth\[\|lighthouse'
-o4='Package\|Core\|Composite\|Sensor'
+o4='Package\|Core\|Composite\|Sensor\|temp[0-9]'
 a0='0x82f6E45b47c5C03F8D52dDDa03B3F65897Cd5AB2'
 
 meeu=$(whoami)
@@ -75,10 +76,10 @@ function cex { swb "$1";echo $H|sudo -S $1       2>$s3; }                       
 function yex { swb "$1";echo $H|sudo -S $1 <<< y &>$s3; }                                                                                                     # superuser-command (visible & yes)
 function pex {          echo $H|sudo -S $1       2>$s3; }                                                                                                     # superuser-command (pipe)
 function sex {          echo $H|sudo -S $1       &>$s3; }                                                                                                     # superuser-command (silent)
-function sst { $w1 $1 2>$s3|grep "${2:-inactive\|failed}"                                ; }                                                                  # service status word test
-function ss1 { $w1 $1 2>$s3|grep $2     |sed "s%.*$2 *\(${3:-.}*\).*%\1%"                ; }                                                                  # service status word - 1 extraction
-function ss2 { $w1 $1 2>$s3|grep Active:|sed "s%.*Active: *\(.*\)%\1%;s% *since.*;%; $1%"; }                                                                  # service status word - 2 extraction
-function sso { dts;echo "$1 $(printf '%6s' $(ss1 $2 Memory:)) $dt status: $(ss2 $2)"     ; }                                                                  # service status output
+function sst { $w1 $1 2>$s3|grep "${2:-inactive\|failed}"; }                                                                                                  # service status word test
+function ss1 { $w1 $1 2>$s3|sed -n "s%.*$2 *\(${3:-.}*\).*%\1%p"; }                                                                                           # service status word - 1 extraction
+function ss2 { $w1 $1 2>$s3|sed -n "s%.*Active: *\(.*\)%\1%;s% *since.*;%; $1%p"; }                                                                           # service status word - 2 extraction
+function sso { dts;echo "$1 $(printf '%6s' $(ss1 $2 Memory:)) $dt status: $(ss2 $2)"; }                                                                       # service status output
 function idi { cex "ufw $4 deny from $1 to $2 comment $3"; }                                                                                                  # deny  frm ip to ip
 function ide { cex "ufw $4 deny from $1 port ${2/\// proto } comment $3"; }                                                                                   # deny  frm ip/prt
 function pde { cex "ufw $3 deny $1 comment $2"; }                                                                                                             # deny  prt

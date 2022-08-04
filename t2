@@ -40,7 +40,7 @@ cc2 $c4 'printf "Welcome to %s %s\\n" "$(uname -n)" "$DISTRIB_DESCRIPTION"'     
 cc1 $c5 's%^ *printf%# printf%i'                                                                 ;cmw $c5 755 root                                          # help-text delete
 cc1 $c6 's%timeout *=.*$%timeout=1%i'                                                            ;cmw $c6 755 root                                          # grub timeout
 [[ -x $c7 ]] && sex "chmod -x $c7"                                                                                                                          # motd overlayroot unexecute
-sex 'netplan apply';sex 'sudo update-grub';sex "$w0 restart systemd-timesyncd"
+sex 'netplan apply';sex 'sudo update-grub';sex "$w0 restart $n7"
 
 [[ $cunm = $znm1 || $cunm = $znm4 || $cunm = $vnm1 ]] || exit                                                                                               # ec here
 swu 'INSTALAR GETH';sex 'add-apt-repository -y ppa:ethereum/ethereum';sex 'apt update -y';cex 'apt install -y software-properties-common ethereum'          # install execution client

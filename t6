@@ -94,7 +94,7 @@ function bm0 {                                                                  
   bo4;bm5 ${a[$nn]};b7="rm$(bdc)$(bcc)$(date +%w)_peers:"                                                                                                     # homologous/avg position & outputs
 }
 function bm1 {
-  local g=${1:-$bpri};l1=$(echo "$l3"|grep "node$g:"|sed -Ee 's%.+err: +([0-9]+) +([0-9]+) +([0-9]+) +([0-9]+).+%\1\t\2\t\3\t\4%')                            # set paid errors for current array
+  local g=${1:-$bpri};l1=$(echo "$l3"|sed -nEe "s%.+node$g:.+err: +([0-9]+) +([0-9]+) +([0-9]+) +([0-9]+).+%\1\t\2\t\3\t\4%p")                                # set paid errors for current array
   [[ $l1 ]] && { bkm $g;bzm $g;bxm $g;bwm $g;bcm $g; };((g<bprf)) && bm1 $((g+bprs))                                                                          # recursively sum paid err arrays
 }
 function bm2 { k[0]=$(($(bnk)));z[0]=$(($(bnz)));x[0]=$(($(bnx)));w[0]=$(($(bnw)));c[0]=$(($(bnc)));a[0]=$(bm3 0);bm7; }                                      # tot err/cnt/penalty arrays
@@ -222,12 +222,12 @@ function nsh {
 }
 function wst { echo $@|sed 's%[^: ]*: *%%g;s%,[^,]*(routed)%%;s% (incoming),% <<%;s% (outgoing)% >>%'; }
 function cpe {                                                                                                                                                # system status
-  local e='NO';[[ $(timedatectl|grep synchronized:|sed 's%.*synchronized: \([a-z]*\).*%\1%') = yes ]] && e='OK';dts
-  m=$(ss2 systemd-timesyncd);[[ $(echo $m|grep dead) ]] && m=$(ss2 ntp);swn "CLCK $e $(printf '%3i' $(fs0 clock|wc -l)) $dt status: $m"                       # CLCK info
+  local e='NO';[[ $(timedatectl|sed -n 's%.*synchronized: \([a-z]*\) *%\1%p') = yes ]] && e='OK';dts
+  if [[ $(sst $n7 masked) ]];then m=$(ss2 ntp);else m=$(ss2 $n7);fi;swn "CLCK $e $(printf '%3i' $(fs0 clock|wc -l)) $dt status: $m"                           # CLCK info
   [[ $1 = c ]] && return;local l=0;local n=0;local v=0
   local d=$(fs3|grep throttled|head -n1|sed 's%.* \([0-9]*:[0-9]*\):[0-9]*.*%\1%')
   local e=$(fs3|grep normal   |tail -n1|sed 's%.* \([0-9]*:[0-9]*\):[0-9]*.*%\1%')
-  local v=0;for v in $(sensors 2>$s3|grep $o4|sed 's%.*: *\([-+][0-9][0-9]*\.[0-9]*\).*%\1%');do ((n+=1));l=$(nu1 $l$v 1);done
+  local v=0;for v in $(sensors 2>$s3|sed -n "s%\($o4\).*: *\([-+][0-9][0-9]*\.[0-9]*\).*%\2%p");do ((n+=1));l=$(nu1 $l$v 1);done
   [[ $d ]] && d="throttled: $d";[[ $e ]] && e="normal: $e";swn "TEMP $(nu5 $l/$((n==0?1:n)) 1 2 %5.1fC) $dt $d $e"                                            # TEMP cpu info
   [[ $1 = p ]] && return
   if [[ $(cat $s6) -eq 0 ]];then e=off;else e=on;fi;if [[ $(cat $s7) -eq 1 ]];then d=off;else d=on;fi                                                         # usb/cpu current state
@@ -350,7 +350,7 @@ function sr9 { chmod 644 $1.jwt;sex "mv $1.jwt $s4/$1.jwt"; }
 [[ $1 = drs ]] && { dpa; }
 [[ $1 = nrs ]] && { cex 'netplan apply';dpa; }
 [[ $1 = nsh ]] && { nsh; }
-[[ $1 = trs ]] && { [[ $(sst systemd-timesyncd masked) ]] || cex "$w0 restart systemd-timesyncd";cpe c; }
+[[ $1 = trs ]] && { [[ $(sst $n7 masked) ]] || cex "$w0 restart $n7";cpe c; }
 [[ $1 = vcp ]] && { [[ $2 ]] && ssp $2; }
 [[ $1 = gl  ]] && { gl0;swn "$m"; }
 [[ $1 = glf ]] && { gl0;swn "$m" >> $p5;grt && grb;[[ $ok != OK ]] && grs 0;pas; }                                                                            # geth log/reboot/restart & parameter set
