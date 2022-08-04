@@ -19,9 +19,9 @@ o3='geth\[\|lighthouse'
 o4='Package\|Core\|Composite\|Sensor'
 a0='0x82f6E45b47c5C03F8D52dDDa03B3F65897Cd5AB2'
 
-meeu="$(whoami)"
-cunm="$(uname -n)"
-cust="$(uname -n|cut -c1-3)"
+meeu=$(whoami)
+cunm=$(uname -n)
+cust=$(uname -n|cut -c1-3)
 zip1='192.168.8.25'
 zip2='192.168.8.28'
 zip3='192.168.8.31'
@@ -36,7 +36,7 @@ vip3='164.68.107.45'
 vnm1='vmi471826.contaboserver.net'
 vnm2='vmi506976.contaboserver.net'
 vnm3='vmi469069.contaboserver.net'
-cgth=$zip1;[[ $cunm = $znm4 ]] && cgth=$zip1;[[ $cunm = $vnm1 ]] && cgth=$vip1
+if [[ $cust = hrv ]];then cuec=$zip1;else cuec=$vip1;fi;[[ $cunm = $znm4 ]] && cuec=$zip4
 
 s0='/usr/local/bin'
 s1='/var/log/syslog'

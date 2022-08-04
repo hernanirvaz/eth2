@@ -38,8 +38,8 @@ function stt { [[ $d1 =~ 23:5[89] ]]; }                                         
 
 # geth control commands
 function gv  { nn=$(nu0 $(ss1 $n0 maxpeers [0-9]))                                    ; }                                                                     # set configured peers
-function gq  { nr=$(nu0 $(geth attach --exec net.peerCount "http://$cgth:8545" 2>$s3)); }                                                                     # set current    peers
-function gy  {            geth attach --exec eth.syncing   "http://$cgth:8545" 2>$s3  ; }                                                                     # current syncing status
+function gq  { nr=$(nu0 $(geth attach --exec net.peerCount "http://$cuec:8545" 2>$s3)); }                                                                     # set current    peers
+function gy  {            geth attach --exec eth.syncing   "http://$cuec:8545" 2>$s3  ; }                                                                     # current syncing status
 function gi  { echo $@|sed 's%.*highestBlock: *\([0-9]*\).*%\1%'; }                                                                                           # get highest geth block
 function gc  { echo $@|sed 's%.*currentBlock: *\([0-9]*\).*%\1%'; }                                                                                           # get current geth block
 function gb  { g0=$(fs0 Imported 0 geth|wc -l);ok=OK;[[ $g0 -eq $(lg0 .*sgs:) ]] && ok=BK; }                                                                  # imported new chain segments & OK/BK
