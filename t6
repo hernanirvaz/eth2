@@ -278,10 +278,10 @@ function ve  { [[ -f $p1/vc_lock ]] || { vop;sex 'ufw reload';cex "$w4 $n3"; } }
 function pe  { pai 9090/tcp 192.168.8.0/24 prometheus;sex 'ufw reload';cex "$w4 $n4"; }
 function ne  { sex 'ufw reload';cex "$w4 $n5"; }
 function fe  { pai 3000/tcp 192.168.8.0/24 grafana   ;sex 'ufw reload';cex "$w4 $n6"; }
-function ga  { [[ $(sst $n0) ]] && [[ -d /var/lib/goethereum   ]] && { cex "$w3 $n0"; } }
-function ba  { [[ $(sst $n1) ]] && { cex "$w3 $n1"; } }
+function ga  { [[ $(sst $n0) && -d $p9 ]] && cex "$w3 $n0"; }
+function ba  { [[ $(sst $n1) && -d $p7 ]] && cex "$w3 $n1"; }
 function va  {
-  [[ $(sst $n3) ]] || return                                                                                                                                  # continue if inactive\|failed
+  [[ $(sst $n3) && -d $p8 ]] || return
   if [[ -f $p1/vc_lock ]];then
     if [[ -f $p0/slashing_protection.sqlite ]];then                                                                                                           # slashing_protection
       cex "cp $p0/slashing_protection.sqlite $p8"
@@ -373,6 +373,7 @@ function sr9 { chmod 644 $1.jwt;sex "mv $1.jwt $s4/$1.jwt"; }
 [[ $1 = bsl ]] && { bsl; }
 [[ $1 = cpe ]] && { cpe $2; }
 [[ $1 = grs ]] && { grs ${2:-0}   ; }
+[[ $1 = gpn ]] && { if [[ $(sst $n0 running) ]];then gp;cex "du -h $p9";sudo -u eth1 $s8/geth --datadir $p9 snapshot prune-state;cex "du -h $p9";dmr;ga;fi; }
 [[ $1 = srs ]] && { b1r ${2:-0} RB; }
 [[ $1 = brs ]] && { b1r ${2:-0} BN; }
 [[ $1 = lrs ]] && { b1r ${2:-0} VC; }
@@ -418,7 +419,6 @@ function sr9 { chmod 644 $1.jwt;sex "mv $1.jwt $s4/$1.jwt"; }
 [[ $1 = vpa ]] && { vp;dmr;va;jsh "-u $n3"; }
 [[ $1 = spa ]] && { sp;sa; }
 [[ $1 = gpd ]] && { gp;gd; }
-[[ $1 = opd ]] && { op;od; }
 [[ $1 = bpd ]] && { bp;bd; }
 [[ $1 = vpd ]] && { vp;vd; }
 [[ $1 = xpd ]] && { xp;xd; }
@@ -432,7 +432,6 @@ function sr9 { chmod 644 $1.jwt;sex "mv $1.jwt $s4/$1.jwt"; }
 [[ $1 = xea ]] && { xe;xa; }
 # enable
 [[ $1 = ge  ]] && { ge; }
-[[ $1 = oe  ]] && { oe; }
 [[ $1 = be  ]] && { be; }
 [[ $1 = ve  ]] && { ve; }
 [[ $1 = pe  ]] && { pe; }
@@ -448,7 +447,6 @@ function sr9 { chmod 644 $1.jwt;sex "mv $1.jwt $s4/$1.jwt"; }
 [[ $1 = vpr ]] && { vp; }
 [[ $1 = bpr ]] && { bp; }
 [[ $1 = gpr ]] && { gp; }
-[[ $1 = opr ]] && { op; }
 [[ $1 = xpr ]] && { xp; }
 [[ $1 = rpr ]] && { rp; }
 [[ $1 = spr ]] && { sp; }
@@ -459,7 +457,6 @@ function sr9 { chmod 644 $1.jwt;sex "mv $1.jwt $s4/$1.jwt"; }
 [[ $1 = vds ]] && { vd; }
 [[ $1 = bds ]] && { bd; }
 [[ $1 = gds ]] && { gd; }
-[[ $1 = ods ]] && { od; }
 [[ $1 = xds ]] && { xd; }
 [[ $1 = rds ]] && { rd; }
 [[ $1 = sds ]] && { sd; }
@@ -489,6 +486,7 @@ if [[ ! $1 ]];then
   m="$m\nvcp url\t\t$n3 copy to server url"
   m="$m\ngl[f]\t\tgeth log report"
   m="$m\ngh[s]\t\tgeth historic report [summary]"
+  m="$m\ngpn\t\t$n0 prune DB - TAKES HOURS"
   m="$m\ngrs [n]\t\t$n0 restart n nodes to change"
   m="$m\nbrs [n]\t\t$n1 restart n nodes to change"
   m="$m\nsrs [n]\t\tsystem restart n=nodes to change"
