@@ -336,13 +336,13 @@ function paf { t2t && sex "$p0/eth2/t5 cputurbo"; }                             
 function jw0 { openssl rand -hex 32|tr -d '\n'|tee jwt 1>$s3;[[ -f jwt ]] && jw4; }
 function jw1 { sex "cp jwt $2";sex "chown $1:$1 $2/jwt"; }
 function jw3 { scp jwt $1:~;ssh $1 "export H=$H;eth2/t6 jwt"; }
-function jw4 { chmod 600 jwt;jw3 ztc2;jw3 ztc3;jw1 eth1 $p9/geth; }
+function jw4 { chmod 600 jwt;jw3 ztc2;jw3 ztc3;jw3 ztc4; }
 function sr0 { cp $s4/$n0.service $n0.sav;sed "s%peers *\([0-9]*\)%peers \1 --authrpc.addr $zip1 --authrpc.jwtsecret $p9/geth/jwt%" $n0.sav > $n0.jwt;sr9 $n0; }
 function sr1 { cp $s4/$n1.service $n1.sav;sed "s%--eth1-endpoints *\([^,]*:8545\)[^ ]*%--execution-endpoint http://$zip1:8551 --execution-jwt $p7/jwt --suggested-fee-recipient $a0%" $n1.sav > $n1.jwt;sr9 $n1; }
 function sr3 { cp $s4/$n3.service $n3.sav;sed "s%beacon-nodes *\([^,]*:5052\)[^ ]*%beacon-nodes \1,http://$zip2:5052 --suggested-fee-recipient $a0%" $n3.sav > $n3.jwt;sr9 $n3; }
 function sr9 { chmod 644 $1.jwt;sex "mv $1.jwt $s4/$1.jwt"; }
 
-[[ $1 = jwt ]] && { [[ -d $p9/geth ]] && jw0;[[ -d $p7 && -f jwt ]] && jw1 eth2 $p7;[[ -f jwt ]] && sex "rm jwt"; }
+[[ $1 = jwt ]] && { [[ $cunm = $znm1 || $cunm = $vnm1 ]] && jw0;if [[ -f jwt ]];then [[ -d $p9/geth ]] && jw1 eth1 $p9/geth;[[ -d $p7 ]] && jw1 eth2 $p7;sex "rm jwt";fi; }
 [[ $1 = srv ]] && { [[ -f $s4/$n0.service ]] && sr0;[[ -f $s4/$n1.service ]] && sr1;[[ -f $s4/$n3.service ]] && sr3; }
 [[ $1 = chk ]] && { cex 'chkrootkit'; }
 [[ $1 = eip ]] && { curl -s4 "https://${3:-meo.fruga.pt}:$2@dyn.dns.he.net/nic/update?hostname=${3:-meo.fruga.pt}" &>$s3; }
