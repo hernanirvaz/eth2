@@ -227,7 +227,7 @@ function cpe {                                                                  
   [[ $1 = c ]] && return;local l=0;local n=0;local v=0
   local d=$(fs3|grep throttled|head -n1|sed 's%.* \([0-9]*:[0-9]*\):[0-9]*.*%\1%')
   local e=$(fs3|grep normal   |tail -n1|sed 's%.* \([0-9]*:[0-9]*\):[0-9]*.*%\1%')
-  local v=0;for v in $(sensors 2>$s3|grep 'Package\|Core'|sed 's%.*: *\([-+][0-9][0-9]*\.[0-9]*\).*%\1%');do ((n+=1));l=$(nu1 $l$v 1);done
+  local v=0;for v in $(sensors 2>$s3|grep $o4|sed 's%.*: *\([-+][0-9][0-9]*\.[0-9]*\).*%\1%');do ((n+=1));l=$(nu1 $l$v 1);done
   [[ $d ]] && d="throttled: $d";[[ $e ]] && e="normal: $e";swn "TEMP $(nu5 $l/$((n==0?1:n)) 1 2 %5.1fC) $dt $d $e"                                            # TEMP cpu info
   [[ $1 = p ]] && return
   if [[ $(cat $s6) -eq 0 ]];then e=off;else e=on;fi;if [[ $(cat $s7) -eq 1 ]];then d=off;else d=on;fi                                                         # usb/cpu current state

@@ -21,8 +21,8 @@ else
 fi
 [[ -f $s4/$n0.service || -f $s4/$n1.service || -f $s4/$n3.service ]] && exit                                                                                  # ec/cl instalados -> exit
 swu 'UPDATE LINUX'       ;t4update linux
-swu 'ROOTKIT SCANNER'    ;sex 'apt install chkrootkit -y';cex 'chkrootkit'
-swu 'UNATTENDED UPGRADES';cex 'apt install unattended-upgrades apt-listchanges landscape-common update-notifier-common python3-pip net-tools -y'
+swu 'ROOTKIT SCANNER'    ;sex 'apt install python3-pip net-tools lm-sensors chkrootkit -y';cex 'chkrootkit'
+swu 'UNATTENDED UPGRADES';cex 'apt install unattended-upgrades apt-listchanges landscape-common update-notifier-common -y'
 sudo dpkg-reconfigure -plow unattended-upgrades
 swu 'LINUX CONFIGS'      ;sex 'timedatectl set-ntp on'
 if [[ $cust = hrv ]]; then
