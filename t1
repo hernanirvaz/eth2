@@ -77,9 +77,13 @@ function yex { swb "$1";echo $H|sudo -S $1 <<< y &>$s3; }                       
 function pex {          echo $H|sudo -S $1       2>$s3; }                                                                                                     # superuser-command (pipe)
 function sex {          echo $H|sudo -S $1       &>$s3; }                                                                                                     # superuser-command (silent)
 function sst { $w1 $1 2>$s3|grep "${2:-inactive\|failed}"; }                                                                                                  # service status word test
-function ss1 { $w1 $1 2>$s3|sed -n "s%.*$2 *\(${3:-.}*\).*%\1%p"; }                                                                                           # service status word - 1 extraction
-function ss2 { $w1 $1 2>$s3|sed -n "s%.*Active: *\(.*\)%\1%;s% *since.*;%; $1%p"; }                                                                           # service status word - 2 extraction
-function sso { dts;echo "$1 $(printf '%6s' $(ss1 $2 Memory:)) $dt status: $(ss2 $2)"; }                                                                       # service status output
+function ss1 { $w1 $1 2>$s3|sed -n "s%.*$2 *\(${3:-.}*\).*%\1%p"; }                                                                                           # service status 1 extraction
+function ss2 { $w1 $1 2>$s3|sed -n "s%.*Active: *\(.*\)%\1%;s% *since.*;%; $1%p"; }                                                                           # service status 2 extraction
+function sso {
+  dts;local e="$1 $(printf '%6s' $(ss1 $2 Memory:)) $dt status: $(ss2 $2)";[[ $1 = VALI ]] || e="$e peers $(ss1 $2 peers [0-9])"                              # status & memory & peers
+  [[ $1 = BEAC ]] && e="$e el-http $(ss1 $2 endpoints* '[^ ]'|sed -n 's%http://192.168.8.\([0-9]*:[0-9]*\)%\1%gp')"                                           # el http
+  [[ $1 = VALI ]] && e="$e cl-http $(ss1 $2 nodes '[^ ]'|sed -n 's%http://192.168.8.\([0-9]*:[0-9]*\)%\1%gp')";swn "$e"                                       # cl https
+}
 function idi { cex "ufw $4 deny from $1 to $2 comment $3"; }                                                                                                  # deny  frm ip to ip
 function ide { cex "ufw $4 deny from $1 port ${2/\// proto } comment $3"; }                                                                                   # deny  frm ip/prt
 function pde { cex "ufw $3 deny $1 comment $2"; }                                                                                                             # deny  prt
