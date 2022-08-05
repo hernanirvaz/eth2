@@ -38,10 +38,12 @@ function stt { [[ $d1 =~ 23:5[89] ]]; }                                         
 function sst { $w1 $1 2>$s3|grep "${2:-inactive\|failed}"; }                                                                                                  # service status word test
 function ss1 { $w1 $1 2>$s3|sed -n "s%.*$2 *\(${3:-.}*\).*%\1%p"; }                                                                                           # service status 1 extraction
 function ss2 { $w1 $1 2>$s3|sed -n "s%.*Active: *\(.*\)%\1%;s% *since.*;%; $1%p"; }                                                                           # service status 2 extraction
+function sgx { geth attach --exec net.peerCount "http://$cuec:8545" 2>$s3; }                                                                                  # get current    peers
+function sbx { echo ${@:$#}; }                                                                                                                                # set current    peers
 function sso {
   dts;local e="$1 $(printf '%6s' $(ss1 $2 Memory:)) $dt status: $(ss2 $2)"
-  [[ $1 = GETH ]] && e="$e $(printf 'el:%02i' $(ss1 $n0 peers [0-9])) $(printf '%2i' $(gx))"                                                                  # status & memory & peers
-  [[ $1 = BEAC ]] && e="$e $(printf 'cl:%02i' $(ss1 $n1 peers [0-9])) $(printf '%2i' $(bx $(fs4 peers:)))"                                                    # status & memory & peers
+  [[ $1 = GETH ]] && e="$e $(printf 'el:%02i' $(ss1 $n0 peers [0-9])) $(printf '%2i' $(sgx))"                                                                 # status & memory & peers
+  [[ $1 = BEAC ]] && e="$e $(printf 'cl:%02i' $(ss1 $n1 peers [0-9])) $(printf '%2i' $(sbx $(fs4 peers:)))"                                                   # status & memory & peers
   [[ $1 = BEAC ]] && e="$e el:http $(ss1 $2 endpoints* '[^ ]'|sed -n 's%http://192.168.8.\([0-9]*:[0-9]*\)%\1%gp')"                                           # el http
   [[ $1 = VALI ]] && e="$e cl:http $(ss1 $2 nodes '[^ ]'|sed -n 's%http://192.168.8.\([0-9]*:[0-9]*\)%\1%gp')";swn "$e"                                       # cl https
 }
@@ -59,9 +61,8 @@ function ssp {
 
 # geth control commands
 function gy  { geth attach --exec eth.syncing   "http://$cuec:8545" 2>$s3; }                                                                                  # get current syncing status
-function gx  { geth attach --exec net.peerCount "http://$cuec:8545" 2>$s3; }                                                                                  # get current    peers
 function gv  { nn=$(nu0 $(ss1 $n0 maxpeers [0-9])); }                                                                                                         # set configured peers
-function gq  { nr=$(nu0 $(gx))                    ; }                                                                                                         # set current    peers
+function gq  { nr=$(nu0 $(sgx))                   ; }                                                                                                         # set current    peers
 function gi  { echo $@|sed 's%.*highestBlock: *\([0-9]*\).*%\1%'; }                                                                                           # get highest geth block
 function gc  { echo $@|sed 's%.*currentBlock: *\([0-9]*\).*%\1%'; }                                                                                           # get current geth block
 function gb  { g0=$(fs0 Imported 0 geth|wc -l);ok=OK;[[ $g0 -eq $(lg0 .*sgs:) ]] && ok=BK; }                                                                  # imported new chain segments & OK/BK
@@ -84,7 +85,6 @@ function bf  { echo $((90*z3))                                                  
 function bi  { echo $((nd+zk*300+zz*20+zx))                                         ; }                                                                       # get delete day idx
 function bu  { echo $(((z5>400?$(bz)/z5:0)+(z2>300?$(bw)/z2:0)+(z4>999?$(bf)/z4:0))); }                                                                       # get restart idx
 function bv  { nu0 $(ss1 $n1 target-peers [0-9]); }                                                                                                           # get configured peers
-function bx  { echo ${@:$#}; }                                                                                                                                # set current    peers
 function bb  { l0=$(fs0 $bpid] 3600);bl1;bl2;[[ (1 -eq $(bl6 $hors) && $(bu) -ge 1) || (1 -eq $(bl6 5) && $(bu) -ge 5) ]] && ok=BK; }                         # set ok (OK/BK)
 function bbl { cat $p2 2>$s3|wc -l; }                                                                                                                         # get beacon line count
 function bml { cat $p3 2>$s3|wc -l; }                                                                                                                         # get medias line count
