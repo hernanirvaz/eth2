@@ -353,17 +353,18 @@ function sr9 { chmod 644 $1.jwt;sex "mv $1.jwt $s4/$1.jwt"; }
 [[ $1 = trs ]] && { [[ $(sst $n7 masked) ]] || cex "$w0 restart $n7";cpe c; }
 [[ $1 = vcp ]] && { [[ $2 ]] && ssp $2; }
 [[ $1 = gl  ]] && { gl0;swn "$m"; }
-[[ $1 = glf ]] && { gl0;swn "$m" >> $p5;grt && grb;[[ $ok != OK ]] && grs 0;pas; }                                                                            # geth log/reboot/restart & parameter set
+[[ $1 = glf ]] && { gl0;swn "$m" >> $p5;grt && grb;[[ $ok != OK ]] && grs 0;pas; }                                                                            # el log/reboot/restart & parameter set
 [[ $1 = bl  ]] && { bl0;swn "$m"; }
 [[ $1 = bm  ]] && { bm0;bmo;swn "$m"; }
 [[ $1 = bn  ]] && { bm0;bno;swn "$m"; }
-[[ $1 = blf ]] && { bl0;swn "$m" >> $p2;stt && bo5 && bht && bst && bdl $d0;[[ $ok != OK ]] && b1r 0;pas; }                                                   # beacon log/delete day/restart & parameter set
+[[ $1 = blf ]] && { bl0;swn "$m" >> $p2;stt && bo5 && bht && bst && bdl $d0;[[ $ok != OK ]] && b1r 0;pas; }                                                   # cl log/delete/restart & parameter set
 [[ $1 = bmf ]] && { bm0;bms;bbt && swn "$m" >> $p3;bct && b1r $b4 $(brb PE) 120; }
 [[ $1 = bnf ]] && { bm0;bno;swn "$m" >> $p6; }
 [[ $1 = gh  ]] && { gh0 $2; }
 [[ $1 = bh  ]] && { bh0 $2; }
-[[ $1 = bhs ]] && { bm0;bms;[[ -f $p2 ]] && swn "$m";sso BEAC $n1;[[ $(sst $n3 loaded) ]] && sso VALI $n3;cpe; }                                              # lighthouse services & system report
-[[ $1 = ghs ]] && { gl0;swn "$m";sso GETH $n0;cpe; }                                                                                                          # geth service & system report
+[[ $1 = bhs ]] && { bm0;bms;[[ -f $p2 ]] && swn "$m";sso BEAC $n1;[[ $(sst $n3 loaded) ]] && sso VALI $n3;cpe; }                                              # cl      & system report
+[[ $1 = ghs ]] && { gl0;swn "$m";sso GETH $n0;cpe; }                                                                                                          # el      & system report
+[[ $1 = ehs ]] && { gl0;swn "$m";sso GETH $n0;bm0;bms;[[ -f $p2 ]] && swn "$m";sso BEAC $n1;[[ $(sst $n3 loaded) ]] && sso VALI $n3;cpe; }                    # el & cl & system report
 [[ $1 = bo  ]] && { bo0 $2 $3 $4; }
 [[ $1 = bon ]] && { bon $2; }
 [[ $1 = boc && -f $p2 ]] && { read -a v <<< $(bff|tail -n1);l2=$(bff $(pt1 $2 ${v[4]}));boa; }
