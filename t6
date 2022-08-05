@@ -38,14 +38,14 @@ function stt { [[ $d1 =~ 23:5[89] ]]; }                                         
 function sst { $w1 $1 2>$s3|grep "${2:-inactive\|failed}"; }                                                                                                  # service status word test
 function ss1 { $w1 $1 2>$s3|sed -n "s%.*$2 *\(${3:-.}*\).*%\1%p"; }                                                                                           # service status 1 extraction
 function ss2 { $w1 $1 2>$s3|sed -n "s%.*Active: *\(.*\)%\1%;s% *since.*;%; $1%p"; }                                                                           # service status 2 extraction
-function sgx { geth attach --exec net.peerCount "http://$cuec:8545" 2>$s3; }                                                                                  # get current    peers
-function sbx { echo ${@:$#}; }                                                                                                                                # set current    peers
+function sgx { geth attach --exec net.peerCount "http://$cuec:8545" 2>$s3; }                                                                                  # get el current peers
+function sbx { pex "grep lighthouse.*$1 $s1"|tail -n1|sed "s%.*$1 *\([0-9]*\).*%\1%"; }                                                                       # get cl current peers
 function sso {
-  dts;local e="$1 $(printf '%6s' $(ss1 $2 Memory:)) $dt status: $(ss2 $2)"
-  [[ $1 = GETH ]] && e="$e $(printf 'el:%02i' $(ss1 $n0 peers [0-9])) $(printf '%2i' $(sgx))"                                                                 # status & memory & peers
-  [[ $1 = BEAC ]] && e="$e $(printf 'cl:%02i' $(ss1 $n1 peers [0-9])) $(printf '%2i' $(sbx $(fs4 peers:)))"                                                   # status & memory & peers
-  [[ $1 = BEAC ]] && e="$e el:http $(ss1 $2 endpoints* '[^ ]'|sed -n 's%http://192.168.8.\([0-9]*:[0-9]*\)%\1%gp')"                                           # el http
-  [[ $1 = VALI ]] && e="$e cl:http $(ss1 $2 nodes '[^ ]'|sed -n 's%http://192.168.8.\([0-9]*:[0-9]*\)%\1%gp')";swn "$e"                                       # cl https
+  dts;local e="$1 $(printf '%6s' $(ss1 $2 Memory:)) $dt status: $(ss2 $2)"                                                                                    # memory & status
+  [[ $1 = GETH ]] && e="$e $(printf 'el:%02i' $(ss1 $n0 peers [0-9])) $(printf '%2i' $(sgx))"                                                                 # el peers tag
+  [[ $1 = BEAC ]] && e="$e $(printf 'cl:%02i' $(ss1 $n1 peers [0-9])) $(printf '%2i' $(sbx peers:))"                                                          # cl peers tag
+  [[ $1 = BEAC ]] && e="$e el:http $(ss1 $2 endpoints* '[^ ]'|sed -n 's%http://192.168.8.\([0-9]*:[0-9]*\)%\1%gp')"                                           # el http(s)
+  [[ $1 = VALI ]] && e="$e cl:http $(ss1 $2 nodes '[^ ]'|sed -n 's%http://192.168.8.\([0-9]*:[0-9]*\)%\1%gp')";swn "$e"                                       # cl http(s)
 }
 function ssp {
   swu 'QUER MESMO TRANSFERIR VALIDATORS?';read rsp
@@ -345,6 +345,11 @@ function t1t { [[ $(cat $s7) -eq 1 && $(fs5) -le 10 ]]; }                       
 function t2t { [[ $(cat $s7) -eq 1 ]]; }                                                                                                                      # cpu no turbo            test
 function pas { umt && sex "$p0/eth2/t5 usbstop";t1t && sex "$p0/eth2/t5 cputurbo";t0t && sex "$p0/eth2/t5 cpunoturbo"; }                                      # set usb/cpu parameters
 function paf { t2t && sex "$p0/eth2/t5 cputurbo"; }                                                                                                           # set turbo   parameter
+function ghs { sso GETH $n0; }
+function bhs { sso BEAC $n1;[[ $(sst $n3 loaded) ]] && sso VALI $n3; }
+function ah1 { swu $znm1;ghs;cpe;swu $znm3;ssh ztc3 "export H=$H;$p0/eth2/t6 bhs";swu $znm4;ssh ztc4 "export H=$H;$p0/eth2/t6 ehs"; }
+function ah3 { swu $znm1;ssh ztc1 "export H=$H;$p0/eth2/t6 ghs";swu $znm3;bhs;cpe;swu $znm4;ssh ztc4 "export H=$H;$p0/eth2/t6 ehs"; }
+function ah4 { swu $znm1;ssh ztc1 "export H=$H;$p0/eth2/t6 ghs";swu $znm3;ssh ztc3 "export H=$H;$p0/eth2/t6 bhs";swu $znm4;ghs;bhs;cpe; }
 function jw0 { openssl rand -hex 32|tr -d '\n'|tee jwt 1>$s3;[[ -f jwt ]] && jw4; }
 function jw1 { sex "cp jwt $2";sex "chown $1:$1 $2/jwt"; }
 function jw3 { scp jwt $1:~;ssh $1 "export H=$H;eth2/t6 jwt"; }
@@ -374,9 +379,10 @@ function sr9 { chmod 644 $1.jwt;sex "mv $1.jwt $s4/$1.jwt"; }
 [[ $1 = bnf ]] && { bm0;bno;swn "$m" >> $p6; }
 [[ $1 = gh  ]] && { gh0 $2; }
 [[ $1 = bh  ]] && { bh0 $2; }
-[[ $1 = ghs ]] && { sso GETH $n0                                                     ;cpe; }                                                                  # el      & system report
-[[ $1 = bhs ]] && {              sso BEAC $n1;[[ $(sst $n3 loaded) ]] && sso VALI $n3;cpe; }                                                                  # cl      & system report
-[[ $1 = ehs ]] && { sso GETH $n0;sso BEAC $n1;[[ $(sst $n3 loaded) ]] && sso VALI $n3;cpe; }                                                                  # el & cl & system report
+[[ $1 = ahs ]] && { [[ $cunm = $znm1 ]] && ah1;[[ $cunm = $znm3 ]] && ah3;[[ $cunm = $znm4 ]] && ah4; }
+[[ $1 = ghs ]] && { ghs    ;cpe ; }                                                                                                                           # el      & system report
+[[ $1 = bhs ]] && { bhs    ;cpe ; }                                                                                                                           # cl      & system report
+[[ $1 = ehs ]] && { ghs;bhs;cpe ; }                                                                                                                           # el & cl & system report
 [[ $1 = bo  ]] && { bo0 $2 $3 $4; }
 [[ $1 = bon ]] && { bon $2; }
 [[ $1 = boc && -f $p2 ]] && { read -a v <<< $(bff|tail -n1);l2=$(bff $(pt1 $2 ${v[4]}));boa; }
