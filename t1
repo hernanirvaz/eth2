@@ -18,6 +18,7 @@ o1='transmission-daemon'
 o2='named'
 o3='geth\[\|lighthouse'
 o4='Package\|Core\|Composite\|Sensor\|temp[0-9]'
+o5="\n/var/log/syslog\n{\n\trotate 7\n\tdaily\n\tmissingok\n\tnotifempty\n\tnocompress\n\tsharedscripts\n\tpostrotate\n\t\t/usr/lib/rsyslog/rsyslog-rotate\n\tendscript\n}"
 a0='0x82f6E45b47c5C03F8D52dDDa03B3F65897Cd5AB2'
 
 meeu=$(whoami)
@@ -65,7 +66,8 @@ c3='/etc/apt/apt.conf.d/50unattended-upgrades'
 c4='/etc/update-motd.d/00-header'
 c5='/etc/update-motd.d/10-help-text'
 c6='/etc/grub.d/30_os-prober'
-c7='/etc/update-motd.d/97-overlayroot'
+c7='/etc/logrotate.d/rsyslog'
+c8='/etc/update-motd.d/97-overlayroot'
 
 function swb { echo -e "\n\e[5m${1^^}\e[25m\n"; }                                                                                                             # show flash
 function swu { echo -e "${1^^}"; }                                                                                                                            # show upper
