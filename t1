@@ -1,26 +1,5 @@
 #!/bin/bash
 
-w0='systemctl'
-w1="$w0 status"
-w2="$w0 stop"
-w3="$w0 start"
-w4="$w0 enable"
-w5="$w0 disable"
-n0='eth-geth'
-n1='eth-beacon'
-n3='eth-validator'
-n4='prometheus'
-n5='prometheus-node-exporter'
-n6='grafana-server'
-n7='systemd-timesyncd'
-o0='plexmediaserver'
-o1='transmission-daemon'
-o2='named'
-o3='geth\[\|lighthouse'
-o4='Package\|Core\|Composite\|Sensor\|temp[0-9]'
-o5="\n/var/log/syslog\n{\n\trotate 7\n\tdaily\n\tmissingok\n\tnotifempty\n\tnocompress\n\tsharedscripts\n\tpostrotate\n\t\t/usr/lib/rsyslog/rsyslog-rotate\n\tendscript\n}"
-a0='0x82f6E45b47c5C03F8D52dDDa03B3F65897Cd5AB2'
-
 meeu=$(whoami)
 cunm=$(uname -n)
 cust=$(uname -n|cut -c1-3)
@@ -39,6 +18,45 @@ vnm1='vmi471826.contaboserver.net'
 vnm2='vmi506976.contaboserver.net'
 vnm3='vmi469069.contaboserver.net'
 if [[ $cust = hrv ]];then cuec=$zip1;else cuec=$vip1;fi;[[ $cunm = $znm4 ]] && cuec=$zip4
+
+w0='systemctl'
+w1="$w0 status"
+w2="$w0 stop"
+w3="$w0 start"
+w4="$w0 enable"
+w5="$w0 disable"
+n0='eth-geth'
+n1='eth-beacon'
+n3='eth-validator'
+n4='prometheus'
+n5='prometheus-node-exporter'
+n6='grafana-server'
+n7='systemd-timesyncd'
+n8='named'
+n9='systemd-resolved'
+o0='plexmediaserver'
+o1='transmission-daemon'
+o3='geth\[\|lighthouse'
+o4='Package\|Core\|Composite\|Sensor\|temp[0-9]'
+o5="\n/var/log/syslog\n{\n\trotate 7\n\tdaily\n\tmissingok\n\tnotifempty\n\tnocompress\n\tsharedscripts\n\tpostrotate\n\t\t/usr/lib/rsyslog/rsyslog-rotate\n\tendscript\n}"
+o6=""
+o6="$o6\n\tlisten-on { any; };"
+o6="$o6\n\tlisten-on-v6 { none; };"
+o6="$o6\n\tversion \"not currently available\";"
+o6="$o6\n\trecursion yes;"
+o6="$o6\n\tallow-recursion { localhost; 192.168.8.0/24; };"
+o6="$o6\n\tallow-query { localhost; 192.168.8.0/24; };"
+if [[ $cunm = $znm2 ]];then
+  o6="$o6\n\tallow-transfer { 192.168.8.25; 192.168.8.31; 192.168.8.34; };"
+  o6="$o6\n\talso-notify { 192.168.8.25; 192.168.8.31; 192.168.8.34; };"
+  o6="$o6\n\tmax-cache-size 50%;"
+else
+  o6="$o6\n\tallow-transfer { none; };"
+  o6="$o6\n\tmax-cache-size 10%;"
+fi
+o6="$o6\n\tquerylog yes;"
+o6="$o6\n};"
+o9='0x82f6E45b47c5C03F8D52dDDa03B3F65897Cd5AB2'
 
 s0='/usr/local/bin'
 s1='/var/log/syslog'
@@ -59,21 +77,12 @@ p4="$p0/beacon.restart"
 p7="$p1/beacon"
 p8="$p1/validators"
 p9='/var/lib/goethereum';[[ $cunm = $znm4 ]] && p9='/sata/goethereum'
-c0='/etc/systemd/timesyncd.conf'
-c1='/etc/default/motd-news'
-c2='/lib/systemd/system/systemd-networkd-wait-online.service'
-c3='/etc/apt/apt.conf.d/50unattended-upgrades'
-c4='/etc/update-motd.d/00-header'
-c5='/etc/update-motd.d/10-help-text'
-c6='/etc/grub.d/30_os-prober'
-c7='/etc/logrotate.d/rsyslog'
-c8='/etc/update-motd.d/97-overlayroot'
 
 function swb { echo -e "\n\e[5m${1^^}\e[25m\n"; }                                                                                                             # show flash
 function swu { echo -e "${1^^}"; }                                                                                                                            # show upper
 function swn { echo -e "$1"; }                                                                                                                                # show normal
 function sau { user=$1;id $1 &>$s3 || sex "useradd --no-create-home --shell /bin/false $user"; }                                                              # system useradd
-function cmw { [[ $2 ]] && sex "chmod $2 $1";[[ $3 ]] && sex "chown $3:$3 $1"; }                                                                              # chmod/chown file
+function cmw { [[ $2 ]] && sex "chmod $2 $1";[[ $3 ]] && sex "chown $3:${4:-$3} $1"; }                                                                        # chmod/chown file
 function cex { swb "$1";echo $H|sudo -S $1       2>$s3; }                                                                                                     # superuser-command (visible)
 function yex { swb "$1";echo $H|sudo -S $1 <<< y &>$s3; }                                                                                                     # superuser-command (visible & yes)
 function pex {          echo $H|sudo -S $1       2>$s3; }                                                                                                     # superuser-command (pipe)
@@ -85,12 +94,36 @@ function pai { cex "ufw $4 allow from $2 to any port ${1/\// proto } comment $3"
 function pae { cex "ufw $3 allow $1 comment $2"; }                                                                                                            # allow prt
 function ple { cex "ufw $3 limit $1 comment $2"; }                                                                                                            # limit prt (<6 within 30s)
 function nwf { [[ $B = mainnet ]] || echo " --testnet $B"; }                                                                                                  # lighthouse network flag
+function iig { local f=;until [[ $# -lt 1 ]];do f="$f --ignore=$1";shift;done;echo $f; }                                                                      # get list of ignore flags
+function idw { ip link|grep DOWN|cut -d' ' -f2|tr -d :; }                                                                                                     # get down interfaces
 function lcp { [[ -x $p0/.cargo/bin/lighthouse ]] && until [[ $# -lt 1 ]];do scp $p0/.cargo/bin/lighthouse $1:~;shift;done; }                                 # propagate lighthouse
 function lwr {                                                                                                                                                # install   lighthouse
   [[ $cunm = $znm1 ]] && lcp ztc2 ztc3 ztc4;[[ $cunm = $vnm1 ]] && lcp vpss
   [[ -x $p0/lighthouse && ! -d $p0/lighthouse ]] && { sex "cp $s0/lighthouse $s0/lighthouse.sav";sex "mv $p0/lighthouse $s0"; }
   [[ -x $s0/lighthouse                        ]] && { cmw $s0/lighthouse 755 eth;swb 'NOVO LIGHT INSTALADO - PODE/DEVE VERIFICAR'; }
 }
+
+c0='/etc/systemd/timesyncd.conf'
+c1='/etc/default/motd-news'
+c2='/lib/systemd/system/systemd-networkd-wait-online.service'
+c3='/etc/apt/apt.conf.d/50unattended-upgrades'
+c4='/etc/update-motd.d/00-header'
+c5='/etc/update-motd.d/10-help-text'
+c6='/etc/grub.d/30_os-prober'
+c7='/etc/logrotate.d/rsyslog'
+c8='/etc/update-motd.d/97-overlayroot'
+c9='/etc/bind/named.conf.options'
+e0='/etc/default/named'
+r0='s%^ *#*NTP=.*$%NTP=192.168.8.28 ntp02.oal.ul.pt ntp04.oal.ul.pt time.google.com time.cloudflare.com time.facebook.com%i'                                  # my timesyncd servers
+r1='s%^ *ENABLED=.*$%ENABLED=0%i'                                                                                                                             # motd-news disable
+r2="s%-wait-online *$%-wait-online $(iig $(idw))%i"                                                                                                           # ignore down interfaces
+r3='s%^ */* *Unattended-Upgrade::Mail .*$%Unattended-Upgrade::Mail "hernanilr@gmail.com";%i'                                                                  # unattended-upgrades email
+r4='s%^ *printf%# printf%i'                                                                                                                                   # unprint stuff
+r5='printf "Welcome to %s %s\\n" "$(uname -n)" "$DISTRIB_DESCRIPTION"'                                                                                        # my header motd
+r6='s%timeout *=.*$%timeout=1%i'                                                                                                                              # grub timeout
+r7='s%^ */var/log/syslog%# /var/log/syslog%'                                                                                                                  # old logrotate delete
+r8='/dnssec-validation/q'                                                                                                                                     # print lines until pattern
+r9='s%bind[^"]*"%bind -4"%'                                                                                                                                   # use only ipv4
 
 bpid=$($w1 $n1 2>$s3|sed -n 's%.*PID: *\([0-9]*\).*%\1%p')
 rblk=22238623
