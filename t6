@@ -42,7 +42,7 @@ function sgx { geth attach --exec net.peerCount "http://$cuec:8545" 2>$s3; }    
 function sbx { pex "grep lighthouse.*$1 $s1"|tail -n1|sed "s%.*$1 *\([0-9]*\).*%\1%"; }                                                                       # get cl current peers
 function sso {
   dts;local e="$1 $(printf '%6s' $(ss1 $2 Memory:)) $dt status: $(ss2 $2)"                                                                                    # memory & status
-  [[ $1 = GETH ]] && e="$e $(printf 'el:m%ic%ip2p:%i' $(ss1 $2 peers [0-9]) $(sgx) $(ss1 $2 port [0-9]))"                                                     # el peers tag & p2p port tag
+  [[ $1 = GETH ]] && e="$e $(printf 'el:m%ic%i:p2p:%i' $(ss1 $2 peers [0-9]) $(sgx) $(ss1 $2 port [0-9]))"                                                    # el peers tag & p2p port tag
   [[ $1 = BEAC ]] && e="$e $(printf 'cl:m%ic%i' $(ss1 $2 peers [0-9]) $(sbx peers:))"                                                                         # cl peers tag
   [[ $1 = BEAC ]] && e="$e el:http $(ss1 $2 endpoints* '[^ ]'|sed -n 's%http://192.168.8.\([0-9]*:[0-9]*\)%\1%gp')"                                           # el http(s)
   [[ $1 = VALI ]] && e="$e cl:http $(ss1 $2 nodes '[^ ]'|sed -n 's%http://192.168.8.\([0-9]*:[0-9]*\)%\1%gp')";swn "$e"                                       # cl http(s)
