@@ -2,7 +2,7 @@
 
 source /home/eth/eth2/t1
 
-if [[ $cunm = hrv-zen ]]; then
+if [[ $cunm = hrv-zen ]];then
   cli="eth2.0-deposit-cli/validator_keys"
   bs1="/media/eth/cs1"
   bs2="/media/eth/cs2"
@@ -10,11 +10,11 @@ if [[ $cunm = hrv-zen ]]; then
   cs2="$bs2/validator_keys"
   lng="spanish"
   if [[ $B = mainnet ]];then nmv=18;else nmv=3;fi 
-  if [[ -d ~/$D && $(ls -A ~/$D) ]]; then
+  if [[ -d ~/$D && $(ls -A ~/$D) ]];then
     swu 'CHAVES ESTAO PRONTAS'
-  elif [[ -d ~/$cli && $(ls -A ~/$cli) ]]; then
-    if [[ -d $bs1 ]]; then
-      if [[ -d $cs1 ]]; then
+  elif [[ -d ~/$cli && $(ls -A ~/$cli) ]];then
+    if [[ -d $bs1 ]];then
+      if [[ -d $cs1 ]];then
         swu "ARQUIVO OFFLINE $cs1 JA EXISTE"
       else
         cp -R ~/$cli $cs1
@@ -25,8 +25,8 @@ if [[ $cunm = hrv-zen ]]; then
     else
       swu "ARQUIVO OFFLINE $bs1 NAO ESTA MONTADO"
     fi
-    if [[ -d $bs2 ]]; then
-      if  [[ -d $cs2 ]]; then
+    if [[ -d $bs2 ]];then
+      if  [[ -d $cs2 ]];then
         swu "ARQUIVO OFFLINE $cs2 JA EXISTE"
       else
         cp -R ~/$cli $cs2
@@ -39,7 +39,7 @@ if [[ $cunm = hrv-zen ]]; then
     fi
     cp -R ~/$cli ~
     swu 'CHAVES FORAM ARQUIVADAS - VERIFICAR AQUIVO OFFLINE'
-  elif [[ -f ~/eth2.0-deposit-cli/README.md ]]; then
+  elif [[ -f ~/eth2.0-deposit-cli/README.md ]];then
     cd ~/eth2.0-deposit-cli
     swb "PARA GERAR $nmv NOVAS CHAVES CHAIN $B"
     swn "STORE($K)"

@@ -353,9 +353,9 @@ function ah2 { swu $znm1;ssh ztc1 "export H=$H;$p0/eth2/t6 ghs";swu $znm3;ssh zt
 function ah3 { swu $znm1;ssh ztc1 "export H=$H;$p0/eth2/t6 ghs";swu $znm3;bhs;cpe;swu $znm4;ssh ztc4 "export H=$H;$p0/eth2/t6 ehs"; }
 function ah4 { swu $znm1;ssh ztc1 "export H=$H;$p0/eth2/t6 ghs";swu $znm3;ssh ztc3 "export H=$H;$p0/eth2/t6 bhs";swu $znm4;ghs;bhs;cpe; }
 function jw0 { openssl rand -hex 32|tr -d '\n'|tee jwt 1>$s3;[[ -f jwt ]] && jw4; }
-function jw1 { sex "cp jwt $2";sex "chown $1:$1 $2/jwt"; }
+function jw1 { sex "cp jwt $2";cmw $2/jwt 600 $1; }
 function jw3 { scp jwt $1:~;ssh $1 "export H=$H;eth2/t6 jwt"; }
-function jw4 { chmod 600 jwt;jw3 ztc2;jw3 ztc3;jw3 ztc4; }
+function jw4 { jw3 ztc2;jw3 ztc3;jw3 ztc4; }
 function sr0 { cp $s4/$n0.service $n0.sav;sed "s%peers *\([0-9]*\)%peers \1 --authrpc.addr $zip1 --authrpc.jwtsecret $p9/geth/jwt%" $n0.sav > $n0.jwt;sr9 $n0; }
 function sr1 { cp $s4/$n1.service $n1.sav;sed "s%--eth1-endpoints *\([^,]*:8545\)[^ ]*%--execution-endpoint http://$zip1:8551 --execution-jwt $p7/jwt --suggested-fee-recipient $a0%" $n1.sav > $n1.jwt;sr9 $n1; }
 function sr3 { cp $s4/$n3.service $n3.sav;sed "s%beacon-nodes *\([^,]*:5052\)[^ ]*%beacon-nodes \1,http://$zip2:5052 --suggested-fee-recipient $a0%" $n3.sav > $n3.jwt;sr9 $n3; }

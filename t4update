@@ -2,7 +2,7 @@
 
 source /home/eth/eth2/t1
 
-if [[ $1 = linux || $1 = reboot || $1 = el ]]; then
+if [[ $1 = linux || $1 = reboot || $1 = el ]];then
   swu 'FULL-UPGRADE'
   [[ $1 = reboot || $1 = el ]] && t6 gpr
   cex 'apt update -y'    ;sudo apt full-upgrade -y && sudo apt dist-upgrade -y
@@ -11,9 +11,9 @@ if [[ $1 = linux || $1 = reboot || $1 = el ]]; then
   [[ $1 = reboot ]] && cex 'reboot'
 fi
 [[ $1 = cl || $1 = cp ]] || exit
-if [[ $1 = cl && ($cunm = $znm1 || $cunm = $vnm1) ]]; then
+if [[ $1 = cl && ($cunm = $znm1 || $cunm = $vnm1) ]];then
   [[ -x $p0/.cargo/bin/rustup ]] && { swu 'UPDATE RUST';rustup update stable; }
-  if [[ -f $p0/lighthouse/README.md ]]; then
+  if [[ -f $p0/lighthouse/README.md ]];then
     cd $p0/lighthouse;make clean;cargo clean                                                                                                                  # clean compile dirs
   else
     cd $p0;sex "rm -rf $p0/lighthouse";git clone https://github.com/sigp/lighthouse.git;cd $p0/lighthouse                                                     # get new git

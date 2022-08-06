@@ -8,7 +8,7 @@ function iig { local f=;until [[ $# -lt 1 ]];do f="$f --ignore=$1";shift;done;ec
 function idw { ip link|grep DOWN|cut -d' ' -f2|tr -d :; }                                                                                                     # get down interfaces
 
 [[ -x $p0/eth2/t ]] || ln -s $p0/eth2/t6 $p0/eth2/t                                                                                                           # link base commands
-if [[ $(pex 'ufw status'|grep -i inactive) ]]; then
+if [[ $(pex 'ufw status'|grep -i inactive) ]];then
   swu 'INIT FIREWALL';sex 'ufw default deny incoming';sex 'ufw default allow outgoing'                                                                        # base ufw
   pde 22/tcp ossh;idi 192.168.8.0/24 224.0.0.1 multicast                                                                                                      # deny  ssh/multicasting
   [[ $cunm = $znm1 ]] && { ple 2021/tcp nssh; }                                                                                                               # limit ssh
@@ -25,7 +25,7 @@ swu 'ROOTKIT SCANNER'    ;sex 'apt install python3-pip net-tools lm-sensors chkr
 swu 'UNATTENDED UPGRADES';cex 'apt install unattended-upgrades apt-listchanges landscape-common update-notifier-common -y'
 sudo dpkg-reconfigure -plow unattended-upgrades
 swu 'LINUX CONFIGS'      ;sex 'timedatectl set-ntp on'
-if [[ $cust = hrv ]]; then
+if [[ $cust = hrv ]];then
   sex 'timedatectl set-timezone Europe/Lisbon'
   cc1 $c0 's%^ *#*NTP=.*$%NTP=192.168.8.28 ntp02.oal.ul.pt ntp04.oal.ul.pt time.google.com time.cloudflare.com time.facebook.com%i' .conf                   # my timesyncd servers
   cc1 $c1 's%^ *ENABLED=.*$%ENABLED=0%i'                                                         ;cmw $c1 644 root                                          # motd-news disable
@@ -47,7 +47,7 @@ sex 'netplan apply';sex 'sudo update-grub';sex "$w0 restart $n7"
 [[ $cunm = $znm1 || $cunm = $znm4 || $cunm = $vnm1 ]] || exit                                                                                               # ec here
 swu 'INSTALAR GETH';sex 'add-apt-repository -y ppa:ethereum/ethereum';sex 'apt update -y';cex 'apt install -y software-properties-common ethereum'          # install execution client
 sex "mkdir -p $p9";sau eth1;cmw $p9 755 $user                                                                                                               # create dir & user for ec
-if [[ $B = mainnet ]]; then
+if [[ $B = mainnet ]];then
   blkc=''
   maxp=50
 else
