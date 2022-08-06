@@ -7,17 +7,9 @@ swu 'WARNING: WITHDRAWING STAKED ETH WILL NOT BE POSSIBLE UNTIL THE MERGE'
 swu 'WARNING: TO ENTER AGAIN YOU GO TO A LONG QUEUE'
 swu 'QUER MESMO EXIT MY VALIDATORS?';read rsp
 if [[ $rsp = sim && ! -f $p1/vc_slash && ! -f $p1/vc_lock && -f $p1/vc_keys && -x $s0/lighthouse ]];then
-  if [[ $B = mainnet ]];then
-    blkc=""
-  else
-    blkc="--testnet $B"
-  fi
   swu 'EXIT VALIDATORS'
   if [[ -f $p8/validator_definitions.yml ]];then
-    swn "STORE($K) WALLET($W)"
-    for kst in $(ls $p8/*.json)
-    do swn "lighthouse $blkc --datadir $p1 account validator exit --keystore $kst"
-    done
+    swn "STORE($K) WALLET($W)";for kst in $(ls $p8/*.json);do swn "lighthouse$(nwf) --datadir $p1 account validator exit --keystore $kst";done
   else
     swu '\nCHAVES AINDA NAO FORAM IMPORTADAS'
   fi

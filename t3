@@ -43,15 +43,8 @@ else
   [[ $cunm = $znm4 ]] && http=" --http-address $zip4"
   [[ $cunm = $vnm1 ]] && http=" --http-address $vip1"
   [[ $cunm = $vnm2 ]] && http=" --http-address $vip2"
-  if [[ $B = mainnet ]];then
-    blkc=''
-    epge=" --eth1-endpoints http://$zip1:8545 --execution-endpoints http://$zip1:8551 --jwt-secrets $p7/jwt" # MERGE
-    epge=" --eth1-endpoints http://$zip1:8545,https://eth-mainnet.alchemyapi.io/v2/vzq1DD3EX7ipGuKck4440uRuccDdVvTm,https://mainnet.infura.io/v3/65be3572c577449f86d92b2e69cd6b06,https://mainnet.infura.io/v3/2c680650de0443cf8ab433565e47a42d"
-  else
-    blkc=" --testnet $B"
-    epge=" --eth1-endpoints $E --jwt-secrets $p7/jwt"
-    epge=" --eth1-endpoints $E"
-  fi
+  epge=" --eth1-endpoints http://$zip1:8545 --execution-endpoints http://$zip1:8551 --jwt-secrets $p7/jwt" # MERGE
+  epge=" --eth1-endpoints http://$zip1:8545,https://eth-mainnet.alchemyapi.io/v2/vzq1DD3EX7ipGuKck4440uRuccDdVvTm,https://mainnet.infura.io/v3/65be3572c577449f86d92b2e69cd6b06,https://mainnet.infura.io/v3/2c680650de0443cf8ab433565e47a42d"
   othe=''
   # othe="$othe --slasher --disable-upnp"
   # othe="$othe --validator-monitor-auto"
@@ -74,7 +67,7 @@ else
 	Group=$user
 	Restart=always
 	RestartSec=10
-	ExecStart=$s0/lighthouse$blkc --datadir $p1 bn --target-peers $tarp$http --staking$epge$othe
+  ExecStart=$s0/lighthouse$(nwf) --datadir $p1 bn --target-peers $tarp$http --staking$epge$othe
 	ExecStopPost=$p0/eth2/t8mail BEACSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 	
 	[Install]
@@ -89,15 +82,10 @@ else
   # https://1q1s6o6cB6Jysu7KKlbLUYiOdAM:8974468780164028652df958a69fbd30@eth2-beacon-mainnet.infura.io
   # MERGE --suggested-fee-recipient $a0
   vlcl="--beacon-nodes http://$zip3:5052,http://$zip2:5052 --suggested-fee-recipient $a0"
-  if [[ $B = mainnet ]];then
-    blkc=""
-  else
-    blkc=" --testnet $B"
-  fi
   sau eth3;cd ~
   if [[ ! -f $p1/vc_keys && -d $HOME/$D && $(ls -A $HOME/$D) ]];then
     swu 'IMPORT VALIDATOR KEYS & INIT SLASH PROTECTION';sex "mkdir -p $p1";cmw $p1 755 $meeu
-    swn "STORE($K)\n";lighthouse$blkc --datadir $p1 account validator import --directory $HOME/$D;[[ -f $p8/validator_definitions.yml ]] && touch $p1/vc_keys
+    swn "STORE($K)\n";lighthouse$(nwf) --datadir $p1 account validator import --directory $HOME/$D;[[ -f $p8/validator_definitions.yml ]] && touch $p1/vc_keys
   fi
   if [[ ! -f $p1/vc_lock && -f $p1/vc_keys ]];then
     swu 'BLOQUEAR VALIDATOR EXECUTE';swn "t6 vpr;t6 vds;sudo chmod 777 $p8;sudo chmod 666 $p8/slashing_protection.sqlite*";touch $p1/vc_lock
@@ -123,7 +111,7 @@ else
 		Group=$user
 		Restart=always
 		RestartSec=10
-		ExecStart=$s0/lighthouse$blkc --datadir $p1 vc $vlcl
+    ExecStart=$s0/lighthouse$(nwf) --datadir $p1 vc $vlcl
 		ExecStopPost=$p0/eth2/t8mail VALISTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 		
 		[Install]

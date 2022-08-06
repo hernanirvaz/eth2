@@ -46,14 +46,8 @@ sex 'netplan apply';sex 'sudo update-grub';sex "$w0 restart $n7"
 [[ $cunm = $znm1 || $cunm = $znm4 || $cunm = $vnm1 ]] || exit                                                                                               # ec here
 swu 'INSTALAR GETH';sex 'add-apt-repository -y ppa:ethereum/ethereum';sex 'apt update -y';cex 'apt install -y software-properties-common ethereum'          # install execution client
 sex "mkdir -p $p9";sau eth1;cmw $p9 755 $user                                                                                                               # create dir & user for ec
-if [[ $B = mainnet ]];then
-  blkc=''
-  maxp=50
-else
-  blkc=' --goerli'
-  maxp=50   # default
-fi
-pp2p=30303  # default
+maxp=50    # default
+pp2p=30303 # default
 cat <<-EOF > $n0.service
 [Unit]
 Description=geth service
@@ -65,7 +59,7 @@ User=$user
 Group=$user
 Restart=always
 RestartSec=10
-ExecStart=$s8/geth$blkc --datadir $p9 --port $pp2p --http --http.addr $zip1 --maxpeers $maxp --authrpc.addr $zip1 --authrpc.jwtsecret $p9/geth/jwt
+ExecStart=$s8/geth$(nwf) --datadir $p9 --port $pp2p --http --http.addr $zip1 --maxpeers $maxp --authrpc.addr $zip1 --authrpc.jwtsecret $p9/geth/jwt
 ExecStopPost=$p0/eth2/t8mail GETHSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 
 [Install]

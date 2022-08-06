@@ -84,6 +84,7 @@ function pde { cex "ufw $3 deny $1 comment $2"; }                               
 function pai { cex "ufw $4 allow from $2 to any port ${1/\// proto } comment $3"; }                                                                           # allow prt frm ip
 function pae { cex "ufw $3 allow $1 comment $2"; }                                                                                                            # allow prt
 function ple { cex "ufw $3 limit $1 comment $2"; }                                                                                                            # limit prt (<6 within 30s)
+function nwf { [[ $B = mainnet ]] || echo " --testnet $B"; }                                                                                                  # lighthouse network flag
 function lcp { [[ -x $p0/.cargo/bin/lighthouse ]] && until [[ $# -lt 1 ]];do scp $p0/.cargo/bin/lighthouse $1:~;shift;done; }                                 # propagate lighthouse
 function lwr {                                                                                                                                                # install   lighthouse
   [[ $cunm = $znm1 ]] && lcp ztc2 ztc3 ztc4;[[ $cunm = $vnm1 ]] && lcp vpss
