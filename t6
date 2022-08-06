@@ -42,8 +42,8 @@ function sgx { geth attach --exec net.peerCount "http://$cuec:8545" 2>$s3; }    
 function sbx { pex "grep lighthouse.*$1 $s1"|tail -n1|sed "s%.*$1 *\([0-9]*\).*%\1%"; }                                                                       # get cl current peers
 function sso {
   dts;local e="$1 $(printf '%6s' $(ss1 $2 Memory:)) $dt status: $(ss2 $2)"                                                                                    # memory & status
-  [[ $1 = GETH ]] && e="$e $(printf 'el:%02i' $(ss1 $n0 peers [0-9])) $(printf '%2i' $(sgx))"                                                                 # el peers tag
-  [[ $1 = BEAC ]] && e="$e $(printf 'cl:%02i' $(ss1 $n1 peers [0-9])) $(printf '%2i' $(sbx peers:))"                                                          # cl peers tag
+  [[ $1 = GETH ]] && e="$e $(printf 'el:m%ic%ip2p:%i' $(ss1 $2 peers [0-9]) $(sgx) $(ss1 $2 port [0-9]))"                                                     # el peers tag & p2p port tag
+  [[ $1 = BEAC ]] && e="$e $(printf 'cl:m%ic%i' $(ss1 $2 peers [0-9]) $(sbx peers:))"                                                                         # cl peers tag
   [[ $1 = BEAC ]] && e="$e el:http $(ss1 $2 endpoints* '[^ ]'|sed -n 's%http://192.168.8.\([0-9]*:[0-9]*\)%\1%gp')"                                           # el http(s)
   [[ $1 = VALI ]] && e="$e cl:http $(ss1 $2 nodes '[^ ]'|sed -n 's%http://192.168.8.\([0-9]*:[0-9]*\)%\1%gp')";swn "$e"                                       # cl http(s)
 }
@@ -240,8 +240,8 @@ function bbt { [[ $(grep $d0 ${p2} 2>$s3|wc -l) -gt 0 ]]; }                     
 function bct { local n=$((nn-5));[[ $nm -ge $n && $(bl6 $hors) -eq 1 ]] && ( btt || sot ); }                                                                  # change configured peers test
 function bdl { local d=$(pt0 $1 sai);[[ -f $p2 && $d != sai ]] || return;cp $p2 ${p2}o;grep -v $d ${p2}o > $p2;grep $d ${p2}o > ${p2}d; }                     # delete beacon log day
 function nsh {
-  swn "ROUTES\t\t$(ip route show|grep 'default via'|grep -v linkdown|cut -d' ' -f3)\nDNS\t\t$(resolvectl|grep 'Current DNS'|cut -d' ' -f6)"                   # routes
-  local v=0;for v in $(ip a|grep 'state UP'|cut -d: -f2);do swn "$v\t\t$(resolvectl dns|grep $v|cut -d' ' -f4-6)";done                                        # dns info
+  swn "ROUTES\t\t$(ip r|sed -n 's%.*default via \([^ ]*\) .*%\1%ip')\nDNS\t\t$(resolvectl|sed -n 's%.*Current DNS Server: *%%ip')"                            # routes
+  resolvectl dns|sed -n 's%.*(\(.*\)): \([0-9].*\)%\1\t\t\2%p'                                                                                                # dns info
 }
 function wst { echo $@|sed 's%[^: ]*: *%%g;s%,[^,]*(routed)%%;s% (incoming),% <<%;s% (outgoing)% >>%'; }
 function cpe {                                                                                                                                                # system status
@@ -262,6 +262,7 @@ function cpe {                                                                  
   local d=$(fs1|grep -v ' INFO '|tail -n1|sed 's%.*[0-9]*:[0-9]*:[0-9]*\.[0-9][0-9][0-9]]* *\(.*\)%\1%;s%  *% %g'|cut -c1-70)
   m="ERRO$(printf '%3i' $l) $(printf '%3i' $n) $dt";[[ $l -gt 0 ]] && m="$m system: $e";[[ $n -gt 0 ]] && m="$m ethrum: $d";(( l+n )) && swn "$m"             # sys/eth errors info
   m='';srt && m="$m, reboot $(($(sra)/60/60)) hours ago";[[ $(bsc) -gt 0 ]] && m="$m, committee on";[[ $m ]] && swn "INFO        $dt${m#*,}"                  # reboot/committee info
+  [[ $(swn $(/usr/lib/update-notifier/apt-check --human-readable)) -gt 0 ]] && { echo;apt list --upgradable; }
 }
 # Plex Media Server
 function xop { pde 32400 plex delete;pai 32400 192.168.8.0/24 plex       ;ide 192.168.8.0/24 1900/udp plex/upnp       ; }
@@ -286,8 +287,8 @@ function sp  { [[ $(sst $o2 loaded  ) ]] && { cex "$w2 $o2"; } }
 function sd  { cex "$w5 $o2";scl;sex 'ufw reload'; }
 # geth/beacon/validator
 function gfw { if [[ $cust = hrv ]];then pai $1 192.168.8.0/24 $2 $3;else pai $1 $vip1 $2 $3;pai $1 $vip3 $2 $3;fi; }
-function gop { pae 30303 ecp2p;pde 8545 ecapi delete;pde 8551 ecjwt delete;gfw 8545 ecapi       ;gfw 8551 ecjwt       ; }
-function gcl { pde 30303 ecp2p;pde 8545 ecapi       ;pde 8551 ecjwt       ;gfw 8545 ecapi delete;gfw 8551 ecjwt delete; }
+function gop { pae 30303 ecp2p;[[ $cunm = $znm4 ]] && pae 30304 ecp2p;pde 8545 ecapi delete;pde 8551 ecjwt delete;gfw 8545 ecapi       ;gfw 8551 ecjwt       ; }
+function gcl { pde 30303 ecp2p;[[ $cunm = $znm4 ]] && pde 30304 ecp2p;pde 8545 ecapi       ;pde 8551 ecjwt       ;gfw 8545 ecapi delete;gfw 8551 ecjwt delete; }
 function bfw { if [[ $cust = hrv ]];then pai $1 192.168.8.0/24 $2 $3;else pai $1 $vip3 $2 $3;fi; }
 function bop { pae 9000 bnp2p;pde 5052 bnapi delete;pde 8551 bnjwt delete;bfw 5052 bnapi       ;bfw 8551 bnjwt       ; }
 function bcl { pde 9000 bnp2p;pde 5052 bnapi       ;pde 8551 bnjwt       ;bfw 5052 bnapi delete;bfw 8551 bnjwt delete; }
@@ -480,6 +481,7 @@ function sr9 { chmod 644 $1.jwt;sex "mv $1.jwt $s4/$1.jwt"; }
 [[ $1 = xds ]] && { xd; }
 [[ $1 = rds ]] && { rd; }
 [[ $1 = sds ]] && { sd; }
+[[ $1 = lup ]] && { apt list --upgradable; }
 
 if [[ ! $1 ]];then
   m="primeira letra"
@@ -539,5 +541,6 @@ if [[ ! $1 ]];then
   m="$m\ndrs\t\tdns reset"
   m="$m\ntrs\t\ttime sync restart"
   m="$m\nchk\t\tcheck server with chkrootkit"
+  m="$m\nlup\t\tcheck apt list --upgradable"
   swn "\n$m\n"
 fi
