@@ -24,7 +24,7 @@ if [[ $cunm = $znm1 || $cunm = $vnm1 ]];then                                    
 fi
 lwr                                                                                                                                                           # propagate & install lighthouse 
 [[ -f $s4/$n1.service || -f $s4/$n3.service ]] && exit                                                                                                        # cl ja instalado -> exit
-if [[ $cunm = $znm1 || $cunm = $vnm1 ]];then                                                                                                                 # beacon here
+if [[ $cunm = $znm1 || $cunm = $vnm1 ]];then                                                                                                                  # beacon here
   swu 'BEACON NAO DEVE SER INSTALADO AQUI'
 else
   # slots per restore point after init can't be changed

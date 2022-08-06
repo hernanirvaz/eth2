@@ -43,7 +43,6 @@ cc1 $c7 's%^ */var/log/syslog%# /var/log/syslog%'                               
 cc2 $c7 "$o5"                                                                                    ;cmw $c7 644 root                                          # new logrotate add
 [[ -x $c8 ]] && sex "chmod -x $c8"                                                                                                                          # motd overlayroot unexecute
 sex 'netplan apply';sex 'sudo update-grub';sex "$w0 restart $n7"
-
 [[ $cunm = $znm1 || $cunm = $znm4 || $cunm = $vnm1 ]] || exit                                                                                               # ec here
 swu 'INSTALAR GETH';sex 'add-apt-repository -y ppa:ethereum/ethereum';sex 'apt update -y';cex 'apt install -y software-properties-common ethereum'          # install execution client
 sex "mkdir -p $p9";sau eth1;cmw $p9 755 $user                                                                                                               # create dir & user for ec
