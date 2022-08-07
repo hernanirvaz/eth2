@@ -252,8 +252,8 @@ function cpe {                                                                  
   [[ $1 = p ]] && return
   if [[ $(cat $s6) -eq 0 ]];then e=off;else e=on;fi;if [[ $(cat $s7) -eq 1 ]];then d=off;else d=on;fi                                                         # usb/cpu current state
   m="INFO$(printf '%3i' $(fs6)) $(printf '%3i' $(fs5)) $dt"                                                                                                   # usb/cpu erros count
-  m="$m uptime:$(uptime|sed 's%[0-9]*:[0-9]*:[0-9]*%%;s%[0-9]*:[0-9]*,%%;s%[0-9]* users*,%%;s% average\([^,]*\).*%\1%;s%  *% %g')"                            # uptime/load info
-  m="$m, usb $e, turbo $d, ufw: $(wst $(pex 'ufw status verbose'|grep -i 'status:\|default:'))";swn "$m"                                                      # usb/cpu/ufw info
+  m="$m usb $e, turbo $d, ufw: $(wst $(pex 'ufw status verbose'|grep -i 'status:\|default:'))"                                                                # usb/cpu/ufw info
+  m="$m, uptime:$(uptime|sed 's%[0-9]*:[0-9]*:[0-9]*%%;s%[0-9]*:[0-9]*,%%;s%[0-9]* users*,%%;s% average\([^,]*\).*%\1%;s%  *% %g')";swn "$m"                  # uptime/load info
   local l=$(fs2|grep -i 'error' |wc -l);local n=$(fs1|grep -v ' INFO '|wc -l)
   local e=$(fs2|grep -i 'error' |tail -n1|sed 's%.*hrv-zotac[0-9] *\(.*\)%\1%;s%  *% %g'                         |cut -c1-70)
   local d=$(fs1|grep -v ' INFO '|tail -n1|sed 's%.*[0-9]*:[0-9]*:[0-9]*\.[0-9][0-9][0-9]]* *\(.*\)%\1%;s%  *% %g'|cut -c1-70)
@@ -345,10 +345,10 @@ function pas { umt && sex "$p0/eth2/t5 usbstop";t1t && sex "$p0/eth2/t5 cputurbo
 function paf { t2t && sex "$p0/eth2/t5 cputurbo"; }                                                                                                           # set turbo   parameter
 function ghs { sso GETH $n0; }
 function bhs { sso BEAC $n1;[[ $(sst $n3 loaded) ]] && sso VALI $n3; }
-function ah1 { swu $znm1;ghs;cpe;swu $znm3;ssh ztc3 "export H=$H;$p0/eth2/t6 bhs";swu $znm4;ssh ztc4 "export H=$H;$p0/eth2/t6 ehs"; }
-function ah2 { swu $znm1;ssh ztc1 "export H=$H;$p0/eth2/t6 ghs";swu $znm3;ssh ztc3 "export H=$H;$p0/eth2/t6 bhs";swu $znm4;ssh ztc4 "export H=$H;$p0/eth2/t6 ehs"; }
-function ah3 { swu $znm1;ssh ztc1 "export H=$H;$p0/eth2/t6 ghs";swu $znm3;bhs;cpe;swu $znm4;ssh ztc4 "export H=$H;$p0/eth2/t6 ehs"; }
-function ah4 { swu $znm1;ssh ztc1 "export H=$H;$p0/eth2/t6 ghs";swu $znm3;ssh ztc3 "export H=$H;$p0/eth2/t6 bhs";swu $znm4;ghs;bhs;cpe; }
+function ah1 { swn "\n\n$znm1";ghs;cpe;swn "\n\n$znm3";ssh ztc3 "export H=$H;$p0/eth2/t6 bhs";swn "\n\n$znm4";ssh ztc4 "export H=$H;$p0/eth2/t6 ehs"; }
+function ah2 { swn "\n\n$znm1";ssh ztc1 "export H=$H;$p0/eth2/t6 ghs";swn "\n\n$znm3";ssh ztc3 "export H=$H;$p0/eth2/t6 bhs";swn "\n\n$znm4";ssh ztc4 "export H=$H;$p0/eth2/t6 ehs"; }
+function ah3 { swn "\n\n$znm1";ssh ztc1 "export H=$H;$p0/eth2/t6 ghs";swn "\n\n$znm3";bhs;cpe;swn "\n\n$znm4";ssh ztc4 "export H=$H;$p0/eth2/t6 ehs"; }
+function ah4 { swn "\n\n$znm1";ssh ztc1 "export H=$H;$p0/eth2/t6 ghs";swn "\n\n$znm3";ssh ztc3 "export H=$H;$p0/eth2/t6 bhs";swn "\n\n$znm4";ghs;bhs;cpe; }
 function jw0 { openssl rand -hex 32|tr -d '\n'|tee jwt 1>$s3;[[ -f jwt ]] && jw4; }
 function jw1 { sex "cp jwt $2";cmw $2/jwt 600 $1; }
 function jw3 { scp jwt $1:~;ssh $1 "export H=$H;eth2/t6 jwt"; }
