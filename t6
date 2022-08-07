@@ -38,7 +38,7 @@ function stt { [[ $d1 =~ 23:5[89] ]]; }                                         
 function sst { $w1 $1 2>$s3|grep "${2:-inactive\|failed}"; }                                                                                                  # service status word test
 function ss1 { $w1 $1 2>$s3|sed -n "s%.*$2 *\(${3:-.}*\).*%\1%p"; }                                                                                           # service status 1 extraction
 function ss2 { $w1 $1 2>$s3|sed -n "s%.*Active: *\(.*\)%\1%;s% *since.*;%%p"; }                                                                               # service status 2 extraction
-function ss3 { printf '%-40s' "$(printf '%-31s' "$(ss2 $1)") $(printf '%9s' ${1/[a-z]*-/})"; }                                                                # service status 2 extraction formated
+function ss3 { printf '%s' "$(printf '%-30s' "$(ss2 $1)") $(printf '%9s' ${1/[a-z]*-/})"; }                                                                   # service status 2 extraction formated
 function sgx { geth attach --exec net.peerCount "http://$cuec:8545" 2>$s3; }                                                                                  # get el current peers
 function sbx { pex "grep lighthouse.*$1 $s1"|tail -n1|sed "s%.*$1 *\([0-9]*\).*%\1%"; }                                                                       # get cl current peers
 function sso {
