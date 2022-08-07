@@ -12,14 +12,14 @@ if [[ $1 = linux || $1 = reboot || $1 = el ]];then
 fi
 [[ $1 = cl || $1 = cp ]] || exit
 if [[ $1 = cl && ($cunm = $znm1 || $cunm = $vnm1) ]];then
-  [[ -x $p0/.cargo/bin/rustup ]] && { swu 'UPDATE RUST';rustup update stable; }
-  if [[ -f $p0/lighthouse/README.md ]];then
-    cd $p0/lighthouse;make clean;cargo clean                                                                                                                  # clean compile dirs
+  [[ -x ${p[9]}/.cargo/bin/rustup ]] && { swu 'UPDATE RUST';rustup update stable; }
+  if [[ -f ${p[9]}/lighthouse/README.md ]];then
+    cd ${p[9]}/lighthouse;make clean;cargo clean                                                                                                              # clean compile dirs
   else
-    cd $p0;sex "rm -rf $p0/lighthouse";git clone https://github.com/sigp/lighthouse.git;cd $p0/lighthouse                                                     # get new git
+    cd ${p[9]};sex "rm -rf ${p[9]}/lighthouse";git clone https://github.com/sigp/lighthouse.git;cd ${p[9]}/lighthouse                                         # get new git
   fi
   git fetch;if [[ $(echo $2|egrep 'v[0-9]+\.[0-9]+\.[0-9]+') ]];then v=$2;else t=$(git rev-list --tags --max-count=1);v=$(git describe --tags $t);fi
   git checkout $v;swu 'VAI COMPILAR LIGHT';make
-  [[ $? -eq 0 && -x $p0/.cargo/bin/lighthouse ]] || swb 'ERRO COMPILAR ERRO'
+  [[ $? -eq 0 && -x ${p[9]}/.cargo/bin/lighthouse ]] || swb 'ERRO COMPILAR ERRO'
 fi
 lwr                                                                                                                                                           # propagate & install lighthouse  

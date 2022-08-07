@@ -6,7 +6,7 @@ function cc1 { local f=$(basename $1);cp $1 $f.sav                   ;sed  -e "$
 function cc2 { local f=$(basename $1);cp $1 $f.sav;cp $1 $f.n        ;echo -e "$2"   >> $f.n;sex "mv $f.n $1"; }                                              # add lines to end file
 function cc3 { local f=$(basename $1);cp $1 $f.sav;sed "$2" $1 > $f.n;echo -e "$3"   >> $f.n;sex "mv $f.n $1"; }                                              # add lines to pos file
 
-[[ -x $p0/eth2/t ]] || ln -s $p0/eth2/t6 $p0/eth2/t                                                                                                           # link base commands
+[[ -x ${p[9]}/eth2/t ]] || ln -s ${p[9]}/eth2/t6 ${p[9]}/eth2/t                                                                                               # link base commands
 if [[ $(pex 'ufw status'|grep -i inactive) ]];then
   swu 'INIT FIREWALL';sex 'ufw default deny incoming';sex 'ufw default allow outgoing'                                                                        # base ufw
   pde 22/tcp ossh;idi 192.168.8.0/24 224.0.0.1 multicast                                                                                                      # deny  ssh/multicasting
@@ -18,38 +18,38 @@ if [[ $(pex 'ufw status'|grep -i inactive) ]];then
 else
   cex 'ufw status numbered'                                                                                                                                   # show
 fi
-[[ -f $s4/$n0.service || -f $s4/$n1.service || -f $s4/$n3.service ]] && exit                                                                                  # ec/cl instalados -> exit
+[[ -f $(pjp 4 70).service || -f $(pjp 4 71).service || -f $(pjp 4 73).service ]] && exit                                                                      # ec/cl instalados -> exit
 swu 'UPDATE LINUX'       ;t4update linux
 swu 'ROOTKIT SCANNER'    ;sex 'apt install python3-pip net-tools lm-sensors chkrootkit bind9 bind9utils apt-listchanges landscape-common -y';cex 'chkrootkit'
 swu 'UNATTENDED UPGRADES';cex 'apt install unattended-upgrades update-notifier-common -y'
 swu 'LINUX CONFIGS'      ;sex 'timedatectl set-ntp on'
 if [[ $cust = hrv ]];then
   sex 'timedatectl set-timezone Europe/Lisbon'
-  cc1 $c0 "$r0"                                                                                                                                               # timesyncd my servers
-  cc1 $c1 "$r1"    ;cmw $c1 644 root                                                                                                                          # motd-news disable
-  cc1 $c2 "$r2"    ;cmw $c2 644 root                                                                                                                          # ignore down interfaces
+  cc1 ${p[19]} "${p[40]}"                                                                                                                                     # timesyncd my servers
+  cc1 ${p[20]} "${p[41]}"    ;cmw ${p[20]} 644 root                                                                                                           # motd-news disable
+  cc1 ${p[21]} "${p[42]}"    ;cmw ${p[21]} 644 root                                                                                                           # ignore down interfaces
 else
   sex 'timedatectl set-timezone Europe/Berlin'
-  cc1 $c0 "$r0" # timesyncd other servers
-  fi               ;cmw $c0 644 root                                                                                                                          # timesyncd cmod
-cc1 $c3 "$r3"      ;cmw $c3 644 root                                                                                                                          # unattended-upgrades
-cc1 $c4 "$r4"                                                                                                                                                 # header delete
-cc2 $c4 "$r5"      ;cmw $c4 755 root                                                                                                                          # header add my motd
-cc1 $c5 "$r4"      ;cmw $c5 755 root                                                                                                                          # help-text delete
-cc1 $c6 "$r6"      ;cmw $c6 755 root                                                                                                                          # grub timeout
-cc1 $c7 "$r7"                                                                                                                                                 # old logrotate delete
-cc2 $c7 "$o5"      ;cmw $c7 644 root                                                                                                                          # new logrotate add
-cc3 $c9 "$r8" "$o6";cmw $c9 644 root bind                                                                                                                     # named my options
-cc1 $e0 "$r9"      ;cmw $e0 644 root                                                                                                                          # use only ipv4
-[[ -x $c8 ]] && sex "chmod -x $c8"                                                                                                                            # motd overlayroot unexecute
-sex 'sudo update-grub';sex 'netplan apply';sex "$w0 daemon-reload";sex "$w0 restart $n7";sex "$w0 restart $n8";sex "$w0 restart $n9"
+  cc1 ${p[19]} "${p[40]}" # timesyncd other servers
+  fi                         ;cmw ${p[19]} 644 root                                                                                                           # timesyncd cmod
+cc1 ${p[22]} "${p[43]}"      ;cmw ${p[22]} 644 root                                                                                                           # unattended-upgrades
+cc1 ${p[23]} "${p[44]}"                                                                                                                                       # header delete
+cc2 ${p[23]} "${p[45]}"      ;cmw ${p[23]} 755 root                                                                                                           # header add my motd
+cc1 ${p[24]} "${p[44]}"      ;cmw ${p[24]} 755 root                                                                                                           # help-text delete
+cc1 ${p[25]} "${p[46]}"      ;cmw ${p[25]} 755 root                                                                                                           # grub timeout
+cc1 ${p[26]} "${p[47]}"                                                                                                                                       # old logrotate delete
+cc2 ${p[26]} "${p[90]}"      ;cmw ${p[26]} 644 root                                                                                                           # new logrotate add
+[[ -x ${p[27]} ]] && sex "chmod -x ${p[27]}"                                                                                                                  # motd overlayroot unexecute
+cc3 ${p[28]} "${p[48]}" "${p[91]}";cmw ${p[28]} 644 root bind                                                                                                 # named my options
+cc1 ${p[29]} "${p[49]}"      ;cmw ${p[29]} 644 root                                                                                                           # use only ipv4
+sex 'sudo update-grub';sex 'netplan apply';sex "${p[60]} daemon-reload";sex "${p[66]} ${p[77]}";sex "${p[66]} ${p[78]}";sex "${p[66]} ${p[79]}"
 sudo dpkg-reconfigure -plow unattended-upgrades
 [[ $cunm = $znm1 || $cunm = $znm4 || $cunm = $vnm1 ]] || exit                                                                                                 # ec here
 swu 'INSTALAR GETH';sex 'add-apt-repository -y ppa:ethereum/ethereum';sex 'apt update -y';cex 'apt install -y software-properties-common ethereum'            # install execution client
-sex "mkdir -p $p9";sau eth1;cmw $p9 755 $user                                                                                                                 # create dir & user for ec
+sex "mkdir -p ${p[18]}";sau eth1;cmw ${p[18]} 755 $user                                                                                                       # create dir & user for ec
 maxp=50    # default
 pp2p=30303 # default
-cat <<-EOF > $n0.service
+cat <<-EOF > ${p[70]}.service
 [Unit]
 Description=geth service
 Wants=network-online.target
@@ -60,10 +60,10 @@ User=$user
 Group=$user
 Restart=always
 RestartSec=10
-ExecStart=$s8/geth$(nwf) --datadir $p9 --port $pp2p --http --http.addr $zip1 --maxpeers $maxp --authrpc.addr $zip1 --authrpc.jwtsecret $p9/geth/jwt
-ExecStopPost=$p0/eth2/t8mail GETHSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
+ExecStart=${p[8]}/geth$(nwf) --datadir ${p[18]} --port $pp2p --http --http.addr $zip1 --maxpeers $maxp --authrpc.addr $zip1 --authrpc.jwtsecret ${p[18]}/geth/jwt
+ExecStopPost=${p[9]}/eth2/t8mail GETHSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 
 [Install]
 WantedBy=multi-user.target
 EOF
-sex "mv $n0.service $s4/$n0.service";cmw $s4/$n0.service 644
+sex "mv ${p[70]}.service $(pjp 4 70).service";cmw $(pjp 4 70).service 644

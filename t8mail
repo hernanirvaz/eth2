@@ -8,4 +8,4 @@ function nu { u=0;[[ -f /var/lib/update-notifier/updates-available ]] && u=$(egr
 [[ $1 = BEACSTP ]] && { swn "Subject: BEAC STOPPED $(date '+%F %H:%M')\n\n$(uname -n)\nSERVICE_RESULT=$2\nEXIT_CODE=$3\nEXIT_STATUS=$4\n"|ssmtp hernanilr@gmail.com; }
 [[ $1 = VALISTP ]] && { swn "Subject: VALI STOPPED $(date '+%F %H:%M')\n\n$(uname -n)\nSERVICE_RESULT=$2\nEXIT_CODE=$3\nEXIT_STATUS=$4\n"|ssmtp hernanilr@gmail.com; }
 
-[[ $1 = UPDTCHK ]] && { nu;[[ $u -gt 0 ]] && swn "Subject: $u UPDATES ON $(uname -n)\n\n$(apt list --upgradable 2>$s3)"|ssmtp hernanilr@gmail.com; }
+[[ $1 = UPDTCHK ]] && { nu;[[ $u -gt 0 ]] && swn "Subject: $u UPDATES ON $(uname -n)\n\n$(apt list --upgradable 2>${p[3]})"|ssmtp hernanilr@gmail.com; }

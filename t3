@@ -3,7 +3,7 @@
 source /home/eth/eth2/t1
 
 if [[ $cunm = $znm1 || $cunm = $vnm1 ]];then                                                                                                                  # rust here
-  if [[ -x $p0/.cargo/bin/rustup ]];then
+  if [[ -x ${p[9]}/.cargo/bin/rustup ]];then
     if [[ $1 ]];then
       swn "RUST OVERRIDE SET $1";rustup override set $1
     else
@@ -11,19 +11,19 @@ if [[ $cunm = $znm1 || $cunm = $vnm1 ]];then                                    
     fi
   else
     swu 'RUST NEEDS';cex 'apt install git gcc g++ make cmake pkg-config llvm-dev libclang-dev clang libssl-dev build-essential libudev-dev perl yasm -y'      # rust dependencies
-    swu 'RUST INSTALL';cd $p0;curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+    swu 'RUST INSTALL';cd ${p[9]};curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
   fi
-  if [[ -f $p0/lighthouse/README.md ]];then
-    cd $p0/lighthouse;make clean;cargo clean                                                                                                                  # clean compile dirs
+  if [[ -f ${p[9]}/lighthouse/README.md ]];then
+    cd ${p[9]}/lighthouse;make clean;cargo clean                                                                                                              # clean compile dirs
   else
-    cd $p0;sex "rm -rf $p0/lighthouse";git clone https://github.com/sigp/lighthouse.git;cd $p0/lighthouse                                                     # get new git
+    cd ${p[9]};sex "rm -rf ${p[9]}/lighthouse";git clone https://github.com/sigp/lighthouse.git;cd ${p[9]}/lighthouse                                         # get new git
   fi
   git fetch;if [[ $(echo $2|egrep 'v[0-9]+\.[0-9]+\.[0-9]+') ]];then v=$2;else t=$(git rev-list --tags --max-count=1);v=$(git describe --tags $t);fi
   git checkout $v;swu 'VAI COMPILAR LIGHT';make
-  [[ $? -eq 0 && -x $p0/.cargo/bin/lighthouse ]] || swb 'ERRO COMPILAR ERRO'
+  [[ $? -eq 0 && -x ${p[9]}/.cargo/bin/lighthouse ]] || swb 'ERRO COMPILAR ERRO'
 fi
 lwr                                                                                                                                                           # propagate & install lighthouse 
-[[ -f $s4/$n1.service || -f $s4/$n3.service ]] && exit                                                                                                        # cl ja instalado -> exit
+[[ -f $(pjp 4 71).service || -f $(pjp 4 73).service ]] && exit                                                                                                # cl ja instalado -> exit
 if [[ $cunm = $znm1 || $cunm = $vnm1 ]];then                                                                                                                  # beacon here
   swu 'BEACON NAO DEVE SER INSTALADO AQUI'
 else
@@ -43,21 +43,20 @@ else
   [[ $cunm = $znm4 ]] && http=" --http-address $zip4"
   [[ $cunm = $vnm1 ]] && http=" --http-address $vip1"
   [[ $cunm = $vnm2 ]] && http=" --http-address $vip2"
-  epge=" --eth1-endpoints http://$zip1:8545 --execution-endpoints http://$zip1:8551 --jwt-secrets $p7/jwt" # MERGE
+  epge=" --eth1-endpoints http://$zip1:8545 --execution-endpoints http://$zip1:8551 --jwt-secrets ${p[16]}/jwt" # MERGE
   epge=" --eth1-endpoints http://$zip1:8545,https://eth-mainnet.alchemyapi.io/v2/vzq1DD3EX7ipGuKck4440uRuccDdVvTm,https://mainnet.infura.io/v3/65be3572c577449f86d92b2e69cd6b06,https://mainnet.infura.io/v3/2c680650de0443cf8ab433565e47a42d"
   othe=''
   # othe="$othe --slasher --disable-upnp"
-  # othe="$othe --validator-monitor-auto"
   # redundant beacon nodes
   othe="$othe --subscribe-all-subnets --import-all-attestations"
-  othe="$othe --disable-upnp"
+  othe="$othe --validator-monitor-auto --disable-upnp"
   # syncing from a recent finalized checkpoint
   # othe="$othe --checkpoint-sync-url https://1q1s6o6cB6Jysu7KKlbLUYiOdAM:8974468780164028652df958a69fbd30@eth2-beacon-mainnet.infura.io"
   othe="$othe --checkpoint-sync-url http://192.168.8.28:5052"
-  # MERGE --execution-endpoints $epge --jwt-secrets $p7/jwt
-  swu 'CONFIGURE BEACON';sex "mkdir -p $p7";cmw $p1 755 $meeu;sau eth2;cmw $p7 700 $user;touch $p1/vc_lock;cd ~                                               # IMPORTANTE LOCK VALIDATOR CLIENTE
+  # MERGE --execution-endpoints $epge --jwt-secrets ${p[16]}/jwt
+  swu 'CONFIGURE BEACON';sex "mkdir -p ${p[16]}";cmw ${p[10]} 755 $meeu;sau eth2;cmw ${p[16]} 700 $user;touch ${p[10]}/vc_lock;cd ~                           # IMPORTANTE LOCK VALIDATOR CLIENTE
   pp2p=9000 # default
-  cat <<-EOF > $n1.service
+  cat <<-EOF > ${p[71]}.service
 	[Unit]
 	Description=beacon service
 	Wants=network-online.target
@@ -68,40 +67,40 @@ else
 	Group=$user
 	Restart=always
 	RestartSec=10
-  ExecStart=$s0/lighthouse$(nwf) --datadir $p1 bn --port $pp2p --target-peers $tarp$http --staking$epge$othe
-	ExecStopPost=$p0/eth2/t8mail BEACSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
+  ExecStart=${p[0]}/lighthouse$(nwf) --datadir ${p[10]} bn --port $pp2p --target-peers $tarp$http --staking$epge$othe
+	ExecStopPost=${p[9]}/eth2/t8mail BEACSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 	
 	[Install]
 	WantedBy=multi-user.target
 	EOF
-  sex "mv $n1.service $s4/$n1.service";cmw $s4/$n1.service 644
+  sex "mv ${p[71]}.service $(pjp 4 71).service";cmw $(pjp 4 71).service 644
 fi
 if [[ $cunm != $znm3 && $cunm != $vnm3 ]];then
   swu 'VALIDATOR NAO DEVE SER INSTALADO AQUI'
 else
   # external beacon-nodes before MERGE
   # https://1q1s6o6cB6Jysu7KKlbLUYiOdAM:8974468780164028652df958a69fbd30@eth2-beacon-mainnet.infura.io
-  # MERGE --suggested-fee-recipient $o9
-  vlcl="--beacon-nodes http://$zip3:5052,http://$zip2:5052 --suggested-fee-recipient $o9"
+  # MERGE --suggested-fee-recipient ${p[99]}
+  vlcl="--beacon-nodes http://$zip3:5052,http://$zip2:5052 --suggested-fee-recipient ${p[99]}"
   sau eth3;cd ~
-  if [[ ! -f $p1/vc_keys && -d $HOME/$D && $(ls -A $HOME/$D) ]];then
-    swu 'IMPORT VALIDATOR KEYS & INIT SLASH PROTECTION';sex "mkdir -p $p1";cmw $p1 755 $meeu
-    swn "STORE($K)\n";lighthouse$(nwf) --datadir $p1 account validator import --directory $HOME/$D;[[ -f $p8/validator_definitions.yml ]] && touch $p1/vc_keys
+  if [[ ! -f ${p[10]}/vc_keys && -d $HOME/$D && $(ls -A $HOME/$D) ]];then
+    swu 'IMPORT VALIDATOR KEYS & INIT SLASH PROTECTION';sex "mkdir -p ${p[10]}";cmw ${p[10]} 755 $meeu
+    swn "STORE($K)\n";lighthouse$(nwf) --datadir ${p[10]} account validator import --directory $HOME/$D;[[ -f ${p[17]}/validator_definitions.yml ]] && touch ${p[10]}/vc_keys
   fi
-  if [[ ! -f $p1/vc_lock && -f $p1/vc_keys ]];then
-    swu 'BLOQUEAR VALIDATOR EXECUTE';swn "t6 vpr;t6 vds;sudo chmod 777 $p8;sudo chmod 666 $p8/slashing_protection.sqlite*";touch $p1/vc_lock
+  if [[ ! -f ${p[10]}/vc_lock && -f ${p[10]}/vc_keys ]];then
+    swu 'BLOQUEAR VALIDATOR EXECUTE';swn "t6 vpr;t6 vds;sudo chmod 777 ${p[17]};sudo chmod 666 ${p[17]}/slashing_protection.sqlite*";touch ${p[10]}/vc_lock
   fi
-  if [[ ! -f $p1/vc_slash && -f $p1/vc_lock && -f $p1/vc_keys ]];then
-    sex "mkdir -p $p8";cmw $p8 700 $meeu
-    if [[ -f $p0/slashing_protection.sqlite ]];then
-      swu 'COPIAR slash DB';sex "rm $p8/slashing_protection.sqlite $p8/slashing_protection.sqlite-journal";sex "cp $p0/slashing_protection.sqlite $p8"
-      [[ -f $p8/slashing_protection.sqlite ]] && touch $p1/vc_slash;cmw $p8/slashing_protection.sqlite 600 $user
+  if [[ ! -f ${p[10]}/vc_slash && -f ${p[10]}/vc_lock && -f ${p[10]}/vc_keys ]];then
+    sex "mkdir -p ${p[17]}";cmw ${p[17]} 700 $meeu
+    if [[ -f ${p[9]}/slashing_protection.sqlite ]];then
+      swu 'COPIAR slash DB';sex "rm ${p[17]}/slashing_protection.sqlite ${p[17]}/slashing_protection.sqlite-journal";sex "cp ${p[9]}/slashing_protection.sqlite ${p[17]}"
+      [[ -f ${p[17]}/slashing_protection.sqlite ]] && touch ${p[10]}/vc_slash;cmw ${p[17]}/slashing_protection.sqlite 600 $user
     fi
-    cmw $p8 700 $user
+    cmw ${p[17]} 700 $user
   fi
-  if [[ -f $p1/vc_slash && -f $p1/vc_lock && -f $p1/vc_keys ]];then
-    swu 'CONFIGURE VALIDATOR';sex "mkdir -p $p8";cmw $p8 700 $user
-    cat <<-EOF > $n3.service
+  if [[ -f ${p[10]}/vc_slash && -f ${p[10]}/vc_lock && -f ${p[10]}/vc_keys ]];then
+    swu 'CONFIGURE VALIDATOR';sex "mkdir -p ${p[17]}";cmw ${p[17]} 700 $user
+    cat <<-EOF > ${p[73]}.service
 		[Unit]
 		Description=validator service
 		Wants=network-online.target
@@ -112,15 +111,15 @@ else
 		Group=$user
 		Restart=always
 		RestartSec=10
-    ExecStart=$s0/lighthouse$(nwf) --datadir $p1 vc $vlcl
-		ExecStopPost=$p0/eth2/t8mail VALISTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
+    ExecStart=${p[0]}/lighthouse$(nwf) --datadir ${p[10]} vc $vlcl
+		ExecStopPost=${p[9]}/eth2/t8mail VALISTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 		
 		[Install]
 		WantedBy=multi-user.target
 		EOF
-    sex "mv $n3.service $s4/$n3.service";cmw $s4/$n3.service 644
+    sex "mv ${p[73]}.service $(pjp 4 73).service";cmw $(pjp 4 73).service 644
     swu 'VALIDATOR CONFIGURADO VERIFICAR TUDO (LOCK & SLASH DB)'
   else
-    swn "VALIDATOR JA CONFIGURADO OR LOCKED ($p1/vc_lock)"
+    swn "VALIDATOR JA CONFIGURADO OR LOCKED (${p[10]}/vc_lock)"
   fi
 fi
