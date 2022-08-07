@@ -37,11 +37,12 @@ function sot { [[ $(sra) -ge $((60*60*${1:-24})) ]]; }                          
 function stt { [[ $d1 =~ 23:5[89] ]]; }                                                                                                                       # time test
 function sst { $w1 $1 2>$s3|grep "${2:-inactive\|failed}"; }                                                                                                  # service status word test
 function ss1 { $w1 $1 2>$s3|sed -n "s%.*$2 *\(${3:-.}*\).*%\1%p"; }                                                                                           # service status 1 extraction
-function ss2 { $w1 $1 2>$s3|sed -n "s%.*Active: *\(.*\)%\1%;s% *since.*;%; $1%p"; }                                                                           # service status 2 extraction
+function ss2 { $w1 $1 2>$s3|sed -n "s%.*Active: *\(.*\)%\1%;s% *since.*;%%p"; }                                                                               # service status 2 extraction
+function ss3 { printf '%-40s' "$(printf '%-31s' "$(ss2 $1)") $(printf '%9s' ${1/[a-z]*-/})"; }                                                                # service status 2 extraction formated
 function sgx { geth attach --exec net.peerCount "http://$cuec:8545" 2>$s3; }                                                                                  # get el current peers
 function sbx { pex "grep lighthouse.*$1 $s1"|tail -n1|sed "s%.*$1 *\([0-9]*\).*%\1%"; }                                                                       # get cl current peers
 function sso {
-  dts;local e="$1 $(printf '%6s' $(ss1 $2 Memory:)) $dt status: $(ss2 $2)"                                                                                    # memory & status
+  dts;local e="$1 $(printf '%6s' $(ss1 $2 Memory:)) $dt status: $(ss3 $2)"                                                                                    # memory & status
   [[ $1 = GETH ]] && e="$e $(printf 'el:m%ic%i:p2p:%i' $(ss1 $2 peers [0-9]) $(sgx) $(ss1 $2 port [0-9]))"                                                    # el peers tag & p2p port tag
   [[ $1 = BEAC ]] && e="$e $(printf 'cl:m%ic%i' $(ss1 $2 peers [0-9]) $(sbx peers:))"                                                                         # cl peers tag
   [[ $1 = BEAC ]] && e="$e el:http $(ss1 $2 endpoints* '[^ ]'|sed -n 's%http://192.168.8.\([0-9]*:[0-9]*\)%\1%gp')"                                           # el http(s)
@@ -243,7 +244,7 @@ function nsh { swn "ROUTES\t\t$(ip r|sed -n 's%.*default via \([^ ]*\) .*%\1%ip'
 function wst { echo $@|sed 's%[^: ]*: *%%g;s%,[^,]*(routed)%%;s% (incoming),% <<%;s% (outgoing)% >>%'; }
 function cpe {                                                                                                                                                # system status
   local e='NO';[[ $(timedatectl|sed -n 's%.*synchronized: \([a-z]*\) *%\1%p') = yes ]] && e='OK';dts
-  if [[ $(sst $n7 masked) ]];then m=$(ss2 ntp);else m=$(ss2 $n7);fi;swn "CLCK $e $(printf '%3i' $(fs0 clock|wc -l)) $dt status: $m"                           # CLCK info
+  if [[ $(sst $n7 masked) ]];then m=$(ss3 ntp);else m=$(ss3 $n7);fi;swn "CLCK $e $(printf '%3i' $(fs0 clock|wc -l)) $dt status: $m"                           # CLCK info
   [[ $1 = c ]] && return;local l=0;local n=0;local v=0
   local d=$(fs3|grep throttled|head -n1|sed 's%.* \([0-9]*:[0-9]*\):[0-9]*.*%\1%')
   local e=$(fs3|grep normal   |tail -n1|sed 's%.* \([0-9]*:[0-9]*\):[0-9]*.*%\1%')
