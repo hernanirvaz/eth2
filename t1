@@ -118,7 +118,7 @@ e0='/etc/default/named'
 r0='s%^ *#*NTP=.*$%NTP=192.168.8.28 ntp02.oal.ul.pt ntp04.oal.ul.pt time.google.com time.cloudflare.com time.facebook.com%i'                                  # my timesyncd servers
 r1='s%^ *ENABLED=.*$%ENABLED=0%i'                                                                                                                             # motd-news disable
 r2="s%ExecStart\(.*\)online.*$%ExecStart\1online $(iig $(idw))%i"                                                                                             # ignore down interfaces
-r3='s%^ */* *Unattended-Upgrade::Mail .*$%Unattended-Upgrade::Mail "hernanilr@gmail.com";%i'                                                                  # unattended-upgrades email
+r3='s%^ */* *Unattended-Upgrade::Mail .*$%Unattended-Upgrade::Mail "hernanilr@gmail.com";%i;s%^ */*\(.*codename}-updates.*$\)%\1%i'                           # unattended-upgrades
 r4='s%^ *printf%# printf%i'                                                                                                                                   # unprint stuff
 r5='printf "Welcome to %s %s\\n" "$(uname -n)" "$DISTRIB_DESCRIPTION"'                                                                                        # my header motd
 r6='s%timeout *=.*$%timeout=1%i'                                                                                                                              # grub timeout

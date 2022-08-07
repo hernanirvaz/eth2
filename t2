@@ -20,9 +20,8 @@ else
 fi
 [[ -f $s4/$n0.service || -f $s4/$n1.service || -f $s4/$n3.service ]] && exit                                                                                  # ec/cl instalados -> exit
 swu 'UPDATE LINUX'       ;t4update linux
-swu 'ROOTKIT SCANNER'    ;sex 'apt install python3-pip net-tools lm-sensors chkrootkit bind9 bind9utils -y';cex 'chkrootkit'
-swu 'UNATTENDED UPGRADES';cex 'apt install unattended-upgrades apt-listchanges landscape-common update-notifier-common -y'
-sudo dpkg-reconfigure -plow unattended-upgrades
+swu 'ROOTKIT SCANNER'    ;sex 'apt install python3-pip net-tools lm-sensors chkrootkit bind9 bind9utils apt-listchanges landscape-common -y';cex 'chkrootkit'
+swu 'UNATTENDED UPGRADES';cex 'apt install unattended-upgrades update-notifier-common -y'
 swu 'LINUX CONFIGS'      ;sex 'timedatectl set-ntp on'
 if [[ $cust = hrv ]];then
   sex 'timedatectl set-timezone Europe/Lisbon'
@@ -33,7 +32,7 @@ else
   sex 'timedatectl set-timezone Europe/Berlin'
   cc1 $c0 "$r0" # timesyncd other servers
   fi               ;cmw $c0 644 root                                                                                                                          # timesyncd cmod
-cc1 $c3 "$r3"      ;cmw $c3 644 root                                                                                                                          # unattended-upgrades email
+cc1 $c3 "$r3"      ;cmw $c3 644 root                                                                                                                          # unattended-upgrades
 cc1 $c4 "$r4"                                                                                                                                                 # header delete
 cc2 $c4 "$r5"      ;cmw $c4 755 root                                                                                                                          # header add my motd
 cc1 $c5 "$r4"      ;cmw $c5 755 root                                                                                                                          # help-text delete
@@ -44,6 +43,7 @@ cc3 $c9 "$r8" "$o6";cmw $c9 644 root bind                                       
 cc1 $e0 "$r9"      ;cmw $e0 644 root                                                                                                                          # use only ipv4
 [[ -x $c8 ]] && sex "chmod -x $c8"                                                                                                                            # motd overlayroot unexecute
 sex 'sudo update-grub';sex 'netplan apply';sex "$w0 daemon-reload";sex "$w0 restart $n7";sex "$w0 restart $n8";sex "$w0 restart $n9"
+sudo dpkg-reconfigure -plow unattended-upgrades
 [[ $cunm = $znm1 || $cunm = $znm4 || $cunm = $vnm1 ]] || exit                                                                                                 # ec here
 swu 'INSTALAR GETH';sex 'add-apt-repository -y ppa:ethereum/ethereum';sex 'apt update -y';cex 'apt install -y software-properties-common ethereum'            # install execution client
 sex "mkdir -p $p9";sau eth1;cmw $p9 755 $user                                                                                                                 # create dir & user for ec
