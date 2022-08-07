@@ -36,7 +36,7 @@ function sra { if srt;then echo $(($(date +%s)-$(date -r $s5 +%s)));else echo 0;
 function sot { [[ $(sra) -ge $((60*60*${1:-24})) ]]; }                                                                                                        # 24 hours old system reboot test
 function stt { [[ $d1 =~ 23:5[89] ]]; }                                                                                                                       # time test
 function sst { $w1 $1 2>$s3|grep "${2:-inactive\|failed}"; }                                                                                                  # service status word test
-function ss1 { $w1 $1 2>$s3|sed -n "s%.*$2 *\(${3:-.}*\).*%\1%p"; }                                                                                           # service status 1 extraction
+function ss1 { $w1 $1 2>$s3|sed -n "s%.*$2 \(${3:-.}*\).*%\1%p"; }                                                                                            # service status 1 extraction
 function ss2 { $w1 $1 2>$s3|sed -n "s%.*Active: *\(.*\)%\1%;s% *since.*;%%p"; }                                                                               # service status 2 extraction
 function ss3 { printf '%s' "$(printf '%-30s' "$(ss2 $1)") $(printf '%9s' ${1/[a-z]*-/})"; }                                                                   # service status 2 extraction formated
 function sgx { geth attach --exec net.peerCount "http://$cuec:8545" 2>$s3; }                                                                                  # get el current peers
@@ -44,7 +44,7 @@ function sbx { pex "grep lighthouse.*$1 $s1"|tail -n1|sed "s%.*$1 *\([0-9]*\).*%
 function sso {
   dts;local e="$1 $(printf '%6s' $(ss1 $2 Memory:)) $dt status: $(ss3 $2)"                                                                                    # memory & status
   [[ $1 = GETH ]] && e="$e $(printf 'el:m%ic%i:p2p:%i' $(ss1 $2 peers [0-9]) $(sgx) $(ss1 $2 port [0-9]))"                                                    # el peers tag & p2p port tag
-  [[ $1 = BEAC ]] && e="$e $(printf 'cl:m%ic%i' $(ss1 $2 peers [0-9]) $(sbx peers:))"                                                                         # cl peers tag
+  [[ $1 = BEAC ]] && e="$e $(printf 'cl:m%ic%i:p2p:%i' $(ss1 $2 peers [0-9]) $(sbx peers:) $(ss1 $2 port [0-9]))"                                             # cl peers tag
   [[ $1 = BEAC ]] && e="$e el:http $(ss1 $2 endpoints* '[^ ]'|sed -n 's%http://192.168.8.\([0-9]*:[0-9]*\)%\1%gp')"                                           # el http(s)
   [[ $1 = VALI ]] && e="$e cl:http $(ss1 $2 nodes '[^ ]'|sed -n 's%http://192.168.8.\([0-9]*:[0-9]*\)%\1%gp')";swn "$e"                                       # cl http(s)
 }
@@ -285,11 +285,11 @@ function sp  { [[ $(sst $n8 loaded  ) ]] && { cex "$w2 $n8"; } }
 function sd  { cex "$w5 $n8";scl;sex 'ufw reload'; }
 # geth/beacon/validator
 function gfw { if [[ $cust = hrv ]];then pai $1 192.168.8.0/24 $2 $3;else pai $1 $vip1 $2 $3;pai $1 $vip3 $2 $3;fi; }
-function gop { pae 30303 ecp2p;[[ $cunm = $znm4 ]] && pae 30304 ecp2p;pde 8545 ecapi delete;pde 8551 ecjwt delete;gfw 8545 ecapi       ;gfw 8551 ecjwt       ; }
-function gcl { pde 30303 ecp2p;[[ $cunm = $znm4 ]] && pde 30304 ecp2p;pde 8545 ecapi       ;pde 8551 ecjwt       ;gfw 8545 ecapi delete;gfw 8551 ecjwt delete; }
+function gop { local e=30303;[[ $cunm = $znm1 ]] || e=30304;pae $e elp2p;pde 8545 elapi delete;pde 8551 eljwt delete;gfw 8545 elapi       ;gfw 8551 eljwt       ; }
+function gcl { local e=30303;[[ $cunm = $znm1 ]] || e=30304;pde $e elp2p;pde 8545 elapi       ;pde 8551 eljwt       ;gfw 8545 elapi delete;gfw 8551 eljwt delete; }
 function bfw { if [[ $cust = hrv ]];then pai $1 192.168.8.0/24 $2 $3;else pai $1 $vip3 $2 $3;fi; }
-function bop { pae 9000 bnp2p;pde 5052 bnapi delete;pde 8551 bnjwt delete;bfw 5052 bnapi       ;bfw 8551 bnjwt       ; }
-function bcl { pde 9000 bnp2p;pde 5052 bnapi       ;pde 8551 bnjwt       ;bfw 5052 bnapi delete;bfw 8551 bnjwt delete; }
+function bop { local e=9000 ;[[ $cunm = $znm3 ]] || e=9004 ;pae $e clp2p;pde 5052 clapi delete;pde 8551 cljwt delete;bfw 5052 clapi       ;bfw 8551 cljwt       ; }
+function bcl { local e=9000 ;[[ $cunm = $znm3 ]] || e=9004 ;pde $e clp2p;pde 5052 clapi       ;pde 8551 cljwt       ;bfw 5052 clapi delete;bfw 8551 cljwt delete; }
 function vfw { if [[ $cust = hrv ]];then pai $1 192.168.8.0/24 $2 $3;else pai $1 $vip1 $2 $3;fi; }
 function vop { vfw 5064 vcapi       ;pde 5064 vcapi delete; }
 function vcl { vfw 5064 vcapi delete;pde 5064 vcapi       ; }

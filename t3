@@ -56,6 +56,7 @@ else
   othe="$othe --checkpoint-sync-url http://192.168.8.28:5052"
   # MERGE --execution-endpoints $epge --jwt-secrets $p7/jwt
   swu 'CONFIGURE BEACON';sex "mkdir -p $p7";cmw $p1 755 $meeu;sau eth2;cmw $p7 700 $user;touch $p1/vc_lock;cd ~                                               # IMPORTANTE LOCK VALIDATOR CLIENTE
+  pp2p=9000 # default
   cat <<-EOF > $n1.service
 	[Unit]
 	Description=beacon service
@@ -67,7 +68,7 @@ else
 	Group=$user
 	Restart=always
 	RestartSec=10
-  ExecStart=$s0/lighthouse$(nwf) --datadir $p1 bn --target-peers $tarp$http --staking$epge$othe
+  ExecStart=$s0/lighthouse$(nwf) --datadir $p1 bn --port $pp2p --target-peers $tarp$http --staking$epge$othe
 	ExecStopPost=$p0/eth2/t8mail BEACSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 	
 	[Install]
