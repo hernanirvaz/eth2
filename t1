@@ -41,7 +41,7 @@ p[17]="${p[10]}/validators"
 p[18]='/var/lib/goethereum';[[ $cunm = $znm4 ]] && p[18]='/sata/goethereum'
 p[19]='/etc/systemd/timesyncd.conf'
 p[20]='/etc/default/motd-news'
-p[21]="${p[4]}/systemd-networkd-wait-online.service"
+p[21]='/etc/netplan/00-installer-config.yaml'
 p[22]='/etc/apt/apt.conf.d/50unattended-upgrades'
 p[23]='/etc/update-motd.d/00-header'
 p[24]='/etc/update-motd.d/10-help-text'
@@ -50,6 +50,19 @@ p[26]='/etc/logrotate.d/rsyslog'
 p[27]='/etc/update-motd.d/97-overlayroot'
 p[28]='/etc/bind/named.conf.options'
 p[29]='/etc/default/named'
+
+p[40]=''
+p[41]=''
+p[42]=""
+p[43]=''
+p[44]=''
+p[45]=''
+p[46]=''
+p[47]=''
+p[48]=''
+p[49]=''
+p[50]='geth\[\|lighthouse'                                                                                                                                    # el/cl clients
+p[51]='Package\|Core\|Composite\|Sensor\|temp[0-9]'                                                                                                           # temperature sensors
 
 p[60]='systemctl'
 p[61]="${p[60]} status"
@@ -69,24 +82,10 @@ p[77]='systemd-timesyncd'
 p[78]='named'
 p[79]='systemd-resolved'
 p[80]='plexmediaserver'
-p[90]="\n/var/log/syslog\n{\n\trotate 7\n\tdaily\n\tmissingok\n\tnotifempty\n\tnocompress\n\tsharedscripts\n\tpostrotate\n\t\t/usr/lib/rsyslog/rsyslog-rotate\n\tendscript\n}"
+
+p[90]=""
 p[91]=""
-p[91]="${p[91]}\n\tlisten-on { any; };"
-p[91]="${p[91]}\n\tlisten-on-v6 { none; };"
-p[91]="${p[91]}\n\tversion \"not currently available\";"
-p[91]="${p[91]}\n\trecursion yes;"
-p[91]="${p[91]}\n\tallow-recursion { localhost; 192.168.8.0/24; };"
-p[91]="${p[91]}\n\tallow-query { localhost; 192.168.8.0/24; };"
-if [[ $cunm = $znm2 ]];then
-  p[91]="${p[91]}\n\tallow-transfer { 192.168.8.25; 192.168.8.31; 192.168.8.34; };"
-  p[91]="${p[91]}\n\talso-notify { 192.168.8.25; 192.168.8.31; 192.168.8.34; };"
-  p[91]="${p[91]}\n\tmax-cache-size 50%;"
-else
-  p[91]="${p[91]}\n\tallow-transfer { none; };"
-  p[91]="${p[91]}\n\tmax-cache-size 10%;"
-fi
-p[91]="${p[91]}\n\tquerylog yes;"
-p[91]="${p[91]}\n};"
+p[92]=""
 p[99]='0x82f6E45b47c5C03F8D52dDDa03B3F65897Cd5AB2'
 
 function pjp { echo    "${p[$1]}/${p[$2]}"; }                                                                                                                 # paths join
@@ -108,27 +107,12 @@ function pai { local e="allow from $2 to any port ${1/\// proto }";if [[ $4 ]];t
 function pae { local e="allow $1"                                 ;if [[ $3 ]];then nex "ufw $3 $e";else nex "ufw $e comment $2";fi; }                        # allow prt
 function ple { local e="limit $1"                                 ;if [[ $3 ]];then nex "ufw $3 $e";else nex "ufw $e comment $2";fi; }                        # limit prt (<6 within 30s)
 function nwf { [[ $B = mainnet ]] || echo " --testnet $B"; }                                                                                                  # lighthouse network flag
-function iig { local f=;until [[ $# -lt 1 ]];do f="$f --ignore=$1";shift;done;echo $f; }                                                                      # get list of ignore flags
-function idw { ip link|grep DOWN|cut -d' ' -f2|tr -d :; }                                                                                                     # get down interfaces
 function lcp { [[ -x ${p[9]}/.cargo/bin/lighthouse ]] && until [[ $# -lt 1 ]];do scp ${p[9]}/.cargo/bin/lighthouse $1:~;shift;done; }                         # propagate lighthouse
 function lwr {                                                                                                                                                # install   lighthouse
   [[ $cunm = $znm1 ]] && lcp ztc2 ztc3 ztc4;[[ $cunm = $vnm1 ]] && lcp vpss
   [[ -x ${p[9]}/lighthouse && ! -d ${p[9]}/lighthouse ]] && { sex "cp ${p[0]}/lighthouse ${p[0]}/lighthouse.sav";sex "mv ${p[9]}/lighthouse ${p[0]}"; }
   [[ -x ${p[0]}/lighthouse                        ]] && { cmw ${p[0]}/lighthouse 755 eth;swb 'NOVO LIGHT INSTALADO - PODE/DEVE VERIFICAR'; }
 }
-
-p[40]='s%^ *#*NTP=.*$%NTP=192.168.8.28 ntp02.oal.ul.pt ntp04.oal.ul.pt time.google.com time.cloudflare.com time.facebook.com%i'                               # my timesyncd servers
-p[41]='s%^ *ENABLED=.*$%ENABLED=0%i'                                                                                                                          # motd-news disable
-p[42]="s%ExecStart\(.*\)online.*$%ExecStart\1online $(iig $(idw))%i"                                                                                          # ignore down interfaces
-p[43]='s%^ */* *Unattended-Upgrade::Mail .*$%Unattended-Upgrade::Mail "hernanilr@gmail.com";%i;s%^ */*\(.*codename}-updates.*$\)%\1%i'                        # unattended-upgrades
-p[44]='s%^ *printf%# printf%i'                                                                                                                                # unprint stuff
-p[45]='printf "Welcome to %s %s\\n" "$(uname -n)" "$DISTRIB_DESCRIPTION"'                                                                                     # my header motd
-p[46]='s%timeout *=.*$%timeout=1%i'                                                                                                                           # grub timeout
-p[47]='s%^ */var/log/syslog%# /var/log/syslog%'                                                                                                               # old logrotate delete
-p[48]='/dnssec-validation/q'                                                                                                                                  # print lines until pattern
-p[49]='s%bind[^"]*"%bind -4"%'                                                                                                                                # use only ipv4
-p[50]='geth\[\|lighthouse'                                                                                                                                    # el/cl clients
-p[51]='Package\|Core\|Composite\|Sensor\|temp[0-9]'                                                                                                           # temperature sensors
 
 bpid=$($(pjw 61 71) 2>${p[3]}|sed -n 's%.*PID: *\([0-9]*\).*%\1%p')
 rblk=22238623
