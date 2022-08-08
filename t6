@@ -26,7 +26,6 @@ function pt3 { until [[ $# -le 1 || $1 =~ ^[a-z]+$                     ]];do shi
 function dts { read d0 d1 <<< ${1:-$(date '+%F %H:%M')};dt="$d0 $d1"          ; }                                                                             # set date/time         vars
 function bnn { nr=${@:$#};nm=$(printf '%i\n' $@|sort -n|head -n1);nd=$(nu2 $@); }                                                                             # set cur/min/std peers vars
 function dnn { echo "$dt $(printf 'node%02i:' $nn) $(printf '%2i' $nr)"       ; }                                                                             # get date/nodes info
-function dmr { sex "${p[60]} daemon-reload"                  ; }                                                                                              # daemon-reload
 function jsh { cex "journalctl --no-hostname --no-full -f $1"; }                                                                                              # my journal   format
 function spc { nn=$2;cp ${p[4]}/$1.service ${p[9]}/$1.sav;sed "s%peers *[0-9]*%peers $2%" ${p[9]}/$1.sav > ${p[4]}/$1.service; }                              # service configuration change
 function spp { resolvectl query smtp.gmail.com &>${p[3]};sex "${p[62]} $1";dmr                                               ; }                              # service process stop/load
@@ -240,7 +239,6 @@ function bbt { [[ $(grep $d0 ${p[11]} 2>${p[3]}|wc -l) -gt 0 ]]; }              
 function bct { local n=$((nn-5));[[ $nm -ge $n && $(bl6 $hors) -eq 1 ]] && ( btt || sot ); }                                                                  # change configured peers test
 function bdw { cp $1 ${1}o;grep -v $2 ${1}o > $1;grep $2 ${1}o > ${1}d; }                                                                                     # work to delete beacon log day
 function bdl { local d=$(pt0 $1 sai);[[ -f ${p[11]} && $d != sai ]] || return;bdw ${p[11]} $d; }                                                              #         delete beacon log day
-function nsh { swn "ROUTES\t\t$(ip r|sed -n 's%.*default via \([^ ]*\) .*%\1%ip')";resolvectl dns|sed -n 's%.*(\(.*\)): \([0-9].*\)%\1\t\t\2%p'; }            # routes/dns info
 function wst { echo $@|sed 's%[^: ]*: *%%g;s%,[^,]*(routed)%%;s% (incoming),% <<%;s% (outgoing)% >>%'; }
 function cpe {                                                                                                                                                # system status
   local e='NO';[[ $(timedatectl|sed -n 's%.*synchronized: \([a-z]*\) *%\1%p') = yes ]] && e='OK';dts
@@ -337,7 +335,6 @@ function vd  { cex "$(pjw 65 73)";vcl;sex 'ufw reload';touch ${p[10]}/vc_lock; }
 function pd  { [[ $(sst ${p[74]} loaded) ]] && { cex "$(pjw 65 74)";pai 9090/tcp 192.168.8.0/24 prometheus delete;sex 'ufw reload'; } }
 function nd  { [[ $(sst ${p[75]} loaded) ]] && { cex "$(pjw 65 75)"; } }
 function fd  { [[ $(sst ${p[76]} loaded) ]] && { cex "$(pjw 65 76)";pai 3000/tcp 192.168.8.0/24 grafana    delete;sex 'ufw reload'; } }
-function dpa { cex "$(pjw 62 78)";sex "$(pjw 65 79)";cex "$(pjw 63 78)";sex "$(pjw 63 79)"; }                                                                 # DNS stop/start
 function umt { [[ $(cat ${p[6]}) -eq 1 && $(fs6) -gt 10 ]]; }                                                                                                 # usb messages test
 function t0t { [[ $(cat ${p[7]}) -eq 0 && $(fs5) -gt 20 ]]; }                                                                                                 # cpu no turbo recomended test
 function t1t { [[ $(cat ${p[7]}) -eq 1 && $(fs5) -le 10 ]]; }                                                                                                 # cpu    turbo recomended test
@@ -350,6 +347,7 @@ function ah1 { swn "\n\n$znm1";ghs;cpe;swn "\n\n$znm3";ssh ztc3 "export H=$H;${p
 function ah2 { swn "\n\n$znm1";ssh ztc1 "export H=$H;${p[9]}/eth2/t6 ghs";swn "\n\n$znm3";ssh ztc3 "export H=$H;${p[9]}/eth2/t6 bhs";swn "\n\n$znm4";ssh ztc4 "export H=$H;${p[9]}/eth2/t6 ehs"; }
 function ah3 { swn "\n\n$znm1";ssh ztc1 "export H=$H;${p[9]}/eth2/t6 ghs";swn "\n\n$znm3";bhs;cpe;swn "\n\n$znm4";ssh ztc4 "export H=$H;${p[9]}/eth2/t6 ehs"; }
 function ah4 { swn "\n\n$znm1";ssh ztc1 "export H=$H;${p[9]}/eth2/t6 ghs";swn "\n\n$znm3";ssh ztc3 "export H=$H;${p[9]}/eth2/t6 bhs";swn "\n\n$znm4";ghs;bhs;cpe; }
+function nsh { networkctl list;networkctl status; }                                                                                                           # routes/dns info
 function jw0 { openssl rand -hex 32|tr -d '\n'|tee jwt 1>${p[3]};[[ -f jwt ]] && jw4; }
 function jw1 { sex "cp jwt $2";cmw $2/jwt 600 $1; }
 function jw3 { scp jwt $1:~;ssh $1 "export H=$H;eth2/t6 jwt"; }
@@ -365,9 +363,9 @@ function sr9 { chmod 644 $1.jwt;sex "mv $1.jwt ${p[4]}/$1.jwt"; }
 [[ $1 = eip ]] && { curl -s4 "https://${3:-meo.fruga.pt}:$2@dyn.dns.he.net/nic/update?hostname=${3:-meo.fruga.pt}" &>${p[3]}; }
 [[ $1 = dsh ]] && { resolvectl query ${2:-smtp.gmail.com}; }
 [[ $1 = drs ]] && { dpa; }
-[[ $1 = nrs ]] && { cex 'netplan apply';dpa; }
+[[ $1 = nrs ]] && { nrs; }
+[[ $1 = trs ]] && { trs; }
 [[ $1 = nsh ]] && { nsh; }
-[[ $1 = trs ]] && { [[ $(sst ${p[77]} masked) ]] || cex "$(pjw 66 77)";cpe c; }
 [[ $1 = vcp ]] && { [[ $2 ]] && ssp $2; }
 [[ $1 = gl  ]] && { gl0;swn "$m"; }
 [[ $1 = glf ]] && { gl0;swn "$m" >> ${p[13]};grt && grb;[[ $ok != OK ]] && grs 0;pas; }                                                                       # el log/reboot/restart & parameter set

@@ -50,10 +50,11 @@ p[26]='/etc/logrotate.d/rsyslog'
 p[27]='/etc/update-motd.d/97-overlayroot'
 p[28]='/etc/bind/named.conf.options'
 p[29]='/etc/default/named'
+p[30]='/etc/ntp.conf'
 
 p[40]=''
 p[41]=''
-p[42]=""
+p[42]=''
 p[43]=''
 p[44]=''
 p[45]=''
@@ -100,6 +101,10 @@ function nex { swn "$1";echo $H|sudo -S $1       2>${p[3]}; }                   
 function yex { swb "$1";echo $H|sudo -S $1 <<< y &>${p[3]}; }                                                                                                 # superuser-command (visible & yes)
 function pex {          echo $H|sudo -S $1       2>${p[3]}; }                                                                                                 # superuser-command (pipe)
 function sex {          echo $H|sudo -S $1       &>${p[3]}; }                                                                                                 # superuser-command (silent)
+function dmr { sex "${p[60]} daemon-reload"                  ; }                                                                                              # daemon-reload
+function dpa { nex "$(pjw 62 78)";nex "$(pjw 62 79)";nex "$(pjw 63 78)";nex "$(pjw 63 79)"; }                                                                 # DNS stop/start
+function trs { if [[ $(sst ${p[77]} masked) ]];then nex "${p[66]} ntp";else nex "$(pjw 66 77)";fi; }                                                          # time sync || ntp restart
+function nrs { nex 'netplan apply';dpa; }                                                                                                                     # netplan/DNS restart
 function idi { local e="deny from $1 to $2"                       ;if [[ $4 ]];then nex "ufw $4 $e";else nex "ufw $e comment $3";fi; }                        # deny  frm ip to ip
 function ide { local e="deny from $1 port ${2/\// proto }"        ;if [[ $4 ]];then nex "ufw $4 $e";else nex "ufw $e comment $3";fi; }                        # deny  frm ip/prt
 function pde { local e="deny $1"                                  ;if [[ $3 ]];then nex "ufw $3 $e";else nex "ufw $e comment $2";fi; }                        # deny  prt

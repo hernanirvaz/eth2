@@ -5,7 +5,7 @@ source /home/eth/eth2/t1
 function cc1 { local f=$(basename $1);cp $1 $f.sav                     ;sed  -e "$2" $1 > $f.new;sex "cp $f.new $1"; }                                        # edit             file
 function cc2 { local f=$(basename $1);cp $1 $f.sav;cp $1 $f.new        ;echo -e "$2"   >> $f.new;sex "cp $f.new $1"; }                                        # add lines to end file
 function cc3 { local f=$(basename $1);cp $1 $f.sav;sed "$2" $1 > $f.new;echo -e "$3"   >> $f.new;sex "cp $f.new $1"; }                                        # add lines to pos file
-function cc4 { local f=$(basename $1);cp $1 $f.sav;cp $1 $f.new        ;echo -e "$2"    > $f.new;sex "cp $f.new $1"; }                                        # replace lines on file
+function cc4 { local f=$(basename $1);cp $1 $f.sav;cp $1 $f.new        ;echo -e "$2"    > $f.new;sex "cp $f.new $1"; }                                        # replace lines of file
 
 p[40]='s%^ *#*NTP=.*$%NTP=192.168.8.28 ntp02.oal.ul.pt ntp04.oal.ul.pt time.google.com time.cloudflare.com time.facebook.com%i'                               # my timesyncd servers
 p[41]='s%^ *ENABLED=.*$%ENABLED=0%i'                                                                                                                          # motd-news disable
@@ -16,6 +16,12 @@ p[45]='printf "Welcome to %s %s\\n" "$(uname -n)" "$DISTRIB_DESCRIPTION"'       
 p[46]='s%timeout *=.*$%timeout=1%i'                                                                                                                           # grub timeout
 p[47]='s%^ */var/log/syslog%# /var/log/syslog%'                                                                                                               # old logrotate delete
 p[48]='/dnssec-validation/q'                                                                                                                                  # print lines until pattern
+p[49]="s%^ *pool \([^a-z]\)%# pool \1%;/# Specify one or more NTP servers/a "                                                                                 # ntp my pool servers
+p[49]="${p[49]}pool 0.pt.pool.ntp.org iburst"
+p[49]="${p[49]}\npool 0.europe.pool.ntp.org iburst"
+p[49]="${p[49]}\npool 1.europe.pool.ntp.org iburst"
+p[49]="${p[49]}\npool 0.ubuntu.pool.ntp.org iburst"
+p[50]="/#restrict 192/a restrict 192.168.8.0 mask 255.255.255.0 notrap nomodify"                                                                              # ntp my lan unlimited access
 
 p[90]="\n/var/log/syslog\n{\n\trotate 7\n\tdaily\n\tmissingok\n\tnotifempty\n\tnocompress\n\tsharedscripts\n\tpostrotate\n\t\t/usr/lib/rsyslog/rsyslog-rotate\n\tendscript\n}"
 p[91]=""
@@ -49,6 +55,7 @@ for v in $(ip l|sed -n 's%.* \([a-z0-9]*\): .* state UP .*%\1%p'|tail -n1);do
   [[ $cunm = $znm2 ]] && p[92]="${p[92]}\n      addresses: [192.168.8.28/24]"
   [[ $cunm = $znm3 ]] && p[92]="${p[92]}\n      addresses: [192.168.8.31/24]"
   [[ $cunm = $znm4 ]] && p[92]="${p[92]}\n      addresses: [192.168.8.34/24]"
+  p[92]="${p[92]}\n      critical: true"
   p[92]="${p[92]}\n      routes:"
   p[92]="${p[92]}\n        - to: 0.0.0.0/0"
   p[92]="${p[92]}\n          via: 192.168.8.254"
@@ -64,7 +71,11 @@ done
 for v in $(ip l|sed -n 's%.* \([a-z0-9]*\): .* state DOWN .*%\1%p');do
   p[92]="${p[92]}\n    $v:"
   p[92]="${p[92]}\n      dhcp4: true"
-  p[92]="${p[92]}\n      optional: true"
+  if [[ $v =~ ^wlo[0-9] ]];then
+    p[92]="${p[92]}\n      activation-mode: off"
+  else
+    p[92]="${p[92]}\n      activation-mode: manual"
+  fi
 done
 
 [[ -x ${p[9]}/eth2/t ]] || ln -s ${p[9]}/eth2/t6 ${p[9]}/eth2/t                                                                                               # link base commands
@@ -83,6 +94,7 @@ fi
 swu 'UPDATE LINUX'       ;t4update linux
 swu 'ROOTKIT SCANNER'    ;sex 'apt install python3-pip net-tools lm-sensors chkrootkit bind9 bind9utils apt-listchanges landscape-common -y';cex 'chkrootkit'
 swu 'UNATTENDED UPGRADES';cex 'apt install unattended-upgrades update-notifier-common -y'
+[[ $cunm = $znm2 ]] && { swu 'INSTALL NTP SERVER';cex 'apt install ntp -y'; }                                                                                 # ntp install
 swu 'LINUX CONFIGS'      ;sex 'timedatectl set-ntp on'
 if [[ $cust = hrv ]];then
   sex 'timedatectl set-timezone Europe/Lisbon'
@@ -91,7 +103,7 @@ if [[ $cust = hrv ]];then
 else
   sex 'timedatectl set-timezone Europe/Berlin'
   cc1 ${p[19]} "${p[40]}" # timesyncd other servers
-  fi                              ;cmw ${p[19]} 644 root                                                                                                      # timesyncd cmod
+fi                                ;cmw ${p[19]} 644 root                                                                                                      # timesyncd cmod
 cc1 ${p[22]} "${p[43]}"           ;cmw ${p[22]} 644 root                                                                                                      # unattended-upgrades
 cc1 ${p[23]} "${p[44]}"                                                                                                                                       # header delete
 cc2 ${p[23]} "${p[45]}"           ;cmw ${p[23]} 755 root                                                                                                      # header add my motd
@@ -103,7 +115,8 @@ cc2 ${p[26]} "${p[90]}"           ;cmw ${p[26]} 644 root                        
 cc3 ${p[28]} "${p[48]}" "${p[91]}";cmw ${p[28]} 644 root bind                                                                                                 # named my options
 cc1 ${p[29]} "${p[42]}"           ;cmw ${p[29]} 644 root                                                                                                      # use only ipv4
 cc4 ${p[21]} "${p[92]}"           ;cmw ${p[21]} 644 root                                                                                                      # new netplan
-cex 'sudo update-grub';cex 'netplan apply';cex "${p[60]} daemon-reload";cex "$(pjw 66 77)";cex "$(pjw 66 78)";cex "$(pjw 66 79)"
+[[ $cunm = $znm2 ]] && { cc1 ${p[30]} "${p[49]}";cc1 ${p[30]} "${p[50]}";cmw ${p[30]} 644 root; }                                                             # ntp config
+cex 'sudo update-grub';dmr;nrs;trs                                                                                                                            # daemon-reload & netplan/DNS/time restart
 sudo dpkg-reconfigure -plow unattended-upgrades
 [[ $cunm = $znm1 || $cunm = $znm4 || $cunm = $vnm1 ]] || exit                                                                                                 # ec here
 swu 'INSTALAR GETH';sex 'add-apt-repository -y ppa:ethereum/ethereum';sex 'apt update -y';cex 'apt install -y software-properties-common ethereum'            # install execution client
