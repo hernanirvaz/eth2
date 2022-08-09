@@ -64,6 +64,8 @@ p[48]=''
 p[49]=''
 p[50]='geth\[\|lighthouse'                                                                                                                                    # el/cl clients
 p[51]='Package\|Core\|Composite\|Sensor\|temp[0-9]'                                                                                                           # temperature sensors
+p[52]=''
+p[53]=''
 
 p[60]='systemctl'
 p[61]="${p[60]} status"
@@ -101,7 +103,7 @@ function nex { swn "$1";echo $H|sudo -S $1       2>${p[3]}; }                   
 function yex { swb "$1";echo $H|sudo -S $1 <<< y &>${p[3]}; }                                                                                                 # superuser-command (visible & yes)
 function pex {          echo $H|sudo -S $1       2>${p[3]}; }                                                                                                 # superuser-command (pipe)
 function sex {          echo $H|sudo -S $1       &>${p[3]}; }                                                                                                 # superuser-command (silent)
-function dmr { sex "${p[60]} daemon-reload"                  ; }                                                                                              # daemon-reload
+function dmr { sex "${p[60]} daemon-reload"; }                                                                                                                # daemon-reload
 function dpa { nex "$(pjw 62 78)";nex "$(pjw 62 79)";nex "$(pjw 63 78)";nex "$(pjw 63 79)"; }                                                                 # DNS stop/start
 function trs { if [[ $(sst ${p[77]} masked) ]];then nex "${p[66]} ntp";else nex "$(pjw 66 77)";fi; }                                                          # time sync || ntp restart
 function nrs { nex 'netplan apply';dpa; }                                                                                                                     # netplan/DNS restart
