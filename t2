@@ -109,6 +109,7 @@ else
   sex 'timedatectl set-timezone Europe/Berlin'
   cc1 ${p[19]} "${p[53]}"                                                                                                                                     # general time servers
 fi                                ;cmw ${p[19]} 644 root                                                                                                      # timesyncd cmod
+cc4 ${p[21]} "${p[92]}"           ;cmw ${p[21]} 644 root                                                                                                      # new netplan
 cc1 ${p[22]} "${p[43]}"           ;cmw ${p[22]} 644 root                                                                                                      # unattended-upgrades
 cc1 ${p[23]} "${p[44]}"                                                                                                                                       # header delete
 cc2 ${p[23]} "${p[45]}"           ;cmw ${p[23]} 755 root                                                                                                      # header add my motd
@@ -118,7 +119,6 @@ cc1 ${p[26]} "${p[47]}"                                                         
 cc2 ${p[26]} "${p[90]}"           ;cmw ${p[26]} 644 root                                                                                                      # new logrotate add
 cc3 ${p[28]} "${p[48]}" "${p[91]}";cmw ${p[28]} 644 root bind                                                                                                 # named my options
 cc1 ${p[29]} "${p[42]}"           ;cmw ${p[29]} 644 root                                                                                                      # use only ipv4
-cc4 ${p[21]} "${p[92]}"           ;cmw ${p[21]} 644 root                                                                                                      # new netplan
 [[ -x ${p[27]} ]] && sex "chmod -x ${p[27]}"                                                                                                                  # motd overlayroot unexecute
 cex 'sudo update-grub';dmr;nrs;trs                                                                                                                            # daemon-reload & netplan/DNS/time restart
 sudo dpkg-reconfigure -plow unattended-upgrades

@@ -91,8 +91,8 @@ p[91]=""
 p[92]=""
 p[99]='0x82f6E45b47c5C03F8D52dDDa03B3F65897Cd5AB2'
 
-function pjp { echo    "${p[$1]}/${p[$2]}"; }                                                                                                                 # paths join
-function pjw { echo    "${p[$1]} ${p[$2]}"; }                                                                                                                 # words join
+function pjp { local e="";[[ $# -ge 1 ]] && { e="${p[$1]}";shift; };until [[ $# -lt 1 ]];do e="$e/${p[$1]}";shift;done;echo "$e"; }                           # paths join
+function pjw { local e="";[[ $# -ge 1 ]] && { e="${p[$1]}";shift; };until [[ $# -lt 1 ]];do e="$e ${p[$1]}";shift;done;echo "$e"; }                           # words join
 function swb { echo -e "\n\e[5m${1^^}\e[25m\n"; }                                                                                                             # show flash
 function swu { echo -e "${1^^}"; }                                                                                                                            # show upper
 function swn { echo -e "$1"; }                                                                                                                                # show normal
@@ -105,7 +105,7 @@ function pex {          echo $H|sudo -S $1       2>${p[3]}; }                   
 function sex {          echo $H|sudo -S $1       &>${p[3]}; }                                                                                                 # superuser-command (silent)
 function dmr { sex "${p[60]} daemon-reload"; }                                                                                                                # daemon-reload
 function dpa { nex "$(pjw 62 78)";nex "$(pjw 62 79)";nex "$(pjw 63 78)";nex "$(pjw 63 79)"; }                                                                 # DNS stop/start
-function trs { if [[ $(sst ${p[77]} masked) ]];then nex "${p[66]} ntp";else nex "$(pjw 66 77)";fi; }                                                          # time sync || ntp restart
+function trs { if [[ $(sst ${p[77]} masked) ]];then nex "${p[66]} ntp";else nex "$(pjw 66 77)";fi; }                                                          # systemd-timesyncd/ntp restart
 function nrs { nex 'netplan apply';dpa; }                                                                                                                     # netplan/DNS restart
 function idi { local e="deny from $1 to $2"                       ;if [[ $4 ]];then nex "ufw $4 $e";else nex "ufw $e comment $3";fi; }                        # deny  frm ip to ip
 function ide { local e="deny from $1 port ${2/\// proto }"        ;if [[ $4 ]];then nex "ufw $4 $e";else nex "ufw $e comment $3";fi; }                        # deny  frm ip/prt
