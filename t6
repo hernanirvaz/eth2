@@ -42,10 +42,10 @@ function sgx { ${p[8]}/geth attach --exec net.peerCount "http://$cuec:8545" 2>${
 function sbx { pex "grep lighthouse.*$1 ${p[1]}"|tail -n1|sed "s%.*$1 *\([0-9]*\).*%\1%"; }                                                                   # get cl current peers
 function sso {
   dts;local e="$1 $(printf '%6s' $(ss1 $2 Memory:)) $dt status: $(ss3 $2)"                                                                                    # memory & status
-  [[ $1 = GETH ]] && e="$e $(printf "EL:m%2i C%2i p2p:%5i" $(ss1 $2 peers [0-9]) $(sgx) $(ss1 $2 port [0-9]))"                                                # el peers tag & p2p port tag
-  [[ $1 = BEAC ]] && e="$e $(printf "CL:m%2i C%2i p2p:%5i" $(ss1 $2 peers [0-9]) $(sbx peers:) $(ss1 $2 port [0-9]))"                                         # cl peers tag
+  [[ $1 = GETH ]] && e="$e $(printf "el:p%2i p2p:%5i" $(sgx) $(ss1 $2 port [0-9]))"                                                                           # el peers & p2p port tag
+  [[ $1 = BEAC ]] && e="$e $(printf "cl:p%2i p2p:%5i" $(sbx peers:) $(ss1 $2 port [0-9]))"                                                                    # cl peers 
   [[ $1 = BEAC ]] && e="$e\tel:http $(ss1 $2 endpoints* '[^ ]'|sed -n 's%http://192.168.8.\([0-9]*:[0-9]*\)%\1%gp')"                                          # el http(s)
-  [[ $1 = VALI ]] && e="$e\t\t\t\tel:http $(ss1 $2 nodes '[^ ]'|sed -n 's%http://192.168.8.\([0-9]*:[0-9]*\)%\1%gp')";swn "$e"                                # cl http(s)
+  [[ $1 = VALI ]] && e="$e\t\t\tel:http $(ss1 $2 nodes '[^ ]'|sed -n 's%http://192.168.8.\([0-9]*:[0-9]*\)%\1%gp')";swn "$e"                                  # cl http(s)
 }
 function ssp {
   swu 'QUER MESMO TRANSFERIR VALIDATORS?';read rsp
