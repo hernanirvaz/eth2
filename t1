@@ -30,43 +30,105 @@ p[6]='/sys/bus/usb/devices/1-0:1.0/authorized'
 p[7]='/sys/devices/system/cpu/intel_pstate/no_turbo'
 p[8]='/usr/bin'
 p[9]='/home/eth'
-p[10]='/var/lib/lighthouse'
-p[11]="${p[9]}/beacon.log"
-p[12]="${p[9]}/bmedias.log"
-p[13]="${p[9]}/geth.log"
-p[14]="${p[9]}/barqivo.log"
-p[15]="${p[9]}/beacon.restart"
-p[16]="${p[10]}/beacon"
-p[17]="${p[10]}/validators"
-p[18]='/var/lib/goethereum';[[ $cunm = $znm4 ]] && p[18]='/sata/goethereum'
-p[19]='/etc/systemd/timesyncd.conf'
-p[20]='/etc/default/motd-news'
-p[21]='/etc/netplan/00-installer-config.yaml'
-p[22]='/etc/apt/apt.conf.d/50unattended-upgrades'
-p[23]='/etc/update-motd.d/00-header'
-p[24]='/etc/update-motd.d/10-help-text'
-p[25]='/etc/grub.d/30_os-prober'
-p[26]='/etc/logrotate.d/rsyslog'
-p[27]='/etc/update-motd.d/97-overlayroot'
-p[28]='/etc/bind/named.conf.options'
-p[29]='/etc/default/named'
-p[30]='/etc/ntp.conf'
+p[10]='/var/lib/lighthouse'                                                                                                                                   # cl data
+p[11]="${p[9]}/beacon.log"                                                                                                                                    # cc minute log
+p[12]="${p[9]}/bmedias.log"                                                                                                                                   # cc daily  log
+p[13]="${p[9]}/geth.log"                                                                                                                                      # ec minute log
+p[14]="${p[9]}/barqivo.log"                                                                                                                                   # cc yearly log
+p[15]="${p[9]}/beacon.restart"                                                                                                                                # cl restart control files
+p[16]="${p[10]}/beacon"                                                                                                                                       # cc data
+p[17]="${p[10]}/validators"                                                                                                                                   # vc data
+p[18]='/var/lib/goethereum';[[ $cunm = $znm4 ]] && p[18]='/sata/goethereum'                                                                                   # el data
+p[19]="$(dirname ${p[4]})/timesyncd.conf"                                                                                                                     # Network Time Synchronization configuration
+p[20]='/etc/default/motd-news'                                                                                                                                # disable dynamic MOTD news service
+p[21]='/etc/netplan/00-installer-config.yaml'                                                                                                                 # network configuration abstraction
+p[22]='/etc/apt/apt.conf.d/50unattended-upgrades'                                                                                                             # automatically upgrade packages
+p[23]='/etc/update-motd.d/00-header'                                                                                                                          # delete header of the MOTD
+p[24]='/etc/update-motd.d/10-help-text'                                                                                                                       # delete help text associated with the distro
+p[25]='/etc/grub.d/30_os-prober'                                                                                                                              # grub-mkconfig helper script
+p[26]='/etc/logrotate.d/rsyslog'                                                                                                                              # automatic rotation syslog config
+p[27]='/etc/update-motd.d/97-overlayroot'                                                                                                                     # unexecute MOTD Protecting Root Filesystem
+p[28]='/etc/bind/named.conf.options'                                                                                                                          # options domain name server
+p[29]='/etc/default/named'                                                                                                                                    # default domain name server
+p[30]='/etc/ntp.conf'                                                                                                                                         # ntpd config
+p[31]="${p[18]}/geth"                                                                                                                                         # ec data
+p[32]="${p[17]}/slashing_protection"                                                                                                                          # cl slashing_protection data
 
-p[40]=''
-p[41]=''
-p[42]=''
-p[43]=''
-p[44]=''
-p[45]=''
-p[46]=''
-p[47]=''
-p[48]=''
-p[49]=''
+# sed/grep scripts
+p[40]='s%^ *#*NTP=.*$%NTP=192.168.8.28 ntp02.oal.ul.pt ntp04.oal.ul.pt time.google.com time.cloudflare.com time.facebook.com%i'                               # my time servers
+p[41]='s%^ *ENABLED=.*$%ENABLED=0%i'                                                                                                                          # motd-news disable
+p[42]='s%bind[^"]*"%bind -4"%'                                                                                                                                # use only ipv4
+p[43]='s%^ */* *Unattended-Upgrade::Mail .*$%Unattended-Upgrade::Mail "hernanilr@gmail.com";%i;s%^ */*\(.*codename}-updates.*$\)%\1%i'                        # unattended-upgrades
+p[44]='s%^ *printf%# printf%i'                                                                                                                                # unprint stuff
+p[45]='printf "Welcome to %s %s\\n" "$(uname -n)" "$DISTRIB_DESCRIPTION"'                                                                                     # my header motd
+p[46]='s%timeout *=.*$%timeout=1%i'                                                                                                                           # grub timeout
+p[47]="s%^ *${p[1]}%# ${p[1]}%"                                                                                                                               # old logrotate delete
+p[48]='/dnssec-validation/q'                                                                                                                                  # print lines until pattern
+p[49]="s%^ *pool \([^a-z]\)%# pool \1%;/# Specify one or more NTP servers/a "                                                                                 # ntp my pool servers
+p[49]="${p[49]}pool 0.pt.pool.ntp.org iburst"
+p[49]="${p[49]}\npool 0.europe.pool.ntp.org iburst"
+p[49]="${p[49]}\npool 1.europe.pool.ntp.org iburst"
+p[49]="${p[49]}\npool 0.ubuntu.pool.ntp.org iburst"
 p[50]='geth\[\|lighthouse'                                                                                                                                    # el/cl clients
 p[51]='Package\|Core\|Composite\|Sensor\|temp[0-9]'                                                                                                           # temperature sensors
-p[52]=''
-p[53]=''
+p[52]="/#restrict 192/a restrict 192.168.8.0 mask 255.255.255.0 notrap nomodify"                                                                              # ntp my lan unlimited access
+p[53]='s%^ *#*NTP=.*$%NTP=time.google.com time.cloudflare.com time.facebook.com%i'                                                                            # general time servers
+p[54]="\n${p[1]}\n{\n\trotate 7\n\tdaily\n\tmissingok\n\tnotifempty\n\tnocompress\n\tsharedscripts\n\tpostrotate\n\t\t/usr/lib/rsyslog/rsyslog-rotate\n\tendscript\n}"
+p[55]=""
+p[55]="${p[55]}\n\tlisten-on { any; };"
+p[55]="${p[55]}\n\tlisten-on-v6 { none; };"
+p[55]="${p[55]}\n\tversion \"not currently available\";"
+p[55]="${p[55]}\n\trecursion yes;"
+p[55]="${p[55]}\n\tallow-recursion { localhost; 192.168.8.0/24; };"
+p[55]="${p[55]}\n\tallow-query { localhost; 192.168.8.0/24; };"
+if [[ $cunm = $znm2 ]];then
+  p[55]="${p[55]}\n\tallow-transfer { 192.168.8.25; 192.168.8.31; 192.168.8.34; };"
+  p[55]="${p[55]}\n\talso-notify { 192.168.8.25; 192.168.8.31; 192.168.8.34; };"
+  p[55]="${p[55]}\n\tmax-cache-size 50%;"
+else
+  p[55]="${p[55]}\n\tallow-transfer { none; };"
+  p[55]="${p[55]}\n\tmax-cache-size 10%;"
+fi
+p[55]="${p[55]}\n\tquerylog yes;"
+p[55]="${p[55]}\n};"
+p[56]=""
+p[56]="${p[56]}\nnetwork:"
+p[56]="${p[56]}\n  version: 2"
+p[56]="${p[56]}\n  renderer: networkd"
+p[56]="${p[56]}\n  ethernets:"
+for m in $(ip l|sed -n 's%.* \([a-z0-9]*\): .* state UP .*%\1%p'|tail -n1);do
+  p[56]="${p[56]}\n    $m:"
+  p[56]="${p[56]}\n      match:"
+  p[56]="${p[56]}\n        macaddress: $(cat /sys/class/net/$m/address)"
+  p[56]="${p[56]}\n      dhcp4: false"
+  [[ $cunm = $znm1 ]] && p[56]="${p[56]}\n      addresses: [192.168.8.25/24]"
+  [[ $cunm = $znm2 ]] && p[56]="${p[56]}\n      addresses: [192.168.8.28/24]"
+  [[ $cunm = $znm3 ]] && p[56]="${p[56]}\n      addresses: [192.168.8.31/24]"
+  [[ $cunm = $znm4 ]] && p[56]="${p[56]}\n      addresses: [192.168.8.34/24]"
+  p[56]="${p[56]}\n      critical: true"
+  p[56]="${p[56]}\n      routes:"
+  p[56]="${p[56]}\n        - to: 0.0.0.0/0"
+  p[56]="${p[56]}\n          via: 192.168.8.254"
+  p[56]="${p[56]}\n          metric: 100"
+  p[56]="${p[56]}\n          on-link: true"
+  p[56]="${p[56]}\n      nameservers:"
+  [[ $cunm = $znm1 ]] && p[56]="${p[56]}\n        addresses: [192.168.8.28, 192.168.8.25, 192.168.8.31, 192.168.8.34]"
+  [[ $cunm = $znm2 ]] && p[56]="${p[56]}\n        addresses: [192.168.8.28, 192.168.8.31, 192.168.8.25, 192.168.8.34]"
+  [[ $cunm = $znm3 ]] && p[56]="${p[56]}\n        addresses: [192.168.8.28, 192.168.8.31, 192.168.8.25, 192.168.8.34]"
+  [[ $cunm = $znm4 ]] && p[56]="${p[56]}\n        addresses: [192.168.8.28, 192.168.8.34, 192.168.8.25, 192.168.8.31]"
+  p[56]="${p[56]}\n      link-local: [ ]"
+done
+for m in $(ip l|sed -n 's%.* \([a-z0-9]*\): .* state DOWN .*%\1%p');do
+  p[56]="${p[56]}\n    $m:"
+  p[56]="${p[56]}\n      dhcp4: true"
+  if [[ $m =~ ^wlo[0-9] ]];then
+    p[56]="${p[56]}\n      activation-mode: off"
+  else
+    p[56]="${p[56]}\n      activation-mode: manual"
+  fi
+done
 
+# services management
 p[60]='systemctl'
 p[61]="${p[60]} status"
 p[62]="${p[60]} stop"
@@ -74,6 +136,9 @@ p[63]="${p[60]} start"
 p[64]="${p[60]} enable"
 p[65]="${p[60]} disable"
 p[66]="${p[60]} restart"
+p[67]='timedatectl'
+p[68]='networkctl'
+p[69]='resolvectl'
 p[70]='eth-geth'
 p[71]='eth-beacon'
 p[72]='transmission-daemon'
@@ -83,12 +148,7 @@ p[75]='prometheus-node-exporter'
 p[76]='grafana-server'
 p[77]='systemd-timesyncd'
 p[78]='named'
-p[79]='systemd-resolved'
-p[80]='plexmediaserver'
-
-p[90]=""
-p[91]=""
-p[92]=""
+p[79]='plexmediaserver'
 p[99]='0x82f6E45b47c5C03F8D52dDDa03B3F65897Cd5AB2'
 
 function pjp { local e="";[[ $# -ge 1 ]] && { e="${p[$1]}";shift; };until [[ $# -lt 1 ]];do e="$e/${p[$1]}";shift;done;echo "$e"; }                           # paths join

@@ -10,14 +10,14 @@ if [[ $cunm = hrv-zen ]];then
   cs2="$bs2/validator_keys"
   lng="spanish"
   if [[ $B = mainnet ]];then nmv=18;else nmv=3;fi 
-  if [[ -d ~/$D && $(ls -A ~/$D) ]];then
+  if [[ -d ${p[9]}/$D && $(ls -A ${p[9]}/$D) ]];then
     swu 'CHAVES ESTAO PRONTAS'
-  elif [[ -d ~/$cli && $(ls -A ~/$cli) ]];then
+  elif [[ -d ${p[9]}/$cli && $(ls -A ${p[9]}/$cli) ]];then
     if [[ -d $bs1 ]];then
       if [[ -d $cs1 ]];then
         swu "ARQUIVO OFFLINE $cs1 JA EXISTE"
       else
-        cp -R ~/$cli $cs1
+        cp -R ${p[9]}/$cli $cs1
         sex "chown -R eu:eu $cs1"
         sex "chmod 755 $cs1"
         sex "chmod 644 $cs1/*"
@@ -29,7 +29,7 @@ if [[ $cunm = hrv-zen ]];then
       if  [[ -d $cs2 ]];then
         swu "ARQUIVO OFFLINE $cs2 JA EXISTE"
       else
-        cp -R ~/$cli $cs2
+        cp -R ${p[9]}/$cli $cs2
         sex "chown -R eu:eu $cs2"
         sex "chmod 755 $cs2"
         sex "chmod 644 $cs2/*"
@@ -37,10 +37,10 @@ if [[ $cunm = hrv-zen ]];then
     else
       swu "ARQUIVO OFFLINE $bs2 NAO ESTA MONTADO"
     fi
-    cp -R ~/$cli ~
+    cp -R ${p[9]}/$cli ${p[9]}
     swu 'CHAVES FORAM ARQUIVADAS - VERIFICAR AQUIVO OFFLINE'
-  elif [[ -f ~/eth2.0-deposit-cli/README.md ]];then
-    cd ~/eth2.0-deposit-cli
+  elif [[ -f ${p[9]}/eth2.0-deposit-cli/README.md ]];then
+    cd ${p[9]}/eth2.0-deposit-cli
     swb "PARA GERAR $nmv NOVAS CHAVES CHAIN $B"
     swn "STORE($K)"
     swb "PARA GERAR $nmv NOVAS CHAVES CHAIN $B"
@@ -50,9 +50,9 @@ if [[ $cunm = hrv-zen ]];then
   else
     swu 'INSTALAR SCRIPT CHAVES'
     cex 'apt install python3-pip python3-testresources git -y'
-    cd ~
+    cd ${p[9]}
     git clone https://github.com/ethereum/eth2.0-deposit-cli.git
-    cd ~/eth2.0-deposit-cli
+    cd ${p[9]}/eth2.0-deposit-cli
     cex './deposit.sh install'
     swu 'para GERAR CHAVES executar de novo - OFFLINE'
   fi

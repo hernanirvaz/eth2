@@ -18,8 +18,8 @@ if [[ $1 = cl && ($cunm = $znm1 || $cunm = $vnm1) ]];then
   else
     cd ${p[9]};sex "rm -rf ${p[9]}/lighthouse";git clone https://github.com/sigp/lighthouse.git;cd ${p[9]}/lighthouse                                         # get new git
   fi
-  git fetch;if [[ $(echo $2|egrep 'v[0-9]+\.[0-9]+\.[0-9]+') ]];then v=$2;else t=$(git rev-list --tags --max-count=1);v=$(git describe --tags $t);fi
-  git checkout $v;swu 'VAI COMPILAR LIGHT';make
+  git fetch;if [[ $(echo $2|egrep 'v[0-9]+\.[0-9]+\.[0-9]+') ]];then m=$2;else t=$(git rev-list --tags --max-count=1);m=$(git describe --tags $t);fi
+  git checkout $m;swu 'VAI COMPILAR LIGHT';make
   [[ $? -eq 0 && -x ${p[9]}/.cargo/bin/lighthouse ]] || swb 'ERRO COMPILAR ERRO'
 fi
-lwr                                                                                                                                                           # propagate & install lighthouse  
+lwr                                                                                                                                                           # propagate & install lighthouse

@@ -7,78 +7,6 @@ function cc2 { local f=$(basename $1);cp $1 $f.sav;cp $1 $f.new        ;echo -e 
 function cc3 { local f=$(basename $1);cp $1 $f.sav;sed "$2" $1 > $f.new;echo -e "$3"   >> $f.new;sex "cp $f.new $1"; }                                        # add lines to pos file
 function cc4 { local f=$(basename $1);cp $1 $f.sav;cp $1 $f.new        ;echo -e "$2"    > $f.new;sex "cp $f.new $1"; }                                        # replace lines of file
 
-p[40]='s%^ *#*NTP=.*$%NTP=192.168.8.28 ntp02.oal.ul.pt ntp04.oal.ul.pt time.google.com time.cloudflare.com time.facebook.com%i'                               # my time servers
-p[41]='s%^ *ENABLED=.*$%ENABLED=0%i'                                                                                                                          # motd-news disable
-p[42]='s%bind[^"]*"%bind -4"%'                                                                                                                                # use only ipv4
-p[43]='s%^ */* *Unattended-Upgrade::Mail .*$%Unattended-Upgrade::Mail "hernanilr@gmail.com";%i;s%^ */*\(.*codename}-updates.*$\)%\1%i'                        # unattended-upgrades
-p[44]='s%^ *printf%# printf%i'                                                                                                                                # unprint stuff
-p[45]='printf "Welcome to %s %s\\n" "$(uname -n)" "$DISTRIB_DESCRIPTION"'                                                                                     # my header motd
-p[46]='s%timeout *=.*$%timeout=1%i'                                                                                                                           # grub timeout
-p[47]='s%^ */var/log/syslog%# /var/log/syslog%'                                                                                                               # old logrotate delete
-p[48]='/dnssec-validation/q'                                                                                                                                  # print lines until pattern
-p[49]="s%^ *pool \([^a-z]\)%# pool \1%;/# Specify one or more NTP servers/a "                                                                                 # ntp my pool servers
-p[49]="${p[49]}pool 0.pt.pool.ntp.org iburst"
-p[49]="${p[49]}\npool 0.europe.pool.ntp.org iburst"
-p[49]="${p[49]}\npool 1.europe.pool.ntp.org iburst"
-p[49]="${p[49]}\npool 0.ubuntu.pool.ntp.org iburst"
-p[52]="/#restrict 192/a restrict 192.168.8.0 mask 255.255.255.0 notrap nomodify"                                                                              # ntp my lan unlimited access
-p[53]='s%^ *#*NTP=.*$%NTP=time.google.com time.cloudflare.com time.facebook.com%i'                                                                            # general time servers
-
-p[90]="\n/var/log/syslog\n{\n\trotate 7\n\tdaily\n\tmissingok\n\tnotifempty\n\tnocompress\n\tsharedscripts\n\tpostrotate\n\t\t/usr/lib/rsyslog/rsyslog-rotate\n\tendscript\n}"
-p[91]=""
-p[91]="${p[91]}\n\tlisten-on { any; };"
-p[91]="${p[91]}\n\tlisten-on-v6 { none; };"
-p[91]="${p[91]}\n\tversion \"not currently available\";"
-p[91]="${p[91]}\n\trecursion yes;"
-p[91]="${p[91]}\n\tallow-recursion { localhost; 192.168.8.0/24; };"
-p[91]="${p[91]}\n\tallow-query { localhost; 192.168.8.0/24; };"
-if [[ $cunm = $znm2 ]];then
-  p[91]="${p[91]}\n\tallow-transfer { 192.168.8.25; 192.168.8.31; 192.168.8.34; };"
-  p[91]="${p[91]}\n\talso-notify { 192.168.8.25; 192.168.8.31; 192.168.8.34; };"
-  p[91]="${p[91]}\n\tmax-cache-size 50%;"
-else
-  p[91]="${p[91]}\n\tallow-transfer { none; };"
-  p[91]="${p[91]}\n\tmax-cache-size 10%;"
-fi
-p[91]="${p[91]}\n\tquerylog yes;"
-p[91]="${p[91]}\n};"
-p[92]=""
-p[92]="${p[92]}\nnetwork:"
-p[92]="${p[92]}\n  version: 2"
-p[92]="${p[92]}\n  renderer: networkd"
-p[92]="${p[92]}\n  ethernets:"
-for v in $(ip l|sed -n 's%.* \([a-z0-9]*\): .* state UP .*%\1%p'|tail -n1);do
-  p[92]="${p[92]}\n    $v:"
-  p[92]="${p[92]}\n      match:"
-  p[92]="${p[92]}\n        macaddress: $(cat /sys/class/net/$v/address)"
-  p[92]="${p[92]}\n      dhcp4: false"
-  [[ $cunm = $znm1 ]] && p[92]="${p[92]}\n      addresses: [192.168.8.25/24]"
-  [[ $cunm = $znm2 ]] && p[92]="${p[92]}\n      addresses: [192.168.8.28/24]"
-  [[ $cunm = $znm3 ]] && p[92]="${p[92]}\n      addresses: [192.168.8.31/24]"
-  [[ $cunm = $znm4 ]] && p[92]="${p[92]}\n      addresses: [192.168.8.34/24]"
-  p[92]="${p[92]}\n      critical: true"
-  p[92]="${p[92]}\n      routes:"
-  p[92]="${p[92]}\n        - to: 0.0.0.0/0"
-  p[92]="${p[92]}\n          via: 192.168.8.254"
-  p[92]="${p[92]}\n          metric: 100"
-  p[92]="${p[92]}\n          on-link: true"
-  p[92]="${p[92]}\n      nameservers:"
-  [[ $cunm = $znm1 ]] && p[92]="${p[92]}\n        addresses: [192.168.8.28, 192.168.8.25, 192.168.8.31, 192.168.8.34]"
-  [[ $cunm = $znm2 ]] && p[92]="${p[92]}\n        addresses: [192.168.8.28, 192.168.8.31, 192.168.8.25, 192.168.8.34]"
-  [[ $cunm = $znm3 ]] && p[92]="${p[92]}\n        addresses: [192.168.8.28, 192.168.8.31, 192.168.8.25, 192.168.8.34]"
-  [[ $cunm = $znm4 ]] && p[92]="${p[92]}\n        addresses: [192.168.8.28, 192.168.8.34, 192.168.8.25, 192.168.8.31]"
-  p[92]="${p[92]}\n      link-local: [ ]"
-done
-for v in $(ip l|sed -n 's%.* \([a-z0-9]*\): .* state DOWN .*%\1%p');do
-  p[92]="${p[92]}\n    $v:"
-  p[92]="${p[92]}\n      dhcp4: true"
-  if [[ $v =~ ^wlo[0-9] ]];then
-    p[92]="${p[92]}\n      activation-mode: off"
-  else
-    p[92]="${p[92]}\n      activation-mode: manual"
-  fi
-done
-
 [[ -x ${p[9]}/eth2/t ]] || ln -s ${p[9]}/eth2/t6 ${p[9]}/eth2/t                                                                                               # link base commands
 if [[ $(pex 'ufw status'|grep -i inactive) ]];then
   swu 'INIT FIREWALL';sex 'ufw default deny incoming';sex 'ufw default allow outgoing'                                                                        # base ufw
@@ -97,16 +25,16 @@ swu 'ROOTKIT SCANNER'    ;sex 'apt install python3-pip net-tools lm-sensors chkr
 swu 'UNATTENDED UPGRADES';cex 'apt install unattended-upgrades update-notifier-common -y'
 swu 'LINUX CONFIGS'
 if [[ $cunm = $znm2 ]];then                                                                                                                                   # network time synchronization
-  cex 'timedatectl set-ntp no';cex 'apt install ntp -y';cc1 ${p[30]} "${p[49]}";cc1 ${p[30]} "${p[52]}";cmw ${p[30]} 644 root                                 # use ntp       (sophisticated)
+  cex "${[67]} set-ntp no";cex 'apt install ntp -y';cc1 ${p[30]} "${p[49]}";cc1 ${p[30]} "${p[52]}";cmw ${p[30]} 644 root                                     # use ntp       (sophisticated)
 else
-  cex 'timedatectl set-ntp on'                                                                                                                                # use timesyncd (lightweight)
+  cex "${[67]} set-ntp on"                                                                                                                                    # use timesyncd (lightweight)
 fi
 if [[ $cust = hrv ]];then
-  sex 'timedatectl set-timezone Europe/Lisbon'
+  sex "${[67]} set-timezone Europe/Lisbon"
   cc1 ${p[19]} "${p[40]}"                                                                                                                                     # my      time servers
   cc1 ${p[20]} "${p[41]}"         ;cmw ${p[20]} 644 root                                                                                                      # motd-news disable
 else
-  sex 'timedatectl set-timezone Europe/Berlin'
+  sex "${[67]} set-timezone Europe/Berlin"
   cc1 ${p[19]} "${p[53]}"                                                                                                                                     # general time servers
 fi                                ;cmw ${p[19]} 644 root                                                                                                      # timesyncd cmod
 cc4 ${p[21]} "${p[92]}"           ;cmw ${p[21]} 644 root                                                                                                      # new netplan
@@ -116,8 +44,8 @@ cc2 ${p[23]} "${p[45]}"           ;cmw ${p[23]} 755 root                        
 cc1 ${p[24]} "${p[44]}"           ;cmw ${p[24]} 755 root                                                                                                      # help-text delete
 cc1 ${p[25]} "${p[46]}"           ;cmw ${p[25]} 755 root                                                                                                      # grub timeout
 cc1 ${p[26]} "${p[47]}"                                                                                                                                       # old logrotate delete
-cc2 ${p[26]} "${p[90]}"           ;cmw ${p[26]} 644 root                                                                                                      # new logrotate add
-cc3 ${p[28]} "${p[48]}" "${p[91]}";cmw ${p[28]} 644 root bind                                                                                                 # named my options
+cc2 ${p[26]} "${p[54]}"           ;cmw ${p[26]} 644 root                                                                                                      # new logrotate add
+cc3 ${p[28]} "${p[48]}" "${p[55]}";cmw ${p[28]} 644 root bind                                                                                                 # named my options
 cc1 ${p[29]} "${p[42]}"           ;cmw ${p[29]} 644 root                                                                                                      # use only ipv4
 [[ -x ${p[27]} ]] && sex "chmod -x ${p[27]}"                                                                                                                  # motd overlayroot unexecute
 cex 'sudo update-grub';dmr;nrs;trs                                                                                                                            # daemon-reload & netplan/DNS/time restart
