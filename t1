@@ -70,8 +70,8 @@ p[49]="${p[49]}\npool 0.europe.pool.ntp.org iburst"
 p[49]="${p[49]}\npool 1.europe.pool.ntp.org iburst"
 p[49]="${p[49]}\npool 0.ubuntu.pool.ntp.org iburst"
 p[50]='geth\[\|lighthouse'                                                                                                                                    # el/cl clients
-p[51]='Package\|Core\|Composite\|Sensor\|temp[0-9]'                                                                                                           # temperature sensors
-p[52]="/#restrict 192/a restrict 192.168.8.0 mask 255.255.255.0 notrap nomodify"                                                                              # ntp my lan unlimited access
+p[51]=''
+p[52]='/#restrict 192/a restrict 192.168.8.0 mask 255.255.255.0 notrap nomodify'                                                                              # ntp my lan unlimited access
 p[53]='s%^ *#*NTP=.*$%NTP=time.google.com time.cloudflare.com time.facebook.com%i'                                                                            # general time servers
 p[54]="\n${p[1]}\n{\n\trotate 7\n\tdaily\n\tmissingok\n\tnotifempty\n\tnocompress\n\tsharedscripts\n\tpostrotate\n\t\t/usr/lib/rsyslog/rsyslog-rotate\n\tendscript\n}"
 p[55]=""

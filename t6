@@ -236,7 +236,9 @@ function cpe {                                                                  
   [[ $1 = c ]] && return;local l=0;local n=0;local g=0
   local d=$(fs3|grep throttled|head -n1|sed 's%.* \([0-9]*:[0-9]*\):[0-9]*.*%\1%')
   local e=$(fs3|grep normal   |tail -n1|sed 's%.* \([0-9]*:[0-9]*\):[0-9]*.*%\1%')
-  local g=0;for g in $(sensors 2>${p[3]}|sed -n "s%\(${p[51]}\).*: *\([-+][0-9][0-9]*\.[0-9]*\).*%\2%p");do ((n+=1));l=$(nu1 $l$g 1);done
+  local g=0;for g in $(sensors 2>${p[3]}|sed -n 's%\(Package\|Core\|Composite\|Sensor\|temp[0-9]\).*: *\([-+][0-9][0-9]*\.[0-9]*\).*%\2%p')                   # temperature sensors
+  do ((n+=1));l=$(nu1 $l$g 1)
+  done
   [[ $d ]] && d="throttled: $d";[[ $e ]] && e="normal: $e";swn "TEMP $(nu5 $l/$((n==0?1:n)) 1 2 %5.1fC) $dt $d $e"                                            # TEMP cpu info
   [[ $1 = p ]] && return
   if [[ $(cat ${p[6]}) -eq 0 ]];then e=off;else e=on;fi;if [[ $(cat ${p[7]}) -eq 1 ]];then d=off;else d=on;fi                                                 # usb/cpu current state
