@@ -40,6 +40,7 @@ function ss2 { ${p[61]} $1 2>${p[3]}|sed -n "s%.*Active: *\(.*\)%\1%;s% *since.*
 function ss3 { printf '%s' "$(printf '%-30s' "$(ss2 $1)") $(printf '%9s' ${1/[a-z]*-/})"; }                                                                   # systemctl status format
 function sgx { ${p[8]}/geth attach --exec net.peerCount "http://$cuec:8545" 2>${p[3]}; }                                                                      # get el current peers
 function sbx { pex "grep lighthouse.*$1 ${p[1]}"|tail -n1|sed "s%.*$1 *\([0-9]*\).*%\1%"; }                                                                   # get cl current peers
+function sci { ip a|sed -n 's% *inet  *192.168.8.\([0-9]*\).*%\1%p'; }                                                                                        # get    current ip (last number)
 function sso {
   dts;local e="$1 $(printf '%6s' $(ss1 $2 Memory:)) $dt status: $(ss3 $2)"                                                                                    # memory & status
   [[ $1 = GETH ]] && e="$e $(printf "el:p%2i p2p:%5i" $(sgx) $(ss1 $2 port [0-9]))"                                                                           # el peers & p2p port tag
@@ -176,6 +177,11 @@ function bh0 {
   bl0;swn "BL$(printf '%9i' $(bbl))\n$m";bm0                                                                                                                  # current cc report
   bmo;swn "BM$(printf '%9i' $(bml))$(printf '%46s')i20  i30  i40  i50  i60  i70  i80\n$m";sso BEAC ${p[71]};sso VALI ${p[73]};cpe                             # cc-daily/services/system report
 }
+function blt { [[ $(sst ${p[71]} '\-all-') ]]; }                                                                                                              # cl subscribe/import all test
+function bvt { [[ $(ss1 ${p[73]} nodes '[^ ]'|sed -n 's%http://192.168.8.\([0-9]*\).*%\1%p') -eq $(sci) ]]; }                                                 # vc -> this-cc           test
+function bln { cp $(pjp 4 71).service $(pjp 9 71).sav;sed 's%--subscribe-all-subnets --import-all-attestations %%' $(pjp 9 71).sav > $(pjp 4 71).service; }   # service remove long-lived cc
+function blc { (blt && bvt) || return;bln;dmr; }                                                                                                              # cc change confg if needed
+function bls { if blt;then echo ImpAll;else echo NotAll;fi; }                                                                                                 # cl subscribe/import all text
 function brb { if srt;then echo RB;else echo $1;fi; }                                                                                                         # get reboot/other tag
 function bro { dts;bb;bnn $(fs4 peers:);[[ -f ${p[11]} ]] && swn "$(printf 'R%03i' $1) ${2:-$ok} $(printf '%3i' $(bu)) $(dnn)" >> ${p[11]}; }                 # log restart info
 function bpt { [[ $(date +%s) -ge $(bss $1 6) ]]; }                                                                                                           # ideal position test (based on time)
@@ -190,11 +196,11 @@ function bsc { pex "grep lighthouse.$bpid].*INFO ${p[1]}"|tail -n99|grep sync_co
 function bsf { [[ ${1:-0} -gt 0 ]] || return;local e=${p[15]}.s$(btg $1);touch $e;sleep $1s;rm -f $e; }                                                       # sleep with file info
 function bsw { while :;do local t=$(bng);if [[ $(bf2 $t) -le ${1:-36} || ${2:-24} -ge $(bfn $t) ]];then bsf $(bmn $(bfn $t));else break;fi;done; }            # sleep while small (gap or remaining) time
 # slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168
-function b1r {                                                                                                                                                # cc/validator gap restart
+function b1r {                                                                                                                                                # cc/vc gap restart
   [[ $(ls ${p[15]}.* 2>${p[3]}) || $(bsc) -gt 0 ]] && return;bsf $3;local n=${4:-36};[[ $2 = VC ]] && n=60;[[ $2 = RB ]] && n=84;bsw $n;local t=$(bng)
   local e=${p[15]}.i$(btg);touch $e;local n=0;paf;while [[ -f $e ]];do ((n+=$(bfn $t)));bsf $(bfn $t)
-  if bpt $t;then rm $e;nn=$(bv);snp ${p[71]} $1 $bpri $bprf           ;[[ $2 = VC ]] && sex "$(pjw 62 73)"                                                    #         stop cc/validator
-    if [[ $2 = RB ]];then bro $n $2;sex reboot;else sex "$(pjw 63 71)";[[ $2 = VC ]] && sex "$(pjw 63 73)";bsf 20;bro $n $2;fi                                # reboot/start cc/validator
+  if bpt $t;then rm $e;nn=$(bv);snp ${p[71]} $1 $bpri $bprf           ;[[ $2 = VC ]] && sex "$(pjw 62 73)"                                                    #         stop cc/vc
+    if [[ $2 = RB ]];then bro $n $2;sex reboot;else sex "$(pjw 63 71)";[[ $2 = VC ]] && sex "$(pjw 63 73)";bsf 20;bro $n $2;fi                                # reboot/start cc/vc
   fi;done;rm -f $e
 }
 function brh { head -n${1:-0} ${p[11]}r; }                                                                                                                    # new cc head lines
@@ -226,8 +232,6 @@ function bht { [[ $b2 -gt $b3 ]]; }                                             
 function bst { [[ $(bi) -ge 2500 ]]; }                                                                                                                        # peers standard deviation test
 function btt { bnt && bht && ! bst; }                                                                                                                         # peers change global test
 function bbt { [[ $(grep $d0 ${p[11]} 2>${p[3]}|wc -l) -gt 0 ]]; }                                                                                            # exists cc log day test
-function blt { [[ $(sst ${p[71]} '\-all-') ]]; }                                                                                                              # cl subscribe/import all test
-function bls { if blt;then echo ImpAll;else echo NotAll;fi; }                                                                                                 # cl subscribe/import all text
 function bct { local n=$((nn-5));[[ $nm -ge $n && $(bl6 $hors) -eq 1 ]] && ( btt || sot ); }                                                                  # change configured peers test
 function bdw { cp $1 ${1}o;grep -v $2 ${1}o > $1;grep $2 ${1}o > ${1}d; }                                                                                     # work to delete cc log day
 function bdl { local d=$(pt0 $1 sai);[[ -f ${p[11]} && $d != sai ]] || return;bdw ${p[11]} $d; }                                                              #         delete cc log day
@@ -275,7 +279,7 @@ function se  { sop;sex 'ufw reload';cex "$(pjw 64 78)"; }                       
 function sa  { [[ $(sst ${p[78]} disabled) ]] || { [[ $(sst ${p[78]}) ]] && cex "$(pjw 63 78)"; } }                                                           # start   named
 function sp  { [[ $(sst ${p[78]} loaded  ) ]] && { cex "$(pjw 62 78)"; } }                                                                                    # stop    named
 function sd  { cex "$(pjw 65 78)";scl;sex 'ufw reload'; }                                                                                                     # disable named
-# el/cc/validator
+# el/cc/vc
 function gfw { if [[ $cust = hrv ]];then pai $1 192.168.8.0/24 $2 $3;else pai $1 $vip1 $2 $3;pai $1 $vip3 $2 $3;fi; }
 function gop { local e=30303;[[ $cunm = $znm1 ]] || e=30304;pae $e elp2p;pde 8545 elapi delete;pde 8551 eljwt delete;gfw 8545 elapi       ;gfw 8551 eljwt       ; }
 function gcl { local e=30303;[[ $cunm = $znm1 ]] || e=30304;pde $e elp2p;pde 8545 elapi       ;pde 8551 eljwt       ;gfw 8545 elapi delete;gfw 8551 eljwt delete; }
