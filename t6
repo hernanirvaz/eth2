@@ -34,13 +34,13 @@ function srt { [[ -f ${p[5]} ]]; }                                              
 function sra { if srt;then echo $(($(date +%s)-$(date -r ${p[5]} +%s)));else echo 0;fi }                                                                      # system reboot age (secounds)
 function sot { [[ $(sra) -ge $((60*60*${1:-24})) ]]; }                                                                                                        # 24 hours old system reboot test
 function stt { [[ $d1 =~ 23:5[89] ]]; }                                                                                                                       # time test
+function sci { ip a|sed -n 's% *inet  *192.168.8.\([0-9]*\).*%\1%p'; }                                                                                        # get    current ip (server)
 function sst { ${p[61]} $1 2>${p[3]}|grep "${2:-inactive\|failed}"; }                                                                                         # systemctl status word test
 function ss1 { ${p[61]} $1 2>${p[3]}|sed -n "s%.*$2 \(${3:-.}*\).*%\1%p"; }                                                                                   # systemctl status 1 extraction
 function ss2 { ${p[61]} $1 2>${p[3]}|sed -n "s%.*Active: *\(.*\)%\1%;s% *since.*;%%;s%running%RUNNING%ip"; }                                                  # systemctl status 2 extraction
 function ss3 { printf '%s' "$(printf '%-30s' "$(ss2 $1)") $(printf '%9s' ${1/[a-z]*-/})"; }                                                                   # systemctl status format
 function sgx { ${p[8]}/geth attach --exec net.peerCount "http://$cuec:8545" 2>${p[3]}; }                                                                      # get el current peers
 function sbx { pex "grep lighthouse.*$1 ${p[1]}"|tail -n1|sed "s%.*$1 *\([0-9]*\).*%\1%"; }                                                                   # get cl current peers
-function sci { ip a|sed -n 's% *inet  *192.168.8.\([0-9]*\).*%\1%p'; }                                                                                        # get    current ip (last number)
 function sso {
   dts;local e="$1 $(printf '%6s' $(ss1 $2 Memory:)) $dt status: $(ss3 $2)"                                                                                    # memory & status
   [[ $1 = GETH ]] && e="$e $(printf "el:p%2i p2p:%5i" $(sgx) $(ss1 $2 port [0-9]))"                                                                           # el peers & p2p port tag
@@ -177,12 +177,13 @@ function bh0 {
   bl0;swn "BL$(printf '%9i' $(bbl))\n$m";bm0                                                                                                                  # current cc report
   bmo;swn "BM$(printf '%9i' $(bml))$(printf '%46s')i20  i30  i40  i50  i60  i70  i80\n$m";sso BEAC ${p[71]};sso VALI ${p[73]};cpe                             # cc-daily/services/system report
 }
-function blt { [[ $(sst ${p[71]} '\-all-') ]]; }                                                                                                              # cl subscribe/import all test
+function bft { [[ -f $(pjp 4 71).service ]]; }                                                                                                                # cc service test
+function blt { [[ $(grep '\-all-' $(pjp 4 71).service) ]]; }                                                                                                  # cc long-lived test
 function bvt { [[ $(ss1 ${p[73]} nodes '[^ ]'|sed -n 's%http://192.168.8.\([0-9]*\).*%\1%p') -eq $(sci) ]]; }                                                 # vc -> this-cc           test
-function bln { cp $(pjp 4 71).service $(pjp 9 71).sav;sed 's%--subscribe-all-subnets --import-all-attestations %%' $(pjp 9 71).sav > $(pjp 4 71).service; }   # service remove long-lived cc
-function blc { (blt && bvt) || return;bln;dmr; }                                                                                                              # cc change confg if needed
+function ble { cp $(pjp 4 71).service $(pjp 9 71).sav;sed "$1" $(pjp 9 71).sav > $(pjp 4 71).service; }                                                       # cc service edit
+function blc { local e='';if bft;then if bvt;then blt && e="${p[57]}";else blt || e="${p[58]}";fi;fi;if [[ $e ]];then ble "$e";dmr;fi; }                      # cc del/add long-lived (if needed)
 function bls { if blt;then echo ImpAll;else echo NotAll;fi; }                                                                                                 # cl subscribe/import all text
-function brb { if srt;then echo RB;else echo $1;fi; }                                                                                                         # get reboot/other tag
+function brb { if srt;then echo RB    ;else echo $1    ;fi; }                                                                                                 # get reboot/other tag
 function bro { dts;bb;bnn $(fs4 peers:);[[ -f ${p[11]} ]] && swn "$(printf 'R%03i' $1) ${2:-$ok} $(printf '%3i' $(bu)) $(dnn)" >> ${p[11]}; }                 # log restart info
 function bpt { [[ $(date +%s) -ge $(bss $1 6) ]]; }                                                                                                           # ideal position test (based on time)
 function btg { echo $(date -d@${1:-0} +%M:%S|tr -d :)t$(date -d@$(($(date +%s)+${1:-0})) +%H:%M:%S|tr -d :); }                                                # get end file sleep tag
