@@ -236,7 +236,7 @@ function bbt { [[ $(grep $d0 ${p[11]} 2>${p[3]}|wc -l) -gt 0 ]]; }              
 function bct { local n=$((nn-5));[[ $nm -ge $n && $(bl6 $hors) -eq 1 ]] && ( btt || sot ); }                                                                  # change configured peers test
 function bdw { cp $1 ${1}o;grep -v $2 ${1}o > $1;grep $2 ${1}o > ${1}d; }                                                                                     # work to delete cc log day
 function bdl { local d=$(pt0 $1 sai);[[ -f ${p[11]} && $d != sai ]] || return;bdw ${p[11]} $d; }                                                              #         delete cc log day
-function wst { echo $@|sed 's%[^: ]*: *%%g;s%,[^,]*(routed)%%;s% (incoming),% <<%;s% (outgoing)% >>%'; }
+function wst { echo $@|sed 's%[^: ]*: *%%g;s%,[^,]*(routed)%%;s% (incoming),% <<%;s% (outgoing)% >>%'; }                                                      # get ufw info
 function cpe {                                                                                                                                                # system status
   local e='NO';[[ $(${p[67]}|sed -n 's%.*synchronized: \([a-z]*\) *%\1%p') = yes ]] && e='OK';dts
   if [[ $(sst ${p[77]} masked) ]];then m=$(ss3 ntp);else m=$(ss3 ${p[77]});fi;swn "CLCK $e $(printf '%3i' $(fs0 clock|wc -l)) $dt status: $m"                 # CLCK info
@@ -251,7 +251,7 @@ function cpe {                                                                  
   if [[ $(cat ${p[6]}) -eq 0 ]];then e=off;else e=on;fi;if [[ $(cat ${p[7]}) -eq 1 ]];then d=off;else d=on;fi                                                 # usb/cpu current state
   m="INFO$(printf '%3i' $(fs6)) $(printf '%3i' $(fs5)) $dt"                                                                                                   # usb/cpu erros count
   m="$m usb $e, turbo $d, ufw: $(wst $(pex 'ufw status verbose'|grep -i 'status:\|default:'))"                                                                # usb/cpu/ufw info
-  m="$m, uptime:$(uptime|sed 's%[0-9]*:[0-9]*:[0-9]*%%;s%[0-9]*:[0-9]*,%%;s%[0-9]* users*,%%;s% average\([^,]*\).*%\1%;s%  *% %g')";swn "$m"                  # uptime/load info
+  m="$m, uptime:$(uptime|sed 's%[0-9]*:[0-9]*:[0-9]*%%;s%[0-9]* users*,%%;s% average\([^,]*\).*%\1%;s%  *% %g')";swn "$m"                                     # uptime/load info
   local l=$(fs2|grep -i 'error' |wc -l);local n=$(fs1|grep -v ' INFO '|wc -l)
   local e=$(fs2|grep -i 'error' |tail -n1|sed 's%.*hrv-zotac[0-9] *\(.*\)%\1%;s%  *% %g'                         |cut -c1-70)
   local d=$(fs1|grep -v ' INFO '|tail -n1|sed 's%.*[0-9]*:[0-9]*:[0-9]*\.[0-9][0-9][0-9]]* *\(.*\)%\1%;s%  *% %g'|cut -c1-70)
