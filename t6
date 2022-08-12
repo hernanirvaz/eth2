@@ -106,7 +106,7 @@ function bl7 { fs0 attestation.s.*$1|bl5; }                                     
 function blo {
   m="BEAC $ok $(printf '%3i' $(bu)) $(dnn) reward_penalty: $(nu5 "($z5*$ratt+$b0*$rblk)*$rate/$decp" 10 2 %4.0f)"
   m="$m $(printf '%4i' $(nu4 $zk $zz $zx $zw 1)) attestation_blocks: $(printf '%4i' $z5) $(printf '%4i' $(bz)) $(printf '%1i' $b0)"
-  m="$m err: $(printf '%1i' $zk) $(printf '%2i' $zz) $(printf '%3i' $zx) $(printf '%2i' $zw) $(printf '%2i' $z1) $(printf '%3i' $z2)"
+  m="$m err: $(printf '%1i' $zk) $(printf '%2i' $zz) $(printf '%3i' $zx) $(printf '%2i' $zw) $(printf '%2i' $z1) $(printf '%4i' $z2)"
   m="$m $(printf '%3i' $(bw)) $(printf '%2i' $z3) $(printf '%4i' $z4) $(printf '%4i' $(bf)) delay: $(printf '%3i' $b1)"
 }
 function bcc { if bct       ;then echo c;else echo _;fi; }                                                                                                    # get change configured peers char

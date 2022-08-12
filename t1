@@ -128,7 +128,7 @@ for m in $(ip l|sed -n 's%.* \([a-z0-9]*\): .* state DOWN .*%\1%p');do
   fi
 done
 p[57]='s%\-\-subscribe-all-subnets \-\-import-all-attestations %%'                                                                                            # cc service remove long-lived
-p[58]='s%\-\-validator-monitor-auto%--subscribe-all-subnets --import-all-attestations --validator-monitor-auto%'                                              # cc service add    long-lived
+p[58]='s%\-\-validator-monitor-file%--subscribe-all-subnets --import-all-attestations --validator-monitor-file%'                                              # cc service add    long-lived
 
 # services management
 p[60]='systemctl'
