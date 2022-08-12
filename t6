@@ -178,10 +178,10 @@ function bh0 {
   bmo;swn "BM$(printf '%9i' $(bml))$(printf '%46s')i20  i30  i40  i50  i60  i70  i80\n$m";sso BEAC ${p[71]};sso VALI ${p[73]};cpe                             # cc-daily/services/system report
 }
 function bft { [[ -f $(pjp 4 71).service ]]; }                                                                                                                # cc service test
-function blt { [[ $(grep '\-all-' $(pjp 4 71).service) ]]; }                                                                                                  # cc long-lived test
-function bvt { [[ $(ss1 ${p[73]} nodes '[^ ]'|sed -n 's%http://192.168.8.\([0-9]*\).*%\1%p') -eq $(sci) ]]; }                                                 # vc -> this-cc           test
-function ble { cp $(pjp 4 71).service $(pjp 9 71).sav;sed "$1" $(pjp 9 71).sav > $(pjp 4 71).service; }                                                       # cc service edit
-function blc { [[ $1 -eq 0 ]] && bft || return;local e='';if bvt;then blt && e="${p[57]}";else blt || e="${p[58]}";fi;if [[ $e ]];then ble "$e";dmr;fi; }     # cc del/add long-lived (if needed)
+function blt { [[ $(grep '\-all-' $(pjp 4 71).service 2>${p[3]}) ]]; }                                                                                        # cc long-lived test
+function bvt { [[ $(sed -n 's%.*nodes  *http://192.168.8.\([0-9]*\).*%\1%p' $(pjp 4 73).service 2>${p[3]}) -eq $(sci) ]]; }                                   # vc -> this-cc           test
+function ble { cp $(pjp 4 71).service $(pjp 9 71).sav;sed "$1" $(pjp 9 71).sav > $(pjp 4 71).service;dmr; }                                                   # cc service edit
+function blc { [[ $1 -eq 0 ]] && bft || return;local e='';if bvt;then blt && e="${p[57]}";else blt || e="${p[58]}";fi;[[ $e ]] && ble "$e"; }                 # cc del/add long-lived (if needed)
 function bls { if blt;then echo ImpAll;else echo NotAll;fi; }                                                                                                 # cl subscribe/import all text
 function brb { if srt;then echo RB    ;else echo $1    ;fi; }                                                                                                 # get reboot/other tag
 function bro { dts;bb;bnn $(fs4 peers:);[[ -f ${p[11]} ]] && swn "$(printf 'R%03i' $1) ${2:-$ok} $(printf '%3i' $(bu)) $(dnn)" >> ${p[11]}; }                 # log restart info
