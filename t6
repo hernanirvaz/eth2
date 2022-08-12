@@ -177,11 +177,12 @@ function bh0 {
   bl0;swn "BL$(printf '%9i' $(bbl))\n$m";bm0                                                                                                                  # current cc report
   bmo;swn "BM$(printf '%9i' $(bml))$(printf '%46s')i20  i30  i40  i50  i60  i70  i80\n$m";sso BEAC ${p[71]};sso VALI ${p[73]};cpe                             # cc-daily/services/system report
 }
-function bft { [[ -f $(pjp 4 71).service ]]; }                                                                                                                # cc service test
+function vft { [[ -f $(pjp 4 73).service ]]; }                                                                                                                # vc service file test
+function cft { [[ -f $(pjp 4 71).service ]]; }                                                                                                                # cc service file test
 function blt { [[ $(grep '\-all-' $(pjp 4 71).service 2>${p[3]}) ]]; }                                                                                        # cc long-lived test
 function bvt { [[ $(sed -n 's%.*nodes  *http://192.168.8.\([0-9]*\).*%\1%p' $(pjp 4 73).service 2>${p[3]}) -eq $(sci) ]]; }                                   # vc -> this-cc           test
 function ble { cp $(pjp 4 71).service $(pjp 9 71).sav;sed "$1" $(pjp 9 71).sav > $(pjp 4 71).service;dmr; }                                                   # cc service edit
-function blc { [[ $1 -eq 0 ]] && bft || return;local e='';if bvt;then blt && e="${p[57]}";else blt || e="${p[58]}";fi;[[ $e ]] && ble "$e"; }                 # cc del/add long-lived (if needed)
+function blc { [[ $1 -eq 0 ]] && cft || return;local e='';if bvt;then blt && e="${p[57]}";else blt || e="${p[58]}";fi;[[ $e ]] && ble "$e"; }                 # cc del/add long-lived (if needed)
 function bls { if blt;then echo ImpAll;else echo NotAll;fi; }                                                                                                 # cl subscribe/import all text
 function brb { if srt;then echo RB    ;else echo $1    ;fi; }                                                                                                 # get reboot/other tag
 function bro { dts;bb;bnn $(fs4 peers:);[[ -f ${p[11]} ]] && swn "$(printf 'R%03i' $1) ${2:-$ok} $(printf '%3i' $(bu)) $(dnn)" >> ${p[11]}; }                 # log restart info
@@ -339,18 +340,26 @@ function ah2 { swn "\n\n$znm1";ssh ztc1 "export H=$H;${p[9]}/eth2/t6 ghs";swn "\
 function ah3 { swn "\n\n$znm1";ssh ztc1 "export H=$H;${p[9]}/eth2/t6 ghs";swn "\n\n$znm3";bhs;cpe;swn "\n\n$znm4";ssh ztc4 "export H=$H;${p[9]}/eth2/t6 ehs"; }
 function ah4 { swn "\n\n$znm1";ssh ztc1 "export H=$H;${p[9]}/eth2/t6 ghs";swn "\n\n$znm3";ssh ztc3 "export H=$H;${p[9]}/eth2/t6 bhs";swn "\n\n$znm4";ghs;bhs;cpe; }
 function nsh { ${p[68]} list;${p[68]} status; }                                                                                                               # routes/dns info
+function wlp { local e="$1";shift;until [[ $# -lt 1 ]];do e="$e\|$1";shift;done;fs2|grep '\[UFW'|if [[ $e ]];then grep -v "$e";else cat;fi; }
+function vcc { vft || return;cp $(pjp 4 73).service ${p[73]}.sav;sed "${p[59]}" ${p[73]}.sav > $(pjp 4 73).service;cmw $(pjp 4 73).service 644 eth; }         # vc switch cc order
+function occ { cft || return;cp $(pjp 4 71).service ${p[71]}.sav;sed "${p[82]}" ${p[71]}.sav > $(pjp 4 71).service;cmw $(pjp 4 71).service 644 eth; }         # cc change el server
+function c0t { [[ $(sed -n 's%.*\-\-execution-endpoint *[^ ]*/\([0-9\.]*\):8551.*%\1%p' $(pjp 4 71).service 2>${p[3]}) -eq $zip1 ]]; }                        # cc choose el server test
+function c0c { local e="${p[81]}";c0t && e="${p[80]}";sed "$e" ${p[71]}.sav > $(pjp 4 71).service; }                                                          # cc change el server
+function ccc { cft || return;cp $(pjp 4 71).service ${p[71]}.sav;c0c;cmw $(pjp 4 71).service 644 eth; }                                                       # cc change el server (merge)
+
 function jw0 { openssl rand -hex 32|tr -d '\n'|tee jwt 1>${p[3]};[[ -f jwt ]] && jw4; }
 function jw1 { sex "cp jwt $2";cmw $2/jwt 600 $1; }
 function jw3 { scp jwt $1:${p[9]};ssh $1 "export H=$H;eth2/t6 jwt"; }
 function jw4 { jw3 ztc2;jw3 ztc3;jw3 ztc4; }
-function sr0 { cp $(pjp 4 70).service ${p[70]}.sav;sed "s%peers *\([0-9]*\)%peers \1 --authrpc.addr $zip1 --authrpc.jwtsecret ${p[31]}/jwt%" ${p[70]}.sav > ${p[70]}.jwt;sr9 ${p[70]}; }
-function sr1 { cp $(pjp 4 71).service ${p[71]}.sav;sed "s%--eth1-endpoints *\([^,]*:8545\)[^ ]*%--execution-endpoint http://$zip1:8551 --execution-jwt ${p[16]}/jwt --suggested-fee-recipient ${p[99]}%" ${p[71]}.sav > ${p[71]}.jwt;sr9 ${p[71]}; }
-function sr3 { cp $(pjp 4 73).service ${p[73]}.sav;sed "s%beacon-nodes *\([^,]*:5052\)[^ ]*%beacon-nodes \1,http://$zip2:5052 --suggested-fee-recipient ${p[99]}%" ${p[73]}.sav > ${p[73]}.jwt;sr9 ${p[73]}; }
-function sr9 { chmod 644 $1.jwt;sex "mv $1.jwt ${p[4]}/$1.jwt"; }
-function wlp { local e="$1";shift;until [[ $# -lt 1 ]];do e="$e\|$1";shift;done;fs2|grep '\[UFW'|if [[ $e ]];then grep -v "$e";else cat;fi; }
-
+function sr0 { cp $(pjp 4 70).service ${p[70]}.sav;sed "s%peers *\([0-9]*\)%peers \1 --authrpc.addr $zip1 --authrpc.jwtsecret ${p[31]}/jwt%" ${p[70]}.sav > $(pjp 4 70).jwt;cmw $(pjp 4 70).jwt 644 eth; }
+function sr1 { cp $(pjp 4 71).service ${p[71]}.sav;sed "s%--eth1-endpoints  *\([^,]*:8545\)[^ ]*%--execution-endpoint http://$zip1:8551 --execution-jwt ${p[16]}/jwt --suggested-fee-recipient ${p[99]}%" ${p[71]}.sav > $(pjp 4 71).jwt;cmw $(pjp 4 71).jwt 644 eth; }
+function sr3 { cp $(pjp 4 73).service ${p[73]}.sav;sed "s%beacon-nodes *\([^ ]*:5052\)[^ ]*%beacon-nodes \1,http://$zip2:5052 --suggested-fee-recipient ${p[99]}%" ${p[73]}.sav > $(pjp 4 73).jwt;cmw $(pjp 4 73).jwt 644 eth; }
 [[ $1 = jwt ]] && { [[ $cunm = $znm1 || $cunm = $vnm1 ]] && jw0;if [[ -f jwt ]];then [[ -d ${p[31]} ]] && jw1 eth1 ${p[31]};[[ -d ${p[16]} ]] && jw1 eth2 ${p[16]};sex "rm jwt";fi; }
 [[ $1 = srv ]] && { [[ -f $(pjp 4 70).service ]] && sr0;[[ -f $(pjp 4 71).service ]] && sr1;[[ -f $(pjp 4 73).service ]] && sr3; }
+
+[[ $1 = vcc ]] && { vcc; }
+[[ $1 = ccc ]] && { ccc; }
+[[ $1 = occ ]] && { occ; }
 [[ $1 = chk ]] && { cex 'chkrootkit'; }
 [[ $1 = eip ]] && { curl -s4 "https://${3:-meo.fruga.pt}:$2@dyn.dns.he.net/nic/update?hostname=${3:-meo.fruga.pt}" &>${p[3]}; }
 [[ $1 = dsh ]] && { ${p[69]} query ${2:-smtp.gmail.com}; }
