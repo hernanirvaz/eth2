@@ -198,7 +198,7 @@ function bsf { [[ ${1:-0} -gt 0 ]] || return;local f=${p[15]}.s$(btg $1);touch $
 function bsw { while :;do local t=$(bng);if [[ $(bf2 $t) -le ${1:-36} || ${2:-24} -ge $(bfn $t) ]];then bsf $(bmn $(bfn $t));else break;fi;done; }            # sleep while small (gap or remaining) time
 # slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168
 function b1r {                                                                                                                                                # cc/vc gap restart
-  [[ $(ls ${p[15]}.* 2>${p[3]}) || $(bsc) -gt 0 ]] && return;bsf $3;local n=${4:-36};[[ $2 = VC ]] && n=60;[[ $2 = RB ]] && n=84;bsw $n;local t=$(bng)
+  [[ $(ls ${p[15]}.* 2>${p[3]}) || $(bsc) -gt 0 ]] && return;bsf $3;local n=${4:-48};[[ $2 = VC ]] && n=60;[[ $2 = RB ]] && n=84;bsw $n;local t=$(bng)
   local f=${p[15]}.i$(btg);touch $f;local n=0;paf;while [[ -f $f ]];do ((n+=$(bfn $t)));bsf $(bfn $t)
   if bpt $t;then rm $f;nn=$(bv);snp ${p[71]} $1 $bpri $bprf;blc $1    ;[[ $2 = VC ]] && sex "$(pjw 62 73)"                                                    # stop cc/conf change?/stop vc?
     if [[ $2 = RB ]];then bro $n $2;sex reboot;else sex "$(pjw 63 71)";[[ $2 = VC ]] && sex "$(pjw 63 73)";bsf 20;bro $n $2;fi                                # reboot/start cc/vc

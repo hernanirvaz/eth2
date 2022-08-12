@@ -44,17 +44,15 @@ else
   [[ $cunm = $znm4 ]] && http=" --http-address $zip4"
   [[ $cunm = $vnm1 ]] && http=" --http-address $vip1"
   [[ $cunm = $vnm2 ]] && http=" --http-address $vip2"
-  epge=" --eth1-endpoints http://$zip1:8545 --execution-endpoints http://$zip1:8551 --jwt-secrets ${p[16]}/jwt" # MERGE
   epge=" --eth1-endpoints http://$zip1:8545,https://eth-mainnet.alchemyapi.io/v2/vzq1DD3EX7ipGuKck4440uRuccDdVvTm,https://mainnet.infura.io/v3/65be3572c577449f86d92b2e69cd6b06,https://mainnet.infura.io/v3/2c680650de0443cf8ab433565e47a42d"
+  epge=" --execution-endpoint http://$zip1:8551 --execution-jwt ${p[16]}/jwt"                                                                                 # MERGE
   othe=''
-  # othe="$othe --slasher --disable-upnp"
-  # redundant beacon nodes
-  othe="$othe --subscribe-all-subnets --import-all-attestations"
-  othe="$othe --validator-monitor-file ${p[16]}/pubkeys --disable-upnp"
-  # syncing from a recent finalized checkpoint
+  othe="$othe --subscribe-all-subnets --import-all-attestations"                                                                                              # for redundant cc
+  othe="$othe --validator-monitor-file ${p[16]}/pubkeys"                                                                                                      # monitor validators
   # othe="$othe --checkpoint-sync-url https://1q1s6o6cB6Jysu7KKlbLUYiOdAM:8974468780164028652df958a69fbd30@eth2-beacon-mainnet.infura.io"
-  othe="$othe --checkpoint-sync-url http://192.168.8.28:5052"
-  # MERGE --execution-endpoints $epge --jwt-secrets ${p[16]}/jwt
+  othe="$othe --checkpoint-sync-url http://192.168.8.28:5052"                                                                                                 # syncing from finalized checkpoint
+  othe="$othe --disable-upnp"
+  # othe="$othe --slasher"
   swu 'CONFIGURE BEACON';sex "mkdir -p ${p[16]}";cmw ${p[10]} 755 $meeu;sau eth2
   echo $pubk > ${p[16]}/pubkeys;cmw ${p[16]}/pubkeys 600 $user
   cmw ${p[16]} 700 $user;touch ${p[10]}/vc_lock;cd ${p[9]}                                                                                                    # IMPORTANTE LOCK VALIDATOR CLIENTE
