@@ -38,7 +38,7 @@ function sci { ip a|sed -n 's% *inet  *192.168.8.\([0-9]*\).*%\1%p'; }          
 function sst { ${p[61]} $1 2>${p[3]}|grep "${2:-inactive\|failed}"; }                                                                                         # systemctl status word test
 function ss1 { ${p[61]} $1 2>${p[3]}|sed -n "s%.*$2 \(${3:-.}*\).*%\1%p"; }                                                                                   # systemctl status 1 extraction
 function ss2 { ${p[61]} $1 2>${p[3]}|sed -n "s%.*Active: *\(.*\)%\1%;s% *since.*;%%;s%running%RUNNING%ip"; }                                                  # systemctl status 2 extraction
-function ss3 { printf '%s' "$(printf '%-30s' "$(ss2 $1)") $(printf '%9s' ${1/[a-z]*-/})"; }                                                                   # systemctl status format
+function ss3 { printf '%s' "$(printf '%-35s' "$(ss2 $1)") $(printf '%9s' ${1/[a-z]*-/})"; }                                                                   # systemctl status format
 function sgx { ${p[8]}/geth attach --exec net.peerCount "http://$cuec:8545" 2>${p[3]}; }                                                                      # get el current peers
 function sbx { pex "grep lighthouse.*$1 ${p[1]}"|tail -n1|sed "s%.*$1 *\([0-9]*\).*%\1%"; }                                                                   # get cl current peers
 function sso {
