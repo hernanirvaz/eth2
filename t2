@@ -32,21 +32,21 @@ fi
 if [[ $cust = hrv ]];then
   sex "${[67]} set-timezone Europe/Lisbon"
   cc1 ${p[19]} "${p[40]}"                                                                                                                                     # my      time servers
-  cc1 ${p[20]} "${p[41]}"         ;cmw ${p[20]} 644 root                                                                                                      # motd-news disable
+  cc1 ${p[20]} "${p[41]}"             ;cmw ${p[20]} 644 root                                                                                                  # motd-news disable
 else
   sex "${[67]} set-timezone Europe/Berlin"
   cc1 ${p[19]} "${p[53]}"                                                                                                                                     # general time servers
-fi                                ;cmw ${p[19]} 644 root                                                                                                      # timesyncd cmod
-cc4 ${p[21]} "${p[92]}"           ;cmw ${p[21]} 644 root                                                                                                      # new netplan
-cc1 ${p[22]} "${p[43]}"           ;cmw ${p[22]} 644 root                                                                                                      # unattended-upgrades
+fi                                    ;cmw ${p[19]} 644 root                                                                                                  # timesyncd cmod
+cc4 ${p[21]} "${p[92]}"               ;cmw ${p[21]} 644 root                                                                                                  # new netplan
+cc1 ${p[22]} "${p[43]}"               ;cmw ${p[22]} 644 root                                                                                                  # unattended-upgrades
 cc1 ${p[23]} "${p[44]}"                                                                                                                                       # header delete
-cc2 ${p[23]} "${p[45]}"           ;cmw ${p[23]} 755 root                                                                                                      # header add my motd
-cc1 ${p[24]} "${p[44]}"           ;cmw ${p[24]} 755 root                                                                                                      # help-text delete
-cc1 ${p[25]} "${p[46]}"           ;cmw ${p[25]} 755 root                                                                                                      # grub timeout
-cc1 ${p[26]} "${p[47]}"                                                                                                                                       # old logrotate delete
-cc2 ${p[26]} "${p[54]}"           ;cmw ${p[26]} 644 root                                                                                                      # new logrotate add
-cc3 ${p[28]} "${p[48]}" "${p[55]}";cmw ${p[28]} 644 root bind                                                                                                 # named my options
-cc1 ${p[29]} "${p[42]}"           ;cmw ${p[29]} 644 root                                                                                                      # use only ipv4
+cc2 ${p[23]} "${p[45]}"               ;cmw ${p[23]} 755 root                                                                                                  # header add my motd
+cc1 ${p[24]} "${p[44]}"               ;cmw ${p[24]} 755 root                                                                                                  # help-text delete
+cc1 ${p[25]} "${p[46]}"               ;cmw ${p[25]} 755 root                                                                                                  # grub timeout
+cc1 ${p[26]} "s%^ *${p[1]}%# ${p[1]}%"                                                                                                                        # old logrotate delete
+cc2 ${p[26]} "${p[54]}"               ;cmw ${p[26]} 644 root                                                                                                  # new logrotate add
+cc3 ${p[28]} "${p[48]}" "${p[55]}"    ;cmw ${p[28]} 644 root bind                                                                                             # named my options
+cc1 ${p[29]} "${p[42]}"               ;cmw ${p[29]} 644 root                                                                                                  # use only ipv4
 [[ -x ${p[27]} ]] && sex "chmod -x ${p[27]}"                                                                                                                  # motd overlayroot unexecute
 cex 'sudo update-grub';dmr;nrs;trs                                                                                                                            # daemon-reload & netplan/DNS/time restart
 sudo dpkg-reconfigure -plow unattended-upgrades

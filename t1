@@ -62,15 +62,15 @@ p[43]='s%^ */* *Unattended-Upgrade::Mail .*$%Unattended-Upgrade::Mail "hernanilr
 p[44]='s%^ *printf%# printf%i'                                                                                                                                # unprint stuff
 p[45]='printf "Welcome to %s %s\\n" "$(uname -n)" "$DISTRIB_DESCRIPTION"'                                                                                     # my header motd
 p[46]='s%timeout *=.*$%timeout=1%i'                                                                                                                           # grub timeout
-p[47]="s%^ *${p[1]}%# ${p[1]}%"                                                                                                                               # old logrotate delete
+p[47]='geth\[\|lighthouse'                                                                                                                                    # el/cl clients
 p[48]='/dnssec-validation/q'                                                                                                                                  # print lines until pattern
 p[49]="s%^ *pool \([^a-z]\)%# pool \1%;/# Specify one or more NTP servers/a "                                                                                 # ntp my pool servers
 p[49]="${p[49]}pool 0.pt.pool.ntp.org iburst"
 p[49]="${p[49]}\npool 0.europe.pool.ntp.org iburst"
 p[49]="${p[49]}\npool 1.europe.pool.ntp.org iburst"
 p[49]="${p[49]}\npool 0.ubuntu.pool.ntp.org iburst"
-p[50]='geth\[\|lighthouse'                                                                                                                                    # el/cl clients
-p[51]=''
+p[50]="s%--execution-endpoint  *\([^ ]*/\)[0-9\.]*:8551[^ ]*%--execution-endpoint \1$zip4:8551%"                                                              # cc service change to 34 (merge)
+p[51]="s%--execution-endpoint  *\([^ ]*/\)[0-9\.]*:8551[^ ]*%--execution-endpoint \1$zip1:8551%"                                                              # cc service change to 25 (merge)
 p[52]='/#restrict 192/a restrict 192.168.8.0 mask 255.255.255.0 notrap nomodify'                                                                              # ntp my lan unlimited access
 p[53]='s%^ *#*NTP=.*$%NTP=time.google.com time.cloudflare.com time.facebook.com%i'                                                                            # general time servers
 p[54]="\n${p[1]}\n{\n\trotate 7\n\tdaily\n\tmissingok\n\tnotifempty\n\tnocompress\n\tsharedscripts\n\tpostrotate\n\t\t/usr/lib/rsyslog/rsyslog-rotate\n\tendscript\n}"
@@ -152,8 +152,6 @@ p[76]='grafana-server'
 p[77]='systemd-timesyncd'
 p[78]='named'
 p[79]='plexmediaserver'
-p[80]="s%--execution-endpoint  *\([^ ]*/\)[0-9\.]*:8551[^ ]*%--execution-endpoint \1$zip4:8551%"                                                              # cc service change to 34 (merge)
-p[81]="s%--execution-endpoint  *\([^ ]*/\)[0-9\.]*:8551[^ ]*%--execution-endpoint \1$zip1:8551%"                                                              # cc service change to 25 (merge)
 p[99]='0x82f6E45b47c5C03F8D52dDDa03B3F65897Cd5AB2'
 
 function pjp { local e="";[[ $# -ge 1 ]] && { e="${p[$1]}";shift; };until [[ $# -lt 1 ]];do e="$e/${p[$1]}";shift;done;echo "$e"; }                           # paths join
