@@ -89,13 +89,13 @@ else
     swn "STORE($K)\n";lighthouse$(nwf) --datadir ${p[10]} account validator import --directory $HOME/$D;[[ -f ${p[17]}/validator_definitions.yml ]] && touch ${p[10]}/vc_keys
   fi
   if [[ ! -f ${p[10]}/vc_lock && -f ${p[10]}/vc_keys ]];then
-    swu 'BLOQUEAR VALIDATOR EXECUTE';swn "t6 vpr;t6 vds;sudo chmod 777 ${p[17]};sudo chmod 666 ${p[32]}.sqlite*";touch ${p[10]}/vc_lock
+    swu 'BLOQUEAR VALIDATOR EXECUTE';swn "t6 vpr;t6 vds;sudo chmod 777 ${p[17]};sudo chmod 666 ${p[31]}.sqlite*";touch ${p[10]}/vc_lock
   fi
   if [[ ! -f ${p[10]}/vc_slash && -f ${p[10]}/vc_lock && -f ${p[10]}/vc_keys ]];then
     sex "mkdir -p ${p[17]}";cmw ${p[17]} 700 $meeu
-    if [[ -f ${p[9]}/$(basename ${p[32]}).sqlite ]];then
-      swu 'COPIAR slash DB';sex "rm ${p[32]}.sqlite ${p[32]}.sqlite-journal";sex "cp ${p[9]}/$(basename ${p[32]}).sqlite ${p[17]}"
-      [[ -f ${p[32]}.sqlite ]] && touch ${p[10]}/vc_slash;cmw ${p[32]}.sqlite 600 $user
+    if [[ -f ${p[9]}/$(basename ${p[31]}).sqlite ]];then
+      swu 'COPIAR slash DB';sex "rm ${p[31]}.sqlite ${p[31]}.sqlite-journal";sex "cp ${p[9]}/$(basename ${p[31]}).sqlite ${p[17]}"
+      [[ -f ${p[31]}.sqlite ]] && touch ${p[10]}/vc_slash;cmw ${p[31]}.sqlite 600 $user
     fi
     cmw ${p[17]} 700 $user
   fi

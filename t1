@@ -51,8 +51,7 @@ p[27]='/etc/update-motd.d/97-overlayroot'                                       
 p[28]='/etc/bind/named.conf.options'                                                                                                                          # options domain name server
 p[29]='/etc/default/named'                                                                                                                                    # default domain name server
 p[30]='/etc/ntp.conf'                                                                                                                                         # ntpd config
-p[31]="${p[18]}/geth"                                                                                                                                         # ec data
-p[32]="${p[17]}/slashing_protection"                                                                                                                          # cl slashing_protection data
+p[31]="${p[17]}/slashing_protection"                                                                                                                          # cl slashing_protection data
 
 # sed/grep scripts
 p[40]='s%^ *#*NTP=.*$%NTP=192.168.8.28 ntp02.oal.ul.pt ntp04.oal.ul.pt time.google.com time.cloudflare.com time.facebook.com%i'                               # my time servers
