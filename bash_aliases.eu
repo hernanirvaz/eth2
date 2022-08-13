@@ -1,0 +1,20 @@
+mp4ls () { echo -e "\nls extensao *.${1:-txt}";find /var/lib/transmission-daemon/downloads -name "*.${1:-txt}" -print; }
+mp4rm () { echo -e "\nrm extensao *.${1:-txt}";find /var/lib/transmission-daemon/downloads -name "*.${1:-txt}" -exec rm {} \;; }
+rsq ()   { echo -e "\nresolvectl query ${1:-pt.archive.ubuntu.com}";resolvectl query "${1:-pt.archive.ubuntu.com}"; }
+
+alias tst='sudo systemctl transmission-daemon start'
+alias tpr='sudo systemctl transmission-daemon stop'
+alias trl='sudo systemctl transmission-daemon reload'
+alias tls='transmission-remote -n 'transmission:transmission' -l'
+alias tbs='transmission-remote -n 'transmission:transmission' -st'
+alias tfs='transmission-remote -n 'transmission:transmission' -si'
+
+alias tlt='mp4ls'
+alias trt='mp4rm'
+alias tld='ll /var/lib/transmission-daemon/downloads'
+
+#alias tac='sudo chown eu:eu -R ~/mp4;sudo setfacl -R -m u:plex:rx ~/mp4'
+alias tac='sudo chown plex:plex -R ~/mp4'
+
+alias xx='exit'
+alias nt='sudo iftop -i enp1s0'
