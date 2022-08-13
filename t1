@@ -52,6 +52,8 @@ p[28]='/etc/bind/named.conf.options'                                            
 p[29]='/etc/default/named'                                                                                                                                    # default domain name server
 p[30]='/etc/ntp.conf'                                                                                                                                         # ntpd config
 p[31]="${p[17]}/slashing_protection"                                                                                                                          # cl slashing_protection data
+p[32]='/etc/nginx/conf.d/plexmediaserver.conf'                                                                                                                # nginx config for plex
+p[33]='/etc/transmission-daemon/settings.json'                                                                                                                # transmission settings
 
 # sed/grep scripts
 p[40]='s%^ *#*NTP=.*$%NTP=192.168.8.28 ntp02.oal.ul.pt ntp04.oal.ul.pt time.google.com time.cloudflare.com time.facebook.com%i'                               # my time servers
@@ -151,6 +153,24 @@ p[76]='grafana-server'
 p[77]='systemd-timesyncd'
 p[78]='named'
 p[79]='plexmediaserver'
+p[80]='nginx'
+p[81]='server {'
+p[81]="${p[81]}\nlisten 80;"
+p[81]="${p[81]}\nserver_name $zip2;"
+p[81]="${p[81]}\nlocation / {"
+p[81]="${p[81]}\nproxy_pass http://127.0.0.1:32400;"
+p[81]="${p[81]}\nproxy_set_header Host \$host;"
+p[81]="${p[81]}\nproxy_set_header X-Real-IP \$remote_addr;"
+p[81]="${p[81]}\nproxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;"
+p[81]="${p[81]}\n#upgrade to WebSocket protocol when requested"
+p[81]="${p[81]}\nproxy_set_header Upgrade \$http_upgrade;"
+p[81]="${p[81]}\nproxy_set_header Connection \"Upgrade\";"
+p[81]="${p[81]}\n}"
+p[81]="${p[81]}\n}"
+p[82]="s%rpc-whitelist\": \"[^\"]*\"%rpc-whitelist\": \"127.0.0.1,192.168.8.*\"%"
+p[82]="${p[82]};s%rpc-username\": \"[^\"]*\"%rpc-username\": \"eu\"%"
+p[82]="${p[82]};s%rpc-password\": \"[^\"]*\"%rpc-password\": \"\"%"
+p[82]="${p[82]};s%umask\": [0-9]*%umask\": 2%"
 p[99]='0x82f6E45b47c5C03F8D52dDDa03B3F65897Cd5AB2'
 
 function pjp { local e="";[[ $# -ge 1 ]] && { e="${p[$1]}";shift; };until [[ $# -lt 1 ]];do e="$e/${p[$1]}";shift;done;echo "$e"; }                           # paths join

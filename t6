@@ -261,12 +261,12 @@ function cpe {                                                                  
   [[ $(swn $(/usr/lib/update-notifier/apt-check --human-readable)) -gt 0 ]] && { echo;apt list --upgradable; }
 }
 # Plex Media Server
-function xop { pde 32400 plex delete;pai 32400 192.168.8.0/24 plex       ;ide 192.168.8.0/24 1900/udp plex/upnp       ; }
-function xcl { pde 32400 plex       ;pai 32400 192.168.8.0/24 plex delete;ide 192.168.8.0/24 1900/udp plex/upnp delete; }
-function xe  { xop;sex 'ufw reload';cex "$(pjw 64 79)"; }                                                                                                     # enable  plexmediaserver
-function xa  { [[ $(sst ${p[79]}       ) ]] && { cex "$(pjw 63 79)"; } }                                                                                      # start   plexmediaserver
-function xp  { [[ $(sst ${p[79]} loaded) ]] && { cex "$(pjw 62 79)"; } }                                                                                      # stop    plexmediaserver
-function xd  { cex "$(pjw 65 79)";xcl;sex 'ufw reload'; }                                                                                                     # disable plexmediaserver
+function xop { pde 80 plex/nginx delete;pai 80 192.168.8.0/24 plex/nginx       ;ide 192.168.8.0/24 1900/udp plex/upnp       ; }
+function xcl { pde 80 plex/nginx       ;pai 80 192.168.8.0/24 plex/nginx delete;ide 192.168.8.0/24 1900/udp plex/upnp delete; }
+function xe  { xop;sex 'ufw reload';cex "$(pjw 64 80)";cex "$(pjw 64 79)"; }                                                                                  # enable  plexmediaserver
+function xa  { [[ $(sst ${p[80]}       ) ]] && cex "$(pjw 63 80)";[[ $(sst ${p[79]}       ) ]] && cex "$(pjw 63 79)"; }                                       # start   plexmediaserver
+function xp  { [[ $(sst ${p[80]} loaded) ]] && cex "$(pjw 62 80)";[[ $(sst ${p[79]} loaded) ]] && cex "$(pjw 62 79)"; }                                       # stop    plexmediaserver
+function xd  { cex "$(pjw 65 79)";cex "$(pjw 65 80)";xcl;sex 'ufw reload'; }                                                                                  # disable plexmediaserver
 # Transmission BitTorrent Daemon
 function rop { pae 51413 torrent;pde 9091 torrent delete;pai 9091 192.168.8.0/24 torrent       ; }
 function rcl { pde 51413 torrent;pde 9091 torrent       ;pai 9091 192.168.8.0/24 torrent delete; }
