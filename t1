@@ -30,7 +30,7 @@ p[6]='/sys/bus/usb/devices/1-0:1.0/authorized'
 p[7]='/sys/devices/system/cpu/intel_pstate/no_turbo'
 p[8]='/usr/bin'
 p[9]='/home/eth'
-p[10]='/var/lib/lighthouse'                                                                                                                                   # cl data
+p[10]='/var/lib/lighthouse';[[ $cunm = $znm2 ]] && p[10]='/sata/lighthouse'                                                                                   # cl data
 p[11]="${p[9]}/beacon.log"                                                                                                                                    # cc minute log
 p[12]="${p[9]}/bmedias.log"                                                                                                                                   # cc daily  log
 p[13]="${p[9]}/geth.log"                                                                                                                                      # ec minute log
