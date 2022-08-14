@@ -14,5 +14,5 @@ alias tcd='cd /var/lib/transmission-daemon/downloads'
 alias tac='fntac'
 
 #alias zz='echo $H|sudo -S shutdown;exit'
-alias xx='exit'
 alias nt='sudo iftop -i $(ip l|sed -n "s%.* \([a-z0-9]*\): .* state UP .*%\1%p"|tail -n1)'
+alias xx='exit'
