@@ -53,6 +53,8 @@ cc1 ${p[25]} "${p[46]}"                                       ;cmw ${p[25]} 755 
 cc1 ${p[26]} "s%^ *${p[1]}%# ${p[1]}%";cc2 ${p[26]} "${p[54]}";cmw ${p[26]} 644 root                                                                          # new logrotate add
 cc3 ${p[28]} "${p[48]}" "${p[55]}"                            ;cmw ${p[28]} 644 root bind                                                                     # named my options
 cc1 ${p[29]} "${p[42]}"                                       ;cmw ${p[29]} 644 root                                                                          # use only ipv4
+cc1 ${p[34]} "${p[83]}"                                       ;cmw ${p[34]} 644 root                                                                          # hosts config
+cc4 ${p[35]} "${p[84]}"                                       ;cmw ${p[35]} 644 root                                                                          # ssh config
 [[ -x ${p[27]} ]] && sex "chmod -x ${p[27]}"                                                                                                                  # motd overlayroot unexecute
 cex 'sudo update-grub';dmr;nrs;trs                                                                                                                            # daemon-reload & netplan/DNS/time restart
 sudo dpkg-reconfigure -plow unattended-upgrades

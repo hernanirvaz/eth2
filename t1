@@ -54,6 +54,8 @@ p[30]='/etc/ntp.conf'                                                           
 p[31]="${p[17]}/slashing_protection"                                                                                                                          # cl slashing_protection data
 p[32]='/etc/nginx/conf.d/plexmediaserver.conf'                                                                                                                # nginx config for plex
 p[33]='/etc/transmission-daemon/settings.json'                                                                                                                # transmission settings
+p[34]='/etc/hosts'                                                                                                                                            # hosts config
+p[35]='/etc/ssh/ssh_config.d/ztc.conf'                                                                                                                        # ssh config
 
 # sed/grep scripts
 p[40]='s%^ *#*NTP=.*$%NTP=192.168.8.28 ntp02.oal.ul.pt ntp04.oal.ul.pt time.google.com time.cloudflare.com time.facebook.com%i'                               # my time servers
@@ -171,6 +173,19 @@ p[82]="s%rpc-whitelist\": \"[^\"]*\"%rpc-whitelist\": \"127.0.0.1,192.168.8.*\"%
 p[82]="${p[82]};s%rpc-username\": \"[^\"]*\"%rpc-username\": \"eu\"%"
 p[82]="${p[82]};s%rpc-password\": \"[^\"]*\"%rpc-password\": \"\"%"
 p[82]="${p[82]};s%umask\": [0-9]*%umask\": 2%"
+p[83]="s%hrv-zotac\([0-9]\).*%hrv-zotac\1 ztc\1%;/127.0.1.1/a \ "
+[[ $cunm = $znm1 ]] && p[83]="${p[83]}\n192.168.8.28\thrv-zotac2 ztc2\n192.168.8.31\thrv-zotac3 ztc3\n192.168.8.34\thrv-zotac4 ztc4"
+[[ $cunm = $znm2 ]] && p[83]="${p[83]}\n192.168.8.25\thrv-zotac1 ztc1\n192.168.8.31\thrv-zotac3 ztc3\n192.168.8.34\thrv-zotac4 ztc4"
+[[ $cunm = $znm3 ]] && p[83]="${p[83]}\n192.168.8.25\thrv-zotac1 ztc1\n192.168.8.28\thrv-zotac2 ztc2\n192.168.8.34\thrv-zotac4 ztc4"
+[[ $cunm = $znm4 ]] && p[83]="${p[83]}\n192.168.8.25\thrv-zotac1 ztc1\n192.168.8.28\thrv-zotac2 ztc2\n192.168.8.31\thrv-zotac3 ztc3"
+p[83]="${p[83]}\n207.180.214.8\tvpsl"
+p[83]="${p[83]}\n173.249.42.190\tvpsm"
+p[83]="${p[83]}\n164.68.107.45\tvpss"
+p[84]=""
+[[ $cunm = $znm1 ]] && p[84]="${p[84]}\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/ztc1\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/ztc1\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/ztc1"
+[[ $cunm = $znm2 ]] && p[84]="${p[84]}\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/ztc2\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/ztc2\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/ztc2"
+[[ $cunm = $znm3 ]] && p[84]="${p[84]}\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/ztc3\n\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/ztc3\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/ztc3"
+[[ $cunm = $znm4 ]] && p[84]="${p[84]}\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/ztc4\n\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/ztc4\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/ztc4"
 p[99]='0x82f6E45b47c5C03F8D52dDDa03B3F65897Cd5AB2'
 
 function pjp { local e="";[[ $# -ge 1 ]] && { e="${p[$1]}";shift; };until [[ $# -lt 1 ]];do e="$e/${p[$1]}";shift;done;echo "$e"; }                           # paths join
