@@ -202,7 +202,7 @@ function pex {          echo $H|sudo -S $1       2>${p[3]}; }                   
 function sex {          echo $H|sudo -S $1       &>${p[3]}; }                                                                                                 # superuser-command (silent)
 function dmr { sex "${p[60]} daemon-reload"; }                                                                                                                # daemon-reload
 function dpa { nex "$(pjw 62 78)";nex "$(pjw 62 79)";nex "$(pjw 63 78)";nex "$(pjw 63 79)"; }                                                                 # DNS stop/start
-function trs { if [[ $(sst ${p[77]} masked) ]];then nex "${p[66]} ntp";else nex "$(pjw 66 77)";fi; }                                                          # systemd-timesyncd/ntp restart
+function trs { if [[ $(${p[61]} ${p[77]} 2>${p[3]}|grep masked) ]];then nex "${p[66]} ntp";else nex "$(pjw 66 77)";fi; }                                      # systemd-timesyncd/ntp restart
 function nrs { nex 'netplan apply';dpa; }                                                                                                                     # netplan/DNS restart
 function idi { local e="deny from $1 to $2"                       ;if [[ $4 ]];then nex "ufw $4 $e";else nex "ufw $e comment $3";fi; }                        # deny  frm ip to ip
 function ide { local e="deny from $1 port ${2/\// proto }"        ;if [[ $4 ]];then nex "ufw $4 $e";else nex "ufw $e comment $3";fi; }                        # deny  frm ip/prt

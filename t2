@@ -25,7 +25,7 @@ swu 'ROOTKIT SCANNER'    ;sex 'apt install python3-pip net-tools lm-sensors chkr
 swu 'UNATTENDED UPGRADES';cex 'apt install unattended-upgrades update-notifier-common -y'
 swu 'LINUX CONFIGS'
 if [[ $cunm = $znm2 ]];then
-  cex "${[67]} set-ntp no"                                                                                                                                    # use ntp       (sophisticated)
+  cex "${p[67]} set-ntp no"                                                                                                                                   # use ntp       (sophisticated)
   cex 'apt install apt-transport-https curl ntp -y'                                                                                                           # install dependencies & ntp
   cc1 ${p[30]} "${p[49]}";cc1 ${p[30]} "${p[52]}"             ;cmw ${p[30]} 644 root                                                                          # ntp config for time synchronization
   sex 'add-apt-repository -y ppa:transmissionbt/ppa'                                                                                                          # add apt source for transmission
@@ -35,14 +35,14 @@ if [[ $cunm = $znm2 ]];then
   cc4 ${p[32]} "${p[81]}"                                     ;cmw ${p[32]} 644 root               ;sex "${p[60]} reload ${p[80]}"                            # nginx config for plex
   cc1 ${p[33]} "${p[82]}"                                     ;cmw ${p[33]} 600 debian-transmission;sex "${p[60]} reload ${p[72]}"                            # transmission config
 else
-  cex "${[67]} set-ntp on"                                                                                                                                    # use timesyncd (lightweight)
+  cex "${p[67]} set-ntp on"                                                                                                                                   # use timesyncd (lightweight)
 fi
 if [[ $cust = hrv ]];then
-  sex "${[67]} set-timezone Europe/Lisbon"
+  sex "${p[67]} set-timezone Europe/Lisbon"
   cc1 ${p[19]} "${p[40]}"                                                                                                                                     # my      time servers
   cc1 ${p[20]} "${p[41]}"                                     ;cmw ${p[20]} 644 root                                                                          # motd-news disable
 else
-  sex "${[67]} set-timezone Europe/Berlin"
+  sex "${p[67]} set-timezone Europe/Berlin"
   cc1 ${p[19]} "${p[53]}"                                                                                                                                     # general time servers
 fi                                                            ;cmw ${p[19]} 644 root                                                                          # timesyncd cmod
 cc4 ${p[21]} "${p[56]}"                                       ;cmw ${p[21]} 644 root                                                                          # new netplan
