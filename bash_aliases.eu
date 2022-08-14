@@ -1,20 +1,18 @@
-mp4ls () { echo -e "\nls extensao *.${1:-txt}";find /var/lib/transmission-daemon/downloads -name "*.${1:-txt}" -print; }
-mp4rm () { echo -e "\nrm extensao *.${1:-txt}";find /var/lib/transmission-daemon/downloads -name "*.${1:-txt}" -exec rm {} \;; }
-rsq ()   { echo -e "\nresolvectl query ${1:-pt.archive.ubuntu.com}";resolvectl query "${1:-pt.archive.ubuntu.com}"; }
+mp4ls () { echo -e "\ntls ${1:-txt}  ${2:-~/mp4}";find ${2:-~/mp4} -name "*.${1:-txt}" -print; }
+mp4rm () { echo -e "\ntrm ${1:-txt}  ${2:-~/mp4}";find ${2:-~/mp4} -name "*.${1:-txt}" -exec sudo rm {} \;; }
+fntac () { echo -e "\ntac ${1:-plex} ${2:-~/mp4}";sudo chown ${1:-plex}:${1:-plex} -R ${2:-~/mp4}; }
 
-alias tst='sudo systemctl transmission-daemon start'
-alias tpr='sudo systemctl transmission-daemon stop'
-alias trl='sudo systemctl transmission-daemon reload'
-alias tls='transmission-remote -n 'transmission:transmission' -l'
-alias tbs='transmission-remote -n 'transmission:transmission' -st'
-alias tfs='transmission-remote -n 'transmission:transmission' -si'
+alias tll='transmission-remote -n 'eu:' -l'
+alias tbs='transmission-remote -n 'eu:' -st'
+alias tfs='transmission-remote -n 'eu:' -si'
 
-alias tlt='mp4ls'
-alias trt='mp4rm'
-alias tld='ll /var/lib/transmission-daemon/downloads'
+alias tls='mp4ls'
+alias trm='mp4rm'
+alias tcd='cd /var/lib/transmission-daemon/downloads'
 
 #alias tac='sudo chown eu:eu -R ~/mp4;sudo setfacl -R -m u:plex:rx ~/mp4'
-alias tac='sudo chown plex:plex -R ~/mp4'
+alias tac='fntac'
 
+#alias zz='echo $H|sudo -S shutdown;exit'
 alias xx='exit'
-alias nt='sudo iftop -i enp1s0'
+alias nt='sudo iftop -i $(ip l|sed -n "s%.* \([a-z0-9]*\): .* state UP .*%\1%p"|tail -n1)'
