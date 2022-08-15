@@ -27,13 +27,13 @@ swu 'LINUX CONFIGS'
 if [[ $cunm = $znm2 ]];then
   cex "${p[67]} set-ntp no"                                                                                                                                   # use ntp       (sophisticated)
   cex 'apt install apt-transport-https curl ntp -y'                                                                                                           # install dependencies & ntp
-  cc1 ${p[30]} "${p[49]}";cc1 ${p[30]} "${p[52]}"             ;cmw ${p[30]} 644 root                                                                          # ntp config for time synchronization
+  cc1 ${p[30]} "${p[49]}"                                     ;cmw ${p[30]} 644 root                                                                          # ntp config for time synchronization
   sex 'add-apt-repository -y ppa:transmissionbt/ppa'                                                                                                          # add apt source for transmission
   echo deb https://downloads.plex.tv/repo/deb public main | sudo tee /etc/apt/sources.list.d/plexmediaserver.list                                             # add apt source for plex
   curl https://downloads.plex.tv/plex-keys/PlexSign.key | sudo apt-key add -;sex 'apt update'                                                                 # add apt key    for plex
   cex 'apt install nginx plexmediaserver transmission-cli transmission-common transmission-daemon -y';sex "usermod -a -G debian-transmission eu"              # install nginx/plex/transmission
   cc4 ${p[32]} "${p[81]}"                                     ;cmw ${p[32]} 644 root               ;sex "${p[60]} reload ${p[80]}"                            # nginx config for plex
-  cc1 ${p[33]} "${p[82]}"                                     ;cmw ${p[33]} 600 debian-transmission;sex "${p[60]} reload ${p[72]}"                            # transmission config
+  cc1 ${p[33]} "${p[52]}"                                     ;cmw ${p[33]} 600 debian-transmission;sex "${p[60]} reload ${p[72]}"                            # transmission config
 else
   cex "${p[67]} set-ntp on"                                                                                                                                   # use timesyncd (lightweight)
 fi
@@ -54,7 +54,7 @@ cc1 ${p[26]} "s%^ *${p[1]}%# ${p[1]}%";cc2 ${p[26]} "${p[54]}";cmw ${p[26]} 644 
 cc3 ${p[28]} "${p[48]}" "${p[55]}"                            ;cmw ${p[28]} 644 root bind                                                                     # named my options
 cc1 ${p[29]} "${p[42]}"                                       ;cmw ${p[29]} 644 root                                                                          # use only ipv4
 cc1 ${p[34]} "${p[83]}"                                       ;cmw ${p[34]} 644 root                                                                          # hosts config
-cc4 ${p[35]} "${p[84]}"                                       ;cmw ${p[35]} 644 root                                                                          # ssh config
+cc4 ${p[35]} "${p[82]}"                                       ;cmw ${p[35]} 644 root                                                                          # ssh config
 [[ -x ${p[27]} ]] && sex "chmod -x ${p[27]}"                                                                                                                  # motd overlayroot unexecute
 cex 'sudo update-grub';t6 dmr;t6 nrs;t6 trs;t6 sea                                                                                                            # daemon-reload & netplan/DNS/time restart
 sudo dpkg-reconfigure -plow unattended-upgrades

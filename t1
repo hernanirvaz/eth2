@@ -67,14 +67,19 @@ p[45]='printf "Welcome to %s %s\\n" "$(uname -n)" "$DISTRIB_DESCRIPTION"'       
 p[46]='s%timeout *=.*$%timeout=1%i'                                                                                                                           # grub timeout
 p[47]='geth\[\|lighthouse'                                                                                                                                    # el/cl clients
 p[48]='/dnssec-validation/q'                                                                                                                                  # print lines until pattern
-p[49]="s%^ *pool \([^a-z]\)%# pool \1%;/# Specify one or more NTP servers/a "                                                                                 # ntp my pool servers
+p[49]="s%^ *pool \([^a-z]\)%# pool \1%"                                                                                                                       # ntp del other pool servers
+p[49]="${p[49]};s%^ *#.*restrict.*192.*%restrict 192.168.8.0 mask 255.255.255.0 notrap nomodify%"                                                             # ntp my lan unlimited access
+p[49]="${p[49]};/^ *#.*Specify/a "                                                                                                                            # ntp my pool servers
 p[49]="${p[49]}pool 0.pt.pool.ntp.org iburst"
 p[49]="${p[49]}\npool 0.europe.pool.ntp.org iburst"
 p[49]="${p[49]}\npool 1.europe.pool.ntp.org iburst"
 p[49]="${p[49]}\npool 0.ubuntu.pool.ntp.org iburst"
 p[50]="s%--execution-endpoint  *\([^ ]*/\)[0-9\.]*:8551[^ ]*%--execution-endpoint \1$zip4:8551%"                                                              # cc service change to 34 (merge)
 p[51]="s%--execution-endpoint  *\([^ ]*/\)[0-9\.]*:8551[^ ]*%--execution-endpoint \1$zip1:8551%"                                                              # cc service change to 25 (merge)
-p[52]='/#restrict 192/a restrict 192.168.8.0 mask 255.255.255.0 notrap nomodify'                                                                              # ntp my lan unlimited access
+p[52]="s%rpc-whitelist\": \"[^\"]*\"%rpc-whitelist\": \"127.0.0.1,192.168.8.*\"%"                                                                             # transmission config
+p[52]="${p[52]};s%rpc-username\": \"[^\"]*\"%rpc-username\": \"eu\"%"
+p[52]="${p[52]};s%rpc-password\": \"[^\"]*\"%rpc-password\": \"\"%"
+p[52]="${p[52]};s%umask\": [0-9]*%umask\": 2%"
 p[53]='s%^ *#*NTP=.*$%NTP=time.google.com time.cloudflare.com time.facebook.com%i'                                                                            # general time servers
 p[54]="\n${p[1]}\n{\n\trotate 7\n\tdaily\n\tmissingok\n\tnotifempty\n\tnocompress\n\tsharedscripts\n\tpostrotate\n\t\t/usr/lib/rsyslog/rsyslog-rotate\n\tendscript\n}"
 p[55]=""
@@ -169,10 +174,11 @@ p[81]="${p[81]}\nproxy_set_header Upgrade \$http_upgrade;"
 p[81]="${p[81]}\nproxy_set_header Connection \"Upgrade\";"
 p[81]="${p[81]}\n}"
 p[81]="${p[81]}\n}"
-p[82]="s%rpc-whitelist\": \"[^\"]*\"%rpc-whitelist\": \"127.0.0.1,192.168.8.*\"%"
-p[82]="${p[82]};s%rpc-username\": \"[^\"]*\"%rpc-username\": \"eu\"%"
-p[82]="${p[82]};s%rpc-password\": \"[^\"]*\"%rpc-password\": \"\"%"
-p[82]="${p[82]};s%umask\": [0-9]*%umask\": 2%"
+p[82]=""
+[[ $cunm = $znm1 ]] && p[82]="${p[82]}\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/ztc1\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/ztc1\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/ztc1"
+[[ $cunm = $znm2 ]] && p[82]="${p[82]}\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/ztc2\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/ztc2\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/ztc2"
+[[ $cunm = $znm3 ]] && p[82]="${p[82]}\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/ztc3\n\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/ztc3\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/ztc3"
+[[ $cunm = $znm4 ]] && p[82]="${p[82]}\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/ztc4\n\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/ztc4\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/ztc4"
 p[83]="s%hrv-zotac\([0-9]\).*%hrv-zotac\1 ztc\1%;/127.0.1.1/a \ "
 [[ $cunm = $znm1 ]] && p[83]="${p[83]}\n192.168.8.28\thrv-zotac2 ztc2\n192.168.8.31\thrv-zotac3 ztc3\n192.168.8.34\thrv-zotac4 ztc4"
 [[ $cunm = $znm2 ]] && p[83]="${p[83]}\n192.168.8.25\thrv-zotac1 ztc1\n192.168.8.31\thrv-zotac3 ztc3\n192.168.8.34\thrv-zotac4 ztc4"
@@ -181,11 +187,6 @@ p[83]="s%hrv-zotac\([0-9]\).*%hrv-zotac\1 ztc\1%;/127.0.1.1/a \ "
 p[83]="${p[83]}\n207.180.214.8\tvpsl"
 p[83]="${p[83]}\n173.249.42.190\tvpsm"
 p[83]="${p[83]}\n164.68.107.45\tvpss"
-p[84]=""
-[[ $cunm = $znm1 ]] && p[84]="${p[84]}\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/ztc1\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/ztc1\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/ztc1"
-[[ $cunm = $znm2 ]] && p[84]="${p[84]}\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/ztc2\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/ztc2\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/ztc2"
-[[ $cunm = $znm3 ]] && p[84]="${p[84]}\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/ztc3\n\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/ztc3\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/ztc3"
-[[ $cunm = $znm4 ]] && p[84]="${p[84]}\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/ztc4\n\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/ztc4\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/ztc4"
 p[99]='0x82f6E45b47c5C03F8D52dDDa03B3F65897Cd5AB2'
 
 function pjp { local e="";[[ $# -ge 1 ]] && { e="${p[$1]}";shift; };until [[ $# -lt 1 ]];do e="$e/${p[$1]}";shift;done;echo "$e"; }                           # paths join
