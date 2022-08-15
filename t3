@@ -50,11 +50,11 @@ else
   othe="$othe --subscribe-all-subnets --import-all-attestations"                                                                                              # for redundant cc
   othe="$othe --validator-monitor-file ${p[16]}/pubkeys"                                                                                                      # monitor validators
   # othe="$othe --checkpoint-sync-url https://1q1s6o6cB6Jysu7KKlbLUYiOdAM:8974468780164028652df958a69fbd30@eth2-beacon-mainnet.infura.io"
-  othe="$othe --checkpoint-sync-url http://192.168.8.28:5052"                                                                                                 # syncing from finalized checkpoint
+  othe="$othe --checkpoint-sync-url http://192.168.8.31:5052"                                                                                                 # syncing from finalized checkpoint
   othe="$othe --disable-upnp"
   # othe="$othe --slasher"
   swu 'CONFIGURE BEACON';sex "mkdir -p ${p[16]}";cmw ${p[10]} 755 $meeu;sau eth2
-  echo $pubk > ${p[16]}/pubkeys;cmw ${p[16]}/pubkeys 600 $user
+  sex "echo $pubk > ${p[16]}/pubkeys";cmw ${p[16]}/pubkeys 600 $user
   cmw ${p[16]} 700 $user;touch ${p[10]}/vc_lock;cd ${p[9]}                                                                                                    # IMPORTANTE LOCK VALIDATOR CLIENTE
   pp2p=9000 # default
   cat <<-EOF > ${p[71]}.service

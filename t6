@@ -358,7 +358,7 @@ function jw4 { jw3 ztc2;jw3 ztc3;jw3 ztc4; }
 function sr1 { cp $(pjp 4 71).service ${p[71]}.sav;sed "s%--eth1-endpoints  *\([^ ]*\):8545,[^ ]*%--execution-endpoint \1:8551 --execution-jwt ${p[16]}/jwt --suggested-fee-recipient ${p[99]}%" ${p[71]}.sav > $(pjp 9 71).jwt;cmw $(pjp 9 71).jwt 644 eth; }
 function sr3 { cp $(pjp 4 73).service ${p[73]}.sav;sed "s%--beacon-nodes  *\([^ ]*\)%--beacon-nodes \1 --suggested-fee-recipient ${p[99]}%" ${p[73]}.sav > $(pjp 9 73).jwt;cmw $(pjp 9 73).jwt 644 eth; }
 [[ $1 = oce ]] && { oce; }
-[[ $1 = jwt ]] && { [[ $cunm = $znm1 || $cunm = $vnm1 ]] && jw0;if [[ -f jwt ]];then [[ -d ${p[18]}/geth} ]] && jw1 eth1 ${p[18]}/geth;[[ -d ${p[16]} ]] && jw1 eth2 ${p[16]};sex "rm jwt";fi; }
+[[ $1 = jwt ]] && { [[ $cunm = $znm1 || $cunm = $vnm1 ]] && jw0;if [[ -f jwt ]];then [[ -d ${p[18]}/geth ]] && jw1 eth1 ${p[18]}/geth;[[ -d ${p[16]} ]] && jw1 eth2 ${p[16]};sex "rm jwt";fi; }
 [[ $1 = srv ]] && { [[ -f $(pjp 4 71).service ]] && sr1;[[ -f $(pjp 4 73).service ]] && sr3; }
 
 [[ $1 = vcc ]] && { vcc; }
