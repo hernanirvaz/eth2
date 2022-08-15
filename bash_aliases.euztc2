@@ -8,7 +8,7 @@ alias tfs='transmission-remote -n 'eu:' -si'
 
 alias tls='mp4ls'
 alias trm='mp4rm'
-alias tcd='cd /var/lib/transmission-daemon/downloads'
+alias tcd='cd /sata/downloads'
 
 #alias tac='sudo chown eu:eu -R /sata/mp4;sudo setfacl -R -m u:plex:rx /sata/mp4'
 alias tac='fntac'
