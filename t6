@@ -345,6 +345,10 @@ function c0t { [[ $(sed -n 's%.*--execution-endpoint  *[^ ]*/\([0-9\.]*\):8551.*
 function c0c { local e="${p[51]}";c0t && e="${p[50]}";sed "$e" ${p[71]}.sav > $(pjp 4 71).service; }                                                          # cc change el server
 function cce { cft || return;cp $(pjp 4 71).service ${p[71]}.sav;c0c;cmw $(pjp 4 71).service 644 eth; }                                                       # cc change el server (merge)
 function vcc { vft || return;cp $(pjp 4 73).service ${p[73]}.sav;sed "${p[59]}" ${p[73]}.sav > $(pjp 4 73).service;cmw $(pjp 4 73).service 644 eth; }         # vc switch cc server order
+function dmr { sex "${p[60]} daemon-reload"; }                                                                                                                # daemon-reload
+function trs { if [[ $(sst ${p[77]} masked) ]];then nex "${p[66]} ntp";else nex "$(pjw 66 77)";fi; }                                                          # systemd-timesyncd/ntp restart
+function dpa { nex "$(pjw 62 78)";nex "${p[62]} systemd-resolved";nex "$(pjw 63 78)";nex "${p[63]} systemd-resolved"; }                                       # DNS stop/start
+function nrs { nex 'netplan apply';dpa; }                                                                                                                     # netplan/DNS restart
 
 function oce { cft || return;cp $(pjp 4 71).service ${p[71]}.sav;sed 's%--eth1-endpoints *\([^ ]*:8545\),\([^ ]*:8545\)[^ ]*%--eth1-endpoints \2,\1%' ${p[71]}.sav > $(pjp 4 71).service;cmw $(pjp 4 71).service 644 eth; }
 function jw0 { openssl rand -hex 32|tr -d '\n'|tee jwt 1>${p[3]};[[ -f jwt ]] && jw4; }
@@ -365,6 +369,7 @@ function sr3 { cp $(pjp 4 73).service ${p[73]}.sav;sed "s%--beacon-nodes  *\([^ 
 [[ $1 = drs ]] && { dpa; }
 [[ $1 = nrs ]] && { nrs; }
 [[ $1 = trs ]] && { trs; }
+[[ $1 = dmr ]] && { dmr; }
 [[ $1 = tsh ]] && { cex "${p[67]}";cex "${p[67]} timesync-status";cex "${p[67]} show-timesync"; }
 [[ $1 = nsh ]] && { nsh; }
 [[ $1 = vcp ]] && { [[ $2 ]] && ssp $2; }
