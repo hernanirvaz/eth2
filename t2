@@ -27,7 +27,7 @@ swu 'LINUX CONFIGS'
 if [[ $cunm = $znm2 ]];then
   cex "${p[67]} set-ntp no"                                                                                                                                   # use ntp       (sophisticated)
   cex 'apt install apt-transport-https curl ntp -y'                                                                                                           # install dependencies & ntp
-  cc1 ${p[30]} "${p[49]}"                                     ;cmw ${p[30]} 644 root                                                                          # ntp config for time synchronization
+  cc1 ${p[30]} "${p[49]}"                                     ;cmw ${p[30]} 644 root;nex "${p[66]} ntp"                                                       # ntp config for time synchronization
   sex 'add-apt-repository -y ppa:transmissionbt/ppa'                                                                                                          # add apt source for transmission
   echo deb https://downloads.plex.tv/repo/deb public main | sudo tee /etc/apt/sources.list.d/plexmediaserver.list                                             # add apt source for plex
   curl https://downloads.plex.tv/plex-keys/PlexSign.key | sudo apt-key add -;sex 'apt update'                                                                 # add apt key    for plex
@@ -45,7 +45,7 @@ if [[ $cust = hrv ]];then
 else
   sex "${p[67]} set-timezone Europe/Berlin"
   cc1 ${p[19]} "${p[53]}"                                                                                                                                     # general time servers
-fi                                                            ;cmw ${p[19]} 644 root                                                                          # timesyncd cmod
+fi                                                            ;cmw ${p[19]} 644 root;nex "$(pjw 66 77)"                                                       # timesyncd cmod & restart
 cc4 ${p[21]} "${p[56]}"                                       ;cmw ${p[21]} 644 root                                                                          # new netplan
 cc1 ${p[22]} "${p[43]}"                                       ;cmw ${p[22]} 644 root                                                                          # unattended-upgrades
 cc1 ${p[23]} "${p[44]}"               ;cc2 ${p[23]} "${p[45]}";cmw ${p[23]} 755 root                                                                          # header add my motd
@@ -57,8 +57,9 @@ cc1 ${p[29]} "${p[42]}"                                       ;cmw ${p[29]} 644 
 cc1 ${p[34]} "${p[83]}"                                       ;cmw ${p[34]} 644 root                                                                          # hosts config
 cc4 ${p[35]} "${p[82]}"                                       ;cmw ${p[35]} 644 root                                                                          # ssh config
 [[ -x ${p[27]} ]] && sex "chmod -x ${p[27]}"                                                                                                                  # motd overlayroot unexecute
-cex 'sudo update-grub';t6 dmr;t6 nrs;t6 trs;t6 sea                                                                                                            # daemon-reload & netplan/DNS/time restart
-sudo dpkg-reconfigure -plow unattended-upgrades
+nex 'sudo update-grub';nex "${p[60]} daemon-reload"                                                                                                           # daemon-reload
+sudo dpkg-reconfigure -plow unattended-upgrades                                                                                                               # unattended upgrades
+nex 'netplan apply';t6 sea;nex "${p[62]} systemd-resolved";nex "${p[63]} systemd-resolved"                                                                    # netplan/DNS restart
 [[ $cunm = $znm1 || $cunm = $znm4 || $cunm = $vnm1 ]] || exit                                                                                                 # ec here
 swu 'INSTALAR GETH';sex 'add-apt-repository -y ppa:ethereum/ethereum';sex 'apt update -y';cex 'apt install -y software-properties-common ethereum'            # install execution client
 sex "mkdir -p ${p[18]}";sau eth1;cmw ${p[18]} 755 $user                                                                                                       # create dir & user for ec
