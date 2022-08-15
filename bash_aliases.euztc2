@@ -1,6 +1,6 @@
-mp4ls () { echo -e "\ntls ${1:-txt}  ${2:-~/mp4}";find ${2:-~/mp4} -name "*.${1:-txt}" -print; }
-mp4rm () { echo -e "\ntrm ${1:-txt}  ${2:-~/mp4}";find ${2:-~/mp4} -name "*.${1:-txt}" -exec sudo rm {} \;; }
-fntac () { echo -e "\ntac ${1:-plex} ${2:-~/mp4}";sudo chown ${1:-plex}:${1:-plex} -R ${2:-~/mp4}; }
+mp4ls () { echo -e "\ntls ${1:-txt}  ${2:-/sata/mp4}";find ${2:-/sata/mp4} -name "*.${1:-txt}" -print; }
+mp4rm () { echo -e "\ntrm ${1:-txt}  ${2:-/sata/mp4}";find ${2:-/sata/mp4} -name "*.${1:-txt}" -exec sudo rm {} \;; }
+fntac () { echo -e "\ntac ${1:-plex} ${2:-/sata/mp4}";sudo chown ${1:-plex}:${1:-plex} -R ${2:-/sata/mp4}; }
 
 alias tll='transmission-remote -n 'eu:' -l'
 alias tbs='transmission-remote -n 'eu:' -st'
@@ -10,7 +10,7 @@ alias tls='mp4ls'
 alias trm='mp4rm'
 alias tcd='cd /var/lib/transmission-daemon/downloads'
 
-#alias tac='sudo chown eu:eu -R ~/mp4;sudo setfacl -R -m u:plex:rx ~/mp4'
+#alias tac='sudo chown eu:eu -R /sata/mp4;sudo setfacl -R -m u:plex:rx /sata/mp4'
 alias tac='fntac'
 
 #alias zz='echo $H|sudo -S shutdown;exit'
