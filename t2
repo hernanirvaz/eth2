@@ -62,7 +62,7 @@ sudo dpkg-reconfigure -plow unattended-upgrades                                 
 t6 sea;nex "${p[62]} systemd-resolved";nex "${p[63]} systemd-resolved"                                                                                        # DNS restart/netplan
 if [[ $cunm = $znm1 || $cunm = $znm4 || $cunm = $vnm1 ]];then                                                                                                 # ec here
   swu 'INSTALAR GETH';sex 'add-apt-repository -y ppa:ethereum/ethereum';sex 'apt update -y';cex 'apt install -y software-properties-common ethereum'          # install execution client
-  sex "mkdir -p ${p[18]}";sau eth1;cmw ${p[18]} 755 $user                                                                                                     # create dir & user for ec
+  sex "mkdir -p ${p[18]}/geth ";sau eth1;cmw ${p[18]} 755 $user;cmw ${p[18]}/geth 700 $user                                                                                                     # create dir & user for ec
   maxp=50    # default
   pp2p=30303 # default
   cat <<-EOF > ${p[70]}.service
