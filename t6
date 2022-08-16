@@ -349,18 +349,18 @@ function dmr { sex "${p[60]} daemon-reload"; }                                  
 function trs { if [[ $(sst ${p[77]} masked) ]];then nex "${p[66]} ntp";else nex "$(pjw 66 77)";fi; }                                                          # systemd-timesyncd/ntp restart
 function dpa { nex "$(pjw 62 78)";nex "${p[62]} systemd-resolved";nex "$(pjw 63 78)";nex "${p[63]} systemd-resolved"; }                                       # DNS stop/start
 function nrs { nex 'netplan apply';dpa; }                                                                                                                     # netplan/DNS restart
-function lcp { [[ -x ${p[36]} ]] && until [[ $# -lt 1 ]];do if [[ $1 = $cusn ]];then lci ${p[36]};else scp ${p[36]} $1:${p[9]};fi;shift;done; }               # propagate lighthouse
-function lci { [[ -x $1 && ! -d $1 ]] && sex "cp ${p[0]}/lighthouse ${p[0]}/lighthouse.sav";sex "cp $1 ${p[0]}"; }                                            # lighthouse binary install
+function lcp { local f=$1;shift;[[ -x $f ]] && until [[ $# -lt 1 ]];do if [[ $1 = $cusn ]];then lci $f;else scp $f $1:${p[9]};fi;shift;done; }                # propagate lighthouse
+function lci { [[ -x $1 && ! -d $1      ]] || exit;sex "mv ${p[0]}/lighthouse ${p[0]}/lighthouse.sav";sex "cp $1 ${p[0]}"; }                                  # lighthouse binary install
 function lmd { [[ -x ${p[0]}/lighthouse ]] || exit;cmw ${p[0]}/lighthouse 755 eth;swb 'LIGHT INSTALADO - PODE/DEVE VERIFICAR'; }                              # lighthouse set permissions
-function lpi { [[ $cunm = $znm2 ]] && lcp ztc2 ztc3 ztc4;[[ $cunm = $vnm1 ]] && lcp vpss;lci ${p[9]}/lighthouse;sex "rm ${p[9]}/lighthouse";lmd; }            # lighthouse propagate/install
+function lpi { [[ $cunm = $znm2 ]] && lcp $1 ztc2 ztc3 ztc4;[[ $cunm = $vnm1 ]] && lcp $1 vpss;lci ${p[9]}/lighthouse;sex "rm ${p[9]}/lighthouse";lmd; }      # lighthouse propagate/install
 function luc {                                                                                                                                                # lighthouse upgrade/compile
   if [[ -f ${p[9]}/lighthouse/README.md ]];then
     cd ${p[9]}/lighthouse;make clean;cargo clean                                                                                                              # clean compile dirs
   else
     cd ${p[9]};sex "rm -rf ${p[9]}/lighthouse";git clone https://github.com/sigp/lighthouse.git;cd ${p[9]}/lighthouse                                         # get new git
   fi
-  git fetch;if [[ $(echo $1|egrep 'v[0-9]+\.[0-9]+\.[0-9]+') ]];then m=$1;else m=$(git describe --tags $(git rev-list --tags --max-count=1));fi               # fetch (vX.X.X/last) version
-  git checkout $m;swu 'VAI COMPILAR LIGHT';make;[[ $? -eq 0 && -x ${p[36]} ]] || swb 'ERRO COMPILAR ERRO'                                                     # checkout stable version & compile
+  git fetch;if [[ $(echo $2|egrep 'v[0-9]+\.[0-9]+\.[0-9]+') ]];then m=$2;else m=$(git describe --tags $(git rev-list --tags --max-count=1));fi               # fetch (vX.X.X/last) version
+  git checkout $m;swu 'VAI COMPILAR LIGHT';make;[[ $? -eq 0 && -x $1 ]] || swb 'ERRO COMPILAR ERRO'                                                           # checkout stable version & compile
 }
 function ruv { if [[ $1 ]];then swn "RUST OVERRIDE SET $1";rustup override set $1;else swn 'RUST UPDATE';rustup update stable;fi; }                           # set/update rust version
 
@@ -375,8 +375,8 @@ function sr3 { cp $(pjp 4 73).service ${p[73]}.sav;sed "s%--beacon-nodes  *\([^ 
 [[ $1 = jwt ]] && { [[ $cunm = $znm1 || $cunm = $vnm1 ]] && jw0;if [[ -f jwt ]];then [[ -d ${p[18]}/geth ]] && jw1 eth1 ${p[18]}/geth;[[ -d ${p[16]} ]] && jw1 eth2 ${p[16]};sex "rm jwt";fi; }
 [[ $1 = srv ]] && { [[ -f $(pjp 4 71).service ]] && sr1;[[ -f $(pjp 4 73).service ]] && sr3; }
 
-[[ $1 = lpi ]] && { lpi; }
-[[ $1 = luc ]] && { luc $2; }
+[[ $1 = lpi ]] && { lpi ${p[9]}/.cargo/bin/lighthouse; }
+[[ $1 = luc ]] && { luc ${p[9]}/.cargo/bin/lighthouse $2; }
 [[ $1 = ruv ]] && { ruv $2; }
 [[ $1 = vcc ]] && { vcc; }
 [[ $1 = cce ]] && { cce; }

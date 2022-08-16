@@ -57,7 +57,6 @@ p[32]='/etc/nginx/conf.d/plexmediaserver.conf'                                  
 p[33]='/etc/transmission-daemon/settings.json'                                                                                                                # transmission settings
 p[34]='/etc/hosts'                                                                                                                                            # hosts config
 p[35]='/etc/ssh/ssh_config.d/ztc.conf'                                                                                                                        # ssh config
-p[36]="${p[9]}/.cargo/bin/lighthouse"                                                                                                                         # compiled lighthouse
 
 # sed/grep scripts
 p[40]='s%^ *#*NTP=.*$%NTP=192.168.8.28 ntp02.oal.ul.pt ntp04.oal.ul.pt time.google.com time.cloudflare.com time.facebook.com%i'                               # my time servers
