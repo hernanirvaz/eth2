@@ -2,24 +2,14 @@
 
 source /home/eth/eth2/t1
 
-if [[ $1 = linux || $1 = reboot || $1 = el ]];then
+if [[ $1 = linux || $1 = reboot || $1 = ec ]];then
   swu 'FULL-UPGRADE'
-  [[ $1 = reboot || $1 = el ]] && t6 gpr
+  [[ $1 = reboot || $1 = ec ]] && t6 gpr
   cex 'apt update -y'    ;sudo apt full-upgrade -y && sudo apt dist-upgrade -y
-  cex 'apt autoremove -y';sudo apt autoclean
-  [[ $1 = el     ]] && t6 gaj
+  cex 'apt autoremove -y';cex 'apt autoclean'
+  [[ $1 = ec     ]] && t6 gaj
   [[ $1 = reboot ]] && cex 'reboot'
 fi
-[[ $1 = cl || $1 = cp ]] || exit
-if [[ $1 = cl && ($cunm = $znm1 || $cunm = $vnm1) ]];then
-  [[ -x ${p[9]}/.cargo/bin/rustup ]] && { swu 'UPDATE RUST';rustup update stable; }
-  if [[ -f ${p[9]}/lighthouse/README.md ]];then
-    cd ${p[9]}/lighthouse;make clean;cargo clean                                                                                                              # clean compile dirs
-  else
-    cd ${p[9]};sex "rm -rf ${p[9]}/lighthouse";git clone https://github.com/sigp/lighthouse.git;cd ${p[9]}/lighthouse                                         # get new git
-  fi
-  git fetch;if [[ $(echo $2|egrep 'v[0-9]+\.[0-9]+\.[0-9]+') ]];then m=$2;else t=$(git rev-list --tags --max-count=1);m=$(git describe --tags $t);fi
-  git checkout $m;swu 'VAI COMPILAR LIGHT';make
-  [[ $? -eq 0 && -x ${p[9]}/.cargo/bin/lighthouse ]] || swb 'ERRO COMPILAR ERRO'
-fi
-lwr                                                                                                                                                           # propagate & install lighthouse
+[[ $1 = cc || $1 = cp ]] || { swn "\n$(basename $0) linux|reboot|ec|cc [version] [rust version]|cp\n\n\tec/cc\tupgrade execution/consencus client\n\tcp\tcopy & propagate";exit; }
+if [[ $1 = cc && ($cunm = $znm2 || $cunm = $vnm1) ]];then [[ -x ${p[9]}/.cargo/bin/rustup ]] && t6 ruv $3;t6 luc $2;fi                                        # rust update & lighthouse upgrade/compile
+t6 lpi                                                                                                                                                        # propagate & install lighthouse

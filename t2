@@ -59,10 +59,10 @@ cc4 ${p[35]} "${p[82]}"                                       ;cmw ${p[35]} 644 
 [[ -x ${p[27]} ]] && sex "chmod -x ${p[27]}"                                                                                                                  # motd overlayroot unexecute
 nex 'sudo update-grub';nex "${p[60]} daemon-reload"                                                                                                           # daemon-reload
 sudo dpkg-reconfigure -plow unattended-upgrades                                                                                                               # unattended upgrades
-t6 sea;nex "${p[62]} systemd-resolved";nex "${p[63]} systemd-resolved"                                                                                        # DNS restart/netplan
+t6 spd;t6 sea;nex "${p[62]} systemd-resolved";nex "${p[63]} systemd-resolved"                                                                                 # DNS stop & start
 if [[ $cunm = $znm1 || $cunm = $znm4 || $cunm = $vnm1 ]];then                                                                                                 # ec here
   swu 'INSTALAR GETH';sex 'add-apt-repository -y ppa:ethereum/ethereum';sex 'apt update -y';cex 'apt install -y software-properties-common ethereum'          # install execution client
-  sex "mkdir -p ${p[18]}/geth ";sau eth1;cmw ${p[18]} 755 $user;cmw ${p[18]}/geth 700 $user                                                                                                     # create dir & user for ec
+  sex "mkdir -p ${p[18]}/geth ";sau eth1;cmw ${p[18]} 755 $user;cmw ${p[18]}/geth 700 $user                                                                   # create dir & user for ec
   maxp=50    # default
   pp2p=30303 # default
   cat <<-EOF > ${p[70]}.service
@@ -86,3 +86,4 @@ if [[ $cunm = $znm1 || $cunm = $znm4 || $cunm = $vnm1 ]];then                   
 fi
 swn 'sudo netplan apply'
 swn 'AND reboot'
+swn 'para iniciar ec: t6 jwt;t gea'

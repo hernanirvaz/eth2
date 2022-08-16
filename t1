@@ -3,6 +3,7 @@
 meeu=$(whoami)
 cunm=$(uname -n)
 cust=$(uname -n|cut -c1-3)
+cusn=$(echo ${cunm/[a-z]*-/}|tr -d '[ao]')
 zip1='192.168.8.25'
 zip2='192.168.8.28'
 zip3='192.168.8.31'
@@ -56,6 +57,7 @@ p[32]='/etc/nginx/conf.d/plexmediaserver.conf'                                  
 p[33]='/etc/transmission-daemon/settings.json'                                                                                                                # transmission settings
 p[34]='/etc/hosts'                                                                                                                                            # hosts config
 p[35]='/etc/ssh/ssh_config.d/ztc.conf'                                                                                                                        # ssh config
+p[36]="${p[9]}/.cargo/bin/lighthouse"                                                                                                                         # compiled lighthouse
 
 # sed/grep scripts
 p[40]='s%^ *#*NTP=.*$%NTP=192.168.8.28 ntp02.oal.ul.pt ntp04.oal.ul.pt time.google.com time.cloudflare.com time.facebook.com%i'                               # my time servers
@@ -211,12 +213,6 @@ function pai { local e="allow from $2 to any port ${1/\// proto }";if [[ $4 ]];t
 function pae { local e="allow $1"                                 ;if [[ $3 ]];then nex "ufw $3 $e";else nex "ufw $e comment $2";fi; }                        # allow prt
 function ple { local e="limit $1"                                 ;if [[ $3 ]];then nex "ufw $3 $e";else nex "ufw $e comment $2";fi; }                        # limit prt (<6 within 30s)
 function nwf { [[ $B = mainnet ]] || echo " --testnet $B"; }                                                                                                  # lighthouse network flag
-function lcp { [[ -x ${p[9]}/.cargo/bin/lighthouse ]] && until [[ $# -lt 1 ]];do scp ${p[9]}/.cargo/bin/lighthouse $1:~;shift;done; }                         # propagate lighthouse
-function lwr {                                                                                                                                                # install   lighthouse
-  [[ $cunm = $znm1 ]] && lcp ztc2 ztc3 ztc4;[[ $cunm = $vnm1 ]] && lcp vpss
-  [[ -x ${p[9]}/lighthouse && ! -d ${p[9]}/lighthouse ]] && { sex "cp ${p[0]}/lighthouse ${p[0]}/lighthouse.sav";sex "mv ${p[9]}/lighthouse ${p[0]}"; }
-  [[ -x ${p[0]}/lighthouse                        ]] && { cmw ${p[0]}/lighthouse 755 eth;swb 'NOVO LIGHT INSTALADO - PODE/DEVE VERIFICAR'; }
-}
 
 bpid=$($(pjw 61 71) 2>${p[3]}|sed -n 's%.*PID: *\([0-9]*\).*%\1%p')
 rblk=22238623

@@ -2,27 +2,17 @@
 
 source /home/eth/eth2/t1
 
-if [[ $cunm = $znm1 || $cunm = $vnm1 ]];then                                                                                                                  # rust here
+if [[ $cunm = $znm2 || $cunm = $vnm1 ]];then                                                                                                                  # rust here
+  swn "\n\ninstall consencus client with lighthouse-${1:-stable} source using rust-${2:-stable}\n" 
   if [[ -x ${p[9]}/.cargo/bin/rustup ]];then
-    if [[ $1 ]];then
-      swn "RUST OVERRIDE SET $1";rustup override set $1
-    else
-      swu 'RUST UPDATE';rustup update stable
-    fi
+    t6 ruv $2                                                                                                                                                 # set/update rust version
   else
-    swu 'RUST NEEDS';cex 'apt install git gcc g++ make cmake pkg-config llvm-dev libclang-dev clang libssl-dev build-essential libudev-dev perl yasm -y'      # rust dependencies
-    swu 'RUST INSTALL';cd ${p[9]};curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+    swu 'RUST NEEDS';cex 'apt install curl build-essential gcc make git g++ cmake pkg-config llvm-dev libclang-dev clang libssl-dev libudev-dev perl yasm -y' # rust dependencies
+    swu 'RUST INSTALL';cd ${p[9]};curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh;source "$HOME/.cargo/env"
   fi
-  if [[ -f ${p[9]}/lighthouse/README.md ]];then
-    cd ${p[9]}/lighthouse;make clean;cargo clean                                                                                                              # clean compile dirs
-  else
-    cd ${p[9]};sex "rm -rf ${p[9]}/lighthouse";git clone https://github.com/sigp/lighthouse.git;cd ${p[9]}/lighthouse                                         # get new git
-  fi
-  git fetch;if [[ $(echo $2|egrep 'v[0-9]+\.[0-9]+\.[0-9]+') ]];then m=$2;else t=$(git rev-list --tags --max-count=1);m=$(git describe --tags $t);fi
-  git checkout $m;swu 'VAI COMPILAR LIGHT';make
-  [[ $? -eq 0 && -x ${p[9]}/.cargo/bin/lighthouse ]] || swb 'ERRO COMPILAR ERRO'
+  t6 luc $1                                                                                                                                                   # lighthouse upgrade/compile
 fi
-lwr                                                                                                                                                           # propagate & install lighthouse
+t6 lpi                                                                                                                                                        # propagate & install lighthouse
 [[ -f $(pjp 4 71).service || -f $(pjp 4 73).service ]] && exit                                                                                                # cl ja instalado -> exit
 if [[ $cunm = $znm1 || $cunm = $vnm1 ]];then                                                                                                                  # beacon here
   swu 'BEACON NAO DEVE SER INSTALADO AQUI'
