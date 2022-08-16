@@ -360,8 +360,7 @@ function luc {                                                                  
     cd ${p[9]};sex "rm -rf ${p[9]}/lighthouse";git clone https://github.com/sigp/lighthouse.git;cd ${p[9]}/lighthouse                                         # get new git
   fi
   git fetch;if [[ $(echo $1|egrep 'v[0-9]+\.[0-9]+\.[0-9]+') ]];then m=$1;else m=$(git describe --tags $(git rev-list --tags --max-count=1));fi               # fetch (vX.X.X/last) version
-  git checkout $m;swu 'VAI COMPILAR LIGHT';make                                                                                                               # checkout stable version & compile
-  [[ $? -eq 0 && -x ${p[9]}/.cargo/bin/lighthouse ]] || swb 'ERRO COMPILAR ERRO'
+  git checkout $m;swu 'VAI COMPILAR LIGHT';make;[[ $? -eq 0 && -x ${p[36]} ]] || swb 'ERRO COMPILAR ERRO'                                                     # checkout stable version & compile
 }
 function ruv { if [[ $1 ]];then swn "RUST OVERRIDE SET $1";rustup override set $1;else swn 'RUST UPDATE';rustup update stable;fi; }                           # set/update rust version
 
