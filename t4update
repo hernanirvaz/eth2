@@ -2,6 +2,8 @@
 
 source /home/eth/eth2/t1
 
+function hlp { swn "\n$(basename $0) linux|reboot|ec|cc [version] [rust version]|cp\n\n\tec/cc\tupgrade execution/consencus client\n\tcp\tcopy & propagate"; }
+
 if [[ $1 = linux || $1 = reboot || $1 = ec ]];then
   swu 'FULL-UPGRADE'
   [[ $1 = reboot || $1 = ec ]] && t6 gpr
@@ -10,6 +12,6 @@ if [[ $1 = linux || $1 = reboot || $1 = ec ]];then
   [[ $1 = ec     ]] && t6 gaj
   [[ $1 = reboot ]] && cex 'reboot'
 fi
-[[ $1 = cc || $1 = cp ]] || { swn "\n$(basename $0) linux|reboot|ec|cc [version] [rust version]|cp\n\n\tec/cc\tupgrade execution/consencus client\n\tcp\tcopy & propagate";exit; }
+[[ $1 = cc || $1 = cp ]] || { hlp;exit; }
 if [[ $1 = cc && ($cunm = $znm2 || $cunm = $vnm1) ]];then [[ -x ${p[9]}/.cargo/bin/rustup ]] && t6 ruv $3;t6 luc $2;fi                                        # rust update & lighthouse upgrade/compile
 t6 lpi                                                                                                                                                        # propagate & install lighthouse
