@@ -39,7 +39,7 @@ function sst { ${p[61]} $1 2>${p[3]}|grep "${2:-inactive\|failed}"; }           
 function ss1 { ${p[61]} $1 2>${p[3]}|sed -n "s%.*$2 \(${3:-.}*\).*%\1%p"; }                                                                                   # systemctl status 1 extraction
 function ss2 { ${p[61]} $1 2>${p[3]}|sed -n "s%.*Active: *\(.*\)%\1%;s% *since.*;%%;s%running%RUNNING%ip"; }                                                  # systemctl status 2 extraction
 function ss3 { printf '%s' "$(printf '%-35s' "$(ss2 $1)") $(printf '%9s' ${1/[a-z]*-/})"; }                                                                   # systemctl status format
-function sgx { ${p[8]}/geth attach --exec net.peerCount "http://$cuec:8545" 2>${p[3]}; }                                                                      # get el current peers
+function sgx { ${p[8]}/geth attach --exec net.peerCount "http://$ciec:8545" 2>${p[3]}; }                                                                      # get el current peers
 function sbx { pex "grep lighthouse.*$1 ${p[1]}"|tail -n1|sed "s%.*$1 *\([0-9]*\).*%\1%"; }                                                                   # get cl current peers
 function sso {
   dts;local e="$1 $(printf '%6s' $(ss1 $2 Memory:)) $dt status: $(ss3 $2)"                                                                                    # memory & status
@@ -61,7 +61,7 @@ function ssp {
 }
 
 # el control commands
-function gy  { ${p[8]}/geth attach --exec eth.syncing "http://$cuec:8545" 2>${p[3]}; }                                                                        # get current syncing status
+function gy  { ${p[8]}/geth attach --exec eth.syncing "http://$ciec:8545" 2>${p[3]}; }                                                                        # get current syncing status
 function gv  { nn=$(nu0 $(ss1 ${p[70]} maxpeers [0-9])); }                                                                                                    # set configured peers
 function gq  { nr=$(nu0 $(sgx))                   ; }                                                                                                         # set current    peers
 function gi  { echo $@|sed 's%.*highestBlock: *\([0-9]*\).*%\1%'; }                                                                                           # get highest el block
@@ -76,7 +76,7 @@ function gl0 {                                                                  
   fi
 }
 function glt { tail -n$1 ${p[13]} 2>${p[3]}|cut -d' ' -f1|sort -u|wc -l; }                                                                                    # get el restart activity test
-function grt { [[ $(glt 6) -eq 1 ]] && sot 6; }                                                                                                               # 6 hours old system reboot test
+function grt { [[ $cunm = $maec && $(glt 6) -eq 1 ]] && sot 6; }                                                                                              # main ec, 6 hours old system reboot test
 function grb { ok=OK;swn "RSTR SYSTEM $(dnn)" >> ${p[13]};sex reboot; }                                                                                       # el system reboot
 function grs { gv;snp ${p[70]} $1 10 50;sex "$(pjw 63 70)";sleep 20s;dts;gq;[[ -f ${p[13]} ]] && swn "RSTR SERVIC $(dnn)" >> ${p[13]}; }                      # change/stop/load/start/log el
 # cc control commands
@@ -179,8 +179,8 @@ function bh0 {
 }
 function vft { [[ -f $(pjp 4 73).service ]]; }                                                                                                                # vc service file test
 function cft { [[ -f $(pjp 4 71).service ]]; }                                                                                                                # cc service file test
-function blt { [[ $(grep '\-all-' $(pjp 4 71).service 2>${p[3]}) ]]; }                                                                                        # cc long-lived test
-function bvt { [[ $(sed -n 's%.*nodes  *http://192.168.8.\([0-9]*\).*%\1%p' $(pjp 4 73).service 2>${p[3]}) -eq $(sci) ]]; }                                   # vc -> this-cc           test
+function blt { [[ $(grep '\-all-' $(pjp 4 71).service 2>${p[3]}) ]]; }                                                                                        # cc long-lived   test
+function bvt { [[ $(sed -n 's%.*nodes  *http://192.168.8.\([0-9]*\).*%\1%p' $(pjp 4 73).service 2>${p[3]}) -eq $(sci) ]]; }                                   # vc -> this-cc   test
 function ble { cp $(pjp 4 71).service $(pjp 9 71).sav;sed "$1" $(pjp 9 71).sav > $(pjp 4 71).service;dmr; }                                                   # cc service edit
 function blc { [[ $1 -eq 0 ]] && cft || return;local e='';if bvt;then blt && e="${p[57]}";else blt || e="${p[58]}";fi;[[ $e ]] && ble "$e"; }                 # cc del/add long-lived (if needed)
 function bls { if blt;then echo ImpAll;else echo NotAll;fi; }                                                                                                 # cl subscribe/import all text
@@ -199,7 +199,7 @@ function bsf { [[ ${1:-0} -gt 0 ]] || return;local f=${p[15]}.s$(btg $1);touch $
 function bsw { while :;do local t=$(bng);if [[ $(bf2 $t) -le ${1:-36} || ${2:-24} -ge $(bfn $t) ]];then bsf $(bmn $(bfn $t));else break;fi;done; }            # sleep while small (gap or remaining) time
 # slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168
 function b1r {                                                                                                                                                # cc/vc gap restart
-  [[ $cunm != $znm3 || $(ls ${p[15]}.* 2>${p[3]}) || $(bsc) -gt 0 ]] && return;bsf $3;local n=${4:-48};[[ $2 = VC ]] && n=60;[[ $2 = RB ]] && n=84;bsw $n
+  [[ $cunm != $mavc || $(ls ${p[15]}.* 2>${p[3]}) || $(bsc) -gt 0 ]] && return;bsf $3;local n=${4:-48};[[ $2 = VC ]] && n=60;[[ $2 = RB ]] && n=84;bsw $n
   local t=$(bng);local f=${p[15]}.i$(btg);touch $f;local n=0;paf;while [[ -f $f ]];do ((n+=$(bfn $t)));bsf $(bfn $t)
   if bpt $t;then rm $f;nn=$(bv);snp ${p[71]} $1 $bpri $bprf;blc $1    ;[[ $2 = VC ]] && sex "$(pjw 62 73)"                                                    # stop cc/conf change?/stop vc?
     if [[ $2 = RB ]];then bro $n $2;sex reboot;else sex "$(pjw 63 71)";[[ $2 = VC ]] && sex "$(pjw 63 73)";bsf 20;bro $n $2;fi                                # reboot/start cc/vc
@@ -548,7 +548,7 @@ if [[ ! $1 ]];then
   m="$m\nbm[f]\t\tcc-daily report [file add & ${p[71]} nodes change/restart]"
   m="$m\nbn[f]\t\tarqivo report [file add]"
   m="$m\nbh[s]\t\tlighthouse historic report [summary]"
-  m="$m\ncce\t\tcc change el server to alternative"
+  m="$m\ncce\t\tcc change ec server"
   m="$m\nvcc\t\tvc switch cc server order"
   m="$m\nws\t\tfirewall status"
   m="$m\nwa\t\tfirewall arranca"

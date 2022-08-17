@@ -2,8 +2,8 @@
 
 source /home/eth/eth2/t1
 
-if [[ $cunm != $znm3 && $cunm != $vnm2 ]];then
-  swu 'MONITOR NAO DEVE SER INSTALADO - DEVE FICAR ONDE FICA O MAIN BEACON'
+if [[ $cunm != $mavc ]];then
+  swn "MONITOR NAO DEVE SER INSTALADO AQUI - DEVE FICAR EM $mavc"
 else
   if [[ -f ${p[2]}/${p[74]}.yml ]];then
     swu 'PROMETHEUS JA INSTALADO'
