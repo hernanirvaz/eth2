@@ -198,7 +198,7 @@ function pjw { local e="";[[ $# -ge 1 ]] && { e="${p[$1]}";shift; };until [[ $# 
 function swb { echo -e "\n\e[5m${1^^}\e[25m\n"; }                                                                                                             # show flash
 function swu { echo -e "${1^^}"; }                                                                                                                            # show upper
 function swn { echo -e "$1"; }                                                                                                                                # show normal
-function sau { user=$1;id $1 &>${p[3]} || sex "useradd --no-create-home --shell /bin/false $user"; }                                                          # system useradd
+function sau { id $1 &>${p[3]} || sex "useradd --no-create-home --shell /bin/false $1"; }                                                                     # system useradd
 function cmw { [[ $2 ]] && sex "chmod $2 $1";[[ $3 ]] && sex "chown $3:${4:-$3} $1"; }                                                                        # chmod/chown file
 function cex { swb "$1";echo $H|sudo -S $1       2>${p[3]}; }                                                                                                 # superuser-command (visible)
 function nex { swn "$1";echo $H|sudo -S $1       2>${p[3]}; }                                                                                                 # superuser-command (visible)

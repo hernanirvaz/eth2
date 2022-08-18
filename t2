@@ -61,7 +61,7 @@ sudo dpkg-reconfigure -plow unattended-upgrades                                 
 t6 spd;t6 sea;nex "${p[62]} systemd-resolved";nex "${p[63]} systemd-resolved"                                                                                 # DNS stop & start
 if [[ $cunm = $znm1 || $cunm = $znm4 || $cunm = $vnm1 ]];then                                                                                                 # ec here
   swu 'INSTALAR GETH';sex 'add-apt-repository -y ppa:ethereum/ethereum';sex 'apt update -y';cex 'apt install -y software-properties-common ethereum'          # install execution client
-  sex "mkdir -p ${p[18]}/geth ";sau eth1;cmw ${p[18]} 755 $user;cmw ${p[18]}/geth 700 $user                                                                   # create dir & user for ec
+  sex "mkdir -p ${p[18]}/geth ";sau eth1;cmw ${p[18]} 755 eth1;cmw ${p[18]}/geth 700 eth1                                                                     # create dir & user for ec
   maxp=50    # default
   pp2p=30303 # default
   cat <<-EOF > ${p[70]}.service
@@ -71,8 +71,8 @@ if [[ $cunm = $znm1 || $cunm = $znm4 || $cunm = $vnm1 ]];then                   
 	After=network-online.target
 	
 	[Service]
-	User=$user
-	Group=$user
+	User=eth1
+	Group=eth1
 	Restart=always
 	RestartSec=10
 	ExecStart=${p[8]}/geth$(nwf) --datadir ${p[18]} --port $pp2p --http --http.addr $zip1 --maxpeers $maxp --authrpc.addr $zip1 --authrpc.jwtsecret ${p[18]}/geth/jwt
