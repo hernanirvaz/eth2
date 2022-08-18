@@ -41,23 +41,13 @@ function ss2 { ${p[61]} $1 2>${p[3]}|sed -n "s%.*Active: *\(.*\)%\1%;s% *since.*
 function ss3 { printf '%s' "$(printf '%-35s' "$(ss2 $1)") $(printf '%9s' ${1/[a-z]*-/})"; }                                                                   # systemctl status format
 function sgx { ${p[8]}/geth attach --exec net.peerCount "http://$ciec:8545" 2>${p[3]}; }                                                                      # get el current peers
 function sbx { pex "grep lighthouse.*$1 ${p[1]}"|tail -n1|sed "s%.*$1 *\([0-9]*\).*%\1%"; }                                                                   # get cl current peers
+function snc { echo ${1/[a-z]*-/}|tr -d '[ao]'; }                                                                                                             # get small server name
 function sso {
   dts;local e="$1 $(printf '%6s' $(ss1 $2 Memory:)) $dt status: $(ss3 $2)"                                                                                    # memory & status
   [[ $1 = GETH ]] && e="$e $(printf "el:p%2i p2p:%5i" $(sgx) $(ss1 $2 port [0-9]))"                                                                           # el peers & p2p port tag
   [[ $1 = BEAC ]] && e="$e $(printf "cl:p%2i p2p:%5i %6s" $(sbx peers:) $(ss1 $2 port [0-9]) $(bls))"                                                         # cl peers/port/import all
   [[ $1 = BEAC ]] && e="$e\tel:http $(ss1 $2 endpoints* '[^ ]'|sed -n 's%http://192.168.8.\([0-9]*:[0-9]*\)%\1%gp')"                                          # el http(s)
   [[ $1 = VALI ]] && e="$e\t\t\t\tcc:http $(ss1 $2 nodes '[^ ]'|sed -n 's%http://192.168.8.\([0-9]*:[0-9]*\)%\1%gp')";swn "$e"                                # cl http(s)
-}
-function ssp {
-  swu 'QUER MESMO TRANSFERIR VALIDATORS?';read rsp
-  if [[ $rsp = sim && ! -f ${p[10]}/vc_slash && ! -f ${p[10]}/vc_lock && -f ${p[10]}/vc_keys ]];then
-    vp;vd
-    swu 'SAVE SLASHING PROTECTION DB'
-    sex "cp ${p[31]}.sqlite ${p[9]}"
-    sex "chown eth:eth ${p[9]}/$(basename ${p[31]}).sqlite"
-    scp ${p[9]}/$(basename ${p[31]}).sqlite $2:${p[9]}
-    swu 'SAVED SLASHING PROTECTION DB IN $2'
-  fi
 }
 
 # el control commands
@@ -76,7 +66,7 @@ function gl0 {                                                                  
   fi
 }
 function glt { tail -n$1 ${p[13]} 2>${p[3]}|cut -d' ' -f1|sort -u|wc -l; }                                                                                    # get el restart activity test
-function grt { [[ $cunm = $maec && $(glt 6) -eq 1 ]] && sot 6; }                                                                                              # main ec, 6 hours old system reboot test
+function grt { [[ $cunm = $znm1 && $(glt 6) -eq 1 ]] && sot 6; }                                                                                              # main ec, 6 hours old system reboot test
 function grb { ok=OK;swn "RSTR SYSTEM $(dnn)" >> ${p[13]};sex reboot; }                                                                                       # el system reboot
 function grs { gv;snp ${p[70]} $1 10 50;sex "$(pjw 63 70)";sleep 20s;dts;gq;[[ -f ${p[13]} ]] && swn "RSTR SERVIC $(dnn)" >> ${p[13]}; }                      # change/stop/load/start/log el
 # cc control commands
@@ -199,7 +189,7 @@ function bsf { [[ ${1:-0} -gt 0 ]] || return;local f=${p[15]}.s$(btg $1);touch $
 function bsw { while :;do local t=$(bng);if [[ $(bf2 $t) -le ${1:-36} || ${2:-24} -ge $(bfn $t) ]];then bsf $(bmn $(bfn $t));else break;fi;done; }            # sleep while small (gap or remaining) time
 # slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168
 function b1r {                                                                                                                                                # cc/vc gap restart
-  [[ $cunm != $mavc || $(ls ${p[15]}.* 2>${p[3]}) || $(bsc) -gt 0 ]] && return;bsf $3;local n=${4:-48};[[ $2 = VC ]] && n=60;[[ $2 = RB ]] && n=84;bsw $n
+  [[ $cunm = $(vco) || $(ls ${p[15]}.* 2>${p[3]}) || $(bsc) -gt 0 ]] && return;bsf $3;local n=${4:-48};[[ $2 = VC ]] && n=60;[[ $2 = RB ]] && n=84;bsw $n
   local t=$(bng);local f=${p[15]}.i$(btg);touch $f;local n=0;paf;while [[ -f $f ]];do ((n+=$(bfn $t)));bsf $(bfn $t)
   if bpt $t;then rm $f;nn=$(bv);snp ${p[71]} $1 $bpri $bprf;blc $1    ;[[ $2 = VC ]] && sex "$(pjw 62 73)"                                                    # stop cc/conf change?/stop vc?
     if [[ $2 = RB ]];then bro $n $2;sex reboot;else sex "$(pjw 63 71)";[[ $2 = VC ]] && sex "$(pjw 63 73)";bsf 20;bro $n $2;fi                                # reboot/start cc/vc
@@ -294,36 +284,48 @@ function vcl { vfw 5064 vcapi delete;pde 5064 vcapi       ; }
 # enable/start eth-geth eth-beacon eth-validator prometheus prometheus-node-exporter grafana-server
 function ge  { gop;sex 'ufw reload';cex "$(pjw 64 70)"; }                                                                                                     # enable eth-geth
 function be  { bop;sex 'ufw reload';cex "$(pjw 64 71)"; }                                                                                                     # enable eth-beacon
-function ve  { [[ -f ${p[10]}/vc_lock ]] || { vop;sex 'ufw reload';cex "$(pjw 64 73)"; } }                                                                    # enable eth-validator
+
 function pe  { pai 9090/tcp 192.168.8.0/24 ${p[74]};sex 'ufw reload';cex "$(pjw 64 74)"; }                                                                    # enable prometheus
 function ne  { sex 'ufw reload';cex "$(pjw 64 75)"; }                                                                                                         # enable prometheus-node-exporter
 function fe  { pai 3000/tcp 192.168.8.0/24 grafana   ;sex 'ufw reload';cex "$(pjw 64 76)"; }                                                                  # enable grafana-server
 function ga  { [[ $(sst ${p[70]}) && -d ${p[18]} ]] && cex "$(pjw 63 70)"; }                                                                                  # start eth-geth
 function ba  { [[ $(sst ${p[71]}) && -d ${p[16]} ]] && cex "$(pjw 63 71)"; }                                                                                  # start eth-beacon
+
+function ve  { [[ -f ${p[10]}/vc_lock ]] && return;vop;sex 'ufw reload';cex "$(pjw 64 73)"; }                                                                 # enable eth-validator
 function va  {
-  [[ $(sst ${p[73]}) && -d ${p[17]} ]] || return
+  [[ $(sst ${p[73]}) && -f ${p[10]}/vc_keys ]] || return                                                                                                      # cannot start eth-validator
   if [[ -f ${p[10]}/vc_lock ]];then
-    if [[ -f ${p[9]}/$(basename ${p[31]}).sqlite ]];then
-      cex "cp ${p[9]}/$(basename ${p[31]}).sqlite ${p[17]}";cmw ${p[31]}.sqlite 600 eth3                                                                      # slashing_protection
-    fi
+    [[ -f ${p[9]}/$(basename ${p[31]}) ]] && sis eth3                                                                                                         # init slash db
   else
     cex "$(pjw 63 73)";rm ${p[10]}/vc_slash                                                                                                                   # start eth-validator
   fi
 }
-function pa  { [[ $(sst ${p[74]}) ]] && { cex "$(pjw 63 74)"; } }                                                                                             # start prometheus
-function na  { [[ $(sst ${p[75]}) ]] && { cex "$(pjw 63 75)"; } }                                                                                             # start prometheus-node-exporter
-function fa  { [[ $(sst ${p[76]}) ]] && { cex "$(pjw 63 76)"; } }                                                                                             # start grafana-server
+function vp  { [[ -f ${p[10]}/vc_slash ]] && return;cex "$(pjw 62 73)"                     ;touch ${p[10]}/vc_slash; }                                        # stop eth-validator
+function vd  { [[ -f ${p[10]}/vc_slash ]] || return;cex "$(pjw 65 73)";vcl;sex 'ufw reload';touch ${p[10]}/vc_lock; }                                         # disable eth-validator
+function v0t { [[ $(sst ${p[73]} running) ]]; }                                                                                                               # vc running test
+function v1t { [[ $cunm = $(vco)          ]]; }                                                                                                               # vc other   test
+function v2t { [[ $cunm = $cuvc           ]]; }                                                                                                               # vc current test
+function vps { local f=${p[9]}/$(basename ${p[31]});sex "cp ${p[31]} ${p[9]}";cmw $f 666 eth;scp $f $(snc $cuvc):~;sex "rm $f"; }                             # prep slash db
+function tvc {
+  v2t && v0t && swn "cuvc ->\t$(vco)\nt6 tvc\nt3 ->\t$(vco)";v2t && ! v0t && swn "t6 tvc ->\t$(vco)";v0t || swn "t3"                                          # show instructions
+  if v1t && v0t;then swn "TRANSFERIR VC -> $cuvc (SIM/nao)?";else return;fi;local rsp=nao;read rsp
+  if [[ $rsp = SIM && ! -f ${p[10]}/vc_slash && ! -f ${p[10]}/vc_lock && -f ${p[10]}/vc_keys ]];then vp;vd;swu "COPY SLASH DB -> $cuvc";vps;fi                # vc stop/disable & prep slash db
+}
+
+function pa  { [[ $(sst ${p[74]}) ]] && cex "$(pjw 63 74)"; }                                                                                                 # start prometheus
+function na  { [[ $(sst ${p[75]}) ]] && cex "$(pjw 63 75)"; }                                                                                                 # start prometheus-node-exporter
+function fa  { [[ $(sst ${p[76]}) ]] && cex "$(pjw 63 76)"; }                                                                                                 # start grafana-server
 function wa  { if [[ $(pex 'ufw status'|grep -i inactive) ]];then yex 'ufw enable';else swu 'FIREWALL ALREADY ACTIVE';fi; }                                   # enable ufw : Proceed with operation (y|n)?
 # stop/disable eth-geth eth-beacon eth-validator prometheus prometheus-node-exporter grafana-server
-function gp  { [[ $(sst ${p[70]} loaded) ]] && { cex "$(pjw 62 70)"; } }                                                                                      # stop eth-geth
-function bp  { [[ $(sst ${p[71]} loaded) ]] && { cex "$(pjw 62 71)"; } }                                                                                      # stop eth-beacon
-function vp  { [[ $(sst ${p[73]} loaded) ]] && { cex "$(pjw 62 73)";touch ${p[10]}/vc_slash; } }                                                              # stop eth-validator
-function pp  { [[ $(sst ${p[74]} loaded) ]] && { cex "$(pjw 62 74)"; } }                                                                                      # stop prometheus
-function np  { [[ $(sst ${p[75]} loaded) ]] && { cex "$(pjw 62 75)"; } }                                                                                      # stop prometheus-node-exporter
-function fp  { [[ $(sst ${p[76]} loaded) ]] && { cex "$(pjw 62 76)"; } }                                                                                      # stop grafana-server
+function gp  { [[ $(sst ${p[70]} loaded) ]] && cex "$(pjw 62 70)"; }                                                                                          # stop eth-geth
+function bp  { [[ $(sst ${p[71]} loaded) ]] && cex "$(pjw 62 71)"; }                                                                                          # stop eth-beacon
+
+function pp  { [[ $(sst ${p[74]} loaded) ]] && cex "$(pjw 62 74)"; }                                                                                          # stop prometheus
+function np  { [[ $(sst ${p[75]} loaded) ]] && cex "$(pjw 62 75)"; }                                                                                          # stop prometheus-node-exporter
+function fp  { [[ $(sst ${p[76]} loaded) ]] && cex "$(pjw 62 76)"; }                                                                                          # stop grafana-server
 function gd  { cex "$(pjw 65 70)";gcl;sex 'ufw reload'; }                                                                                                     # disable eth-geth
 function bd  { cex "$(pjw 65 71)";bcl;sex 'ufw reload'; }                                                                                                     # disable eth-beacon
-function vd  { cex "$(pjw 65 73)";vcl;sex 'ufw reload';touch ${p[10]}/vc_lock; }                                                                              # disable eth-validator
+
 function pd  { [[ $(sst ${p[74]} loaded) ]] && { cex "$(pjw 65 74)";pai 9090/tcp 192.168.8.0/24 ${p[74]} delete;sex 'ufw reload'; } }                         # disable prometheus
 function nd  { [[ $(sst ${p[75]} loaded) ]] && { cex "$(pjw 65 75)"; } }                                                                                      # disable prometheus-node-exporter
 function fd  { [[ $(sst ${p[76]} loaded) ]] && { cex "$(pjw 65 76)";pai 3000/tcp 192.168.8.0/24 grafana    delete;sex 'ufw reload'; } }                       # disable grafana-server
@@ -349,9 +351,9 @@ function dmr { sex "${p[60]} daemon-reload"; }                                  
 function trs { if [[ $(sst ${p[77]} masked) ]];then nex "${p[66]} ntp";else nex "$(pjw 66 77)";fi; }                                                          # systemd-timesyncd/ntp restart
 function dpa { nex "$(pjw 62 78)";nex "${p[62]} systemd-resolved";nex "$(pjw 63 78)";nex "${p[63]} systemd-resolved"; }                                       # DNS stop/start
 function nrs { nex 'netplan apply';dpa; }                                                                                                                     # netplan/DNS restart
-function lcp { local f=$1;shift;[[ -x $f ]] && until [[ $# -lt 1 ]];do if [[ $1 = $cusn ]];then lci $f;else scp $f $1:${p[9]};fi;shift;done; }                # propagate lighthouse
-function lci { [[ -x $1 && ! -d $1      ]] || exit;sex "mv ${p[0]}/lighthouse ${p[0]}/lighthouse.sav";sex "cp $1 ${p[0]}"; }                                  # lighthouse binary install
-function lmd { [[ -x ${p[0]}/lighthouse ]] || exit;cmw ${p[0]}/lighthouse 755 eth;swb 'LIGHT INSTALADO'; }                                                    # lighthouse set permissions
+function lcp { local f=$1;shift;[[ -x $f ]] && until [[ $# -lt 1 ]];do if [[ $1 = $(snc $cunm) ]];then lci $f;else scp $f $1:${p[9]};fi;shift;done; }         # propagate lighthouse
+function lci { [[ -x $1 && ! -d $1      ]] || return;sex "mv ${p[0]}/lighthouse ${p[0]}/lighthouse.sav";sex "cp $1 ${p[0]}"; }                                # lighthouse binary install
+function lmd { [[ -x ${p[0]}/lighthouse ]] || return;cmw ${p[0]}/lighthouse 755 eth;swb 'LIGHT INSTALADO'; }                                                  # lighthouse set permissions
 function lpi { [[ $cunm = $znm2 ]] && lcp $1 ztc2 ztc3 ztc4;[[ $cunm = $vnm1 ]] && lcp $1 vpss;lci ${p[9]}/lighthouse;sex "rm ${p[9]}/lighthouse";lmd; }      # lighthouse propagate/install
 function luc {                                                                                                                                                # lighthouse upgrade/compile
   if [[ -f ${p[9]}/lighthouse/README.md ]];then
@@ -389,9 +391,9 @@ function sr3 { cp $(pjp 4 73).service ${p[73]}.sav;sed "s%--beacon-nodes  *\([^ 
 [[ $1 = dmr ]] && { dmr; }
 [[ $1 = tsh ]] && { cex "${p[67]}";cex "${p[67]} timesync-status";cex "${p[67]} show-timesync"; }
 [[ $1 = nsh ]] && { nsh; }
-[[ $1 = vcp ]] && { [[ $2 ]] && ssp $2; }
+[[ $1 = tvc ]] && { tvc; }
 [[ $1 = gl  ]] && { gl0;swn "$m"; }
-[[ $1 = glf ]] && { gl0;swn "$m" >> ${p[13]};grt && grb;[[ $ok != OK ]] && grs 0;pas; }                                                                       # el log/reboot/restart & parameter set
+[[ $1 = glf ]] && { gl0;swn "$m" >> ${p[13]};grt && grb;[[ $ok != OK ]] && grs 0;[[ $cunm = $znm1 ]] && pas; }                                                # el log/reboot/restart & parameter set
 [[ $1 = bl  ]] && { bl0;swn "$m"; }
 [[ $1 = bm  ]] && { bm0;bmo;swn "$m"; }
 [[ $1 = bn  ]] && { bm0;bno;swn "$m"; }
@@ -524,7 +526,6 @@ if [[ ! $1 ]];then
   m="$m\npa\t\tpara\t& arranca\t& journal"
   m="$m\nea\t\tenable\t& arranca\t& journal"
   m="$m\noutros"
-  m="$m\nvcp url\t\t${p[73]} copy to server url"
   m="$m\ngl[f]\t\tec log report"
   m="$m\ngh[s]\t\tec historic report [summary]"
   m="$m\ngpn\t\t${p[70]} prune DB - TAKES HOURS"
@@ -550,6 +551,7 @@ if [[ ! $1 ]];then
   m="$m\nbh[s]\t\tlighthouse historic report [summary]"
   m="$m\ncce\t\tcc change ec server"
   m="$m\nvcc\t\tvc switch cc server order"
+  m="$m\ntvc\t\tvc transfer ($(vco) -> $cuvc)"
   m="$m\nws\t\tfirewall status"
   m="$m\nwa\t\tfirewall arranca"
   m="$m\nwpr\t\tfirewall para"

@@ -3,7 +3,6 @@
 meeu=$(whoami)
 cunm=$(uname -n)
 cust=$(uname -n|cut -c1-3)
-cusn=$(echo ${cunm/[a-z]*-/}|tr -d '[ao]')
 zip1='192.168.8.25'
 zip2='192.168.8.28'
 zip3='192.168.8.31'
@@ -19,8 +18,7 @@ vnm1='vmi471826.contaboserver.net'
 vnm2='vmi506976.contaboserver.net'
 vnm3='vmi469069.contaboserver.net'
 if [[ $cust = hrv ]];then ciec=$zip1;else ciec=$vip1;fi;[[ $cunm = $znm4 ]] && ciec=$zip4                                                                     # current ec
-maec="$znm1";miec="$zip1"                                                                                                                                     # main    ec
-mavc="$znm3";mivc="$zip3"                                                                                                                                     # main    vc
+cuvc=$znm4                                                                                                                                                    # current vc
 
 unset p
 p[0]='/usr/local/bin'
@@ -54,7 +52,7 @@ p[27]='/etc/update-motd.d/97-overlayroot'                                       
 p[28]='/etc/bind/named.conf.options'                                                                                                                          # options domain name server
 p[29]='/etc/default/named'                                                                                                                                    # default domain name server
 p[30]='/etc/ntp.conf'                                                                                                                                         # ntpd config
-p[31]="${p[17]}/slashing_protection"                                                                                                                          # cl slashing_protection data
+p[31]="${p[17]}/slashing_protection.sqlite"                                                                                                                   # cl slashing_protection data
 p[32]='/etc/nginx/conf.d/plexmediaserver.conf'                                                                                                                # nginx config for plex
 p[33]='/etc/transmission-daemon/settings.json'                                                                                                                # transmission settings
 p[34]='/etc/hosts'                                                                                                                                            # hosts config
@@ -214,6 +212,8 @@ function pai { local e="allow from $2 to any port ${1/\// proto }";if [[ $4 ]];t
 function pae { local e="allow $1"                                 ;if [[ $3 ]];then nex "ufw $3 $e";else nex "ufw $e comment $2";fi; }                        # allow prt
 function ple { local e="limit $1"                                 ;if [[ $3 ]];then nex "ufw $3 $e";else nex "ufw $e comment $2";fi; }                        # limit prt (<6 within 30s)
 function nwf { [[ $B = mainnet ]] || echo " --testnet $B"; }                                                                                                  # lighthouse network flag
+function vco { if [[ $cuvc = $znm3 ]];then echo $znm4;else echo $znm3;fi; }                                                                                   # get other vc server name
+function sis { sex "mv ${p[9]}/$(basename ${p[31]}) ${p[17]}";[[ -f ${p[31]} ]] && touch ${p[10]}/vc_slash;cmw ${p[31]} 600 $1; }                             # init slash db
 
 bpid=$($(pjw 61 71) 2>${p[3]}|sed -n 's%.*PID: *\([0-9]*\).*%\1%p')
 rblk=22238623

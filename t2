@@ -28,7 +28,6 @@ if [[ $cunm = $znm2 ]];then
   cex "${p[67]} set-ntp no"                                                                                                                                   # use ntp       (sophisticated)
   cex 'apt install apt-transport-https curl ntp -y'                                                                                                           # install dependencies & ntp
   cc1 ${p[30]} "${p[49]}"                                     ;cmw ${p[30]} 644 root;nex "${p[66]} ntp"                                                       # ntp config for time synchronization
-  sex 'add-apt-repository -y ppa:transmissionbt/ppa'                                                                                                          # add apt source for transmission
   echo deb https://downloads.plex.tv/repo/deb public main | sudo tee /etc/apt/sources.list.d/plexmediaserver.list                                             # add apt source for plex
   curl https://downloads.plex.tv/plex-keys/PlexSign.key | sudo apt-key add -;sex 'apt update'                                                                 # add apt key    for plex
   cex 'apt install nginx plexmediaserver transmission-cli transmission-common transmission-daemon -y'                                                         # install nginx/plex/transmission

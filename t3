@@ -68,32 +68,29 @@ else
 	EOF
   sex "mv ${p[71]}.service $(pjp 4 71).service";cmw $(pjp 4 71).service 644
 fi
-if [[ $cunm != $mavc || -f $(pjp 4 73).service ]];then                                                                                                        # vc not here
-  if [[ -f $(pjp 4 73).service ]];then swu "vc ja instalado";else swu 'vc NAO DEVE SER INSTALADO AQUI';fi
+if [[ $cunm = $(vco) || -f ${p[10]}/vc_lock ]];then                                                                                                           # vc not here
+  if [[ -f $(pjp 4 73).service ]];then swu "vc ja instalado";else swu 'vc NAO PODE SER INSTALADO AQUI';fi
 else
   # external beacon-nodes before MERGE
   # https://1q1s6o6cB6Jysu7KKlbLUYiOdAM:8974468780164028652df958a69fbd30@eth2-beacon-mainnet.infura.io
   # MERGE --suggested-fee-recipient ${p[99]}
-  epcc="--beacon-nodes http://$zip3:5052,http://$zip2:5052"                                                                                                   # cc order
-  epcc="$epcc --suggested-fee-recipient ${p[99]}"                                                                                                             # vc level fees
+  epcc="--beacon-nodes http://$zip4:5052,http://$zip3:5052"                                                                                                   # cc order
+  epcc="--beacon-nodes http://$zip4:5052,https://1q1s6o6cB6Jysu7KKlbLUYiOdAM:8974468780164028652df958a69fbd30@eth2-beacon-mainnet.infura.io,http://$zip3:5052"
+  #epcc="$epcc --suggested-fee-recipient ${p[99]}"                                                                                                             # vc level fees
   sau eth3;cd ${p[9]}
   if [[ ! -f ${p[10]}/vc_keys && -d $HOME/$D && $(ls -A $HOME/$D) ]];then
-    swu 'IMPORT vc KEYS & INIT SLASH PROTECTION';sex "mkdir -p ${p[10]}";cmw ${p[10]} 755 $meeu
-    swn "STORE($K)\n";lighthouse$(nwf) --datadir ${p[10]} account validator import --directory $HOME/$D;[[ -f ${p[17]}/validator_definitions.yml ]] && touch ${p[10]}/vc_keys
+    swu 'IMPORT KEYS';sex "mkdir -p ${p[10]}";cmw ${p[10]} 755 $meeu
+    swn "STORE($K)\n";lighthouse$(nwf) --datadir ${p[10]} account validator import --directory $HOME/$D                                                       # import keys
+    [[ -f ${p[17]}/validator_definitions.yml ]] && touch ${p[10]}/vc_keys                                                                                     # check work
   fi
-  if [[ ! -f ${p[10]}/vc_lock && -f ${p[10]}/vc_keys ]];then
-    swu 'BLOQUEAR vc EXECUTE';swn "t6 vpr;t6 vds;sudo chmod 777 ${p[17]};sudo chmod 666 ${p[31]}.sqlite*";touch ${p[10]}/vc_lock
-  fi
-  if [[ ! -f ${p[10]}/vc_slash && -f ${p[10]}/vc_lock && -f ${p[10]}/vc_keys ]];then
-    sex "mkdir -p ${p[17]}";cmw ${p[17]} 700 $meeu
-    if [[ -f ${p[9]}/$(basename ${p[31]}).sqlite ]];then
-      swu 'COPIAR slash DB';sex "rm ${p[31]}.sqlite ${p[31]}.sqlite-journal";sex "cp ${p[9]}/$(basename ${p[31]}).sqlite ${p[17]}"
-      [[ -f ${p[31]}.sqlite ]] && touch ${p[10]}/vc_slash;cmw ${p[31]}.sqlite 600 $user
-    fi
+  if [[ ! -f ${p[10]}/vc_lock && -f ${p[10]}/vc_keys                           ]];then swn "\n\nDISABLE VC ->\t$(vco)";touch ${p[10]}/vc_lock;fi              # vc so pode correr num servidor
+  if [[   -f ${p[10]}/vc_lock && -f ${p[10]}/vc_keys && ! -f ${p[10]}/vc_slash ]];then
+    sex "mkdir -p ${p[17]}";cmw ${p[17]} 755 $meeu
+    if [[ -f ${p[9]}/$(basename ${p[31]}) ]];then swu 'INIT SLASH DB';sis $user;else swb 'NAO HA slash DB (IMPORTANTE)';fi                                    # init slash db
     cmw ${p[17]} 700 $user
   fi
   if [[ -f ${p[10]}/vc_slash && -f ${p[10]}/vc_lock && -f ${p[10]}/vc_keys ]];then
-    swu 'CONFIGURE vc';sex "mkdir -p ${p[17]}";cmw ${p[17]} 700 $user
+    swu 'CONFIGURE vc'
     cat <<-EOF > ${p[73]}.service
 		[Unit]
 		Description=validator service
@@ -105,7 +102,7 @@ else
 		Group=$user
 		Restart=always
 		RestartSec=10
-    ExecStart=${p[0]}/lighthouse$(nwf) --datadir ${p[10]} vc $epcc
+		ExecStart=${p[0]}/lighthouse$(nwf) --datadir ${p[10]} vc $epcc
 		ExecStopPost=${p[9]}/eth2/t8mail VALISTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 		
 		[Install]
@@ -113,7 +110,5 @@ else
 		EOF
     sex "mv ${p[73]}.service $(pjp 4 73).service";cmw $(pjp 4 73).service 644
     swu 'VC CONFIGURADO VERIFICAR TUDO (LOCK & SLASH DB)'
-  else
-    swn "VC JA CONFIGURADO OR LOCKED (${p[10]}/vc_lock)"
   fi
 fi
