@@ -295,11 +295,7 @@ function dmr { sex "${p[60]} daemon-reload"; }                                  
 function ve  { [[ -f ${p[10]}/vc_lock ]] && return;vop;sex 'ufw reload';sex "$(pjw 64 73)"; }                                                                 # enable eth-validator
 function va  {
   [[ $(sst ${p[73]}) && -f ${p[10]}/vc_keys ]] || return                                                                                                      # cannot start eth-validator
-  if [[ -f ${p[10]}/vc_lock ]];then
-    [[ -f ${p[9]}/$(basename ${p[31]}) ]] && sis eth3                                                                                                         # init slash db
-  else
-    sex "$(pjw 63 73)";rm ${p[10]}/vc_slash                                                                                                                   # start eth-validator
-  fi
+  if [[ -f ${p[10]}/vc_lock ]];then [[ -f ${p[9]}/$(basename ${p[31]}) ]] && sis eth3;else sex "$(pjw 63 73)";rm ${p[10]}/vc_slash;fi                         # start eth-validator
 }
 function vp  { [[ -f ${p[10]}/vc_slash ]] && return;cex "$(pjw 62 73)"                     ;touch ${p[10]}/vc_slash; }                                        # stop eth-validator
 function vd  { [[ -f ${p[10]}/vc_slash ]] || return;cex "$(pjw 65 73)";vcl;sex 'ufw reload';touch ${p[10]}/vc_lock; }                                         # disable eth-validator
@@ -311,7 +307,7 @@ function tvc {
   swn "\n1 [$(snc $(vco))]\tt tvc (vp,vd,cp slash -> $cuvc)\n2\t\tsleep 7m\n3 [$(snc $cuvc)]\trm lock;t3\n4\t\tcheck slash,srv,dirs\n5\t\trm lock;t vea\n"
   v2t && v0t && swn "cuvc ->\t$(vco)\nt6 tvc\nt3 ->\t$(vco)";v2t && ! v0t && swn "t6 tvc ->\t$(vco)";v0t || swn "t3"                                          # show instructions
   if v1t && v0t;then swn "TRANSFERIR VC -> $cuvc (SIM/nao)?";else return;fi;local rsp=nao;read rsp
-  if [[ $rsp = SIM && ! -f ${p[10]}/vc_slash && ! -f ${p[10]}/vc_lock && -f ${p[10]}/vc_keys ]];then echo 'vp;vd';swu "COPY SLASH -> $cuvc";vps;fi                # vc stop/disable & prep slash db
+  if [[ $rsp = SIM && ! -f ${p[10]}/vc_slash && ! -f ${p[10]}/vc_lock && -f ${p[10]}/vc_keys ]];then vp;vd;swu "COPY SLASH -> $cuvc";vps;fi                   # vc stop/disable & prep slash db
 }
 
 function pa  { [[ $(sst ${p[74]}) ]] && cex "$(pjw 63 74)"; }                                                                                                 # start prometheus
