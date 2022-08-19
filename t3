@@ -36,13 +36,14 @@ else
   [[ $cunm = $vnm1 ]] && http=" --http-address $vip1"
   [[ $cunm = $vnm2 ]] && http=" --http-address $vip2"
   epec=" --eth1-endpoints http://$zip1:8545,https://eth-mainnet.alchemyapi.io/v2/vzq1DD3EX7ipGuKck4440uRuccDdVvTm,https://mainnet.infura.io/v3/65be3572c577449f86d92b2e69cd6b06,https://mainnet.infura.io/v3/2c680650de0443cf8ab433565e47a42d"
+  epec=" --eth1-endpoints http://$zip4:8545,http://$zip1:8545"
   epec=" --execution-endpoint http://$zip1:8551 --execution-jwt ${p[16]}/jwt"                                                                                 # MERGE
   epec="$epec --suggested-fee-recipient ${p[99]}"                                                                                                             # cc level fees
   othe=''
   othe="$othe --subscribe-all-subnets --import-all-attestations"                                                                                              # for redundant cc
   othe="$othe --validator-monitor-file ${p[16]}/pubkeys"                                                                                                      # monitor validators
   # othe="$othe --checkpoint-sync-url https://1q1s6o6cB6Jysu7KKlbLUYiOdAM:8974468780164028652df958a69fbd30@eth2-beacon-mainnet.infura.io"
-  othe="$othe --checkpoint-sync-url http://192.168.8.31:5052"                                                                                                 # syncing from finalized checkpoint
+  othe="$othe --checkpoint-sync-url http://192.168.8.34:5052"                                                                                                 # syncing from finalized checkpoint
   othe="$othe --disable-upnp"
   # othe="$othe --slasher"
   swu 'CONFIGURE BEACON';sex "mkdir -p ${p[16]}";cmw ${p[10]} 755 $meeu;sau eth2
@@ -60,7 +61,7 @@ else
 	Group=eth2
 	Restart=always
 	RestartSec=10
-  ExecStart=${p[0]}/lighthouse$(nwf) --datadir ${p[10]} bn --port $pp2p --target-peers $tarp$http --staking$epec$othe
+	ExecStart=${p[0]}/lighthouse$(nwf) --datadir ${p[10]} bn --port $pp2p --target-peers $tarp$http --staking$epec$othe
 	ExecStopPost=${p[9]}/eth2/t8mail BEACSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 	
 	[Install]
