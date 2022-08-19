@@ -291,13 +291,14 @@ function fe  { pai 3000/tcp 192.168.8.0/24 grafana   ;sex 'ufw reload';cex "$(pj
 function ga  { [[ $(sst ${p[70]}) && -d ${p[18]} ]] && cex "$(pjw 63 70)"; }                                                                                  # start eth-geth
 function ba  { [[ $(sst ${p[71]}) && -d ${p[16]} ]] && cex "$(pjw 63 71)"; }                                                                                  # start eth-beacon
 
-function ve  { [[ -f ${p[10]}/vc_lock ]] && return;vop;sex 'ufw reload';cex "$(pjw 64 73)"; }                                                                 # enable eth-validator
+function dmr { sex "${p[60]} daemon-reload"; }                                                                                                                # daemon-reload
+function ve  { [[ -f ${p[10]}/vc_lock ]] && return;vop;sex 'ufw reload';sex "$(pjw 64 73)"; }                                                                 # enable eth-validator
 function va  {
   [[ $(sst ${p[73]}) && -f ${p[10]}/vc_keys ]] || return                                                                                                      # cannot start eth-validator
   if [[ -f ${p[10]}/vc_lock ]];then
     [[ -f ${p[9]}/$(basename ${p[31]}) ]] && sis eth3                                                                                                         # init slash db
   else
-    cex "$(pjw 63 73)";rm ${p[10]}/vc_slash                                                                                                                   # start eth-validator
+    sex "$(pjw 63 73)";rm ${p[10]}/vc_slash                                                                                                                   # start eth-validator
   fi
 }
 function vp  { [[ -f ${p[10]}/vc_slash ]] && return;cex "$(pjw 62 73)"                     ;touch ${p[10]}/vc_slash; }                                        # stop eth-validator
@@ -307,9 +308,10 @@ function v1t { [[ $cunm = $(vco)          ]]; }                                 
 function v2t { [[ $cunm = $cuvc           ]]; }                                                                                                               # vc current test
 function vps { local f=${p[9]}/$(basename ${p[31]});sex "cp ${p[31]} ${p[9]}";cmw $f 666 eth;scp $f $(snc $cuvc):~;sex "rm $f"; }                             # prep slash db
 function tvc {
+  swn "\n1 [$(snc $(vco))]\tt tvc (vp,vd,cp slash -> $cuvc)\n2\t\tsleep 7m\n3 [$(snc $cuvc)]\trm lock;t3\n4\t\tcheck slash,srv,dirs\n5\t\trm lock;t vea\n"
   v2t && v0t && swn "cuvc ->\t$(vco)\nt6 tvc\nt3 ->\t$(vco)";v2t && ! v0t && swn "t6 tvc ->\t$(vco)";v0t || swn "t3"                                          # show instructions
   if v1t && v0t;then swn "TRANSFERIR VC -> $cuvc (SIM/nao)?";else return;fi;local rsp=nao;read rsp
-  if [[ $rsp = SIM && ! -f ${p[10]}/vc_slash && ! -f ${p[10]}/vc_lock && -f ${p[10]}/vc_keys ]];then vp;vd;swu "COPY SLASH DB -> $cuvc";vps;fi                # vc stop/disable & prep slash db
+  if [[ $rsp = SIM && ! -f ${p[10]}/vc_slash && ! -f ${p[10]}/vc_lock && -f ${p[10]}/vc_keys ]];then echo 'vp;vd';swu "COPY SLASH -> $cuvc";vps;fi                # vc stop/disable & prep slash db
 }
 
 function pa  { [[ $(sst ${p[74]}) ]] && cex "$(pjw 63 74)"; }                                                                                                 # start prometheus
@@ -347,7 +349,6 @@ function c0t { [[ $(sed -n 's%.*--execution-endpoint  *[^ ]*/\([0-9\.]*\):8551.*
 function c0c { local e="${p[51]}";c0t && e="${p[50]}";sed "$e" ${p[71]}.sav > $(pjp 4 71).service; }                                                          # cc change el server
 function cce { cft || return;cp $(pjp 4 71).service ${p[71]}.sav;c0c;cmw $(pjp 4 71).service 644 eth; }                                                       # cc change el server (merge)
 function vcc { vft || return;cp $(pjp 4 73).service ${p[73]}.sav;sed "${p[59]}" ${p[73]}.sav > $(pjp 4 73).service;cmw $(pjp 4 73).service 644 eth; }         # vc switch cc server order
-function dmr { sex "${p[60]} daemon-reload"; }                                                                                                                # daemon-reload
 function trs { if [[ $(sst ${p[77]} masked) ]];then nex "${p[66]} ntp";else nex "$(pjw 66 77)";fi; }                                                          # systemd-timesyncd/ntp restart
 function dpa { nex "$(pjw 62 78)";nex "${p[62]} systemd-resolved";nex "$(pjw 63 78)";nex "${p[63]} systemd-resolved"; }                                       # DNS stop/start
 function nrs { nex 'netplan apply';dpa; }                                                                                                                     # netplan/DNS restart
