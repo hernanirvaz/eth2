@@ -191,13 +191,12 @@ p[83]="s%hrv-zotac\([0-9]\).*%hrv-zotac\1 ztc\1%;/127.0.1.1/a \ "
 p[83]="${p[83]}\n207.180.214.8\tvpsl"
 p[83]="${p[83]}\n173.249.42.190\tvpsm"
 p[83]="${p[83]}\n164.68.107.45\tvpss"
-p[99]='0x82f6E45b47c5C03F8D52dDDa03B3F65897Cd5AB2'
 
 function pjp { local e="";[[ $# -ge 1 ]] && { e="${p[$1]}";shift; };until [[ $# -lt 1 ]];do e="$e/${p[$1]}";shift;done;echo "$e"; }                           # paths join
 function pjw { local e="";[[ $# -ge 1 ]] && { e="${p[$1]}";shift; };until [[ $# -lt 1 ]];do e="$e ${p[$1]}";shift;done;echo "$e"; }                           # words join
-function swb { echo -e "\n\e[5m${1^^}\e[25m\n"; }                                                                                                             # show flash
-function swu { echo -e "${1^^}"; }                                                                                                                            # show upper
-function swn { echo -e "$1"; }                                                                                                                                # show normal
+function swb { echo -e "\n\e[5m${1^^}\e[25m\n"; }                                                                                                             # get flash
+function swu { echo -e "${1^^}"; }                                                                                                                            # get upper
+function swn { echo -e "$1"; }                                                                                                                                # get normal
 function sau { id $1 &>${p[3]} || sex "useradd --no-create-home --shell /bin/false $1"; }                                                                     # system useradd
 function cmw { [[ $2 ]] && sex "chmod $2 $1";[[ $3 ]] && sex "chown $3:${4:-$3} $1"; }                                                                        # chmod/chown file
 function cex { swb "$1";echo $H|sudo -S $1       2>${p[3]}; }                                                                                                 # superuser-command (visible)
@@ -212,8 +211,19 @@ function pai { local e="allow from $2 to any port ${1/\// proto }";if [[ $4 ]];t
 function pae { local e="allow $1"                                 ;if [[ $3 ]];then nex "ufw $3 $e";else nex "ufw $e comment $2";fi; }                        # allow prt
 function ple { local e="limit $1"                                 ;if [[ $3 ]];then nex "ufw $3 $e";else nex "ufw $e comment $2";fi; }                        # limit prt (<6 within 30s)
 function nwf { [[ $B = mainnet ]] || echo " --testnet $B"; }                                                                                                  # lighthouse network flag
-function vco { if [[ $cuvc = $znm3 ]];then echo $znm4;else echo $znm3;fi; }                                                                                   # get other vc server name
 function sis { sex "mv ${p[9]}/$(basename ${p[31]}) ${p[17]}";[[ -f ${p[31]} ]] && touch ${p[10]}/vc_slash;cmw ${p[31]} 600 $1; }                             # init slash db
+function snc { echo ${1/[a-z]*-/}|tr -d '[ao]'; }                                                                                                             # get small server name
+function vco { if [[ $cuvc = $znm3 ]];then echo $znm4;else echo $znm3;fi; }                                                                                   # get other vc server name
+
+p[84]="1 [$(snc $(vco))]\tt tvc (vp,vd,cp slash -> $cuvc)"
+p[85]="3 [$(snc $cuvc)]\trm lock;t3"
+p[86]="\n0\t\tcuvc=$cuvc"
+p[86]="${p[86]}\n${p[84]}"
+p[86]="${p[86]}\n2\t\tsleep 7m"
+p[86]="${p[86]}\n${p[85]}"
+p[86]="${p[86]}\n4\t\tcheck slash,srv,dirs"
+p[86]="${p[86]}\n5\t\trm lock;t vea\n"
+p[99]='0x82f6E45b47c5C03F8D52dDDa03B3F65897Cd5AB2'
 
 bpid=$($(pjw 61 71) 2>${p[3]}|sed -n 's%.*PID: *\([0-9]*\).*%\1%p')
 rblk=22238623

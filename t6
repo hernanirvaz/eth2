@@ -40,7 +40,6 @@ function ss2 { ${p[61]} $1 2>${p[3]}|sed -n "s%.*Active: *\(.*\)%\1%;s% *since.*
 function ss3 { printf '%s' "$(printf '%-35s' "$(ss2 $1)") $(printf '%9s' ${1/[a-z]*-/})"; }                                                                   # systemctl status format
 function sgx { ${p[8]}/geth attach --exec net.peerCount "http://$ciec:8545" 2>${p[3]}; }                                                                      # get el current peers
 function sbx { pex "grep lighthouse.*$1 ${p[1]}"|tail -n1|sed "s%.*$1 *\([0-9]*\).*%\1%"; }                                                                   # get cl current peers
-function snc { echo ${1/[a-z]*-/}|tr -d '[ao]'; }                                                                                                             # get small server name
 function sso {
   dts;local e="$1 $(printf '%6s' $(ss1 $2 Memory:)) $dt status: $(ss3 $2)"                                                                                    # memory & status
   [[ $1 = GETH ]] && e="$e $(printf "el:p%2i p2p:%5i" $(sgx) $(ss1 $2 port [0-9]))"                                                                           # el peers & p2p port tag
@@ -303,15 +302,7 @@ function v1t { [[ $cunm = $(vco)          ]]; }                                 
 function v2t { [[ $cunm = $cuvc           ]]; }                                                                                                               # vc current test
 function vps { local f=${p[9]}/$(basename ${p[31]});sex "cp ${p[31]} ${p[9]}";cmw $f 666 eth;scp $f $(snc $cuvc):~;sex "rm $f"; }                             # prep slash db
 function tvc {
-  m="\n0\t\tcuvc=$cuvc"
-  m="$m\n1 [$(snc $(vco))]\tt tvc (vp,vd,cp slash -> $cuvc)"
-  m="$m\n2\t\tsleep 7m"
-  m="$m\n3 [$(snc $cuvc)]\trm lock;t3"
-  m="$m\n4\t\tcheck slash,srv,dirs"
-  m="$m\n5\t\trm lock;t vea\n";swn "$m"                                                                                                                       # show agenda
-  v2t &&   v0t && swn "0\t\tcuvc=$(vco)\n1 [$(snc $(vco))]\tt tvc\n3 [$(snc $cuvc)]\tt3"
-  v2t && ! v0t && swn "1 [$(snc $(vco))]\tt tvc"
-  v0t || swn "3 [$(snc $cuvc)]\tt3"                                                                                                                           # show instructions
+  swn "${p[86]}";v2t &&   v0t && swn "0\t\tset cuvc=$(vco)\n${p[84]}\n${p[85]}";v2t && ! v0t && swn "${p[84]}";v0t || swn "${p[85]}"                          # show agenda/instructions
   if v1t && v0t;then swn "TRANSFERIR VC -> $cuvc (SIM/nao)?";else return;fi;local rsp=nao;read rsp
   if [[ $rsp = SIM && ! -f ${p[10]}/vc_slash && ! -f ${p[10]}/vc_lock && -f ${p[10]}/vc_keys ]];then vp;vd;swu "COPY SLASH -> $cuvc";vps;fi                   # vc stop/disable & prep slash db
 }
