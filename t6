@@ -41,7 +41,7 @@ function ss3 { printf '%s' "$(printf '%-35s' "$(ss2 $1)") $(printf '%9s' ${1/[a-
 function sgx { ${p[8]}/geth attach --exec net.peerCount "http://$ciec:8545" 2>${p[3]}; }                                                                      # get el current peers
 function sbx { pex "grep lighthouse.*$1 ${p[1]}"|tail -n1|sed "s%.*$1 *\([0-9]*\).*%\1%"; }                                                                   # get cl current peers
 function sso {
-  dts;local e="$1 $(printf '%6s' $(ss1 $2 Memory:)) $dt status: $(ss3 $2)"                                                                                    # memory & status
+  [[ $(sst $2 loaded) ]] || return;dts;local e="$1 $(printf '%6s' $(ss1 $2 Memory:)) $dt status: $(ss3 $2)"                                                   # memory & status
   [[ $1 = GETH ]] && e="$e $(printf "el:p%2i p2p:%5i" $(sgx) $(ss1 $2 port [0-9]))"                                                                           # el peers & p2p port tag
   [[ $1 = BEAC ]] && e="$e $(printf "cl:p%2i p2p:%5i %6s" $(sbx peers:) $(ss1 $2 port [0-9]) $(bls))"                                                         # cl peers/port/import all
   [[ $1 = BEAC ]] && e="$e\tel:http $(ss1 $2 endpoints* '[^ ]'|sed -n 's%http://192.168.8.\([0-9]*:[0-9]*\)%\1%gp')"                                          # el http(s)
@@ -163,7 +163,7 @@ function bh0 {
   [[ -f ${p[11]} ]] || return;tail -n${1:-$hors} ${p[11]};[[ $1 ]] && return                                                                                  # last cc    report
   boi;swn "BO$(printf '%5i' $(echo "$l2"|wc -l)) $(printf '%3i' $b2)$(printf '%91s')x5 x2  x1 x1";bo6                                                         # homologous report
   bl0;swn "BL$(printf '%9i' $(bbl))\n$m";bm0                                                                                                                  # current cc report
-  bmo;swn "BM$(printf '%9i' $(bml))$(printf '%46s')i20  i30  i40  i50  i60  i70  i80\n$m";bhs;cpe                                                             # cc-daily/services/system report
+  bmo;swn "BM$(printf '%9i' $(bml))$(printf '%46s')i20  i30  i40  i50  i60  i70  i80\n$m";ghs;bhs;cpe                                                         # cc-daily/services/system report
 }
 function vft { [[ -f $(pjp 4 73).service ]]; }                                                                                                                # vc service file test
 function cft { [[ -f $(pjp 4 71).service ]]; }                                                                                                                # cc service file test
