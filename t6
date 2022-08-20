@@ -336,7 +336,7 @@ function ah1 { swn "\n\n$znm1";ghs;cpe;swn "\n\n$znm3";ssh ztc3 "export H=$H;${p
 function ah2 { swn "\n\n$znm1";ssh ztc1 "export H=$H;${p[9]}/eth2/t6 ghs";swn "\n\n$znm3";ssh ztc3 "export H=$H;${p[9]}/eth2/t6 bhs";swn "\n\n$znm4";ssh ztc4 "export H=$H;${p[9]}/eth2/t6 ehs"; }
 function ah3 { swn "\n\n$znm1";ssh ztc1 "export H=$H;${p[9]}/eth2/t6 ghs";swn "\n\n$znm3";bhs;cpe;swn "\n\n$znm4";ssh ztc4 "export H=$H;${p[9]}/eth2/t6 ehs"; }
 function ah4 { swn "\n\n$znm1";ssh ztc1 "export H=$H;${p[9]}/eth2/t6 ghs";swn "\n\n$znm3";ssh ztc3 "export H=$H;${p[9]}/eth2/t6 bhs";swn "\n\n$znm4";ghs;bhs;cpe; }
-function nsh { ${p[68]} list;${p[68]} status; }                                                                                                               # routes/dns info
+function nsh { ${p[68]} list;${p[68]} status;${p[69]} status|sed -n 's%\(Current DNS\).*:%   \1:%ip'; }                                                       # network/dns info
 function wlp { local e="$1";shift;until [[ $# -lt 1 ]];do e="$e\|$1";shift;done;fs2|grep '\[UFW'|if [[ $e ]];then grep -v "$e";else cat;fi; }
 function c0t { [[ $(sed -n 's%.*--execution-endpoint  *[^ ]*/\([0-9\.]*\):8551.*%\1%p' $(pjp 4 71).service 2>${p[3]}) = $zip1 ]]; }                           # cc choose el server test
 function c0c { local e="${p[51]}";c0t && e="${p[50]}";sed "$e" ${p[71]}.sav > $(pjp 4 71).service; }                                                          # cc change el server
