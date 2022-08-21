@@ -418,6 +418,7 @@ function sr3 { cp $(pjp 4 73).service ${p[73]}.sav;sed "s%--beacon-nodes  *\([^ 
 [[ $1 = sl  ]] && { fs2|if [[ $2 ]];then grep -i "[a-z]* [0-9]* $2";else grep -i 'error' ;fi; }
 [[ $1 = el  ]] && { fs1|if [[ $2 ]];then grep -i "[a-z]* [0-9]* $2";else grep -v ' INFO ';fi; }
 [[ $1 = ll  ]] && { rl1|if [[ $2 ]];then grep -i "[a-z]* [0-9]* $2";else grep -v ' INFO ';fi; }
+[[ $1 = cl  ]] && { fs0|if [[ $2 ]];then grep -i "[a-z]* [0-9]* $2";else grep -v ' INFO ';fi; }
 [[ $1 = nl  ]] && { rl0|if [[ $2 ]];then grep -i               "$2";else grep -v ' INFO ';fi; }
 [[ $1 = ws  ]] && { cex 'ufw status numbered'; }
 [[ $1 = wa  ]] && { wa; }
@@ -530,6 +531,7 @@ if [[ ! $1 ]];then
   m="$m\nsl [hh:mm]\tsystem journal  log lines"
   m="$m\nel [hh:mm]\tel/cl log lines"
   m="$m\nll [hh:mm]\tel/cl all log lines"
+  m="$m\ncl [hh:mm]\tcl log lines"
   m="$m\nnl [hh:mm]\tcc log lines"
   m="$m\nbrl\t\trecalculate cc/cc-daily logs"
   m="$m\nbsl\t\tshrink cc log using barqivo"
