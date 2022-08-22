@@ -375,7 +375,7 @@ function sr3 { cp $(pjp 4 73).service ${p[73]}.sav;sed "s%--beacon-nodes  *\([^ 
 [[ $1 = vcc ]] && { vcc; }
 [[ $1 = cce ]] && { cce; }
 [[ $1 = chk ]] && { cex 'chkrootkit'; }
-[[ $1 = eip ]] && { curl -s4 "https://${3:-meo.fruga.pt}:$2@dyn.dns.he.net/nic/update?hostname=${3:-meo.fruga.pt}" &>${p[3]}; }
+[[ $1 = eip ]] && { curl -s4 "https://${3:-meo.fruga.pt}:$2@dyn.dns.he.net/nic/update?hostname=${3:-meo.fruga.pt}" &>${p[3]};swn "Subject: eip $(uname -n)\t$(date '+%F %H:%M')" >> ${p[9]}/eip.log; }
 [[ $1 = dsh ]] && { ${p[69]} query ${2:-smtp.gmail.com}; }
 [[ $1 = drs ]] && { dpa; }
 [[ $1 = nrs ]] && { nrs; }
@@ -416,9 +416,9 @@ function sr3 { cp $(pjp 4 73).service ${p[73]}.sav;sed "s%--beacon-nodes  *\([^ 
 [[ $1 = lp  ]] && { netstat -tulpn; }
 # outros journal system/lighthouse
 [[ $1 = sl  ]] && { fs2|if [[ $2 ]];then grep -i "[a-z]* [0-9]* $2";else grep -i 'error' ;fi; }
-[[ $1 = el  ]] && { fs1|if [[ $2 ]];then grep -i "[a-z]* [0-9]* $2";else grep -v ' INFO ';fi; }
+[[ $1 = el  ]] && { fs0 . 0 geth|if [[ $2 ]];then grep -i "[a-z]* [0-9]* $2";else grep -v ' INFO ';fi; }
+[[ $1 = cl  ]] && { fs0         |if [[ $2 ]];then grep -i "[a-z]* [0-9]* $2";else grep -v ' INFO ';fi; }
 [[ $1 = ll  ]] && { rl1|if [[ $2 ]];then grep -i "[a-z]* [0-9]* $2";else grep -v ' INFO ';fi; }
-[[ $1 = cl  ]] && { fs0|if [[ $2 ]];then grep -i "[a-z]* [0-9]* $2";else grep -v ' INFO ';fi; }
 [[ $1 = nl  ]] && { rl0|if [[ $2 ]];then grep -i               "$2";else grep -v ' INFO ';fi; }
 [[ $1 = ws  ]] && { cex 'ufw status numbered'; }
 [[ $1 = wa  ]] && { wa; }
@@ -529,10 +529,10 @@ if [[ ! $1 ]];then
   m="$m\nurs [h]\t\treboot if system needs it after h hours"
   m="$m\nyj\t\tsystem journal"
   m="$m\nsl [hh:mm]\tsystem journal  log lines"
-  m="$m\nel [hh:mm]\tel/cl log lines"
-  m="$m\nll [hh:mm]\tel/cl all log lines"
-  m="$m\ncl [hh:mm]\tcl log lines"
-  m="$m\nnl [hh:mm]\tcc log lines"
+  m="$m\nll [hh:mm]\tel/cl log lines (last 7 days)"
+  m="$m\nel [hh:mm]\tec log lines"
+  m="$m\ncl [hh:mm]\tcc log lines"
+  m="$m\nnl [hh:mm]\tnode log lines"
   m="$m\nbrl\t\trecalculate cc/cc-daily logs"
   m="$m\nbsl\t\tshrink cc log using barqivo"
   m="$m\nbdl yyyy-mm-dd\tdelete cc log day"
