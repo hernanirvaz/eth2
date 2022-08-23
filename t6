@@ -273,12 +273,14 @@ function vop { vfw 5064 vcapi       ;pde 5064 vcapi delete; }
 function vcl { vfw 5064 vcapi delete;pde 5064 vcapi       ; }
 # enable/start eth-geth eth-beacon eth-validator prometheus prometheus-node-exporter grafana-server
 function ge  { gop;sex 'ufw reload';cex "$(pjw 64 70)"; }                                                                                                     # enable eth-geth
+function ue  { gop;sex 'ufw reload';cex "$(pjw 64 87)"; }                                                                                                     # enable eth-besu
 function be  { bop;sex 'ufw reload';cex "$(pjw 64 71)"; }                                                                                                     # enable eth-beacon
 
 function pe  { pai 9090/tcp 192.168.8.0/24 ${p[74]};sex 'ufw reload';cex "$(pjw 64 74)"; }                                                                    # enable prometheus
 function ne  { sex 'ufw reload';cex "$(pjw 64 75)"; }                                                                                                         # enable prometheus-node-exporter
 function fe  { pai 3000/tcp 192.168.8.0/24 grafana   ;sex 'ufw reload';cex "$(pjw 64 76)"; }                                                                  # enable grafana-server
 function ga  { [[ $(sst ${p[70]}) && -d ${p[18]} ]] && cex "$(pjw 63 70)"; }                                                                                  # start eth-geth
+function ua  { [[ $(sst ${p[87]}) && -d ${p[37]} ]] && cex "$(pjw 63 87)"; }                                                                                  # start eth-besu
 function ba  { [[ $(sst ${p[71]}) && -d ${p[16]} ]] && cex "$(pjw 63 71)"; }                                                                                  # start eth-beacon
 
 function dmr { sex "${p[60]} daemon-reload"; }                                                                                                                # daemon-reload
@@ -305,12 +307,14 @@ function fa  { [[ $(sst ${p[76]}) ]] && cex "$(pjw 63 76)"; }                   
 function wa  { if [[ $(pex 'ufw status'|grep -i inactive) ]];then yex 'ufw enable';else swu 'FIREWALL ALREADY ACTIVE';fi; }                                   # enable ufw : Proceed with operation (y|n)?
 # stop/disable eth-geth eth-beacon eth-validator prometheus prometheus-node-exporter grafana-server
 function gp  { [[ $(sst ${p[70]} loaded) ]] && cex "$(pjw 62 70)"; }                                                                                          # stop eth-geth
+function up  { [[ $(sst ${p[87]} loaded) ]] && cex "$(pjw 62 87)"; }                                                                                          # stop eth-besu
 function bp  { [[ $(sst ${p[71]} loaded) ]] && cex "$(pjw 62 71)"; }                                                                                          # stop eth-beacon
 
 function pp  { [[ $(sst ${p[74]} loaded) ]] && cex "$(pjw 62 74)"; }                                                                                          # stop prometheus
 function np  { [[ $(sst ${p[75]} loaded) ]] && cex "$(pjw 62 75)"; }                                                                                          # stop prometheus-node-exporter
 function fp  { [[ $(sst ${p[76]} loaded) ]] && cex "$(pjw 62 76)"; }                                                                                          # stop grafana-server
 function gd  { cex "$(pjw 65 70)";gcl;sex 'ufw reload'; }                                                                                                     # disable eth-geth
+function ud  { cex "$(pjw 65 87)";gcl;sex 'ufw reload'; }                                                                                                     # disable eth-besu
 function bd  { cex "$(pjw 65 71)";bcl;sex 'ufw reload'; }                                                                                                     # disable eth-beacon
 
 function pd  { [[ $(sst ${p[74]} loaded) ]] && { cex "$(pjw 65 74)";pai 9090/tcp 192.168.8.0/24 ${p[74]} delete;sex 'ufw reload'; } }                         # disable prometheus
@@ -364,7 +368,7 @@ function jw4 { jw3 ztc2;jw3 ztc3;jw3 ztc4; }
 function sr1 { cp $(pjp 4 71).service ${p[71]}.sav;sed "s%--eth1-endpoints  *\([^ ]*\):8545,[^ ]*%--execution-endpoint \1:8551 --execution-jwt ${p[16]}/jwt --suggested-fee-recipient ${p[99]}%" ${p[71]}.sav > $(pjp 9 71).jwt;cmw $(pjp 9 71).jwt 644 eth; }
 function sr3 { cp $(pjp 4 73).service ${p[73]}.sav;sed "s%--beacon-nodes  *\([^ ]*\)%--beacon-nodes \1 --suggested-fee-recipient ${p[99]}%" ${p[73]}.sav > $(pjp 9 73).jwt;cmw $(pjp 9 73).jwt 644 eth; }
 [[ $1 = oce ]] && { oce; }
-[[ $1 = jwt ]] && { [[ $cunm = $znm1 || $cunm = $vnm1 ]] && jw0;if [[ -f jwt ]];then [[ -d ${p[18]}/geth ]] && jw1 eth1 ${p[18]}/geth;[[ -d ${p[16]} ]] && jw1 eth2 ${p[16]};sex "rm jwt";fi; }
+[[ $1 = jwt ]] && { [[ $cunm = $znm1 || $cunm = $vnm1 ]] && jw0;if [[ -f jwt ]];then [[ -d ${p[18]}/geth ]] && jw1 eth1 ${p[18]}/geth;[[ -d ${p[37]} ]] && jw1 eth1 ${p[37]};[[ -d ${p[16]} ]] && jw1 eth2 ${p[16]};sex "rm jwt";fi; }
 [[ $1 = srv ]] && { [[ -f $(pjp 4 71).service ]] && sr1;[[ -f $(pjp 4 73).service ]] && sr3; }
 
 [[ $1 = lpi ]] && { lpi ${p[9]}/.cargo/bin/lighthouse; }
@@ -430,12 +434,13 @@ function sr3 { cp $(pjp 4 73).service ${p[73]}.sav;sed "s%--beacon-nodes  *\([^ 
 [[ $1 = yj  ]] && { jsh; }
 [[ $1 = ej  ]] && { jsh "-u ${p[70]} -u ${p[71]} -u ${p[73]}"; }
 [[ $1 = gj  ]] && { jsh "-u ${p[70]}"; }
+[[ $1 = uj  ]] && { jsh "-u ${p[87]}"; }
 [[ $1 = bj  ]] && { jsh "-u ${p[71]}"; }
 [[ $1 = vj  ]] && { jsh "-u ${p[73]}"; }
 [[ $1 = sj  ]] && { jsh "-u ${p[78]}"; }
 # arranca
 [[ $1 = ga  ]] && { dmr;ga; }
-[[ $1 = oa  ]] && { dmr;oa; }
+[[ $1 = ua  ]] && { dmr;ua; }
 [[ $1 = ba  ]] && { dmr;ba; }
 [[ $1 = va  ]] && { dmr;va; }
 [[ $1 = pa  ]] && { dmr;pa; }
@@ -446,20 +451,24 @@ function sr3 { cp $(pjp 4 73).service ${p[73]}.sav;sed "s%--beacon-nodes  *\([^ 
 [[ $1 = sa  ]] && { dmr;sa; }
 # para & arranca & journal
 [[ $1 = gaj ]] && { dmr;ga;jsh "-u ${p[70]}"; }
+[[ $1 = uaj ]] && { dmr;ua;jsh "-u ${p[87]}"; }
 [[ $1 = baj ]] && { dmr;ba;jsh "-u ${p[71]}"; }
 [[ $1 = vaj ]] && { dmr;va;jsh "-u ${p[73]}"; }
 [[ $1 = saj ]] && { dmr;sa;jsh "-u ${p[78]}"; }
 [[ $1 = gpa ]] && { gp;dmr;ga;jsh "-u ${p[70]}"; }
+[[ $1 = upa ]] && { up;dmr;ua;jsh "-u ${p[87]}"; }
 [[ $1 = bpa ]] && { bp;dmr;ba;jsh "-u ${p[71]}"; }
 [[ $1 = vpa ]] && { vp;dmr;va;jsh "-u ${p[73]}"; }
 [[ $1 = spa ]] && { sp;sa; }
 [[ $1 = gpd ]] && { gp;gd; }
+[[ $1 = upd ]] && { up;ud; }
 [[ $1 = bpd ]] && { bp;bd; }
 [[ $1 = vpd ]] && { vp;vd; }
 [[ $1 = xpd ]] && { xp;xd; }
 [[ $1 = rpd ]] && { rp;rd; }
 [[ $1 = spd ]] && { sp;sd; }
 [[ $1 = gea ]] && { ge;dmr;ga;jsh "-u ${p[70]}"; }
+[[ $1 = uea ]] && { ue;dmr;ua;jsh "-u ${p[87]}"; }
 [[ $1 = bea ]] && { be;dmr;ba;jsh "-u ${p[71]}"; }
 [[ $1 = vea ]] && { ve;dmr;va;jsh "-u ${p[73]}"; }
 [[ $1 = rea ]] && { re;ra; }
@@ -467,6 +476,7 @@ function sr3 { cp $(pjp 4 73).service ${p[73]}.sav;sed "s%--beacon-nodes  *\([^ 
 [[ $1 = xea ]] && { xe;xa; }
 # enable
 [[ $1 = ge  ]] && { ge; }
+[[ $1 = ue  ]] && { ue; }
 [[ $1 = be  ]] && { be; }
 [[ $1 = ve  ]] && { ve; }
 [[ $1 = pe  ]] && { pe; }
@@ -482,6 +492,7 @@ function sr3 { cp $(pjp 4 73).service ${p[73]}.sav;sed "s%--beacon-nodes  *\([^ 
 [[ $1 = vpr ]] && { vp; }
 [[ $1 = bpr ]] && { bp; }
 [[ $1 = gpr ]] && { gp; }
+[[ $1 = upr ]] && { up; }
 [[ $1 = xpr ]] && { xp; }
 [[ $1 = rpr ]] && { rp; }
 [[ $1 = spr ]] && { sp; }
@@ -492,6 +503,7 @@ function sr3 { cp $(pjp 4 73).service ${p[73]}.sav;sed "s%--beacon-nodes  *\([^ 
 [[ $1 = vds ]] && { vd; }
 [[ $1 = bds ]] && { bd; }
 [[ $1 = gds ]] && { gd; }
+[[ $1 = uds ]] && { ud; }
 [[ $1 = xds ]] && { xd; }
 [[ $1 = rds ]] && { rd; }
 [[ $1 = sds ]] && { sd; }
@@ -501,6 +513,7 @@ if [[ ! $1 ]];then
   m="primeira letra"
   m="$m\ne\t\t${p[70]} ${p[71]} ${p[73]}"
   m="$m\ng\t\t${p[70]}"
+  m="$m\nu\t\t${p[87]}"
   m="$m\nb\t\t${p[71]}"
   m="$m\nv\t\t${p[73]}"
   m="$m\np\t\t${p[74]}"
