@@ -64,6 +64,8 @@ if [[ $cunm = $znm1 || $cunm = $znm4 || $cunm = $vnm1 ]];then                   
   sex "mkdir -p ${p[18]}/geth ";sau eth1;cmw ${p[18]} 755 eth1;cmw ${p[18]}/geth 700 eth1                                                                     # create dir & user for ec
   maxp=50    # default
   pp2p=30303 # default
+  othe=''
+  [[ $cunm = $znm1 ]] && othe="$othe --http.corsdomain 'chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn' --http.vhosts '*'"                               # for metamask
   cat <<-EOF > ${p[70]}.service
 	[Unit]
 	Description=geth service
@@ -75,7 +77,7 @@ if [[ $cunm = $znm1 || $cunm = $znm4 || $cunm = $vnm1 ]];then                   
 	Group=eth1
 	Restart=always
 	RestartSec=10
-	ExecStart=${p[8]}/geth$(nwf) --datadir ${p[18]} --port $pp2p --http --http.addr $zip1 --maxpeers $maxp --authrpc.addr $zip1 --authrpc.jwtsecret ${p[18]}/geth/jwt
+	ExecStart=${p[8]}/geth$(nwf) --datadir ${p[18]} --port $pp2p --http --http.addr $zip1$othe --maxpeers $maxp --authrpc.addr $zip1 --authrpc.jwtsecret ${p[18]}/geth/jwt
 	ExecStopPost=${p[9]}/eth2/t8mail GETHSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 	
 	[Install]

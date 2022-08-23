@@ -37,13 +37,12 @@ function sci { ip a|sed -n 's% *inet  *192.168.8.\([0-9]*\).*%\1%p'; }          
 function sst { ${p[61]} $1 2>${p[3]}|grep "${2:-inactive\|failed}"; }                                                                                         # systemctl status word test
 function ss1 { ${p[61]} $1 2>${p[3]}|sed -n "s%.*$2 \(${3:-.}*\).*%\1%p"; }                                                                                   # systemctl status 1 extraction
 function ss2 { ${p[61]} $1 2>${p[3]}|sed -n "s%.*Active: *\(.*\)%\1%;s% *since.*;%%;s%running%RUNNING%ip"; }                                                  # systemctl status 2 extraction
-function ss3 { printf '%s' "$(printf '%-35s' "$(ss2 $1)") $(printf '%9s' ${1/[a-z]*-/})"; }                                                                   # systemctl status format
 function sgx { ${p[8]}/geth attach --exec net.peerCount "http://$ciec:8545" 2>${p[3]}; }                                                                      # get el current peers
 function sbx { pex "grep lighthouse.*$1 ${p[1]}"|tail -n1|sed "s%.*$1 *\([0-9]*\).*%\1%"; }                                                                   # get cl current peers
 function sso {
-  [[ $(sst $2 loaded) ]] || return;dts;local e="$1 $(printf '%6s' $(ss1 $2 Memory:)) $dt status: $(ss3 $2)"                                                   # memory & status
-  [[ $1 = GETH ]] && e="$e $(printf "el:p%2i p2p:%5i" $(sgx) $(ss1 $2 port [0-9]))"                                                                           # el peers & p2p port tag
-  [[ $1 = BEAC ]] && e="$e $(printf "cl:p%2i p2p:%5i %6s" $(sbx peers:) $(ss1 $2 port [0-9]) $(bls))"                                                         # cl peers/port/import all
+  [[ $(sst $2 loaded) ]] || return;dts;local e="$1 $(printf '%6s' $(ss1 $2 Memory:)) $dt status: $(ss2 $2)"                                                   # memory & status
+  [[ $1 = GETH ]] && e="$e\t$(printf "el:p%2i p2p:%5i" $(sgx) $(ss1 $2 port [0-9]))"                                                                          # el peers & p2p port tag
+  [[ $1 = BEAC ]] && e="$e\t$(printf "cl:p%2i p2p:%5i" $(sbx peers:) $(ss1 $2 port [0-9]))"                                                                   # cl peers/port/import all
   [[ $1 = BEAC ]] && e="$e\tel:http $(ss1 $2 endpoints* '[^ ]'|sed -n 's%http://192.168.8.\([0-9]*:[0-9]*\)%\1%gp')"                                          # el http(s)
   [[ $1 = VALI ]] && e="$e\t\t\t\tcc:http $(ss1 $2 nodes '[^ ]'|sed -n 's%http://192.168.8.\([0-9]*:[0-9]*\)%\1%gp')";swn "$e"                                # cl http(s)
 }
@@ -220,7 +219,8 @@ function bdl { v2t || return;local d=$(pt0 $1 sai);[[ -f ${p[11]} && $d != sai ]
 function wst { echo $@|sed 's%[^: ]*: *%%g;s%,[^,]*(routed)%%;s% (incoming),% <<%;s% (outgoing)% >>%'; }                                                      # get ufw info
 function cpe {                                                                                                                                                # system status
   local e='NO';[[ $(${p[67]}|sed -n 's%.*synchronized: \([a-z]*\) *%\1%p') = yes ]] && e='OK';dts
-  if [[ $(sst ${p[77]} masked) ]];then m=$(ss3 ntp);else m=$(ss3 ${p[77]});fi;swn "CLCK $e $(printf '%3i' $(fs0 clock|wc -l)) $dt status: $m"                 # CLCK info
+  if [[ $(sst ${p[77]} masked) ]];then e="CNTP $e";m=$(ss2 ntp);else e="CSYS $e";m=$(ss2 ${p[77]});fi
+  swn "$e $(printf '%3i' $(fs0 clock|wc -l)) $dt status: $m"                                                                                                  # clock info
   [[ $1 = c ]] && return;local l=0;local n=0;local g=0
   local d=$(fs3|grep throttled|head -n1|sed 's%.* \([0-9]*:[0-9]*\):[0-9]*.*%\1%')
   local e=$(fs3|grep normal   |tail -n1|sed 's%.* \([0-9]*:[0-9]*\):[0-9]*.*%\1%')
