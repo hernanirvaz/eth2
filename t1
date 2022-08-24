@@ -20,6 +20,12 @@ vnm3='vmi469069.contaboserver.net'
 if [[ $cust = hrv ]];then ciec=$zip1;else ciec=$vip1;fi;[[ $cunm = $znm4 ]] && ciec=$zip4                                                                     # current ec
 cuvc=$znm4                                                                                                                                                    # current vc
 
+#curl -X POST --data '{"jsonrpc":"2.0","method":"net_peerCount","params":[],"id":53}' http://192.168.8.25:8545
+#{
+#  "jsonrpc" : "2.0",
+#  "id" : 53,
+#  "result" : "0x19"
+#}
 #curl -X POST --data '{"jsonrpc":"2.0","method":"eth_syncing","params":[],"id":51}' 192.168.8.25:8545
 #{
 #  "jsonrpc" : "2.0",
