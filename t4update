@@ -2,7 +2,7 @@
 
 source /home/eth/eth2/t1
 
-function hlp { swn "\n$(basename $0) linux|reboot|ec|cc [version] [rust version]|cp\n\n\tec/cc\tupgrade execution/consencus client\n\tcp\tcopy & propagate"; }
+function hlp { swn "\n$(basename $0) linux|reboot|besu [version]|ec|cc [version] [rust version]|cp\n\n\tec/cc\tupgrade execution/consencus client\n\tcp\tcopy & propagate"; }
 
 if [[ $1 = linux || $1 = reboot || $1 = ec ]];then
   swu 'FULL-UPGRADE'
@@ -11,6 +11,14 @@ if [[ $1 = linux || $1 = reboot || $1 = ec ]];then
   cex 'apt autoremove -y';cex 'apt autoclean'
   [[ $1 = ec     ]] && t6 gaj
   [[ $1 = reboot ]] && cex 'reboot'
+fi
+if [[ $1 = besu ]];then
+  curl -LO https://hyperledger.jfrog.io/artifactory/besu-binaries/besu/$vuel/besu-$vuel.tar.gz
+  t6 upr
+  sex "mv ${p[0]}/besu besu-sav"                                                                                                                              # save old besu binaries
+  tar xvf besu-$vuel.tar.gz;sex "cp -a besu-$vuel ${p[0]}/besu"                                                                                               # install besu binaries
+  sex "chown eth1:eth1 -R ${p[0]}/besu";cmw ${p[0]}/besu 755 eth1                                                                                             # set owner/permissions
+  t6 uaj
 fi
 [[ $1 = cc || $1 = cp ]] || { [[ $1 ]] || hlp;exit; }
 if [[ $1 = cc && ($cunm = $znm2 || $cunm = $vnm1) ]];then [[ -x ${p[9]}/.cargo/bin/rustup ]] && t6 ruv $3;t6 luc $2;fi                                        # rust update & lighthouse upgrade/compile
