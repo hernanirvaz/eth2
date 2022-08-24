@@ -85,7 +85,7 @@ p[43]='s%^ */* *Unattended-Upgrade::Mail .*$%Unattended-Upgrade::Mail "hernanilr
 p[44]='s%^ *printf%# printf%i'                                                                                                                                # unprint stuff
 p[45]='printf "Welcome to %s %s\\n" "$(uname -n)" "$DISTRIB_DESCRIPTION"'                                                                                     # my header motd
 p[46]='s%timeout *=.*$%timeout=1%i'                                                                                                                           # grub timeout
-p[47]='geth\[\|lighthouse'                                                                                                                                    # el/cl clients
+p[47]='geth\[\|besu\[\|lighthouse'                                                                                                                            # el/cl clients
 p[48]='/dnssec-validation/q'                                                                                                                                  # print lines until pattern
 p[49]="s%^ *pool \([^a-z]\)%# pool \1%"                                                                                                                       # ntp del other pool servers
 p[49]="${p[49]};s%^ *#.*restrict.*192.*%restrict 192.168.8.0 mask 255.255.255.0 notrap nomodify%"                                                             # ntp my lan unlimited access

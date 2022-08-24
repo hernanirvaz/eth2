@@ -420,8 +420,8 @@ function sr3 { cp $(pjp 4 73).service ${p[73]}.sav;sed "s%--beacon-nodes  *\([^ 
 [[ $1 = lp  ]] && { netstat -tulpn; }
 # outros journal system/lighthouse
 [[ $1 = sl  ]] && { fs2|if [[ $2 ]];then grep -i "[a-z]* [0-9]* $2";else grep -i 'error' ;fi; }
-[[ $1 = el  ]] && { fs0 . 0 geth|if [[ $2 ]];then grep -i "[a-z]* [0-9]* $2";else grep -v ' INFO ';fi; }
-[[ $1 = cl  ]] && { fs0         |if [[ $2 ]];then grep -i "[a-z]* [0-9]* $2";else grep -v ' INFO ';fi; }
+[[ $1 = el  ]] && { if [[ $(sst ${p[70]} running) ]];then fs0 . 0 geth;else fs0 'WARN\|ERROR\|INFO' 0 besu;fi|if [[ $2 ]];then grep -i "[a-z]* [0-9]* $2";else grep -v ' INFO ';fi; }
+[[ $1 = cl  ]] && { fs0|if [[ $2 ]];then grep -i "[a-z]* [0-9]* $2";else grep -v ' INFO ';fi; }
 [[ $1 = ll  ]] && { rl1|if [[ $2 ]];then grep -i "[a-z]* [0-9]* $2";else grep -v ' INFO ';fi; }
 [[ $1 = nl  ]] && { rl0|if [[ $2 ]];then grep -i               "$2";else grep -v ' INFO ';fi; }
 [[ $1 = ws  ]] && { cex 'ufw status numbered'; }
