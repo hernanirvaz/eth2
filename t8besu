@@ -3,6 +3,8 @@
 source /home/eth/eth2/t1
 
 if [[ $cunm = $znm1 || $cunm = $znm4 || $cunm = $vnm1 ]];then                                                                                                 # ec here
+  swu 'INSTALL JAVA ';sex 'apt install default-jdk libjemalloc-dev -y'
+  swu 'INSTALAR BESU';sex "mkdir -p ${p[37]}/data"
   vuel='22.7.1'                                                                                                                                               # besu version
   alow='192.168.8.25,192.168.8.31,192.168.8.34'                                                                                                               # my servers
   maxp=25    # default
@@ -13,7 +15,7 @@ if [[ $cunm = $znm1 || $cunm = $znm4 || $cunm = $vnm1 ]];then                   
   eped="$eped --rpc-http-cors-origins=chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn"                                                                    # for metamask
   epec="$epec --max-peers=$maxp"                                                                                                                              # set p2p connections
   epec="$epec --engine-jwt-secret=${p[37]}/data/jwt --host-allowlist=$alow --engine-host-allowlist=$alow"                                                     # MERGE
-  swu 'INSTALAR BESU';sex "mkdir -p ${p[37]}/data"
+  curl -LO https://hyperledger.jfrog.io/artifactory/besu-binaries/besu/$vuel/besu-$vuel.tar.gz
   tar xvf besu-$vuel.tar.gz;sex "cp -a besu-$vuel ${p[0]}/besu"                                                                                               # install besu binaries
   sex "chown eth1:eth1 -R ${p[0]}/besu";cmw ${p[0]}/besu 755 eth1;cmw ${p[37]} 755 eth1;cmw ${p[37]}/data 700 eth1                                            # set owner/permissions
   cat <<-EOF > ${p[87]}.service

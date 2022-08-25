@@ -50,11 +50,11 @@ function sso {
 # el control commands
 function glt { tail -n$1 ${p[13]} 2>${p[3]}|cut -d' ' -f1|sort -u|wc -l; }                                                                                    # get el restart activity test
 function sgx { ${p[8]}/geth attach --exec net.peerCount "http://$ciec:8545" 2>${p[3]}; }                                                                      # get el current peers
-function gy0 { ${p[8]}/geth attach --exec eth.syncing "http://$ciec:8545" 2>${p[3]}; }                                                                        # get current syncing status
+function gy0 { ${p[8]}/geth attach --exec eth.syncing   "http://$ciec:8545" 2>${p[3]}; }                                                                      # get current syncing status
 function gi0 { echo $@|sed -n 's%.*highestBlock: *\([0-9]*\).*%\1%ip'; }                                                                                      # get el highest block
 function gc0 { echo $@|sed -n 's%.*currentBlock: *\([0-9]*\).*%\1%ip'; }                                                                                      # get el current block
 function gv0 { nn=$(nu0 $(ss1 ${p[70]} maxpeers [0-9])); }                                                                                                    # set configured peers
-function gq0 { nr=$(nu0 $(sgx))                   ; }                                                                                                         # set el current peers
+function gq0 { nr=$(nu0 $(sgx))                        ; }                                                                                                    # set el current peers
 function gb0 { g0=$(fs0 Imported 0 geth|wc -l);ok=OK;[[ $g0 -eq $(lg0 .*sgs: ${p[13]}) && $(glt $hors) -eq 1 ]] && ok=BK; }                                   # imported new chain segments & OK/BK
 function gh0 { [[ -f ${p[13]} ]] || return;tail -n${1:-$hors} ${p[13]};[[ $1 ]] && return;gl0;swn "$m\n";ghs;cpe; }                                           # el historic report
 function gl0 {                                                                                                                                                # el report
@@ -73,10 +73,10 @@ function uc0 { echo $((16#$(echo $@|sed -n 's%.*currentBlock" *: *"0x\([^"]*\)".
 function up0 { echo $((16#$(echo $@|sed -n 's%.*result" *: *"0x\([^"]*\)".*%\1%ip'))); }                                                                      # get el result
 function uv0 { nn=$(nu0 $(ss1 ${p[87]} max-peers [0-9])); }                                                                                                   # set configured peers
 function uq0 { nr=$(nu0 $(sux))                         ; }                                                                                                   # set el current peers
-function ub  { u0=$(fs0 importing 0 besu|wc -l);ok=OK;[[ $u0 -eq $(lg0 .*sgs: ${p[89]}) ]] && ok=BK; }                                                        # imported new chain segments & OK/BK
+function ub0 { u0=$(fs0 importing 0 besu|wc -l);ok=OK;[[ $u0 -eq $(lg0 .*sgs: ${p[89]}) ]] && ok=BK; }                                                        # imported new chain segments & OK/BK
 function uh0 { [[ -f ${p[89]} ]] || return;tail -n${1:-$hors} ${p[89]};[[ $1 ]] && return;ul0;swn "$m\n";uhs;cpe; }                                           # el historic report
 function ul0 {                                                                                                                                                # el report
-  dts;ok=OK;if [[ $(sst ${p[87]} running) ]];then local e=$(uy0);ub;uv0;uq0;m="$(dnn) sgs: $(printf '%4i' $u0)"
+  dts;ok=OK;if [[ $(sst ${p[87]} running) ]];then local e=$(uy0);ub0;uv0;uq0;m="$(dnn) sgs: $(printf '%4i' $u0)"
     if [[ $(echo $e|grep false) ]];then m="BESU $ok SYC $m";else m="BESU $ok NSY $m blocks: $(($(ui0 $e)-$(uc0 $e)))";fi                                      # OK SYC/NSY (dnn) sgs: 5 blocks: 8 (6)
   else
     m="BESU NOT ON $dt"

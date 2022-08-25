@@ -111,7 +111,7 @@ if [[ $cunm = $znm1 || $cunm = $znm4 || $cunm = $vnm1 ]];then                   
 	Group=eth1
 	Restart=always
 	RestartSec=10
-	ExecStart=${p[37]}/besu/bin/besu --data-path=${p[37]}/data $epec
+	ExecStart=${p[0]}/besu/bin/besu --data-path=${p[37]}/data $epec
 	ExecStopPost=${p[9]}/eth2/t8mail BESUSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 	
 	[Install]
