@@ -37,7 +37,6 @@ function sci { ip a|sed -n 's% *inet  *192.168.8.\([0-9]*\).*%\1%p'; }          
 function sst { ${p[61]} $1 2>${p[3]}|grep "${2:-inactive\|failed}"; }                                                                                         # systemctl status word test
 function ss1 { ${p[61]} $1 2>${p[3]}|sed -n "s%.*$2[ =]\(${3:-.}*\).*%\1%p"; }                                                                                # systemctl status 1 extraction
 function ss2 { ${p[61]} $1 2>${p[3]}|sed -n "s%.*Active: *\(.*\)%\1%;s% *since.*;%%;s%running%RUNNING%ip"; }                                                  # systemctl status 2 extraction
-function sgx { ${p[8]}/geth attach --exec net.peerCount "http://$ciec:8545" 2>${p[3]}; }                                                                      # get el current peers
 function sbx { pex "grep lighthouse.*$1 ${p[1]}"|tail -n1|sed "s%.*$1 *\([0-9]*\).*%\1%"; }                                                                   # get cl current peers
 function sso {
   [[ $(sst $2 loaded) ]] || return;dts;local e="$1 $(printf '%6s' $(ss1 $2 Memory:)) $dt status: $(ss2 $2)"                                                   # memory & status
@@ -49,28 +48,36 @@ function sso {
 }
 
 # el control commands
-function gy  { ${p[8]}/geth attach --exec eth.syncing "http://$ciec:8545" 2>${p[3]}; }                                                                        # get current syncing status
-function gv  { nn=$(nu0 $(ss1 ${p[70]} maxpeers [0-9])); }                                                                                                    # set configured peers
-function gq  { nr=$(nu0 $(sgx))                   ; }                                                                                                         # set current    peers
-function gi  { echo $@|sed 's%.*highestBlock: *\([0-9]*\).*%\1%'; }                                                                                           # get highest el block
-function gc  { echo $@|sed 's%.*currentBlock: *\([0-9]*\).*%\1%'; }                                                                                           # get current el block
-function gb  { g0=$(fs0 Imported 0 geth|wc -l);ok=OK;[[ $g0 -eq $(lg0 .*sgs: ${p[13]}) ]] && ok=BK; }                                                         # imported new chain segments & OK/BK
+function glt { tail -n$1 ${p[13]} 2>${p[3]}|cut -d' ' -f1|sort -u|wc -l; }                                                                                    # get el restart activity test
+function sgx { ${p[8]}/geth attach --exec net.peerCount "http://$ciec:8545" 2>${p[3]}; }                                                                      # get el current peers
+function gy0 { ${p[8]}/geth attach --exec eth.syncing "http://$ciec:8545" 2>${p[3]}; }                                                                        # get current syncing status
+function gi0 { echo $@|sed -n 's%.*highestBlock: *\([0-9]*\).*%\1%ip'; }                                                                                      # get el highest block
+function gc0 { echo $@|sed -n 's%.*currentBlock: *\([0-9]*\).*%\1%ip'; }                                                                                      # get el current block
+function gv0 { nn=$(nu0 $(ss1 ${p[70]} maxpeers [0-9])); }                                                                                                    # set configured peers
+function gq0 { nr=$(nu0 $(sgx))                   ; }                                                                                                         # set el current peers
+function gb0 { g0=$(fs0 Imported 0 geth|wc -l);ok=OK;[[ $g0 -eq $(lg0 .*sgs: ${p[13]}) && $(glt $hors) -eq 1 ]] && ok=BK; }                                   # imported new chain segments & OK/BK
 function gh0 { [[ -f ${p[13]} ]] || return;tail -n${1:-$hors} ${p[13]};[[ $1 ]] && return;gl0;swn "$m\n";ghs;cpe; }                                           # el historic report
 function gl0 {                                                                                                                                                # el report
-  dts;ok=OK;if [[ $(sst ${p[70]} running) ]];then local e=$(gy);gb;gv;gq;m="$(dnn) sgs: $(printf '%4i' $g0)"
-    if [[ $(echo $e|grep false) ]];then m="GETH $ok SYC $m";else m="GETH $ok NSY $m blocks: $(($(gi $e)-$(gc $e)))";fi                                        # OK SYC/NSY (dnn) sgs: 5 blocks: 8 (6)
+  dts;ok=OK;if [[ $(sst ${p[70]} running) ]];then local e=$(gy0);gb0;gv0;gq0;m="$(dnn) sgs: $(printf '%4i' $g0)"
+    if [[ $(echo $e|grep false) ]];then m="GETH $ok SYC $m";else m="GETH $ok NSY $m blocks: $(($(gi0 $e)-$(gc0 $e)))";fi                                      # OK SYC/NSY (dnn) sgs: 5 blocks: 8 (6)
   else
     m="GSRV NOT ON $dt"
   fi
 }
-function glt { tail -n$1 ${p[13]} 2>${p[3]}|cut -d' ' -f1|sort -u|wc -l; }                                                                                    # get el restart activity test
-function grs { gv;snp ${p[70]} $1 10 50;sex "$(pjw 63 70)";sleep 20s;dts;gq;[[ -f ${p[13]} ]] && swn "RSTR SERVIC $(dnn)" >> ${p[13]}; }                      # change/stop/load/start/log el
-function uv  { nn=$(nu0 $(ss1 ${p[87]} max-peers [0-9])); }                                                                                                   # set configured peers
+function grs { gv0;snp ${p[70]} $1 10 50;sex "$(pjw 63 70)";sleep 20s;dts;gq0;[[ -f ${p[13]} ]] && swn "RSTR SERVIC $(dnn)" >> ${p[13]}; }                    # change/stop/load/start/log el
+function ucl { curl -sX POST --data "{\"jsonrpc\":\"2.0\",\"method\":\"$1\",\"params\":[],\"id\":51}" "http://$ciec:8545"; }                                  # exec RPC HTTP
+function sux { ucl net_peerCount 2>${p[3]}; }                                                                                                                 # get el current peers
+function uy0 { ucl eth_syncing 2>${p[3]}; }                                                                                                                   # get current syncing status
+function ui0 { echo $((16#$(echo $@|sed -n 's%.*highestBlock" *: *"0x\([^"]*\)".*%\1%ip'))); }                                                                # get el highest block
+function uc0 { echo $((16#$(echo $@|sed -n 's%.*currentBlock" *: *"0x\([^"]*\)".*%\1%ip'))); }                                                                # get el current block
+function up0 { echo $((16#$(echo $@|sed -n 's%.*result" *: *"0x\([^"]*\)".*%\1%ip'))); }                                                                      # get el result
+function uv0 { nn=$(nu0 $(ss1 ${p[87]} max-peers [0-9])); }                                                                                                   # set configured peers
+function uq0 { nr=$(nu0 $(up0 $(sux)))                  ; }                                                                                                   # set el current peers
 function ub  { u0=$(fs0 importing 0 besu|wc -l);ok=OK;[[ $u0 -eq $(lg0 .*sgs: ${p[89]}) ]] && ok=BK; }                                                        # imported new chain segments & OK/BK
 function uh0 { [[ -f ${p[89]} ]] || return;tail -n${1:-$hors} ${p[89]};[[ $1 ]] && return;ul0;swn "$m\n";uhs;cpe; }                                           # el historic report
 function ul0 {                                                                                                                                                # el report
-  dts;ok=OK;if [[ $(sst ${p[87]} running) ]];then local e=$(gy);ub;uv;gq;m="$(dnn) sgs: $(printf '%4i' $u0)"
-    if [[ $(echo $e|grep false) ]];then m="BESU $ok SYC $m";else m="BESU $ok NSY $m blocks: $(($(gi $e)-$(gc $e)))";fi                                        # OK SYC/NSY (dnn) sgs: 5 blocks: 8 (6)
+  dts;ok=OK;if [[ $(sst ${p[87]} running) ]];then local e=$(uy0);ub;uv0;uq0;m="$(dnn) sgs: $(printf '%4i' $u0)"
+    if [[ $(echo $e|grep false) ]];then m="BESU $ok SYC $m";else m="BESU $ok NSY $m blocks: $(($(ui0 $e)-$(uc0 $e)))";fi                                      # OK SYC/NSY (dnn) sgs: 5 blocks: 8 (6)
   else
     m="BESU NOT ON $dt"
   fi
