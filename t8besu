@@ -10,7 +10,7 @@ if [[ $cunm = $znm1 || $cunm = $znm4 || $cunm = $vnm1 ]];then                   
   epec="--miner-enabled=true --miner-coinbase=\"${p[99]}\""                                                                                                   # coincashew guide had these NOT USING
   epec="--sync-mode=X_SNAP --data-storage-format=BONSAI --pruning-enabled=true"                                                                               # recommend snap sync/bonsai/pruning
   epec="$epec --p2p-port=$pp2p --rpc-http-enabled=true --rpc-http-host=$zip1"                                                                                 # enable  rpc:8545
-  epec="$epec --rpc-http-cors-origins=all"                                                                                                                    # eliminate CORS errors
+  eped="$eped --rpc-http-cors-origins=chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn"                                                                    # for metamask
   epec="$epec --max-peers=$maxp"                                                                                                                              # set p2p connections
   epec="$epec --engine-jwt-secret=${p[37]}/data/jwt --host-allowlist=$alow --engine-host-allowlist=$alow"                                                     # MERGE
   swu 'INSTALAR BESU';sex "mkdir -p ${p[37]}/data"
