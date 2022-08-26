@@ -55,8 +55,8 @@ function gi0 { echo $@|sed -n 's%.*highestBlock: *\([0-9]*\).*%\1%ip'; }        
 function gc0 { echo $@|sed -n 's%.*currentBlock: *\([0-9]*\).*%\1%ip'; }                                                                                      # get el current block
 function gv0 { nn=$(nu0 $(ss1 ${p[70]} maxpeers [0-9])); }                                                                                                    # set configured peers
 function gq0 { nr=$(nu0 $(sgx))                        ; }                                                                                                    # set el current peers
-function gb0 { g0=$(fs0 Imported 0 geth|wc -l);ok=OK;[[ $g0 -eq $(lg0 .*sgs: ${p[13]}) && $(glt $hors) -eq 1 ]] && ok=BK; }                                   # Imported new chain segment & OK/BK
-function gh0 { [[ -f ${p[13]} ]] || return;tail -n${1:-$hors} ${p[13]};[[ $1 ]] && return;gl0;swn "$m\n";ghs;cpe; }                                           # el historic report
+function gb0 { g0=$(fs0 Imported 0 geth|wc -l);ok=OK;[[ $g0 -eq $(lg0 .*sgs: ${p[13]}) && $(glt $ehrs) -eq 1 ]] && ok=BK; }                                   # Imported new chain segment & OK/BK
+function gh0 { [[ -f ${p[13]} ]] || return;tail -n${1:-$ehrs} ${p[13]};[[ $1 ]] && return;gl0;swn "$m\n";ghs;cpe; }                                           # el historic report
 function gl0 {                                                                                                                                                # el report
   dts;ok=OK;if [[ $(sst ${p[70]} running) ]];then local e=$(gy0);gb0;gv0;gq0;m="$(dnn) sgs: $(printf '%4i' $g0)"
     if [[ $(echo $e|grep false) ]];then m="GETH $ok SYC $m";else m="GETH $ok NSY $m blocks: $(($(gi0 $e)-$(gc0 $e)))";fi                                      # OK SYC/NSY (dnn) sgs: 5 blocks: 8 (6)
@@ -65,6 +65,7 @@ function gl0 {                                                                  
   fi
 }
 function grs { gv0;snp ${p[70]} $1 10 50;sex "$(pjw 63 70)";sleep 20s;dts;gq0;[[ -f ${p[13]} ]] && swn "RSTR SERVIC $(dnn)" >> ${p[13]}; }                    # change/stop/load/start/log el
+function ult { tail -n$1 ${p[89]} 2>${p[3]}|cut -d' ' -f1|sort -u|wc -l; }                                                                                    # get el restart activity test
 function ucl { curl -sX POST --data "{\"jsonrpc\":\"2.0\",\"method\":\"$1\",\"params\":[],\"id\":51}" "http://$ciec:8545"; }                                  # exec RPC HTTP
 function sux { up0 $(ucl net_peerCount 2>${p[3]}); }                                                                                                          # get el current peers
 function uy0 { ucl eth_syncing 2>${p[3]}; }                                                                                                                   # get current syncing status
@@ -73,8 +74,8 @@ function uc0 { echo $((16#$(echo $@|sed -n 's%.*currentBlock" *: *"0x\([^"]*\)".
 function up0 { echo $((16#$(echo $@|sed -n 's%.*result" *: *"0x\([^"]*\)".*%\1%ip'))); }                                                                      # get el result
 function uv0 { nn=$(nu0 $(ss1 ${p[87]} max-peers [0-9])); }                                                                                                   # set configured peers
 function uq0 { nr=$(nu0 $(sux))                         ; }                                                                                                   # set el current peers
-function ub0 { u0=$(fs0 Imported 0 besu|wc -l);ok=OK;[[ $u0 -eq $(lg0 .*sgs: ${p[89]}) ]] && ok=BK; }                                                         # Imported #<block> & OK/BK
-function uh0 { [[ -f ${p[89]} ]] || return;tail -n${1:-$hors} ${p[89]};[[ $1 ]] && return;ul0;swn "$m\n";uhs;cpe; }                                           # el historic report
+function ub0 { u0=$(fs0 Imported 0 besu|wc -l);ok=OK;[[ $u0 -eq $(lg0 .*sgs: ${p[89]}) && $(ult $ehrs) -eq 1 ]] && ok=BK; }                                   # Imported #<block> & OK/BK
+function uh0 { [[ -f ${p[89]} ]] || return;tail -n${1:-$ehrs} ${p[89]};[[ $1 ]] && return;ul0;swn "$m\n";uhs;cpe; }                                           # el historic report
 function ul0 {                                                                                                                                                # el report
   dts;ok=OK;if [[ $(sst ${p[87]} running) ]];then local e=$(uy0);ub0;uv0;uq0;m="$(dnn) sgs: $(printf '%4i' $u0)"
     if [[ $(echo $e|grep false) ]];then m="BESU $ok SYC $m";else m="BESU $ok NSY $m blocks: $(($(ui0 $e)-$(uc0 $e)))";fi                                      # OK SYC/NSY (dnn) sgs: 5 blocks: 8 (6)
@@ -82,6 +83,7 @@ function ul0 {                                                                  
     m="BESU NOT ON $dt"
   fi
 }
+function urs { uv0;snp ${p[87]} $1 10 25;sex "$(pjw 63 87)";sleep 20s;dts;uq0;[[ -f ${p[89]} ]] && swn "RSTR SERVIC $(dnn)" >> ${p[89]}; }                    # change/stop/load/start/log el
 # cc control commands
 function bz0 { echo $((10*(5*zk+2*zz+zx+zw)))                                          ; }                                                                    # get numerator paid errors
 function bw0 { echo $((10*z1))                                                         ; }                                                                    # get numerator processed blocks
@@ -89,7 +91,7 @@ function bf0 { echo $((90*z3))                                                  
 function bi0 { echo $((nd+zk*300+zz*20+zx))                                            ; }                                                                    # get delete day idx
 function bu0 { echo $(((z5>400?$(bz0)/z5:0)+(z2>300?$(bw0)/z2:0)+(z4>999?$(bf0)/z4:0))); }                                                                    # get restart idx
 function bv0 { nu0 $(ss1 ${p[71]} target-peers [0-9]); }                                                                                                      # get configured peers
-function bb0 { l0=$(fs0 $bpid] 3600);bl1;bl2;[[ (1 -eq $(bl6 $hors) && $(bu0) -ge 1) || (1 -eq $(bl6 5) && $(bu0) -ge 5) ]] && ok=BK; }                       # set ok (OK/BK)
+function bb0 { l0=$(fs0 $bpid] 3600);bl1;bl2;[[ (1 -eq $(bl6 $chrs) && $(bu0) -ge 1) || (1 -eq $(bl6 5) && $(bu0) -ge 5) ]] && ok=BK; }                       # set ok (OK/BK)
 function bbl { cat ${p[11]} 2>${p[3]}|wc -l; }                                                                                                                # get cc       line count
 function bml { cat ${p[12]} 2>${p[3]}|wc -l; }                                                                                                                # get cc-daily line count
 function bfl { grep "BEAC.*$1"    ; }                                                                                                                         # filter cc lines
@@ -170,12 +172,12 @@ function bo2 { b2=$(bo1|grep -n $1|cut -d: -f1); }                              
 function bo3 { b3=$(nu3 ${b2:=0} $(lg1 BEAC\ *[0-9]* ${p[12]})); }                                                                                            # set homologous avg
 function bo4 { [[ ${b2:=0} -eq 0 && -f ${p[11]} ]] && boi;bo3; }                                                                                              # set homologous position/avg
 function bo5 { l2=$(bff $d1);bo2 $d0;bo3; }                                                                                                                   # set homologous position/avg
-function bo6 { bo1|head -n$((b6>b2?b6:b2<5?5:b2))|tail -n$((b6>0?b6:b2>hors?hors:b2<5?5:b2)); }                                                               # homologous report
+function bo6 { bo1|head -n$((b6>b2?b6:b2<5?5:b2))|tail -n$((b6>0?b6:b2>chrs?chrs:b2<5?5:b2)); }                                                               # homologous report
 function bo7 { bo1|grep $(printf 'node%02i:' $1); }                                                                                                           # get homologous node lines sorted
 function bon { [[ -f ${p[11]} ]] || return;nn=$(pt2 $1 $(bv0));l2=$(bff 23:58);bo7 $nn; }                                                                     # homologous nodes report
 function boa { local g=${1:-$bpri};echo "BO$(printf '%5i' $(bo7 $g|wc -l)) $(printf '%3i' $g)";bo7 $g;((g<bprf)) && boa $((g+bprs)); }                        # recursively show homologous nodes report
 function bh0 {
-  [[ -f ${p[11]} ]] || return;tail -n${1:-$hors} ${p[11]};[[ $1 ]] && return                                                                                  # last cc    report
+  [[ -f ${p[11]} ]] || return;tail -n${1:-$chrs} ${p[11]};[[ $1 ]] && return                                                                                  # last cc    report
   boi;swn "BO$(printf '%5i' $(echo "$l2"|wc -l)) $(printf '%3i' $b2)$(printf '%91s')x5 x2  x1 x1";bo6                                                         # homologous report
   bl0;swn "BL$(printf '%9i' $(bbl))\n$m";bm0                                                                                                                  # current cc report
   bmo;swn "BM$(printf '%9i' $(bml))$(printf '%46s')i20  i30  i40  i50  i60  i70  i80\n$m";ghs;bhs;cpe                                                         # cc-daily/services/system report
@@ -231,7 +233,7 @@ function bht { [[ $b2 -gt $b3 ]]; }                                             
 function bst { [[ $(bi0) -ge 2500 ]]; }                                                                                                                       # peers standard deviation test
 function btt { bnt && bht && ! bst; }                                                                                                                         # peers change global test
 function bbt { [[ $(grep $d0 ${p[11]} 2>${p[3]}|wc -l) -gt 0 ]]; }                                                                                            # exists cc log day test
-function bct { local n=$((nn-5));[[ $nm -ge $n && $(bl6 $hors) -eq 1 ]] && ( btt || sot ); }                                                                  # change configured peers test
+function bct { local n=$((nn-5));[[ $nm -ge $n && $(bl6 $chrs) -eq 1 ]] && ( btt || sot ); }                                                                  # change configured peers test
 function bdw { cp $1 ${1}o;grep -v $2 ${1}o > $1;grep $2 ${1}o > ${1}d; }                                                                                     # work to delete cc log day
 function bdl { v2t || return;local d=$(pt0 $1 sai);[[ -f ${p[11]} && $d != sai ]] || return;bdw ${p[11]} $d; }                                                #         delete cc log day
 function wst { echo $@|sed 's%[^: ]*: *%%g;s%,[^,]*(routed)%%;s% (incoming),% <<%;s% (outgoing)% >>%'; }                                                      # get ufw info
@@ -402,7 +404,7 @@ function sr3 { cp $(pjp 4 73).service ${p[73]}.sav;sed "s%--beacon-nodes  *\([^ 
 [[ $1 = nsh ]] && { nsh; }
 [[ $1 = tvc ]] && { tvc; }
 [[ $1 = ul  ]] && { ul0;swn "$m"; }
-[[ $1 = ulf ]] && { ul0;swn "$m" >> ${p[89]}; }                                                                                                               # el log
+[[ $1 = ulf ]] && { ul0;swn "$m" >> ${p[89]};[[ $ok != OK ]] && urs 0; }                                                                                      # el log/restart
 [[ $1 = gl  ]] && { gl0;swn "$m"; }
 [[ $1 = glf ]] && { gl0;swn "$m" >> ${p[13]};[[ $ok != OK ]] && grs 0; }                                                                                      # el log/restart
 [[ $1 = bl  ]] && { bl0;swn "$m"; }
@@ -428,11 +430,12 @@ function sr3 { cp $(pjp 4 73).service ${p[73]}.sav;sed "s%--beacon-nodes  *\([^ 
 [[ $1 = bsl ]] && { bsl; }
 [[ $1 = cpe ]] && { cpe $2; }
 [[ $1 = grs ]] && { grs ${2:-0}   ; }
+[[ $1 = urs ]] && { urs ${2:-0}   ; }
 [[ $1 = gpn ]] && { if [[ $(sst ${p[70]} running) ]];then gp;cex "du -h ${p[18]}";sudo -u eth1 ${p[8]}/geth --datadir ${p[18]} snapshot prune-state;cex "du -h ${p[18]}";dmr;ga;fi; }
 [[ $1 = srs ]] && { b1r ${2:-0} RB; }
 [[ $1 = brs ]] && { b1r ${2:-0} BN; }
 [[ $1 = lrs ]] && { b1r ${2:-0} VC; }
-[[ $1 = urs ]] && { sot ${2:-3} && sex reboot;pas; }                                                                                                          # system reboot needs & parameter set
+[[ $1 = irs ]] && { sot ${2:-3} && sex reboot;pas; }                                                                                                          # if system reboot needs & parameter set
 # lista servicos & portas
 [[ $1 = lp  ]] && { netstat -tulpn; }
 # outros journal system/lighthouse
@@ -553,10 +556,11 @@ if [[ ! $1 ]];then
   m="$m\ngh[s]\t\tec historic report [summary]"
   m="$m\ngpn\t\t${p[70]} prune DB - TAKES HOURS"
   m="$m\ngrs [n]\t\t${p[70]} restart n nodes to change"
+  m="$m\nurs [n]\t\t${p[87]} restart n nodes to change"
   m="$m\nbrs [n]\t\t${p[71]} restart n nodes to change"
   m="$m\nsrs [n]\t\tsystem restart n=nodes to change"
   m="$m\nlrs [n]\t\tlighthouse restart n=nodes to change"
-  m="$m\nurs [h]\t\treboot if system needs it after h hours"
+  m="$m\nirs [h]\t\treboot if system needs it after h hours"
   m="$m\nyj\t\tsystem journal"
   m="$m\nsl [hh:mm]\tsystem journal  log lines"
   m="$m\nll [hh:mm]\tel/cl log lines (last 7 days)"
