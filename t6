@@ -27,7 +27,7 @@ function dts { read d0 d1 <<< ${1:-$(date '+%F %H:%M')};dt="$d0 $d1"          ; 
 function bnn { nr=${@:$#};nm=$(printf '%i\n' $@|sort -n|head -n1);nd=$(nu2 $@); }                                                                             # set cur/min/std peers vars
 function dnn { echo "$dt $(printf 'node%02i:' $nn) $(printf '%2i' $nr)"       ; }                                                                             # get date/nodes info
 function jsh { cex "journalctl --no-hostname --no-full -f $1"; }                                                                                              # my journal   format
-function spc { nn=$2;cp ${p[4]}/$1.service ${p[9]}/$1.sav;sed "s%peers *[0-9]*%peers $2%" ${p[9]}/$1.sav > ${p[4]}/$1.service; }                              # service configuration change
+function spc { nn=$2;cp ${p[4]}/$1.service ${p[9]}/$1.sav;sed "s%peers\([ =]*\)[0-9]*%peers\1$2%" ${p[9]}/$1.sav > ${p[4]}/$1.service; }                      # service configuration change
 function snp { local n=$(($2+nn));(($2!=0&&n>=$3&&n<=$4)) && spc $1 $n;sex "${p[62]} $1";sex "${p[60]} daemon-reload"        ; }                              # service peers change/stop/reload
 function srt { [[ -f ${p[5]} ]]; }                                                                                                                            # system needs reboot test
 function sra { if srt;then echo $(($(date +%s)-$(date -r ${p[5]} +%s)));else echo 0;fi }                                                                      # system reboot age (secounds)
