@@ -226,7 +226,7 @@ p[86]="${p[86]}\n${p[85]}"
 p[86]="${p[86]}\n4\t\tcheck slash,srv,dirs"
 p[86]="${p[86]}\n5\t\trm lock;t vea\n"
 p[87]='eth-besu'
-p[88]="JAVA_HOME='/usr/lib/jvm/java-11-openjdk-amd64'"
+p[88]="JAVA_HOME='/usr/lib/jvm/java-11-openjdk-amd64'"                                                                                                        # besu needs java
 p[89]="${p[9]}/besu.log"                                                                                                                                      # ec minute log
 p[90]='  *[A-Z][A-Z][A-Z][A-Z][A-Z]* *'                                                                                                                       # filter log msg (not dump)
 p[99]='0x82f6E45b47c5C03F8D52dDDa03B3F65897Cd5AB2'
