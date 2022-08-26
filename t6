@@ -39,10 +39,11 @@ function ss1 { ${p[61]} $1 2>${p[3]}|sed -n "s%.*$2[ =]\(${3:-.}*\).*%\1%p"; }  
 function ss2 { ${p[61]} $1 2>${p[3]}|sed -n "s%.*Active: *\(.*\)%\1%;s% *since.*;%%;s%running%RUNNING%ip"; }                                                  # systemctl status 2 extraction
 function sbx { pex "grep lighthouse.*$1 ${p[1]}"|tail -n1|sed "s%.*$1 *\([0-9]*\).*%\1%"; }                                                                   # get cl current peers
 function dmr { sex "${p[60]} daemon-reload"; }                                                                                                                # daemon-reload
+function tsy { if [[ $(echo $@|grep false) ]];then echo SYC;else echo NSY;fi; }                                                                               # get el SYN/NSY text
 function sso {
   [[ $(sst $2 loaded) ]] || return;dts;local e="$1 $(printf '%6s' $(ss1 $2 Memory:)) $dt status: $(ss2 $2)"                                                   # memory & status
-  [[ $1 = GETH ]] && e="$e\t$(printf "el:p%2i p2p:%5i" $(sgx) $(ss1 $2 port [0-9]))"                                                                          # el peers & p2p port tag
-  [[ $1 = BESU ]] && e="$e\t$(printf "el:p%2i p2p:%5i" $(sux) $(ss1 $2 p2p-port [0-9]))"                                                                      # el peers & p2p port tag
+  [[ $1 = GETH ]] && e="$e\t$(printf "el:p%2i p2p:%5i" $(sgx) $(ss1 $2 port [0-9])) $(tsy $(gy0))"                                                            # el peers & p2p port tag
+  [[ $1 = BESU ]] && e="$e\t$(printf "el:p%2i p2p:%5i" $(sux) $(ss1 $2 p2p-port [0-9])) $(tsy $(uy0))"                                                        # el peers & p2p port tag
   [[ $1 = BEAC ]] && e="$e\t$(printf "cl:p%2i p2p:%5i" $(sbx peers:) $(ss1 $2 port [0-9]))"                                                                   # cl peers/port/import all
   [[ $1 = BEAC ]] && e="$e\tel:http $(ss1 $2 endpoints* '[^ ]'|sed -n 's%http://192.168.8.\([0-9]*:[0-9]*\)%\1%gp')"                                          # el http(s)
   [[ $1 = VALI ]] && e="$e\t\t\t\tcc:http $(ss1 $2 nodes '[^ ]'|sed -n 's%http://192.168.8.\([0-9]*:[0-9]*\)%\1%gp')";swn "$e"                                # cl http(s)
@@ -83,7 +84,7 @@ function ul0 {                                                                  
     m="BESU NOT ON $dt"
   fi
 }
-function urs { uv0;snp ${p[87]} $1 10 25;sex "$(pjw 63 87)";sleep 20s;dts;uq0;[[ -f ${p[89]} ]] && swn "RSTR SERVIC $(dnn)" >> ${p[89]}; }                    # change/stop/load/start/log el
+function urs { uv0;snp ${p[87]} $1 10 50;sex "$(pjw 63 87)";sleep 20s;dts;uq0;[[ -f ${p[89]} ]] && swn "RSTR SERVIC $(dnn)" >> ${p[89]}; }                    # change/stop/load/start/log el
 # cc control commands
 function bz0 { echo $((10*(5*zk+2*zz+zx+zw)))                                          ; }                                                                    # get numerator paid errors
 function bw0 { echo $((10*z1))                                                         ; }                                                                    # get numerator processed blocks
