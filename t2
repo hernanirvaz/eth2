@@ -19,10 +19,9 @@ if [[ $(pex 'ufw status'|grep -i inactive) ]];then
 else
   cex 'ufw status numbered'                                                                                                                                   # show
 fi
-[[ -f $(pjp 4 70).service || -f $(pjp 4 71).service || -f $(pjp 4 73).service ]] && exit                                                                      # ec/cl instalados -> exit
+[[ -f $(pjp 4 70).service || -f $(pjp 4 87).service || -f $(pjp 4 71).service || -f $(pjp 4 73).service ]] && exit                                            # ec/cl instalados -> exit
 swu 'UPDATE LINUX'       ;t4update linux
 swu 'ROOTKIT SCANNER'    ;sex 'apt install python3-pip net-tools lm-sensors chkrootkit bind9 bind9utils apt-listchanges landscape-common -y';cex 'chkrootkit'
-swu 'INSTALL JAVA   '    ;sex 'apt install default-jdk libjemalloc-dev -y'
 swu 'UNATTENDED UPGRADES';cex 'apt install unattended-upgrades update-notifier-common -y'
 swu 'LINUX CONFIGS'
 if [[ $cunm = $znm2 ]];then
@@ -56,16 +55,15 @@ cc3 ${p[28]} "${p[48]}" "${p[55]}"                            ;cmw ${p[28]} 644 
 cc1 ${p[29]} "${p[42]}"                                       ;cmw ${p[29]} 644 root                                                                          # use only ipv4
 cc1 ${p[34]} "${p[83]}"                                       ;cmw ${p[34]} 644 root                                                                          # hosts config
 cc4 ${p[35]} "${p[82]}"                                       ;cmw ${p[35]} 644 root                                                                          # ssh config
-cc2 ${p[36]} "${p[88]}"                                       ;cmw ${p[36]} 644 root                                                                          # java environment
 [[ -x ${p[27]} ]] && sex "chmod -x ${p[27]}"                                                                                                                  # motd overlayroot unexecute
 nex 'sudo update-grub';nex "${p[60]} daemon-reload"                                                                                                           # daemon-reload
 sudo dpkg-reconfigure -plow unattended-upgrades                                                                                                               # unattended upgrades
 t6 spd;t6 sea;nex "${p[62]} systemd-resolved";nex "${p[63]} systemd-resolved"                                                                                 # DNS stop & start
 if [[ $cunm = $znm1 || $cunm = $znm4 || $cunm = $vnm1 ]];then                                                                                                 # ec here
-  swu 'INSTALAR GETH';sex 'add-apt-repository -y ppa:ethereum/ethereum';sex 'apt update -y';cex 'apt install -y software-properties-common ethereum'          # install execution client
-  sex "mkdir -p ${p[18]}/geth ";sau eth1;cmw ${p[18]} 755 eth1;cmw ${p[18]}/geth 700 eth1                                                                     # create dir & user for ec
-  maxp=50    # default
-  pp2p=30303 # default
+  swu 'INSTALAR GETH';sex 'add-apt-repository -y ppa:ethereum/ethereum';sex 'apt update -y';cex 'apt install -y software-properties-common ethereum'          # geth execution client needs
+  sex "mkdir -p ${p[18]}/geth";sau eth1;cmw ${p[18]} 755 eth1;cmw ${p[18]}/geth 700 eth1                                                                      # create dir & user for ec
+  maxp=50                                                                                                                                                     # default
+  pp2p=30303                                                                                                                                                  # default
   othe=''
   othe="$othe --http.corsdomain 'chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn' --http.vhosts '*'"                                                      # for metamask
   cat <<-EOF > ${p[70]}.service
@@ -86,20 +84,20 @@ if [[ $cunm = $znm1 || $cunm = $znm4 || $cunm = $vnm1 ]];then                   
 	WantedBy=multi-user.target
 	EOF
   sex "mv ${p[70]}.service $(pjp 4 70).service";cmw $(pjp 4 70).service 644
-  swu 'INSTALAR BESU';sex "mkdir -p ${p[37]}/data"
-  vuel='22.7.1'                                                                                                                                               # besu version
+  if [[ -f jwt ]];then sex "cp jwt ${p[18]}/geth";cmw ${p[18]}/geth/jwt 600 eth1;else swb "needs ${p[18]}/geth/jwt secret";fi
+  swu 'INSTALAR BESU';sex 'apt install default-jdk libjemalloc-dev -y';cc2 ${p[36]} "${p[88]}";cmw ${p[36]} 644 root                                          # besu execution client needs
+  sex "mkdir -p ${p[37]}/data";sau eth1;cmw ${p[37]} 755 eth1;cmw ${p[37]}/data 700 eth1                                                                      # create dir & user for ec
+  unv                                                                                                                                                         # download/install besu binaries
   alow='192.168.8.25,192.168.8.31,192.168.8.34'                                                                                                               # my servers
-  maxp=25    # default
-  pp2p=30303 # default
+  maxp=25                                                                                                                                                     # default
+  pp2p=30303                                                                                                                                                  # default
   epec="--miner-enabled=true --miner-coinbase=\"${p[99]}\""                                                                                                   # coincashew guide had these NOT USING
+  epec="--pruning-enabled=true"                                                                                                                               # DO NOT REMOVE but pruning deprecated for bonsai tries
   epec="--sync-mode=X_SNAP --data-storage-format=BONSAI --pruning-enabled=true"                                                                               # recommend snap sync/bonsai/pruning
   epec="$epec --p2p-port=$pp2p --rpc-http-enabled=true --rpc-http-host=$zip1"                                                                                 # enable  rpc:8545
   eped="$eped --rpc-http-cors-origins=chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn"                                                                    # for metamask
   epec="$epec --max-peers=$maxp"                                                                                                                              # set p2p connections
   epec="$epec --engine-jwt-secret=${p[37]}/data/jwt --host-allowlist=$alow --engine-host-allowlist=$alow"                                                     # MERGE
-  curl -LO https://hyperledger.jfrog.io/artifactory/besu-binaries/besu/$vuel/besu-$vuel.tar.gz
-  tar xvf besu-$vuel.tar.gz;sex "cp -a besu-$vuel ${p[0]}/besu"                                                                                               # install besu binaries
-  sex "chown eth1:eth1 -R ${p[0]}/besu";cmw ${p[0]}/besu 755 eth1;cmw ${p[37]} 755 eth1;cmw ${p[37]}/data 700 eth1                                            # set owner/permissions
   cat <<-EOF > ${p[87]}.service
 	[Unit]
 	Description=besu service
@@ -118,6 +116,7 @@ if [[ $cunm = $znm1 || $cunm = $znm4 || $cunm = $vnm1 ]];then                   
 	WantedBy=multi-user.target
 	EOF
   sex "mv ${p[87]}.service $(pjp 4 87).service";cmw $(pjp 4 87).service 644
+  if [[ -f jwt ]];then sex "cp jwt ${p[37]}/data";cmw ${p[37]}/data/jwt 600 eth1;else swb "needs ${p[37]}/data/jwt secret";fi
 fi
 swn 'sudo netplan apply'
 swn 'AND reboot'

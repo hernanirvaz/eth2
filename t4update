@@ -12,14 +12,7 @@ if [[ $1 = linux || $1 = reboot || $1 = ec ]];then
   [[ $1 = ec     ]] && t6 gaj
   [[ $1 = reboot ]] && cex 'reboot'
 fi
-if [[ $1 = besu ]];then
-  curl -LO https://hyperledger.jfrog.io/artifactory/besu-binaries/besu/$vuel/besu-$vuel.tar.gz
-  t6 upr
-  sex "mv ${p[0]}/besu besu-sav"                                                                                                                              # save old besu binaries
-  tar xvf besu-$vuel.tar.gz;sex "cp -a besu-$vuel ${p[0]}/besu"                                                                                               # install besu binaries
-  sex "chown eth1:eth1 -R ${p[0]}/besu";cmw ${p[0]}/besu 755 eth1                                                                                             # set owner/permissions
-  t6 uaj
-fi
+if [[ $1 = besu && $2 ]];then t6 upr;sex "mv ${p[0]}/besu besu-sav";unv $2;t6 uaj;fi                                                                          # stop/save/download/install/start besu
 [[ $1 = cc || $1 = cp ]] || { [[ $1 ]] || hlp;exit; }
 if [[ $1 = cc && ($cunm = $znm2 || $cunm = $vnm1) ]];then [[ -x ${p[9]}/.cargo/bin/rustup ]] && t6 ruv $3;t6 luc $2;fi                                        # rust update & lighthouse upgrade/compile
 t6 lpi                                                                                                                                                        # propagate & install lighthouse
