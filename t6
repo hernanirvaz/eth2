@@ -60,7 +60,7 @@ function gv0 { nn=$(nu0 $(ss1 ${p[70]} maxpeers [0-9])); }                      
 function gq0 { nr=$(nu0 $(gcl net.peerCount))          ; }                                                                                                    # set el current peers
 function gb1 { if [[ $(echo $@|grep false) ]];then echo;else echo " $1 $(($(gi0 $@)-$(gc0 $@)))";fi; }                                                        # get el syncing blocks remaining
 function gl0 {                                                                                                                                                # el report
-  dts;ok=OK;if [[ $(sst ${p[70]} running) ]];then local e=$(gcl eth.syncing);eb0 ${p[13]} Imported geth;gv0;gq0
+  dts;ok=OK;if [[ $(sst ${p[70]} running) ]];then local e=$(gcl eth.syncing);eb0 ${p[13]} Imported 'geth\[';gv0;gq0
     m="GETH $ok $(tsy $e) $(dnn) sgs: $(printf '%4i' $e0)$(gb1 blocks: $e)"                                                                                   # OK SYC/NSY (dnn) sgs: 5 blocks: 8
   else
     m="GSRV NOT ON $dt"
@@ -75,7 +75,7 @@ function uv0 { nn=$(nu0 $(ss1 ${p[87]} max-peers [0-9])); }                     
 function uq0 { nr=$(nu0 $(up0 $(ucl net_peerCount)))                         ; }                                                                              # set el current peers
 function ub1 { if [[ $(echo $@|grep false) ]];then echo;else echo " $1 $(($(ui0 $@)-$(uc0 $@)))";fi; }                                                        # get el syncing blocks remaining
 function ul0 {                                                                                                                                                # el report
-  dts;ok=OK;if [[ $(sst ${p[87]} running) ]];then local e=$(ucl eth_syncing);eb0 ${p[89]} Imported besu;uv0;uq0
+  dts;ok=OK;if [[ $(sst ${p[87]} running) ]];then local e=$(ucl eth_syncing);eb0 ${p[89]} Imported 'besu\[';uv0;uq0
     m="BESU $ok $(tsy $e) $(dnn) sgs: $(printf '%4i' $e0)$(ub1 blocks: $e)"                                                                                   # OK SYC/NSY (dnn) sgs: 5 blocks: 8
   else
     m="BSRV NOT ON $dt"
@@ -441,7 +441,7 @@ function sr3 { cp $(pjp 4 73).service ${p[73]}.sav;sed "s%--beacon-nodes  *\([^ 
 [[ $1 = lp  ]] && { netstat -tulpn; }
 # outros journal system/lighthouse
 [[ $1 = sl  ]] && { fs2|if [[ $2 ]];then grep -i "[a-z]* [0-9]* $2";else grep -i 'error' ;fi; }
-[[ $1 = el  ]] && { if [[ $(sst ${p[70]} running) ]];then fs0 . 0 geth;else fs0 "|${p[90]}|" 0 besu;fi|if [[ $2 ]];then grep -i "[a-z]* [0-9]* $2";else grep -v ' INFO ';fi; }
+[[ $1 = el  ]] && { if [[ $(sst ${p[70]} running) ]];then fs0 . 0 'geth\[';else fs0 "|${p[90]}|" 0 'besu\[';fi|if [[ $2 ]];then grep -i "[a-z]* [0-9]* $2";else grep -v ' INFO ';fi; }
 [[ $1 = cl  ]] && { fs0|if [[ $2 ]];then grep -i "[a-z]* [0-9]* $2";else grep -v ' INFO ';fi; }
 [[ $1 = ll  ]] && { rl1|if [[ $2 ]];then grep -i "[a-z]* [0-9]* $2";else grep -v ' INFO ';fi; }
 [[ $1 = nl  ]] && { rl0|if [[ $2 ]];then grep -i               "$2";else grep -v ' INFO ';fi; }
