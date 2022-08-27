@@ -328,13 +328,17 @@ function t1t { [[ $(cat ${p[7]}) -eq 1 && $(fs5) -le 10 ]]; }                   
 function t2t { [[ $(cat ${p[7]}) -eq 1 ]]; }                                                                                                                  # cpu no turbo            test
 function pas { umt && sex "${p[9]}/eth2/t5 usbstop";t1t && sex "${p[9]}/eth2/t5 cputurbo";t0t && sex "${p[9]}/eth2/t5 cpunoturbo"; }                          # set usb/cpu parameters
 function paf { t2t && sex "${p[9]}/eth2/t5 cputurbo"; }                                                                                                       # set turbo   parameter
-function ghs { [[ $(sst ${p[70]} running) ]] && sso GETH ${p[70]}; }
-function uhs { [[ $(sst ${p[87]} running) ]] && sso BESU ${p[87]}; }
+function ghs { sso GETH ${p[70]}; }
+function uhs { sso BESU ${p[87]}; }
 function bhs { sso BEAC ${p[71]};sso VALI ${p[73]}; }
-function ah1 { swn "\n\n$znm1";uhs;cpe;swn "\n\n$znm3";ssh ztc3 "export H=$H;~/eth2/t6 bhs";swn "\n\n$znm4";ssh ztc4 "export H=$H;~/eth2/t6 ehs"; }
-function ah2 { swn "\n\n$znm1";ssh ztc1 "export H=$H;~/eth2/t6 uhs";swn "\n\n$znm3";ssh ztc3 "export H=$H;~/eth2/t6 bhs";swn "\n\n$znm4";ssh ztc4 "export H=$H;~/eth2/t6 ehs"; }
-function ah3 { swn "\n\n$znm1";ssh ztc1 "export H=$H;~/eth2/t6 uhs";swn "\n\n$znm3";bhs;cpe;swn "\n\n$znm4";ssh ztc4 "export H=$H;~/eth2/t6 ehs"; }
-function ah4 { swn "\n\n$znm1";ssh ztc1 "export H=$H;~/eth2/t6 uhs";swn "\n\n$znm3";ssh ztc3 "export H=$H;~/eth2/t6 bhs";swn "\n\n$znm4";ghs;bhs;cpe; }
+function uhx { swn "\n\n$znm1";ssh ztc1 "export H=$H;~/eth2/t6 uhs"; }
+function cpx { swn "\n\n$znm2";ssh ztc2 "export H=$H;~/eth2/t6 cpe"; }
+function bhx { swn "\n\n$znm3";ssh ztc3 "export H=$H;~/eth2/t6 bhs"; }
+function ehx { swn "\n\n$znm4";ssh ztc4 "export H=$H;~/eth2/t6 ehs"; }
+function ah1 { swn "\n\n$znm1";uhs;cpe            ;cpx                ;bhx                ;ehx; }
+function ah2 {                 uhx;swn "\n\n$znm2";cpe                ;bhx                ;ehx; }
+function ah3 {                 uhx                ;cpx;swn "\n\n$znm3";bhs;cpe            ;ehx; }
+function ah4 {                 uhx                ;cpx                ;bhx;swn "\n\n$znm4";ghs;bhs;cpe; }
 function nsh { ${p[68]} list;${p[68]} status;${p[69]} status|sed -n 's%\(Current DNS\).*:%   \1:%ip'; }                                                       # network/dns info
 function wlp { local e="$1";shift;until [[ $# -lt 1 ]];do e="$e\|$1";shift;done;fs2|grep '\[UFW'|if [[ $e ]];then grep -v "$e";else cat;fi; }
 function vft { [[ -f $(pjp 4 73).service ]]; }                                                                                                                # vc service file test
@@ -414,10 +418,10 @@ function sr3 { cp $(pjp 4 73).service ${p[73]}.sav;sed "s%--beacon-nodes  *\([^ 
 [[ $1 = uh  ]] && { eh0 ${p[89]} $2;[[ $2 ]] || { ul0;swn "$m\n";uhs;cpe; } }
 [[ $1 = bh  ]] && { bh0 $2; }
 [[ $1 = ahs ]] && { [[ $cunm = $znm1 ]] && ah1;[[ $cunm = $znm2 ]] && ah2;[[ $cunm = $znm3 ]] && ah3;[[ $cunm = $znm4 ]] && ah4; }
-[[ $1 = ghs ]] && { ghs        ;cpe; }                                                                                                                        # el      & system report
-[[ $1 = uhs ]] && { uhs        ;cpe; }                                                                                                                        # el      & system report
-[[ $1 = bhs ]] && { bhs        ;cpe; }                                                                                                                        # cl      & system report
-[[ $1 = ehs ]] && { ghs;uhs;bhs;cpe; }                                                                                                                        # el & cl & system report
+[[ $1 = ghs ]] && { ghs    ;cpe; }                                                                                                                            # el      & system report
+[[ $1 = uhs ]] && { uhs    ;cpe; }                                                                                                                            # el      & system report
+[[ $1 = bhs ]] && { bhs    ;cpe; }                                                                                                                            # cl      & system report
+[[ $1 = ehs ]] && { ghs;bhs;cpe; }                                                                                                                            # el & cl & system report
 [[ $1 = bo  ]] && { bo0 $2 $3 $4; }
 [[ $1 = bon ]] && { bon $2; }
 [[ $1 = boc && -f ${p[11]} ]] && { unset v;read -a v <<< $(bff|tail -n1);l2=$(bff $(pt1 $2 ${v[4]}));boa; }
