@@ -330,11 +330,11 @@ function pas { umt && sex "${p[9]}/eth2/t5 usbstop";t1t && sex "${p[9]}/eth2/t5 
 function paf { t2t && sex "${p[9]}/eth2/t5 cputurbo"; }                                                                                                       # set turbo   parameter
 function ghs { [[ $(sst ${p[70]} running) ]] && sso GETH ${p[70]}; }
 function uhs { [[ $(sst ${p[87]} running) ]] && sso BESU ${p[87]}; }
-function bhs { sso BEAC ${p[71]};[[ $(sst ${p[73]} loaded) ]] && sso VALI ${p[73]}; }
-function ah1 { swn "\n\n$znm1";ghs;cpe;swn "\n\n$znm3";ssh ztc3 "export H=$H;${p[9]}/eth2/t6 bhs";swn "\n\n$znm4";ssh ztc4 "export H=$H;${p[9]}/eth2/t6 ehs"; }
-function ah2 { swn "\n\n$znm1";ssh ztc1 "export H=$H;${p[9]}/eth2/t6 ghs";swn "\n\n$znm3";ssh ztc3 "export H=$H;${p[9]}/eth2/t6 bhs";swn "\n\n$znm4";ssh ztc4 "export H=$H;${p[9]}/eth2/t6 ehs"; }
-function ah3 { swn "\n\n$znm1";ssh ztc1 "export H=$H;${p[9]}/eth2/t6 ghs";swn "\n\n$znm3";bhs;cpe;swn "\n\n$znm4";ssh ztc4 "export H=$H;${p[9]}/eth2/t6 ehs"; }
-function ah4 { swn "\n\n$znm1";ssh ztc1 "export H=$H;${p[9]}/eth2/t6 ghs";swn "\n\n$znm3";ssh ztc3 "export H=$H;${p[9]}/eth2/t6 bhs";swn "\n\n$znm4";ghs;bhs;cpe; }
+function bhs { sso BEAC ${p[71]};sso VALI ${p[73]}; }
+function ah1 { swn "\n\n$znm1";uhs;cpe;swn "\n\n$znm3";ssh ztc3 "export H=$H;~/eth2/t6 bhs";swn "\n\n$znm4";ssh ztc4 "export H=$H;~/eth2/t6 ehs"; }
+function ah2 { swn "\n\n$znm1";ssh ztc1 "export H=$H;~/eth2/t6 uhs";swn "\n\n$znm3";ssh ztc3 "export H=$H;~/eth2/t6 bhs";swn "\n\n$znm4";ssh ztc4 "export H=$H;~/eth2/t6 ehs"; }
+function ah3 { swn "\n\n$znm1";ssh ztc1 "export H=$H;~/eth2/t6 uhs";swn "\n\n$znm3";bhs;cpe;swn "\n\n$znm4";ssh ztc4 "export H=$H;~/eth2/t6 ehs"; }
+function ah4 { swn "\n\n$znm1";ssh ztc1 "export H=$H;~/eth2/t6 uhs";swn "\n\n$znm3";ssh ztc3 "export H=$H;~/eth2/t6 bhs";swn "\n\n$znm4";ghs;bhs;cpe; }
 function nsh { ${p[68]} list;${p[68]} status;${p[69]} status|sed -n 's%\(Current DNS\).*:%   \1:%ip'; }                                                       # network/dns info
 function wlp { local e="$1";shift;until [[ $# -lt 1 ]];do e="$e\|$1";shift;done;fs2|grep '\[UFW'|if [[ $e ]];then grep -v "$e";else cat;fi; }
 function vft { [[ -f $(pjp 4 73).service ]]; }                                                                                                                # vc service file test
