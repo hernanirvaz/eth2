@@ -59,6 +59,7 @@ p[34]='/etc/hosts'                                                              
 p[35]='/etc/ssh/ssh_config.d/ztc.conf'                                                                                                                        # ssh config
 p[36]='/etc/environment'                                                                                                                                      # system environment
 p[37]='/var/lib/javaethereum';[[ $cunm = $znm4 ]] && p[37]='/sata/javaethereum'                                                                               # el data
+p[38]='/sata/eth'                                                                                                                                             # cl compile location
 
 # sed/grep scripts
 p[40]='s%^ *#*NTP=.*$%NTP=192.168.8.28 ntp02.oal.ul.pt ntp04.oal.ul.pt time.google.com time.cloudflare.com time.facebook.com%i'                               # my time servers

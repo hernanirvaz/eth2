@@ -357,10 +357,10 @@ function lci { [[ -x $1 && ! -d $1      ]] || return;sex "mv ${p[0]}/lighthouse 
 function lmd { [[ -x ${p[0]}/lighthouse ]] || return;cmw ${p[0]}/lighthouse 755 eth;swb 'LIGHT INSTALADO'; }                                                  # lighthouse set permissions
 function lpi { [[ $cunm = $znm2 ]] && lcp $1 ztc2 ztc3 ztc4;[[ $cunm = $vnm1 ]] && lcp $1 vpss;lci ${p[9]}/lighthouse;sex "rm ${p[9]}/lighthouse";lmd; }      # lighthouse propagate/install
 function luc {                                                                                                                                                # lighthouse upgrade/compile
-  if [[ -f ${p[9]}/lighthouse/README.md ]];then
-    cd ${p[9]}/lighthouse;make clean;cargo clean                                                                                                              # clean compile dirs
+  if [[ -f ${p[38]}/lighthouse/README.md ]];then
+    cd ${p[38]}/lighthouse;make clean;cargo clean                                                                                                             # clean compile dirs
   else
-    cd ${p[9]};sex "rm -rf ${p[9]}/lighthouse";git clone https://github.com/sigp/lighthouse.git;cd ${p[9]}/lighthouse                                         # get new git
+    cd ${p[38]};sex "rm -rf ${p[38]}/lighthouse";git clone https://github.com/sigp/lighthouse.git;cd ${p[38]}/lighthouse                                      # get new git
   fi
   git fetch;if [[ $(echo $2|egrep 'v[0-9]+\.[0-9]+\.[0-9]+') ]];then m=$2;else m=$(git describe --tags $(git rev-list --tags --max-count=1));fi               # fetch (vX.X.X/last) version
   git checkout $m;swu 'VAI COMPILAR LIGHT';make;[[ $? -eq 0 && -x $1 ]] || swb 'ERRO COMPILAR ERRO'                                                           # checkout stable version & compile
