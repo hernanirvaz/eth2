@@ -33,8 +33,7 @@ function stt { [[ $d1 =~ 23:5[89] ]]; }                                         
 function sci { ip a|sed -n 's% *inet  *192.168.8.\([0-9]*\).*%\1%p'; }                                                                                        # get    current ip (server)
 function sst { ${p[61]} $1 2>${p[3]}|grep "${2:-inactive\|failed}"; }                                                                                         # systemctl status word test
 function ss1 { ${p[61]} $1 2>${p[3]}|sed -n "s%.*$2[ =]\(${3:-.}*\).*%\1%p"; }                                                                                # systemctl status 1 extraction
-function ss2 { ${p[61]} $1 2>${p[3]}|sed -n "s%.*Active: *\(.*\)%\1%;s% *since.*;%%;s%running%RUNNING%ip"; }                                                  # systemctl status 2 extraction
-function sbx { pex "grep lighthouse.*$1 ${p[1]}"|tail -n1|sed "s%.*$1 *\([0-9]*\).*%\1%"; }                                                                   # get cl current peers
+function ss2 { ${p[61]} $1 2>${p[3]}|sed -n "s%.*Active: *\(.*\)%\1%p"|sed "s% *since.*;%%"|cut -c1-40; }                                                     # systemctl status 2 extraction
 function dmr { sex "${p[60]} daemon-reload"; }                                                                                                                # daemon-reload
 function dts { read d0 d1 <<< ${1:-$(date '+%F %H:%M')};dt="$d0 $d1"          ; }                                                                             # set date/time         vars
 function bnn { nr=${@:$#};nm=$(printf '%i\n' $@|sort -n|head -n1);nd=$(nu2 $@); }                                                                             # set cur/min/std peers vars
@@ -44,12 +43,13 @@ function era { tail -n$ehrs $1 2>${p[3]}|cut -d' ' -f1|sort -u|wc -l; }         
 function eh0 { [[ -f $1 ]] || return;tail -n${2:-$ehrs} $1; }                                                                                                 # el historic report
 function eb0 { e0=$(fs0 $2 0 $3|wc -l);ok=OK;[[ $e0 -eq $(lg0 .*sgs: $1) && $(era $1) -eq 1 ]] && ok=BK; }                                                    # Imported new chain segment & OK/BK
 function sso {
-  [[ $(sst $2 loaded) ]] || return;dts;local e="$1 $(printf '%6s' $(ss1 $2 Memory:)) $dt status: $(ss2 $2)"                                                   # memory & status
-  [[ $1 = GETH ]] && e="$e\t$(printf "el:p%2i p2p:%5i" $(gcl net.peerCount) $(ss1 $2 port [0-9]))$(gb1 syncing: $(gcl eth.syncing))"                          # el peers & p2p port tag
-  [[ $1 = BESU ]] && e="$e\t$(printf "el:p%2i p2p:%5i" $(up0 $(ucl net_peerCount)) $(ss1 $2 p2p-port [0-9]))$(ub1 syncing: $(ucl eth_syncing))"               # el peers & p2p port tag
-  [[ $1 = BEAC ]] && e="$e\t$(printf "cl:p%2i p2p:%5i" $(sbx peers:) $(ss1 $2 port [0-9]))"                                                                   # cl peers/port/import all
-  [[ $1 = BEAC ]] && e="$e\tel:http $(ss1 $2 endpoints*  '[^ ]'|sed -n ${p[91]}) nys: $(fs0|grep not.yet.synced|wc -l)"                                       # el http & # not yet synced messages
-  [[ $1 = VALI ]] && e="$e\t\t\t\tcc:http $(ss1 $2 nodes '[^ ]'|sed -n ${p[91]})";swn "$e"                                                                    # cl http
+  [[ $(sst $2 loaded) ]] || return;dts;local e="$1 $(printf '%6s' $(ss1 $2 Memory:)) $dt status: $(printf '%-40s' "$(ss2 $2)")"                               # memory & status
+  [[ $1 = GETH ]] && e="$e $(printf "el:p%2i p2p:%5i" $(nu0 $(gcl net.peerCount)) $(ss1 $2 port [0-9]))$(gb1 syncing: $(gcl eth.syncing))"                    # el peers & p2p port tag
+  [[ $1 = BESU ]] && e="$e $(printf "el:p%2i p2p:%5i" $(up0 $(ucl net_peerCount)) $(ss1 $2 p2p-port [0-9]))$(ub1 syncing: $(ucl eth_syncing))"                # el peers & p2p port tag
+  [[ $1 = BEAC ]] && bnn $(fs4 peers:)                                                                                                                        # set cur/min/std peers vars
+  [[ $1 = BEAC ]] && e="$e $(printf "cl:p%2i p2p:%5i mn:p%2i" $nr $(ss1 $2 port [0-9]) $nm)"                                                                    # cl peers/port/import all
+  [[ $1 = BEAC ]] && e="$e el:http $(ss1 $2 endpoints*  '[^ ]'|sed -n ${p[91]}) nys: $(fs0|grep not.yet.synced|wc -l)"                                        # el http & # not yet synced messages
+  [[ $1 = VALI ]] && e="$e cc:http $(ss1 $2 nodes '[^ ]'|sed -n ${p[91]})";swn "$e"                                                                           # cl http
 }
 # el control commands
 function grs { gv0;snp ${p[70]} $1 10 50;sex "$(pjw 63 70)";sleep 20s;dts;gq0;[[ -f ${p[13]} ]] && swn "RSTR SERVIC $(dnn)" >> ${p[13]}; }                    # change/stop/load/start/log el
@@ -58,7 +58,7 @@ function gi0 { echo $@|sed -n 's%.*highestBlock: *\([0-9]*\).*%\1%ip'; }        
 function gc0 { echo $@|sed -n 's%.*currentBlock: *\([0-9]*\).*%\1%ip'; }                                                                                      # get el current block
 function gv0 { nn=$(nu0 $(ss1 ${p[70]} maxpeers [0-9])); }                                                                                                    # set configured peers
 function gq0 { nr=$(nu0 $(gcl net.peerCount))          ; }                                                                                                    # set el current peers
-function gb1 { if [[ $(echo $@|grep false) ]];then echo;else echo " $1 $(($(gi0 $@)-$(gc0 $@)))";fi; }                                                        # get el syncing blocks remaining
+function gb1 { if [[ $(echo $@|grep false) ]];then echo;else printf " $1 %6i" $(($(gi0 $@)-$(gc0 $@)));fi; }                                                  # get el syncing blocks remaining
 function gl0 {                                                                                                                                                # el report
   dts;ok=OK;if [[ $(sst ${p[70]} running) ]];then local e=$(gcl eth.syncing);eb0 ${p[13]} Imported 'geth\[';gv0;gq0
     m="GETH $ok $(tsy $e) $(dnn) sgs: $(printf '%4i' $e0)$(gb1 blocks: $e)"                                                                                   # OK SYC/NSY (dnn) sgs: 5 blocks: 8
@@ -70,10 +70,10 @@ function urs { uv0;snp ${p[87]} $1 10 50;sex "$(pjw 63 87)";sleep 20s;dts;uq0;[[
 function ucl { curl -sX POST --data "{\"jsonrpc\":\"2.0\",\"method\":\"$1\",\"params\":[],\"id\":51}" "http://$ciec:8545" 2>${p[3]}; }                        # exec RPC HTTP
 function ui0 { echo $((16#$(echo $@|sed -n 's%.*highestBlock" *: *"0x\([^"]*\)".*%\1%ip'))); }                                                                # get el highest block
 function uc0 { echo $((16#$(echo $@|sed -n 's%.*currentBlock" *: *"0x\([^"]*\)".*%\1%ip'))); }                                                                # get el current block
-function up0 { echo $((16#$(echo $@|sed -n 's%.*result" *: *"0x\([^"]*\)".*%\1%ip'))); }                                                                      # get el result
+function up0 { nu0  $((16#$(echo $@|sed -n 's%.*result" *: *"0x\([^"]*\)".*%\1%ip'      ))); }                                                                # get el result
 function uv0 { nn=$(nu0 $(ss1 ${p[87]} max-peers [0-9])); }                                                                                                   # set configured peers
 function uq0 { nr=$(nu0 $(up0 $(ucl net_peerCount)))                         ; }                                                                              # set el current peers
-function ub1 { if [[ $(echo $@|grep false) ]];then echo;else echo " $1 $(($(ui0 $@)-$(uc0 $@)))";fi; }                                                        # get el syncing blocks remaining
+function ub1 { if [[ $(echo $@|grep false) ]];then echo;else printf " $1 %6i" $(($(ui0 $@)-$(uc0 $@)));fi; }                                                  # get el syncing blocks remaining
 function ul0 {                                                                                                                                                # el report
   dts;ok=OK;if [[ $(sst ${p[87]} running) ]];then local e=$(ucl eth_syncing);eb0 ${p[89]} Imported 'besu\[';uv0;uq0
     m="BESU $ok $(tsy $e) $(dnn) sgs: $(printf '%4i' $e0)$(ub1 blocks: $e)"                                                                                   # OK SYC/NSY (dnn) sgs: 5 blocks: 8
