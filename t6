@@ -30,7 +30,8 @@ function srt { [[ -f ${p[5]} ]]; }                                              
 function sra { if srt;then echo $(($(date +%s)-$(date -r ${p[5]} +%s)));else echo 0;fi }                                                                      # system reboot age (secounds)
 function sot { [[ $(sra) -ge $((60*60*${1:-24})) ]]; }                                                                                                        # 24 hours old system reboot test
 function stt { [[ $d1 =~ 23:5[89] ]]; }                                                                                                                       # time test
-function sci { ip a|sed -n 's% *inet  *192.168.8.\([0-9]*\).*%\1%p'; }                                                                                        # get    current ip (server)
+function sci { ip a|sed -n 's% *inet  *192.168.8.\([0-9]*\).*%\1%p'; }                                                                                        # get ip/24
+function sni { case $1 in 25) echo $znm1;;28) echo $znm2;;31) echo $znm3;;34) echo $znm4;;esac; }                                                             # get name from ip/24
 function sst { ${p[61]} $1 2>${p[3]}|grep "${2:-inactive\|failed}"; }                                                                                         # systemctl status word test
 function ss1 { ${p[61]} $1 2>${p[3]}|sed -n "s%.*$2[ =]\(${3:-.}*\).*%\1%p"; }                                                                                # systemctl status 1 extraction
 function ss2 { ${p[61]} $1 2>${p[3]}|sed -n "s%.*Active: *\(.*\)%\1%p"|sed "s% *since.*;%%"|cut -c1-40; }                                                     # systemctl status 2 extraction
@@ -338,11 +339,15 @@ function bhs { sso BEAC ${p[71]};sso VALI ${p[73]}; }
 function uhx { swn "\n\n$znm1";ssh ztc1 "export H=$H;~/eth2/t6 uhs"; }
 function cpx { swn "\n\n$znm2";ssh ztc2 "export H=$H;~/eth2/t6 cpe"; }
 function bhx { swn "\n\n$znm3";ssh ztc3 "export H=$H;~/eth2/t6 bhs"; }
-function ehx { swn "\n\n$znm4";ssh ztc4 "export H=$H;~/eth2/t6 ehs"; }
+function ehx { swn "\n\n$znm4";ssh ztc4 "export H=$H;~/eth2/t6 gbs"; }
 function ah1 { swn "\n\n$znm1";uhs;cpe            ;cpx                ;bhx                ;ehx; }
 function ah2 {                 uhx;swn "\n\n$znm2";cpe                ;bhx                ;ehx; }
 function ah3 {                 uhx                ;cpx;swn "\n\n$znm3";bhs;cpe            ;ehx; }
 function ah4 {                 uhx                ;cpx                ;bhx;swn "\n\n$znm4";ghs;bhs;cpe; }
+function mhs {
+  local i=$(sci);[[ $i -eq $(ss1 ${p[73]} nodes '[^, ]'|sed -n ${p[92]}) ]] || return;local n=$(ss1 ${p[71]} endpoint '[^ ]'|sed -n ${p[92]})
+  echo -e "\n$(sni $n)";if [[ $i -eq $n ]];then ghs;uhs;else ssh $(snc $(sni $n)) "export H=$H;~/eth2/t6 ehs";echo -e "\n$(sni $i)";fi;bhs;cpe
+}
 function nsh { ${p[68]} list;${p[68]} status;${p[69]} status|sed -n 's%\(Current DNS\).*:%   \1:%ip'; }                                                       # network/dns info
 function wlp { local e="$1";shift;until [[ $# -lt 1 ]];do e="$e\|$1";shift;done;fs2|grep '\[UFW'|if [[ $e ]];then grep -v "$e";else cat;fi; }
 function vft { [[ -f $(pjp 4 73).service ]]; }                                                                                                                # vc service file test
@@ -425,7 +430,9 @@ function sr3 { cp $(pjp 4 73).service ${p[73]}.sav;sed "s%--beacon-nodes  *\([^ 
 [[ $1 = ghs ]] && { ghs    ;cpe; }                                                                                                                            # el      & system report
 [[ $1 = uhs ]] && { uhs    ;cpe; }                                                                                                                            # el      & system report
 [[ $1 = bhs ]] && { bhs    ;cpe; }                                                                                                                            # cl      & system report
-[[ $1 = ehs ]] && { ghs;bhs;cpe; }                                                                                                                            # el & cl & system report
+[[ $1 = ehs ]] && { ghs;uhs;cpe; }                                                                                                                            # el & cl & system report
+[[ $1 = gbs ]] && { ghs;bhs;cpe; }                                                                                                                            # el & cl & system report
+[[ $1 = mhs ]] && { mhs        ; }                                                                                                                            # main    & system report
 [[ $1 = bo  ]] && { bo0 $2 $3 $4; }
 [[ $1 = bon ]] && { bon $2; }
 [[ $1 = boc && -f ${p[11]} ]] && { unset v;read -a v <<< $(bff|tail -n1);l2=$(bff $(pt1 $2 ${v[4]}));boa; }

@@ -235,6 +235,7 @@ p[88]="JAVA_HOME='/usr/lib/jvm/java-11-openjdk-amd64'"                          
 p[89]="${p[9]}/besu.log"                                                                                                                                      # ec minute log
 p[90]='  *[A-Z][A-Z][A-Z][A-Z][A-Z]* *'                                                                                                                       # filter log msg (not dump)
 p[91]='s%http://192.168.8.\([0-9]*:[0-9]*\)%\1%gp'                                                                                                            # get ip/port from http config
+p[92]='s%.*\.\([0-9]*\):[0-9]*%\1%p'                                                                                                                          # get ip      from http config
 p[99]='0x534029B6371dc4453DD750Bc1198181F55C859fe'
 
 bpid=$($(pjw 61 71) 2>${p[3]}|sed -n 's%.*PID: *\([0-9]*\).*%\1%p')
