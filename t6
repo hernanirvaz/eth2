@@ -344,8 +344,13 @@ function ah1 { swn "\n\n$znm1";uhs;cpe            ;cpx                ;bhx      
 function ah2 {                 uhx;swn "\n\n$znm2";cpe                ;bhx                ;ehx; }
 function ah3 {                 uhx                ;cpx;swn "\n\n$znm3";bhs;cpe            ;ehx; }
 function ah4 {                 uhx                ;cpx                ;bhx;swn "\n\n$znm4";ghs;bhs;cpe; }
-function mhs {
-  local i=$(sci);[[ $i -eq $(ss1 ${p[73]} nodes '[^, ]'|sed -n ${p[92]}) ]] || return;local n=$(ss1 ${p[71]} endpoint '[^ ]'|sed -n ${p[92]})
+function lhs {
+  local i=$(sci);local e=$(nu0 $(ss1 ${p[73]} nodes '[^, ]'|sed -n ${p[92]}))
+  if [[ $e -eq 0 || $i -eq $e ]];then
+    local n=$(nu0 $(ss1 ${p[71]} endpoint '[^ ]'|sed -n ${p[92]}))
+  else
+    local n=$(ssh $(snc $(sni $e)) "export H=$H;~/eth2/t6 eep")
+  fi;[[ $n -gt 0 ]] || return
   echo -e "\n$(sni $n)";if [[ $i -eq $n ]];then ghs;uhs;else ssh $(snc $(sni $n)) "export H=$H;~/eth2/t6 ehs";echo -e "\n$(sni $i)";fi;bhs;cpe
 }
 function nsh { ${p[68]} list;${p[68]} status;${p[69]} status|sed -n 's%\(Current DNS\).*:%   \1:%ip'; }                                                       # network/dns info
@@ -427,12 +432,13 @@ function sr3 { cp $(pjp 4 73).service ${p[73]}.sav;sed "s%--beacon-nodes  *\([^ 
 [[ $1 = uh  ]] && { eh0 ${p[89]} $2;[[ $2 ]] || { ul0;swn "$m\n";uhs;cpe; } }
 [[ $1 = bh  ]] && { bh0 $2; }
 [[ $1 = ahs ]] && { [[ $cunm = $znm1 ]] && ah1;[[ $cunm = $znm2 ]] && ah2;[[ $cunm = $znm3 ]] && ah3;[[ $cunm = $znm4 ]] && ah4; }
-[[ $1 = ghs ]] && { ghs    ;cpe; }                                                                                                                            # el      & system report
-[[ $1 = uhs ]] && { uhs    ;cpe; }                                                                                                                            # el      & system report
-[[ $1 = bhs ]] && { bhs    ;cpe; }                                                                                                                            # cl      & system report
-[[ $1 = ehs ]] && { ghs;uhs;cpe; }                                                                                                                            # el & cl & system report
-[[ $1 = gbs ]] && { ghs;bhs;cpe; }                                                                                                                            # el & cl & system report
-[[ $1 = mhs ]] && { mhs        ; }                                                                                                                            # main    & system report
+[[ $1 = ghs ]] && { ghs    ;cpe; }                                                                                                                            # el       & system report
+[[ $1 = uhs ]] && { uhs    ;cpe; }                                                                                                                            # el       & system report
+[[ $1 = bhs ]] && { bhs    ;cpe; }                                                                                                                            # cl       & system report
+[[ $1 = ehs ]] && { ghs;uhs;cpe; }                                                                                                                            # el       & system report
+[[ $1 = gbs ]] && { ghs;bhs;cpe; }                                                                                                                            # ec/cc    & system report
+[[ $1 = lhs ]] && { lhs        ; }                                                                                                                            # el/cc/vc & system report
+[[ $1 = eep ]] && { nu0 $(ss1 ${p[71]} endpoint '[^ ]'|sed -n ${p[92]}); }                                                                                    # el endpoint cc uses
 [[ $1 = bo  ]] && { bo0 $2 $3 $4; }
 [[ $1 = bon ]] && { bon $2; }
 [[ $1 = boc && -f ${p[11]} ]] && { unset v;read -a v <<< $(bff|tail -n1);l2=$(bff $(pt1 $2 ${v[4]}));boa; }
@@ -565,7 +571,6 @@ if [[ ! $1 ]];then
   m="$m\nea\t\tenable\t& arranca\t& journal"
   m="$m\noutros"
   m="$m\ngl[f]\t\tec log report"
-  m="$m\ngh[s]\t\tec historic report [summary]"
   m="$m\ngpn\t\t${p[70]} prune DB - TAKES HOURS"
   m="$m\ngrs [n]\t\t${p[70]} restart n nodes to change"
   m="$m\nurs [n]\t\t${p[87]} restart n nodes to change"
@@ -588,7 +593,10 @@ if [[ ! $1 ]];then
   m="$m\nbl[f]\t\tcc report [file add & delete log day]"
   m="$m\nbm[f]\t\tcc-daily report [file add & ${p[71]} nodes change/restart]"
   m="$m\nbn[f]\t\tarqivo report [file add]"
-  m="$m\nbh[s]\t\tlighthouse historic report [summary]"
+  m="$m\n[gub]h[s]\tgeth|besu|beacon\thistoric report [summary]"
+  m="$m\nehs\t\tgeth|besu\t\thistoric report summary"
+  m="$m\ngbs\t\tgeth/beacon\t\thistoric report summary"
+  m="$m\nlhs\t\tel/beacon/validator\thistoric report summary"
   m="$m\ncla\t\tcc add    long-lived parms"
   m="$m\nclr\t\tcc remove long-lived parms"
   m="$m\ncce\t\tcc change ec server ($znm1/$znm4)"
