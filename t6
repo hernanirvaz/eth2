@@ -46,10 +46,10 @@ function eh0 { [[ -f $1 ]] || return;tail -n${2:-$ehrs} $1; }                   
 function eb0 { e0=$(fs0 $2 0 $3|wc -l);ok=OK;[[ $e0 -eq $(lg0 .*sgs: $1) && $(era $1) -eq 1 ]] && ok=BK; }                                                    # Imported new chain segment & OK/BK
 function sso {
   [[ $(sst $2 loaded) ]] || return;dts;local e="$1 $(printf '%6s' $(ss1 $2 Memory:)) $dt status: $(printf '%-40s' "$(ss2 $2)")"                               # memory & status
-  [[ $1 = GETH ]] && enn $(fs0 peercount= 0 'geth\['|lg1 .*peercount=)                                                                                        # set cur/min/std peers vars
-  [[ $1 = GETH ]] && e="$e $(printf "el:p%2i:m%2i p2p:%5i" $(nu0 $(gcl net.peerCount)) $em $(ss1 $2 port     [0-9])) $(gb1 syncing: $(gcl eth.syncing))"      # el peers & p2p port tag
-  [[ $1 = BESU ]] && enn $(fs0 Peers: 0 'besu\['|lg1 .*Peers:)                                                                                                # set cur/min/std peers vars
-  [[ $1 = BESU ]] && e="$e $(printf "el:p%2i:m%2i p2p:%5i" $(up0 $(ucl net_peerCount)) $em $(ss1 $2 p2p-port [0-9])) $(ub1 syncing: $(ucl eth_syncing))"      # el peers & p2p port tag
+  [[ $1 = GETH ]] && enn $(fs0 peercount= 0 'geth\['|lg1 .*peercount=) $(nu0 $(gcl net.peerCount))                                                            # set cur/min/std peers vars
+  [[ $1 = GETH ]] && e="$e $(printf "el:p%2i:m%2i p2p:%5i" $er $em $(ss1 $2 port     [0-9])) $(gb1 syncing: $(gcl eth.syncing))"                              # el peers & p2p port tag
+  [[ $1 = BESU ]] && enn $(fs0 Peers:     0 'besu\['|lg1 .*Peers:)     $(up0 $(ucl net_peerCount))                                                            # set cur/min/std peers vars
+  [[ $1 = BESU ]] && e="$e $(printf "el:p%2i:m%2i p2p:%5i" $er $em $(ss1 $2 p2p-port [0-9])) $(ub1 syncing: $(ucl eth_syncing))"                              # el peers & p2p port tag
   [[ $1 = BEAC ]] && bnn $(fs4 peers:)                                                                                                                        # set cur/min/std peers vars
   [[ $1 = BEAC ]] && e="$e $(printf "cl:p%2i:m%2i p2p:%5i" $nr $nm $(ss1 $2 port [0-9]))"                                                                     # cl peers/port/import all
   [[ $1 = BEAC ]] && e="$e el:http $(ss1 $2 endpoints*  '[^ ]'|sed -n ${p[91]}) nys: $(fs0|grep not.yet.synced|wc -l)"                                        # el http & # not yet synced messages
