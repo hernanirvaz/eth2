@@ -47,15 +47,13 @@ function eh0 { [[ -f $1 ]] || return;tail -n${2:-$ehrs} $1; }                   
 function eb0 { e0=$(fs0 $2 0 $3|wc -l);ok=OK;[[ $e0 -eq $(lg0 .*sgs: $1) && $(era $1) -eq 1 ]] && ok=BK; }                                                    # Imported new chain segment & OK/BK
 function sso {
   [[ $(sst $2 loaded) ]] || return;dts;local e="$1 $(printf '%6s' $(ss1 $2 Memory:)) $dt status: $(printf '%-40s' "$(ss2 $2)")"                               # memory & status
-  [[ $1 = GETH ]] && enn $(fs0 peercount= 0 'geth\['|lg1 .*peercount=) $(nu0 $(gcl net.peerCount))                                                            # set cur/min/std peers vars
-  [[ $1 = GETH ]] && e="$e $(printf "el:p%2i:m%2i p2p:%5i" $er $em $(ss1 $2 port     [0-9])) $(gb1 syncing: $(gcl eth.syncing))"                              # el peers & p2p port tag
-  [[ $1 = BESU ]] && enn $(fs0 Peers:     0 'besu\['|lg1 .*Peers:)     $(up0 $(ucl net_peerCount))                                                            # set cur/min/std peers vars
-  [[ $1 = BESU ]] && e="$e $(printf "el:p%2i:m%2i p2p:%5i" $er $em $(ss1 $2 p2p-port [0-9])) $(ub1 syncing: $(ucl eth_syncing))"                              # el peers & p2p port tag
-  [[ $1 = BEAC ]] && bnn $(fs4 peers:)                                                                                                                        # set cur/min/std peers vars
-  [[ $1 = BEAC ]] && e="$e $(printf "cl:p%2i:m%2i p2p:%5i" $nr $nm $(ss1 $2 port [0-9]))"                                                                     # cl peers/port/import all
+  [[ $1 = GETH ]] && enn $(fs0 peercount= 0 'geth\['|lg1 .*peercount=) $(nu0 $(gcl net.peerCount))                                                            # set min peers
+  [[ $1 = GETH ]] && e="$e $(printf "el:p%2i:m%2i p2p:%5i" $er $em $(ss1 $2 port     [0-9])) $(gb1 syncing: $(gcl eth.syncing))"                              # el peers/port tag
+  [[ $1 = BESU ]] && enn $(fs0 Peers:     0 'besu\['|lg1 .*Peers:)     $(up0 $(ucl net_peerCount))                                                            # set min peers
+  [[ $1 = BESU ]] && e="$e $(printf "el:p%2i:m%2i p2p:%5i" $er $em $(ss1 $2 p2p-port [0-9])) $(ub1 syncing: $(ucl eth_syncing))"                              # el peers/port tag
+  [[ $1 = BEAC ]] && { bnn $(fs4 peers:);e="$e $(printf "cl:p%2i:m%2i p2p:%5i" $nr $nm $(ss1 $2 port [0-9]))"; }                                              # set min peers & cl peers/port tag
   [[ $1 = BEAC ]] && e="$e el:http $(ss1 $2 endpoints*  '[^ ]'|sed -n ${p[91]}) nys: $(fs0|grep not.yet.synced|wc -l)"                                        # el http & # not yet synced messages
-  [[ $1 = VALI ]] && { dtl;bo5; }                                                                                                                             # set homologous position/avg vars
-  [[ $1 = VALI ]] && e="$e vl:m$(printf '%2i' $b3):c$(printf '%2i' $b2) cc:http $(ss1 $2 nodes '[^ ]'|sed -n ${p[91]})";swn "$e"                              # cl http
+  [[ $1 = VALI ]] && { dtl;bo5;e="$e vl:m$(printf '%2i' $b3):c$(printf '%2i' $b2) cc:http $(ss1 $2 nodes '[^ ]'|sed -n ${p[91]})"; };swn "$e"                 # set homologous/avg & cl http
 }
 # el control commands
 function grs { gv0;snp ${p[70]} $1 10 50;sex "$(pjw 63 70)";sleep 20s;dts;gq0;[[ -f ${p[13]} ]] && swn "RSTR SERVIC $(dnn)" >> ${p[13]}; }                    # change/stop/load/start/log el
@@ -199,7 +197,7 @@ function bsc { pex "grep lighthouse.$bpid].*INFO ${p[1]}"|tail -n99|grep sync_co
 function bsf { [[ ${1:-0} -gt 0 ]] || return;local f=${p[15]}.s$(btg $1);touch $f;sleep $1s;rm -f $f; }                                                       # sleep with file info
 function bsw { while :;do local t=$(bng);if [[ $(bf2 $t) -le ${1:-36} || ${2:-24} -ge $(bfn $t) ]];then bsf $(bmn $(bfn $t));else break;fi;done; }            # sleep while small (gap or remaining) time
 # slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168
-function b1r {                                                                                                                                                # cc/vc gap restart
+function brs {                                                                                                                                                # cc/vc gap restart
   [[ $(ls ${p[15]}.* 2>${p[3]}) || $(bsc) -gt 0 ]] && return;bsf $3;local n=${4:-48};[[ $2 = VC ]] && n=60;[[ $2 = RB ]] && n=84;bsw $n
   local t=$(bng);local f=${p[15]}.i$(btg);touch $f;local n=0;paf;while [[ -f $f ]];do ((n+=$(bfn $t)));bsf $(bfn $t)
   if bpt $t;then rm $f;nn=$(bv0);snp ${p[71]} $1 $bpri $bprf          ;[[ $2 = VC ]] && sex "$(pjw 62 73)"                                                    # stop cc/conf change?/stop vc?
@@ -345,13 +343,18 @@ function ah2 {                 uhx;swn "\n\n$znm2";cpe                ;bhx      
 function ah3 {                 uhx                ;cpx;swn "\n\n$znm3";bhs;cpe            ;ehx; }
 function ah4 {                 uhx                ;cpx                ;bhx;swn "\n\n$znm4";ghs;bhs;cpe; }
 function lhs {
-  local i=$(sci);local e=$(nu0 $(ss1 ${p[73]} nodes '[^, ]'|sed -n ${p[92]}))
-  if [[ $e -eq 0 || $i -eq $e ]];then
+  if [[ $cunm = $cuvc ]];then                                                                                                                                 # get master/slave cc ip
+    local e=$(nu0 $(ss1 ${p[73]} nodes "[^$1 ]"|sed -n ${p[92]}))
+  else
+    local e=$(ssh $(snc $cuvc) "export H=$H;~/eth2/t6 cci $1")
+  fi;[[ $e -gt 0 ]] || return;local i=$(sci)                                                                                                                  # cc ip not found
+  if [[ $i -eq $e ]];then                                                                                                                                     # get connected ec ip
     local n=$(nu0 $(ss1 ${p[71]} endpoint '[^ ]'|sed -n ${p[92]}))
   else
-    local n=$(ssh $(snc $(sni $e)) "export H=$H;~/eth2/t6 eep")
-  fi;[[ $n -gt 0 ]] || return
-  echo -e "\n$(sni $n)";if [[ $i -eq $n ]];then ghs;uhs;else ssh $(snc $(sni $n)) "export H=$H;~/eth2/t6 ehs";echo -e "\n$(sni $i)";fi;bhs;cpe
+    local n=$(ssh $(snc $(sni $e)) "export H=$H;~/eth2/t6 eci")
+  fi;[[ $n -gt 0 ]] || return                                                                                                                                 # ec ip not found
+  echo -e "\n$(sni $n)";if [[ $i -eq $n ]];then ghs;uhs;cpe;else ssh $(snc $(sni $n)) "export H=$H;~/eth2/t6 ehs";fi                                          # ec historic report summary
+  echo -e "\n$(sni $e)";if [[ $i -eq $e ]];then bhs    ;cpe;else ssh $(snc $(sni $e)) "export H=$H;~/eth2/t6 bhs";fi                                          # cc historic report summary
 }
 function nsh { ${p[68]} list;${p[68]} status;${p[69]} status|sed -n 's%\(Current DNS\).*:%   \1:%ip'; }                                                       # network/dns info
 function wlp { local e="$1";shift;until [[ $# -lt 1 ]];do e="$e\|$1";shift;done;fs2|grep '\[UFW'|if [[ $e ]];then grep -v "$e";else cat;fi; }
@@ -425,20 +428,22 @@ function sr3 { cp $(pjp 4 73).service ${p[73]}.sav;sed "s%--beacon-nodes  *\([^ 
 [[ $1 = bl  ]] && { bl0;swn "$m"; }
 [[ $1 = bm  ]] && { bm0;bmo;swn "$m"; }
 [[ $1 = bn  ]] && { bm0;bno;swn "$m"; }
-[[ $1 = blf ]] && { bl0;swn "$m" >> ${p[11]};stt && bo5 && bht && bst && bdl $d0;[[ $ok != OK ]] && b1r 0;pas; }                                              # cl log/delete/restart & parameter set
-[[ $1 = bmf ]] && { bm0;bms;bbt && swn "$m" >> ${p[12]};bct && b1r $b4 $(brb PE) 120; }
+[[ $1 = blf ]] && { bl0;swn "$m" >> ${p[11]};stt && bo5 && bht && bst && bdl $d0;[[ $ok != OK ]] && brs 0;pas; }                                              # cl log/delete/restart & parameter set
+[[ $1 = bmf ]] && { bm0;bms;bbt && swn "$m" >> ${p[12]};bct && brs $b4 $(brb PE) 120; }
 [[ $1 = bnf ]] && { bm0;bno;swn "$m" >> ${p[14]}; }
 [[ $1 = gh  ]] && { eh0 ${p[13]} $2;[[ $2 ]] || { gl0;swn "$m\n";ghs;cpe; } }
 [[ $1 = uh  ]] && { eh0 ${p[89]} $2;[[ $2 ]] || { ul0;swn "$m\n";uhs;cpe; } }
 [[ $1 = bh  ]] && { bh0 $2; }
 [[ $1 = ahs ]] && { [[ $cunm = $znm1 ]] && ah1;[[ $cunm = $znm2 ]] && ah2;[[ $cunm = $znm3 ]] && ah3;[[ $cunm = $znm4 ]] && ah4; }
-[[ $1 = ghs ]] && { ghs    ;cpe; }                                                                                                                            # el       & system report
-[[ $1 = uhs ]] && { uhs    ;cpe; }                                                                                                                            # el       & system report
-[[ $1 = bhs ]] && { bhs    ;cpe; }                                                                                                                            # cl       & system report
-[[ $1 = ehs ]] && { ghs;uhs;cpe; }                                                                                                                            # el       & system report
-[[ $1 = gbs ]] && { ghs;bhs;cpe; }                                                                                                                            # ec/cc    & system report
-[[ $1 = lhs ]] && { lhs        ; }                                                                                                                            # el/cc/vc & system report
-[[ $1 = eep ]] && { nu0 $(ss1 ${p[71]} endpoint '[^ ]'|sed -n ${p[92]}); }                                                                                    # el endpoint cc uses
+[[ $1 = ghs ]] && { ghs    ;cpe; }                                                                                                                            #        ec/system       reports
+[[ $1 = uhs ]] && { uhs    ;cpe; }                                                                                                                            #        ec/system       reports
+[[ $1 = bhs ]] && { bhs    ;cpe; }                                                                                                                            #        cl/system       reports
+[[ $1 = ehs ]] && { ghs;uhs;cpe; }                                                                                                                            #        el/system       reports
+[[ $1 = gbs ]] && { ghs;bhs;cpe; }                                                                                                                            #        ec/cc/system    reports
+[[ $1 = mhs ]] && { lhs ,; }                                                                                                                                  # master ec/cc/vc/system reports
+[[ $1 = shs ]] && { lhs  ; }                                                                                                                                  # slave  ec/cc/vc/system reports
+[[ $1 = cci ]] && { nu0 $(ss1 ${p[73]} nodes   "[^$2 ]"|sed -n ${p[92]}); }                                                                                   # cc ip vc uses
+[[ $1 = eci ]] && { nu0 $(ss1 ${p[71]} endpoint  '[^ ]'|sed -n ${p[92]}); }                                                                                   # ec ip cc uses
 [[ $1 = bo  ]] && { bo0 $2 $3 $4; }
 [[ $1 = bon ]] && { bon $2; }
 [[ $1 = boc && -f ${p[11]} ]] && { unset v;read -a v <<< $(bff|tail -n1);l2=$(bff $(pt1 $2 ${v[4]}));boa; }
@@ -450,9 +455,9 @@ function sr3 { cp $(pjp 4 73).service ${p[73]}.sav;sed "s%--beacon-nodes  *\([^ 
 [[ $1 = grs ]] && { grs ${2:-0}   ; }
 [[ $1 = urs ]] && { urs ${2:-0}   ; }
 [[ $1 = gpn ]] && { if [[ $(sst ${p[70]} running) ]];then gp;cex "du -h ${p[18]}";sudo -u eth1 ${p[8]}/geth --datadir ${p[18]} snapshot prune-state;cex "du -h ${p[18]}";dmr;ga;fi; }
-[[ $1 = srs ]] && { b1r ${2:-0} RB; }
-[[ $1 = brs ]] && { b1r ${2:-0} BN; }
-[[ $1 = lrs ]] && { b1r ${2:-0} VC; }
+[[ $1 = srs ]] && { brs ${2:-0} RB; }
+[[ $1 = brs ]] && { brs ${2:-0} BN; }
+[[ $1 = lrs ]] && { brs ${2:-0} VC; }
 [[ $1 = irs ]] && { sot ${2:-3} && sex reboot;pas; }                                                                                                          # if system reboot needs & parameter set
 # lista servicos & portas
 [[ $1 = lp  ]] && { netstat -tulpn; }
@@ -596,7 +601,7 @@ if [[ ! $1 ]];then
   m="$m\n[gub]h[s]\tgeth|besu|beacon\thistoric report [summary]"
   m="$m\nehs\t\tgeth|besu\t\thistoric report summary"
   m="$m\ngbs\t\tgeth/beacon\t\thistoric report summary"
-  m="$m\nlhs\t\tel/beacon/validator\thistoric report summary"
+  m="$m\n[m|s]hs\t\t[master|slave] el/cl\thistoric report summary"
   m="$m\ncla\t\tcc add    long-lived parms"
   m="$m\nclr\t\tcc remove long-lived parms"
   m="$m\ncce\t\tcc change ec server ($znm1/$znm4)"
