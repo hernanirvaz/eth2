@@ -412,7 +412,7 @@ function sr3 { cp $(pjp 4 73).service ${p[73]}.sav;sed "s%--beacon-nodes  *\([^ 
 [[ $1 = vcc ]] && { vcc; }
 [[ $1 = cce ]] && { cce; }
 [[ $1 = chk ]] && { cex 'chkrootkit'; }
-[[ $1 = eip ]] && { curl -s4 "https://${3:-meo.fruga.pt}:$2@dyn.dns.he.net/nic/update?hostname=${3:-meo.fruga.pt}" &>${p[3]};swn "Subject: eip $(uname -n)\t$(date '+%F %H:%M')" >> ${p[9]}/eip.log; }
+[[ $1 = eip ]] && { curl -s4 "https://${3:-meo.fruga.pt}:$2@dyn.dns.he.net/nic/update?hostname=${3:-meo.fruga.pt}" &>${p[3]}; }
 [[ $1 = dsh ]] && { ${p[69]} query ${2:-smtp.gmail.com}; }
 [[ $1 = drs ]] && { dpa; }
 [[ $1 = nrs ]] && { nrs; }
