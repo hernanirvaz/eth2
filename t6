@@ -458,7 +458,7 @@ function sr3 { cp $(pjp 4 73).service ${p[73]}.sav;sed "s%--beacon-nodes  *\([^ 
 [[ $1 = srs ]] && { brs ${2:-0} RB; }
 [[ $1 = brs ]] && { brs ${2:-0} BN; }
 [[ $1 = lrs ]] && { brs ${2:-0} VC; }
-[[ $1 = irs ]] && { sot ${2:-3} && sex reboot;pas; }                                                                                                          # if system reboot needs & parameter set
+[[ $1 = irs ]] && { sot ${2:-3} && sex reboot;if srt;then touch ${p[93]}.${2:-3}.hours;else rm -f ${p[93]}.${2:-3}.hour.hourss;fi;pas; }                      # if system reboot needs & parameter set
 # lista servicos & portas
 [[ $1 = lp  ]] && { netstat -tulpn; }
 # outros journal system/lighthouse
