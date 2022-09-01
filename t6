@@ -48,12 +48,12 @@ function eb0 { e0=$(fs0 $2 0 $3|wc -l);ok=OK;[[ $e0 -eq $(lg0 .*sgs: $1) && $(er
 function sso {
   [[ $(sst $2 loaded) ]] || return;dts;local e="$1 $(printf '%6s' $(ss1 $2 Memory:)) $dt status: $(printf '%-40s' "$(ss2 $2)")"                               # memory & status
   [[ $1 = GETH ]] && enn $(fs0 peercount= 0 'geth\['|lg1 .*peercount=) $(nu0 $(gcl net.peerCount))                                                            # set min peers
-  [[ $1 = GETH ]] && e="$e $(printf "el:p%2i:m%2i p2p:%5i" $er $em $(ss1 $2 port     [0-9])) $(gb1 syncing: $(gcl eth.syncing))"                              # el peers/port tag
+  [[ $1 = GETH ]] && e="$e $(printf "el:p%02i:m%02i p2p:%5i" $er $em $(ss1 $2 port     [0-9])) $(gb1 syncing: $(gcl eth.syncing))"                            # el peers/port tag
   [[ $1 = BESU ]] && enn $(fs0 Peers:     0 'besu\['|lg1 .*Peers:)     $(up0 $(ucl net_peerCount))                                                            # set min peers
-  [[ $1 = BESU ]] && e="$e $(printf "el:p%2i:m%2i p2p:%5i" $er $em $(ss1 $2 p2p-port [0-9])) $(ub1 syncing: $(ucl eth_syncing))"                              # el peers/port tag
-  [[ $1 = BEAC ]] && { bnn $(fs4 peers:);e="$e $(printf "cl:p%2i:m%2i p2p:%5i" $nr $nm $(ss1 $2 port [0-9]))"; }                                              # set min peers & cl peers/port tag
+  [[ $1 = BESU ]] && e="$e $(printf "el:p%02i:m%02i p2p:%5i" $er $em $(ss1 $2 p2p-port [0-9])) $(ub1 syncing: $(ucl eth_syncing))"                            # el peers/port tag
+  [[ $1 = BEAC ]] && { bnn $(fs4 peers:);e="$e $(printf "cl:p%02i:m%02i p2p:%5i" $nr $nm $(ss1 $2 port [0-9]))"; }                                            # set min peers & cl peers/port tag
   [[ $1 = BEAC ]] && e="$e el:http $(ss1 $2 endpoints*  '[^ ]'|sed -n ${p[91]}) nys: $(fs0|grep not.yet.synced|wc -l)"                                        # el http & # not yet synced messages
-  [[ $1 = VALI ]] && { dtl;bo5;e="$e vl:m$(printf '%2i' $b3):c$(printf '%2i' $b2) cc:http $(ss1 $2 nodes '[^ ]'|sed -n ${p[91]})"; };swn "$e"                 # set homologous/avg & cl http
+  [[ $1 = VALI ]] && { dtl;bo5;e="$e vl:m$(printf '%02i' $b3):c$(printf '%02i' $b2) cc:http $(ss1 $2 nodes '[^ ]'|sed -n ${p[91]})"; };swn "$e"               # set homologous/avg & cl http
 }
 # el control commands
 function grs { gv0;snp ${p[70]} $1 10 50;sex "$(pjw 63 70)";sleep 20s;dts;gq0;[[ -f ${p[13]} ]] && swn "RSTR SERVIC $(dnn)" >> ${p[13]}; }                    # change/stop/load/start/log el
