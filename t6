@@ -65,7 +65,7 @@ function gq0 { nr=$(nu0 $(gcl net.peerCount))          ; }                      
 function gb1 { if [[ $(echo $@|grep false) ]];then echo synced;else printf " $1 %6i" $(($(gi0 $@)-$(gc0 $@)));fi; }                                           # get el syncing blocks remaining
 function gl0 {                                                                                                                                                # el report
   dts;ok=OK;if [[ $(sst ${p[70]} running) ]];then local e=$(gcl eth.syncing);eb0 ${p[13]} Imported 'geth\[';gv0;gq0
-    m="GETH $ok $(tsy $e) $(dnn) sgs: $(printf '%4i' $e0)$(gb1 blocks: $e)"                                                                                   # OK SYC/NSY (dnn) sgs: 5 blocks: 8
+    m="GETH $ok $(tsy $e) $(dnn) sgs: $(printf '%4i' $e0) $(gb1 syncing: $e)"                                                                                 # OK SYC/NSY (dnn) sgs: 5 blocks: 8
   else
     m="GSRV NOT ON $dt"
   fi
@@ -80,7 +80,7 @@ function uq0 { nr=$(nu0 $(up0 $(ucl net_peerCount)))                         ; }
 function ub1 { if [[ $(echo $@|grep false) ]];then echo synced;else printf " $1 %6i" $(($(ui0 $@)-$(uc0 $@)));fi; }                                           # get el syncing blocks remaining
 function ul0 {                                                                                                                                                # el report
   dts;ok=OK;if [[ $(sst ${p[87]} running) ]];then local e=$(ucl eth_syncing);eb0 ${p[89]} Imported 'besu\[';uv0;uq0
-    m="BESU $ok $(tsy $e) $(dnn) sgs: $(printf '%4i' $e0)$(ub1 blocks: $e)"                                                                                   # OK SYC/NSY (dnn) sgs: 5 blocks: 8
+    m="BESU $ok $(tsy $e) $(dnn) sgs: $(printf '%4i' $e0) $(ub1 syncing: $e)"                                                                                 # OK SYC/NSY (dnn) sgs: 5 blocks: 8
   else
     m="BSRV NOT ON $dt"
   fi
