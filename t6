@@ -257,7 +257,8 @@ function cpe {                                                                  
   local e=$(fs2|grep -i 'error' |tail -n1|sed 's%.*hrv-zotac[0-9] *\(.*\)%\1%;s%  *% %g'                         |cut -c1-70)
   local d=$(fs1|grep -v ' INFO '|tail -n1|sed 's%.*[0-9]*:[0-9]*:[0-9]*\.[0-9][0-9][0-9]]* *\(.*\)%\1%;s%  *% %g'|cut -c1-70)
   m="ERRO$(printf '%3i' $l) $(printf '%3i' $n) $dt";[[ $l -gt 0 ]] && m="$m system: $e";[[ $n -gt 0 ]] && m="$m ethrum: $d";(( l+n )) && swn "$m"             # sys/eth errors info
-  m='';srt && m="$m, reboot $(($(sra)/60/60)) hours ago";[[ $(bsc) -gt 0 ]] && m="$m, committee on";[[ $m ]] && swn "INFO        $dt${m#*,}"                  # reboot/committee info
+  m='';srt && m="$m, reboot $(($(sra)/60/60)) hours ago";[[ $(ls ${p[93]}.* 2>${p[3]}) ]] &&m="$m, $(basename $(ls ${p[93]}.* 2>${p[3]}))"                    # reboot info
+  [[ $(bsc) -gt 0 ]] && m="$m, committee on";[[ $m ]] && swn "INFO        $dt${m#*,}"                                                                         # committee info
   [[ $(swn $(/usr/lib/update-notifier/apt-check --human-readable)) -gt 0 ]] && { echo;apt list --upgradable; }
 }
 # Plex Media Server
@@ -458,7 +459,7 @@ function sr3 { cp $(pjp 4 73).service ${p[73]}.sav;sed "s%--beacon-nodes  *\([^ 
 [[ $1 = srs ]] && { brs ${2:-0} RB; }
 [[ $1 = brs ]] && { brs ${2:-0} BN; }
 [[ $1 = lrs ]] && { brs ${2:-0} VC; }
-[[ $1 = irs ]] && { sot ${2:-3} && sex reboot;if srt;then touch ${p[93]}.${2:-3}.hours;else rm -f ${p[93]}.${2:-3}.hour.hourss;fi;pas; }                      # if system reboot needs & parameter set
+[[ $1 = irs ]] && { sot ${2:-3} && sex reboot;if srt;then touch ${p[93]}.${2:-3}.hours;else rm -f ${p[93]}.${2:-3}.hours;fi;pas; }                            # if system reboot needs & parameter set
 # lista servicos & portas
 [[ $1 = lp  ]] && { netstat -tulpn; }
 # outros journal system/lighthouse
