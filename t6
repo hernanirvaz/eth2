@@ -48,9 +48,9 @@ function eb0 { e0=$(fs0 $2 0 $3|wc -l);ok=OK;[[ $e0 -eq $(lg0 .*sgs: $1) && $(er
 function sso {
   [[ $(sst $2 loaded) ]] || return;dts;local e="$1 $(printf '%6s' $(ss1 $2 Memory:)) $dt status: $(printf '%-40s' "$(ss2 $2)")"                               # memory & status
   [[ $1 = GETH ]] && enn $(fs0 peercount= 0 'geth\['|lg1 .*peercount=) $(nu0 $(gcl net.peerCount))                                                            # set min peers
-  [[ $1 = GETH ]] && e="$e $(printf "el:p%02i:m%02i p2p:%5i" $er $em $(ss1 $2 port     [0-9])) $(gb1 syncing: $(gcl eth.syncing))"                            # el peers/port tag
+  [[ $1 = GETH ]] && e="$e $(printf "el:p%02i:m%02i p2p:%5i" $er $em $(ss1 $2 port     [0-9]))$(gb1 synced $(gcl eth.syncing))"                               # el peers/port tag
   [[ $1 = BESU ]] && enn $(fs0 Peers:     0 'besu\['|lg1 .*Peers:)     $(up0 $(ucl net_peerCount))                                                            # set min peers
-  [[ $1 = BESU ]] && e="$e $(printf "el:p%02i:m%02i p2p:%5i" $er $em $(ss1 $2 p2p-port [0-9])) $(ub1 syncing: $(ucl eth_syncing))"                            # el peers/port tag
+  [[ $1 = BESU ]] && e="$e $(printf "el:p%02i:m%02i p2p:%5i" $er $em $(ss1 $2 p2p-port [0-9]))$(ub1 synced $(ucl eth_syncing))"                               # el peers/port tag
   [[ $1 = BEAC ]] && { bnn $(fs4 peers:);e="$e $(printf "cl:p%02i:m%02i p2p:%5i" $nr $nm $(ss1 $2 port [0-9]))"; }                                            # set min peers & cl peers/port tag
   [[ $1 = BEAC ]] && e="$e el:http $(ss1 $2 endpoints*  '[^ ]'|sed -n ${p[91]}) nys: $(fs0|grep not.yet.synced|wc -l)"                                        # el http & # not yet synced messages
   [[ $1 = VALI ]] && { dtl;bo5;e="$e vl:m$(printf '%02i' $b3):c$(printf '%02i' $b2) cc:http $(ss1 $2 nodes '[^ ]'|sed -n ${p[91]})"; };swn "$e"               # set homologous/avg & cl http
@@ -62,10 +62,10 @@ function gi0 { echo $@|sed -n 's%.*highestBlock: *\([0-9]*\).*%\1%ip'; }        
 function gc0 { echo $@|sed -n 's%.*currentBlock: *\([0-9]*\).*%\1%ip'; }                                                                                      # get el current block
 function gv0 { nn=$(nu0 $(ss1 ${p[70]} maxpeers [0-9])); }                                                                                                    # set configured peers
 function gq0 { nr=$(nu0 $(gcl net.peerCount))          ; }                                                                                                    # set el current peers
-function gb1 { if [[ $(echo $@|grep false) ]];then echo synced;else printf " $1 %6i" $(($(gi0 $@)-$(gc0 $@)));fi; }                                           # get el syncing blocks remaining
+function gb1 { if [[ $(echo $@|grep false) ]];then [[ $1 ]] && echo " $1";else printf " syncing: %6i" $(($(gi0 $@)-$(gc0 $@)));fi; }                          # get el syncing blocks remaining
 function gl0 {                                                                                                                                                # el report
   dts;ok=OK;if [[ $(sst ${p[70]} running) ]];then local e=$(gcl eth.syncing);eb0 ${p[13]} Imported 'geth\[';gv0;gq0
-    m="GETH $ok $(tsy $e) $(dnn) sgs: $(printf '%4i' $e0) $(gb1 syncing: $e)"                                                                                 # OK SYC/NSY (dnn) sgs: 5 blocks: 8
+    m="GETH $ok $(tsy $e) $(dnn) sgs: $(printf '%4i' $e0)$(gb1 '' $e)"                                                                                        # OK SYC/NSY (dnn) sgs: 5 blocks: 8
   else
     m="GSRV NOT ON $dt"
   fi
@@ -77,10 +77,10 @@ function uc0 { echo $((16#$(echo $@|sed -n 's%.*currentBlock" *: *"0x\([^"]*\)".
 function up0 { nu0  $((16#$(echo $@|sed -n 's%.*result" *: *"0x\([^"]*\)".*%\1%ip'      ))); }                                                                # get el result
 function uv0 { nn=$(nu0 $(ss1 ${p[87]} max-peers [0-9])); }                                                                                                   # set configured peers
 function uq0 { nr=$(nu0 $(up0 $(ucl net_peerCount)))                         ; }                                                                              # set el current peers
-function ub1 { if [[ $(echo $@|grep false) ]];then echo synced;else printf " $1 %6i" $(($(ui0 $@)-$(uc0 $@)));fi; }                                           # get el syncing blocks remaining
+function ub1 { if [[ $(echo $@|grep false) ]];then [[ $1 ]] && echo " $1";else printf " syncing: %6i" $(($(ui0 $@)-$(uc0 $@)));fi; }                          # get el syncing blocks remaining
 function ul0 {                                                                                                                                                # el report
   dts;ok=OK;if [[ $(sst ${p[87]} running) ]];then local e=$(ucl eth_syncing);eb0 ${p[89]} Imported 'besu\[';uv0;uq0
-    m="BESU $ok $(tsy $e) $(dnn) sgs: $(printf '%4i' $e0) $(ub1 syncing: $e)"                                                                                 # OK SYC/NSY (dnn) sgs: 5 blocks: 8
+    m="BESU $ok $(tsy $e) $(dnn) sgs: $(printf '%4i' $e0)$(ub1 '' $e)"                                                                                        # OK SYC/NSY (dnn) sgs: 5 blocks: 8
   else
     m="BSRV NOT ON $dt"
   fi
