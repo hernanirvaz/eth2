@@ -9,7 +9,7 @@ swu 'QUER MESMO EXIT MY VALIDATORS?';read rsp
 if [[ $rsp = sim && ! -f ${p[10]}/vc_slash && ! -f ${p[10]}/vc_lock && -f ${p[10]}/vc_keys && -x ${p[0]}/lighthouse ]];then
   swu 'EXIT VALIDATORS'
   if [[ -f ${p[17]}/validator_definitions.yml ]];then
-    swn "STORE($K) WALLET($W)";for kst in $(ls ${p[17]}/*.json);do swn "${p[0]}/lighthouse$(nwf) --datadir ${p[10]} account validator exit --keystore $kst";done
+    swn "STORE($K) WALLET($W)";for kst in $(ls ${p[17]}/*.json);do swn "${p[0]}/lighthouse --datadir ${p[10]} account validator exit --keystore $kst";done
   else
     swu '\nCHAVES AINDA NAO FORAM IMPORTADAS'
   fi

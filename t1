@@ -214,7 +214,6 @@ function pde { local e="deny $1"                                  ;if [[ $3 ]];t
 function pai { local e="allow from $2 to any port ${1/\// proto }";if [[ $4 ]];then nex "ufw $4 $e";else nex "ufw $e comment $3";fi; }                        # allow prt frm ip
 function pae { local e="allow $1"                                 ;if [[ $3 ]];then nex "ufw $3 $e";else nex "ufw $e comment $2";fi; }                        # allow prt
 function ple { local e="limit $1"                                 ;if [[ $3 ]];then nex "ufw $3 $e";else nex "ufw $e comment $2";fi; }                        # limit prt (<6 within 30s)
-function nwf { [[ $B = mainnet ]] || echo " --testnet $B"; }                                                                                                  # lighthouse network flag
 function sis { sex "mv ${p[9]}/$(basename ${p[31]}) ${p[17]}";[[ -f ${p[31]} ]] && touch ${p[10]}/vc_slash;cmw ${p[31]} 600 $1; }                             # init slash db
 function snc { echo ${1/[a-z]*-/}|tr -d '[ao]'; }                                                                                                             # get small server name
 function vos { if [[ $cuvc = $znm3 ]];then echo $znm4;else echo $znm3;fi; }                                                                                   # get other vc server name

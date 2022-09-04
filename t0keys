@@ -9,7 +9,8 @@ if [[ $cunm = hrv-zen ]];then
   cs1="$bs1/validator_keys"
   cs2="$bs2/validator_keys"
   lng="spanish"
-  if [[ $B = mainnet ]];then nmv=18;else nmv=3;fi 
+  chi="mainnet"
+  if [[ $chi = mainnet ]];then nmv=18;else nmv=3;fi 
   if [[ -d ${p[9]}/$D && $(ls -A ${p[9]}/$D) ]];then
     swu 'CHAVES ESTAO PRONTAS'
   elif [[ -d ${p[9]}/$cli && $(ls -A ${p[9]}/$cli) ]];then
@@ -41,11 +42,11 @@ if [[ $cunm = hrv-zen ]];then
     swu 'CHAVES FORAM ARQUIVADAS - VERIFICAR AQUIVO OFFLINE'
   elif [[ -f ${p[9]}/eth2.0-deposit-cli/README.md ]];then
     cd ${p[9]}/eth2.0-deposit-cli
-    swb "PARA GERAR $nmv NOVAS CHAVES CHAIN $B"
+    swb "PARA GERAR $nmv NOVAS CHAVES CHAIN $chi"
     swn "STORE($K)"
-    swb "PARA GERAR $nmv NOVAS CHAVES CHAIN $B"
+    swb "PARA GERAR $nmv NOVAS CHAVES CHAIN $chi"
     # if keystores lost to recover keys use ./deposit.sh existing-mnemonic
-    ./deposit.sh new-mnemonic --num_validators $nmv --mnemonic_language $lng --chain $B
+    ./deposit.sh new-mnemonic --num_validators $nmv --mnemonic_language $lng --chain $chi
     swu 'para ARQUIVAR CHAVES executar de novo - OFFLINE & com USB INSTALADOS'
   else
     swu 'INSTALAR SCRIPT CHAVES'
