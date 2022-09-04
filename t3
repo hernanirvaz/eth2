@@ -45,8 +45,8 @@ else
   # othe="$othe --checkpoint-sync-url https://1q1s6o6cB6Jysu7KKlbLUYiOdAM:8974468780164028652df958a69fbd30@eth2-beacon-mainnet.infura.io"
   othe="$othe --checkpoint-sync-url http://192.168.8.34:5052"                                                                                                 # syncing from finalized checkpoint
   othe="$othe --disable-upnp"
-  othe="$othe --monitoring-endpoint https://beaconcha.in/api/v1/client/metrics?apikey=$B&machine=$(snc $cunm)"                                                # monitoring
   # othe="$othe --slasher"
+  # othe="$othe --monitoring-endpoint https://beaconcha.in/api/v1/client/metrics?apikey=$B&machine=$(snc $cunm)"
   swu 'CONFIGURE BEACON';sex "mkdir -p ${p[16]}";cmw ${p[10]} 755 $meeu;sau eth2
   echo $pubk > ${p[10]}/pubkeys;sex "mv ${p[10]}/pubkeys ${p[16]}";cmw ${p[16]}/pubkeys 600 eth2
   cmw ${p[16]} 700 eth2;touch ${p[10]}/vc_lock;cd ${p[9]}                                                                                                     # IMPORTANTE LOCK vc
@@ -78,7 +78,7 @@ else
   epcc=" --beacon-nodes http://$zip4:5052,http://$zip3:5052"                                                                                                  # cc order
   othe=''
   othe="$othe --suggested-fee-recipient ${p[99]}"                                                                                                             # vc level fees
-  othe="$othe --monitoring-endpoint https://beaconcha.in/api/v1/client/metrics?apikey=$B&machine=$(snc $cunm)"                                                # monitoring
+  # othe="$othe --monitoring-endpoint https://beaconcha.in/api/v1/client/metrics?apikey=$B&machine=$(snc $cunm)"
   sau eth3;cd ${p[9]}
   if [[ ! -f ${p[10]}/vc_keys && -d $HOME/$D && $(ls -A $HOME/$D) ]];then
     swu 'IMPORT KEYS';sex "mkdir -p ${p[10]}";cmw ${p[10]} 755 $meeu
