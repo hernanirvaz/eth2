@@ -53,7 +53,7 @@ function sso {
   [[ $1 = BESU ]] && e="$e $(printf "el:p%02i:m%02i p2p:%5i" $er $em $(ss1 $2 p2p-port [0-9]))$(ub1 synced $(ucl eth_syncing))"                               # el peers/port tag
   [[ $1 = BEAC ]] && bnn $(fs4 peers:) $(bpc $(bcl peer_count))                                                                                               # set min peers
   [[ $1 = BEAC ]] && e="$e $(printf "cl:p%02i:m%02i p2p:%5i" $nr $nm $(ss1 $2 port [0-9]))$(bb1 $(bcl syncing))"                                              # cl peers/port tag
-  [[ $1 = BEAC ]] && e="$e el:http $(ss1 $2 endpoints*  '[^ ]'|sed -n ${p[91]}) nys: $(fs0|grep not.yet.synced|wc -l)"                                        # el http & # not yet synced messages
+  [[ $1 = BEAC ]] && e="$e el:http $(ss1 $2 execution-endpoint '[^ ]'|sed -n ${p[91]}) nys: $(fs0|grep not.yet.synced|wc -l)"                                 # el http & # not yet synced messages
   [[ $1 = VALI ]] && { dtl;bo5;e="$e vl:m$(printf '%02i' $b3):c$(printf '%02i' $b2) cc:http $(ss1 $2 nodes '[^ ]'|sed -n ${p[91]})"; };swn "$e"               # set homologous/avg & cl http
 }
 # el control commands
@@ -351,7 +351,7 @@ function lhs {
     local e=$(ssh $(snc $cuvc) "export H=$H;~/eth2/t6 cci $1")
   fi;[[ $e -gt 0 ]] || return;local i=$(sci)                                                                                                                  # cc ip not found
   if [[ $i -eq $e ]];then                                                                                                                                     # get connected ec ip
-    local n=$(nu0 $(ss1 ${p[71]} endpoint '[^ ]'|sed -n ${p[92]}))
+    local n=$(nu0 $(ss1 ${p[71]} execution-endpoint '[^ ]'|sed -n ${p[92]}))
   else
     local n=$(ssh $(snc $(sni $e)) "export H=$H;~/eth2/t6 eci")
   fi;[[ $n -gt 0 ]] || return                                                                                                                                 # ec ip not found
@@ -444,8 +444,8 @@ function sr3 { cp $(pjp 4 73).service ${p[73]}.sav;sed "s%--beacon-nodes  *\([^ 
 [[ $1 = gbs ]] && { ghs;bhs;cpe; }                                                                                                                            #        ec/cc/system    reports
 [[ $1 = mhs ]] && { lhs ,; }                                                                                                                                  # master ec/cc/vc/system reports
 [[ $1 = shs ]] && { lhs  ; }                                                                                                                                  # slave  ec/cc/vc/system reports
-[[ $1 = cci ]] && { nu0 $(ss1 ${p[73]} nodes   "[^$2 ]"|sed -n ${p[92]}); }                                                                                   # cc ip vc uses
-[[ $1 = eci ]] && { nu0 $(ss1 ${p[71]} endpoint  '[^ ]'|sed -n ${p[92]}); }                                                                                   # ec ip cc uses
+[[ $1 = cci ]] && { nu0 $(ss1 ${p[73]} nodes            "[^$2 ]"|sed -n ${p[92]}); }                                                                          # cc ip vc uses
+[[ $1 = eci ]] && { nu0 $(ss1 ${p[71]} execution-endpoint '[^ ]'|sed -n ${p[92]}); }                                                                          # ec ip cc uses
 [[ $1 = bo  ]] && { bo0 $2 $3 $4; }
 [[ $1 = bon ]] && { bon $2; }
 [[ $1 = boc && -f ${p[11]} ]] && { unset v;read -a v <<< $(bff|tail -n1);l2=$(bff $(pt1 $2 ${v[4]}));boa; }
