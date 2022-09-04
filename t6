@@ -51,7 +51,8 @@ function sso {
   [[ $1 = GETH ]] && e="$e $(printf "el:p%02i:m%02i p2p:%5i" $er $em $(ss1 $2 port     [0-9]))$(gb1 synced $(gcl eth.syncing))"                               # el peers/port tag
   [[ $1 = BESU ]] && enn $(fs0 Peers:     0 'besu\['|lg1 .*Peers:)     $(up0 $(ucl net_peerCount))                                                            # set min peers
   [[ $1 = BESU ]] && e="$e $(printf "el:p%02i:m%02i p2p:%5i" $er $em $(ss1 $2 p2p-port [0-9]))$(ub1 synced $(ucl eth_syncing))"                               # el peers/port tag
-  [[ $1 = BEAC ]] && { bnn $(fs4 peers:);e="$e $(printf "cl:p%02i:m%02i p2p:%5i" $nr $nm $(ss1 $2 port [0-9]))"; }                                            # set min peers & cl peers/port tag
+  [[ $1 = BEAC ]] && bnn $(fs4 peers:) $(bpc $(bcl peer_count))                                                                                               # set min peers
+  [[ $1 = BEAC ]] && e="$e $(printf "cl:p%02i:m%02i p2p:%5i" $nr $nm $(ss1 $2 port [0-9]))$(bb1 $(bcl syncing))"                                              # cl peers/port tag
   [[ $1 = BEAC ]] && e="$e el:http $(ss1 $2 endpoints*  '[^ ]'|sed -n ${p[91]}) nys: $(fs0|grep not.yet.synced|wc -l)"                                        # el http & # not yet synced messages
   [[ $1 = VALI ]] && { dtl;bo5;e="$e vl:m$(printf '%02i' $b3):c$(printf '%02i' $b2) cc:http $(ss1 $2 nodes '[^ ]'|sed -n ${p[91]})"; };swn "$e"               # set homologous/avg & cl http
 }
@@ -62,7 +63,7 @@ function gi0 { echo $@|sed -n 's%.*highestBlock: *\([0-9]*\).*%\1%ip'; }        
 function gc0 { echo $@|sed -n 's%.*currentBlock: *\([0-9]*\).*%\1%ip'; }                                                                                      # get el current block
 function gv0 { nn=$(nu0 $(ss1 ${p[70]} maxpeers [0-9])); }                                                                                                    # set configured peers
 function gq0 { nr=$(nu0 $(gcl net.peerCount))          ; }                                                                                                    # set el current peers
-function gb1 { if [[ $(echo $@|grep false) ]];then [[ $1 ]] && echo " $1";else printf " syncing: %6i" $(($(gi0 $@)-$(gc0 $@)));fi; }                          # get el syncing blocks remaining
+function gb1 { if [[ $(echo $@|grep false) ]];then [[ $1 ]] && printf " $1";else printf " syncing: %6i" $(($(gi0 $@)-$(gc0 $@)));fi; }                        # get el syncing blocks remaining
 function gl0 {                                                                                                                                                # el report
   dts;ok=OK;if [[ $(sst ${p[70]} running) ]];then local e=$(gcl eth.syncing);eb0 ${p[13]} Imported 'geth\[';gv0;gq0
     m="GETH $ok $(tsy $e) $(dnn) sgs: $(printf '%4i' $e0)$(gb1 '' $e)"                                                                                        # OK SYC/NSY (dnn) sgs: 5 blocks: 8
@@ -77,7 +78,7 @@ function uc0 { echo $((16#$(echo $@|sed -n 's%.*currentBlock" *: *"0x\([^"]*\)".
 function up0 { nu0  $((16#$(echo $@|sed -n 's%.*result" *: *"0x\([^"]*\)".*%\1%ip'      ))); }                                                                # get el result
 function uv0 { nn=$(nu0 $(ss1 ${p[87]} max-peers [0-9])); }                                                                                                   # set configured peers
 function uq0 { nr=$(nu0 $(up0 $(ucl net_peerCount)))                         ; }                                                                              # set el current peers
-function ub1 { if [[ $(echo $@|grep false) ]];then [[ $1 ]] && echo " $1";else printf " syncing: %6i" $(($(ui0 $@)-$(uc0 $@)));fi; }                          # get el syncing blocks remaining
+function ub1 { if [[ $(echo $@|grep false) ]];then [[ $1 ]] && printf " $1";else printf " syncing: %6i" $(($(ui0 $@)-$(uc0 $@)));fi; }                        # get el syncing blocks remaining
 function ul0 {                                                                                                                                                # el report
   dts;ok=OK;if [[ $(sst ${p[87]} running) ]];then local e=$(ucl eth_syncing);eb0 ${p[89]} Imported 'besu\[';uv0;uq0
     m="BESU $ok $(tsy $e) $(dnn) sgs: $(printf '%4i' $e0)$(ub1 '' $e)"                                                                                        # OK SYC/NSY (dnn) sgs: 5 blocks: 8
@@ -86,6 +87,10 @@ function ul0 {                                                                  
   fi
 }
 # cc control commands
+function bcl { curl -sX GET "http://$cicc:5052/eth/v1/node/$1" -H "accept: application/json" 2>${p[3]}; }                                                     # exec RPC HTTP
+function bsd { nu0 $(echo $@|sed -n 's%.*"sync_distance" *: *"\([^"]*\)".*%\1%ip'); }                                                                         # get cl syncing distance
+function bpc { nu0 $(echo $@|sed -n 's%.*"connected" *: *"\([^"]*\)".*%\1%ip'    ); }                                                                         # get cl peers connected
+function bb1 { if [[ $(echo $@|grep is_syncing\":false) ]];then printf " synced";else printf " syncing: %6i" $(bsd $@);fi; }                                  # get cl syncing distance remaining
 function bz0 { echo $((10*(5*zk+2*zz+zx+zw)))                                          ; }                                                                    # get numerator paid errors
 function bw0 { echo $((10*z1))                                                         ; }                                                                    # get numerator processed blocks
 function bf0 { echo $((90*z3))                                                         ; }                                                                    # get numerator general errors
@@ -263,35 +268,35 @@ function cpe {                                                                  
 }
 # Plex Media Server
 function xop { pde 80 plex/nginx delete;pai 80 192.168.8.0/24 plex/nginx       ;ide 192.168.8.0/24 1900/udp plex/upnp       ; }
-function xcl { pde 80 plex/nginx       ;pai 80 192.168.8.0/24 plex/nginx delete;ide 192.168.8.0/24 1900/udp plex/upnp delete; }
+function xco { pde 80 plex/nginx       ;pai 80 192.168.8.0/24 plex/nginx delete;ide 192.168.8.0/24 1900/udp plex/upnp delete; }
 function xe  { xop;sex 'ufw reload';cex "$(pjw 64 80)";cex "$(pjw 64 79)"; }                                                                                  # enable  plexmediaserver
 function xa  { [[ $(sst ${p[80]}       ) ]] && cex "$(pjw 63 80)";[[ $(sst ${p[79]}       ) ]] && cex "$(pjw 63 79)"; }                                       # start   plexmediaserver
 function xp  { [[ $(sst ${p[80]} loaded) ]] && cex "$(pjw 62 80)";[[ $(sst ${p[79]} loaded) ]] && cex "$(pjw 62 79)"; }                                       # stop    plexmediaserver
-function xd  { cex "$(pjw 65 79)";cex "$(pjw 65 80)";xcl;sex 'ufw reload'; }                                                                                  # disable plexmediaserver
+function xd  { cex "$(pjw 65 79)";cex "$(pjw 65 80)";xco;sex 'ufw reload'; }                                                                                  # disable plexmediaserver
 # Transmission BitTorrent Daemon
 function rop { pae 51413 torrent;pde 9091 torrent delete;pai 9091 192.168.8.0/24 torrent       ; }
-function rcl { pde 51413 torrent;pde 9091 torrent       ;pai 9091 192.168.8.0/24 torrent delete; }
+function rco { pde 51413 torrent;pde 9091 torrent       ;pai 9091 192.168.8.0/24 torrent delete; }
 function re  { rop;sex 'ufw reload';cex "$(pjw 64 72)"; }                                                                                                     # enable  transmission-daemon
 function ra  { [[ $(sst ${p[72]}       ) ]] && cex "$(pjw 63 72)"; }                                                                                          # start   transmission-daemon
 function rp  { [[ $(sst ${p[72]} loaded) ]] && cex "$(pjw 62 72)"; }                                                                                          # stop    transmission-daemon
-function rd  { cex "$(pjw 65 72)";rcl;sex 'ufw reload'; }                                                                                                     # disable transmission-daemon
+function rd  { cex "$(pjw 65 72)";rco;sex 'ufw reload'; }                                                                                                     # disable transmission-daemon
 # Bind9
 function sop { pai 53 192.168.8.0/24 dns       ; }
-function scl { pai 53 192.168.8.0/24 dns delete; }
+function sco { pai 53 192.168.8.0/24 dns delete; }
 function se  { sop;sex 'ufw reload';cex "$(pjw 64 78)"; }                                                                                                     # enable  named
 function sa  { [[ $(sst ${p[78]}       ) ]] && cex "$(pjw 63 78)"; }                                                                                          # start   named
 function sp  { [[ $(sst ${p[78]} loaded) ]] && cex "$(pjw 62 78)"; }                                                                                          # stop    named
-function sd  { cex "$(pjw 65 78)";scl;sex 'ufw reload'; }                                                                                                     # disable named
+function sd  { cex "$(pjw 65 78)";sco;sex 'ufw reload'; }                                                                                                     # disable named
 # el/cc/vc
 function efw { if [[ $cust = hrv ]];then pai $1 192.168.8.0/24 $2 $3;else pai $1 $vip1 $2 $3;pai $1 $vip3 $2 $3;fi; }
 function eop { local e=30303;[[ $cunm = $znm1 ]] || e=30304;pae $e elp2p;pde 8545 elapi delete;pde 8551 eljwt delete;efw 8545 elapi       ;efw 8551 eljwt       ; }
-function ecl { local e=30303;[[ $cunm = $znm1 ]] || e=30304;pde $e elp2p;pde 8545 elapi       ;pde 8551 eljwt       ;efw 8545 elapi delete;efw 8551 eljwt delete; }
+function eco { local e=30303;[[ $cunm = $znm1 ]] || e=30304;pde $e elp2p;pde 8545 elapi       ;pde 8551 eljwt       ;efw 8545 elapi delete;efw 8551 eljwt delete; }
 function bfw { if [[ $cust = hrv ]];then pai $1 192.168.8.0/24 $2 $3;else pai $1 $vip3 $2 $3;fi; }
 function bop { local e=9000 ;[[ $cunm = $znm3 ]] || e=9004 ;pae $e clp2p;pde 5052 clapi delete;pde 8551 cljwt delete;bfw 5052 clapi       ;bfw 8551 cljwt       ; }
-function bcl { local e=9000 ;[[ $cunm = $znm3 ]] || e=9004 ;pde $e clp2p;pde 5052 clapi       ;pde 8551 cljwt       ;bfw 5052 clapi delete;bfw 8551 cljwt delete; }
+function bco { local e=9000 ;[[ $cunm = $znm3 ]] || e=9004 ;pde $e clp2p;pde 5052 clapi       ;pde 8551 cljwt       ;bfw 5052 clapi delete;bfw 8551 cljwt delete; }
 function vfw { if [[ $cust = hrv ]];then pai $1 192.168.8.0/24 $2 $3;else pai $1 $vip1 $2 $3;fi; }
 function vop { vfw 5064 vcapi       ;pde 5064 vcapi delete; }
-function vcl { vfw 5064 vcapi delete;pde 5064 vcapi       ; }
+function vco { vfw 5064 vcapi delete;pde 5064 vcapi       ; }
 # enable/start eth-geth eth-beacon eth-validator prometheus prometheus-node-exporter grafana-server
 function ge  { eop;sex 'ufw reload';cex "$(pjw 64 70)"; }                                                                                                     # enable eth-geth
 function ue  { eop;sex 'ufw reload';cex "$(pjw 64 87)"; }                                                                                                     # enable eth-besu
@@ -319,10 +324,10 @@ function vp  { [[ -f ${p[10]}/vc_slash ]] && return;cex "$(pjw 62 73)";touch ${p
 function pp  { [[ $(sst ${p[74]} loaded) ]] && cex "$(pjw 62 74)"; }                                                                                          # stop prometheus
 function np  { [[ $(sst ${p[75]} loaded) ]] && cex "$(pjw 62 75)"; }                                                                                          # stop prometheus-node-exporter
 function fp  { [[ $(sst ${p[76]} loaded) ]] && cex "$(pjw 62 76)"; }                                                                                          # stop grafana-server
-function gd  { cex "$(pjw 65 70)";ecl;sex 'ufw reload'; }                                                                                                     # disable eth-geth
-function ud  { cex "$(pjw 65 87)";ecl;sex 'ufw reload'; }                                                                                                     # disable eth-besu
-function bd  { cex "$(pjw 65 71)";bcl;sex 'ufw reload'; }                                                                                                     # disable eth-beacon
-function vd  { [[ -f ${p[10]}/vc_slash ]] || return;cex "$(pjw 65 73)";vcl;sex 'ufw reload';touch ${p[10]}/vc_lock; }                                         # disable eth-validator
+function gd  { cex "$(pjw 65 70)";eco;sex 'ufw reload'; }                                                                                                     # disable eth-geth
+function ud  { cex "$(pjw 65 87)";eco;sex 'ufw reload'; }                                                                                                     # disable eth-besu
+function bd  { cex "$(pjw 65 71)";bco;sex 'ufw reload'; }                                                                                                     # disable eth-beacon
+function vd  { [[ -f ${p[10]}/vc_slash ]] || return;cex "$(pjw 65 73)";vco;sex 'ufw reload';touch ${p[10]}/vc_lock; }                                         # disable eth-validator
 function pd  { [[ $(sst ${p[74]} loaded) ]] || return;cex "$(pjw 65 74)";pai 9090/tcp 192.168.8.0/24 ${p[74]} delete;sex 'ufw reload'; }                      # disable prometheus
 function nd  { [[ $(sst ${p[75]} loaded) ]] || return;cex "$(pjw 65 75)"; }                                                                                   # disable prometheus-node-exporter
 function fd  { [[ $(sst ${p[76]} loaded) ]] || return;cex "$(pjw 65 76)";pai 3000/tcp 192.168.8.0/24 grafana  delete;sex 'ufw reload'; }                      # disable grafana-server
@@ -385,11 +390,11 @@ function luc {                                                                  
 }
 function ruv { if [[ $1 ]];then swn "RUST OVERRIDE SET $1";rustup override set $1;else swn 'RUST UPDATE';rustup update stable;fi; }                           # set/update rust version
 function v0t { [[ $(sst ${p[73]} running) ]]; }                                                                                                               # vc running test
-function v1t { [[ $cunm = $(vco)          ]]; }                                                                                                               # vc other   test
+function v1t { [[ $cunm = $(vos)          ]]; }                                                                                                               # vc other   test
 function v2t { [[ $cunm = $cuvc           ]]; }                                                                                                               # vc current test
 function vps { local f=${p[9]}/$(basename ${p[31]});sex "cp ${p[31]} ${p[9]}";cmw $f 666 eth;scp $f $(snc $cuvc):~;sex "rm $f"; }                             # prep slash db
 function tvc {
-  swn "${p[86]}";v2t &&   v0t && swn "0\t\tset cuvc=$(vco)\n${p[84]}\n${p[85]}";v2t && ! v0t && swn "${p[84]}";v0t || swn "${p[85]}"                          # show agenda/instructions
+  swn "${p[86]}";v2t &&   v0t && swn "0\t\tset cuvc=$(vos)\n${p[84]}\n${p[85]}";v2t && ! v0t && swn "${p[84]}";v0t || swn "${p[85]}"                          # show agenda/instructions
   if v1t && v0t;then swn "TRANSFERIR VC -> $cuvc (SIM/nao)?";else return;fi;local rsp=nao;read rsp
   if [[ $rsp = SIM && ! -f ${p[10]}/vc_slash && ! -f ${p[10]}/vc_lock && -f ${p[10]}/vc_keys ]];then vp;vd;swu "COPY SLASH -> $cuvc";vps;fi                   # vc stop/disable & prep slash db
 }
@@ -607,7 +612,7 @@ if [[ ! $1 ]];then
   m="$m\nclr\t\tcc remove long-lived parms"
   m="$m\ncce\t\tcc change ec server ($znm1/$znm4)"
   m="$m\nvcc\t\tvc switch cc server order"
-  m="$m\ntvc\t\tvc transfer ($(vco) -> $cuvc)"
+  m="$m\ntvc\t\tvc transfer ($(vos) -> $cuvc)"
   m="$m\nws\t\tfirewall status"
   m="$m\nwa\t\tfirewall arranca"
   m="$m\nwpr\t\tfirewall para"
