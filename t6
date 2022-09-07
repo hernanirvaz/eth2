@@ -298,10 +298,10 @@ function ge  { eop;sex 'ufw reload';cex "$(pjw 64 70)"; }                       
 function ue  { eop;sex 'ufw reload';cex "$(pjw 64 87)"; }                                                                                                     # enable eth-besu
 function be  { bop;sex 'ufw reload';cex "$(pjw 64 71)"; }                                                                                                     # enable eth-beacon
 function ve  { [[ -f ${p[10]}/vc_lock ]] && return;vop;sex 'ufw reload';cex "$(pjw 64 73)"; }                                                                 # enable eth-validator
-function pe  { pai 9090/tcp 192.168.8.0/24 ${p[74]};sex 'ufw reload';cex "$(pjw 64 74)"; }                                                                    # enable prometheus
+function pe  { pai 9090/tcp 192.168.8.0/24 ${p[74]} ;sex 'ufw reload';cex "$(pjw 64 74)"; }                                                                   # enable prometheus
 function ne  { sex 'ufw reload';cex "$(pjw 64 75)"; }                                                                                                         # enable prometheus-node-exporter
-function fe  { pai 3000/tcp 192.168.8.0/24 grafana ;sex 'ufw reload';cex "$(pjw 64 76)"; }                                                                    # enable grafana-server
-function me  { pai 18550    192.168.8.0/24 mev     ;sex 'ufw reload';cex "$(pjw 64 96)"; }                                                                    # enable mev-boost
+function fe  { pai 3000/tcp 192.168.8.0/24 grafana  ;sex 'ufw reload';cex "$(pjw 64 76)"; }                                                                   # enable grafana-server
+function me  { pai 18550    192.168.8.0/24 mev-boost;sex 'ufw reload';cex "$(pjw 64 96)"; }                                                                   # enable mev-boost
 function ga  { [[ $(sst ${p[70]}) && -d ${p[18]} ]] && cex "$(pjw 63 70)"; }                                                                                  # start eth-geth
 function ua  { [[ $(sst ${p[87]}) && -d ${p[37]} ]] && cex "$(pjw 63 87)"; }                                                                                  # start eth-besu
 function ba  { [[ $(sst ${p[71]}) && -d ${p[16]} ]] && cex "$(pjw 63 71)"; }                                                                                  # start eth-beacon
@@ -327,10 +327,10 @@ function gd  { cex "$(pjw 65 70)";eco;sex 'ufw reload'; }                       
 function ud  { cex "$(pjw 65 87)";eco;sex 'ufw reload'; }                                                                                                     # disable eth-besu
 function bd  { cex "$(pjw 65 71)";bco;sex 'ufw reload'; }                                                                                                     # disable eth-beacon
 function vd  { [[ -f ${p[10]}/vc_slash ]] || return;cex "$(pjw 65 73)";vco;sex 'ufw reload';touch ${p[10]}/vc_lock; }                                         # disable eth-validator
-function pd  { [[ $(sst ${p[74]} loaded) ]] || return;cex "$(pjw 65 74)";pai 9090/tcp 192.168.8.0/24 ${p[74]} delete;sex 'ufw reload'; }                      # disable prometheus
+function pd  { [[ $(sst ${p[74]} loaded) ]] || return;cex "$(pjw 65 74)";pai 9090/tcp 192.168.8.0/24 ${p[74]}  delete;sex 'ufw reload'; }                     # disable prometheus
 function nd  { [[ $(sst ${p[75]} loaded) ]] || return;cex "$(pjw 65 75)"; }                                                                                   # disable prometheus-node-exporter
-function fd  { [[ $(sst ${p[76]} loaded) ]] || return;cex "$(pjw 65 76)";pai 3000/tcp 192.168.8.0/24 grafana  delete;sex 'ufw reload'; }                      # disable grafana-server
-function md  { [[ $(sst ${p[96]} loaded) ]] || return;cex "$(pjw 65 96)";pai 18550    192.168.8.0/24 mev      delete;sex 'ufw reload'; }                      # disable mev-boost
+function fd  { [[ $(sst ${p[76]} loaded) ]] || return;cex "$(pjw 65 76)";pai 3000/tcp 192.168.8.0/24 grafana   delete;sex 'ufw reload'; }                     # disable grafana-server
+function md  { [[ $(sst ${p[96]} loaded) ]] || return;cex "$(pjw 65 96)";pai 18550    192.168.8.0/24 mev-boost delete;sex 'ufw reload'; }                     # disable mev-boost
 function umt { [[ $(cat ${p[6]}) -eq 1 && $(fs6) -gt 10 ]]; }                                                                                                 # usb messages test
 function t0t { [[ $(cat ${p[7]}) -eq 0 && $(fs5) -gt 20 ]]; }                                                                                                 # cpu no turbo recomended test
 function t1t { [[ $(cat ${p[7]}) -eq 1 && $(fs5) -le 10 ]]; }                                                                                                 # cpu    turbo recomended test
