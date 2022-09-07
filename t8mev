@@ -1,0 +1,31 @@
+#!/bin/bash
+
+source /home/eth/eth2/t1
+
+if [[ $cunm = $znm2 || $cunm = $vnm2 ]];then                                                                                                                  # mev here
+  swu 'INSTALAR MEV-BOOST';sex 'apt install golang-go -y';sau eth4;[[ -f ${p[9]}/go/bin/mev-boost ]] || go install github.com/flashbots/mev-boost@latest
+  sex "cp ${p[9]}/go/bin/mev-boost ${p[0]}";sex "chown eth4:eth4 ${p[0]}/mev-boost";cmw ${p[0]}/mev-boost 755 eth4                                            # install mev-boost binary
+  rlys='https://0x8b5d2e73e2a3a55c6c87b8b6eb92e0149a125c852751db1422fa951e42a09b82c142c3ea98d0d9930b056a3bc9896b8f@bloxroute.max-profit.blxrbdn.com'
+  rlys="$rlys,https://0xac6e77dfe25ecd6110b8e780608cce0dab71fdd5ebea22a16c0205200f2f8e2e3ad3b71d3499c54ad14d6c21b41a37ae@boost-relay.flashbots.net"
+  trqt=2000                                                                                                                                                   # timeout for requests default 2000
+  epmv='192.168.8.28:18550'                                                                                                                                   # listen-address default "localhost:18550"
+  cat <<-EOF > ${p[96]}.service
+	[Unit]
+	Description=mev-boost service
+	Wants=network-online.target
+	After=network-online.target
+	
+	[Service]
+	User=eth4
+	Group=eth4
+	Restart=always
+	RestartSec=10
+	ExecStart=${p[0]}/mev-boost -addr $epmv -mainnet -request-timeout $trqt -relays $rlys
+	ExecStopPost=${p[9]}/eth2/t8mail MEVBSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
+	
+	[Install]
+	WantedBy=multi-user.target
+	EOF
+  sex "mv ${p[96]}.service $(pjp 4 96).service";cmw $(pjp 4 96).service 644
+fi
+swn 'para iniciar mev-boost: t mea'
