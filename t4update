@@ -2,17 +2,15 @@
 
 source /home/eth/eth2/t1
 
-function hlp { swn "\n$(basename $0) linux|reboot|besu [version]|ec|cc [version] [rust version]|cp\n\n\tec/cc\tupgrade execution/consencus client\n\tcp\tcopy & propagate"; }
+function hlp { swn "\n$(basename $0) linux|reboot|besu <version>|geth|cc [version] [rust version]|cp\n\n  besu|geth|cc\tupgrade besu|geth|lighthouse\n  cp\t\tcopy & propagate  lighthouse"; }
 
-if [[ $1 = linux || $1 = reboot || $1 = ec ]];then
+if [[ $1 = linux || $1 = reboot || $1 = geth ]];then
   swu 'FULL-UPGRADE'
-  [[ $1 = reboot || $1 = ec ]] && t6 gpr
   cex 'apt update -y'    ;sudo apt full-upgrade -y && sudo apt dist-upgrade -y
   cex 'apt autoremove -y';cex 'apt autoclean'
-  [[ $1 = ec     ]] && t6 gaj
   [[ $1 = reboot ]] && cex 'reboot'
 fi
-if [[ $1 = besu && $2 ]];then t6 upr;sex "mv ${p[0]}/besu besu-sav";unv $2;t6 uaj;fi                                                                          # stop/save/download/install/start besu
+if [[ $1 = besu && $2 ]];then sex "mv ${p[0]}/besu ${p[0]}/besu-sav";unv $2;fi                                                                                # save/download/install besu
 [[ $1 = cc || $1 = cp ]] || { [[ $1 ]] || hlp;exit; }
 if [[ $1 = cc && ($cunm = $znm2 || $cunm = $vnm1) ]];then [[ -x ${p[9]}/.cargo/bin/rustup ]] && t6 ruv $3;t6 luc $2;fi                                        # rust update & lighthouse upgrade/compile
 t6 lpi                                                                                                                                                        # propagate & install lighthouse

@@ -218,7 +218,8 @@ function sis { sex "mv ${p[9]}/$(basename ${p[31]}) ${p[17]}";[[ -f ${p[31]} ]] 
 function snc { echo ${1/[a-z]*-/}|tr -d '[ao]'; }                                                                                                             # get small server name
 function vos { if [[ $cuvc = $znm3 ]];then echo $znm4;else echo $znm3;fi; }                                                                                   # get other vc server name
 function unv {
-  local vuel=${1:-22.7.1};curl -LO https://hyperledger.jfrog.io/artifactory/besu-binaries/besu/$vuel/besu-$vuel.tar.gz;sha256sum besu-$vuel.tar.gz            # download besu binaries
+  local vuel=${1:-22.7.2};curl -LO https://hyperledger.jfrog.io/artifactory/besu-binaries/besu/$vuel/besu-$vuel.tar.gz;sha256sum besu-$vuel.tar.gz            # download besu binaries
+  swn "INSTALAR BESU $vuel (SIM/nao)?";local rsp=nao;read rsp;[[ $rsp = SIM ]] || return                                                                      # install (Sim/nao)?
   tar xvf besu-$vuel.tar.gz;sex "cp -a besu-$vuel ${p[0]}/besu";sex "chown eth1:eth1 -R ${p[0]}/besu";cmw ${p[0]}/besu 755 eth1                               # install  besu binaries
 }
 
@@ -240,6 +241,8 @@ p[93]="${p[9]}/system.restart"                                                  
 p[94]='s%\(Package\|Core\|Composite\|Sensor\|temp[0-9]\).*: *\([-+][0-9][0-9]*\.[0-9]*\).*%\2%p'                                                              # temperature sensors
 p[95]='s%.* \([0-9]*:[0-9]*\):[0-9]*.*%\1%'                                                                                                                   # hour/minute log event
 p[96]='eth-mev-boost'
+p[97]="${p[9]}/geth.restart"                                                                                                                                  # el restart control files
+p[98]="${p[9]}/besu.restart"                                                                                                                                  # el restart control files
 p[99]='0x534029B6371dc4453DD750Bc1198181F55C859fe'
 
 bpid=$($(pjw 61 71) 2>${p[3]}|sed -n 's%.*PID: *\([0-9]*\).*%\1%p')

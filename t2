@@ -92,7 +92,6 @@ if [[ $cunm = $znm1 || $cunm = $znm4 || $cunm = $vnm1 ]];then                   
   maxp=25                                                                                                                                                     # default
   pp2p=30303                                                                                                                                                  # default
   epec="--miner-enabled=true --miner-coinbase=\"${p[99]}\""                                                                                                   # coincashew guide had these NOT USING
-  # Aug 26 16:23:43 hrv-zotac3 lighthouse[271300]: Aug 26 15:23:43.003 ERRO Error during execution engine upcheck   error: Reqwest(reqwest::Error { kind: Request, url: Url { scheme: "http", cannot_be_a_base: false, username: "", password: None, host: Some(Ipv4(192.168.8.25)), port: Some(8551), path: "/", query: None, fragment: None }, source: TimedOut }), service: exec
   epec="--pruning-enabled=true"                                                                                                                               # pruning deprecated for bonsai tries
   epec="--sync-mode=X_SNAP --data-storage-format=BONSAI"                                                                                                      # recommend snap sync/bonsai
   epec="$epec --p2p-port=$pp2p --rpc-http-enabled=true --rpc-http-host=$zip1"                                                                                 # enable  rpc:8545
