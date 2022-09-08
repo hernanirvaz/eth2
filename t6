@@ -540,9 +540,9 @@ function sr3 { cp $(pjp 4 73).service ${p[73]}.sav;sed "s%--beacon-nodes  *\([^ 
 [[ $1 = uea ]] && { ue;dmr;ua;jsh "-u ${p[87]}"; }
 [[ $1 = bea ]] && { be;dmr;ba;jsh "-u ${p[71]}"; }
 [[ $1 = vea ]] && { ve;dmr;va;jsh "-u ${p[73]}"; }
-[[ $1 = rea ]] && { re;ra; }
-[[ $1 = sea ]] && { se;sa; }
-[[ $1 = xea ]] && { xe;xa; }
+[[ $1 = rea ]] && { re;dmr;ra; }
+[[ $1 = sea ]] && { se;dmr;sa; }
+[[ $1 = xea ]] && { xe;dmr;xa; }
 [[ $1 = mea ]] && { me;dmr;ma;jsh "-u ${p[96]}"; }
 # enable
 [[ $1 = ge  ]] && { ge; }
