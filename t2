@@ -10,7 +10,9 @@ function cc4 { local f=$(basename $1);cp $1 $f.sav 2>${p[3]}               ;echo
 [[ -x ${p[9]}/eth2/t ]] || ln -s ${p[9]}/eth2/t6 ${p[9]}/eth2/t                                                                                               # link base commands
 if [[ $(pex 'ufw status'|grep -i inactive) ]];then
   swu 'INIT FIREWALL';sex 'ufw default deny incoming';sex 'ufw default allow outgoing'                                                                        # base ufw
-  pde 22/tcp ossh;idi 192.168.8.0/24 224.0.0.1 multicast                                                                                                      # deny  ssh/multicasting
+  pde 22/tcp ossh
+  [[ $cust = hrv   ]] && { idi 192.168.8.0/24 224.0.0.1 multicast; }                                                                                          # deny  ssh/multicasting
+  [[ $cunm = $vnm1 ]] && { ple 2020/tcp nssh; }                                                                                                               # limit ssh
   [[ $cunm = $znm1 ]] && { ple 2021/tcp nssh; }                                                                                                               # limit ssh
   [[ $cunm = $znm2 ]] && { ple 2022/tcp nssh;pai 123/udp 192.168.8.0/24 ntp; }                                                                                # limit ssh;allow ntp
   [[ $cunm = $znm3 ]] && { ple 2023/tcp nssh; }                                                                                                               # limit ssh
@@ -20,8 +22,7 @@ else
   cex 'ufw status numbered'                                                                                                                                   # show
 fi
 [[ -f $(pjp 4 70).service || -f $(pjp 4 87).service || -f $(pjp 4 71).service || -f $(pjp 4 73).service ]] && exit                                            # ec/cl instalados -> exit
-swu 'UPDATE LINUX'       ;t4update linux
-swu 'ROOTKIT SCANNER'    ;sex 'apt install python3-pip net-tools lm-sensors chkrootkit bind9 bind9utils apt-listchanges landscape-common -y';cex 'chkrootkit'
+swu 'UPDATE LINUX'       ;t4update linux;sex 'apt install python3-pip net-tools apt-listchanges landscape-common software-properties-common -y'
 swu 'UNATTENDED UPGRADES';cex 'apt install unattended-upgrades update-notifier-common -y'
 swu 'LINUX CONFIGS'
 if [[ $cunm = $znm2 ]];then
@@ -38,29 +39,31 @@ else
   cex "${p[67]} set-ntp on"                                                                                                                                   # use timesyncd (lightweight)
 fi
 if [[ $cust = hrv ]];then
+  swu 'ROOTKIT SCANNER';sex 'apt install lm-sensors chkrootkit bind9 bind9utils -y';cex 'chkrootkit'
   sex "${p[67]} set-timezone Europe/Lisbon"
   cc1 ${p[19]} "${p[40]}"                                                                                                                                     # my      time servers
   cc1 ${p[20]} "${p[41]}"                                     ;cmw ${p[20]} 644 root                                                                          # motd-news disable
+  cc4 ${p[21]} "${p[56]}"                                     ;cmw ${p[21]} 644 root                                                                          # new netplan
+  cc1 ${p[25]} "${p[46]}"                                     ;cmw ${p[25]} 755 root                                                                          # grub timeout
+  cc1 ${p[34]} "${p[83]}"                                     ;cmw ${p[34]} 644 root                                                                          # hosts config
+  cc4 ${p[35]} "${p[82]}"                                     ;cmw ${p[35]} 644 root                                                                          # ssh config
+  cc3 ${p[28]} "${p[48]}" "${p[55]}"                          ;cmw ${p[28]} 644 root bind                                                                     # named my options
+  cc1 ${p[29]} "${p[42]}"                                     ;cmw ${p[29]} 644 root                                                                          # use only ipv4
+  nex 'update-grub'
+  t6 spd;t6 sea;nex "${p[62]} systemd-resolved";nex "${p[63]} systemd-resolved"                                                                               # DNS stop & start
 else
   sex "${p[67]} set-timezone Europe/Berlin"
   cc1 ${p[19]} "${p[53]}"                                                                                                                                     # general time servers
+  nex "mv -f /etc/motd ${p[9]}/motd.sav"                                                                                                                      # no contabo info
 fi                                                            ;cmw ${p[19]} 644 root;nex "$(pjw 66 77)"                                                       # timesyncd cmod & restart
-cc4 ${p[21]} "${p[56]}"                                       ;cmw ${p[21]} 644 root                                                                          # new netplan
 cc1 ${p[22]} "${p[43]}"                                       ;cmw ${p[22]} 644 root                                                                          # unattended-upgrades
 cc1 ${p[23]} "${p[44]}"               ;cc2 ${p[23]} "${p[45]}";cmw ${p[23]} 755 root                                                                          # header add my motd
 cc1 ${p[24]} "${p[44]}"                                       ;cmw ${p[24]} 755 root                                                                          # help-text delete
-cc1 ${p[25]} "${p[46]}"                                       ;cmw ${p[25]} 755 root                                                                          # grub timeout
 cc1 ${p[26]} "s%^ *${p[1]}%# ${p[1]}%";cc2 ${p[26]} "${p[54]}";cmw ${p[26]} 644 root                                                                          # new logrotate add
-cc3 ${p[28]} "${p[48]}" "${p[55]}"                            ;cmw ${p[28]} 644 root bind                                                                     # named my options
-cc1 ${p[29]} "${p[42]}"                                       ;cmw ${p[29]} 644 root                                                                          # use only ipv4
-cc1 ${p[34]} "${p[83]}"                                       ;cmw ${p[34]} 644 root                                                                          # hosts config
-cc4 ${p[35]} "${p[82]}"                                       ;cmw ${p[35]} 644 root                                                                          # ssh config
 [[ -x ${p[27]} ]] && sex "chmod -x ${p[27]}"                                                                                                                  # motd overlayroot unexecute
-nex 'sudo update-grub';nex "${p[60]} daemon-reload"                                                                                                           # daemon-reload
-sudo dpkg-reconfigure -plow unattended-upgrades                                                                                                               # unattended upgrades
-t6 spd;t6 sea;nex "${p[62]} systemd-resolved";nex "${p[63]} systemd-resolved"                                                                                 # DNS stop & start
+nex "${p[60]} daemon-reload";sudo dpkg-reconfigure -plow unattended-upgrades                                                                                  # unattended upgrades
 if [[ $cunm = $znm1 || $cunm = $znm4 || $cunm = $vnm1 ]];then                                                                                                 # ec here
-  swu 'INSTALAR GETH';sex 'add-apt-repository -y ppa:ethereum/ethereum';sex 'apt update -y';cex 'apt install -y software-properties-common ethereum'          # geth execution client needs
+  swu 'INSTALAR GETH';sex 'add-apt-repository -y ppa:ethereum/ethereum';sex 'apt update -y';cex 'apt install ethereum -y'                                     # geth execution client needs
   sex "mkdir -p ${p[18]}/geth";sau eth1;cmw ${p[18]} 755 eth1;cmw ${p[18]}/geth 700 eth1                                                                      # create dir & user for ec
   maxp=50                                                                                                                                                     # default
   pp2p=30303                                                                                                                                                  # default

@@ -416,7 +416,7 @@ function oce { cft || return;cp $(pjp 4 71).service ${p[71]}.sav;sed 's%--eth1-e
 function jw0 { openssl rand -hex 32|tr -d '\n'|tee jwt 1>${p[3]};[[ -f jwt ]] && jw4; }
 function jw1 { sex "cp jwt $2";cmw $2/jwt 600 $1; }
 function jw3 { scp jwt $1:${p[9]};ssh $1 "export H=$H;eth2/t6 jwt"; }
-function jw4 { jw3 ztc2;jw3 ztc3;jw3 ztc4; }
+function jw4 { [[ $cust = hrv ]] || return;jw3 ztc2;jw3 ztc3;jw3 ztc4; }
 function sr1 { cp $(pjp 4 71).service ${p[71]}.sav;sed "s%--eth1-endpoints  *\([^ ]*\):8545,[^ ]*%--execution-endpoint \1:8551 --execution-jwt ${p[16]}/jwt --suggested-fee-recipient ${p[99]}%" ${p[71]}.sav > $(pjp 9 71).jwt;cmw $(pjp 9 71).jwt 644 eth; }
 function sr3 { cp $(pjp 4 73).service ${p[73]}.sav;sed "s%--beacon-nodes  *\([^ ]*\)%--beacon-nodes \1 --suggested-fee-recipient ${p[99]}%" ${p[73]}.sav > $(pjp 9 73).jwt;cmw $(pjp 9 73).jwt 644 eth; }
 [[ $1 = oce ]] && { oce; }

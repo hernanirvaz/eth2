@@ -21,7 +21,7 @@ alias r1='eth2sl "ztc1.fruga.pt"'
 alias r2='eth2sl "ztc2.fruga.pt"'
 alias r3='eth2sl "ztc3.fruga.pt"'
 alias r4='eth2sl "ztc4.fruga.pt"'
-alias vp='eth2cp "vpsl";eth2cp "vpss"'
+alias vp='eth2cp "vpsl"'
 alias zp='eth2cp "ztc1"         ;eth2cp "ztc2"         ;eth2cp "ztc3"         ;eth2cp "ztc4"         '
 alias rp='eth2cp "ztc3.fruga.pt";eth2cp "ztc4.fruga.pt";eth2cp "ztc1.fruga.pt";eth2cp "ztc2.fruga.pt"'
 
