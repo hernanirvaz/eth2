@@ -68,9 +68,9 @@ function sso {
 }
 # el control commands
 function grs {                                                                                                                                                # el gap restart
-  [[ $(ls ${p[97]}.* 2>${p[3]}) ]] && return;local n=${3:-36};[[ $2 = RB ]] && n=72;ssw $n ${p[97]};gv0
+  [[ $(ls ${p[97]}.* 2>${p[3]}) ]] && return;local n=${3:-36};[[ $2 = RB ]] && n=72;ssw $n ${p[97]}
   local t=$(sng);local f=${p[97]}.i$(stg);touch $f;local n=0;paf;while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) ${p[97]}
-  if spt $t;then rm $f;[[ $2 = RB ]] && gq0;snp ${p[70]} $1 10 50                                                                                             # change peers/stop el
+  if spt $t;then rm $f;gv0;[[ $2 = RB ]] && gq0;snp ${p[70]} $1 10 50                                                                                         # change peers/stop el
     if [[ $2 = RB ]];then ero $n ${p[13]} $2;sex reboot;else sex "$(pjw 63 70)";ssf 20 ${p[97]};gq0;ero $n ${p[13]} $2;fi                                     # reboot/start el
   fi;done;rm -f $f
 }
@@ -88,9 +88,9 @@ function gl0 {                                                                  
   fi
 }
 function urs {                                                                                                                                                # el gap restart
-  [[ $(ls ${p[98]}.* 2>${p[3]}) ]] && return;local n=${3:-36};[[ $2 = RB ]] && n=72;ssw $n ${p[98]};uv0
+  [[ $(ls ${p[98]}.* 2>${p[3]}) ]] && return;local n=${3:-36};[[ $2 = RB ]] && n=72;ssw $n ${p[98]}
   local t=$(sng);local f=${p[98]}.i$(stg);touch $f;local n=0;paf;while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) ${p[98]}
-  if spt $t;then rm $f;[[ $2 = RB ]] && uq0;snp ${p[87]} $1 10 50                                                                                             # change peers/stop el
+  if spt $t;then rm $f;uv0;[[ $2 = RB ]] && uq0;snp ${p[87]} $1 10 50                                                                                         # change peers/stop el
     if [[ $2 = RB ]];then ero $n ${p[89]} $2;sex reboot;else sex "$(pjw 63 87)";ssf 20 ${p[98]};uq0;ero $n ${p[89]} $2;fi                                     # reboot/start el
   fi;done;rm -f $f
 }
