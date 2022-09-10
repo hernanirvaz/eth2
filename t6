@@ -213,7 +213,7 @@ function bh0 {
 function btr { if srt;then echo RB;else echo $1;fi; }                                                                                                         # get tag reboot
 function bro { dts;bb0;bnn $(fs4 peers:);[[ -f ${p[11]} ]] && swn "$(printf 'R%03i' $1) ${2:-$ok} $(printf '%3i' $(bu0)) $(dnn)" >> ${p[11]}; }               # log restart info
 function bss { echo $((${2:-0}+$(date -d$(sf1 $1) +%s))); }                                                                                                   # get sum secounds + time
-function bsc { pex "grep lighthouse.$bpid].*INFO ${p[1]}"|tail -n99|grep sync_committee|wc -l; }                                                              # get # committee messages
+function bsc { pex "grep lighthouse.$bpid].*INFO ${p[1]}"|tail -n99|grep Sync\ committee|wc -l; }                                                             # get # committee messages
 # slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168
 function brs {                                                                                                                                                # cc/vc gap restart
   [[ $(ls ${p[15]}.* 2>${p[3]}) || $(bsc) -gt 0 ]] && return;ssf $3 ${p[15]};local n=${4:-48};[[ $2 = VC ]] && n=60;[[ $2 = RB ]] && n=84;ssw $n ${p[15]}
