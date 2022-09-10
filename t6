@@ -391,7 +391,7 @@ function nrs { nex 'netplan apply';dpa; }                                       
 function lcp { local f=$1;shift;[[ -x $f ]] && until [[ $# -lt 1 ]];do if [[ $1 = $(snc $cunm) ]];then lci $f;else scp $f $1:${p[9]};fi;shift;done; }         # propagate lighthouse
 function lci { [[ -x $1 && ! -d $1      ]] || return;sex "mv ${p[0]}/lighthouse ${p[0]}/lighthouse.sav";sex "cp $1 ${p[0]}"; }                                # lighthouse binary install
 function lmd { [[ -x ${p[0]}/lighthouse ]] || return;cmw ${p[0]}/lighthouse 755 eth;swb 'LIGHT INSTALADO'; }                                                  # lighthouse set permissions
-function lpi { [[ $cunm = $znm2 ]] && lcp $1 ztc2 ztc3 ztc4;[[ $cunm = $vnm1 ]] && lcp $1 vpss;lci ${p[9]}/lighthouse;sex "rm ${p[9]}/lighthouse";lmd; }      # lighthouse propagate/install
+function lpi { [[ $cunm = $znm2 ]] && lcp $1 ztc2 ztc3 ztc4;lci ${p[9]}/lighthouse;sex "rm ${p[9]}/lighthouse";lmd; }                                         # lighthouse propagate/install
 function luc {                                                                                                                                                # lighthouse upgrade/compile
   if [[ -f ${p[38]}/lighthouse/README.md ]];then
     cd ${p[38]}/lighthouse;make clean;cargo clean                                                                                                             # clean compile dirs

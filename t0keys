@@ -3,22 +3,22 @@
 source /home/eth/eth2/t1
 
 if [[ $cunm = hrv-zen ]];then
-  cli="eth2.0-deposit-cli/validator_keys"
+  cli="${p[9]}/eth2.0-deposit-cli/$(basename ${p[100]})"
   bs1="/media/eth/cs1"
   bs2="/media/eth/cs2"
-  cs1="$bs1/validator_keys"
-  cs2="$bs2/validator_keys"
+  cs1="$bs1/$(basename ${p[100]})"
+  cs2="$bs2/$(basename ${p[100]})"
   lng="spanish"
   chi="mainnet"
   if [[ $chi = mainnet ]];then nmv=18;else nmv=3;fi 
-  if [[ -d ${p[9]}/$D && $(ls -A ${p[9]}/$D) ]];then
+  if [[ -d ${p[100]} && $(ls -A ${p[100]} 2>${p[3]}) ]];then
     swu 'CHAVES ESTAO PRONTAS'
-  elif [[ -d ${p[9]}/$cli && $(ls -A ${p[9]}/$cli) ]];then
+  elif [[ -d $cli && $(ls -A $cli 2>${p[3]}) ]];then
     if [[ -d $bs1 ]];then
       if [[ -d $cs1 ]];then
         swu "ARQUIVO OFFLINE $cs1 JA EXISTE"
       else
-        cp -R ${p[9]}/$cli $cs1
+        cp -R $cli $cs1
         sex "chown -R eu:eu $cs1"
         sex "chmod 755 $cs1"
         sex "chmod 644 $cs1/*"
@@ -30,7 +30,7 @@ if [[ $cunm = hrv-zen ]];then
       if  [[ -d $cs2 ]];then
         swu "ARQUIVO OFFLINE $cs2 JA EXISTE"
       else
-        cp -R ${p[9]}/$cli $cs2
+        cp -R $cli $cs2
         sex "chown -R eu:eu $cs2"
         sex "chmod 755 $cs2"
         sex "chmod 644 $cs2/*"
@@ -38,10 +38,10 @@ if [[ $cunm = hrv-zen ]];then
     else
       swu "ARQUIVO OFFLINE $bs2 NAO ESTA MONTADO"
     fi
-    cp -R ${p[9]}/$cli ${p[9]}
+    cp -R $cli ${p[9]}
     swu 'CHAVES FORAM ARQUIVADAS - VERIFICAR AQUIVO OFFLINE'
-  elif [[ -f ${p[9]}/eth2.0-deposit-cli/README.md ]];then
-    cd ${p[9]}/eth2.0-deposit-cli
+  elif [[ -f $(dirname $cli)/README.md ]];then
+    cd $(dirname $cli)
     swb "PARA GERAR $nmv NOVAS CHAVES CHAIN $chi"
     swn "STORE($K)"
     swb "PARA GERAR $nmv NOVAS CHAVES CHAIN $chi"
@@ -52,8 +52,8 @@ if [[ $cunm = hrv-zen ]];then
     swu 'INSTALAR SCRIPT CHAVES'
     cex 'apt install python3-pip python3-testresources git -y'
     cd ${p[9]}
-    git clone https://github.com/ethereum/eth2.0-deposit-cli.git
-    cd ${p[9]}/eth2.0-deposit-cli
+    git clone https://github.com/ethereum/$(basename $(dirname $cli)).git
+    cd $(dirname $cli)
     cex './deposit.sh install'
     swu 'para GERAR CHAVES executar de novo - OFFLINE'
   fi
