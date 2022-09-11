@@ -12,9 +12,8 @@ if [[ $cunm = $znm2 || $cunm = $vnm1 ]];then                                    
     swu 'RUST NEEDS';cex 'apt install curl build-essential gcc make git g++ cmake pkg-config llvm-dev libclang-dev clang libssl-dev libudev-dev perl yasm -y' # rust dependencies
     swu 'RUST INSTALL';cd ${p[9]};curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh;source "$HOME/.cargo/env"
   fi
-  t6 luc $1                                                                                                                                                   # lighthouse upgrade/compile
+  t6 luc $1;t6 lpi                                                                                                                                            # cc compile/propagate/install
 fi
-t6 lpi                                                                                                                                                        # propagate & install lighthouse
 if [[ $cunm = $znm1 || -f $(pjp 4 71).service ]];then                                                                                                         # cc not here
   if [[ -f $(pjp 4 71).service ]];then swu "cc ja instalado";else swu 'cc NAO DEVE SER INSTALADO AQUI';fi
 else
@@ -78,7 +77,11 @@ if [[ $cunm != $cuvc || -f ${p[10]}/vc_lock ]];then                             
 else
   # external beacon-node before MERGE
   # https://1q1s6o6cB6Jysu7KKlbLUYiOdAM:8974468780164028652df958a69fbd30@eth2-beacon-mainnet.infura.io
-  epcc=" --beacon-nodes http://$zip4:5052,http://$zip3:5052"                                                                                                  # cc order
+  if [[ $cust = hrv ]];then                                                                                                                                   # cc order
+    epcc=" --beacon-nodes http://$zip4:5052,http://$zip3:5052"
+  else
+    epcc=" --beacon-nodes http://$vip1:5052"
+  fi
   othe=''
   othe="$othe --suggested-fee-recipient ${p[99]}"                                                                                                             # vc level fees
   # othe="$othe --monitoring-endpoint https://beaconcha.in/api/v1/client/metrics?apikey=$B&machine=$(snc $cunm)"
@@ -90,9 +93,7 @@ else
   fi
   if [[ ! -f ${p[10]}/vc_lock && -f ${p[10]}/vc_keys                           ]];then swn "\nDISABLE VC ->\t$(vos)";touch ${p[10]}/vc_lock;fi                # vc so pode correr num servidor
   if [[   -f ${p[10]}/vc_lock && -f ${p[10]}/vc_keys && ! -f ${p[10]}/vc_slash ]];then
-    sex "mkdir -p ${p[17]}";cmw ${p[17]} 755 $meeu
-    if [[ -f ${p[9]}/$(basename ${p[31]}) ]];then swu 'INIT SLASH';sis eth3;else swb 'NAO HA SLASH (IMPORTANTE)';fi                                           # init slash db
-    sex "chown -R eth3:eth3 ${p[17]}";cmw ${p[17]} 700 eth3
+    sex "mkdir -p ${p[17]}";cmw ${p[17]} 755 $meeu;sis ${p[9]}/$(basename ${p[31]});sex "chown -R eth3:eth3 ${p[17]}";cmw ${p[17]} 700 eth3
   fi
   if [[ -f ${p[10]}/vc_slash && -f ${p[10]}/vc_lock && -f ${p[10]}/vc_keys ]];then
     swu 'vc CONFIG'

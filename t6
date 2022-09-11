@@ -310,17 +310,17 @@ function vco { vfw 5064 vcapi delete;pde 5064 vcapi       ; }
 function ge  { eop;sex 'ufw reload';cex "$(pjw 64 70)"; }                                                                                                     # enable eth-geth
 function ue  { eop;sex 'ufw reload';cex "$(pjw 64 87)"; }                                                                                                     # enable eth-besu
 function be  { bop;sex 'ufw reload';cex "$(pjw 64 71)"; }                                                                                                     # enable eth-beacon
-function ve  { [[ -f ${p[10]}/vc_lock ]] && return;vop;sex 'ufw reload';cex "$(pjw 64 73)"; }                                                                 # enable eth-validator
+function ve  { vop;sex 'ufw reload';cex "$(pjw 64 73)"; }                                                                                                     # enable eth-validator
 function pe  { pai 9090/tcp 192.168.8.0/24 ${p[74]} ;sex 'ufw reload';cex "$(pjw 64 74)"; }                                                                   # enable prometheus
 function ne  { sex 'ufw reload';cex "$(pjw 64 75)"; }                                                                                                         # enable prometheus-node-exporter
 function fe  { pai 3000/tcp 192.168.8.0/24 grafana  ;sex 'ufw reload';cex "$(pjw 64 76)"; }                                                                   # enable grafana-server
 function me  { pai 18550    192.168.8.0/24 mev-boost;sex 'ufw reload';cex "$(pjw 64 96)"; }                                                                   # enable mev-boost
-function ga  { [[ $(sst ${p[70]}) && -d ${p[18]} ]] && cex "$(pjw 63 70)"; }                                                                                  # start eth-geth
-function ua  { [[ $(sst ${p[87]}) && -d ${p[37]} ]] && cex "$(pjw 63 87)"; }                                                                                  # start eth-besu
-function ba  { [[ $(sst ${p[71]}) && -d ${p[16]} ]] && cex "$(pjw 63 71)"; }                                                                                  # start eth-beacon
+function ga  { [[ -d ${p[18]} && $(sst ${p[70]}) ]] && cex "$(pjw 63 70)"; }                                                                                  # start eth-geth
+function ua  { [[ -d ${p[37]} && $(sst ${p[87]}) ]] && cex "$(pjw 63 87)"; }                                                                                  # start eth-besu
+function ba  { [[ -d ${p[16]} && $(sst ${p[71]}) ]] && cex "$(pjw 63 71)"; }                                                                                  # start eth-beacon
 function va  {
-  [[ $(sst ${p[73]}) && -f ${p[10]}/vc_keys ]] || return                                                                                                      # cannot start eth-validator
-  if [[ -f ${p[10]}/vc_lock ]];then [[ -f ${p[9]}/$(basename ${p[31]}) ]] && sis eth3;else cex "$(pjw 63 73)";rm ${p[10]}/vc_slash;fi                         # start eth-validator
+  v2t && [[ -f ${p[10]}/vc_keys && $(sst ${p[73]}) ]] || return                                                                                               # cannot start eth-validator
+  if [[ -f ${p[10]}/vc_lock ]];then sis ${p[9]}/$(basename ${p[31]});else cex "$(pjw 63 73)";rm -f ${p[10]}/vc_slash;fi                                       # start eth-validator
 }
 function pa  { [[ $(sst ${p[74]}) ]] && cex "$(pjw 63 74)"; }                                                                                                 # start prometheus
 function na  { [[ $(sst ${p[75]}) ]] && cex "$(pjw 63 75)"; }                                                                                                 # start prometheus-node-exporter
@@ -331,7 +331,7 @@ function wa  { if [[ $(pex 'ufw status'|grep -i inactive) ]];then yex 'ufw enabl
 function gp  { [[ $(sst ${p[70]} loaded) ]] && cex "$(pjw 62 70)"; }                                                                                          # stop eth-geth
 function up  { [[ $(sst ${p[87]} loaded) ]] && cex "$(pjw 62 87)"; }                                                                                          # stop eth-besu
 function bp  { [[ $(sst ${p[71]} loaded) ]] && cex "$(pjw 62 71)"; }                                                                                          # stop eth-beacon
-function vp  { [[ -f ${p[10]}/vc_slash ]] && return;cex "$(pjw 62 73)";touch ${p[10]}/vc_slash; }                                                             # stop eth-validator
+function vp  { [[ $(sst ${p[73]} loaded) ]] && cex "$(pjw 62 73)";touch ${p[10]}/vc_slash; }                                                                  # stop eth-validator
 function pp  { [[ $(sst ${p[74]} loaded) ]] && cex "$(pjw 62 74)"; }                                                                                          # stop prometheus
 function np  { [[ $(sst ${p[75]} loaded) ]] && cex "$(pjw 62 75)"; }                                                                                          # stop prometheus-node-exporter
 function fp  { [[ $(sst ${p[76]} loaded) ]] && cex "$(pjw 62 76)"; }                                                                                          # stop grafana-server
@@ -339,7 +339,7 @@ function mp  { [[ $(sst ${p[96]} loaded) ]] && cex "$(pjw 62 96)"; }            
 function gd  { cex "$(pjw 65 70)";eco;sex 'ufw reload'; }                                                                                                     # disable eth-geth
 function ud  { cex "$(pjw 65 87)";eco;sex 'ufw reload'; }                                                                                                     # disable eth-besu
 function bd  { cex "$(pjw 65 71)";bco;sex 'ufw reload'; }                                                                                                     # disable eth-beacon
-function vd  { [[ -f ${p[10]}/vc_slash ]] || return;cex "$(pjw 65 73)";vco;sex 'ufw reload';touch ${p[10]}/vc_lock; }                                         # disable eth-validator
+function vd  { cex "$(pjw 65 73)";vco;sex 'ufw reload';touch ${p[10]}/vc_lock; }                                                                              # disable eth-validator
 function pd  { [[ $(sst ${p[74]} loaded) ]] || return;cex "$(pjw 65 74)";pai 9090/tcp 192.168.8.0/24 ${p[74]}  delete;sex 'ufw reload'; }                     # disable prometheus
 function nd  { [[ $(sst ${p[75]} loaded) ]] || return;cex "$(pjw 65 75)"; }                                                                                   # disable prometheus-node-exporter
 function fd  { [[ $(sst ${p[76]} loaded) ]] || return;cex "$(pjw 65 76)";pai 3000/tcp 192.168.8.0/24 grafana   delete;sex 'ufw reload'; }                     # disable grafana-server
@@ -362,11 +362,8 @@ function ah2 {                 uhx;swn "\n\n$znm2";cpe                ;bhx      
 function ah3 {                 uhx                ;cpx;swn "\n\n$znm3";bhs;cpe            ;ehx; }
 function ah4 {                 uhx                ;cpx                ;bhx;swn "\n\n$znm4";ghs;bhs;cpe; }
 function lhs {
-  if [[ $cunm = $cuvc ]];then                                                                                                                                 # get master/slave cc ip
-    local e=$(nu0 $(ss1 ${p[73]} nodes "[^$1 ]"|sed -n ${p[92]}))
-  else
-    local e=$(ssh $(snc $cuvc) "export H=$H;~/eth2/t6 cci $1")
-  fi;[[ $e -gt 0 ]] || return;local i=$(sci)                                                                                                                  # cc ip not found
+  if v2t;then local e=$(nu0 $(ss1 ${p[73]} nodes "[^$1 ]"|sed -n ${p[92]}));else local e=$(ssh $(snc $cuvc) "export H=$H;~/eth2/t6 cci $1");fi                # get master/slave cc ip
+  [[ $e -gt 0 ]] || return;local i=$(sci)                                                                                                                     # cc ip not found
   if [[ $i -eq $e ]];then                                                                                                                                     # get connected ec ip
     local n=$(nu0 $(ss1 ${p[71]} execution-endpoint '[^ ]'|sed -n ${p[92]}))
   else
@@ -408,7 +405,7 @@ function v1t { [[ $cunm = $(vos)          ]]; }                                 
 function v2t { [[ $cunm = $cuvc           ]]; }                                                                                                               # vc current test
 function vps { local f=${p[9]}/$(basename ${p[31]});sex "cp ${p[31]} ${p[9]}";cmw $f 666 eth;scp $f $(snc $cuvc):~;sex "rm $f"; }                             # prep slash db
 function tvc {
-  swn "${p[86]}";v2t &&   v0t && swn "0\t\tset cuvc=$(vos)\n${p[84]}\n${p[85]}";v2t && ! v0t && swn "${p[84]}";v0t || swn "${p[85]}"                          # show agenda/instructions
+  swn "${p[86]}";v2t && v0t && swn "0\t\tset cuvc=$(vos)\n${p[84]}\n${p[85]}";v2t && ! v0t && swn "${p[84]}";v0t || swn "${p[85]}"                            # show agenda/instructions
   if v1t && v0t;then swn "TRANSFERIR VC -> $cuvc (SIM/nao)?";else return;fi;local rsp=nao;read rsp
   if [[ $rsp = SIM && ! -f ${p[10]}/vc_slash && ! -f ${p[10]}/vc_lock && -f ${p[10]}/vc_keys ]];then vp;vd;swu "COPY SLASH -> $cuvc";vps;fi                   # vc stop/disable & prep slash db
 }
