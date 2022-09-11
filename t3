@@ -71,6 +71,7 @@ else
 	WantedBy=multi-user.target
 	EOF
   sex "mv ${p[71]}.service $(pjp 4 71).service";cmw $(pjp 4 71).service 644
+  if [[ -f jwt ]];then sjw eth2 ${p[16]};else swb "needs ${p[16]}/jwt secret";fi
 fi
 if [[ $cunm != $cuvc || -f ${p[10]}/vc_lock ]];then                                                                                                           # vc not here
   if [[ -f $(pjp 4 73).service ]];then swu "vc ja instalado";else swu 'vc NAO PODE SER INSTALADO AQUI';fi

@@ -60,7 +60,7 @@ p[34]='/etc/hosts'                                                              
 p[35]='/etc/ssh/ssh_config.d/ztc.conf'                                                                                                                        # ssh config
 p[36]='/etc/environment'                                                                                                                                      # system environment
 p[37]='/var/lib/javaethereum';[[ $cunm = $znm4 ]] && p[37]='/sata/javaethereum'                                                                               # el data
-p[38]='/sata/eth'                                                                                                                                             # cl compile location
+p[38]='/sata/eth';[[ $cunm = $vnm1 ]] && p[38]=${p[9]}                                                                                                        # cl compile location
 
 # sed/grep scripts
 p[40]='s%^ *#*NTP=.*$%NTP=192.168.8.28 ntp02.oal.ul.pt ntp04.oal.ul.pt time.google.com time.cloudflare.com time.facebook.com%i'                               # my time servers
@@ -225,8 +225,9 @@ function pai { local e="allow from $2 to any port ${1/\// proto }";if [[ $4 ]];t
 function pae { local e="allow $1"                                 ;if [[ $3 ]];then nex "ufw $3 $e";else nex "ufw $e comment $2";fi; }                        # allow prt
 function ple { local e="limit $1"                                 ;if [[ $3 ]];then nex "ufw $3 $e";else nex "ufw $e comment $2";fi; }                        # limit prt (<6 within 30s)
 function sis { sex "mv ${p[9]}/$(basename ${p[31]}) ${p[17]}";[[ -f ${p[31]} ]] && touch ${p[10]}/vc_slash;cmw ${p[31]} 600 $1; }                             # init slash db
-function snc { echo ${1/[a-z]*-/}|tr -d '[ao]'; }                                                                                                             # get small server name
+function snc { if [[ $cust = hrv ]];then echo ${1/[a-z]*-/}|tr -d '[ao]';else echo $1;fi; }                                                                   # get small server name
 function vos { if [[ $cust = hrv ]];then if [[ $cuvc = $znm3 ]];then echo $znm4;else echo $znm3;fi;else echo $vnm1;fi; }                                      # get other vc server name
+function sjw { [[ -d $2 ]] || return;sex "cp jwt $2";cmw $2/jwt 600 $1; }                                                                                     # install jwt
 function unv {
   local vuel=${1:-22.7.2};curl -LO https://hyperledger.jfrog.io/artifactory/besu-binaries/besu/$vuel/besu-$vuel.tar.gz;sha256sum besu-$vuel.tar.gz            # download besu binaries
   swn "INSTALAR BESU $vuel (SIM/nao)?";local rsp=nao;read rsp;[[ $rsp = SIM ]] || return                                                                      # install (Sim/nao)?

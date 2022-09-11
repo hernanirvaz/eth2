@@ -63,7 +63,7 @@ cc1 ${p[26]} "s%^ *${p[1]}%# ${p[1]}%";cc2 ${p[26]} "${p[54]}";cmw ${p[26]} 644 
 [[ -x ${p[27]} ]] && sex "chmod -x ${p[27]}"                                                                                                                  # motd overlayroot unexecute
 nex "${p[60]} daemon-reload";sudo dpkg-reconfigure -plow unattended-upgrades                                                                                  # unattended upgrades
 if [[ $cunm = $znm1 || $cunm = $znm4 || $cunm = $vnm1 ]];then                                                                                                 # ec here
-  swu 'INSTALAR GETH';sex 'add-apt-repository -y ppa:ethereum/ethereum';sex 'apt update -y';cex 'apt install ethereum -y'                                     # geth execution client needs
+  swu 'INSTALAR GETH';t6 jwt;sex 'add-apt-repository -y ppa:ethereum/ethereum';sex 'apt update -y';cex 'apt install ethereum -y'                              # geth execution client needs
   sex "mkdir -p ${p[18]}/geth";sau eth1;cmw ${p[18]} 755 eth1;cmw ${p[18]}/geth 700 eth1                                                                      # create dir & user for ec
   maxp=50                                                                                                                                                     # default
   pp2p=30303                                                                                                                                                  # default
@@ -87,7 +87,7 @@ if [[ $cunm = $znm1 || $cunm = $znm4 || $cunm = $vnm1 ]];then                   
 	WantedBy=multi-user.target
 	EOF
   sex "mv ${p[70]}.service $(pjp 4 70).service";cmw $(pjp 4 70).service 644
-  if [[ -f jwt ]];then sex "cp jwt ${p[18]}/geth";cmw ${p[18]}/geth/jwt 600 eth1;else swb "needs ${p[18]}/geth/jwt secret";fi
+  if [[ -f jwt ]];then sjw eth1 ${p[18]}/geth;else swb "needs ${p[18]}/geth/jwt secret";fi
   swu 'INSTALAR BESU';sex 'apt install default-jdk libjemalloc-dev -y';cc2 ${p[36]} "${p[88]}";cmw ${p[36]} 644 root                                          # besu execution client needs
   sex "mkdir -p ${p[37]}/data";sau eth1;cmw ${p[37]} 755 eth1;cmw ${p[37]}/data 700 eth1                                                                      # create dir & user for ec
   unv                                                                                                                                                         # download/install besu binaries
@@ -119,7 +119,7 @@ if [[ $cunm = $znm1 || $cunm = $znm4 || $cunm = $vnm1 ]];then                   
 	WantedBy=multi-user.target
 	EOF
   sex "mv ${p[87]}.service $(pjp 4 87).service";cmw $(pjp 4 87).service 644
-  if [[ -f jwt ]];then sex "cp jwt ${p[37]}/data";cmw ${p[37]}/data/jwt 600 eth1;else swb "needs ${p[37]}/data/jwt secret";fi
+  if [[ -f jwt ]];then sjw eth1 ${p[37]}/data;else swb "needs ${p[37]}/data/jwt secret";fi
 fi
 swn 'sudo netplan apply'
 swn 'AND reboot'

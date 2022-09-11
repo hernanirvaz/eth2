@@ -391,7 +391,7 @@ function nrs { nex 'netplan apply';dpa; }                                       
 function lcp { local f=$1;shift;[[ -x $f ]] && until [[ $# -lt 1 ]];do if [[ $1 = $(snc $cunm) ]];then lci $f;else scp $f $1:${p[9]};fi;shift;done; }         # propagate lighthouse
 function lci { [[ -x $1 && ! -d $1      ]] || return;sex "mv ${p[0]}/lighthouse ${p[0]}/lighthouse.sav";sex "cp $1 ${p[0]}"; }                                # lighthouse binary install
 function lmd { [[ -x ${p[0]}/lighthouse ]] || return;cmw ${p[0]}/lighthouse 755 eth;swb 'LIGHT INSTALADO'; }                                                  # lighthouse set permissions
-function lpi { [[ $cunm = $znm2 ]] && lcp $1 ztc2 ztc3 ztc4;lci ${p[9]}/lighthouse;sex "rm ${p[9]}/lighthouse";lmd; }                                         # lighthouse propagate/install
+function lpi { [[ $cunm = $znm2 ]] && lcp $1 ztc2 ztc3 ztc4;[[ $cunm = $vnm1 ]] && lcp $1 $vnm1;lci ${p[9]}/lighthouse;sex "rm ${p[9]}/lighthouse";lmd; }     # lighthouse propagate/install
 function luc {                                                                                                                                                # lighthouse upgrade/compile
   if [[ -f ${p[38]}/lighthouse/README.md ]];then
     cd ${p[38]}/lighthouse;make clean;cargo clean                                                                                                             # clean compile dirs
@@ -401,6 +401,7 @@ function luc {                                                                  
   git fetch;if [[ $(echo $2|egrep 'v[0-9]+\.[0-9]+\.[0-9]+') ]];then m=$2;else m=$(git describe --tags $(git rev-list --tags --max-count=1));fi               # fetch (vX.X.X/last) version
   git checkout $m;swu 'VAI COMPILAR LIGHT';make;[[ $? -eq 0 && -x $1 ]] || swb 'ERRO COMPILAR ERRO'                                                           # checkout stable version & compile
 }
+function jw0 { [[ -f jwt ]] && return;openssl rand -hex 32|tr -d '\n'|tee jwt 1>${p[3]}; }                                                                    # create jwt file
 function ruv { if [[ $1 ]];then swn "RUST OVERRIDE SET $1";rustup override set $1;else swn 'RUST UPDATE';rustup update stable;fi; }                           # set/update rust version
 function v0t { [[ $(sst ${p[73]} running) ]]; }                                                                                                               # vc running test
 function v1t { [[ $cunm = $(vos)          ]]; }                                                                                                               # vc other   test
@@ -412,17 +413,7 @@ function tvc {
   if [[ $rsp = SIM && ! -f ${p[10]}/vc_slash && ! -f ${p[10]}/vc_lock && -f ${p[10]}/vc_keys ]];then vp;vd;swu "COPY SLASH -> $cuvc";vps;fi                   # vc stop/disable & prep slash db
 }
 
-function oce { cft || return;cp $(pjp 4 71).service ${p[71]}.sav;sed 's%--eth1-endpoints *\([^ ]*:8545\),\([^ ]*:8545\)[^ ]*%--eth1-endpoints \2,\1%' ${p[71]}.sav > $(pjp 4 71).service;cmw $(pjp 4 71).service 644 eth; }
-function jw0 { openssl rand -hex 32|tr -d '\n'|tee jwt 1>${p[3]};[[ -f jwt ]] && jw4; }
-function jw1 { sex "cp jwt $2";cmw $2/jwt 600 $1; }
-function jw3 { scp jwt $1:${p[9]};ssh $1 "export H=$H;eth2/t6 jwt"; }
-function jw4 { [[ $cust = hrv ]] || return;jw3 ztc2;jw3 ztc3;jw3 ztc4; }
-function sr1 { cp $(pjp 4 71).service ${p[71]}.sav;sed "s%--eth1-endpoints  *\([^ ]*\):8545,[^ ]*%--execution-endpoint \1:8551 --execution-jwt ${p[16]}/jwt --suggested-fee-recipient ${p[99]}%" ${p[71]}.sav > $(pjp 9 71).jwt;cmw $(pjp 9 71).jwt 644 eth; }
-function sr3 { cp $(pjp 4 73).service ${p[73]}.sav;sed "s%--beacon-nodes  *\([^ ]*\)%--beacon-nodes \1 --suggested-fee-recipient ${p[99]}%" ${p[73]}.sav > $(pjp 9 73).jwt;cmw $(pjp 9 73).jwt 644 eth; }
-[[ $1 = oce ]] && { oce; }
-[[ $1 = jwt ]] && { [[ $cunm = $znm1 || $cunm = $vnm1 ]] && jw0;if [[ -f jwt ]];then [[ -d ${p[18]}/geth ]] && jw1 eth1 ${p[18]}/geth;[[ -d ${p[37]} ]] && jw1 eth1 ${p[37]};[[ -d ${p[16]} ]] && jw1 eth2 ${p[16]};sex "rm jwt";fi; }
-[[ $1 = srv ]] && { [[ -f $(pjp 4 71).service ]] && sr1;[[ -f $(pjp 4 73).service ]] && sr3; }
-
+[[ $1 = jwt ]] && { [[ $cunm = $znm1 || $cunm = $vnm1 ]] && jw0;if [[ -f jwt ]];then sjw eth1 ${p[18]}/geth;sjw eth1 ${p[37]}/data;sjw eth2 ${p[16]};fi; }
 [[ $1 = lpi ]] && { lpi ${p[9]}/.cargo/bin/lighthouse; }
 [[ $1 = luc ]] && { luc ${p[9]}/.cargo/bin/lighthouse $2; }
 [[ $1 = ruv ]] && { ruv $2; }
