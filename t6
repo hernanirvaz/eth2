@@ -263,7 +263,7 @@ function cpe {                                                                  
   local g=0;for g in $(sensors 2>${p[3]}|sed -n "${p[94]}");do ((n+=1));l=$(nu1 $l$g 1);done                                                                  # average temperature sensors
   [[ $d ]] && d="throttled: $d";[[ $e ]] && e="normal: $e";[[ $d$e ]] && swn "TEMP $(nu5 $l/$((n==0?1:n)) 1 2 %5.1fC) $dt $d $e"                              # TEMP cpu info
   [[ $1 = p ]] && return
-  if [[ $(cat ${p[6]}) -eq 0 ]];then e=off;else e=on;fi;if [[ $(cat ${p[7]}) -eq 1 ]];then d=off;else d=on;fi                                                 # usb/cpu current state
+  if [[ $(cat ${p[6]} 2>${p[3]}) -eq 0 ]];then e=off;else e=on;fi;if [[ $(cat ${p[7]} 2>${p[3]}) -eq 1 ]];then d=off;else d=on;fi                             # usb/cpu current state
   m="INFO$(printf '%3i' $(fs6)) $(printf '%3i' $(fs5)) $dt"                                                                                                   # usb/cpu erros count
   m="$m usb $e, turbo $d, ufw $(wst $(pex 'ufw status'|grep Status:))"                                                                                        # usb/cpu/ufw info
   m="$m, uptime:$(uptime|sed 's%[0-9]*:[0-9]*:[0-9]*%%;s%[0-9]* users*,%%;s% average\([^,]*\).*%\1%;s%  *% %g')";swn "$m"                                     # uptime/load info
