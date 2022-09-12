@@ -4,16 +4,17 @@ source /home/eth/eth2/t1
 
 function hlp { swn "\n\ninstall consencus client with lighthouse-${1:-stable} source using rust-${2:-stable}\n"; }
 
-if [[ $cunm = $znm2 || $cunm = $vnm1 ]];then                                                                                                                  # rust here
+if [[ $cunm = $znm2 || $cunm = $vnm1 ]];then
   hlp
   if [[ -x ${p[9]}/.cargo/bin/rustup ]];then
-    t6 ruv $2                                                                                                                                                 # set/update rust version
+    t6 ruv $2                                                                                                                                                 # rust update
   else
     swu 'RUST NEEDS';cex 'apt install curl build-essential gcc make git g++ cmake pkg-config llvm-dev libclang-dev clang libssl-dev libudev-dev perl yasm -y' # rust dependencies
-    swu 'RUST INSTALL';cd ${p[9]};curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh;source "$HOME/.cargo/env"
+    swu 'RUST INSTALL';cd ${p[9]};curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh;source "$HOME/.cargo/env"                                    # rust install
   fi
-  t6 luc $1;t6 lpi                                                                                                                                            # cc compile/propagate/install
+  [[ -f ${p[9]}/.cargo/bin/lighthouse ]] || t6 luc $1                                                                                                         # cc compile
 fi
+t6 lpi                                                                                                                                                        # cc propagate/install
 if [[ $cunm = $znm1 || -f $(pjp 4 71).service ]];then                                                                                                         # cc not here
   if [[ -f $(pjp 4 71).service ]];then swu "cc ja instalado";else swu 'cc NAO DEVE SER INSTALADO AQUI';fi
 else
