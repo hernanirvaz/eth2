@@ -52,7 +52,7 @@ function sf2 { echo ${2:-24}; }                                                 
 function smn { local g=${1:-24};echo $((g>360?360:g<24?24:g)); }                                                                                              # get max/min seconds to future (12x30/24)
 function sfn { local g=$(($(bss $1)-$(date +%s)));echo $((g>3?g:3)); }                                                                                        # get min seconds to future
 function spt { [[ $(date +%s) -ge $(bss $1 6) ]]; }                                                                                                           # ideal position test (based on time)
-function ssf { [[ ${1:-0} -gt 0 ]] || return;local f=$2.s$(stg $1);touch $f;sleep $1s;rm -f $f; }                                                             # sleep with file info
+function ssf { [[ $1 -gt 0 ]] || return;local f=$2.s$(stg $1);touch $f;sleep $1s;rm -f $f; }                                                                  # sleep with file info
 # slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168
 function ssw { while :;do local t=$(sng);if [[ $(sf2 $t) -le ${1:-36} || 24 -ge $(sfn $t) ]];then ssf $(smn $(sfn $t)) $2;else break;fi;done; }               # sleep while small (gap or remaining) time
 function sso {
@@ -216,8 +216,8 @@ function bss { echo $((${2:-0}+$(date -d$(sf1 $1) +%s))); }                     
 function bsc { pex "grep lighthouse.$bpid].*INFO ${p[1]}"|tail -n99|grep Sync\ committee|wc -l; }                                                             # get # committee messages
 # slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168
 function brs {                                                                                                                                                # cc/vc gap restart
-  [[ $(ls ${p[15]}.* 2>${p[3]}) || $(bsc) -gt 0 ]] && return;ssf $3 ${p[15]};local n=${4:-48};[[ $2 = VC ]] && n=60;[[ $2 = RB ]] && n=84;ssw $n ${p[15]}
-  local t=$(sng);local f=${p[15]}.i$(stg);touch $f;local n=0;paf;while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) ${p[15]}
+  [[ $(ls ${p[15]}.* 2>${p[3]}) || $(bsc) -gt 0 ]] && return;ssf ${3:-0} ${p[15]};local n=${4:-48};[[ $2 = VC ]] && n=60;[[ $2 = RB ]] && n=84
+  ssw $n ${p[15]};local t=$(sng);local f=${p[15]}.i$(stg);touch $f;local n=0;paf;while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) ${p[15]}
   if spt $t;then rm $f;nn=$(bv0);snp ${p[71]} $1 $bpri $bprf          ;[[ $2 = VC ]] && sex "$(pjw 62 73)"                                                    # stop cc/conf change?/stop vc?
     if [[ $2 = RB ]];then bro $n $2;sex reboot;else sex "$(pjw 63 71)";[[ $2 = VC ]] && sex "$(pjw 63 73)";ssf 20 ${p[15]};bro $n $2;fi                       # reboot/start cc/vc
   fi;done;rm -f $f
