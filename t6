@@ -363,14 +363,13 @@ function ah3 {                 uhx                ;cpx;swn "\n\n$znm3";bhs;cpe  
 function ah4 {                 uhx                ;cpx                ;bhx;swn "\n\n$znm4";ghs;bhs;cpe; }
 function lhs {
   if v2t;then local e=$(nu0 $(ss1 ${p[73]} nodes "[^$1 ]"|sed -n ${p[92]}));else local e=$(ssh $(snc $cuvc) "export H=$H;~/eth2/t6 cci $1");fi                # get master/slave cc ip
-  [[ $e -gt 0 ]] || return;local i=$(sci)                                                                                                                     # cc ip not found
+  [[ $e -gt 0 ]] || return;local i=$(sci)
   if [[ $i -eq $e ]];then                                                                                                                                     # get connected ec ip
     local n=$(nu0 $(ss1 ${p[71]} execution-endpoint '[^ ]'|sed -n ${p[92]}))
   else
     local n=$(ssh $(snc $(sni $e)) "export H=$H;~/eth2/t6 eci")
-  fi;[[ $n -gt 0 ]] || return                                                                                                                                 # ec ip not found
-  echo -e "\n$(sni $n)";if [[ $i -eq $n ]];then ghs;uhs;cpe;else ssh $(snc $(sni $n)) "export H=$H;~/eth2/t6 ehs";fi                                          # ec historic report summary
-  echo -e "\n$(sni $e)";if [[ $i -eq $e ]];then bhs    ;cpe;else ssh $(snc $(sni $e)) "export H=$H;~/eth2/t6 bhs";fi                                          # cc historic report summary
+  fi;[[ $n -gt 0 ]] || return;    echo -e "\n$(sni $n)";if [[ $i -eq $n ]];then ghs;uhs;    else ssh $(snc $(sni $n)) "export H=$H;~/eth2/t6 ehs";fi          # ec historic report summary
+  [[ $i -eq $e && $i -eq $n ]] || echo -e "\n$(sni $e)";if [[ $i -eq $e ]];then bhs    ;cpe;else ssh $(snc $(sni $e)) "export H=$H;~/eth2/t6 bhs";fi          # cc historic report summary
 }
 function nsh { ${p[68]} list;${p[68]} status;${p[69]} status|sed -n 's%\(Current DNS\).*:%   \1:%ip'; }                                                       # network/dns info
 function wlp { local e="$1";shift;until [[ $# -lt 1 ]];do e="$e\|$1";shift;done;fs2|grep '\[UFW'|if [[ $e ]];then grep -v "$e";else cat;fi; }
