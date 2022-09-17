@@ -3,15 +3,15 @@
 source /home/eth/eth2/t1
 
 if [[ $cunm = hrv-zen ]];then
-  cli="${p[9]}/eth2.0-deposit-cli/$(basename ${p[100]})"
+  cli="${p[9]}/eth2.0-deposit-cli/$(basename ${p[84]})"
   bs1="/media/eth/cs1"
   bs2="/media/eth/cs2"
-  cs1="$bs1/$(basename ${p[100]})"
-  cs2="$bs2/$(basename ${p[100]})"
+  cs1="$bs1/$(basename ${p[84]})"
+  cs2="$bs2/$(basename ${p[84]})"
   lng="spanish"
   chi="mainnet"
   if [[ $chi = mainnet ]];then nmv=18;else nmv=3;fi 
-  if [[ -d ${p[100]} && $(ls -A ${p[100]} 2>${p[3]}) ]];then
+  if [[ -d ${p[84]} && $(ls -A ${p[84]} 2>${p[3]}) ]];then
     swu 'CHAVES ESTAO PRONTAS'
   elif [[ -d $cli && $(ls -A $cli 2>${p[3]}) ]];then
     if [[ -d $bs1 ]];then

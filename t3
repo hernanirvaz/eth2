@@ -73,7 +73,7 @@ else
   sex "mv ${p[71]}.service $(pjp 4 71).service";cmw $(pjp 4 71).service 644
   if [[ -f jwt ]];then sjw eth2 ${p[16]};else swb "needs ${p[16]}/jwt secret";fi
 fi
-if [[ $cunm != $cuvc || -f ${p[10]}/vc_lock ]];then                                                                                                           # vc not here
+if [[ ($cuvc = $nxvc && $cunm != $cuvc) || -f ${p[10]}/vc_lock ]];then                                                                                        # vc not here
   if [[ -f $(pjp 4 73).service ]];then swu "vc ja instalado";else swu 'vc NAO PODE SER INSTALADO AQUI';fi
 else
   # external beacon-node before MERGE
@@ -87,12 +87,12 @@ else
   othe="$othe --suggested-fee-recipient ${p[99]}"                                                                                                             # vc level fees
   # othe="$othe --monitoring-endpoint https://beaconcha.in/api/v1/client/metrics?apikey=$B&machine=$(snc $cunm)"
   sau eth3;cd ${p[9]}
-  if [[ ! -f ${p[10]}/vc_keys && -d ${p[100]} && $(ls -A ${p[100]} 2>${p[3]}) ]];then
+  if [[ ! -f ${p[10]}/vc_keys && -d ${p[84]} && $(ls -A ${p[84]} 2>${p[3]}) ]];then
     swu 'IMPORT KEYS';sex "mkdir -p ${p[10]}";cmw ${p[10]} 755 $meeu
-    swn "STORE($K)\n";lighthouse --datadir ${p[10]} account validator import --directory ${p[100]}                                                            # import keys
+    swn "STORE($K)\n";lighthouse --datadir ${p[10]} account validator import --directory ${p[84]}                                                             # import keys
     [[ -f ${p[17]}/validator_definitions.yml ]] && touch ${p[10]}/vc_keys                                                                                     # check work
   fi
-  if [[ ! -f ${p[10]}/vc_lock && -f ${p[10]}/vc_keys                           ]];then swn "\nDISABLE VC ->\t$(vos)";touch ${p[10]}/vc_lock;fi                # vc so pode correr num servidor
+  if [[ ! -f ${p[10]}/vc_lock && -f ${p[10]}/vc_keys                           ]];then swn "\nDISABLE VC ->\t$cuvc";touch ${p[10]}/vc_lock;fi                 # vc so pode correr num servidor
   if [[   -f ${p[10]}/vc_lock && -f ${p[10]}/vc_keys && ! -f ${p[10]}/vc_slash ]];then
     sex "mkdir -p ${p[17]}";cmw ${p[17]} 755 $meeu;sis ${p[9]}/$(basename ${p[31]});sex "chown -R eth3:eth3 ${p[17]}";cmw ${p[17]} 700 eth3
   fi

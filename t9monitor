@@ -2,7 +2,7 @@
 
 source /home/eth/eth2/t1
 
-if [[ $cunm = $(vos) ]];then
+if [[ $cunm != $cuvc ]];then
   swn "MONITOR NAO DEVE SER INSTALADO AQUI - DEVE FICAR EM $cuvc"
 else
   if [[ -f ${p[2]}/${p[74]}.yml ]];then

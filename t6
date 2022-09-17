@@ -387,7 +387,7 @@ function nrs { nex 'netplan apply';dpa; }                                       
 function lcp { local f=$1;shift;[[ -x $f ]] && until [[ $# -lt 1 ]];do if [[ $1 = $(snc $cunm) ]];then lci $f;else scp $f $1:${p[9]};fi;shift;done; }         # propagate lighthouse
 function lci { [[ -x $1 && ! -d $1      ]] || return;sex "mv ${p[0]}/lighthouse ${p[0]}/lighthouse.sav";sex "cp $1 ${p[0]}"; }                                # lighthouse binary install
 function lmd { [[ -x ${p[0]}/lighthouse ]] || return;cmw ${p[0]}/lighthouse 755 eth;swb 'LIGHT INSTALADO'; }                                                  # lighthouse set permissions
-function lpi { [[ $cunm = $znm2 ]] && lcp $1 ztc2 ztc3 ztc4;[[ $cunm = $vnm1 ]] && lcp $1 $vnm1;lci ${p[9]}/lighthouse;sex "rm ${p[9]}/lighthouse";lmd; }     # lighthouse propagate/install
+function lpi { [[ $cunm = $znm2 ]] && lcp $1 ztc2 ztc3 ztc4;[[ $cunm = $vnm1 ]] && lcp $1 vpsl;lci ${p[9]}/lighthouse;sex "rm ${p[9]}/lighthouse";lmd; }     # lighthouse propagate/install
 function luc {                                                                                                                                                # lighthouse upgrade/compile
   if [[ -f ${p[38]}/lighthouse/README.md ]];then
     cd ${p[38]}/lighthouse;make clean;cargo clean                                                                                                             # clean compile dirs
@@ -399,14 +399,14 @@ function luc {                                                                  
 }
 function jw0 { [[ -f jwt ]] && return;openssl rand -hex 32|tr -d '\n'|tee jwt 1>${p[3]}; }                                                                    # create jwt file
 function ruv { if [[ $1 ]];then swn "RUST OVERRIDE SET $1";rustup override set $1;else swn 'RUST UPDATE';rustup update stable;fi; }                           # set/update rust version
-function v0t { [[ $(sst ${p[73]} running) ]]; }                                                                                                               # vc running test
-function v1t { [[ $cunm = $(vos)          ]]; }                                                                                                               # vc other   test
-function v2t { [[ $cunm = $cuvc           ]]; }                                                                                                               # vc current test
-function vps { local f=${p[9]}/$(basename ${p[31]});sex "cp ${p[31]} ${p[9]}";cmw $f 666 eth;scp $f $(snc $cuvc):~;sex "rm $f"; }                             # prep slash db
+function v0t { [[ $(sst ${p[73]} running) ]]; }                                                                                                               # vc running  test
+function v1t { [[ $cunm = $nxvc ]]; }                                                                                                                         # vc next     test
+function v2t { [[ $cunm = $cuvc ]]; }                                                                                                                         # vc current  test
+function v3t { [[ $cuvc = $nxvc ]]; }                                                                                                                         # vc transfer test
+function vps { local f=${p[9]}/$(basename ${p[31]});sex "cp ${p[31]} ${p[9]}";cmw $f 666 eth;scp $f $(snc $nxvc):~;sex "rm $f"; }                             # prep slash db
 function tvc {
-  swn "${p[86]}";v2t && v0t && swn "0\t\tset cuvc=$(vos)\n${p[84]}\n${p[85]}";v2t && ! v0t && swn "${p[84]}";v0t || swn "${p[85]}"                            # show agenda/instructions
-  if v1t && v0t;then swn "TRANSFERIR VC -> $cuvc (SIM/nao)?";else return;fi;local rsp=nao;read rsp
-  if [[ $rsp = SIM && ! -f ${p[10]}/vc_slash && ! -f ${p[10]}/vc_lock && -f ${p[10]}/vc_keys ]];then vp;vd;swu "COPY SLASH -> $cuvc";vps;fi                   # vc stop/disable & prep slash db
+  v3t && return;swn "${p[86]}";if v2t && v0t;then swn "TRANSFERIR VC -> $nxvc (SIM/nao)?";else return;fi;local rsp=nao;read rsp
+  if [[ $rsp = SIM && ! -f ${p[10]}/vc_slash && ! -f ${p[10]}/vc_lock && -f ${p[10]}/vc_keys ]];then vp;vd;swu "COPY SLASH -> $nxvc";vps;fi                   # vc stop/disable & prep slash db
 }
 
 [[ $1 = jwt ]] && { [[ $cunm = $znm1 || $cunm = $vnm1 ]] && jw0;if [[ -f jwt ]];then sjw eth1 ${p[18]}/geth;sjw eth1 ${p[37]}/data;sjw eth2 ${p[16]};fi; }
@@ -626,7 +626,7 @@ if [[ ! $1 ]];then
   m="$m\nclr\t\tcc remove long-lived parms"
   m="$m\ncce\t\tcc change ec server ($znm1/$znm4)"
   m="$m\nvcc\t\tvc switch cc server order"
-  m="$m\ntvc\t\tvc transfer ($(vos) -> $cuvc)"
+  m="$m\ntvc\t\tvc transfer ($cuvc -> $nxvc)"
   m="$m\nws\t\tfirewall status"
   m="$m\nwa\t\tfirewall arranca"
   m="$m\nwpr\t\tfirewall para"
