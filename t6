@@ -25,7 +25,7 @@ function pt2 { until [[ $# -le 1 || $1 =~ ^[0-9]+$                     ]];do shi
 function pt3 { until [[ $# -le 1 || $1 =~ ^[a-z]+$                     ]];do shift;done;echo $1; }                                                            # string     test
 function jsh { cex "journalctl --no-hostname --no-full -f $1"; }                                                                                              # my journal   format
 function spc { nn=$2;cp ${p[4]}/$1.service ${p[9]}/$1.sav;sed "s%peers\([ =]*\)[0-9]*%peers\1$2%" ${p[9]}/$1.sav > ${p[4]}/$1.service; }                      # service configuration change
-function snp { local n=$(($2+nn));(($2!=0&&n>=$3&&n<=$4)) && spc $1 $n;sex "${p[62]} $1";sex "${p[60]} daemon-reload"        ; }                              # service peers change/stop/reload
+function snp { local n=$(($2+nn));(($2!=0&&n>=$3&&n<=$4)) && spc $1 $n;sex "${p[62]} $1";sex "${p[60]} daemon-reload"; }                                      # service peers change/stop/reload
 function srt { [[ -f ${p[5]} ]]; }                                                                                                                            # system needs reboot test
 function sra { if srt;then echo $(($(date +%s)-$(date -r ${p[5]} +%s)));else echo 0;fi }                                                                      # system reboot age (secounds)
 function sot { [[ $(sra) -ge $((60*60*${1:-24})) ]]; }                                                                                                        # 24 hours old system reboot test
@@ -118,13 +118,13 @@ function bw0 { echo $((10*z1))                                                  
 function bf0 { echo $((90*z3))                                                         ; }                                                                    # get numerator general errors
 function bi0 { echo $((nd+zk*300+zz*20+zx))                                            ; }                                                                    # get delete day idx
 function bu0 { echo $(((z5>400?$(bz0)/z5:0)+(z2>300?$(bw0)/z2:0)+(z4>999?$(bf0)/z4:0))); }                                                                    # get restart idx
-function bv0 { nu0 $(ss1 ${p[71]} target-peers [0-9]); }                                                                                                      # get configured peers
+function bv0 { nn=$(nu0 $(ss1 ${p[71]} target-peers [0-9])); }                                                                                                # get configured peers
 function bb0 { l0=$(fs0 $bpid] 3600);bl1;bl2;[[ (1 -eq $(bl6 $chrs) && $(bu0) -ge 1) || (1 -eq $(bl6 5) && $(bu0) -ge 5) ]] && ok=BK; }                       # set ok (OK/BK)
 function bbl { cat ${p[11]} 2>${p[3]}|wc -l; }                                                                                                                # get cc       line count
 function bml { cat ${p[12]} 2>${p[3]}|wc -l; }                                                                                                                # get cc-daily line count
 function bfl { grep "BEAC.*$1"    ; }                                                                                                                         # filter cc lines
 function bff { [[ -f ${p[11]} ]] || return;grep "BEAC.*$1" ${p[11]}; }                                                                                        # filter cc log
-function bl0 { dts;ok=OK;if [[ $(sst ${p[71]} running) ]];then bl3;nn=$(bv0);bnn $(fs4 peers:);bb0;blo;else m="BSRV NOT ON $dt";fi; }                         # cc report
+function bl0 { dts;ok=OK;if [[ $(sst ${p[71]} running) ]];then bl3;bv0;bnn $(fs4 peers:);bb0;blo;else m="BSRV NOT ON $dt";fi; }                               # cc report
 function bl1 {                                                                                                                                                # set restart idx vars
   z1=${1:-$(echo "$l0"|grep 'rocessed block'|wc -l)};z2=${2:-$(echo "$l0"|grep 'block received'|wc -l)};z3=${3:-$(echo "$l0"|grep -v ' INFO ' |wc -l)}        # set processed/received blocks,error lines
   z4=${4:-$(echo "$l0"|grep    ' INFO '     |wc -l)};z5=${5:-$(bl7 success)};ok=${6:-OK}                                                                      # set info lines,success/had activities
@@ -146,7 +146,7 @@ function bcc { if bct       ;then echo c;else echo _;fi; }                      
 function bdc { if bht && bst;then echo d;else echo _;fi; }                                                                                                    # get delete cc log day       char
 function bmi { zk=0;zz=0;zx=0;unset v;v[1]=0;unset k;k[0]=0;unset z;z[0]=0;unset x;x[0]=0;unset w;w[0]=0;unset c;c[0]=0;unset a;a[0]=0;bm6; }                 # ini err/cnt/avg penalty arrays
 function bm0 {                                                                                                                                                # cc-daily report
-  [[ -f ${p[11]} ]] || return;bmi;b4=0;b5=$(fs0 reduce|wc -l);dts;nn=$(bv0);bnn $(fs4 peers:);bl2;[[ -f ${p[14]} ]] && bm4                                    # ini vars/arrays
+  [[ -f ${p[11]} ]] || return;bmi;b4=0;b5=$(fs0 reduce|wc -l);dts;bv0;bnn $(fs4 peers:);bl2;[[ -f ${p[14]} ]] && bm4                                          # ini vars/arrays
   l3=$(tail -n$(($(bbl)-v[1])) ${p[11]} 2>${p[3]}|bfl);[[ $l3 ]] && bm1;bm2;bo4;bm5 ${a[$nn]};b7="rm$(bdc)$(bcc)$(date +%w)_peers:"                           # add cc lines & homologous/avg position
 }
 function bm1 {
@@ -202,7 +202,7 @@ function bo4 { [[ ${b2:=0} -eq 0 && -f ${p[11]} ]] && boi;bo3; }                
 function bo5 { l2=$(bff $d1);bo2 $d0;bo3; }                                                                                                                   # set homologous position/avg
 function bo6 { bo1|head -n$((b6>b2?b6:b2<5?5:b2))|tail -n$((b6>0?b6:b2>chrs?chrs:b2<5?5:b2)); }                                                               # homologous report
 function bo7 { bo1|grep $(printf 'node%02i:' $1); }                                                                                                           # get homologous node lines sorted
-function bon { [[ -f ${p[11]} ]] || return;nn=$(pt2 $1 $(bv0));l2=$(bff 23:58);bo7 $nn; }                                                                     # homologous nodes report
+function bon { [[ -f ${p[11]} ]] || return;bv0;nn=$(pt2 $1 $nn);l2=$(bff 23:58);bo7 $nn; }                                                                    # homologous nodes report
 function boa { local g=${1:-$bpri};echo "BO$(printf '%5i' $(bo7 $g|wc -l)) $(printf '%3i' $g)";bo7 $g;((g<bprf)) && boa $((g+bprs)); }                        # recursively show homologous nodes report
 function bh0 {
   [[ -f ${p[11]} ]] || return;tail -n${1:-$chrs} ${p[11]};[[ $1 ]] && return                                                                                  # last cc    report
@@ -218,8 +218,8 @@ function bsc { pex "grep lighthouse.$bpid].*INFO ${p[1]}"|tail -n99|grep Sync\ c
 function brs {                                                                                                                                                # cc/vc gap restart
   [[ $(ls ${p[15]}.* 2>${p[3]}) || $(bsc) -gt 0 ]] && return;ssf ${3:-0} ${p[15]};local n=${4:-48};[[ $2 = VC ]] && n=60;[[ $2 = RB ]] && n=84
   ssw $n ${p[15]};local t=$(sng);local f=${p[15]}.i$(stg);touch $f;local n=0;paf;while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) ${p[15]}
-  if spt $t;then rm $f;nn=$(bv0);snp ${p[71]} $1 $bpri $bprf          ;[[ $2 = VC ]] && sex "$(pjw 62 73)"                                                    # stop cc/conf change?/stop vc?
-    if [[ $2 = RB ]];then bro $n $2;sex reboot;else sex "$(pjw 63 71)";[[ $2 = VC ]] && sex "$(pjw 63 73)";ssf 20 ${p[15]};bro $n $2;fi                       # reboot/start cc/vc
+  if spt $t;then rm $f;bv0;snp ${p[71]} $1 $bpri $bprf                   ;[[ $2 = VC ]] && sex "$(pjw 62 73)"                                                 # stop cc/conf change?/stop vc?
+    if [[ $2 = RB ]];then bro $n $2;gp;sex reboot;else sex "$(pjw 63 71)";[[ $2 = VC ]] && sex "$(pjw 63 73)";ssf 20 ${p[15]};bro $n $2;fi                    # stop ec/reboot|start cc+vc
   fi;done;rm -f $f
 }
 function brh { head -n${1:-0} ${p[11]}r; }                                                                                                                    # new cc head lines
