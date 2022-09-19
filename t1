@@ -233,6 +233,10 @@ function unv {
   swn "INSTALAR BESU $vuel (SIM/nao)?";local rsp=nao;read rsp;[[ $rsp = SIM ]] || return                                                                      # install (Sim/nao)?
   tar xvf besu-$vuel.tar.gz;sex "cp -a besu-$vuel ${p[0]}/besu";sex "chown eth1:eth1 -R ${p[0]}/besu";cmw ${p[0]}/besu 755 eth1                               # install  besu binaries
 }
+function mnv {
+  local f="${p[9]}/go/bin/mev-boost";swu 'INSTALAR MEV-BOOST';[[ -f $f ]] && sex "rm -rf ${p[9]}/go"
+  go install github.com/flashbots/mev-boost@latest;sex "cp $f ${p[0]}";cmw ${p[0]}/mev-boost 755 eth4
+}
 
 p[84]="${p[9]}/validator_keys"
 p[85]="" # NOT USED
