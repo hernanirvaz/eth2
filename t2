@@ -91,7 +91,7 @@ if [[ $cunm = $znm1 || $cunm = $znm4 || $cunm = $vnm1 ]];then                   
   swu 'INSTALAR BESU';sex 'apt install default-jdk libjemalloc-dev -y';cc2 ${p[36]} "${p[88]}";cmw ${p[36]} 644 root                                          # besu execution client needs
   sex "mkdir -p ${p[37]}/data";sau eth1;cmw ${p[37]} 755 eth1;cmw ${p[37]}/data 700 eth1                                                                      # create dir & user for ec
   unv                                                                                                                                                         # download/install besu binaries
-  alow='192.168.8.25,192.168.8.31,192.168.8.34'                                                                                                               # my servers
+  alow='192.168.8.25,192.168.8.28,192.168.8.31,192.168.8.34'                                                                                                  # my servers
   maxp=25                                                                                                                                                     # default
   pp2p=30303                                                                                                                                                  # default
   epec="--miner-enabled=true --miner-coinbase=\"${p[99]}\""                                                                                                   # coincashew guide had these NOT USING
