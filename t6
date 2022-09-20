@@ -408,14 +408,9 @@ function tvc {
   v3t && return;swn "${p[86]}";if v2t && v0t;then swn "TRANSFERIR VC -> $nxvc (SIM/nao)?";else return;fi;local rsp=nao;read rsp
   if [[ $rsp = SIM && ! -f ${p[10]}/vc_slash && ! -f ${p[10]}/vc_lock && -f ${p[10]}/vc_keys ]];then vp;vd;swu "COPY SLASH -> $nxvc";vps;fi                   # vc stop/disable & prep slash db
 }
-function mrs {
-  local f=''
-  for f in $(ls $1/keystore*.json)
-  do curl -sX GET "https://boost-relay.flashbots.net/relay/v1/data/validator_registration?pubkey=0x$(sed -n 's%.*pubkey": "\([^"]*\)".*%\1%p' $f)"
-  done
-}
+function mrs { local f='';for f in $(ls $1 2>${p[3]});do curl -sX GET "${p[85]}$(sed -n "${p[100]}" $f)"|sed -n "${p[101]}";done; }                           # show mev validator registration
 
-[[ $1 = mr  ]] && { mrs ${2:-${p[9]}/validator_keys}; }
+[[ $1 = mr  ]] && { mrs ${2:-${p[9]}/validator_keys/keystore\*.json}; }
 [[ $1 = jwt ]] && { [[ $cunm = $znm1 || $cunm = $vnm1 ]] && jw0;if [[ -f jwt ]];then sjw eth1 ${p[18]}/geth;sjw eth1 ${p[37]}/data;sjw eth2 ${p[16]};fi; }
 [[ $1 = lpi ]] && { lpi ${p[9]}/.cargo/bin/lighthouse; }
 [[ $1 = luc ]] && { luc ${p[9]}/.cargo/bin/lighthouse $2; }

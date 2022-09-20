@@ -239,7 +239,7 @@ function mnv {
 }
 
 p[84]="${p[9]}/validator_keys"
-p[85]="" # NOT USED
+p[85]='https://boost-relay.flashbots.net/relay/v1/data/validator_registration?pubkey=0x'
 p[86]=""
 p[86]="${p[86]}\n1 [$(snc $cuvc)]\tt tvc (vp,vd,cp slash -> $(snc $nxvc))"
 p[86]="${p[86]}\n2\t\tsleep 7m"
@@ -259,6 +259,8 @@ p[96]='eth-mev-boost'
 p[97]="${p[9]}/geth.restart"                                                                                                                                  # el restart control files
 p[98]="${p[9]}/besu.restart"                                                                                                                                  # el restart control files
 p[99]='0x534029B6371dc4453DD750Bc1198181F55C859fe'
+p[100]='s%.*pubkey": "\([^"]*\)".*%\1%p'                                                                                                                      # key validator
+p[101]='s%.*fee_recipient"."\([^"]*\)".*pubkey":"\([^"]*\)".*%pubkey: \2, fee: \1%p'                                                                          # mev validator registration
 
 bpid=$($(pjw 61 71) 2>${p[3]}|sed -n 's%.*PID: *\([0-9]*\).*%\1%p')
 rblk=22238623
