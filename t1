@@ -249,7 +249,7 @@ p[86]="${p[86]}\n5\t\trm lock;t vea\n"
 p[87]='eth-besu'
 p[88]="JAVA_HOME='/usr/lib/jvm/java-11-openjdk-amd64'"                                                                                                        # besu needs java
 p[89]="${p[9]}/besu.log"                                                                                                                                      # ec minute log
-p[90]='  *[A-Z][A-Z][A-Z][A-Z][A-Z]* *'                                                                                                                       # filter log msg (not dump)
+p[90]='s%.*fee_recipient"."\([^"]*\)".*pubkey":"\([^"]*\)".*%pubkey: \2, fee: \1%p'                                                                           # mev validator registration
 p[91]='s%http://192.168.8.\([0-9]*:[0-9]*\)%\1%gp'                                                                                                            # get ip/port from http config
 p[92]='s%.*\.\([0-9]*\):[0-9]*%\1%p'                                                                                                                          # get ip      from http config
 p[93]="${p[9]}/system.restart"                                                                                                                                # system restart control file
@@ -260,7 +260,6 @@ p[97]="${p[9]}/geth.restart"                                                    
 p[98]="${p[9]}/besu.restart"                                                                                                                                  # el restart control files
 p[99]='0x534029B6371dc4453DD750Bc1198181F55C859fe'
 p[100]='s%.*pubkey": "\([^"]*\)".*%\1%p'                                                                                                                      # key validator
-p[101]='s%.*fee_recipient"."\([^"]*\)".*pubkey":"\([^"]*\)".*%pubkey: \2, fee: \1%p'                                                                          # mev validator registration
 
 bpid=$($(pjw 61 71) 2>${p[3]}|sed -n 's%.*PID: *\([0-9]*\).*%\1%p')
 rblk=22238623
