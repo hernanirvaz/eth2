@@ -71,7 +71,7 @@ p[43]='s%^ */* *Unattended-Upgrade::Mail .*$%Unattended-Upgrade::Mail "hernanilr
 p[44]='s%^ *printf%# printf%i'                                                                                                                                # unprint stuff
 p[45]='printf "Welcome to %s %s\\n" "$(uname -n)" "$DISTRIB_DESCRIPTION"'                                                                                     # my header motd
 p[46]='s%timeout *=.*$%timeout=1%i'                                                                                                                           # grub timeout
-p[47]='geth\[\|besu\[\|lighthouse\[\|mev-boost\['                                                                                                             # el|cl|mev clients
+p[47]='geth\['                                                                                                                                                # geth logs
 p[48]='/dnssec-validation/q'                                                                                                                                  # print lines until pattern
 p[49]="s%^ *pool \([^a-z]\)%# pool \1%"                                                                                                                       # ntp del other pool servers
 p[49]="${p[49]};s%^ *#.*restrict.*192.*%restrict 192.168.8.0 mask 255.255.255.0 notrap nomodify%"                                                             # ntp my lan unlimited access
@@ -260,6 +260,10 @@ p[97]="${p[9]}/geth.restart"                                                    
 p[98]="${p[9]}/besu.restart"                                                                                                                                  # el restart control files
 p[99]='0x534029B6371dc4453DD750Bc1198181F55C859fe'
 p[100]='s%.*pubkey": "\([^"]*\)".*%\1%p'                                                                                                                      # key validator
+p[101]='mev-boost\['                                                                                                                                          # mev-boost  logs
+p[102]='besu\[.*|'                                                                                                                                            # besu       logs
+p[103]='lighthouse\['                                                                                                                                         # lighthouse logs
+p[104]="${p[47]}\|${p[102]}\|${p[103]}\|${p[101]}"                                                                                                            # el|cl|mev  logs
 
 bpid=$($(pjw 61 71) 2>${p[3]}|sed -n 's%.*PID: *\([0-9]*\).*%\1%p')
 rblk=22238623
