@@ -229,7 +229,7 @@ function sis { if [[ -f $1 ]];then sex "mv $1 ${p[17]}";swb "NEW ${p[31]}";touch
 function snc { if [[ ${1:0:3} = hrv ]];then echo ${1/[a-z]*-/}|tr -d '[ao]';else case $1 in $vnm1) echo vpsl;;$vnm2) echo vpsm;;$vnm3) echo vpss;;esac;fi; }  # get small server name
 function sjw { [[ -d $2 ]] || return;sex "cp jwt $2";cmw $2/jwt 600 $1; }                                                                                     # install jwt
 function unv {
-  local vuel=${1:-22.7.2};curl -LO https://hyperledger.jfrog.io/artifactory/besu-binaries/besu/$vuel/besu-$vuel.tar.gz;sha256sum besu-$vuel.tar.gz            # download besu binaries
+  local vuel=$1;curl -sLO https://hyperledger.jfrog.io/artifactory/besu-binaries/besu/$vuel/besu-$vuel.tar.gz;sha256sum besu-$vuel.tar.gz                     # download besu binaries
   swn "INSTALAR BESU $vuel (SIM/nao)?";local rsp=nao;read rsp;[[ $rsp = SIM ]] || return                                                                      # install (Sim/nao)?
   tar xvf besu-$vuel.tar.gz;sex "cp -a besu-$vuel ${p[0]}/besu";sex "chown eth1:eth1 -R ${p[0]}/besu";cmw ${p[0]}/besu 755 eth1                               # install  besu binaries
 }
