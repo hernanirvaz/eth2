@@ -9,7 +9,7 @@ if [[ $cunm = $znm2 || $cunm = $vnm2 ]];then                                    
   rlys="$rlys,https://0xb3ee7afcf27f1f1259ac1787876318c6584ee353097a50ed84f51a1f21a323b3736f271a895c7ce918c038e4265918be@relay.edennetwork.io"
   rlys="$rlys,https://0x98650451ba02064f7b000f5768cf0cf4d4e492317d82871bdc87ef841a0743f69f0f1eea11168503240ac35d101c9135@mainnet-relay.securerpc.com"
   rlys="$rlys,https://0xac6e77dfe25ecd6110b8e780608cce0dab71fdd5ebea22a16c0205200f2f8e2e3ad3b71d3499c54ad14d6c21b41a37ae@boost-relay.flashbots.net"
-  trgh=2000                                                                                                                                                   # timeout getHeader         default 950
+  trgh=2500                                                                                                                                                   # timeout getHeader         default 950
   trgp=4000                                                                                                                                                   # timeout getPayload        default 4000
   trrv=6000                                                                                                                                                   # timeout registerValidator default 3000
   epmv='192.168.8.28:18550'                                                                                                                                   # listen-address default "localhost:18550"
