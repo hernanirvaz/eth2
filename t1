@@ -264,6 +264,8 @@ p[101]='mev-boost\['                                                            
 p[102]='besu\[.*|'                                                                                                                                            # besu       logs
 p[103]='lighthouse\['                                                                                                                                         # lighthouse logs
 p[104]="${p[47]}\|${p[102]}\|${p[103]}\|${p[101]}"                                                                                                            # el|cl|mev  logs
+p[105]='imported_delay:'                                                                                                                                      # lighthouse imported delay
+p[106]="s%.*${p[105]} Some(\([0-9]*\)\.\([0-9][0-9]\)[0-9]*s).*%\1\2%p"                                                                                       # get imported delay from intern log
 
 bpid=$($(pjw 61 71) 2>${p[3]}|sed -n 's%.*PID: *\([0-9]*\).*%\1%p')
 rblk=22238623
