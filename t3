@@ -46,11 +46,12 @@ else
   else
     othe="$othe --checkpoint-sync-url https://1q1s6o6cB6Jysu7KKlbLUYiOdAM:8974468780164028652df958a69fbd30@eth2-beacon-mainnet.infura.io"
   fi
-  othe="$othe --prune-payloads false"                                                                                                                         # keep execution payloads -> peers directly
+  othe="$othe --prune-payloads true"                                                                                                                          # fetch/keep execution payloads default true
+  othe="$othe --builder http://192.168.8.28:18550"                                                                                                            # external payload mev-boost
+  othe="$othe --builder-profit-threshold 20000000000000000"                                                                                                   # external payload only if reward >= 0.02 ETH
   othe="$othe --disable-upnp"
   # othe="$othe --slasher"
   # othe="$othe --monitoring-endpoint https://beaconcha.in/api/v1/client/metrics?apikey=$B&machine=$(snc $cunm)"                                              # monitor data for beaconcha.in app
-  # othe="$othe --builder http://192.168.8.28:18550"                                                                                                          # mev-boost
   swu 'CONFIGURE BEACON';sex "mkdir -p ${p[16]}";cmw ${p[10]} 755 $meeu;sau eth2
   echo $pubk > ${p[10]}/pubkeys;sex "mv ${p[10]}/pubkeys ${p[16]}";cmw ${p[16]}/pubkeys 600 eth2
   cmw ${p[16]} 700 eth2;touch ${p[10]}/vc_lock;cd ${p[9]}                                                                                                     # IMPORTANTE LOCK vc
