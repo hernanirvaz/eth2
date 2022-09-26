@@ -46,6 +46,7 @@ else
   else
     othe="$othe --checkpoint-sync-url https://1q1s6o6cB6Jysu7KKlbLUYiOdAM:8974468780164028652df958a69fbd30@eth2-beacon-mainnet.infura.io"
   fi
+  othe="$othe --prune-payloads false"                                                                                                                         # keep execution payloads -> peers directly
   othe="$othe --disable-upnp"
   # othe="$othe --slasher"
   # othe="$othe --monitoring-endpoint https://beaconcha.in/api/v1/client/metrics?apikey=$B&machine=$(snc $cunm)"                                              # monitor data for beaconcha.in app
