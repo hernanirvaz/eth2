@@ -17,10 +17,11 @@ function fs5 { if [[ $1 ]];then grep -i "[a-z][a-z][a-z] [0-9][0-9] $1";else gre
 function fs6 { if [[ $1 ]];then grep -i "[a-z][a-z][a-z] [0-9][0-9] $1";else grep -i  'error'    ;fi; }                                                       # filter system    log lines
 function lg0 { grep $1 $2 2>${p[3]}|tail -n1|lg1 $1; }                                                                                                        # get last  number   from log
 function lg1 { sed "s%$1 *\([0-9]*\).*%\1%" $2 2>${p[3]}; }                                                                                                   # get list  numbers  from log
-function lg2 { echo 100;echo $H|sudo -S grep ${p[105]} ${p[16]}/logs/beacon.log 2>${p[3]}|sed -n "${p[106]}"; }                                               # get imported delay from intern log (s)
-function lg3 { lg2     ;echo $H|sudo -S grep ${p[105]} ${p[16]}/logs/beacon.log 2>${p[3]}|sed -n "${p[107]}"; }                                               # get imported delay from intern log (ms)
-function rl0 { local n=${1:-0};((n<5)) && rl0 $((n+1));local e=${p[16]}/logs/beacon.log;((n>0)) && e="$e.$n";echo $H|sudo -S cat $e 2>${p[3]}; }              # get cc intern lines
-function rl1 { local n=${1:-0};((n<7)) && rl1 $((n+1));local e=${p[1]};((n>0)) && e="$e.$n";echo $H|sudo -S grep ${p[104]} $e 2>${p[3]}; }                    # get all eth  syslog lines
+function lg2 { l4=$(rl2 $1)                ;echo "$l4"|sed -n "s%.*$1 ${p[105]}"; }                                                                           # get imported delay from intern log (s)
+function lg3 { lg2 $1;[[ $l4 ]] || echo 100;echo "$l4"|sed -n "s%.*$1 ${p[106]}"; }                                                                           # get imported delay from intern log (ms)
+function rl0 { local n=${1:-0};((n<5)) && rl0    $((n+1));local e=${p[16]}/logs/beacon.log;((n>0)) && e="$e.$n";echo $H|sudo -S cat $e 2>${p[3]}; }           # get cc intern lines
+function rl1 { local n=${1:-0};((n<7)) && rl1    $((n+1));local e=${p[1]};((n>0)) && e="$e.$n";echo $H|sudo -S grep ${p[104]} $e 2>${p[3]}; }                 # get all eth  syslog lines
+function rl2 { local n=${2:-0};((n<0)) && rl2 $1 $((n+1));local e=${p[16]}/logs/beacon.log;((n>0)) && e="$e.$n";echo $H|sudo -S grep $1 $e 2>${p[3]}; }       # get specific cc intern lines
 function pt0 { until [[ $# -le 1 || $1 =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]];do shift;done;echo $1; }                                                            # yyyy-mm-dd test
 function pt1 { until [[ $# -le 1 || $1 =~ ^[0-9]{2}:[0-9]{2}$          ]];do shift;done;echo $1; }                                                            # hh:mm      test
 function pt2 { until [[ $# -le 1 || $1 =~ ^[0-9]+$                     ]];do shift;done;echo $1; }                                                            # integer    test
@@ -65,7 +66,7 @@ function sso {
   [[ $1 = BESU ]] && e="$e $(printf "el:p%02i:m%02i p2p:%5i" $nr $nm $(ss1 $2 p2p-port [0-9]))$(ub1 synced $(ucl eth_syncing))"                               # el peers/port tag
   [[ $1 = BEAC ]] && bnn $(fs4 peers:) $(bpc $(bcl peer_count))                                                                                               # set min peers
   [[ $1 = BEAC ]] && e="$e $(printf "cl:p%02i:m%02i p2p:%5i" $nr $nm $(ss1 $2 port [0-9]))$(bb1 $(bcl syncing))"                                              # cl peers/port tag
-  [[ $1 = BEAC ]] && e="$e el:http $(ss1 $2 execution-endpoint '[^ ]'|sed -n ${p[91]}) delay_m10: $(nu3 $(lg3|sort -n|tail -n11))"                            # el http & max 10 avg imported delays
+  [[ $1 = BEAC ]] && e="$e el:http $(ss1 $2 execution-endpoint '[^ ]'|sed -n ${p[91]}) delay_m10: $(nu3 $(lg3 imported_delay:|sort -n|tail -n11))"            # el http & max 10 avg imported delays
   [[ $1 = VALI ]] && { dtl;bo5;e="$e vl:m$(printf '%02i' $b3):c$(printf '%02i' $b2) cc:http $(ss1 $2 nodes '[^ ]'|sed -n ${p[91]})"; };swn "$e"               # set homologous/avg & cl http
 }
 # el control commands
@@ -132,7 +133,7 @@ function bl1 {                                                                  
   z4=${4:-$(echo "$l0"|grep    ' INFO '     |wc -l)};z5=${5:-$(bl7 success)};ok=${6:-OK}                                                                      # set info lines,success/had activities
 }
 function bl2 { zk=${1:-$(bl7 missing)};zz=${2:-$(bl7 target)};zx=${3:-$(bl7 head)};zw=${4:-$(bl7 had)}; }                                                     # set missing/target/head activities
-function bl3 { b0=${1:-$(fs0 Valid.block|wc -l)};b1=${2:-$(nu3 $(lg3))}; }                                                                                    # set published blocks/avg imported delays
+function bl3 { b0=${1:-$(fs0 Valid.block|wc -l)};b1=${2:-$(nu3 $(lg3 imported_delay:))}; }                                                                    # set published blocks/avg imported delays
 function bl5 { sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w; }                                                                                               # get number of validators
 function bl6 { tail -n$1 ${p[11]} 2>${p[3]}|cut -d' ' -f1|sort -u|wc -l; }                                                                                    # get cc restart activity
 function bl7 { fs0 attestation.s.*$1|bl5; }                                                                                                                   # get number of paid activities
