@@ -238,6 +238,8 @@ function mnv {
   go install github.com/flashbots/mev-boost@latest;sex "cp $f ${p[0]}";cmw ${p[0]}/mev-boost 755 eth4
 }
 
+# dd if=/dev/zero of=./temp-output conv=fdatasync bs=384k count=1k; rm -f ./temp-output
+# sudo hdparm -Tt /dev/nvme0n1
 p[84]="${p[9]}/validator_keys"
 p[85]='https://boost-relay.flashbots.net/relay/v1/data/validator_registration?pubkey=0x'
 p[86]=""
