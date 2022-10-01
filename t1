@@ -237,6 +237,17 @@ function mnv {
   local f="${p[9]}/go/bin/mev-boost";swu 'INSTALAR MEV-BOOST';[[ -f $f ]] && sex "rm -rf ${p[9]}/go"
   go install github.com/flashbots/mev-boost@latest;sex "cp $f ${p[0]}";cmw ${p[0]}/mev-boost 755 eth4
 }
+function nu1 { echo "scale=$2;$1"|bc; }                                                                                                                       # get arbitrary precision calculations
+function nu2 { if [[ $# -gt 0 ]];then nu5 "sqrt(((0$(printf '+%i^2' $@))-(0$(printf '+%i' $@))^2/$#)/$#)" 1000 5;else echo 0;fi; }                            # get standard deviation list of numbers
+function nu3 { if [[ $# -gt 0 ]];then nu5 "(0$(printf '+%i' $@))/$#"                                            ;else echo 0;fi; }                            # get average            list of numbers
+function nu4 { if [[ $5 -gt 0 ]];then nu5 "($1*$pmis+$2*$pmat+$3*$pmah+$4*$pdly)/$5*$rate/$decp"          1000 5;else echo 0;fi; }                            # get penalty
+function nu5 { printf ${4:-%.0f} $(nu1 $1*${2:-1} ${3:-1}); }                                                                                                 # format arbitrary precision calculations
+function lg2 { if [[ ${2:-0} -gt 0 ]];then l4=$(rl2 $1|tail -n${2:-0});else l4=$(rl2 $1);fi;lg4; }                                                            # set specific cc intern log lines
+function lg3 { if [[ $l4 ]];then echo "$l4"|sed -n "s%.*$1 ${p[105]}";echo "$l4"|sed -n "s%.*$1 ${p[106]}";else echo 1;fi; }                                  # get s/ms delays from intern log lines
+function lg4 { printf %.0f $(nu1 "$(nu3 $(lg3 imported_delay:))*1000/$(nu3 $(lg3 observed_delay:))" 4); }                                                     # get imported/observed delay rate
+function rl2 { local n=${2:-0};((n<0)) && rl2 $1 $((n+1));local e=${p[16]}/logs/beacon.log;((n>0)) && e="$e.$n";echo $H|sudo -S grep $1 $e 2>${p[3]}; }       # get specific cc intern log lines
+function lg5 { lg2 Delayed.head.block  0;echo -e "\n$(nu3 $(lg3 imported_delay:))*1000/$(nu3 $(lg3 observed_delay:))"; }
+function lg6 { lg2 Delayed.head.block 10;echo -e "\n$(nu3 $(lg3 imported_delay:))*1000/$(nu3 $(lg3 observed_delay:))"; }
 
 # dd if=/dev/zero of=./temp-output conv=fdatasync bs=384k count=1k; rm -f ./temp-output
 # sudo hdparm -Tt /dev/nvme0n1
