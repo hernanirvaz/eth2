@@ -33,7 +33,7 @@ p[6]='/sys/bus/usb/devices/1-0:1.0/authorized'
 p[7]='/sys/devices/system/cpu/intel_pstate/no_turbo'
 p[8]='/usr/bin'
 p[9]='/home/eth'
-p[10]='/var/lib/lighthouse';[[ $cunm = $znm2 ]] && p[10]='/sata/lighthouse'                                                                                   # cl data
+p[10]='/var/lib/lighthouse';[[ $cunm = $znm2 ]] && p[10]='/sata/lighthouse';[[ $cunm = $znm4 ]] && p[10]='/sata/lighthouse'                                   # cl data
 p[11]="${p[9]}/beacon.log"                                                                                                                                    # cc minute log
 p[12]="${p[9]}/bmedias.log"                                                                                                                                   # cc daily  log
 p[13]="${p[9]}/geth.log"                                                                                                                                      # ec minute log
@@ -41,7 +41,7 @@ p[14]="${p[9]}/barqivo.log"                                                     
 p[15]="${p[9]}/beacon.restart"                                                                                                                                # cl restart control files
 p[16]="${p[10]}/beacon"                                                                                                                                       # cc data
 p[17]="${p[10]}/validators"                                                                                                                                   # vc data
-p[18]='/var/lib/goethereum';[[ $cunm = $znm4 ]] && p[18]='/sata/goethereum'                                                                                   # el data
+p[18]='/var/lib/goethereum'                                                                                                                                   # el data
 p[19]="$(dirname ${p[4]})/timesyncd.conf"                                                                                                                     # Network Time Synchronization configuration
 p[20]='/etc/default/motd-news'                                                                                                                                # disable dynamic MOTD news service
 p[21]='/etc/netplan/00-installer-config.yaml'                                                                                                                 # network configuration abstraction
@@ -60,7 +60,7 @@ p[33]='/etc/transmission-daemon/settings.json'                                  
 p[34]='/etc/hosts'                                                                                                                                            # hosts config
 p[35]='/etc/ssh/ssh_config.d/ztc.conf'                                                                                                                        # ssh config
 p[36]='/etc/environment'                                                                                                                                      # system environment
-p[37]='/var/lib/javaethereum';[[ $cunm = $znm4 ]] && p[37]='/sata/javaethereum'                                                                               # el data
+p[37]='/var/lib/javaethereum'                                                                                                                                 # el data
 p[38]='/sata/eth';[[ $cunm = $vnm1 ]] && p[38]=${p[9]}                                                                                                        # cl compile location
 
 # sed/grep scripts

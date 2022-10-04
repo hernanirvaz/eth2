@@ -219,12 +219,13 @@ function btr { if srt;then echo RB;else echo $1;fi; }                           
 function bro { dts;bb0;bnn $(fs4 peers:);[[ -f ${p[11]} ]] && swn "$(printf 'R%03i' $1) ${2:-$ok} $(printf '%3i' $(bu0)) $(dnn)" >> ${p[11]}; }               # log restart info
 function bss { echo $((${2:-0}+$(date -d$(sf1 $1) +%s))); }                                                                                                   # get sum secounds + time
 function bsc { pex "grep lighthouse.$bpid].*INFO ${p[1]}"|tail -n99|grep Sync\ committee|wc -l; }                                                             # get # committee messages
+function brt { bro $1 $2;sex "$(pjw 62 70)";sex reboot; }
 # slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168
 function brs {                                                                                                                                                # cc/vc gap restart
   [[ $(ls ${p[15]}.* 2>${p[3]}) || $(bsc) -gt 0 ]] && return;ssf ${3:-0} ${p[15]};local n=${4:-48};[[ $2 = VC ]] && n=60;[[ $2 = RB ]] && n=84
   ssw $n ${p[15]};local t=$(sng);local f=${p[15]}.i$(stg);touch $f;local n=0;paf;while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) ${p[15]}
-  if spt $t;then rm $f;bv0;snp ${p[71]} $1 $bpri $bprf                   ;[[ $2 = VC ]] && sex "$(pjw 62 73)"                                                 # stop cc/conf change?/stop vc?
-    if [[ $2 = RB ]];then bro $n $2;gp;sex reboot;else sex "$(pjw 63 71)";[[ $2 = VC ]] && sex "$(pjw 63 73)";ssf 20 ${p[15]};bro $n $2;fi                    # stop ec/reboot|start cc+vc
+  if spt $t;then rm $f;bv0;snp ${p[71]} $1 $bpri $bprf     ;[[ $2 = VC ]] && sex "$(pjw 62 73)"                                                               # stop cc/conf change?/stop vc?
+    if [[ $2 = RB ]];then brt $n $2;else sex "$(pjw 63 71)";[[ $2 = VC ]] && sex "$(pjw 63 73)";ssf 20 ${p[15]};bro $n $2;fi                                  # stop ec/reboot|start cc+vc
   fi;done;rm -f $f
 }
 function brh { head -n${1:-0} ${p[11]}r; }                                                                                                                    # new cc head lines
@@ -323,9 +324,9 @@ function pe  { pai 9090/tcp 192.168.8.0/24 ${p[74]} ;sex 'ufw reload';cex "$(pjw
 function ne  { sex 'ufw reload';cex "$(pjw 64 75)"; }                                                                                                         # enable prometheus-node-exporter
 function fe  { pai 3000/tcp 192.168.8.0/24 grafana  ;sex 'ufw reload';cex "$(pjw 64 76)"; }                                                                   # enable grafana-server
 function me  { pai 18550    192.168.8.0/24 mev-boost;sex 'ufw reload';cex "$(pjw 64 96)"; }                                                                   # enable mev-boost
-function ga  { [[ -d ${p[18]} && $(sst ${p[70]}) ]] && cex "$(pjw 63 70)"; }                                                                                  # start eth-geth
-function ua  { [[ -d ${p[37]} && $(sst ${p[87]}) ]] && cex "$(pjw 63 87)"; }                                                                                  # start eth-besu
-function ba  { [[ -d ${p[16]} && $(sst ${p[71]}) ]] && cex "$(pjw 63 71)"; }                                                                                  # start eth-beacon
+function ga  { [[ $(sst ${p[70]}) ]] && cex "$(pjw 63 70)"; }                                                                                                 # start eth-geth
+function ua  { [[ $(sst ${p[87]}) ]] && cex "$(pjw 63 87)"; }                                                                                                 # start eth-besu
+function ba  { [[ $(sst ${p[71]}) ]] && cex "$(pjw 63 71)"; }                                                                                                 # start eth-beacon
 function va  {
   v2t && [[ -f ${p[10]}/vc_keys && $(sst ${p[73]}) ]] || return                                                                                               # cannot start eth-validator
   if [[ -f ${p[10]}/vc_lock ]];then sis ${p[9]}/$(basename ${p[31]});else cex "$(pjw 63 73)";rm -f ${p[10]}/vc_slash;fi                                       # start eth-validator
