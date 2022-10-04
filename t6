@@ -147,6 +147,7 @@ function blo {
   m="$m err: $(printf '%1i' $zk) $(printf '%2i' $zz) $(printf '%3i' $zx) $(printf '%2i' $zw) $(printf '%2i' $z1) $(printf '%4i' $z2)"
   m="$m $(printf '%3i' $(bw0)) $(printf '%2i' $z3) $(printf '%4i' $z4) $(printf '%4i' $(bf0)) delay: $(printf '%3i' $b1)"
 }
+function bio { m="BEIO$(printf ' %.0s' {1..7}) $dt $(printf 'average %i lines of imported/observed delays: %i %i %i' $1 $b5 $nm $(lg4 $b5 $nm))"; }
 function bcc { if bct       ;then echo c;else echo _;fi; }                                                                                                    # get change configured peers char
 function bdc { if bht && bst;then echo d;else echo _;fi; }                                                                                                    # get delete cc log day       char
 function bmi { zk=0;zz=0;zx=0;unset v;v[1]=0;unset k;k[0]=0;unset z;z[0]=0;unset x;x[0]=0;unset w;w[0]=0;unset c;c[0]=0;unset a;a[0]=0;bm6; }                 # ini err/cnt/avg penalty arrays
@@ -451,7 +452,7 @@ function mrs { local f='';for f in $(ls $1 2>${p[3]});do curl -sX GET "${p[85]}$
 [[ $1 = gh  ]] && { eh0 ${p[13]} $2;[[ $2 ]] || { gl0;swn "$m\n";ghs;cpe; } }
 [[ $1 = uh  ]] && { eh0 ${p[89]} $2;[[ $2 ]] || { ul0;swn "$m\n";uhs;cpe; } }
 [[ $1 = bh  ]] && { bh0 $2; }
-[[ $1 = bio ]] && { lg5 ${2:-10};printf "imported/observed delays in ${2:-10} lines: %i %i %i\n" $b5 $nm $(lg4 $b5 $nm); }
+[[ $1 = bio ]] && { lg5 ${2:-10};dts;bio ${2:-10};swn "$m"; }
 [[ $1 = ahs ]] && { [[ $cunm = $znm1 ]] && ah1;[[ $cunm = $znm2 ]] && ah2;[[ $cunm = $znm3 ]] && ah3;[[ $cunm = $znm4 ]] && ah4; }
 [[ $1 = ghs ]] && { ghs    ;cpe; }                                                                                                                            #        ec/system       reports
 [[ $1 = uhs ]] && { uhs    ;cpe; }                                                                                                                            #        ec/system       reports
