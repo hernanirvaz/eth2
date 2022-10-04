@@ -262,7 +262,7 @@ function btt { bnt && bht && ! bst; }                                           
 function bbt { [[ $(grep $d0 ${p[11]} 2>${p[3]}|wc -l) -gt 0 ]]; }                                                                                            # exists cc log day test
 function bct { local n=$((nn-5));[[ $nm -ge $n && $(bl6 $chrs) -eq 1 ]] && ( btt || sot ); }                                                                  # change configured peers test
 function bdw { cp $1 ${1}o;grep -v $2 ${1}o > $1;grep $2 ${1}o > ${1}d; }                                                                                     # work to delete cc log day
-function bdl { v2t || return;local d=$(pt0 $1 sai);[[ -f ${p[11]} && $d != sai ]] || return;bdw ${p[11]} $d; }                                                #         delete cc log day
+function bdl { local d=$(pt0 $1 sai);[[ -f ${p[11]} && $d != sai ]] || return;bdw ${p[11]} $d; }                                                              #         delete cc log day
 function wst { echo $@|sed 's%[^: ]*: *%%g;s%inactive%off%;s%active%on%'; }                                                                                   # get ufw info
 function cpf { local f='';until [[ $# -lt 1 ]];do f="$f, $(basename $1)";shift;done;echo $f; }                                                                # get list basenames
 function cpe {                                                                                                                                                # system status
