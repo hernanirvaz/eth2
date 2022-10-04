@@ -39,7 +39,7 @@ else
   epec=" --execution-endpoint http://$zip1:8551 --execution-jwt ${p[16]}/jwt"                                                                                 # MERGE
   epec="$epec --suggested-fee-recipient ${p[99]}"                                                                                                             # cc level fees
   othe=''
-  othe="$othe --subscribe-all-subnets --import-all-attestations"                                                                                              # for redundant cc
+  othe="$othe --subscribe-all-subnets --import-all-attestations"                                                                                              # 5% more profitable
   othe="$othe --validator-monitor-file ${p[16]}/pubkeys"                                                                                                      # monitor validators
   if [[ $cust = hrv ]];then                                                                                                                                   # syncing from finalized checkpoint
     othe="$othe --checkpoint-sync-url http://192.168.8.34:5052"
