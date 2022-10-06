@@ -17,12 +17,11 @@ function fs5 { if [[ $1 ]];then grep -i "[a-z][a-z][a-z]  *[0-9]* $1";else grep 
 function fs6 { if [[ $1 ]];then grep -i "[a-z][a-z][a-z]  *[0-9]* $1";else grep -i  'error'    ;fi; }                                                         # filter system    log lines
 function lg0 { grep $1 $2 2>${p[3]}|tail -n1|lg1 $1; }                                                                                                        # get last  number   from log
 function lg1 { sed "s%$1 *\([0-9]*\).*%\1%" $2 2>${p[3]}; }                                                                                                   # get list  numbers  from log
-function lg2 { local e='Delayed.head.block';if [[ $1 -gt 0 ]];then l4=$(rl2 $e|tail -n$1);else l4=$(rl2 $e);fi; }                                             # set specific cc intern log lines
-function lg3 { if [[ $l4 ]];then echo "$l4"|sed -n "$1${p[105]}";echo "$l4"|sed -n "$1${p[106]}";echo "$l4"|sed -n "$1${p[107]}";else echo 1;fi; }            # get s/ms delays from intern log lines
-function lg4 { printf %.0f $(nu1 "${1:-$(nu3 $(lg3 's%.*imported_delay: '))}*1000/${2:-$(nu3 $(lg3 's%.*observed_delay: '))}" 4); }                           # get imported/observed delay rate
-function lg5 { lg2 ${1:-0};b5=$(nu3 $(lg3 's%.*imported_delay: '));nm=$(nu3 $(lg3 's%.*observed_delay: ')); }                                                 # set Imported/observed delays
-function lg6 { local e='Imported';if [[ $1 -gt 0 ]];then l4=$(rl3 $e|tail -n$1);else l4=$(rl3 $e);fi; }                                                       # set ec imported log lines
-function lg7 { if [[ $l4 ]];then echo "$l4"|sed -n "$1${p[108]}";echo "$l4"|sed -n "$1${p[109]}";echo "$l4"|sed -n "$1${p[110]}";else echo 1;fi; }            # get s/ms times from ec log lines
+function lg2 { local e='Delayed.head.block';if [[ ${1:-0} -gt 0 ]];then l4=$(rl2 $e|tail -n${1:-0});else l4=$(rl2 $e);fi; }                                   # set cc specific log lines
+function lg3 { local e='Imported'          ;if [[ ${1:-0} -gt 0 ]];then l4=$(rl3 $e|tail -n${1:-0});else l4=$(rl3 $e);fi; }                                   # set ec specific log lines
+function lg4 { if [[ $l4 ]];then echo "$l4"|sed -n "$1${p[105]}";echo "$l4"|sed -n "$1${p[106]}";echo "$l4"|sed -n "$1${p[107]}";else echo 1;fi; }            # get s/ms delays from log lines
+function lg5 { if [[ $l4 ]];then echo "$l4"|sed -n "$1${p[108]}";echo "$l4"|sed -n "$1${p[109]}";echo "$l4"|sed -n "$1${p[110]}";else echo 1;fi; }            # get s/ms delays from log lines
+function lg6 { lg2 $1;b5=$(nu3 $(lg4 's%.*imported_delay: '));nm=$(nu3 $(lg4 's%.*observed_delay: ')); }                                                      # set Imported/observed delays
 function rl0 { local n=${1:-0};((n<5)) && rl0    $((n+1));local e=${p[16]}/logs/beacon.log;((n>0)) && e="$e.$n";echo $H|sudo -S cat $e     2>${p[3]}; }       # get cc intern lines
 function rl1 { local n=${2:-0};((n<7)) && rl1 $1 $((n+1));local e=${p[1]}                 ;((n>0)) && e="$e.$n";echo $H|sudo -S grep $1 $e 2>${p[3]}; }       # get all eth  syslog lines
 function rl2 { local n=${2:-0};((n<1)) && rl2 $1 $((n+1));local e=${p[16]}/logs/beacon.log;((n>0)) && e="$e.$n";echo $H|sudo -S grep $1 $e 2>${p[3]}; }       # get specific cc intern log lines
@@ -65,9 +64,9 @@ function ssf { [[ $1 -gt 0 ]] || return;local f=$2.s$(stg $1);touch $f;sleep $1s
 function ssw { while :;do local t=$(sng);if [[ $(sf2 $t) -le ${1:-36} || 24 -ge $(sfn $t) ]];then ssf $(smn $(sfn $t)) $2;else break;fi;done; }               # sleep while small (gap or remaining) time
 function sso {
   [[ $(sst $2 loaded) ]] || return;dts;local e="$1 $(printf '%6s' $(ss1 $2 Memory:)) $dt status: $(printf '%-40s' "$(ss2 $2)")"                               # memory & status
-  [[ $1 = GETH ]] && { bnn $(fs0 peercount= 0 ${p[47]} |lg1 .*peercount=) $(nu0 $(gcl net.peerCount));lg6; }                                                  # set min peers
+  [[ $1 = GETH ]] && bnn $(fs0 peercount= 0 ${p[47]} |lg1 .*peercount=) $(nu0 $(gcl net.peerCount))                                                           # set min peers
   [[ $1 = GETH ]] && e="$e $(printf 'el:p%02i:m%02i p2p:%5i' $nr $nm $(ss1 $2 port     [0-9]))$(gb1 synced $(gcl eth.syncing)) $(gdi)"                        # el peers/port tag
-  [[ $1 = BESU ]] && { bnn $(fs0 Peers:     0 ${p[102]}|lg1 .*Peers:)     $(up0 $(ucl net_peerCount));lg6; }                                                  # set min peers
+  [[ $1 = BESU ]] && bnn $(fs0 Peers:     0 ${p[102]}|lg1 .*Peers:)     $(up0 $(ucl net_peerCount))                                                           # set min peers
   [[ $1 = BESU ]] && e="$e $(printf 'el:p%02i:m%02i p2p:%5i' $nr $nm $(ss1 $2 p2p-port [0-9]))$(ub1 synced $(ucl eth_syncing)) $(udi)"                        # el peers/port tag
   [[ $1 = BEAC ]] && bnn $(fs4 peers:) $(bpc $(bcl peer_count))                                                                                               # set min peers
   [[ $1 = BEAC ]] && e="$e $(printf 'cl:p%02i:m%02i p2p:%5i' $nr $nm $(ss1 $2 port [0-9]))$(bb1 $(bcl syncing))"                                              # cl peers/port tag
@@ -82,7 +81,7 @@ function grs {                                                                  
     if [[ $2 = RB ]];then ero $n ${p[13]} $2;sex reboot;else sex "$(pjw 63 70)";ssf 20 ${p[97]};gq0;ero $n ${p[13]} $2;fi                                     # reboot/start el
   fi;done;rm -f $f
 }
-function gdi { printf 'di: %3i' $(nu3 $(lg7 's%.*elapsed=')); }                                                                                                                   # get delay imported
+function gdi { lg3 $1;printf 'di: %3i' $(nu3 $(lg5 's%.*elapsed=')); }                                                                                        # get delay imported
 function gcl { ${p[8]}/geth attach --exec $1 "http://$ciec:8545" 2>${p[3]}; }                                                                                 # exec RPC HTTP
 function gi0 { echo $@|sed -n 's%.*highestBlock: *\([0-9]*\).*%\1%ip'; }                                                                                      # get el highest block
 function gc0 { echo $@|sed -n 's%.*currentBlock: *\([0-9]*\).*%\1%ip'; }                                                                                      # get el current block
@@ -91,8 +90,8 @@ function gq0 { nr=$(nu0 $(gcl net.peerCount))          ; }                      
 function gb1 { if [[ $(echo $@|grep false) ]];then [[ $1 ]] && printf " $1";else printf " syncing: %6i" $(($(gi0 $@)-$(gc0 $@)));fi; }                        # get el syncing blocks remaining
 function gl0 {                                                                                                                                                # el report
   dts;ok=OK
-  if [[ $(sst ${p[70]} running) ]];then local e=$(gcl eth.syncing);gv0;gq0;eb0 ${p[13]} Imported ${p[47]};lg6 10
-    m="GETH $ok $(tsy $e) $(dnn) sgs: $(printf '%4i' $e0)$(gb1 '' $e) $(gdi)"                                                                                 # OK SYC/NSY (dnn) sgs: 5 blocks: 8
+  if [[ $(sst ${p[70]} running) ]];then local e=$(gcl eth.syncing);gv0;gq0;eb0 ${p[13]} Imported ${p[47]}
+    m="GETH $ok $(tsy $e) $(dnn) sgs: $(printf '%4i' $e0)$(gb1 '' $e) $(gdi 10)"                                                                              # OK SYC/NSY (dnn) sgs: 5 blocks: 8
   else
     m="GSRV NOT ON $dt"
   fi
@@ -104,7 +103,7 @@ function urs {                                                                  
     if [[ $2 = RB ]];then ero $n ${p[89]} $2;sex reboot;else sex "$(pjw 63 87)";ssf 20 ${p[98]};uq0;ero $n ${p[89]} $2;fi                                     # reboot/start el
   fi;done;rm -f $f
 }
-function udi { printf 'di: %3i' $(nu3 $(lg7 's%.* in ')); }                                                                                                                       # get delay imported
+function udi { lg3 $1;printf 'di: %3i' $(nu3 $(lg5 's%.* in ')); }                                                                                            # get delay imported
 function ucl { curl -sX POST --data "{\"jsonrpc\":\"2.0\",\"method\":\"$1\",\"params\":[],\"id\":51}" "http://$ciec:8545" 2>${p[3]}; }                        # exec RPC HTTP
 function ui0 { echo $((16#$(echo $@|sed -n 's%.*highestBlock" *: *"0x\([^"]*\)".*%\1%ip'))); }                                                                # get el highest block
 function uc0 { echo $((16#$(echo $@|sed -n 's%.*currentBlock" *: *"0x\([^"]*\)".*%\1%ip'))); }                                                                # get el current block
@@ -114,8 +113,8 @@ function uq0 { nr=$(nu0 $(up0 $(ucl net_peerCount)))                         ; }
 function ub1 { if [[ $(echo $@|grep false) ]];then [[ $1 ]] && printf " $1";else printf " syncing: %6i" $(($(ui0 $@)-$(uc0 $@)));fi; }                        # get el syncing blocks remaining
 function ul0 {                                                                                                                                                # el report
   dts;ok=OK
-  if [[ $(sst ${p[87]} running) ]];then local e=$(ucl eth_syncing);uv0;uq0;eb0 ${p[89]} Imported ${p[102]};lg6 10
-    m="BESU $ok $(tsy $e) $(dnn) sgs: $(printf '%4i' $e0)$(ub1 '' $e) $(udi)"                                                                                 # OK SYC/NSY (dnn) sgs: 5 blocks: 8
+  if [[ $(sst ${p[87]} running) ]];then local e=$(ucl eth_syncing);uv0;uq0;eb0 ${p[89]} Imported ${p[102]}
+    m="BESU $ok $(tsy $e) $(dnn) sgs: $(printf '%4i' $e0)$(ub1 '' $e) $(udi 10)"                                                                              # OK SYC/NSY (dnn) sgs: 5 blocks: 8
   else
     m="BSRV NOT ON $dt"
   fi
@@ -142,7 +141,7 @@ function bl1 {                                                                  
   z4=${4:-$(echo "$l0"|grep    ' INFO '     |wc -l)};z5=${5:-$(bl7 success)};ok=${6:-OK}                                                                      # set info lines,success/had activities
 }
 function bl2 { zk=${1:-$(bl7 missing)};zz=${2:-$(bl7 target)};zx=${3:-$(bl7 head)};zw=${4:-$(bl7 had)}; }                                                     # set missing/target/head activities
-function bl3 { b0=${1:-$(fs0 Valid.block|wc -l)};lg2 10;b1=${2:-$(lg4)}; }                                                                                    # set pub-blocks & last 10 delays rate
+function bl3 { b0=${1:-$(fs0 Valid.block|wc -l)};b1=${2:-$(bdi)}; }                                                                                           # set pub-blocks & last 10 delays rate
 function bl5 { sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w; }                                                                                               # get number of validators
 function bl6 { tail -n$1 ${p[11]} 2>${p[3]}|cut -d' ' -f1|sort -u|wc -l; }                                                                                    # get cc restart activity
 function bl7 { fs0 attestation.s.*$1|bl5; }                                                                                                                   # get number of paid activities
@@ -154,12 +153,13 @@ function blo {
   m="$m err: $(printf '%1i' $zk) $(printf '%2i' $zz) $(printf '%3i' $zx) $(printf '%2i' $zw) $(printf '%2i' $z1) $(printf '%4i' $z2)"
   m="$m $(printf '%3i' $(bw0)) $(printf '%2i' $z3) $(printf '%4i' $z4) $(printf '%4i' $(bf0)) delay: $(printf '%3i' $b1)"
 }
-function bio { m="BEIO$(printf ' %.0s' {1..7}) $dt $(printf 'average %i lines of imported/observed delays: %i %i %i' $1 $b5 $nm $(lg4 $b5 $nm))"; }
+function bdi { [[ $1$2 ]] || lg2 10;printf %.0f $(nu1 "${1:-$(nu3 $(lg4 's%.*imported_delay: '))}*1000/${2:-$(nu3 $(lg4 's%.*observed_delay: '))}" 4); }      # get imported/observed delay rate
+function bio { m="BEIO$(printf ' %.0s' {1..7}) $dt $(printf 'average %i lines of imported/observed delays: %i %i %i' $1 $b5 $nm $(bdi $b5 $nm))"; }
 function bcc { if bct       ;then echo c;else echo _;fi; }                                                                                                    # get change configured peers char
 function bdc { if bht && bst;then echo d;else echo _;fi; }                                                                                                    # get delete cc log day       char
 function bmi { zk=0;zz=0;zx=0;unset v;v[1]=0;unset k;k[0]=0;unset z;z[0]=0;unset x;x[0]=0;unset w;w[0]=0;unset c;c[0]=0;unset a;a[0]=0;bm6; }                 # ini err/cnt/avg penalty arrays
 function bm0 {                                                                                                                                                # cc-daily report
-  [[ -f ${p[11]} ]] || return;bmi;b4=0;dts;bv0;bnn $(fs4 peers:);bl2;[[ -f ${p[14]} ]] && bm4;lg5                                                             # set vars/arrays
+  [[ -f ${p[11]} ]] || return;bmi;b4=0;dts;bv0;bnn $(fs4 peers:);bl2;[[ -f ${p[14]} ]] && bm4;lg6                                                             # set vars/arrays
   l3=$(tail -n$(($(bbl)-v[1])) ${p[11]} 2>${p[3]}|bfl);[[ $l3 ]] && bm1;bm2;bo4;bm5 ${a[$nn]};b7="io$(bdc)$(bcc)peers:"                                       # add cc lines & homologous/avg position
 }
 function bm1 {
@@ -192,13 +192,13 @@ function bnw { local g=${3:-$bpri};if ((g<=bprf));then bnw "${1:-0}${2:-+}${w[$g
 # BEAC 19  32 2022-06-04 11:05 node60: 64 median_penalty: 1408 1475 1443 1251 1093 1156 1726 all_median: 1289 io__peers:   0   59  59 1579   0
 function bmo {
   m="BEAC $(printf '%2i' $b3) $(printf '%3i' $b2) $(dnn) $(bma 'median_penalty:') all_median: $(printf '%4i' ${a[0]})"
-  m="$m $b7 $(printf '%3i %4i %3i %4i %3i' $b5 $nm $(lg4 $b5 $nm) $(bi0) $b4)"
+  m="$m $b7 $(printf '%3i %4i %3i %4i %3i' $b5 $nm $(bdi $b5 $nm) $(bi0) $b4)"
 }
 #    0  1   2          3     4       5  6        7    8    9   10         11  12   13  14   15  16
 # BEAC 19  32 2022-06-04 11:04 node60: 65 penalty: 1093 avg: 1289 io__peers:   0   59  59 1579   0
 function bms {
   m="BEAC $(printf '%2i' $b3) $(printf '%3i' $b2) $(dnn) penalty: $(printf '%4i' ${a[$nn]}) avg: $(printf '%4i' ${a[0]})"
-  m="$m $b7 $(printf '%3i %4i %3i %4i %3i' $b5 $nm $(lg4 $b5 $nm) $(bi0) $b4)"
+  m="$m $b7 $(printf '%3i %4i %3i %4i %3i' $b5 $nm $(bdi $b5 $nm) $(bi0) $b4)"
 }
 #    0   1          2     3    4 5 6 7 8 9 10 11   12 13 14 15 16 17 18 19   20 21 22 23 24 25 26 27   28 29 30 31 32 33 34 35   36 37 38 39 40 41 42 43
 # BEAC 682 2022-03-16 11:03 cnt: 4 7 0 0 0 10 10 mis: 20 20 20 20 20 20 20 mat: 14 45 30 30 30 30 30 mah: 94 68 40 40 40 40 40 dly: 79 09 50 50 50 50 50
@@ -459,7 +459,7 @@ function mrs { local f='';for f in $(ls $1 2>${p[3]});do curl -sX GET "${p[85]}$
 [[ $1 = gh  ]] && { eh0 ${p[13]} $2;[[ $2 ]] || { gl0;swn "$m\n";ghs;cpe; } }
 [[ $1 = uh  ]] && { eh0 ${p[89]} $2;[[ $2 ]] || { ul0;swn "$m\n";uhs;cpe; } }
 [[ $1 = bh  ]] && { bh0 $2; }
-[[ $1 = bio ]] && { lg5 ${2:-10};dts;bio ${2:-10};swn "$m"; }
+[[ $1 = bio ]] && { lg6 ${2:-10};dts;bio ${2:-10};swn "$m"; }
 [[ $1 = ahs ]] && { [[ $cunm = $znm1 ]] && ah1;[[ $cunm = $znm2 ]] && ah2;[[ $cunm = $znm3 ]] && ah3;[[ $cunm = $znm4 ]] && ah4; }
 [[ $1 = ghs ]] && { ghs    ;cpe; }                                                                                                                            #        ec/system       reports
 [[ $1 = uhs ]] && { uhs    ;cpe; }                                                                                                                            #        ec/system       reports
