@@ -240,6 +240,7 @@ function mnv {
 
 # dd if=/dev/zero of=./temp-output conv=fdatasync bs=384k count=1k; rm -f ./temp-output
 # sudo hdparm -Tt /dev/nvme0n1
+# grep flags /proc/cpuinfo|grep adx|sha_ni accelerated BLS signatures|accelerated SHA256 hashinga https://en.wikipedia.org/wiki/Intel_ADX|https://en.wikipedia.org/wiki/Intel_SHA_extensions
 p[84]="${p[9]}/validator_keys"
 p[85]='https://boost-relay.flashbots.net/relay/v1/data/validator_registration?pubkey=0x'
 p[86]=""
