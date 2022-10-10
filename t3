@@ -4,7 +4,7 @@ source /home/eth/eth2/t1
 
 function hlp { swn "\n\ninstall consencus client with lighthouse-${1:-stable} source using rust-${2:-stable}\n"; }
 
-if [[ $cunm = $znm2 || $cunm = $vnm1 ]];then
+if [[ $cunm = $znm4 || $cunm = $znm2 || $cunm = $vnm1 ]];then
   hlp
   if [[ -x ${p[9]}/.cargo/bin/rustup ]];then
     t6 ruv $2                                                                                                                                                 # rust update
@@ -76,7 +76,7 @@ else
   sex "mv ${p[71]}.service $(pjp 4 71).service";cmw $(pjp 4 71).service 644
   if [[ -f jwt ]];then sjw eth2 ${p[16]};else swb "needs ${p[16]}/jwt secret";fi
 fi
-if [[ ($cuvc = $nxvc && $cunm != $cuvc) || -f ${p[10]}/vc_lock ]];then                                                                                        # vc not here
+if [[ $cunm != $cuvc || $cunm != $nxvc || -f ${p[10]}/vc_lock || -f $(pjp 4 73).service ]];then                                                                                         # vc not here
   if [[ -f $(pjp 4 73).service ]];then swu "vc ja instalado";else swu 'vc NAO PODE SER INSTALADO AQUI';fi
 else
   # external beacon-node before MERGE
