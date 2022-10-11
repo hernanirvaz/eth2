@@ -154,7 +154,7 @@ function blo {
   m="$m $(printf '%3i' $(bw0)) $(printf '%2i' $z3) $(printf '%4i' $z4) $(printf '%4i' $(bf0)) delay: $(printf '%3i' $b1)"
 }
 function bdi { [[ $1$2 ]] || lg2 10;printf %.0f $(nu1 "${1:-$(nu3 $(lg4 's%.*imported_delay: '))}*1000/${2:-$(nu3 $(lg4 's%.*observed_delay: '))}" 4); }      # get imported/observed delay rate
-function bio { m="BEIO$(printf ' %.0s' {1..7}) $dt $(printf 'average %i lines of imported/observed delays: %i %i %i' $1 $b5 $nm $(bdi $b5 $nm))"; }
+function bio { m="BEIO $(printf '%6i' $1) $dt $(printf 'delays: %i %i %i' $b5 $nm $(bdi $b5 $nm))"; }
 function bcc { if bct       ;then echo c;else echo _;fi; }                                                                                                    # get change configured peers char
 function bdc { if bht && bst;then echo d;else echo _;fi; }                                                                                                    # get delete cc log day       char
 function bmi { zk=0;zz=0;zx=0;unset v;v[1]=0;unset k;k[0]=0;unset z;z[0]=0;unset x;x[0]=0;unset w;w[0]=0;unset c;c[0]=0;unset a;a[0]=0;bm6; }                 # ini err/cnt/avg penalty arrays
