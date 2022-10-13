@@ -241,6 +241,7 @@ function mnv {
 # dd if=/dev/zero of=./temp-output conv=fdatasync bs=384k count=1k; rm -f ./temp-output
 # sudo hdparm -Tt /dev/nvme0n1
 # grep flags /proc/cpuinfo|grep adx|sha_ni accelerated BLS signatures|accelerated SHA256 hashinga https://en.wikipedia.org/wiki/Intel_ADX|https://en.wikipedia.org/wiki/Intel_SHA_extensions
+# Oct 13 06:21:00 hrv-zotac4 lighthouse[840]: Oct 13 05:21:00.137 WARN Unable to retrieve a payload from a connected builder, falling back to the local execution client: Reqwest(reqwest::Error { kind: Request, url: Url { scheme: "http", cannot_be_a_base: false, username: "", password: None, host: Some(Ipv4(192.168.8.28)), port: Some(18550), path: "/eth/v1/builder/header/4901203/0x11bd93db981d616123e5638657145d1cb1eecf2e0f909909588682798619d294/0xa2873632721623389d9bc5f455cb21e92244044cebd3bff6d5a809f78edde3de22c67ffc97a672c7ab573f7787c2c8bd", query: None, fragment: None }, source: TimedOut }), service: exec
 p[84]="${p[9]}/validator_keys"
 p[85]='https://boost-relay.flashbots.net/relay/v1/data/validator_registration?pubkey=0x'
 p[86]=""
