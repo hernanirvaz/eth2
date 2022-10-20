@@ -3,6 +3,7 @@
 source /home/eth/eth2/t1
 
 function hlp { swn "\n\ninstall consencus client with lighthouse-${1:-stable} source using rust-${2:-stable}\n"; }
+function pjv { local e="";[[ $# -ge 1 ]] && { e="${p[$1]}";shift; };until [[ $# -lt 1 ]];do e="$e,${p[$1]}";shift;done;echo "$e"; }                           # words join
 
 if [[ $cunm = $znm4 || $cunm = $znm2 || $cunm = $vnm1 ]];then
   hlp
@@ -18,7 +19,6 @@ t6 lpi                                                                          
 if [[ $cunm = $znm1 || -f $(pjp 4 71).service ]];then                                                                                                         # cc not here
   if [[ -f $(pjp 4 71).service ]];then swu "cc ja instalado";else swu 'cc NAO DEVE SER INSTALADO AQUI';fi
 else
-  pubk='0x93bf23a587f11f9eca329a12ef51296b8a9848af8c0fe61201524b14cb85b0c6fbd3e427501cdfa3b28719bd1ed96fff,0x8235d97c3530b6261eec3c658dd158ae5ed98481ead16a33837a083924028393634a71515affa76dcd371b943ee733ab,0x88c2befbce7594c943a386573f03b8ce461457bf59267ffce3e6008b115d70259583ad5fe8d8b15487d84734a6ba8d17,0x814fa0dbba56e8823bd00935e5c67b09c468d5734e80e6574c5984e736300431761bf083ef247f75a73eb1b4c01bde9b,0xae1212d040fabbbd3e6947ecf4799ee5176a1d42e2848d8ebee030690aa4144143c30d32c52fb3931927355470c8f416,0xad71900411ae03e4c63f23d7823ac3754e2ec0b8855693e15632536de677aca9f45ffeaf080ce234cbf3967723f79d45,0xa96278aff172bdebb92e6312eb3b46b0b6ec58e5a9cad46f7958b8d795a97edfb425bc4f2cc5cf92b5a3355577ad6af5,0xb2063ebff899e91b70de66115a2a0e590b8695930126f9d7cad090ca7f19d47b262c7c21dd9208ff6d4c8eea307b4ad3,0x87615568c977431c53171ba39b1f559515e6273b5efe8b649eab88ba6a5abc7e2280bea2f61898b53079a1f1bd3f5caa,0xb5b0fc3d2ba577f3e2c7324f7ea4306f17eeee0f12c722f4fa83e45bf6c15477d50261bb2666c30f21ab71a26aeeeafb,0x89e65476ab56bd1e102569531453620ef805adc4dea9caaa671a9b78a9e7ab61e713d038599364c9321ccc7b50f6bafd,0xad37967c868bcbb69d73dcc82717bf5df57048703277ee48aaf64e753c71631bc17c46934da40fb5f8344390f9880c1a,0xaf5e6791b3cbd587268b8da1822f9b0398cbd796eb4e9af856f561217981d9f9469d7f06accd9ae9ebe1b87d338330b4,0x8606838b0ba9fcdcc2a61925305210cd3e44fe673d99bbb6f180242afa965f513bf7b8c298806171a05a12b6b3d5dd24,0x880c275f193c45276bd250f25092305e06f12d725ecf9761b29051c1fd9a43c8c15c31012316ebad8459c4268824cb34,0x8d7dcdd66f978549965d6ee6828adeaaf6ebb98e8dcb505d003e5369bc3513f090027e77faa0ae0246b6f08344872a73,0x867cf5fd6d05017ef9df4d6ff157e2a8e97bbeb1522de427e82092e485fe7f305b651767997b2a21b6c91d83218493a1,0xa2873632721623389d9bc5f455cb21e92244044cebd3bff6d5a809f78edde3de22c67ffc97a672c7ab573f7787c2c8bd'
   # slots per restore point after init can't be changed
   sprp=1024 # Yearly Disk Usage  12.8GB
   sprp=512  # Yearly Disk Usage  25.6GB
@@ -53,7 +53,7 @@ else
   # othe="$othe --slasher"
   # othe="$othe --monitoring-endpoint https://beaconcha.in/api/v1/client/metrics?apikey=$B&machine=$(snc $cunm)"                                              # monitor data for beaconcha.in app
   swu 'CONFIGURE BEACON';sex "mkdir -p ${p[16]}";cmw ${p[10]} 755 $meeu;sau eth2
-  echo $pubk > ${p[10]}/pubkeys;sex "mv ${p[10]}/pubkeys ${p[16]}";cmw ${p[16]}/pubkeys 600 eth2
+  pjv $(seq 200 221) > ${p[10]}/pubkeys;sex "mv ${p[10]}/pubkeys ${p[16]}";cmw ${p[16]}/pubkeys 600 eth2
   cmw ${p[16]} 700 eth2;touch ${p[10]}/vc_lock;cd ${p[9]}                                                                                                     # IMPORTANTE LOCK vc
   pp2p=9000                                                                                                                                                   # default
   cat <<-EOF > ${p[71]}.service
