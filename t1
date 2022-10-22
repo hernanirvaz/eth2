@@ -209,6 +209,7 @@ p[83]="${p[83]}\n164.68.107.45\tvpss"
 
 function pjp { local e="";[[ $# -ge 1 ]] && { e="${p[$1]}";shift; };until [[ $# -lt 1 ]];do e="$e/${p[$1]}";shift;done;echo "$e"; }                           # paths join
 function pjw { local e="";[[ $# -ge 1 ]] && { e="${p[$1]}";shift; };until [[ $# -lt 1 ]];do e="$e ${p[$1]}";shift;done;echo "$e"; }                           # words join
+function pjv { local e="";[[ $# -ge 1 ]] && { e="${p[$1]}";shift; };until [[ $# -lt 1 ]];do e="$e,${p[$1]}";shift;done;echo "$e"; }                           # comma join
 function swb { echo -e "\n\e[5m${1^^}\e[25m\n"; }                                                                                                             # get flash
 function swu { echo -e "${1^^}"; }                                                                                                                            # get upper
 function swn { echo -e "$1"; }                                                                                                                                # get normal

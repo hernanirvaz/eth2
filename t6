@@ -227,13 +227,21 @@ function btr { if srt;then echo RB;else echo $1;fi; }                           
 function bro { dts;bb0;bnn $(fs4 peers:);[[ -f ${p[11]} ]] && swn "$(printf 'R%03i' $1) ${2:-$ok} $(printf '%3i' $(bu0)) $(dnn)" >> ${p[11]}; }               # log restart info
 function bss { echo $((${2:-0}+$(date -d$(sf1 $1) +%s))); }                                                                                                   # get sum secounds + time
 function bsc { pex "grep lighthouse.$bpid].*INFO ${p[1]}"|tail -n99|grep Sync\ committee|wc -l; }                                                             # get # committee messages
-function brt { bro $1 $2;[[ $(sst ${p[70]} loaded) ]] && sex "$(pjw 62 70)";[[ $(sst ${p[87]} loaded) ]] && sex "$(pjw 62 87)";sex reboot; }                  # stop el client & reboot
+function bre { bro $1 $2;[[ $(sst ${p[70]} loaded) ]] && sex "$(pjw 62 70)";[[ $(sst ${p[87]} loaded) ]] && sex "$(pjw 62 87)";sex reboot; }                  # stop el client & reboot
 # slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168
 function brs {                                                                                                                                                # cc/vc gap restart
   [[ $(ls ${p[15]}.* 2>${p[3]}) || $(bsc) -gt 0 ]] && return;ssf ${3:-0} ${p[15]};local n=${4:-48};[[ $2 = VC ]] && n=60;[[ $2 = RB ]] && n=84
   ssw $n ${p[15]};local t=$(sng);local f=${p[15]}.i$(stg);touch $f;local n=0;paf;while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) ${p[15]}
   if spt $t;then rm $f;bv0;snp ${p[71]} $1 $bpri $bprf     ;[[ $2 = VC ]] && sex "$(pjw 62 73)"                                                               # stop cc/conf change?/stop vc?
-    if [[ $2 = RB ]];then brt $n $2;else sex "$(pjw 63 71)";[[ $2 = VC ]] && sex "$(pjw 63 73)";ssf 20 ${p[15]};bro $n $2;fi                                  # stop ec/reboot|start cc+vc
+    if [[ $2 = RB ]];then bre $n $2;else sex "$(pjw 63 71)";[[ $2 = VC ]] && sex "$(pjw 63 73)";ssf 20 ${p[15]};bro $n $2;fi                                  # stop ec/reboot|start cc+vc
+  fi;done;rm -f $f
+}
+function bsb {                                                                                                                                                # cc/vc gap stop
+  [[ $(ls ${p[15]}.* 2>${p[3]}) || $(bsc) -gt 0 ]] && return;ssf ${3:-0} ${p[15]};local n=${4:-48};[[ $2 = VC ]] && n=72
+  ssw $n ${p[15]};local t=$(sng);local f=${p[15]}.i$(stg);touch $f;local n=0;paf;while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) ${p[15]}
+  if spt $t;then       bv0;snp ${p[71]} $1 $bpri $bprf     ;[[ $2 = VC ]] && sex "$(pjw 62 73)";local rsp=sim;swn "START BN $rsp?"                            # stop cc/vc/conf change
+    [[ $rsp =~ na*o* ]] || sex "$(pjw 63 71)";if [[ $2 = VC ]];then swn "START VC $rsp?";[[ $rsp =~ na*o* ]] || sex "$(pjw 63 73)";fi                         # start cc+vc
+    rm $f;ssf 20 ${p[15]};bro $n $2
   fi;done;rm -f $f
 }
 function brh { head -n${1:-0} ${p[11]}r; }                                                                                                                    # new cc head lines
@@ -482,6 +490,8 @@ function mrs { local f='';for f in $(ls $1 2>${p[3]});do curl -sX GET "${p[85]}$
 [[ $1 = gpn ]] && { if [[ $(sst ${p[70]} running) ]];then gp;cex "du -h ${p[18]}";sudo -u eth1 ${p[8]}/geth --datadir ${p[18]} snapshot prune-state;cex "du -h ${p[18]}";dmr;ga;fi; }
 [[ $1 = grs ]] && { grs ${2:-0}   ; }
 [[ $1 = urs ]] && { urs ${2:-0}   ; }
+[[ $1 = bsb ]] && { bsb ${2:-0} BN; }
+[[ $1 = bsv ]] && { bsb ${2:-0} VC; }
 [[ $1 = brs ]] && { brs ${2:-0} BN; }
 [[ $1 = crs ]] && { brs ${2:-0} VC; }
 [[ $1 = brb ]] && { brs ${2:-0} RB; }
@@ -616,14 +626,16 @@ if [[ ! $1 ]];then
   m="$m\noutros"
   m="$m\ngl[f]\t\tec log report"
   m="$m\ngpn\t\t${p[70]} prune DB - TAKES HOURS"
-  m="$m\ngrs [n]\t\t${p[70]} restart n nodes to change"
-  m="$m\nurs [n]\t\t${p[87]} restart n nodes to change"
-  m="$m\nbrs [n]\t\t${p[71]} restart n nodes to change"
-  m="$m\ncrs [n]\t\t${p[71]}/${p[73]} restart n=nodes to change"
-  m="$m\ngrb [n]\t\tsystem with geth   reboot n=nodes to change"
-  m="$m\nurb [n]\t\tsystem with besu   reboot n=nodes to change"
-  m="$m\nbrb [n]\t\tsystem with beacon reboot n=nodes to change"
-  m="$m\nirb [h]\t\tsystem (if needed) reboot after h hours"
+  m="$m\nbsb [n]\t\t${p[71]}\t\t\tstop\twith n peers"
+  m="$m\nbsv [n]\t\t${p[71]}/${p[73]}\tstop\twith n peers"
+  m="$m\ngrs [n]\t\t${p[70]}\t\t\trestart\twith n peers"
+  m="$m\nurs [n]\t\t${p[87]}\t\t\trestart\twith n peers"
+  m="$m\nbrs [n]\t\t${p[71]}\t\t\trestart\twith n peers"
+  m="$m\ncrs [n]\t\t${p[71]}/${p[73]}\trestart\twith n peers"
+  m="$m\ngrb [n]\t\tsystem & geth\t\t\treboot\twith n peers"
+  m="$m\nurb [n]\t\tsystem & besu\t\t\treboot\twith n peers"
+  m="$m\nbrb [n]\t\tsystem & beacon\t\t\treboot\twith n peers"
+  m="$m\nirb [h]\t\tsystem (if needed)\t\treboot\tafter h hours"
   m="$m\nyj\t\tsystem journal"
   m="$m\nsl [hh:mm]\tsystem journal  log lines"
   m="$m\nll [hh:mm]\tel/cl log lines (last 7 days)"

@@ -3,7 +3,6 @@
 source /home/eth/eth2/t1
 
 function hlp { swn "\n\ninstall consencus client with lighthouse-${1:-stable} source using rust-${2:-stable}\n"; }
-function pjv { local e="";[[ $# -ge 1 ]] && { e="${p[$1]}";shift; };until [[ $# -lt 1 ]];do e="$e,${p[$1]}";shift;done;echo "$e"; }                           # words join
 
 if [[ $cunm = $znm4 || $cunm = $znm2 || $cunm = $vnm1 ]];then
   hlp
