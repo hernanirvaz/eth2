@@ -239,6 +239,7 @@ function mnv {
   go install github.com/flashbots/mev-boost@latest;sex "cp $f ${p[0]}";cmw ${p[0]}/mev-boost 755 eth4
 }
 
+# iostat -d -x -m -p sda2 30 5
 # dd if=/dev/zero of=./temp-output conv=fdatasync bs=384k count=1k; rm -f ./temp-output
 # sudo hdparm -Tt /dev/nvme0n1
 # grep flags /proc/cpuinfo|grep adx|sha_ni accelerated BLS signatures|accelerated SHA256 hashinga https://en.wikipedia.org/wiki/Intel_ADX|https://en.wikipedia.org/wiki/Intel_SHA_extensions
