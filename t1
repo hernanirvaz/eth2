@@ -62,6 +62,7 @@ p[35]='/etc/ssh/ssh_config.d/ztc.conf'                                          
 p[36]='/etc/environment'                                                                                                                                      # system environment
 p[37]='/var/lib/javaethereum'                                                                                                                                 # el data
 p[38]='/sata/eth';[[ $cunm = $vnm1 ]] && p[38]=${p[9]}                                                                                                        # cl compile location
+p[39]='/etc/fstab'                                                                                                                                            # static file system information
 
 # sed/grep scripts
 p[40]='s%^ *#*NTP=.*$%NTP=192.168.8.28 ntp02.oal.ul.pt ntp04.oal.ul.pt time.google.com time.cloudflare.com time.facebook.com%i'                               # my time servers
@@ -276,6 +277,7 @@ p[107]='Some(\([0-9][0-9]\)\.[0-9]*ms).*%\1%p'                                  
 p[108]='\([0-9]*\)\.\([0-9][0-9][0-9]\)[0-9]*s.*%\1\2%p'                                                                                                      # get time  sec
 p[109]='\([0-9][0-9][0-9]\)\.[0-9]*ms.*%\1%p'                                                                                                                 # get time msec
 p[110]='\([0-9][0-9]\)\.[0-9]*ms.*%\1%p'                                                                                                                      # get time msec
+p[111]='s%^\(.*swap\)%#\1%'                                                                                                                                   # do not use swap
 
 p[200]='0x93bf23a587f11f9eca329a12ef51296b8a9848af8c0fe61201524b14cb85b0c6fbd3e427501cdfa3b28719bd1ed96fff'
 p[201]='0xb5b0fc3d2ba577f3e2c7324f7ea4306f17eeee0f12c722f4fa83e45bf6c15477d50261bb2666c30f21ab71a26aeeeafb'
