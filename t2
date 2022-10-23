@@ -49,7 +49,7 @@ if [[ $cust = hrv ]];then
   cc4 ${p[35]} "${p[82]}"                                     ;cmw ${p[35]} 644 root                                                                          # ssh config
   cc3 ${p[28]} "${p[48]}" "${p[55]}"                          ;cmw ${p[28]} 644 root bind                                                                     # named my options
   cc1 ${p[29]} "${p[42]}"                                     ;cmw ${p[29]} 644 root                                                                          # use only ipv4
-  cc1 ${p[39]} "${p[111]}"                                    ;cmw ${p[39]} 644 root                                                                          # do not use swap
+  cc1 ${p[39]} "${p[111]}"                                    ;cmw ${p[39]} 644 root                                                                          # no swap - bad for IOPS
   nex 'update-grub'
   t6 spd;t6 sea;nex "${p[62]} systemd-resolved";nex "${p[63]} systemd-resolved"                                                                               # DNS stop & start
 else
