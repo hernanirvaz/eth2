@@ -17,7 +17,7 @@ function fs5 { if [[ $1 ]];then grep -i "[a-z][a-z][a-z]  *[0-9]* $1";else grep 
 function fs6 { if [[ $1 ]];then grep -i "[a-z][a-z][a-z]  *[0-9]* $1";else grep -i  'error'    ;fi; }                                                         # filter system    log lines
 function lg0 { grep $1 $2 2>${p[3]}|tail -n1|lg1 $1; }                                                                                                        # get last  number   from log
 function lg1 { sed "s%$1 *\([0-9]*\).*%\1%" $2 2>${p[3]}; }                                                                                                   # get list  numbers  from log
-function lg2 { local e='Delayed.head.block';if [[ ${1:-0} -gt 0 ]];then l4=$(rl2 $e|tail -n${1:-0});else l4=$(rl2 $e);fi; }                                   # set cc specific log lines
+function lg2 { local e='Delayed.head.block';if [[ ${1:-0} -gt 0 ]];then l4=$(rl2 $e|grep -v None|tail -n${1:-0});else l4=$(rl2 $e|grep -v None);fi; }         # set cc specific log lines
 function lg3 { local e='Imported'          ;if [[ ${1:-0} -gt 0 ]];then l4=$(rl3 $e|tail -n${1:-0});else l4=$(rl3 $e);fi; }                                   # set ec specific log lines
 function lg4 { if [[ $l4 ]];then echo "$l4"|sed -n "$1${p[105]}";echo "$l4"|sed -n "$1${p[106]}";echo "$l4"|sed -n "$1${p[107]}";else echo 1;fi; }            # get s/ms delays from log lines
 function lg5 { if [[ $l4 ]];then echo "$l4"|sed -n "$1${p[108]}";echo "$l4"|sed -n "$1${p[109]}";echo "$l4"|sed -n "$1${p[110]}";else echo 1;fi; }            # get s/ms delays from log lines
