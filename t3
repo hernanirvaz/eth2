@@ -89,6 +89,7 @@ else
   fi
   othe=''
   othe="$othe --suggested-fee-recipient ${p[99]}"                                                                                                             # vc level fees
+  othe="$othe --disable-run-on-all"                                                                                                                           # no subscription/preparation messages
   # othe="$othe --monitoring-endpoint https://beaconcha.in/api/v1/client/metrics?apikey=$B&machine=$(snc $cunm)"                                              # monitor data for beaconcha.in app
   # othe="$othe --builder-proposals"                                                                                                                          # mev-boost
   sau eth3;cd ${p[9]}
