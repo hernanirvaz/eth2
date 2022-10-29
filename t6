@@ -244,6 +244,7 @@ function bsb {                                                                  
     rm $f;ssf 20 ${p[15]};bro $n $2
   fi;done;rm -f $f
 }
+function irb { rm -f ${p[93]}.*.hours 2>${p[3]};if sot $1;then gp;up;bp;sex reboot;fi;if srt;then touch ${p[93]}.$1.hours;fi; }                               # reboot if system needs it
 function brh { head -n${1:-0} ${p[11]}r; }                                                                                                                    # new cc head lines
 function brl {                                                                                                                                                # recalculate cc logs
   [[ -f ${p[11]} ]] || return;rm -f ${p[11]}r
@@ -455,9 +456,9 @@ function mrs { local f='';for f in $(ls $1 2>${p[3]});do curl -sX GET "${p[85]}$
 [[ $1 = nsh ]] && { nsh; }
 [[ $1 = tvc ]] && { tvc; }
 [[ $1 = ul  ]] && { ul0;swn "$m"; }
-[[ $1 = ulf ]] && { ul0;swn "$m" >> ${p[89]};[[ $ok != OK ]] && urs 0; }                                                                                      # el log/restart
+[[ $1 = ulf ]] && { ul0;swn "$m" >> ${p[89]};[[ $ok != OK ]] && urs 0;pas; }                                                                                  # el log/restart
 [[ $1 = gl  ]] && { gl0;swn "$m"; }
-[[ $1 = glf ]] && { gl0;swn "$m" >> ${p[13]};[[ $ok != OK ]] && grs 0; }                                                                                      # el log/restart
+[[ $1 = glf ]] && { gl0;swn "$m" >> ${p[13]};[[ $ok != OK ]] && grs 0;pas; }                                                                                  # el log/restart
 [[ $1 = bl  ]] && { bl0;swn "$m"; }
 [[ $1 = bm  ]] && { bm0;bmo;swn "$m"; }
 [[ $1 = bn  ]] && { bm0;bno;swn "$m"; }
@@ -497,7 +498,7 @@ function mrs { local f='';for f in $(ls $1 2>${p[3]});do curl -sX GET "${p[85]}$
 [[ $1 = brb ]] && { brs ${2:-0} RB; }
 [[ $1 = grb ]] && { grs ${2:-0} RB; }
 [[ $1 = urb ]] && { urs ${2:-0} RB; }
-[[ $1 = irb ]] && { sot ${2:-3} && sex reboot;if srt;then touch ${p[93]}.${2:-3}.hours;else rm -f ${p[93]}.*.hours;fi;pas; }                                  # if system reboot needs & parameter set
+[[ $1 = irb ]] && { irb ${2:-3}   ; }
 [[ $1 = lp  ]] && { netstat -tulpn; }
 # outros journal system/lighthouse
 [[ $1 = sl  ]] && { fs2|fs6 $2; }
