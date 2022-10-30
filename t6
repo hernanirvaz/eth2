@@ -500,7 +500,7 @@ function mrs { local f='';for f in $(ls $1 2>${p[3]});do curl -sX GET "${p[85]}$
 [[ $1 = brb ]] && { brs ${2:-0} RB; }
 [[ $1 = grb ]] && { grs ${2:-0} RB; }
 [[ $1 = urb ]] && { urs ${2:-0} RB; }
-[[ $1 = irb ]] && { irb ${2:-3}   ; }
+[[ $1 = irb ]] && { irb ${2:-3};pas; }
 [[ $1 = lp  ]] && { netstat -tulpn; }
 # outros journal system/lighthouse
 [[ $1 = sl  ]] && { fs2|fs6 $2; }
