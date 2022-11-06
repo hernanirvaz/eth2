@@ -22,10 +22,11 @@ function lg3 { local e='Imported'          ;if [[ ${1:-0} -gt 0 ]];then l4=$(rl3
 function lg4 { if [[ $l4 ]];then echo "$l4"|sed -n "$1${p[105]}";echo "$l4"|sed -n "$1${p[106]}";echo "$l4"|sed -n "$1${p[107]}";else echo 1;fi; }            # get s/ms delays from log lines
 function lg5 { if [[ $l4 ]];then echo "$l4"|sed -n "$1${p[108]}";echo "$l4"|sed -n "$1${p[109]}";echo "$l4"|sed -n "$1${p[110]}";else echo 1;fi; }            # get s/ms delays from log lines
 function lg6 { lg2 $1;b5=$(nu3 $(lg4 's%.*imported_delay: '));nm=$(nu3 $(lg4 's%.*observed_delay: ')); }                                                      # set Imported/observed delays
-function rl0 { local n=${1:-0};((n<5)) && rl0    $((n+1));local e=${p[16]}/logs/beacon.log;((n>0)) && e="$e.$n";echo $H|sudo -S cat $e     2>${p[3]}; }       # get cc intern lines
-function rl1 { local n=${2:-0};((n<7)) && rl1 $1 $((n+1));local e=${p[1]}                 ;((n>0)) && e="$e.$n";echo $H|sudo -S grep $1 $e 2>${p[3]}; }       # get all eth  syslog lines
-function rl2 { local n=${2:-0};((n<1)) && rl2 $1 $((n+1));local e=${p[16]}/logs/beacon.log;((n>0)) && e="$e.$n";echo $H|sudo -S grep $1 $e 2>${p[3]}; }       # get specific cc intern log lines
-function rl3 { local n=${2:-0};((n<1)) && rl3 $1 $((n+1));local e=${p[1]}                 ;((n>0)) && e="$e.$n";echo $H|sudo -S grep $1 $e 2>${p[3]}; }       # get ec specific log lines
+function rl0 { local n=${1:-0};((n<0)) && rl0    $((n+1));local e=${p[16]}/logs/beacon.log   ;((n>0)) && e="$e.$n";echo $H|sudo -S cat $e     2>${p[3]}; }    # get cc intern lines
+function rl1 { local n=${2:-0};((n<7)) && rl1 $1 $((n+1));local e=${p[1]}                    ;((n>0)) && e="$e.$n";echo $H|sudo -S grep $1 $e 2>${p[3]}; }    # get all eth  syslog lines
+function rl2 { local n=${2:-0};((n<1)) && rl2 $1 $((n+1));local e=${p[16]}/logs/beacon.log   ;((n>0)) && e="$e.$n";echo $H|sudo -S grep $1 $e 2>${p[3]}; }    # get specific cc intern log lines
+function rl3 { local n=${2:-0};((n<1)) && rl3 $1 $((n+1));local e=${p[1]}                    ;((n>0)) && e="$e.$n";echo $H|sudo -S grep $1 $e 2>${p[3]}; }    # get ec specific log lines
+function rl4 { local n=${1:-0};((n<0)) && rl4    $((n+1));local e=${p[17]}/logs/validator.log;((n>0)) && e="$e.$n";echo $H|sudo -S cat $e     2>${p[3]}; }    # get cc intern lines
 function pt0 { until [[ $# -le 1 || $1 =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]];do shift;done;echo $1; }                                                            # yyyy-mm-dd test
 function pt1 { until [[ $# -le 1 || $1 =~ ^[0-9]{2}:[0-9]{2}$          ]];do shift;done;echo $1; }                                                            # hh:mm      test
 function pt2 { until [[ $# -le 1 || $1 =~ ^[0-9]+$                     ]];do shift;done;echo $1; }                                                            # integer    test
@@ -508,7 +509,9 @@ function mrs { local f='';for f in $(ls $1 2>${p[3]});do curl -sX GET "${p[85]}$
 [[ $1 = cl  ]] && { fs0 . 0 ${p[103]}|fs5 $2; }
 [[ $1 = ml  ]] && { fs0 . 0 ${p[101]}|fs5 $2; }
 [[ $1 = ll  ]] && { rl1 ${p[104]}|fs5 $2; }
-[[ $1 = nl  ]] && { rl0          |fs5 $2; }
+[[ $1 = ci  ]] && { rl0          |fs5 $2; }
+[[ $1 = vi  ]] && { rl4          |fs5 $2; }
+[[ $1 = ni  ]] && { (rl0;rl4)    |fs5 $2|sort -M; }
 [[ $1 = ws  ]] && { cex 'ufw status numbered'; }
 [[ $1 = wa  ]] && { wa; }
 [[ $1 = we  ]] && { yex 'ufw enable'; }
@@ -640,12 +643,10 @@ if [[ ! $1 ]];then
   m="$m\nbrb [n]\t\tsystem & beacon\t\t\treboot\twith n peers"
   m="$m\nirb [h]\t\tsystem (if needed)\t\treboot\tafter h hours"
   m="$m\nyj\t\tsystem journal"
-  m="$m\nsl [hh:mm]\tsystem journal  log lines"
-  m="$m\nll [hh:mm]\tel/cl log lines (last 7 days)"
-  m="$m\nel [hh:mm]\tec log lines"
-  m="$m\ncl [hh:mm]\tcc log lines"
-  m="$m\nml [hh:mm]\tmev-boost log lines"
-  m="$m\nnl [hh:mm]\tnode log lines"
+  m="$m\nsl\t[hh:mm]\tsystem journal\tlog lines"
+  m="$m\nll\t[hh:mm]\tel/cl\t\tlog lines (last 7 days)"
+  m="$m\n[ecm]l\t[hh:mm]\tec/cc/mev\tlog lines"
+  m="$m\n[cvn]i\t[hh:mm]\tcc/vc/node\tlog lines (internal)"
   m="$m\nbrl\t\trecalculate cc logs"
   m="$m\nbrm\t\trecalculate cc-daily logs"
   m="$m\nbsl\t\tshrink cc log using barqivo"
