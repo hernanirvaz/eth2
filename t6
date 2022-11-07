@@ -83,9 +83,9 @@ function grs {                                                                  
   fi;done;rm -f $f
 }
 function gdi { lg3 $1;printf '%i' $(nu3 $(lg5 's%.*elapsed=')); }                                                                                             # get delay imported
-function gcl { ${p[8]}/geth attach --exec $1 "http://$ciec:8545" 2>${p[3]}; }                                                                                 # exec RPC HTTP
-function gi0 { echo $@|sed -n 's%.*highestBlock: *\([0-9]*\).*%\1%ip'; }                                                                                      # get el highest block
-function gc0 { echo $@|sed -n 's%.*currentBlock: *\([0-9]*\).*%\1%ip'; }                                                                                      # get el current block
+function gcl { ${p[8]}/geth attach --exec $1 "http://$ciec:8545"      2>${p[3]}; }                                                                            # exec RPC HTTP
+function gi0 { echo $@|sed -n 's%.*highestBlock: *\([0-9]*\).*%\1%ip' 2>${p[3]}; }                                                                            # get el highest block
+function gc0 { echo $@|sed -n 's%.*currentBlock: *\([0-9]*\).*%\1%ip' 2>${p[3]}; }                                                                            # get el current block
 function gv0 { nn=$(nu0 $(ss1 ${p[70]} maxpeers [0-9])); }                                                                                                    # set configured peers
 function gq0 { nr=$(nu0 $(gcl net.peerCount))          ; }                                                                                                    # set el current peers
 function gb1 { if [[ $(echo $@|grep false) ]];then [[ $1 ]] && printf " $1";else printf " syncing: %6i" $(($(gi0 $@)-$(gc0 $@)));fi; }                        # get el syncing blocks remaining
@@ -106,9 +106,9 @@ function urs {                                                                  
 }
 function udi { lg3 $1;printf '%i' $(nu3 $(lg5 's%.* in ')); }                                                                                                 # get delay imported
 function ucl { curl -sX POST --data "{\"jsonrpc\":\"2.0\",\"method\":\"$1\",\"params\":[],\"id\":51}" "http://$ciec:8545" 2>${p[3]}; }                        # exec RPC HTTP
-function ui0 { echo $((16#$(echo $@|sed -n 's%.*highestBlock" *: *"0x\([^"]*\)".*%\1%ip'))); }                                                                # get el highest block
-function uc0 { echo $((16#$(echo $@|sed -n 's%.*currentBlock" *: *"0x\([^"]*\)".*%\1%ip'))); }                                                                # get el current block
-function up0 { nu0  $((16#$(echo $@|sed -n 's%.*result" *: *"0x\([^"]*\)".*%\1%ip'      ))); }                                                                # get el result
+function ui0 { echo $((16#$(echo $@|sed -n 's%.*highestBlock" *: *"0x\([^"]*\)".*%\1%ip'))) 2>${p[3]}; }                                                      # get el highest block
+function uc0 { echo $((16#$(echo $@|sed -n 's%.*currentBlock" *: *"0x\([^"]*\)".*%\1%ip'))) 2>${p[3]}; }                                                      # get el current block
+function up0 { nu0  $((16#$(echo $@|sed -n 's%.*result" *: *"0x\([^"]*\)".*%\1%ip'      ))) 2>${p[3]}; }                                                      # get el result
 function uv0 { nn=$(nu0 $(ss1 ${p[87]} max-peers [0-9])); }                                                                                                   # set configured peers
 function uq0 { nr=$(nu0 $(up0 $(ucl net_peerCount)))                         ; }                                                                              # set el current peers
 function ub1 { if [[ $(echo $@|grep false) ]];then [[ $1 ]] && printf " $1";else printf " syncing: %6i" $(($(ui0 $@)-$(uc0 $@)));fi; }                        # get el syncing blocks remaining

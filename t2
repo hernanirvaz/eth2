@@ -81,6 +81,7 @@ if [[ $cunm = $znm1 || $cunm = $znm4 || $cunm = $vnm1 ]];then                   
 	Group=eth1
 	Restart=always
 	RestartSec=10
+	TimeoutStopSec=300
 	ExecStart=${p[8]}/geth --datadir ${p[18]} --port $pp2p --http --http.addr $zip1$othe --maxpeers $maxp --authrpc.addr $zip1 --authrpc.jwtsecret ${p[18]}/geth/jwt
 	ExecStopPost=${p[9]}/eth2/t8mail GETHSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 	
@@ -113,6 +114,7 @@ if [[ $cunm = $znm1 || $cunm = $znm4 || $cunm = $vnm1 ]];then                   
 	Group=eth1
 	Restart=always
 	RestartSec=10
+	TimeoutStopSec=300
 	ExecStart=${p[0]}/besu/bin/besu --data-path=${p[37]}/data $epec
 	ExecStopPost=${p[9]}/eth2/t8mail BESUSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 	
