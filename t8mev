@@ -13,7 +13,13 @@ if [[ $cunm = $znm2 || $cunm = $vnm2 ]];then                                    
   trgh=950                                                                                                                                                    # timeout getHeader         default 950
   trgp=4000                                                                                                                                                   # timeout getPayload        default 4000
   trrv=3000                                                                                                                                                   # timeout registerValidator default 3000
-  epmv='192.168.8.28:18550'                                                                                                                                   # listen-address default "localhost:18550"
+  mbid=0.02                                                                                                                                                   # minimum bid to accept from a relay
+  epmv='-addr 192.168.8.28:18550'                                                                                                                             # listen-address default "localhost:18550"
+  epmv="$epmv -request-timeout-getheader $trgh"
+  epmv="$epmv -request-timeout-getpayload $trgp"
+  epmv="$epmv -request-timeout-regval $trrv"
+  epmv="$epmv -relay-check -relays $rlys"
+  epmv="$epmv -min-bid $mbid"
   cat <<-EOF > ${p[96]}.service
 	[Unit]
 	Description=mev-boost service
@@ -25,7 +31,7 @@ if [[ $cunm = $znm2 || $cunm = $vnm2 ]];then                                    
 	Group=eth4
 	Restart=always
 	RestartSec=10
-	ExecStart=${p[0]}/mev-boost -addr $epmv -mainnet -request-timeout-getheader $trgh -request-timeout-getpayload $trgp -request-timeout-regval $trrv -relay-check -relays $rlys
+	ExecStart=${p[0]}/mev-boost -mainnet -log-no-version $epmv
 	ExecStopPost=${p[9]}/eth2/t8mail MEVBSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 	
 	[Install]
