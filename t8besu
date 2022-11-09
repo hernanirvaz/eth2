@@ -18,6 +18,7 @@ epec="$epec --rpc-http-cors-origins=chrome-extension://nkbihfbeogaeaoehlefnkodbe
 epec="$epec --max-peers=$maxp"                                                                                                                                # set p2p connections
 epec="$epec --engine-jwt-secret=${p[37]}/data/jwt --host-allowlist=$alow --engine-host-allowlist=$alow"                                                       # MERGE
 epec="$epec --Xplugin-rocksdb-high-spec-enabled"                                                                                                              # boost Besu performance
+epec="$epec --Xbonsai-use-snapshots=true"                                                                                                                     # database snapshots for mutable worldstates
 cat <<-EOF > ${p[87]}.service
 [Unit]
 Description=besu service
