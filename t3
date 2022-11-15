@@ -39,6 +39,7 @@ else
   epec=" --eth1-endpoints http://$zip4:8545,http://$zip1:8545"
   epec=" --execution-endpoint http://$zip1:8551 --execution-jwt ${p[16]}/jwt"                                                                                 # MERGE
   epec="$epec --suggested-fee-recipient ${p[99]}"                                                                                                             # cc level fees
+  epec="$epec --execution-timeout-multiplier 1"                                                                                                               # multiply default execution timeouts
   othe=''
   othe="$othe --subscribe-all-subnets --import-all-attestations"                                                                                              # 5% more profitable
   othe="$othe --validator-monitor-file ${p[16]}/pubkeys"                                                                                                      # monitor validators
