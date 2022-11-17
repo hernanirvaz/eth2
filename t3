@@ -51,7 +51,8 @@ else
   othe="$othe --prune-payloads true"                                                                                                                          # fetch/keep execution payloads default true
   othe="$othe --builder http://192.168.8.28:18550"                                                                                                            # external payload mev-boost
   othe="$othe --builder-profit-threshold 20000000000000000"                                                                                                   # external payload only if reward >= 0.02 ETH
-  othe="$othe --disable-upnp"
+  othe="$othe --disable-upnp"                                                                                                                                 # disable UPnP support
+  # othe="$othe --disable-lock-timeouts"                                                                                                                      # disable timeouts on internal locks
   # othe="$othe --slasher"
   # othe="$othe --monitoring-endpoint https://beaconcha.in/api/v1/client/metrics?apikey=$B&machine=$(snc $cunm)"                                              # monitor data for beaconcha.in app
   swu 'CONFIGURE BEACON';sex "mkdir -p ${p[16]}";cmw ${p[10]} 755 $meeu;sau eth2
