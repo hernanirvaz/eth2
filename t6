@@ -72,7 +72,7 @@ function sso {
   [[ $1 = BEAC ]] && bnn $(fs4 peers:) $(bpc $(bcl peer_count))                                                                                               # set min peers
   [[ $1 = BEAC ]] && e="$e $(printf 'cl:p%02i:m%02i p2p:%5i' $nr $nm $(ss1 $2 port [0-9]))$(bb1 $(bcl syncing))"                                              # cl peers/port tag
   [[ $1 = BEAC ]] && e="$e el:http $(ss1 $2 execution-endpoint '[^ ]'|sed -n ${p[91]})"                                                                       # el http & delays rate
-  [[ $1 = VALI ]] && { dtl;bo5;e="$e vl:m$(printf '%02i' $b3):c$(printf '%02i' $b2) cc:http $(ss1 $2 nodes '[^ ]'|sed -n ${p[91]})"; };swn "$e"               # set homologous/avg & cl http
+  [[ $1 = VALI ]] && { dtl;bo5;e="$e vl:c$(printf '%02i' $b2):m$(printf '%02i' $b3) cc:http $(ss1 $2 nodes '[^ ]'|sed -n ${p[91]})"; };swn "$e"               # set homologous/avg & cl http
 }
 # el control commands
 function grs {                                                                                                                                                # el gap restart
