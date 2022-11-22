@@ -146,15 +146,16 @@ function bl3 { b0=${1:-$(fs0 Valid.block|wc -l)};if [[ $2$3 ]];then b1=$2;b5=$3;
 function bl5 { sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w; }                                                                                               # get number of validators
 function bl6 { tail -n$1 ${p[11]} 2>${p[3]}|cut -d' ' -f1|sort -u|wc -l; }                                                                                    # get cc restart activity
 function bl7 { fs0 attestation.s.*$1|bl5; }                                                                                                                   # get number of paid activities
-#    0  1   2          3     4       5  6   7    8    9  10   11  12 13  14 15 16  17 18 19   20  21 22   23   24  25   26   27
-# BEAC OK   0 2022-11-19 17:55 node50: 55 rp: 4587 1863 ab: 3695 1030 2 err: 1  6  75 11  0  538   0  9 3591  810 io:  415 5047
+function bii { printf '%4i %4i %4i' $b1 $b5 $(((4*b1+b5)/5)); }                                                                                               # shw imported/observed data
+#    0  1   2          3     4       5  6   7    8    9  10   11  12 13  14 15 16  17 18 19   20  21 22   23   24  25   26   27   28
+# BEAC OK   0 2022-11-21 23:46 node50: 55 rp: 3728 2630 ab: 4906 1350 0 err: 0 10 103 12  0  547   0  3 3597  270 io:  370 4336 1163
 function blo {
   m="BEAC $ok $(printf '%3i' $(bu0)) $(dnn) rp: $(nu5 "($z5*$ratt+$b0*$rblk)*$rate/$decp" 10 2 %4.0f)"
   m="$m $(printf '%4i' $(nu4 $zk $zz $zx $zw 1)) ab: $(printf '%4i' $z5) $(printf '%4i' $(bz0)) $(printf '%1i' $b0)"
   m="$m err: $(printf '%1i' $zk) $(printf '%2i' $zz) $(printf '%3i' $zx) $(printf '%2i' $zw) $(printf '%2i' $z1) $(printf '%4i' $z2)"
-  m="$m $(printf '%3i' $(bw0)) $(printf '%2i' $z3) $(printf '%4i' $z4) $(printf '%4i' $(bf0)) io: $(printf '%4i %4i' $b1 $b5)"
+  m="$m $(printf '%3i' $(bw0)) $(printf '%2i' $z3) $(printf '%4i' $z4) $(printf '%4i' $(bf0)) io: $(bii)"
 }
-function bio { lg6 $1;dts;m="BEIO $(printf '%6i' $1) $dt $(printf 'io_2_4: %i %i' $b1 $b5)"; }
+function bio { lg6 $1;dts;m="BEIO $(printf '%6i' $1) $dt io: $(bii)"; }                                                                                       # shw imported/observed delays
 function bcc { if bct       ;then echo c;else echo _;fi; }                                                                                                    # get change configured peers char
 function bdc { if bht && bst;then echo d;else echo _;fi; }                                                                                                    # get delete cc log day       char
 function bmi { zk=0;zz=0;zx=0;unset v;v[1]=0;unset k;k[0]=0;unset z;z[0]=0;unset x;x[0]=0;unset w;w[0]=0;unset c;c[0]=0;unset a;a[0]=0;bm6; }                 # ini err/cnt/avg penalty arrays
@@ -188,12 +189,12 @@ function bnk { local g=${3:-$bpri};if ((g<=bprf));then bnk "${1:-0}${2:-+}${k[$g
 function bnz { local g=${3:-$bpri};if ((g<=bprf));then bnz "${1:-0}${2:-+}${z[$g]}" "$2" $((g+bprs));else echo "$1";fi; }                                     # sum recursively failed target err array
 function bnx { local g=${3:-$bpri};if ((g<=bprf));then bnx "${1:-0}${2:-+}${x[$g]}" "$2" $((g+bprs));else echo "$1";fi; }                                     # sum recursively failed head   err array
 function bnw { local g=${3:-$bpri};if ((g<=bprf));then bnw "${1:-0}${2:-+}${w[$g]}" "$2" $((g+bprs));else echo "$1";fi; }                                     # sum recursively delay         err array
-function bm8 { m="$m $b7 $(printf '%4i %3i %4i %4i' $(bi0) $b4 $b1 $b5)"; }
-#  0    1   2          3     4       5  6   7    8    9   10   11   12   13   14          15   16         17   18  19   20   21
-# BM    1   1 2022-11-20 16:56 node50: 55 mp:    0    0    0  644    0    0    0 all_median:  644 peers__io:  502 -30  458 4930
+function bm8 { m="$m $b7 $(printf '%4i %3i' $(bi0) $b4) $(bii)"; }
+#  0    1   2          3     4       5  6   7    8    9   10   11   12   13   14          15   16         17   18  19   20   21   22
+# BM    2   2 2022-11-21 23:46 node50: 55 mp:    0    0    0 1101    0    0    0 all_median: 1101 peers__io:  706 -30  470 5015 1379
 function bmo { m="BM $(printf '%4i' $b2) $(printf '%3i' $b3) $(dnn) $(bma 'mp:') all_median: $(printf '%4i' ${a[0]})";bm8; }
-#  0    1   2          3     4       5  6        7    8    9   10         11   12  13   14   15
-# BM    1   1 2022-11-20 16:56 node50: 55 penalty:  644 avg:  644 peers__io:  502 -30  458 4930
+#  0    1   2          3     4       5  6        7    8    9   10         11   12  13   14   15   16
+# BM    2   2 2022-11-21 23:49 node50: 55 penalty: 1101 avg: 1101 peers__io:  707 -30  470 5015 1379
 function bms { m="BM $(printf '%4i' $b2) $(printf '%3i' $b3) $(dnn) penalty: $(printf '%4i' ${a[$nn]}) avg: $(printf '%4i' ${a[0]})";bm8; }
 #    0   1          2     3    4 5 6 7 8 9 10 11   12 13 14 15 16 17 18 19   20 21 22 23 24 25 26 27   28 29 30 31 32 33 34 35   36 37 38 39 40 41 42 43
 # BEAC 682 2022-03-16 11:03 cnt: 4 7 0 0 0 10 10 mis: 20 20 20 20 20 20 20 mat: 14 45 30 30 30 30 30 mah: 94 68 40 40 40 40 40 dly: 79 09 50 50 50 50 50
