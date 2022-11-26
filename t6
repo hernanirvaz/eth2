@@ -3,7 +3,7 @@
 source /home/eth/eth2/t1
 
 function nu0 { if [ ${1:-0} -eq $1 ] 2>${p[3]};then echo $1;else echo 0;fi; }                                                                                 # get numeric output (must use [ ] test)
-function nu1 { echo "scale=$2;$1"|bc; }                                                                                                                       # get arbitrary precision calculations
+function nu1 { echo "scale=$2;$1"|bc 2>${p[3]}; }                                                                                                             # get arbitrary precision calculations
 function nu2 { if [[ $# -gt 0 ]];then nu5 "sqrt(((0$(printf '+%i^2' $@))-(0$(printf '+%i' $@))^2/$#)/$#)" 1000 5;else echo 0;fi; }                            # get standard deviation list of numbers
 function nu3 { if [[ $# -gt 0 ]];then nu5 "(0$(printf '+%s' $@))/$#"                                            ;else echo 0;fi; }                            # get average            list of numbers
 function nu4 { if [[ $5 -gt 0 ]];then nu5 "($1*$pmis+$2*$pmat+$3*$pmah+$4*$pdly)/$5*$rate/$decp"          1000 5;else echo 0;fi; }                            # get penalty
