@@ -225,14 +225,14 @@ function bss { echo $((${2:-0}+$(date -d$(sf1 $1) +%s))); }                     
 function bsc { pex "grep lighthouse.$bpid].*INFO ${p[1]}"|tail -n99|grep Sync\ committee|wc -l; }                                                             # get # committee messages
 # slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168
 function brs {                                                                                                                                                # cc/vc gap restart
-  [[ $(ls ${p[15]}.* 2>${p[3]}) || $(bsc) -gt 0 ]] && return;ssf ${3:-0} ${p[15]};local n=${4:-48};[[ $2 = VC ]] && n=60;[[ $2 = RB ]] && n=84
+  [[ $(ls ${p[15]}.* 2>${p[3]}) || $(bsc) -gt 0 ]] && return;ssf ${3:-0} ${p[15]};local n=${4:-60};[[ $2 = VC ]] && n=72;[[ $2 = RB ]] && n=84
   ssw $n ${p[15]};local t=$(sng);local f=${p[15]}.i$(stg);touch $f;local n=0;paf;while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) ${p[15]}
   if spt $t;then rm $f;bv0;snp ${p[71]} $1 $bpri $bprf                        ;[[ $2 = VC ]] && sex "$(pjw 62 73)"                                            # stop cc/conf change?/stop vc?
     if [[ $2 = RB ]];then bro $n $2;gps;ups;sex reboot;else sex "$(pjw 63 71)";[[ $2 = VC ]] && sex "$(pjw 63 73)";ssf 20 ${p[15]};bro $n $2;fi               # stop ec/reboot|start cc+vc
   fi;done;rm -f $f
 }
 function bsb {                                                                                                                                                # cc/vc gap stop
-  [[ $(ls ${p[15]}.* 2>${p[3]}) || $(bsc) -gt 0 ]] && return;ssf ${3:-0} ${p[15]};local n=${4:-48};[[ $2 = VC ]] && n=72
+  [[ $(ls ${p[15]}.* 2>${p[3]}) || $(bsc) -gt 0 ]] && return;ssf ${3:-0} ${p[15]};local n=${4:-60};[[ $2 = VC ]] && n=72
   ssw $n ${p[15]};local t=$(sng);local f=${p[15]}.i$(stg);touch $f;local n=0;paf;while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) ${p[15]}
   if spt $t;then       bv0;snp ${p[71]} $1 $bpri $bprf                        ;[[ $2 = VC ]] && sex "$(pjw 62 73)";local rsp=sim;swn "START BN $rsp?"         # stop cc/vc/conf change
     [[ $rsp =~ na*o* ]] || sex "$(pjw 63 71)";if [[ $2 = VC ]];then swn "START VC $rsp?";[[ $rsp =~ na*o* ]] || sex "$(pjw 63 73)";fi                         # start cc+vc
