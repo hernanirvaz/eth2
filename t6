@@ -276,14 +276,15 @@ function bdw { cp $1 ${1}o;grep -v $2 ${1}o > $1;grep $2 ${1}o > ${1}d; }       
 function bdl { local d=$(pt0 $1 sai);[[ -f ${p[11]} && $d != sai ]] || return;bdw ${p[11]} $d; }                                                              #         delete cc log day
 function wst { echo $@|sed 's%[^: ]*: *%%g;s%inactive%off%;s%active%on%'; }                                                                                   # get ufw info
 function cpf { local f='';until [[ $# -lt 1 ]];do f="$f, $(basename $1)";shift;done;echo $f; }                                                                # get list basenames
+function tmp {
+  local d=$(fs3|grep throttled|head -n1|sed "${p[95]}");local e=$(fs3|grep normal|tail -n1|sed "${p[95]}");[[ $1$d$e ]] || return
+  local l=0;local n=0;local g=0;for g in $(sensors 2>${p[3]}|sed -n "${p[94]}");do ((n+=1));l=$(nu1 $l$g 1);done                                              # average temperature sensors
+  [[ $d ]] && d="throttled: $d";[[ $e ]] && e="normal: $e";swn "TEMP $(nu5 $l/$((n==0?1:n)) 1 2 %5.1fC) $dt $d $e"                                            # TEMP cpu info
+}
 function cpe {                                                                                                                                                # system status
   local e='NO';[[ $(${p[67]}|sed -n 's%.*synchronized: \([a-z]*\) *%\1%p') = yes ]] && e='OK';dts
   if [[ $(sst ${p[77]} masked) ]];then e="CNTP $e";m=$(ss2 ntp);else e="CSYS $e";m=$(ss2 ${p[77]});fi
-  swn "$e $(printf '%3i' $(fs0 clock|wc -l)) $dt status: $m"                                                                                                  # clock info
-  [[ $1 = c ]] && return;local l=0;local n=0;local d=$(fs3|grep throttled|head -n1|sed "${p[95]}");local e=$(fs3|grep normal|tail -n1|sed "${p[95]}")
-  local g=0;for g in $(sensors 2>${p[3]}|sed -n "${p[94]}");do ((n+=1));l=$(nu1 $l$g 1);done                                                                  # average temperature sensors
-  [[ $d ]] && d="throttled: $d";[[ $e ]] && e="normal: $e";[[ $d$e ]] && swn "TEMP $(nu5 $l/$((n==0?1:n)) 1 2 %5.1fC) $dt $d $e"                              # TEMP cpu info
-  [[ $1 = p ]] && return
+  swn "$e $(printf '%3i' $(fs0 clock|wc -l)) $dt status: $m";[[ $1 = c ]] && return;tmp;[[ $1 = p ]] && return                                                # clock & temperature info
   if [[ $(cat ${p[6]} 2>${p[3]}) -eq 0 ]];then e=off;else e=on;fi;if [[ $(cat ${p[7]} 2>${p[3]}) -eq 1 ]];then d=off;else d=on;fi                             # usb/cpu current state
   m="INFO$(printf '%3i' $(fs2|grep usb|grep -i error|wc -l)) $(printf '%3i' $(fs3|wc -l)) $dt"                                                                # usb/cpu erros count
   m="$m usb $e, turbo $d, ufw $(wst $(pex 'ufw status'|grep Status:))"                                                                                        # usb/cpu/ufw info
@@ -453,6 +454,7 @@ function mrs { local f='';for f in $(ls $1 2>${p[3]});do curl -sX GET "${p[85]}$
 [[ $1 = tsh ]] && { cex "${p[67]}";cex "${p[67]} timesync-status";cex "${p[67]} show-timesync"; }
 [[ $1 = nsh ]] && { nsh; }
 [[ $1 = tvc ]] && { tvc; }
+[[ $1 = tmp ]] && { dts;tmp s; }
 [[ $1 = ul  ]] && { ul0;swn "$m"; }
 [[ $1 = ulf ]] && { ul0;swn "$m" >> ${p[89]};[[ $ok != OK ]] && urs 0;pas; }                                                                                  # el log/restart
 [[ $1 = gl  ]] && { gl0;swn "$m"; }
@@ -674,6 +676,7 @@ if [[ ! $1 ]];then
   m="$m\ndrs\t\tdns reset"
   m="$m\ntrs\t\ttime sync restart"
   m="$m\ntsh\t\ttime sync show "
+  m="$m\ntmp\t\ttemperature show"
   m="$m\nchk\t\tcheck server with chkrootkit"
   m="$m\nlup\t\tcheck apt list --upgradable"
   swn "\n$m\n"
