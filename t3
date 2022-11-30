@@ -46,7 +46,8 @@ else
   if [[ $cust = hrv ]];then                                                                                                                                   # syncing from finalized checkpoint
     othe="$othe --checkpoint-sync-url http://192.168.8.34:5052"
   else
-    othe="$othe --checkpoint-sync-url https://1q1s6o6cB6Jysu7KKlbLUYiOdAM:8974468780164028652df958a69fbd30@eth2-beacon-mainnet.infura.io"
+    # othe="$othe --checkpoint-sync-url https://1q1s6o6cB6Jysu7KKlbLUYiOdAM:8974468780164028652df958a69fbd30@eth2-beacon-mainnet.infura.io"
+    othe="$othe --checkpoint-sync-url https://mainnet.checkpoint.sigp.io"
   fi
   othe="$othe --prune-payloads true"                                                                                                                          # fetch/keep execution payloads default true
   othe="$othe --builder http://192.168.8.28:18550"                                                                                                            # external payload mev-boost
