@@ -22,7 +22,8 @@ else
   cex 'ufw status numbered'                                                                                                                                   # show
 fi
 [[ -f $(pjp 4 70).service || -f $(pjp 4 87).service || -f $(pjp 4 71).service || -f $(pjp 4 73).service ]] && exit                                            # ec/cl instalados -> exit
-swu 'UPDATE LINUX'       ;t4update linux;sex 'apt install python3-pip net-tools apt-listchanges landscape-common software-properties-common -y'
+swu 'UPDATE LINUX'       ;t4update linux
+swu 'ADDITIONAL LINUX'   ;sex 'apt install python3-pip net-tools apt-listchanges landscape-common software-properties-common smartmontools -y'
 swu 'UNATTENDED UPGRADES';cex 'apt install unattended-upgrades update-notifier-common -y'
 swu 'LINUX CONFIGS'
 if [[ $cunm = $znm2 ]];then
