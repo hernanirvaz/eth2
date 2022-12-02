@@ -281,8 +281,8 @@ function tm0 {
   if [[ $cunm = $znm4 ]];then local d=$(pex "${p[114]} /dev/nvme0n1");local e=$(echo $e $(echo $d|jq -r ${p[112]} 2>${p[3]}));fi;nu3 $e
 }
 function tmp {
-  local d=$(fs3|grep throttled|head -n1|sed "${p[95]}");local e=$(fs3|grep normal|tail -n1|sed "${p[95]}");local t=$(tm0);[[ $1$d$e ]] || return
-  local l=0;local n=0;local g=0;for g in $(sensors 2>${p[3]}|sed -n "${p[94]}");do ((n+=1));l=$(nu1 $l$g 1);done                                              # average temperature sensors
+  local d=$(fs3|grep throttled|head -n1|sed "${p[95]}");local e=$(fs3|grep normal|tail -n1|sed "${p[95]}");local t=$(tm0)
+  [[ $1$d$e || $t -gt 40 ]] || return;local l=0;local n=0;local g=0;for g in $(sensors 2>${p[3]}|sed -n "${p[94]}");do ((n+=1));l=$(nu1 $l$g 1);done          # average temperature sensors
   [[ $d ]] && d="throttled: $d";[[ $e ]] && e="normal: $e";swn "TEMP $(nu5 $l/$((n==0?1:n)) 1 2 %5.1fC) $dt $(printf 'ssd: %iC %s %s' $t $d $e)"              # TEMP cpu/ssd info
 }
 function cpe {                                                                                                                                                # system status
