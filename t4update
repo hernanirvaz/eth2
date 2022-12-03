@@ -17,7 +17,7 @@ if [[ $1 = linux || $1 = reboot || $1 = geth ]];then
   cex 'apt autoremove -y';cex 'apt autoclean'
   [[ $1 = reboot ]] && cex 'reboot'
 fi
-if [[ $1 = besu ]];then sex "rm -fr ${p[0]}/besu.sav"     ;sex "mv ${p[0]}/besu      ${p[0]}/besu.sav"     ;unv ${2:-22.10.1};fi                              # save/download/install besu
+if [[ $1 = besu ]];then sex "rm -fr ${p[0]}/besu.sav"     ;sex "mv ${p[0]}/besu      ${p[0]}/besu.sav"     ;unv ${2:-22.10.2};fi                              # save/download/install besu
 if [[ $1 = mev  ]];then sex "rm -f  ${p[0]}/mev-boost.sav";sex "mv ${p[0]}/mev-boost ${p[0]}/mev-boost.sav";mnv              ;fi                              # save/download/install mev-boost
 [[ $1 = cc || $1 = cp ]] || { [[ $1 ]] || hlp;exit; }
 if [[ $1 = cc && ($cunm = $znm2 || $cunm = $znm4 || $cunm = $vnm1) ]];then [[ -x ${p[9]}/.cargo/bin/rustup ]] && t6 ruv $3;t6 luc $2;fi                       # rust update & cc upgrade/compile
