@@ -51,7 +51,8 @@ function dnn { echo "$dt $(printf 'node%02i:' $nn) $(printf '%2i' $nr)"       ; 
 function tsy { if [[ $(echo $@|grep false) ]];then echo SYC;else echo NSY;fi  ; }                                                                             # get el SYN/NSY text
 function era { tail -n$ehrs $1 2>${p[3]}|cut -d' ' -f1|sort -u|wc -l; }                                                                                       # get el restart activity
 function eh0 { [[ -f $1 ]] || return;tail -n${2:-$ehrs} $1; }                                                                                                 # el historic report
-function eb0 { e0=$(fs0 $2 0 $3|wc -l);ok=OK;[[ ($e0 -eq $(lg0 .*sgs: $1) || $nr -lt $(((nn*100-nn*30)/100))) && $(era $1) -eq 1 ]] && ok=BK; }               # Imported new chain segment & OK/BK
+function eb0 { e0=$(fs0 $2 0 $3|wc -l);ok=OK;[[ $(echo $@|grep false) && ($e0 -eq $(lg0 .*sgs: $1) || $nr -lt $(eb1)) && $(era $1) -eq 1 ]] && ok=BK; }       # Imported new chain segment & OK/BK
+function eb1 { echo $(((nn*100-nn*30)/100)); }                                                                                                                # get current peers-30%
 function ero { dts;[[ -f $2 ]] && swn "$(printf 'R%03i' $1) ${3:-RS} SRV $(dnn)" >> $2; }                                                                     # log restart info
 function sng { ${p[9]}/eth2/t7 2>${p[3]}; }                                                                                                                   # get next gap without validator tasks
 function stg { echo $(date -d@${1:-0} +%M:%S|tr -d :)t$(date -d@$(($(date +%s)+${1:-0})) +%H:%M:%S|tr -d :); }                                                # get end file sleep tag
@@ -91,7 +92,7 @@ function gq0 { nr=$(nu0 $(gcl net.peerCount))          ; }                      
 function gb1 { if [[ $(echo $@|grep false) ]];then [[ $1 ]] && printf " $1";else printf " syncing: %6i" $(($(gi0 $@)-$(gc0 $@)));fi; }                        # get el syncing blocks remaining
 function gl0 {                                                                                                                                                # el report
   dts;ok=OK
-  if [[ $(sst ${p[70]} running) ]];then local e=$(gcl eth.syncing);gv0;gq0;eb0 ${p[13]} Imported ${p[47]}
+  if [[ $(sst ${p[70]} running) ]];then local e=$(gcl eth.syncing);gv0;gq0;eb0 ${p[13]} Imported ${p[47]} $e
     m="GETH $ok $(tsy $e) $(dnn) sgs: $(printf '%4i' $e0)$(gb1 '' $e) i2: $(gdi 99)"                                                                          # OK SYC/NSY (dnn) sgs: 5 blocks: 8
   else
     m="GSRV NOT ON $dt"
@@ -114,7 +115,7 @@ function uq0 { nr=$(nu0 $(up0 $(ucl net_peerCount)))                         ; }
 function ub1 { if [[ $(echo $@|grep false) ]];then [[ $1 ]] && printf " $1";else printf " syncing: %6i" $(($(ui0 $@)-$(uc0 $@)));fi; }                        # get el syncing blocks remaining
 function ul0 {                                                                                                                                                # el report
   dts;ok=OK
-  if [[ $(sst ${p[87]} running) ]];then local e=$(ucl eth_syncing);uv0;uq0;eb0 ${p[89]} Imported ${p[102]}
+  if [[ $(sst ${p[87]} running) ]];then local e=$(ucl eth_syncing);uv0;uq0;eb0 ${p[89]} Imported ${p[102]} $e
     m="BESU $ok $(tsy $e) $(dnn) sgs: $(printf '%4i' $e0)$(ub1 '' $e) i2: $(udi 99)"                                                                          # OK SYC/NSY (dnn) sgs: 5 blocks: 8
   else
     m="BSRV NOT ON $dt"
