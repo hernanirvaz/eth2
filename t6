@@ -66,7 +66,7 @@ function ssf { [[ $1 -gt 0 ]] || return;local f=$2.s$(stg $1);touch $f;sleep $1s
 # slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168
 function ssw { while :;do local t=$(sng);if [[ $(sf2 $t) -le ${1:-36} || 24 -ge $(sfn $t) ]];then ssf $(smn $(sfn $t)) $2;else break;fi;done; }               # sleep while small (gap or remaining) time
 function sso {
-  [[ $(sst $2 loaded) ]] || return;dts;local e="$1 $(printf '%6s' $(ss1 $2 Memory:)) $dt status: $(printf '%-40s' "$(ss2 $2)")"                               # memory & status
+  [[ $(sst $2 disabled) || ! $(sst $2 $2) ]] && return;dts;local e="$1 $(printf '%6s' $(ss1 $2 Memory:)) $dt status: $(printf '%-40s' "$(ss2 $2)")"           # memory & status
   [[ $1 = GETH ]] && bnn $(fs0 peercount= 0 ${p[47]} |lg1 .*peercount=) $(nu0 $(gcl net.peerCount))                                                           # set min peers
   [[ $1 = GETH ]] && e="$e $(printf 'el:p%02i:m%02i p2p:%5i' $nr $nm $(ss1 $2 port     [0-9]))$(gb1 synced $(gcl eth.syncing)) i2:$(gdi)"                     # el peers/port tag
   [[ $1 = BESU ]] && bnn $(fs0 Peers:     0 ${p[102]}|lg1 .*Peers:)     $(up0 $(ucl net_peerCount))                                                           # set min peers
