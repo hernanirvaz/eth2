@@ -281,7 +281,8 @@ function cpf { local f='';until [[ $# -lt 1 ]];do f="$f, $(basename $1)";shift;d
 function tmp {
   local d=$(fs3|grep throttled|head -n1|sed "${p[95]}");local e=$(fs3|grep normal|tail -n1|sed "${p[95]}");local l=$(pex "${p[114]} /dev/sda")
   local g=$(echo $(echo $l|jq -r "${p[112]}" 2>${p[3]}) $(echo $l|jq -r "${p[113]}" 2>${p[3]}));local l=$(sensors 2>${p[3]}|sed -n "${p[94]}")
-  if [[ $cunm = $znm4 ]];then local g=$(echo $g $(pex "${p[114]} /dev/nvme0n1"|jq -r "${p[112]}" 2>${p[3]}));fi;[[ $1$d$e || $(nu3 $g) -gt 40 ]] || return
+  if [[ $cunm = $znm4 ]];then local g=$(echo $g $(pex "${p[114]} /dev/nvme0n1"|jq -r "${p[112]}" 2>${p[3]}));fi
+  [[ $1$d$e || $(nu3 $l) -gt 50 || $(nu3 $g) -gt 40 ]] || return
   [[ $d ]] && d="throttled: $d";[[ $e ]] && e="normal: $e";swn "TEMP $(printf '%5.1fC %s %s ssd: %.1fC %s %s' $(nu6 $l) $dt $(nu6 $g) $d $e)"                 # TEMP cpu/ssd info
 }
 function cpe {                                                                                                                                                # system status
