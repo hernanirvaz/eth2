@@ -4,21 +4,21 @@ source /home/eth/eth2/t1
 
 function jva { local f=$(basename $1);cp $1 $f.sav;cp $1 $f.new;echo -e "$2" >> $f.new;sex "cp $f.new $1"; }                                                  # add lines to end file
 
-swu 'INSTALAR BESU';sex 'apt install default-jdk libjemalloc-dev -y';jva ${p[36]} "${p[88]}";cmw ${p[36]} 644 root                                            # besu execution client needs
-sex "mkdir -p ${p[37]}/data";sau eth1;cmw ${p[37]} 755 eth1;cmw ${p[37]}/data 700 eth1                                                                        # create dir & user for ec
+swu 'INSTALAR BESU';sex 'apt install default-jdk libjemalloc-dev -y';jva $p36 "$s25";cmw $p36 644 root                                                        # besu execution client needs
+sex "mkdir -p $p09/data";sau eth1;cmw $p09 755 eth1;cmw $p09/data 700 eth1                                                                                    # create dir & user for ec
 unv                                                                                                                                                           # download/install besu binaries
 alow='192.168.8.25,192.168.8.31,192.168.8.34'                                                                                                                 # my servers
 maxp=25    # default
 pp2p=30303 # default
-epec="--miner-enabled=true --miner-coinbase=\"${p[99]}\""                                                                                                     # coincashew guide had these NOT USING
+epec="--miner-enabled=true --miner-coinbase=\"$s26\""                                                                                                         # coincashew guide had these NOT USING
 epec="--pruning-enabled=true"                                                                                                                                 # pruning deprecated for bonsai tries
 epec="--sync-mode=X_SNAP --data-storage-format=BONSAI"                                                                                                        # recommend snap sync/bonsai
 epec="$epec --p2p-port=$pp2p --rpc-http-enabled=true --rpc-http-host=$zip1"                                                                                   # enable  rpc:8545
 epec="$epec --rpc-http-cors-origins=chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn"                                                                      # for metamask
 epec="$epec --max-peers=$maxp"                                                                                                                                # set p2p connections
-epec="$epec --engine-jwt-secret=${p[37]}/data/jwt --host-allowlist=$alow --engine-host-allowlist=$alow"                                                       # MERGE
+epec="$epec --engine-jwt-secret=$p09/data/jwt --host-allowlist=$alow --engine-host-allowlist=$alow"                                                           # MERGE
 epec="$epec --Xplugin-rocksdb-high-spec-enabled"                                                                                                              # boost Besu performance
-cat <<-EOF > ${p[87]}.service
+cat <<-EOF > $s11.service
 [Unit]
 Description=besu service
 Wants=network-online.target
@@ -30,14 +30,14 @@ Group=eth1
 Restart=always
 RestartSec=10
 TimeoutStopSec=300
-ExecStart=${p[0]}/besu/bin/besu --data-path=${p[37]}/data $epec
-ExecStopPost=${p[9]}/eth2/t8mail BESUSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
+ExecStart=$p00/besu/bin/besu --data-path=$p09/data $epec
+ExecStopPost=$p02/eth2/t8mail BESUSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 
 [Install]
 WantedBy=multi-user.target
 EOF
-sex "mv ${p[87]}.service $(pjp 4 87).service";cmw $(pjp 4 87).service 644
-if [[ -f jwt ]];then sjw eth1 ${p[37]}/data;else swb "needs ${p[37]}/data/jwt secret";fi
+sex "mv $s11.service $p04";cmw $p04/$s11.service 644
+if [[ -f jwt ]];then sjw eth1 $p09/data;else swb "needs $p09/data/jwt secret";fi
 
 swn 'sudo netplan apply'
 swn 'AND reboot'

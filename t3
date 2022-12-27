@@ -6,19 +6,19 @@ function hlp { swn "\n\ninstall consencus client with lighthouse-${1:-stable} so
 
 if [[ $cunm = $znm4 || $cunm = $znm2 || $cunm = $vnm1 ]];then
   hlp
-  if [[ -x ${p[9]}/.cargo/bin/rustup ]];then
+  if [[ -x $p02/.cargo/bin/rustup ]];then
     t6 ruv $2                                                                                                                                                 # rust update
   else
     swu 'BASE NEEDS';cex 'apt install curl build-essential libssl-dev libudev-dev perl yasm -y'                                                               # base dependencies
     swu 'RUST NEEDS';cex 'apt install git gcc g++ make cmake pkg-config llvm-dev libclang-dev clang protobuf-compiler -y'                                     # rust dependencies
 
-    swu 'RUST INSTALL';cd ${p[9]};curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh;source "$HOME/.cargo/env"                                    # rust install
+    swu 'RUST INSTALL';cd $p02;curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh;source "$HOME/.cargo/env"                                       # rust install
   fi
-  [[ -f ${p[9]}/.cargo/bin/lighthouse ]] || t6 luc $1                                                                                                         # cc compile
+  [[ -f $p02/.cargo/bin/lighthouse ]] || t6 luc $1                                                                                                            # cc compile
 fi
 t6 lpi                                                                                                                                                        # cc propagate/install
-if [[ $cunm = $znm1 || -f $(pjp 4 71).service ]];then                                                                                                         # cc not here
-  if [[ -f $(pjp 4 71).service ]];then swu "cc ja instalado";else swu 'cc NAO DEVE SER INSTALADO AQUI';fi
+if [[ $cunm = $znm1 || -f $p04/$s12.service ]];then                                                                                                           # cc not here
+  if [[ -f $p04/$s12.service ]];then swu "cc ja instalado";else swu 'cc NAO DEVE SER INSTALADO AQUI';fi
 else
   # slots per restore point after init can't be changed
   sprp=1024 # Yearly Disk Usage  12.8GB
@@ -37,12 +37,12 @@ else
   [[ $cunm = $vnm1 ]] && http=" --http-address $vip1"
   epec=" --eth1-endpoints http://$zip1:8545,https://eth-mainnet.alchemyapi.io/v2/vzq1DD3EX7ipGuKck4440uRuccDdVvTm,https://mainnet.infura.io/v3/65be3572c577449f86d92b2e69cd6b06,https://mainnet.infura.io/v3/2c680650de0443cf8ab433565e47a42d"
   epec=" --eth1-endpoints http://$zip4:8545,http://$zip1:8545"
-  epec=" --execution-endpoint http://$zip1:8551 --execution-jwt ${p[16]}/jwt"                                                                                 # MERGE
+  epec=" --execution-endpoint http://$zip1:8551 --execution-jwt $p16/jwt"                                                                                     # MERGE
   epec="$epec --execution-timeout-multiplier 1"                                                                                                               # multiply default execution timeouts
-  epec="$epec --suggested-fee-recipient ${p[99]}"                                                                                                             # cc level fees
+  epec="$epec --suggested-fee-recipient $s26"                                                                                                                 # cc level fees
   othe=''
   othe="$othe --subscribe-all-subnets --import-all-attestations"                                                                                              # 5% more profitable
-  othe="$othe --validator-monitor-file ${p[16]}/pubkeys"                                                                                                      # monitor validators
+  othe="$othe --validator-monitor-file $p16/pubkeys"                                                                                                          # monitor validators
   if [[ $cust = hrv ]];then                                                                                                                                   # syncing from finalized checkpoint
     othe="$othe --checkpoint-sync-url http://192.168.8.34:5052"
   else
@@ -56,11 +56,12 @@ else
   # othe="$othe --disable-lock-timeouts"                                                                                                                      # disable timeouts on internal locks
   # othe="$othe --slasher"
   # othe="$othe --monitoring-endpoint https://beaconcha.in/api/v1/client/metrics?apikey=$B&machine=$(snc $cunm)"                                              # monitor data for beaconcha.in app
-  swu 'CONFIGURE BEACON';sex "mkdir -p ${p[16]}";cmw ${p[10]} 755 $meeu;sau eth2
-  pjv $(seq 200 221) > ${p[10]}/pubkeys;sex "mv ${p[10]}/pubkeys ${p[16]}";cmw ${p[16]}/pubkeys 600 eth2
-  cmw ${p[16]} 700 eth2;touch ${p[10]}/vc_lock;cd ${p[9]}                                                                                                     # IMPORTANTE LOCK vc
+  swu 'CONFIGURE BEACON';sex "mkdir -p $p16";cmw $p05 755 $meeu;sau eth2
+  echo "$s70,$s71,$s72,$s73,$s74,$s75,$s76,$s77,$s78,$s79,$s80,$s81,$s82,$s83,$s84,$s85,$s86,$s87,$s88,$s89,$s90,$s91" > $p05/pubkeys
+  sex "mv $p05/pubkeys $p16";cmw $p16/pubkeys 600 eth2
+  cmw $p16 700 eth2;touch $p05/vc_lock;cd $p02                                                                                                                # IMPORTANTE LOCK vc
   pp2p=9000                                                                                                                                                   # default
-  cat <<-EOF > ${p[71]}.service
+  cat <<-EOF > $s12.service
 	[Unit]
 	Description=beacon service
 	Wants=network-online.target
@@ -71,17 +72,17 @@ else
 	Group=eth2
 	Restart=always
 	RestartSec=10
-	ExecStart=${p[0]}/lighthouse --datadir ${p[10]} bn --port $pp2p --target-peers $tarp$http --staking$epec$othe
-	ExecStopPost=${p[9]}/eth2/t8mail BEACSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
+	ExecStart=$p00/lighthouse --datadir $p05 bn --port $pp2p --target-peers $tarp$http --staking$epec$othe
+	ExecStopPost=$p02/eth2/t8mail BEACSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 	
 	[Install]
 	WantedBy=multi-user.target
 	EOF
-  sex "mv ${p[71]}.service $(pjp 4 71).service";cmw $(pjp 4 71).service 644
-  if [[ -f jwt ]];then sjw eth2 ${p[16]};else swb "needs ${p[16]}/jwt secret";fi
+  sex "mv $s12.service $p04";cmw $p04/$s12.service 644
+  if [[ -f jwt ]];then sjw eth2 $p16;else swb "needs $p16/jwt secret";fi
 fi
-if [[ $cunm != $cuvc || $cunm != $nxvc || -f ${p[10]}/vc_lock || -f $(pjp 4 73).service ]];then                                                                                         # vc not here
-  if [[ -f $(pjp 4 73).service ]];then swu "vc ja instalado";else swu 'vc NAO PODE SER INSTALADO AQUI';fi
+if [[ $cunm != $cuvc || $cunm != $nxvc || -f $p05/vc_lock || -f $p04/$s13.service ]];then                                                                     # vc not here
+  if [[ -f $p04/$s13.service ]];then swu "vc ja instalado";else swu 'vc NAO PODE SER INSTALADO AQUI';fi
 else
   # external beacon-node before MERGE
   # https://1q1s6o6cB6Jysu7KKlbLUYiOdAM:8974468780164028652df958a69fbd30@eth2-beacon-mainnet.infura.io
@@ -91,23 +92,23 @@ else
     epcc=" --beacon-nodes http://$vip1:5052"
   fi
   othe=''
-  othe="$othe --suggested-fee-recipient ${p[99]}"                                                                                                             # vc level fees
+  othe="$othe --suggested-fee-recipient $s26"                                                                                                                 # vc level fees
   othe="$othe --disable-run-on-all"                                                                                                                           # no subscription/preparation messages
   # othe="$othe --monitoring-endpoint https://beaconcha.in/api/v1/client/metrics?apikey=$B&machine=$(snc $cunm)"                                              # monitor data for beaconcha.in app
   # othe="$othe --builder-proposals"                                                                                                                          # mev-boost
-  sau eth3;cd ${p[9]}
-  if [[ ! -f ${p[10]}/vc_keys && -d ${p[84]} && $(ls -A ${p[84]} 2>${p[3]}) ]];then
-    swu 'IMPORT KEYS';sex "mkdir -p ${p[10]}";cmw ${p[10]} 755 $meeu
-    swn "STORE($K)\n";lighthouse --datadir ${p[10]} account validator import --directory ${p[84]}                                                             # import keys
-    [[ -f ${p[17]}/validator_definitions.yml ]] && touch ${p[10]}/vc_keys                                                                                     # check work
+  sau eth3;cd $p02
+  if [[ ! -f $p05/vc_keys && -d $p19 && $(ls -A $p19 2>$p03) ]];then
+    swu 'IMPORT KEYS';sex "mkdir -p $p05";cmw $p05 755 $meeu
+    swn "STORE($K)\n";lighthouse --datadir $p05 account validator import --directory $p19                                                                     # import keys
+    [[ -f $p17/validator_definitions.yml ]] && touch $p05/vc_keys                                                                                             # check work
   fi
-  if [[ ! -f ${p[10]}/vc_lock && -f ${p[10]}/vc_keys                           ]];then swn "\nDISABLE VC ->\t$cuvc";touch ${p[10]}/vc_lock;fi                 # vc so pode correr num servidor
-  if [[   -f ${p[10]}/vc_lock && -f ${p[10]}/vc_keys && ! -f ${p[10]}/vc_slash ]];then
-    sex "mkdir -p ${p[17]}";cmw ${p[17]} 755 $meeu;sis ${p[9]}/$(basename ${p[31]});sex "chown -R eth3:eth3 ${p[17]}";cmw ${p[17]} 700 eth3
+  if [[ ! -f $p05/vc_lock && -f $p05/vc_keys                       ]];then swn "\nDISABLE VC ->\t$cuvc";touch $p05/vc_lock;fi                                 # vc so pode correr num servidor
+  if [[   -f $p05/vc_lock && -f $p05/vc_keys && ! -f $p05/vc_slash ]];then
+    sex "mkdir -p $p17";cmw $p17 755 $meeu;sis $p02/$(basename $p18);sex "chown -R eth3:eth3 $p17";cmw $p17 700 eth3
   fi
-  if [[ -f ${p[10]}/vc_slash && -f ${p[10]}/vc_lock && -f ${p[10]}/vc_keys ]];then
+  if [[ -f $p05/vc_slash && -f $p05/vc_lock && -f $p05/vc_keys ]];then
     swu 'vc CONFIG'
-    cat <<-EOF > ${p[73]}.service
+    cat <<-EOF > $s13.service
 		[Unit]
 		Description=validator service
 		Wants=network-online.target
@@ -118,13 +119,13 @@ else
 		Group=eth3
 		Restart=always
 		RestartSec=10
-		ExecStart=${p[0]}/lighthouse --datadir ${p[10]} vc$epcc$othe
-		ExecStopPost=${p[9]}/eth2/t8mail VALISTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
+		ExecStart=$p00/lighthouse --datadir $p05 vc$epcc$othe
+		ExecStopPost=$p02/eth2/t8mail VALISTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 		
 		[Install]
 		WantedBy=multi-user.target
 		EOF
-    sex "mv ${p[73]}.service $(pjp 4 73).service";cmw $(pjp 4 73).service 644
+    sex "mv $s13.service $p04";cmw $p04/$s13.service 644
     swb 'VC CONFIGURADO VERIFICAR TUDO (LOCK & SLASH DB)'
   fi
 fi

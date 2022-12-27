@@ -3,17 +3,17 @@
 source /home/eth/eth2/t1
 
 if [[ $cunm = hrv-zen ]];then
-  cli="${p[9]}/eth2.0-deposit-cli/$(basename ${p[84]})"
+  cli="$p02/eth2.0-deposit-cli/$(basename $p19)"
   bs1="/media/eth/cs1"
   bs2="/media/eth/cs2"
-  cs1="$bs1/$(basename ${p[84]})"
-  cs2="$bs2/$(basename ${p[84]})"
+  cs1="$bs1/$(basename $p19)"
+  cs2="$bs2/$(basename $p19)"
   lng="spanish"
   chi="mainnet"
   if [[ $chi = mainnet ]];then nmv=18;else nmv=3;fi 
-  if [[ -d ${p[84]} && $(ls -A ${p[84]} 2>${p[3]}) ]];then
+  if [[ -d $p19 && $(ls -A $p19 2>$p03) ]];then
     swu 'CHAVES ESTAO PRONTAS'
-  elif [[ -d $cli && $(ls -A $cli 2>${p[3]}) ]];then
+  elif [[ -d $cli && $(ls -A $cli 2>$p03) ]];then
     if [[ -d $bs1 ]];then
       if [[ -d $cs1 ]];then
         swu "ARQUIVO OFFLINE $cs1 JA EXISTE"
@@ -38,7 +38,7 @@ if [[ $cunm = hrv-zen ]];then
     else
       swu "ARQUIVO OFFLINE $bs2 NAO ESTA MONTADO"
     fi
-    cp -R $cli ${p[9]}
+    cp -R $cli $p02
     swu 'CHAVES FORAM ARQUIVADAS - VERIFICAR AQUIVO OFFLINE'
   elif [[ -f $(dirname $cli)/README.md ]];then
     cd $(dirname $cli)
@@ -51,7 +51,7 @@ if [[ $cunm = hrv-zen ]];then
   else
     swu 'INSTALAR SCRIPT CHAVES'
     cex 'apt install python3-pip python3-testresources git -y'
-    cd ${p[9]}
+    cd $p02
     git clone https://github.com/ethereum/$(basename $(dirname $cli)).git
     cd $(dirname $cli)
     cex './deposit.sh install'

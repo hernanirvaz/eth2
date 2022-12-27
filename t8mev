@@ -23,7 +23,7 @@ if [[ $cunm = $znm2 || $cunm = $vnm2 ]];then                                    
   epmv="$epmv -request-timeout-regval $trrv"
   epmv="$epmv -relay-check -relays $rlys"
   epmv="$epmv -min-bid $mbid"
-  cat <<-EOF > ${p[96]}.service
+  cat <<-EOF > $s14.service
 	[Unit]
 	Description=mev-boost service
 	Wants=network-online.target
@@ -34,12 +34,12 @@ if [[ $cunm = $znm2 || $cunm = $vnm2 ]];then                                    
 	Group=eth4
 	Restart=always
 	RestartSec=10
-	ExecStart=${p[0]}/mev-boost -mainnet -log-no-version $epmv
-	ExecStopPost=${p[9]}/eth2/t8mail MEVBSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
+	ExecStart=$p00/mev-boost -mainnet -log-no-version $epmv
+	ExecStopPost=$p02/eth2/t8mail MEVBSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 	
 	[Install]
 	WantedBy=multi-user.target
 	EOF
-  sex "mv ${p[96]}.service $(pjp 4 96).service";cmw $(pjp 4 96).service 644
+  sex "mv $s14.service $p04";cmw $p04/$s14.service 644
 fi
 swn 'para iniciar mev-boost: t mea'

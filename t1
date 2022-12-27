@@ -22,290 +22,285 @@ if [[ $cust = hrv ]];then cicc=$zip3;else cicc=$vip1;fi;[[ $cunm = $znm4 ]] && c
 cuvc=$znm4                                                                                                                                                    # current vc
 nxvc=$znm4                                                                                                                                                    # next    vc
 
-unset p
-p[0]='/usr/local/bin'
-p[1]='/var/log/syslog'
-p[2]='/etc/prometheus'
-p[3]='/dev/null'
-p[4]='/etc/systemd/system'
-p[5]='/var/run/reboot-required'
-p[6]='/sys/bus/usb/devices/1-0:1.0/authorized'
-p[7]='/sys/devices/system/cpu/intel_pstate/no_turbo'
-p[8]='/usr/bin'
-p[9]='/home/eth'
-p[10]='/var/lib/lighthouse';[[ $cunm = $znm2 ]] && p[10]='/sata/lighthouse';[[ $cunm = $znm4 ]] && p[10]='/sata/lighthouse'                                   # cl data
-p[11]="${p[9]}/beacon.log"                                                                                                                                    # cc minute log
-p[12]="${p[9]}/bmedias.log"                                                                                                                                   # cc daily  log
-p[13]="${p[9]}/geth.log"                                                                                                                                      # ec minute log
-p[14]="${p[9]}/barqivo.log"                                                                                                                                   # cc yearly log
-p[15]="${p[9]}/beacon.restart"                                                                                                                                # cl restart control files
-p[16]="${p[10]}/beacon"                                                                                                                                       # cc data
-p[17]="${p[10]}/validators"                                                                                                                                   # vc data
-p[18]='/var/lib/goethereum'                                                                                                                                   # el data
-p[19]="$(dirname ${p[4]})/timesyncd.conf"                                                                                                                     # Network Time Synchronization configuration
-p[20]='/etc/default/motd-news'                                                                                                                                # disable dynamic MOTD news service
-p[21]='/etc/netplan/00-installer-config.yaml'                                                                                                                 # network configuration abstraction
-p[22]='/etc/apt/apt.conf.d/50unattended-upgrades'                                                                                                             # automatically upgrade packages
-p[23]='/etc/update-motd.d/00-header'                                                                                                                          # delete header of the MOTD
-p[24]='/etc/update-motd.d/10-help-text'                                                                                                                       # delete help text associated with the distro
-p[25]='/etc/grub.d/30_os-prober'                                                                                                                              # grub-mkconfig helper script
-p[26]='/etc/logrotate.d/rsyslog'                                                                                                                              # automatic rotation syslog config
-p[27]='/etc/update-motd.d/97-overlayroot'                                                                                                                     # unexecute MOTD Protecting Root Filesystem
-p[28]='/etc/bind/named.conf.options'                                                                                                                          # options domain name server
-p[29]='/etc/default/named'                                                                                                                                    # default domain name server
-p[30]='/etc/ntp.conf'                                                                                                                                         # ntpd config
-p[31]="${p[17]}/slashing_protection.sqlite"                                                                                                                   # cl slashing_protection data
-p[32]='/etc/nginx/conf.d/plexmediaserver.conf'                                                                                                                # nginx config for plex
-p[33]='/etc/transmission-daemon/settings.json'                                                                                                                # transmission settings
-p[34]='/etc/hosts'                                                                                                                                            # hosts config
-p[35]='/etc/ssh/ssh_config.d/ztc.conf'                                                                                                                        # ssh config
-p[36]='/etc/environment'                                                                                                                                      # system environment
-p[37]='/var/lib/javaethereum'                                                                                                                                 # el data
-p[38]='/sata/eth';[[ $cunm = $vnm1 ]] && p[38]=${p[9]}                                                                                                        # cl compile location
-p[39]='/etc/fstab'                                                                                                                                            # static file system information
+p00='/usr/local/bin'
+p01='/var/log/syslog'
+p02='/home/eth'
+p03='/dev/null'
+p04='/etc/systemd/system'
+p05='/var/lib/lighthouse';[[ $cunm = $znm2 ]] && p05='/sata/lighthouse';[[ $cunm = $znm4 ]] && p05='/sata/lighthouse'                                         # cl data
+p06='/sata/eth';[[ $cunm = $vnm1 ]] && p06=$p02                                                                                                               # cl compile location
+p07='/usr/bin'
+p08='/var/lib/goethereum'                                                                                                                                     # el data
+p09='/var/lib/javaethereum'                                                                                                                                   # el data
+p10="$p02/geth.log"                                                                                                                                           # ec minute log
+p11="$p02/besu.log"                                                                                                                                           # ec minute log
+p12="$p02/beacon.log"                                                                                                                                         # cc minute log
+p13="$p02/bmedias.log"                                                                                                                                        # cc daily  log
+p14="$p02/barqivo.log"                                                                                                                                        # cc yearly log
+p16="$p05/beacon"                                                                                                                                             # cc data
+p17="$p05/validators"                                                                                                                                         # vc data
+p18="$p17/slashing_protection.sqlite"                                                                                                                         # cl slashing_protection data
+p19="$p02/validator_keys"
+p20="$(dirname $p04)/timesyncd.conf"                                                                                                                          # Network Time Synchronization configuration
+p21='/etc/default/motd-news'                                                                                                                                  # disable dynamic MOTD news service
+p22='/etc/netplan/00-installer-config.yaml'                                                                                                                   # network configuration abstraction
+p23='/etc/apt/apt.conf.d/50unattended-upgrades'                                                                                                               # automatically upgrade packages
+p24='/etc/update-motd.d/00-header'                                                                                                                            # delete header of the MOTD
+p25='/etc/update-motd.d/10-help-text'                                                                                                                         # delete help text associated with the distro
+p26='/etc/grub.d/30_os-prober'                                                                                                                                # grub-mkconfig helper script
+p27='/etc/logrotate.d/rsyslog'                                                                                                                                # automatic rotation syslog config
+p28='/etc/update-motd.d/97-overlayroot'                                                                                                                       # unexecute MOTD Protecting Root Filesystem
+p29='/etc/bind/named.conf.options'                                                                                                                            # options domain name server
+p30='/etc/default/named'                                                                                                                                      # default domain name server
+p31='/etc/ntp.conf'                                                                                                                                           # ntpd config
+p32='/etc/nginx/conf.d/plexmediaserver.conf'                                                                                                                  # nginx config for plex
+p33='/etc/transmission-daemon/settings.json'                                                                                                                  # transmission settings
+p34='/etc/hosts'                                                                                                                                              # hosts config
+p35='/etc/ssh/ssh_config.d/ztc.conf'                                                                                                                          # ssh config
+p36='/etc/environment'                                                                                                                                        # system environment
+p37='/etc/fstab'                                                                                                                                              # static file system information
+p38='/etc/prometheus'
+p39="$p02/system.restart"                                                                                                                                     # system restart control file
+p40="$p02/geth.restart"                                                                                                                                       # el restart control files
+p41="$p02/besu.restart"                                                                                                                                       # el restart control files
+p42="$p02/beacon.restart"                                                                                                                                     # cl restart control files
+p43='/sys/devices/system/cpu/intel_pstate/no_turbo'
+p44='/sys/bus/usb/devices/1-0:1.0/authorized'
+p45='/var/run/reboot-required'
 
-# sed/grep scripts
-p[40]='s%^ *#*NTP=.*$%NTP=192.168.8.28 ntp02.oal.ul.pt ntp04.oal.ul.pt time.google.com time.cloudflare.com time.facebook.com%i'                               # my time servers
-p[41]='s%^ *ENABLED=.*$%ENABLED=0%i'                                                                                                                          # motd-news disable
-p[42]='s%bind[^"]*"%bind -4"%'                                                                                                                                # use only ipv4
-p[43]='s%^ */* *Unattended-Upgrade::Mail .*$%Unattended-Upgrade::Mail "hernanilr@gmail.com";%i;s%^ */*\(.*codename}-updates.*$\)%\1%i'                        # unattended-upgrades
-p[44]='s%^ *printf%# printf%i'                                                                                                                                # unprint stuff
-p[45]='printf "Welcome to %s %s\\n" "$(uname -n)" "$DISTRIB_DESCRIPTION"'                                                                                     # my header motd
-p[46]='s%timeout *=.*$%timeout=1%i'                                                                                                                           # grub timeout
-p[47]='geth\['                                                                                                                                                # geth logs
-p[48]='/dnssec-validation/q'                                                                                                                                  # print lines until pattern
-p[49]="s%^ *pool \([^a-z]\)%# pool \1%"                                                                                                                       # ntp del other pool servers
-p[49]="${p[49]};s%^ *#.*restrict.*192.*%restrict 192.168.8.0 mask 255.255.255.0 notrap nomodify%"                                                             # ntp my lan unlimited access
-p[49]="${p[49]};/^ *#.*Specify/a "                                                                                                                            # ntp my pool servers
-p[49]="${p[49]}pool 0.pt.pool.ntp.org iburst"
-p[49]="${p[49]}\npool 0.europe.pool.ntp.org iburst"
-p[49]="${p[49]}\npool 1.europe.pool.ntp.org iburst"
-p[49]="${p[49]}\npool 0.ubuntu.pool.ntp.org iburst"
-p[50]="s%--execution-endpoint  *\([^ ]*/\)[0-9\.]*:8551[^ ]*%--execution-endpoint \1$zip4:8551%"                                                              # cc service change to 34 (merge)
-p[51]="s%--execution-endpoint  *\([^ ]*/\)[0-9\.]*:8551[^ ]*%--execution-endpoint \1$zip1:8551%"                                                              # cc service change to 25 (merge)
-p[52]="s%download-dir\": \"[^\"]*\"%download-dir\": \"/sata/downloads\"%"                                                                                     # transmission config
-p[52]="${p[52]};s%incomplete-dir\": \"[^\"]*\"%incomplete-dir\": \"/sata/downloads\"%"
-p[52]="${p[52]};s%lpd-enabled\": .*%lpd-enabled\": true,%"
-p[52]="${p[52]};s%rpc-whitelist\": \"[^\"]*\"%rpc-whitelist\": \"127.0.0.1,192.168.8.*\"%"
-p[52]="${p[52]};s%rpc-username\": \"[^\"]*\"%rpc-username\": \"eu\"%"
-p[52]="${p[52]};s%rpc-password\": \"[^\"]*\"%rpc-password\": \"\"%"
-p[52]="${p[52]};s%umask\": [0-9]*%umask\": 2%"
-p[53]='s%^ *#*NTP=.*$%NTP=time.google.com time.cloudflare.com time.facebook.com%i'                                                                            # general time servers
-p[54]="\n${p[1]}\n{\n\trotate 7\n\tdaily\n\tmissingok\n\tnotifempty\n\tnocompress\n\tsharedscripts\n\tpostrotate\n\t\t/usr/lib/rsyslog/rsyslog-rotate\n\tendscript\n}"
-p[55]=""
-p[55]="${p[55]}\n\tlisten-on { any; };"
-p[55]="${p[55]}\n\tlisten-on-v6 { none; };"
-p[55]="${p[55]}\n\tversion \"not currently available\";"
-p[55]="${p[55]}\n\trecursion yes;"
-p[55]="${p[55]}\n\tallow-recursion { localhost; 192.168.8.0/24; };"
-p[55]="${p[55]}\n\tallow-query { localhost; 192.168.8.0/24; };"
+r00='s%^ *#*NTP=.*$%NTP=192.168.8.28 ntp02.oal.ul.pt ntp04.oal.ul.pt time.google.com time.cloudflare.com time.facebook.com%i'                                 # my time servers
+r01='s%^ *ENABLED=.*$%ENABLED=0%i'                                                                                                                            # motd-news disable
+r02='s%bind[^"]*"%bind -4"%'                                                                                                                                  # use only ipv4
+r03='s%^ */* *Unattended-Upgrade::Mail .*$%Unattended-Upgrade::Mail "hernanilr@gmail.com";%i;s%^ */*\(.*codename}-updates.*$\)%\1%i'                          # unattended-upgrades
+r04='s%^ *printf%# printf%i'                                                                                                                                  # unprint stuff
+r05='printf "Welcome to %s %s\\n" "$(uname -n)" "$DISTRIB_DESCRIPTION"'                                                                                       # my header motd
+r06='s%timeout *=.*$%timeout=1%i'                                                                                                                             # grub timeout
+r07=''                                                                                                                                                        # geth logs
+r08='/dnssec-validation/q'                                                                                                                                    # print lines until pattern
+r09="s%^ *pool \([^a-z]\)%# pool \1%"                                                                                                                         # ntp del other pool servers
+r09="${r09};s%^ *#.*restrict.*192.*%restrict 192.168.8.0 mask 255.255.255.0 notrap nomodify%"                                                                 # ntp my lan unlimited access
+r09="${r09};/^ *#.*Specify/a "                                                                                                                                # ntp my pool servers
+r09="${r09}pool 0.pt.pool.ntp.org iburst"
+r09="${r09}\npool 0.europe.pool.ntp.org iburst"
+r09="${r09}\npool 1.europe.pool.ntp.org iburst"
+r09="${r09}\npool 0.ubuntu.pool.ntp.org iburst"
+r10="s%--execution-endpoint  *\([^ ]*/\)[0-9\.]*:8551[^ ]*%--execution-endpoint \1$zip4:8551%"                                                                # cc service change to 34 (merge)
+r11="s%--execution-endpoint  *\([^ ]*/\)[0-9\.]*:8551[^ ]*%--execution-endpoint \1$zip1:8551%"                                                                # cc service change to 25 (merge)
+r12="s%download-dir\": \"[^\"]*\"%download-dir\": \"/sata/downloads\"%"                                                                                       # transmission config
+r12="$r12;s%incomplete-dir\": \"[^\"]*\"%incomplete-dir\": \"/sata/downloads\"%"
+r12="$r12;s%lpd-enabled\": .*%lpd-enabled\": true,%"
+r12="$r12;s%rpc-whitelist\": \"[^\"]*\"%rpc-whitelist\": \"127.0.0.1,192.168.8.*\"%"
+r12="$r12;s%rpc-username\": \"[^\"]*\"%rpc-username\": \"eu\"%"
+r12="$r12;s%rpc-password\": \"[^\"]*\"%rpc-password\": \"\"%"
+r12="$r12;s%umask\": [0-9]*%umask\": 2%"
+r13='s%^ *#*NTP=.*$%NTP=time.google.com time.cloudflare.com time.facebook.com%i'                                                                              # general time servers
+r14="\n$p01\n{\n\trotate 7\n\tdaily\n\tmissingok\n\tnotifempty\n\tnocompress\n\tsharedscripts\n\tpostrotate\n\t\t/usr/lib/rsyslog/rsyslog-rotate\n\tendscript\n}"
+r15=""
+r15="$r15\n\tlisten-on { any; };"
+r15="$r15\n\tlisten-on-v6 { none; };"
+r15="$r15\n\tversion \"not currently available\";"
+r15="$r15\n\trecursion yes;"
+r15="$r15\n\tallow-recursion { localhost; 192.168.8.0/24; };"
+r15="$r15\n\tallow-query { localhost; 192.168.8.0/24; };"
 if [[ $cunm = $znm2 ]];then
-  p[55]="${p[55]}\n\tallow-transfer { 192.168.8.25; 192.168.8.31; 192.168.8.34; };"
-  p[55]="${p[55]}\n\talso-notify { 192.168.8.25; 192.168.8.31; 192.168.8.34; };"
-  p[55]="${p[55]}\n\tmax-cache-size 50%;"
+  r15="$r15\n\tallow-transfer { 192.168.8.25; 192.168.8.31; 192.168.8.34; };"
+  r15="$r15\n\talso-notify { 192.168.8.25; 192.168.8.31; 192.168.8.34; };"
+  r15="$r15\n\tmax-cache-size 50%;"
 else
-  p[55]="${p[55]}\n\tallow-transfer { none; };"
-  p[55]="${p[55]}\n\tmax-cache-size 10%;"
+  r15="$r15\n\tallow-transfer { none; };"
+  r15="$r15\n\tmax-cache-size 10%;"
 fi
-p[55]="${p[55]}\n\tquerylog yes;"
-p[55]="${p[55]}\n};"
-p[56]=""
-p[56]="${p[56]}\nnetwork:"
-p[56]="${p[56]}\n  version: 2"
-p[56]="${p[56]}\n  renderer: networkd"
-p[56]="${p[56]}\n  ethernets:"
+r15="$r15\n\tquerylog yes;"
+r15="$r15\n};"
+r16=""
+r16="$r16\nnetwork:"
+r16="$r16\n  version: 2"
+r16="$r16\n  renderer: networkd"
+r16="$r16\n  ethernets:"
 for m in $(ip l|sed -n 's%.* \([a-z0-9]*\): .* state UP .*%\1%p'|tail -n1);do
-  p[56]="${p[56]}\n    $m:"
-  p[56]="${p[56]}\n      match:"
-  p[56]="${p[56]}\n        macaddress: $(cat /sys/class/net/$m/address)"
-  p[56]="${p[56]}\n      dhcp4: false"
-  [[ $cunm = $znm1 ]] && p[56]="${p[56]}\n      addresses: [192.168.8.25/24]"
-  [[ $cunm = $znm2 ]] && p[56]="${p[56]}\n      addresses: [192.168.8.28/24]"
-  [[ $cunm = $znm3 ]] && p[56]="${p[56]}\n      addresses: [192.168.8.31/24]"
-  [[ $cunm = $znm4 ]] && p[56]="${p[56]}\n      addresses: [192.168.8.34/24]"
-  p[56]="${p[56]}\n      critical: true"
-  p[56]="${p[56]}\n      routes:"
-  p[56]="${p[56]}\n        - to: 0.0.0.0/0"
-  p[56]="${p[56]}\n          via: 192.168.8.254"
-  p[56]="${p[56]}\n          metric: 100"
-  p[56]="${p[56]}\n          on-link: true"
-  p[56]="${p[56]}\n      nameservers:"
-  [[ $cunm = $znm1 ]] && p[56]="${p[56]}\n        addresses: [192.168.8.28, 192.168.8.31]"
-  [[ $cunm = $znm2 ]] && p[56]="${p[56]}\n        addresses: [192.168.8.28, 192.168.8.31]"
-  [[ $cunm = $znm3 ]] && p[56]="${p[56]}\n        addresses: [192.168.8.28, 192.168.8.31]"
-  [[ $cunm = $znm4 ]] && p[56]="${p[56]}\n        addresses: [192.168.8.28, 192.168.8.31]"
-  p[56]="${p[56]}\n      link-local: [ ]"
+  r16="$r16\n    $m:"
+  r16="$r16\n      match:"
+  r16="$r16\n        macaddress: $(cat /sys/class/net/$m/address)"
+  r16="$r16\n      dhcp4: false"
+  [[ $cunm = $znm1 ]] && r16="$r16\n      addresses: [192.168.8.25/24]"
+  [[ $cunm = $znm2 ]] && r16="$r16\n      addresses: [192.168.8.28/24]"
+  [[ $cunm = $znm3 ]] && r16="$r16\n      addresses: [192.168.8.31/24]"
+  [[ $cunm = $znm4 ]] && r16="$r16\n      addresses: [192.168.8.34/24]"
+  r16="$r16\n      critical: true"
+  r16="$r16\n      routes:"
+  r16="$r16\n        - to: 0.0.0.0/0"
+  r16="$r16\n          via: 192.168.8.254"
+  r16="$r16\n          metric: 100"
+  r16="$r16\n          on-link: true"
+  r16="$r16\n      nameservers:"
+  [[ $cunm = $znm1 ]] && r16="$r16\n        addresses: [192.168.8.28, 192.168.8.31]"
+  [[ $cunm = $znm2 ]] && r16="$r16\n        addresses: [192.168.8.28, 192.168.8.31]"
+  [[ $cunm = $znm3 ]] && r16="$r16\n        addresses: [192.168.8.28, 192.168.8.31]"
+  [[ $cunm = $znm4 ]] && r16="$r16\n        addresses: [192.168.8.28, 192.168.8.31]"
+  r16="$r16\n      link-local: [ ]"
 done
 for m in $(ip l|sed -n 's%.* \([a-z0-9]*\): .* state DOWN .*%\1%p');do
-  p[56]="${p[56]}\n    $m:"
-  p[56]="${p[56]}\n      dhcp4: true"
+  r16="$r16\n    $m:"
+  r16="$r16\n      dhcp4: true"
   if [[ $m =~ ^wlo[0-9] ]];then
-    p[56]="${p[56]}\n      activation-mode: off"
+    r16="$r16\n      activation-mode: off"
   else
-    p[56]="${p[56]}\n      activation-mode: manual"
+    r16="$r16\n      activation-mode: manual"
   fi
 done
-p[57]='s%--subscribe-all-subnets --import-all-attestations %%'                                                                                                # cc service remove long-lived
-p[58]='s%--validator-monitor-file%--subscribe-all-subnets --import-all-attestations --validator-monitor-file%'                                                # cc service add    long-lived
-p[59]='s%--beacon-nodes *\([^ ]*:5052\),\([^ ]*:5052\)[^ ]*%--beacon-nodes \2,\1%'                                                                            # vc service switch cc order
+r17='s%--subscribe-all-subnets --import-all-attestations %%'                                                                                                  # cc service remove long-lived
+r18='s%--validator-monitor-file%--subscribe-all-subnets --import-all-attestations --validator-monitor-file%'                                                  # cc service add    long-lived
+r19='s%--beacon-nodes *\([^ ]*:5052\),\([^ ]*:5052\)[^ ]*%--beacon-nodes \2,\1%'                                                                              # vc service switch cc order
+r20='server {'
+r20="$r20\nlisten 80;"
+r20="$r20\nserver_name $zip2;"
+r20="$r20\ngzip on;"
+r20="$r20\ngzip_vary on;"
+r20="$r20\ngzip_min_length 1000;"
+r20="$r20\ngzip_proxied any;"
+r20="$r20\ngzip_types text/plain text/css text/xml application/xml text/javascript application/x-javascript image/svg+xml;"
+r20="$r20\ngzip_disable \"MSIE [1-6]\.\";"
+r20="$r20\nproxy_set_header Host \$host;"
+r20="$r20\nproxy_set_header X-Real-IP \$remote_addr;"
+r20="$r20\nproxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;"
+r20="$r20\nproxy_set_header X-Forwarded-Proto \$scheme;"
+r20="$r20\nproxy_set_header Sec-WebSocket-Extensions \$http_sec_websocket_extensions;"
+r20="$r20\nproxy_set_header Sec-WebSocket-Key \$http_sec_websocket_key;"
+r20="$r20\nproxy_set_header Sec-WebSocket-Version \$http_sec_websocket_version;"
+r20="$r20\nproxy_http_version 1.1;"
+r20="$r20\nproxy_set_header Upgrade \$http_upgrade;"
+r20="$r20\nproxy_set_header Connection \"Upgrade\";"
+r20="$r20\nproxy_redirect off;"
+r20="$r20\nproxy_buffering off;"
+r20="$r20\nlocation / { proxy_pass http://127.0.0.1:32400; }"
+r20="$r20\n}"
+r21=""
+[[ $cunm = $znm1 ]] && r21="$r21\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/id_ed25519"
+[[ $cunm = $znm2 ]] && r21="$r21\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/id_ed25519"
+[[ $cunm = $znm3 ]] && r21="$r21\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/id_ed25519"
+[[ $cunm = $znm4 ]] && r21="$r21\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/id_ed25519"
+r22="s%hrv-zotac\([0-9]\).*%hrv-zotac\1 ztc\1%;/127.0.1.1/a \ "
+[[ $cunm = $znm1 ]] && r22="$r22\n192.168.8.28\thrv-zotac2 ztc2\n192.168.8.31\thrv-zotac3 ztc3\n192.168.8.34\thrv-zotac4 ztc4"
+[[ $cunm = $znm2 ]] && r22="$r22\n192.168.8.25\thrv-zotac1 ztc1\n192.168.8.31\thrv-zotac3 ztc3\n192.168.8.34\thrv-zotac4 ztc4"
+[[ $cunm = $znm3 ]] && r22="$r22\n192.168.8.25\thrv-zotac1 ztc1\n192.168.8.28\thrv-zotac2 ztc2\n192.168.8.34\thrv-zotac4 ztc4"
+[[ $cunm = $znm4 ]] && r22="$r22\n192.168.8.25\thrv-zotac1 ztc1\n192.168.8.28\thrv-zotac2 ztc2\n192.168.8.31\thrv-zotac3 ztc3"
+r22="$r22\n207.180.214.8\tvpsl"
+r22="$r22\n173.249.42.190\tvpsm"
+r22="$r22\n164.68.107.45\tvpss"
+r23='s%.*fee_recipient"."\([^"]*\)".*pubkey":"\([^"]*\)".*%pubkey: \2, fee: \1%p'                                                                             # mev validator registration
+r24='s%http://192.168.8.\([0-9]*:[0-9]*\)%\1%gp'                                                                                                              # get ip/port from http config
+r25='s%.*\.\([0-9]*\):[0-9]*%\1%p'                                                                                                                            # get ip      from http config
+r26='s%\(Package\|Core\|Composite\|Sensor\|temp[0-9]\).*: *\([-+][0-9][0-9]*\.[0-9]*\).*%\2%p'                                                                # temperature sensors
+r27='s%.* \([0-9]*:[0-9]*\):[0-9]*.*%\1%'                                                                                                                     # hour/minute log event
+r28='s%.*pubkey": "\([^"]*\)".*%\1%p'                                                                                                                         # key validator
+r29='/swap/s%^%#%'                                                                                                                                            # no swap - bad for IOPS
+r30='geth\['                                                                                                                                                  # geth logs
+r31='besu\[.*|'                                                                                                                                               # besu       logs
+r32='lighthouse\['                                                                                                                                            # lighthouse logs
+r33='mev-boost\['                                                                                                                                             # mev-boost  logs
+r34="$r30\|$r31\|$r32\|$r33"                                                                                                                                  # el|cl|mev  logs
+r35='Some(\([0-9]*\)\.\([0-9][0-9][0-9]\)[0-9]*s).*%\1\2%p'                                                                                                   # get delays  sec
+r36='Some(\([0-9][0-9][0-9]\)\.[0-9]*ms).*%\1%p'                                                                                                              # get delays msec
+r37='Some(\([0-9][0-9]\)\.[0-9]*ms).*%\1%p'                                                                                                                   # get delays msec
+r38='\([0-9]*\)\.\([0-9][0-9][0-9]\)[0-9]*s.*%\1\2%p'                                                                                                         # get time  sec
+r39='\([0-9][0-9][0-9]\)\.[0-9]*ms.*%\1%p'                                                                                                                    # get time msec
+r40='\([0-9][0-9]\)\.[0-9]*ms.*%\1%p'                                                                                                                         # get time msec
+r41='.temperature.current'                                                                                                                                    # ssd current  temperature
+r42='.ata_sct_temperature_history.table|join(" ")'                                                                                                            # ssd historic temperature
 
-# services management
-p[60]='systemctl'
-p[61]="${p[60]} status"
-p[62]="${p[60]} stop"
-p[63]="${p[60]} start"
-p[64]="${p[60]} enable"
-p[65]="${p[60]} disable"
-p[66]="${p[60]} restart"
-p[67]='timedatectl'
-p[68]='networkctl'
-p[69]='resolvectl'
-p[70]='eth-geth'
-p[71]='eth-beacon'
-p[72]='transmission-daemon'
-p[73]='eth-validator'
-p[74]='prometheus'
-p[75]='prometheus-node-exporter'
-p[76]='grafana-server'
-p[77]='systemd-timesyncd'
-p[78]='named'
-p[79]='plexmediaserver'
-p[80]='nginx'
-p[81]='server {'
-p[81]="${p[81]}\nlisten 80;"
-p[81]="${p[81]}\nserver_name $zip2;"
-p[81]="${p[81]}\ngzip on;"
-p[81]="${p[81]}\ngzip_vary on;"
-p[81]="${p[81]}\ngzip_min_length 1000;"
-p[81]="${p[81]}\ngzip_proxied any;"
-p[81]="${p[81]}\ngzip_types text/plain text/css text/xml application/xml text/javascript application/x-javascript image/svg+xml;"
-p[81]="${p[81]}\ngzip_disable \"MSIE [1-6]\.\";"
-p[81]="${p[81]}\nproxy_set_header Host \$host;"
-p[81]="${p[81]}\nproxy_set_header X-Real-IP \$remote_addr;"
-p[81]="${p[81]}\nproxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;"
-p[81]="${p[81]}\nproxy_set_header X-Forwarded-Proto \$scheme;"
-p[81]="${p[81]}\nproxy_set_header Sec-WebSocket-Extensions \$http_sec_websocket_extensions;"
-p[81]="${p[81]}\nproxy_set_header Sec-WebSocket-Key \$http_sec_websocket_key;"
-p[81]="${p[81]}\nproxy_set_header Sec-WebSocket-Version \$http_sec_websocket_version;"
-p[81]="${p[81]}\nproxy_http_version 1.1;"
-p[81]="${p[81]}\nproxy_set_header Upgrade \$http_upgrade;"
-p[81]="${p[81]}\nproxy_set_header Connection \"Upgrade\";"
-p[81]="${p[81]}\nproxy_redirect off;"
-p[81]="${p[81]}\nproxy_buffering off;"
-p[81]="${p[81]}\nlocation / { proxy_pass http://127.0.0.1:32400; }"
-p[81]="${p[81]}\n}"
-p[82]=""
-[[ $cunm = $znm1 ]] && p[82]="${p[82]}\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/id_ed25519"
-[[ $cunm = $znm2 ]] && p[82]="${p[82]}\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/id_ed25519"
-[[ $cunm = $znm3 ]] && p[82]="${p[82]}\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/id_ed25519"
-[[ $cunm = $znm4 ]] && p[82]="${p[82]}\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/id_ed25519"
-p[83]="s%hrv-zotac\([0-9]\).*%hrv-zotac\1 ztc\1%;/127.0.1.1/a \ "
-[[ $cunm = $znm1 ]] && p[83]="${p[83]}\n192.168.8.28\thrv-zotac2 ztc2\n192.168.8.31\thrv-zotac3 ztc3\n192.168.8.34\thrv-zotac4 ztc4"
-[[ $cunm = $znm2 ]] && p[83]="${p[83]}\n192.168.8.25\thrv-zotac1 ztc1\n192.168.8.31\thrv-zotac3 ztc3\n192.168.8.34\thrv-zotac4 ztc4"
-[[ $cunm = $znm3 ]] && p[83]="${p[83]}\n192.168.8.25\thrv-zotac1 ztc1\n192.168.8.28\thrv-zotac2 ztc2\n192.168.8.34\thrv-zotac4 ztc4"
-[[ $cunm = $znm4 ]] && p[83]="${p[83]}\n192.168.8.25\thrv-zotac1 ztc1\n192.168.8.28\thrv-zotac2 ztc2\n192.168.8.31\thrv-zotac3 ztc3"
-p[83]="${p[83]}\n207.180.214.8\tvpsl"
-p[83]="${p[83]}\n173.249.42.190\tvpsm"
-p[83]="${p[83]}\n164.68.107.45\tvpss"
-
-function pjp { local e="";[[ $# -ge 1 ]] && { e="${p[$1]}";shift; };until [[ $# -lt 1 ]];do e="$e/${p[$1]}";shift;done;echo "$e"; }                           # paths join
-function pjw { local e="";[[ $# -ge 1 ]] && { e="${p[$1]}";shift; };until [[ $# -lt 1 ]];do e="$e ${p[$1]}";shift;done;echo "$e"; }                           # words join
-function pjv { local e="";[[ $# -ge 1 ]] && { e="${p[$1]}";shift; };until [[ $# -lt 1 ]];do e="$e,${p[$1]}";shift;done;echo "$e"; }                           # comma join
 function swb { echo -e "\n\e[5m${1^^}\e[25m\n"; }                                                                                                             # get flash
 function swu { echo -e "${1^^}"; }                                                                                                                            # get upper
 function swn { echo -e "$1"; }                                                                                                                                # get normal
-function sau { id $1 &>${p[3]} || sex "useradd --no-create-home --shell /bin/false $1"; }                                                                     # system useradd
+function sau { id $1 &>$p03 || sex "useradd --no-create-home --shell /bin/false $1"; }                                                                        # system useradd
 function cmw { [[ $2 ]] && sex "chmod $2 $1";[[ $3 ]] && sex "chown $3:${4:-$3} $1"; }                                                                        # chmod/chown file
-function cex { swb "$1";echo $H|sudo -S $1       2>${p[3]}; }                                                                                                 # superuser-command (visible)
-function nex { swn "$1";echo $H|sudo -S $1       2>${p[3]}; }                                                                                                 # superuser-command (visible)
-function yex { swb "$1";echo $H|sudo -S $1 <<< y &>${p[3]}; }                                                                                                 # superuser-command (visible & yes)
-function pex {          echo $H|sudo -S $1       2>${p[3]}; }                                                                                                 # superuser-command (pipe)
-function sex {          echo $H|sudo -S $1       &>${p[3]}; }                                                                                                 # superuser-command (silent)
+function cex { swb "$1";echo $H|sudo -S $1       2>$p03; }                                                                                                    # superuser-command (visible)
+function nex { swn "$1";echo $H|sudo -S $1       2>$p03; }                                                                                                    # superuser-command (visible)
+function yex { swb "$1";echo $H|sudo -S $1 <<< y &>$p03; }                                                                                                    # superuser-command (visible & yes)
+function pex {          echo $H|sudo -S $1       2>$p03; }                                                                                                    # superuser-command (pipe)
+function sex {          echo $H|sudo -S $1       &>$p03; }                                                                                                    # superuser-command (silent)
 function idi { local e="deny from $1 to $2"                       ;if [[ $4 ]];then nex "ufw $4 $e";else nex "ufw $e comment $3";fi; }                        # deny  frm ip to ip
 function ide { local e="deny from $1 port ${2/\// proto }"        ;if [[ $4 ]];then nex "ufw $4 $e";else nex "ufw $e comment $3";fi; }                        # deny  frm ip/prt
 function pde { local e="deny $1"                                  ;if [[ $3 ]];then nex "ufw $3 $e";else nex "ufw $e comment $2";fi; }                        # deny  prt
 function pai { local e="allow from $2 to any port ${1/\// proto }";if [[ $4 ]];then nex "ufw $4 $e";else nex "ufw $e comment $3";fi; }                        # allow prt frm ip
 function pae { local e="allow $1"                                 ;if [[ $3 ]];then nex "ufw $3 $e";else nex "ufw $e comment $2";fi; }                        # allow prt
 function ple { local e="limit $1"                                 ;if [[ $3 ]];then nex "ufw $3 $e";else nex "ufw $e comment $2";fi; }                        # limit prt (<6 within 30s)
-function sis { if [[ -f $1 ]];then sex "mv $1 ${p[17]}";swb "NEW ${p[31]}";touch ${p[10]}/vc_slash;cmw ${p[31]} 600 eth3;else swb "NO NEW $1";fi; }           # init slash db
+function sis { if [[ -f $1 ]];then sex "mv $1 $p17";swb "NEW $p18";touch $p05/vc_slash;cmw $p18 600 eth3;else swb "NO NEW $1";fi; }                           # init slash db
 function snc { if [[ ${1:0:3} = hrv ]];then echo ${1/[a-z]*-/}|tr -d '[ao]';else case $1 in $vnm1) echo vpsl;;$vnm2) echo vpsm;;$vnm3) echo vpss;;esac;fi; }  # get small server name
 function sjw { [[ -d $2 ]] || return;sex "cp jwt $2";cmw $2/jwt 600 $1; }                                                                                     # install jwt
 function unv {
   local vuel=$1;curl -sLO https://hyperledger.jfrog.io/artifactory/besu-binaries/besu/$vuel/besu-$vuel.tar.gz;sha256sum besu-$vuel.tar.gz                     # download besu binaries
   swn "INSTALAR BESU $vuel (SIM/nao)?";local rsp=nao;read rsp;[[ $rsp = SIM ]] || return                                                                      # install (Sim/nao)?
-  tar xvf besu-$vuel.tar.gz;sex "cp -a besu-$vuel ${p[0]}/besu";sex "chown eth1:eth1 -R ${p[0]}/besu";cmw ${p[0]}/besu 755 eth1                               # install  besu binaries
+  tar xvf besu-$vuel.tar.gz;sex "cp -a besu-$vuel $p00/besu";sex "chown eth1:eth1 -R $p00/besu";cmw $p00/besu 755 eth1                                        # install  besu binaries
 }
 function mnv {
-  local f="${p[9]}/go/bin/mev-boost";swu 'INSTALAR MEV-BOOST';[[ -f $f ]] && sex "rm -rf ${p[9]}/go"
-  go install github.com/flashbots/mev-boost@latest;sex "cp $f ${p[0]}";cmw ${p[0]}/mev-boost 755 eth4
+  local f="$p02/go/bin/mev-boost";swu 'INSTALAR MEV-BOOST';[[ -f $f ]] && sex "rm -rf $p02/go"
+  go install github.com/flashbots/mev-boost@latest;sex "cp $f $p00";cmw $p00/mev-boost 755 eth4
 }
+
+s00='systemctl'
+s01="$s00 status"
+s02="$s00 stop"
+s03="$s00 start"
+s04="$s00 enable"
+s05="$s00 disable"
+s06="$s00 restart"
+s07='timedatectl'
+s08='networkctl'
+s09='resolvectl'
+s10='eth-geth'
+s11='eth-besu'
+s12='eth-beacon'
+s13='eth-validator'
+s14='eth-mev-boost'
+s15='transmission-daemon'
+s16='prometheus'
+s17='prometheus-node-exporter'
+s18='grafana-server'
+s19='systemd-timesyncd'
+s20='named'
+s21='plexmediaserver'
+s22='nginx'
+s23='https://boost-relay.flashbots.net/relay/v1/data/validator_registration?pubkey=0x'
+s24=""
+s24="$s24\n1 [$(snc $cuvc)]\tt tvc (vp,vd,cp slash -> $(snc $nxvc))"
+s24="$s24\n2\t\tsleep 7m"
+s24="$s24\n3 [$(snc $nxvc)]\trm lock;t3"
+s24="$s24\n4\t\tcheck slash,srv,dirs"
+s24="$s24\n5\t\trm lock;t vea\n"
+s25="JAVA_HOME='/usr/lib/jvm/java-11-openjdk-amd64'"                                                                                                          # besu needs java
+s26='0x534029B6371dc4453DD750Bc1198181F55C859fe'
+s27='smartctl --json=c -x'                                                                                                                                    # ssd command info
+
+s70='0x93bf23a587f11f9eca329a12ef51296b8a9848af8c0fe61201524b14cb85b0c6fbd3e427501cdfa3b28719bd1ed96fff'
+s71='0xb5b0fc3d2ba577f3e2c7324f7ea4306f17eeee0f12c722f4fa83e45bf6c15477d50261bb2666c30f21ab71a26aeeeafb'
+s72='0x89e65476ab56bd1e102569531453620ef805adc4dea9caaa671a9b78a9e7ab61e713d038599364c9321ccc7b50f6bafd'
+s73='0xad37967c868bcbb69d73dcc82717bf5df57048703277ee48aaf64e753c71631bc17c46934da40fb5f8344390f9880c1a'
+s74='0xaf5e6791b3cbd587268b8da1822f9b0398cbd796eb4e9af856f561217981d9f9469d7f06accd9ae9ebe1b87d338330b4'
+s75='0x8606838b0ba9fcdcc2a61925305210cd3e44fe673d99bbb6f180242afa965f513bf7b8c298806171a05a12b6b3d5dd24'
+s76='0x880c275f193c45276bd250f25092305e06f12d725ecf9761b29051c1fd9a43c8c15c31012316ebad8459c4268824cb34'
+s77='0x8d7dcdd66f978549965d6ee6828adeaaf6ebb98e8dcb505d003e5369bc3513f090027e77faa0ae0246b6f08344872a73'
+s78='0x867cf5fd6d05017ef9df4d6ff157e2a8e97bbeb1522de427e82092e485fe7f305b651767997b2a21b6c91d83218493a1'
+s79='0xa2873632721623389d9bc5f455cb21e92244044cebd3bff6d5a809f78edde3de22c67ffc97a672c7ab573f7787c2c8bd'
+s80='0x8235d97c3530b6261eec3c658dd158ae5ed98481ead16a33837a083924028393634a71515affa76dcd371b943ee733ab'
+s81='0x88c2befbce7594c943a386573f03b8ce461457bf59267ffce3e6008b115d70259583ad5fe8d8b15487d84734a6ba8d17'
+s82='0x814fa0dbba56e8823bd00935e5c67b09c468d5734e80e6574c5984e736300431761bf083ef247f75a73eb1b4c01bde9b'
+s83='0xae1212d040fabbbd3e6947ecf4799ee5176a1d42e2848d8ebee030690aa4144143c30d32c52fb3931927355470c8f416'
+s84='0xad71900411ae03e4c63f23d7823ac3754e2ec0b8855693e15632536de677aca9f45ffeaf080ce234cbf3967723f79d45'
+s85='0xa96278aff172bdebb92e6312eb3b46b0b6ec58e5a9cad46f7958b8d795a97edfb425bc4f2cc5cf92b5a3355577ad6af5'
+s86='0xb2063ebff899e91b70de66115a2a0e590b8695930126f9d7cad090ca7f19d47b262c7c21dd9208ff6d4c8eea307b4ad3'
+s87='0x87615568c977431c53171ba39b1f559515e6273b5efe8b649eab88ba6a5abc7e2280bea2f61898b53079a1f1bd3f5caa'
+s88='0x968b8658458dfd6db14e10a7c0623573113e70c890d53db598f622f5a57300f1c1bd8cd1d27a7a5d882841f179928416'
+s89='0xa137c606f3f700789f2ef09bf71962b8023bee33d1b1db367a6dbb9bb3ad3d03c32247b2fec84afb57029b5de8169e7b'
+s90='0xb9c82583ba13992858faab8f813f9d1b4e50cbe5f2319b00fff781ff9e6cf5ff3e746f146f191d095cc72553597ecd2d'
+s91='0xae08e5f26f503c36ac554c5fbca45495405866ebfaa8976c3791e8461dee8ec34ce3e99e65c76db2bf7408a60d717299'
 
 # iostat -d -x -m -p sda2 30 5
 # dd if=/dev/zero of=./temp-output conv=fdatasync bs=384k count=1k; rm -f ./temp-output
 # sudo hdparm -Tt /dev/nvme0n1
 # grep flags /proc/cpuinfo|grep adx|sha_ni accelerated BLS signatures|accelerated SHA256 hashinga https://en.wikipedia.org/wiki/Intel_ADX|https://en.wikipedia.org/wiki/Intel_SHA_extensions
 # Oct 13 06:21:00 hrv-zotac4 lighthouse[840]: Oct 13 05:21:00.137 WARN Unable to retrieve a payload from a connected builder, falling back to the local execution client: Reqwest(reqwest::Error { kind: Request, url: Url { scheme: "http", cannot_be_a_base: false, username: "", password: None, host: Some(Ipv4(192.168.8.28)), port: Some(18550), path: "/eth/v1/builder/header/4901203/0x11bd93db981d616123e5638657145d1cb1eecf2e0f909909588682798619d294/0xa2873632721623389d9bc5f455cb21e92244044cebd3bff6d5a809f78edde3de22c67ffc97a672c7ab573f7787c2c8bd", query: None, fragment: None }, source: TimedOut }), service: exec
-p[84]="${p[9]}/validator_keys"
-p[85]='https://boost-relay.flashbots.net/relay/v1/data/validator_registration?pubkey=0x'
-p[86]=""
-p[86]="${p[86]}\n1 [$(snc $cuvc)]\tt tvc (vp,vd,cp slash -> $(snc $nxvc))"
-p[86]="${p[86]}\n2\t\tsleep 7m"
-p[86]="${p[86]}\n3 [$(snc $nxvc)]\trm lock;t3"
-p[86]="${p[86]}\n4\t\tcheck slash,srv,dirs"
-p[86]="${p[86]}\n5\t\trm lock;t vea\n"
-p[87]='eth-besu'
-p[88]="JAVA_HOME='/usr/lib/jvm/java-11-openjdk-amd64'"                                                                                                        # besu needs java
-p[89]="${p[9]}/besu.log"                                                                                                                                      # ec minute log
-p[90]='s%.*fee_recipient"."\([^"]*\)".*pubkey":"\([^"]*\)".*%pubkey: \2, fee: \1%p'                                                                           # mev validator registration
-p[91]='s%http://192.168.8.\([0-9]*:[0-9]*\)%\1%gp'                                                                                                            # get ip/port from http config
-p[92]='s%.*\.\([0-9]*\):[0-9]*%\1%p'                                                                                                                          # get ip      from http config
-p[93]="${p[9]}/system.restart"                                                                                                                                # system restart control file
-p[94]='s%\(Package\|Core\|Composite\|Sensor\|temp[0-9]\).*: *\([-+][0-9][0-9]*\.[0-9]*\).*%\2%p'                                                              # temperature sensors
-p[95]='s%.* \([0-9]*:[0-9]*\):[0-9]*.*%\1%'                                                                                                                   # hour/minute log event
-p[96]='eth-mev-boost'
-p[97]="${p[9]}/geth.restart"                                                                                                                                  # el restart control files
-p[98]="${p[9]}/besu.restart"                                                                                                                                  # el restart control files
-p[99]='0x534029B6371dc4453DD750Bc1198181F55C859fe'
-p[100]='s%.*pubkey": "\([^"]*\)".*%\1%p'                                                                                                                      # key validator
-p[101]='mev-boost\['                                                                                                                                          # mev-boost  logs
-p[102]='besu\[.*|'                                                                                                                                            # besu       logs
-p[103]='lighthouse\['                                                                                                                                         # lighthouse logs
-p[104]="${p[47]}\|${p[102]}\|${p[103]}\|${p[101]}"                                                                                                            # el|cl|mev  logs
-p[105]='Some(\([0-9]*\)\.\([0-9][0-9][0-9]\)[0-9]*s).*%\1\2%p'                                                                                                # get delays  sec
-p[106]='Some(\([0-9][0-9][0-9]\)\.[0-9]*ms).*%\1%p'                                                                                                           # get delays msec
-p[107]='Some(\([0-9][0-9]\)\.[0-9]*ms).*%\1%p'                                                                                                                # get delays msec
-p[108]='\([0-9]*\)\.\([0-9][0-9][0-9]\)[0-9]*s.*%\1\2%p'                                                                                                      # get time  sec
-p[109]='\([0-9][0-9][0-9]\)\.[0-9]*ms.*%\1%p'                                                                                                                 # get time msec
-p[110]='\([0-9][0-9]\)\.[0-9]*ms.*%\1%p'                                                                                                                      # get time msec
-p[111]='/swap/s%^%#%'                                                                                                                                         # no swap - bad for IOPS
-p[112]='.temperature.current'                                                                                                                                 # ssd current  temperature
-p[113]='.ata_sct_temperature_history.table|join(" ")'                                                                                                         # ssd historic temperature
-p[114]='smartctl --json=c -x'                                                                                                                                 # ssd command info
 
-p[200]='0x93bf23a587f11f9eca329a12ef51296b8a9848af8c0fe61201524b14cb85b0c6fbd3e427501cdfa3b28719bd1ed96fff'
-p[201]='0xb5b0fc3d2ba577f3e2c7324f7ea4306f17eeee0f12c722f4fa83e45bf6c15477d50261bb2666c30f21ab71a26aeeeafb'
-p[202]='0x89e65476ab56bd1e102569531453620ef805adc4dea9caaa671a9b78a9e7ab61e713d038599364c9321ccc7b50f6bafd'
-p[203]='0xad37967c868bcbb69d73dcc82717bf5df57048703277ee48aaf64e753c71631bc17c46934da40fb5f8344390f9880c1a'
-p[204]='0xaf5e6791b3cbd587268b8da1822f9b0398cbd796eb4e9af856f561217981d9f9469d7f06accd9ae9ebe1b87d338330b4'
-p[205]='0x8606838b0ba9fcdcc2a61925305210cd3e44fe673d99bbb6f180242afa965f513bf7b8c298806171a05a12b6b3d5dd24'
-p[206]='0x880c275f193c45276bd250f25092305e06f12d725ecf9761b29051c1fd9a43c8c15c31012316ebad8459c4268824cb34'
-p[207]='0x8d7dcdd66f978549965d6ee6828adeaaf6ebb98e8dcb505d003e5369bc3513f090027e77faa0ae0246b6f08344872a73'
-p[208]='0x867cf5fd6d05017ef9df4d6ff157e2a8e97bbeb1522de427e82092e485fe7f305b651767997b2a21b6c91d83218493a1'
-p[209]='0xa2873632721623389d9bc5f455cb21e92244044cebd3bff6d5a809f78edde3de22c67ffc97a672c7ab573f7787c2c8bd'
-p[210]='0x8235d97c3530b6261eec3c658dd158ae5ed98481ead16a33837a083924028393634a71515affa76dcd371b943ee733ab'
-p[211]='0x88c2befbce7594c943a386573f03b8ce461457bf59267ffce3e6008b115d70259583ad5fe8d8b15487d84734a6ba8d17'
-p[212]='0x814fa0dbba56e8823bd00935e5c67b09c468d5734e80e6574c5984e736300431761bf083ef247f75a73eb1b4c01bde9b'
-p[213]='0xae1212d040fabbbd3e6947ecf4799ee5176a1d42e2848d8ebee030690aa4144143c30d32c52fb3931927355470c8f416'
-p[214]='0xad71900411ae03e4c63f23d7823ac3754e2ec0b8855693e15632536de677aca9f45ffeaf080ce234cbf3967723f79d45'
-p[215]='0xa96278aff172bdebb92e6312eb3b46b0b6ec58e5a9cad46f7958b8d795a97edfb425bc4f2cc5cf92b5a3355577ad6af5'
-p[216]='0xb2063ebff899e91b70de66115a2a0e590b8695930126f9d7cad090ca7f19d47b262c7c21dd9208ff6d4c8eea307b4ad3'
-p[217]='0x87615568c977431c53171ba39b1f559515e6273b5efe8b649eab88ba6a5abc7e2280bea2f61898b53079a1f1bd3f5caa'
-p[218]='0x968b8658458dfd6db14e10a7c0623573113e70c890d53db598f622f5a57300f1c1bd8cd1d27a7a5d882841f179928416'
-p[219]='0xa137c606f3f700789f2ef09bf71962b8023bee33d1b1db367a6dbb9bb3ad3d03c32247b2fec84afb57029b5de8169e7b'
-p[220]='0xb9c82583ba13992858faab8f813f9d1b4e50cbe5f2319b00fff781ff9e6cf5ff3e746f146f191d095cc72553597ecd2d'
-p[221]='0xae08e5f26f503c36ac554c5fbca45495405866ebfaa8976c3791e8461dee8ec34ce3e99e65c76db2bf7408a60d717299'
-
-bpid=$($(pjw 61 71) 2>${p[3]}|sed -n 's%.*PID: *\([0-9]*\).*%\1%p')
+bpid=$($s01 $s12 2>$p03|sed -n 's%.*PID: *\([0-9]*\).*%\1%p')
 rblk=22238623
 ratt=00019000
 pmis=00010000

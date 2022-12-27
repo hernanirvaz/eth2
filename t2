@@ -5,9 +5,9 @@ source /home/eth/eth2/t1
 function cc1 { local f=$(basename $1);sex "cp $1 $f.sav";cmw $f.sav 644 eth;sed  -e "$2" $f.sav > $f.new;sex "cp $f.new $1"; }                                # edit             file
 function cc2 { local f=$(basename $1);cp $1 $f.sav;cp $1 $f.new            ;echo -e "$2"       >> $f.new;sex "cp $f.new $1"; }                                # add lines to end file
 function cc3 { local f=$(basename $1);cp $1 $f.sav;sed "$2" $1 > $f.new    ;echo -e "$3"       >> $f.new;sex "cp $f.new $1"; }                                # add lines to pos file
-function cc4 { local f=$(basename $1);cp $1 $f.sav 2>${p[3]}               ;echo -e "$2"        > $f.new;sex "cp $f.new $1"; }                                # replace lines of file
+function cc4 { local f=$(basename $1);cp $1 $f.sav 2>$p03                  ;echo -e "$2"        > $f.new;sex "cp $f.new $1"; }                                # replace lines of file
 
-[[ -x ${p[9]}/eth2/t ]] || ln -s ${p[9]}/eth2/t6 ${p[9]}/eth2/t                                                                                               # link base commands
+[[ -x $p02/eth2/t ]] || ln -s $p02/eth2/t6 $p02/eth2/t                                                                                                        # link base commands
 if [[ $(pex 'ufw status'|grep -i inactive) ]];then
   swu 'INIT FIREWALL';sex 'ufw default deny incoming';sex 'ufw default allow outgoing'                                                                        # base ufw
   pde 22/tcp ossh
@@ -21,57 +21,57 @@ if [[ $(pex 'ufw status'|grep -i inactive) ]];then
 else
   cex 'ufw status numbered'                                                                                                                                   # show
 fi
-[[ -f $(pjp 4 70).service || -f $(pjp 4 87).service || -f $(pjp 4 71).service || -f $(pjp 4 73).service ]] && exit                                            # ec/cl instalados -> exit
+[[ -f $p04/$s10.service || -f $p04/$s11.service || -f $p04/$s12.service || -f $p04/$s13.service ]] && exit                                                    # ec/cl instalados -> exit
 swu 'UPDATE LINUX'       ;t4update linux
 swu 'ADDITIONAL LINUX'   ;sex 'apt install python3-pip net-tools apt-listchanges landscape-common software-properties-common smartmontools jq -y'
 swu 'UNATTENDED UPGRADES';cex 'apt install unattended-upgrades update-notifier-common -y'
 swu 'LINUX CONFIGS'
 if [[ $cunm = $znm2 ]];then
-  cex "${p[67]} set-ntp no"                                                                                                                                   # use ntp       (sophisticated)
+  cex "$s07 set-ntp no"                                                                                                                                       # use ntp       (sophisticated)
   cex 'apt install apt-transport-https curl ntp -y'                                                                                                           # install dependencies & ntp
-  cc1 ${p[30]} "${p[49]}"                                     ;cmw ${p[30]} 644 root;nex "${p[66]} ntp"                                                       # ntp config for time synchronization
+  cc1 $p31 "$r09"                           ;cmw $p31 644 root;nex "$s06 ntp"                                                                                 # ntp config for time synchronization
   echo deb https://downloads.plex.tv/repo/deb public main | sudo tee /etc/apt/sources.list.d/plexmediaserver.list                                             # add apt source for plex
   curl https://downloads.plex.tv/plex-keys/PlexSign.key | sudo apt-key add -;sex 'apt update'                                                                 # add apt key    for plex
   cex 'apt install nginx plexmediaserver transmission-cli transmission-common transmission-daemon -y'                                                         # install nginx/plex/transmission
   sex "usermod -a -G debian-transmission eu";sex "mkdir -p /sata/downloads";cmw /sata/downloads 775 debian-transmission                                       # prepare downloads
-  cc4 ${p[32]} "${p[81]}"                                     ;cmw ${p[32]} 644 root               ;sex "${p[60]} reload ${p[80]}"                            # nginx config for plex
-  cc1 ${p[33]} "${p[52]}"                                     ;cmw ${p[33]} 600 debian-transmission;sex "${p[60]} reload ${p[72]}"                            # transmission config
+  cc4 $p32 "$r20"                           ;cmw $p32 644 root               ;sex "$s00 reload $s22"                                                          # nginx config for plex
+  cc1 $p33 "$r12"                           ;cmw $p33 600 debian-transmission;sex "$s00 reload $s15"                                                          # transmission config
 else
-  cex "${p[67]} set-ntp on"                                                                                                                                   # use timesyncd (lightweight)
+  cex "$s07 set-ntp on"                                                                                                                                       # use timesyncd (lightweight)
 fi
 if [[ $cust = hrv ]];then
   swu 'ROOTKIT SCANNER';sex 'apt install lm-sensors chkrootkit bind9 bind9utils -y';cex 'chkrootkit'
-  sex "${p[67]} set-timezone Europe/Lisbon"
-  cc1 ${p[19]} "${p[40]}"                                                                                                                                     # my      time servers
-  cc1 ${p[20]} "${p[41]}"                                     ;cmw ${p[20]} 644 root                                                                          # motd-news disable
-  cc4 ${p[21]} "${p[56]}"                                     ;cmw ${p[21]} 644 root                                                                          # new netplan
-  cc1 ${p[25]} "${p[46]}"                                     ;cmw ${p[25]} 755 root                                                                          # grub timeout
-  cc1 ${p[34]} "${p[83]}"                                     ;cmw ${p[34]} 644 root                                                                          # hosts config
-  cc4 ${p[35]} "${p[82]}"                                     ;cmw ${p[35]} 644 root                                                                          # ssh config
-  cc3 ${p[28]} "${p[48]}" "${p[55]}"                          ;cmw ${p[28]} 644 root bind                                                                     # named my options
-  cc1 ${p[29]} "${p[42]}"                                     ;cmw ${p[29]} 644 root                                                                          # use only ipv4
-  cc1 ${p[39]} "${p[111]}"                                    ;cmw ${p[39]} 644 root                                                                          # no swap - bad for IOPS
+  sex "$s07 set-timezone Europe/Lisbon"
+  cc1 $p20 "$r00"                                                                                                                                             # my      time servers
+  cc1 $p21 "$r01"                           ;cmw $p21 644 root                                                                                                # motd-news disable
+  cc4 $p22 "$r16"                           ;cmw $p22 644 root                                                                                                # new netplan
+  cc1 $p26 "$r06"                           ;cmw $p26 755 root                                                                                                # grub timeout
+  cc1 $p34 "$r22"                           ;cmw $p34 644 root                                                                                                # hosts config
+  cc4 $p35 "$r21"                           ;cmw $p35 644 root                                                                                                # ssh config
+  cc3 $p29 "$r08" "$r15"                    ;cmw $p29 644 root bind                                                                                           # named my options
+  cc1 $p30 "$r02"                           ;cmw $p30 644 root                                                                                                # use only ipv4
+  cc1 $p37 "$r29"                           ;cmw $p37 644 root                                                                                                # no swap - bad for IOPS
   nex 'update-grub'
-  t6 spd;t6 sea;nex "${p[62]} systemd-resolved";nex "${p[63]} systemd-resolved"                                                                               # DNS stop & start
+  t6 spd;t6 sea;nex "$s02 systemd-resolved";nex "$s03 systemd-resolved"                                                                                       # DNS stop & start
 else
-  sex "${p[67]} set-timezone Europe/Berlin"
-  cc1 ${p[19]} "${p[53]}"                                                                                                                                     # general time servers
-  nex "mv -f /etc/motd ${p[9]}/motd.sav"                                                                                                                      # no contabo info
-fi                                                            ;cmw ${p[19]} 644 root;nex "$(pjw 66 77)"                                                       # timesyncd cmod & restart
-cc1 ${p[22]} "${p[43]}"                                       ;cmw ${p[22]} 644 root                                                                          # unattended-upgrades
-cc1 ${p[23]} "${p[44]}"               ;cc2 ${p[23]} "${p[45]}";cmw ${p[23]} 755 root                                                                          # header add my motd
-cc1 ${p[24]} "${p[44]}"                                       ;cmw ${p[24]} 755 root                                                                          # help-text delete
-cc1 ${p[26]} "s%^ *${p[1]}%# ${p[1]}%";cc2 ${p[26]} "${p[54]}";cmw ${p[26]} 644 root                                                                          # new logrotate add
-[[ -x ${p[27]} ]] && sex "chmod -x ${p[27]}"                                                                                                                  # motd overlayroot unexecute
-nex "${p[60]} daemon-reload";sudo dpkg-reconfigure -plow unattended-upgrades                                                                                  # unattended upgrades
+  sex "$s07 set-timezone Europe/Berlin"
+  cc1 $p20 "$r13"                                                                                                                                             # general time servers
+  nex "mv -f /etc/motd $p02/motd.sav"                                                                                                                         # no contabo info
+fi                                          ;cmw $p20 644 root;nex "$s06 $s19"                                                                                # timesyncd cmod & restart
+cc1 $p23 "$r03"                             ;cmw $p23 644 root                                                                                                # unattended-upgrades
+cc1 $p24 "$r04";cc2 $p24 "$r05"             ;cmw $p24 755 root                                                                                                # header add my motd
+cc1 $p25 "$r04"                             ;cmw $p25 755 root                                                                                                # help-text delete
+cc1 $p27 "s%^ *$p01%# $p01%";cc2 $p27 "$r14";cmw $p27 644 root                                                                                                # new logrotate add
+[[ -x $p28 ]] && sex "chmod -x $p28"                                                                                                                          # motd overlayroot unexecute
+nex "$s00 daemon-reload";sudo dpkg-reconfigure -plow unattended-upgrades                                                                                      # unattended upgrades
 if [[ $cunm = $znm1 || $cunm = $znm4 || $cunm = $vnm1 ]];then                                                                                                 # ec here
   swu 'INSTALAR GETH';t6 jwt;sex 'add-apt-repository -y ppa:ethereum/ethereum';sex 'apt update -y';cex 'apt install ethereum -y'                              # geth execution client needs
-  sex "mkdir -p ${p[18]}/geth";sau eth1;cmw ${p[18]} 755 eth1;cmw ${p[18]}/geth 700 eth1                                                                      # create dir & user for ec
+  sex "mkdir -p $p08/geth";sau eth1;cmw $p08 755 eth1;cmw $p08/geth 700 eth1                                                                                  # create dir & user for ec
   maxp=50                                                                                                                                                     # default
   pp2p=30303                                                                                                                                                  # default
   othe=''
   othe="$othe --http.corsdomain 'chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn' --http.vhosts '*'"                                                      # for metamask
-  cat <<-EOF > ${p[70]}.service
+  cat <<-EOF > $s10.service
 	[Unit]
 	Description=geth service
 	Wants=network-online.target
@@ -83,14 +83,14 @@ if [[ $cunm = $znm1 || $cunm = $znm4 || $cunm = $vnm1 ]];then                   
 	Restart=always
 	RestartSec=10
 	TimeoutStopSec=300
-	ExecStart=${p[8]}/geth --datadir ${p[18]} --port $pp2p --http --http.addr $zip1$othe --maxpeers $maxp --authrpc.addr $zip1 --authrpc.jwtsecret ${p[18]}/geth/jwt
-	ExecStopPost=${p[9]}/eth2/t8mail GETHSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
+	ExecStart=$p07/geth --datadir $p08 --port $pp2p --http --http.addr $zip1$othe --maxpeers $maxp --authrpc.addr $zip1 --authrpc.jwtsecret $p08/geth/jwt
+	ExecStopPost=$p02/eth2/t8mail GETHSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 	
 	[Install]
 	WantedBy=multi-user.target
 	EOF
-  sex "mv ${p[70]}.service $(pjp 4 70).service";cmw $(pjp 4 70).service 644
-  if [[ -f jwt ]];then sjw eth1 ${p[18]}/geth;else swb "needs ${p[18]}/geth/jwt secret";fi
+  sex "mv $s10.service $p04";cmw $p04/$s10.service 644
+  if [[ -f jwt ]];then sjw eth1 $p08/geth;else swb "needs $p08/geth/jwt secret";fi
   t8besu                                                                                                                                                      # instalar besu
 fi
 swn 'sudo netplan apply'
