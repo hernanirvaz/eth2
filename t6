@@ -126,11 +126,11 @@ function bcl { curl -sX GET "http://$cicc:5052/eth/v1/node/$1" -H "accept: appli
 function bsd { nu0 $(echo $@|sed -n 's%.*"sync_distance" *: *"\([^"]*\)".*%\1%ip'); }                                                                         # get cl syncing distance
 function bpc { nu0 $(echo $@|sed -n 's%.*"connected" *: *"\([^"]*\)".*%\1%ip'    ); }                                                                         # get cl peers connected
 function bb1 { if [[ $(echo $@|grep is_syncing\":false) ]];then printf " synced";else printf " syncing: %6i" $(bsd $@);fi; }                                  # get cl syncing distance remaining
-function bz0 { echo $((10*(5*zk+2*zz+zx+zw)))                                          ; }                                                                    # get numerator paid errors
-function bw0 { echo $((10*z1))                                                         ; }                                                                    # get numerator processed blocks
-function bf0 { echo $((90*z3))                                                         ; }                                                                    # get numerator general errors
-function bi0 { echo $((nd+zk*300+zz*20+zx))                                            ; }                                                                    # get delete day idx
-function bu0 { echo $(((z5>400?$(bz0)/z5:0)+(z2>300?$(bw0)/z2:0)+(z4>999?$(bf0)/z4:0))); }                                                                    # get restart idx
+function bz0 { printf '%i' $((10*(5*zk+2*zz+zx+zw)))                                          ; }                                                             # get numerator paid errors
+function bw0 { printf '%i' $((10*z1))                                                         ; }                                                             # get numerator processed blocks
+function bf0 { printf '%i' $((90*z3))                                                         ; }                                                             # get numerator general errors
+function bi0 { printf '%i' $((nd+zk*300+zz*20+zx))                                            ; }                                                             # get delete day idx
+function bu0 { printf '%i' $(((z5>400?$(bz0)/z5:0)+(z2>300?$(bw0)/z2:0)+(z4>999?$(bf0)/z4:0))); }                                                             # get restart idx
 function bv0 { nn=$(nu0 $(ss1 $s12 target-peers [0-9])); }                                                                                                    # get configured peers
 function bb0 { l0=$(fs0 $bpid] 3600);bl1;bl2;[[ (1 -eq $(bl6 $chrs) && $(bu0) -ge 1) || (1 -eq $(bl6 5) && $(bu0) -ge 5) ]] && ok=BK; }                       # set ok (OK/BK)
 function bbl { cat $p12 2>$p03|wc -l; }                                                                                                                       # get cc       line count
@@ -216,7 +216,7 @@ function bon { [[ -f $p12 ]] || return;bv0;nn=$(pt2 $1 $nn);l2=$(bff 23:58);bo7 
 function boa { local g=${1:-$bpri};echo "BO$(printf '%5i' $(bo7 $g|wc -l)) $(printf '%3i' $g)";bo7 $g;((g<bprf)) && boa $((g+bprs)); }                        # recursively show homologous nodes report
 function bh0 {
   [[ -f $p12 ]] || return;tail -n${1:-$chrs} $p12;[[ $1 ]] && return                                                                                          # last cc    report
-  boi;swn "BO $(printf '%4i' $b2) $(printf '%3i' $(echo "$l2"|wc -l))$(printf '%63s')x5 x2  x1 x1";bo6                                                        # homologous report
+  boi;swn "BO $(printf '%4i' $b2) $(printf '%3i' $(echo "$l2"|wc -l))$(printf '%63s')x5 x2  x1 x1 pb blkr c10 er info  c90";bo6                               # homologous report
   bl0;swn "BL $(printf '%8i' $(bbl))\n$m";bm0                                                                                                                 # current cc report
   bmo;swn "BM $(printf '%8i' $(bml))$(printf '%34s')i20  i30  i40  i50  i60  i70  i80\n$m"                                                                    # cc-daily/services/system report
 }
