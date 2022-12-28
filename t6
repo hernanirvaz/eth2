@@ -241,24 +241,19 @@ function bsb {                                                                  
   fi;done;rm -f $f
 }
 function irb { rm $p39.$1.hours 2>$p03;if sot $1;then gps;ups;bps;sex reboot;fi;if srt;then touch $p39.$1.hours;fi; }                                         # reboot if system needs it
-function brh { head -n${1:-0} $p12.r; }                                                                                                                       # new cc head lines
+function brh { head -n${1:-0} $p12; }                                                                                                                         # new cc head lines
 function brl {                                                                                                                                                # recalculate cc logs
-  [[ -f $p12 ]] || return;rm -f $p12.r
-  unset v;while read -a v;do ok=${v[1]};dts ${v[3]}\ ${v[4]};nn=${v[5]:4:2};nr=${v[6]}                                                                        # uncalculated vars
+  [[ -f $p12 ]] || return;rm -f $p12.r;unset v;while read -a v;do ok=${v[1]};dts ${v[3]}\ ${v[4]};nn=${v[5]:4:2};nr=${v[6]}                                   # uncalculated vars
     if [[ ${v[0]} = BEAC ]];then
       bl1 ${v[19]} ${v[20]} ${v[22]} ${v[23]} ${v[11]} ${v[1]};bl2 ${v[15]} ${v[16]} ${v[17]} ${v[18]};bl3 ${v[13]} ${v[26]} ${v[27]};blo                     # BEAC lines calculated output
     else
-      if [[ ${v[0]} = BSRV ]];then
-        m="${v[0]} ${v[1]} ${v[2]} $dt"                                                                                                                       # BSRV lines
-      else
-        m="${v[0]} $ok $(printf '%3i' ${v[2]}) $(dnn)"                                                                                                        # restart lines
-      fi
-    fi                                                                                           ;swn "$m" >> $p12.r                                          # new cc output
+      if [[ ${v[0]} = BSRV ]];then m="${v[0]} ${v[1]} ${v[2]} $dt";else m="${v[0]} $ok $(printf '%3i' ${v[2]}) $(dnn)";swn "$m";fi
+    fi;swn "$m" >> $p12.r                                                                                                                                     # new cc output
   done <<< $(cat $p12)
 }
 function brm {                                                                                                                                                # recalculate cc-daily logs
-  [[ -f $p13 ]] || return;rm -f $p13.r;bmi;local d=0000-00-00;local l=0;local n=0;local h=0;local g=0;while read -a v;do
-    d=${v[3]};h=$g;g=$(grep -n "$d 23:58" $p12.r|cut -d: -f1);[[ ${g:=$h} -le $h ]] && continue;dts $d\ ${v[4]};nn=${v[5]:4:2}                                # get next cc log position
+  [[ -f $p12 && -f $p13 ]] || return;rm -f $p13.r;bmi;local d=0000-00-00;local l=0;local n=0;local h=0;local g=0;unset v;while read -a v;do
+    d=${v[3]};h=$g;g=$(grep -n "$d 23:58" $p12|cut -d: -f1);[[ ${g:=$h} -le $h ]] && continue;dts $d\ ${v[4]};nn=${v[5]:4:2}                                  # get next cc log position
     nr=${v[6]};nd=${v[12]};l2=$(brh $g|bfl 23:58);bo2 $d;((l+=b2));((n+=1));b3=$(nu1 $l/$n)                                                                   # cur/avg homologous position
     l3=$(brh $g|tail -n$((g-h))|bfl);[[ $l3 ]] && bm1;bm2;b7=${v[11]};b1=${v[14]};b5=${v[15]};b4=${v[13]};bms;swn "$m" >> $p13.r                              # sum err arrays & new cc-daily output
   done <<< $(cat $p13)
