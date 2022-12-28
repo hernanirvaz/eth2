@@ -139,8 +139,8 @@ function bfl { grep "BEAC.*$1"    ; }                                           
 function bff { [[ -f $p12 ]] || return;grep "BEAC.*$1" $p12; }                                                                                                # filter cc log
 function bl0 { dts;ok=OK;if [[ $(sst $s12 running) ]];then bl3;bv0;bnn $(fs4 peers:);bb0;blo;else m="BSRV NOT ON $dt";fi; }                                   # cc report
 function bl1 {                                                                                                                                                # set restart idx vars
-  z1=${1:-$(echo "$l0"|grep 'rocessed block'|wc -l)};z2=${2:-$(echo "$l0"|grep 'block received'|wc -l)};z3=${3:-$(echo "$l0"|grep -v ' INFO ' |wc -l)}        # set processed/received blocks,error lines
-  z4=${4:-$(echo "$l0"|grep    ' INFO '     |wc -l)};z5=${5:-$(bl7 success)};ok=${6:-OK}                                                                      # set info lines,success/had activities
+  z1=${1:-$(echo "$l0"|grep 'RPC block'|wc -l)};z2=${2:-$(echo "$l0"|grep 'New block'|wc -l)};z3=${3:-$(echo "$l0"|grep -v ' INFO ' |wc -l)}                  # set processed/received blocks,error lines
+  z4=${4:-$(echo "$l0"|grep ' INFO '   |wc -l)};z5=${5:-$(bl7 success)};ok=${6:-OK}                                                                           # set info lines,success/had activities
 }
 function bl2 { zk=${1:-$(bl7 missing)};zz=${2:-$(bl7 target)};zx=${3:-$(bl7 head)};zw=${4:-$(bl7 had)}; }                                                     # set missing/target/head activities
 function bl3 { b0=${1:-$(fs0 Valid.block|wc -l)};if [[ $2$3 ]];then b1=$2;b5=$3;else lg6 2;fi; }                                                              # set pub-blocks & imported/observed delays
@@ -216,7 +216,7 @@ function bon { [[ -f $p12 ]] || return;bv0;nn=$(pt2 $1 $nn);l2=$(bff 23:58);bo7 
 function boa { local g=${1:-$bpri};echo "BO$(printf '%5i' $(bo7 $g|wc -l)) $(printf '%3i' $g)";bo7 $g;((g<bprf)) && boa $((g+bprs)); }                        # recursively show homologous nodes report
 function bh0 {
   [[ -f $p12 ]] || return;tail -n${1:-$chrs} $p12;[[ $1 ]] && return                                                                                          # last cc    report
-  boi;swn "BO $(printf '%4i' $b2) $(printf '%3i' $(echo "$l2"|wc -l))$(printf '%63s')x5 x2  x1 x1 pb blkr c10 er info  c90";bo6                               # homologous report
+  boi;swn "BO $(printf '%4i' $b2) $(printf '%3i' $(echo "$l2"|wc -l))$(printf '%63s')x5 x2  x1 x1 rb   nb c10 er   if  c90";bo6                               # homologous report
   bl0;swn "BL $(printf '%8i' $(bbl))\n$m";bm0                                                                                                                 # current cc report
   bmo;swn "BM $(printf '%8i' $(bml))$(printf '%34s')i20  i30  i40  i50  i60  i70  i80\n$m"                                                                    # cc-daily/services/system report
 }
