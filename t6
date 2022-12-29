@@ -215,10 +215,10 @@ function bo7 { bo1|grep $(printf 'node%02i:' $1); }                             
 function bon { [[ -f $p12 ]] || return;bv0;nn=$(pt2 $1 $nn);l2=$(bff 23:58);bo7 $nn; }                                                                        # homologous nodes report
 function boa { local g=${1:-$bpri};echo "BO$(printf '%5i' $(bo7 $g|wc -l)) $(printf '%3i' $g)";bo7 $g;((g<bprf)) && boa $((g+bprs)); }                        # recursively show homologous nodes report
 function bh0 {
-  [[ -f $p12 ]] || return;tail -n${1:-$chrs} $p12;[[ $1 ]] && return                                                                                          # last cc    report
-  boi;swn "BO $(printf '%4i' $b2) $(printf '%3i' $(echo "$l2"|wc -l))$(printf '%63s')x5 x2  x1 x1 rb   nb c10 er   if  c90";bo6                               # homologous report
-  bl0;swn "BL $(printf '%8i' $(bbl))\n$m";bm0                                                                                                                 # current cc report
-  bmo;swn "BM $(printf '%8i' $(bml))$(printf '%34s')i20  i30  i40  i50  i60  i70  i80\n$m"                                                                    # cc-daily/services/system report
+  [[ -f $p12 ]] || return;tail -n${1:-$chrs} $p12;[[ $1 ]] && return                                                                                          # current    cc report
+  boi;swn "BO $(printf '%4i %3i%34s%29s' $b2 $(echo "$l2"|wc -l))x5 x2  x1 x1";bo6                                                                            # homologous cc report
+  bl0;swn "BL $(printf '%8i%34s%29s%13s'     $(bbl)             )rb   nb c10 er   if  c90\n$m";bm0                                                            # last       cc report
+  bmo;swn "BM $(printf '%8i%34s'             $(bml)             )i20  i30  i40  i50  i60  i70  i80\n$m"                                                       # last cc-daillast y
 }
 function btr { if srt;then echo RB;else echo $1;fi; }                                                                                                         # get tag reboot
 function bro { dts;bb0;bnn $(fs4 peers:);[[ -f $p12 ]] && swn "$(printf 'R%03i' $1) ${2:-$ok} $(printf '%3i' $(bu0)) $(dnn)" >> $p12; }                       # log restart info
