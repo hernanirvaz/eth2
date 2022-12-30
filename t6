@@ -68,9 +68,9 @@ function sso {
   [[ $(sst $2 disabled) || ! $(sst $2 $2) ]] && return;dts;local e="$1 $(printf '%6s %10s %5s status: %-40s' $(ss1 $2 Memory:) $dt "$(ss2 $2)")"              # memory & status
   [[ $1 = GETH ]] && bnn $(fs0 peercount= 0 $r30|lg1 .*peercount=) $(nu0 $(gcl net.peerCount))                                                                # set min peers
   [[ $1 = GETH ]] && e="$e $(printf 'el:p%02i:m%02i p2p:%5i' $nr $nm $(ss1 $2 port     [0-9]) 2>$p03)$(gb1 synced $(gcl eth.syncing)) i2:$(gdi)"              # el peers/port tag
-  [[ $1 = BESU ]] && bnn $(fs0 Peers:     0 $r31|lg1 .*Peers:)     $(up0 $(ucl net_peerCount))                                                                # set min peers
+  [[ $1 = BESU ]] && bnn $(fs0 Peers:     0 $r31|lg1 .*Peers:    ) $(up0 $(ucl net_peerCount))                                                                # set min peers
   [[ $1 = BESU ]] && e="$e $(printf 'el:p%02i:m%02i p2p:%5i' $nr $nm $(ss1 $2 p2p-port [0-9]) 2>$p03)$(ub1 synced $(ucl eth_syncing)) i2:$(udi)"              # el peers/port tag
-  [[ $1 = BEAC ]] && bnn $(fs4 peers:) $(bpc $(bcl peer_count))                                                                                               # set min peers
+  [[ $1 = BEAC ]] && bnn $(fs4 peers:                            ) $(bpc $(bcl peer_count   ))                                                                # set min peers
   [[ $1 = BEAC ]] && e="$e $(printf 'cl:p%02i:m%02i p2p:%5i' $nr $nm $(ss1 $2 port     [0-9]) 2>$p03)$(bb1 $(bcl syncing))"                                   # cl peers/port tag
   [[ $1 = BEAC ]] && e="$e el:http $(ss1 $2 execution-endpoint '[^ ]'|sed -n $r24)"                                                                           # el http & delays rate
   [[ $1 = VALI ]] && { dtl;bo5;e="$e vl:c$(printf '%02i:m%02i' $b2 $b3 2>$p03) cc:http $(ss1 $2 nodes '[^ ]'|sed -n $r24)"; };swn "$e"                        # set homologous/avg & cl http
@@ -83,13 +83,13 @@ function grs {                                                                  
     if [[ $2 = RB ]];then ero $n $p10 $2;sex reboot;else sex "$s03 $s10";ssf 20 $p40;gq0;ero $n $p10 $2;fi                                                    # reboot/start el
   fi;done;rm -f $f
 }
-function gdi { lg3 $1;nu0 $(nu2 $(lg5 's%.*elapsed=')); }                                                                                                     # get delay imported
-function gcl { $p07/geth attach --exec $1 "http://$ciec:8545" 2>$p03; }                                                                                       # exec RPC HTTP
-function gi0 { nu0 $(echo $@|sed -n 's%.*highestBlock: *\([0-9]*\).*%\1%ip'); }                                                                               # get el highest block
-function gc0 { nu0 $(echo $@|sed -n 's%.*currentBlock: *\([0-9]*\).*%\1%ip'); }                                                                               # get el current block
+function gdi { lg3 $1;nu2 $(lg5 's%.*elapsed='); }                                                                                                            # get delay imported
+function gcl { $p07/geth attach --exec $1 "http://$ciec:8545"               2>$p03 ; }                                                                        # exec RPC HTTP
+function gi0 { nu0 $(echo $@|sed -n 's%.*highestBlock: *\([0-9]*\).*%\1%ip' 2>$p03); }                                                                        # get el highest block
+function gc0 { nu0 $(echo $@|sed -n 's%.*currentBlock: *\([0-9]*\).*%\1%ip' 2>$p03); }                                                                        # get el current block
 function gv0 { nn=$(nu0 $(ss1 $s10 maxpeers [0-9])); }                                                                                                        # set configured peers
 function gq0 { nr=$(nu0 $(gcl net.peerCount      )); }                                                                                                        # set el current peers
-function gb1 { if [[ $(echo $@|grep false) ]];then [[ $1 ]] && printf " $1";else nu0 $(($(gi0 $@)-$(gc0 $@))) ' syncing: %6i';fi; }                           # get el syncing blocks remaining
+function gb1 { if [[ $(echo $@|grep false) ]];then [[ $1 ]] && printf " $1";else printf ' syncing: %6i' $(($(gi0 $@)-$(gc0 $@)));fi; }                        # get el syncing blocks remaining
 function gl0 {                                                                                                                                                # el report
   dts;ok=OK
   if [[ $(sst $s10 running) ]];then local e=$(gcl eth.syncing);gv0;gq0;eb0 $p10 Imported $r30 $e
@@ -105,14 +105,14 @@ function urs {                                                                  
     if [[ $2 = RB ]];then ero $n $p11 $2;sex reboot;else sex "$s03 $s11";ssf 20 $p41;uq0;ero $n $p11 $2;fi                                                    # reboot/start el
   fi;done;rm -f $f
 }
-function udi { lg3 $1;nu0 $(nu2 $(lg5 's%.* in ')); }                                                                                                         # get delay imported
+function udi { lg3 $1;nu2 $(lg5 's%.* in '); }                                                                                                                # get delay imported
 function ucl { curl -sX POST --data "{\"jsonrpc\":\"2.0\",\"method\":\"$1\",\"params\":[],\"id\":51}" "http://$ciec:8545" 2>$p03; }                           # exec RPC HTTP
-function ui0 { nu0 $((16#$(echo $@|sed -n 's%.*highestBlock" *: *"0x\([^"]*\)".*%\1%ip'))); }                                                                 # get el highest block
-function uc0 { nu0 $((16#$(echo $@|sed -n 's%.*currentBlock" *: *"0x\([^"]*\)".*%\1%ip'))); }                                                                 # get el current block
-function up0 { nu0 $((16#$(echo $@|sed -n 's%.*result" *: *"0x\([^"]*\)".*%\1%ip'      ))); }                                                                 # get el result
+function ui0 { echo $((16#$(nu0 $(echo $@|sed -n 's%.*highestBlock" *: *"0x\([^"]*\)".*%\1%ip' 2>$p03)))); }                                                  # get el highest block
+function uc0 { echo $((16#$(nu0 $(echo $@|sed -n 's%.*currentBlock" *: *"0x\([^"]*\)".*%\1%ip' 2>$p03)))); }                                                  # get el current block
+function up0 { echo $((16#$(nu0 $(echo $@|sed -n 's%.*result" *: *"0x\([^"]*\)".*%\1%ip'       2>$p03)))); }                                                  # get el result
 function uv0 { nn=$(nu0 $(ss1 $s11 max-peers [0-9])); }                                                                                                       # set configured peers
-function uq0 { nr=$(nu0 $(up0 $(ucl net_peerCount)))                         ; }                                                                              # set el current peers
-function ub1 { if [[ $(echo $@|grep false) ]];then [[ $1 ]] && printf " $1";else nu0 $(($(ui0 $@)-$(uc0 $@))) ' syncing: %6i';fi; }                           # get el syncing blocks remaining
+function uq0 { nr=$(up0 $(ucl net_peerCount       )); }                                                                                                       # set el current peers
+function ub1 { if [[ $(echo $@|grep false) ]];then [[ $1 ]] && printf " $1";else printf ' syncing: %6i' $(($(ui0 $@)-$(uc0 $@)));fi; }                        # get el syncing blocks remaining
 function ul0 {                                                                                                                                                # el report
   dts;ok=OK
   if [[ $(sst $s11 running) ]];then local e=$(ucl eth_syncing);uv0;uq0;eb0 $p11 Imported $r31 $e
@@ -123,20 +123,20 @@ function ul0 {                                                                  
 }
 # cc control commands
 function bcl { curl -sX GET "http://$cicc:5052/eth/v1/node/$1" -H "accept: application/json" 2>$p03; }                                                        # exec RPC HTTP
-function bsd { nu0 $(echo $@|sed -n 's%.*"sync_distance" *: *"\([^"]*\)".*%\1%ip')    ; }                                                                     # get cl syncing distance
-function bpc { nu0 $(echo $@|sed -n 's%.*"connected" *: *"\([^"]*\)".*%\1%ip'    )    ; }                                                                     # get cl peers connected
-function bz0 { nu0 $((10*(5*zk+2*zz+zx+zw)))                                          ; }                                                                     # get numerator paid errors
-function bw0 { nu0 $((10*z1))                                                         ; }                                                                     # get numerator processed blocks
-function bf0 { nu0 $((90*z3))                                                         ; }                                                                     # get numerator general errors
-function bi0 { nu0 $((nd+zk*300+zz*20+zx))                                            ; }                                                                     # get delete day idx
-function bu0 { nu0 $(((z5>400?$(bz0)/z5:0)+(z2>300?$(bw0)/z2:0)+(z4>999?$(bf0)/z4:0))); }                                                                     # get restart idx
+function bsd { nu0 $(echo $@|sed -n 's%.*"sync_distance" *: *"\([^"]*\)".*%\1%ip' 2>$p03); }                                                                  # get cl syncing distance
+function bpc { nu0 $(echo $@|sed -n 's%.*"connected" *: *"\([^"]*\)".*%\1%ip'     2>$p03); }                                                                  # get cl peers connected
+function bz0 { nu0 $((10*(5*zk+2*zz+zx+zw)))                                             ; }                                                                  # get numerator paid errors
+function bw0 { nu0 $((10*z1))                                                            ; }                                                                  # get numerator processed blocks
+function bf0 { nu0 $((90*z3))                                                            ; }                                                                  # get numerator general errors
+function bi0 { nu0 $((nd+zk*300+zz*20+zx))                                               ; }                                                                  # get delete day idx
+function bu0 { nu0 $(((z5>400?$(bz0)/z5:0)+(z2>300?$(bw0)/z2:0)+(z4>999?$(bf0)/z4:0)))   ; }                                                                  # get restart idx
 function bv0 { nn=$(nu0 $(ss1 $s12 target-peers [0-9])); }                                                                                                    # get configured peers
 function bb0 { l0=$(fs0 $bpid] 3600);bl1;bl2;[[ (1 -eq $(bl6 $chrs) && $(bu0) -ge 1) || (1 -eq $(bl6 5) && $(bu0) -ge 5) ]] && ok=BK; }                       # set ok (OK/BK)
 function bbl { cat $p12 2>$p03|wc -l; }                                                                                                                       # get cc       line count
 function bml { cat $p13 2>$p03|wc -l; }                                                                                                                       # get cc-daily line count
 function bfl { grep "BEAC.*$1"; }                                                                                                                             # filter cc lines
 function bff { [[ -f $p12 ]] || return;grep "BEAC.*$1" $p12; }                                                                                                # filter cc log
-function bb1 { if [[ $(echo $@|grep is_syncing\":false) ]];then printf ' synced';else nu0 $(bsd $@) ' syncing: %6i';fi; }                                     # get cl syncing distance remaining
+function bb1 { if [[ $(echo $@|grep is_syncing\":false) ]];then printf ' synced';else printf ' syncing: %6i' $(bsd $@);fi; }                                  # get cl syncing distance remaining
 function bl0 { dts;ok=OK;if [[ $(sst $s12 running) ]];then bl3;bv0;bnn $(fs4 peers:);bb0;blo;else m="BSRV NOT ON $dt";fi; }                                   # cc report
 function bl1 {                                                                                                                                                # set restart idx vars
   z1=${1:-$(echo "$l0"|grep 'RPC block'|wc -l)};z2=${2:-$(echo "$l0"|grep 'New block'|wc -l)};z3=${3:-$(echo "$l0"|grep -v ' INFO ' |wc -l)}                  # set processed/received blocks,error lines
@@ -172,7 +172,7 @@ function bm4 { read -a v <<< $(tail -n1 $p14);bmk;bmz;bmx;bmw;bmc; }            
 function bm5 { local g=${2:-$bpri};local n=$1;if ((a[g]<n));then b4=$((g-nn));n=${a[$g]};fi;((g<bprf)) && bm5 $n $((g+bprs)); }                               # set recursively peer change <- min penalties
 function bm6 { local g=${1:-$bpri};k[$g]=0;z[$g]=0;x[$g]=0;w[$g]=0;c[$g]=0;a[$g]=0         ;((g<bprf)) && bm6    $((g+bprs)); }                               # ini recursively penalty arrays
 function bm7 { local g=${1:-$bpri};a[$g]=$(bm3 $g)                                         ;((g<bprf)) && bm7    $((g+bprs)); }                               # avg recursively penalty arrays
-function bcm { local g=${1:-$bpri};((c[g]+=$(echo "$l1"|wc  -l)                       )); }                                                                   # sum               cnt array
+function bcm { local g=${1:-$bpri};((c[g]+=$(echo "$l1"|wc -l 2>$p03)                        )); }                                                            # sum               cnt array
 function bkm { local g=${1:-$bpri};((k[g]+=$((0$(printf '+%i' $(echo "$l1"|cut -f1) 2>$p03))))); }                                                            # sum missing       err array
 function bzm { local g=${1:-$bpri};((z[g]+=$((0$(printf '+%i' $(echo "$l1"|cut -f2) 2>$p03))))); }                                                            # sum failed target err array
 function bxm { local g=${1:-$bpri};((x[g]+=$((0$(printf '+%i' $(echo "$l1"|cut -f3) 2>$p03))))); }                                                            # sum failed head   err array
@@ -182,7 +182,7 @@ function bmk { local g=${1:-$bpri};local n=${2:-13};k[$g]=${v[$n]};((g<bprf)) &&
 function bmz { local g=${1:-$bpri};local n=${2:-21};z[$g]=${v[$n]};((g<bprf)) && bmz $((g+bprs)) $((n+1)); }                                                  # set recursively failed target err array
 function bmx { local g=${1:-$bpri};local n=${2:-29};x[$g]=${v[$n]};((g<bprf)) && bmx $((g+bprs)) $((n+1)); }                                                  # set recursively failed head   err array
 function bmw { local g=${1:-$bpri};local n=${2:-37};w[$g]=${v[$n]};((g<bprf)) && bmw $((g+bprs)) $((n+1)); }                                                  # set recursively delay         err array
-function bma { local g=${2:-$bpri};if ((g<=bprf));then bma "$1 $(nu0 ${a[$g]} %4i)" $((g+bprs));else echo "$1";fi; }                                          # sum recursively penalty       avg array
+function bma { local g=${2:-$bpri};if ((g<=bprf));then bma "$1 $(nu0 ${a[$g]} %4i)"      $((g+bprs));else echo "$1";fi; }                                     # sum recursively penalty       avg array
 function bnc { local g=${3:-$bpri};if ((g<=bprf));then bnc "${1:-0}${2:-+}${c[$g]}" "$2" $((g+bprs));else echo "$1";fi; }                                     # sum recursively               cnt array
 function bnk { local g=${3:-$bpri};if ((g<=bprf));then bnk "${1:-0}${2:-+}${k[$g]}" "$2" $((g+bprs));else echo "$1";fi; }                                     # sum recursively missing       err array
 function bnz { local g=${3:-$bpri};if ((g<=bprf));then bnz "${1:-0}${2:-+}${z[$g]}" "$2" $((g+bprs));else echo "$1";fi; }                                     # sum recursively failed target err array
