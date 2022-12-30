@@ -225,7 +225,7 @@ function pai { local e="allow from $2 to any port ${1/\// proto }";if [[ $4 ]];t
 function pae { local e="allow $1"                                 ;if [[ $3 ]];then nex "ufw $3 $e";else nex "ufw $e comment $2";fi; }                        # allow prt
 function ple { local e="limit $1"                                 ;if [[ $3 ]];then nex "ufw $3 $e";else nex "ufw $e comment $2";fi; }                        # limit prt (<6 within 30s)
 function sis { if [[ -f $1 ]];then sex "mv $1 $p17";swb "NEW $p18";touch $p05/vc_slash;cmw $p18 600 eth3;else swb "NO NEW $1";fi; }                           # init slash db
-function snc { if [[ ${1:0:3} = hrv ]];then echo ${1/[a-z]*-/}|tr -d '[ao]';else case $1 in $vnm1) echo vpsl;;$vnm2) echo vpsm;;$vnm3) echo vpss;;esac;fi; }  # get small server name
+function snc { if [[ ${1:0:3} = hrv ]];then printf ${1/[a-z]*-/}|tr -d '[ao]';else case $1 in $vnm1) printf vpsl;;$vnm2) printf vpsm;;$vnm3) printf vpss;;esac;fi; }  # get small server name
 function sjw { [[ -d $2 ]] || return;sex "cp jwt $2";cmw $2/jwt 600 $1; }                                                                                     # install jwt
 function unv {
   local vuel=$1;curl -sLO https://hyperledger.jfrog.io/artifactory/besu-binaries/besu/$vuel/besu-$vuel.tar.gz;sha256sum besu-$vuel.tar.gz                     # download besu binaries

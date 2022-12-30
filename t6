@@ -7,7 +7,7 @@ function nu1 { printf "${4:-%.0f}" $(echo "scale=${3:-1};$1*${2:-1}"|bc 2>$p03) 
 function nu2 { if [[ $# -gt 0 ]];then nu1 "(0$(printf '%+.0f' $@ 2>$p03))/$#"                                                 ;else printf %i;fi; }           # get average list numbers scale 1
 function nu3 { if [[ $# -gt 0 ]];then nu1 "(0$(printf '%+.1f' $@ 2>$p03))/$#" 1 2 %.1f                                        ;else printf %i;fi; }           # get average list numbers scale 2
 function nu4 { if [[ $# -gt 0 ]];then nu1 "sqrt(((0$(printf '+%i^2' $@ 2>$p03))-(0$(printf '+%i' $@ 2>$p03))^2/$#)/$#)" 1000 5;else printf %i;fi; }           # get standard deviation list numbers
-function nu5 { nu1 "($1*$pmis+$2*$pmat+$3*$pmah+$4*$pdly)/${5:-1}*$rate/$decp" 1000 5; }                                                                      # get penalty
+function nu5 {                        nu1 "($1*$pmis+$2*$pmat+$3*$pmah+$4*$pdly)/${5:-1}*$rate/$decp"                   1000 5                  ; }           # get penalty
 function fs0 { pex "grep ${3:-lighthouse}.*$1 $p01"|if [[ ${2:-0} -le 0 ]];then cat;else tail -n${2:-0};fi; }                                                 # get specific syslog lines
 function fs1 { pex "grep    $r34 $p01"; }                                                                                                                     # get eth      syslog lines
 function fs2 { pex "grep -v $r34 $p01"; }                                                                                                                     # get sys      syslog lines
@@ -19,47 +19,47 @@ function lg0 { grep $1 $2 2>$p03|tail -n1|lg1 $1; }                             
 function lg1 { sed "s%$1 *\([0-9]*\).*%\1%" $2 2>$p03; }                                                                                                      # get list  numbers  from log
 function lg2 { local e='Delayed.head.block';if [[ ${1:-0} -gt 0 ]];then l4=$(rl2 $e|grep -v None|tail -n${1:-0});else l4=$(rl2 $e|grep -v None);fi; }         # set cc specific log lines
 function lg3 { local e='Imported'          ;if [[ ${1:-0} -gt 0 ]];then l4=$(rl3 $e|tail -n${1:-0});else l4=$(rl3 $e);fi; }                                   # set ec specific log lines
-function lg4 { if [[ $l4 ]];then echo "$l4"|sed -n "$1$r35";echo "$l4"|sed -n "$1$r36";echo "$l4"|sed -n "$1$r37";else echo 1;fi; }                           # get s/ms delays from log lines
-function lg5 { if [[ $l4 ]];then echo "$l4"|sed -n "$1$r38";echo "$l4"|sed -n "$1$r39";echo "$l4"|sed -n "$1$r40";else echo 1;fi; }                           # get s/ms delays from log lines
+function lg4 { if [[ $l4 ]];then echo "$l4"|sed -n "$1$r35";echo "$l4"|sed -n "$1$r36";echo "$l4"|sed -n "$1$r37";else printf %i 1;fi; }                      # get s/ms delays from log lines
+function lg5 { if [[ $l4 ]];then echo "$l4"|sed -n "$1$r38";echo "$l4"|sed -n "$1$r39";echo "$l4"|sed -n "$1$r40";else printf %i 1;fi; }                      # get s/ms delays from log lines
 function lg6 { lg2 $1;b1=$(nu2 $(lg4 's%.*imported_delay: '));b5=$(nu2 $(lg4 's%.*observed_delay: ')); }                                                      # set Imported/observed delays
 function rl0 { local n=${1:-0};((n<0)) && rl0    $((n+1));local e=$p16/logs/beacon.log   ;((n>0)) && e="$e.$n";echo $H|sudo -S cat $e     2>$p03; }           # get cc intern lines
 function rl1 { local n=${2:-0};((n<7)) && rl1 $1 $((n+1));local e=$p01                   ;((n>0)) && e="$e.$n";echo $H|sudo -S grep $1 $e 2>$p03; }           # get all eth  syslog lines
 function rl2 { local n=${2:-0};((n<1)) && rl2 $1 $((n+1));local e=$p16/logs/beacon.log   ;((n>0)) && e="$e.$n";echo $H|sudo -S grep $1 $e 2>$p03; }           # get specific cc intern log lines
 function rl3 { local n=${2:-0};((n<1)) && rl3 $1 $((n+1));local e=$p01                   ;((n>0)) && e="$e.$n";echo $H|sudo -S grep $1 $e 2>$p03; }           # get ec specific log lines
 function rl4 { local n=${1:-0};((n<0)) && rl4    $((n+1));local e=$p17/logs/validator.log;((n>0)) && e="$e.$n";echo $H|sudo -S cat $e     2>$p03; }           # get cc intern lines
-function pt0 { until [[ $# -le 1 || $1 =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]];do shift;done;echo $1; }                                                            # yyyy-mm-dd test
-function pt1 { until [[ $# -le 1 || $1 =~ ^[0-9]{2}:[0-9]{2}$          ]];do shift;done;echo $1; }                                                            # hh:mm      test
-function pt2 { until [[ $# -le 1 || $1 =~ ^[0-9]+$                     ]];do shift;done;echo $1; }                                                            # integer    test
-function pt3 { until [[ $# -le 1 || $1 =~ ^[a-z]+$                     ]];do shift;done;echo $1; }                                                            # string     test
+function pt0 { until [[ $# -le 1 || $1 =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]];do shift;done;printf %s $1; }                                                       # yyyy-mm-dd test
+function pt1 { until [[ $# -le 1 || $1 =~ ^[0-9]{2}:[0-9]{2}$          ]];do shift;done;printf %s $1; }                                                       # hh:mm      test
+function pt2 { until [[ $# -le 1 || $1 =~ ^[0-9]+$                     ]];do shift;done;printf %i $1; }                                                       # integer    test
+function pt3 { until [[ $# -le 1 || $1 =~ ^[a-z]+$                     ]];do shift;done;printf %s $1; }                                                       # string     test
 function jsh { cex "journalctl --no-hostname --no-full -f $1"; }                                                                                              # my journal   format
 function spc { nn=$2;cp $p04/$1.service $p02/$1.sav;sed "s%peers\([ =]*\)[0-9]*%peers\1$2%" $p02/$1.sav > $p04/$1.service; }                                  # service configuration change
 function snp { local n=$(($2+nn));(($2!=0&&n>=$3&&n<=$4)) && spc $1 $n;sex "$s02 $1";sex "$s00 daemon-reload"; }                                              # service peers change/stop/reload
 function srt { [[ -f $p45 ]]; }                                                                                                                               # system needs reboot test
-function sra { if srt;then echo $(($(date +%s)-$(date -r $p45 +%s)));else echo 0;fi }                                                                         # system reboot age (secounds)
+function sra { if srt;then nu0 $(($(date +%s)-$(date -r $p45 +%s)));else printf %i;fi }                                                                       # system reboot age (secounds)
 function sot { [[ $(sra) -ge $((60*60*${1:-24})) ]]; }                                                                                                        # 24 hours old system reboot test
 function stt { [[ $d1 =~ 23:5[89] ]]; }                                                                                                                       # time test
-function sci { ip a|sed -n 's% *inet  *192.168.8.\([0-9]*\).*%\1%p'; }                                                                                        # get ip/24
-function sni { case $1 in 25) echo $znm1;;28) echo $znm2;;31) echo $znm3;;34) echo $znm4;;esac; }                                                             # get name from ip/24
-function sst { $s01 $1 2>$p03|grep "${2:-inactive\|failed}"; }                                                                                                # systemctl status word test
-function ss1 { $s01 $1 2>$p03|sed -n "s%.*$2[ =]\(${3:-.}*\).*%\1%p"; }                                                                                       # systemctl status 1 extraction
-function ss2 { $s01 $1 2>$p03|sed -n "s%.*Active: *\(.*\)%\1%p"|sed "s% *since.*;%%"|cut -c1-40; }                                                            # systemctl status 2 extraction
+function sci { nu0 $(ip a|sed -n 's% *inet  *192.168.8.\([0-9]*\).*%\1%p' 2>$p03); }                                                                          # get ip/24
+function sni { case $1 in 25) printf $znm1;;28) printf $znm2;;31) printf $znm3;;34) printf $znm4;;esac; }                                                     # get name from ip/24
+function sst { $s01 $1 2>$p03|grep "${2:-inactive\|failed}" 2>$p03; }                                                                                         # systemctl status word test
+function ss1 { $s01 $1 2>$p03|sed -n "s%.*$2[ =]\(${3:-.}*\).*%\1%p" 2>$p03; }                                                                                # systemctl status 1 extraction
+function ss2 { $s01 $1 2>$p03|sed -n "s%.*Active: *\(.*\)%\1%p" 2>$p03|sed "s% *since.*;%%" 2>$p03|cut -c1-40; }                                              # systemctl status 2 extraction
 function dmr { sex "$s00 daemon-reload"; }                                                                                                                    # daemon-reload
 function dts { read d0 d1 <<< ${1:-$(date '+%F %H:%M')};dt="$d0 $d1"  ; }                                                                                     # set date/time vars
 function dtl { read dt dt dt d0 d1 dt <<< $(bff|tail -n1);dt="$d0 $d1"; }                                                                                     # set date/time vars with last beacon log
 function bnn { nr=${@:$#};nm=$(printf '%i\n' $@|sort -n|head -n1 2>$p03);nd=$(nu4 $@); }                                                                      # set cur/min/std peers vars
 function dnn { printf '%10s %5s node%02i: %2i' $dt $nn $nr 2>$p03; }                                                                                          # get date/nodes info
-function tsy { if [[ $(echo $@|grep false) ]];then echo SYC;else echo NSY;fi; }                                                                               # get el SYN/NSY text
+function tsy { if [[ $(echo $@|grep false) ]];then printf SYC;else printf NSY;fi; }                                                                           # get el SYN/NSY text
 function era { tail -n$ehrs $1 2>$p03|cut -d' ' -f1|sort -u|wc -l; }                                                                                          # get el restart activity
-function eh0 { [[ -f $1 ]] || return;tail -n${2:-$ehrs} $1; }                                                                                                 # el historic report
+function eh0 { [[ -f $1 ]] || return;tail -n${2:-$ehrs} $1 2>$p03; }                                                                                          # el historic report
 function eb0 { e0=$(fs0 $2 0 $3|wc -l);ok=OK;[[ $(echo $@|grep false) && ($e0 -eq $(lg0 .*sgs: $1) || $nr -lt $(eb1)) && $(era $1) -eq 1 ]] && ok=BK; }       # Imported new chain segment & OK/BK
-function eb1 { echo $(((nn*100-nn*30)/100)); }                                                                                                                # get current peers-30%
+function eb1 { nu0 $(((nn*100-nn*30)/100)); }                                                                                                                 # get current peers-30%
 function ero { dts;[[ -f $2 ]] && swn "$(nu0 $1 R%03i) ${3:-RS} SRV $(dnn)" >> $2; }                                                                          # log restart info
 function sng { $p02/eth2/t7 2>$p03; }                                                                                                                         # get next gap without validator tasks
-function stg { echo $(date -d@${1:-0} +%M:%S|tr -d :)t$(date -d@$(($(date +%s)+${1:-0})) +%H:%M:%S|tr -d :); }                                                # get end file sleep tag
-function sf1 { echo ${1:-$(date +%H:%M:%S)}; }                                                                                                                # get filterd t7 parm 1
-function sf2 { echo ${2:-24}; }                                                                                                                               # get filterd t7 parm 2
-function smn { local g=${1:-24};echo $((g>360?360:g<24?24:g)); }                                                                                              # get max/min seconds to future (12x30/24)
-function sfn { local g=$(($(bss $1)-$(date +%s)));echo $((g>3?g:3)); }                                                                                        # get min seconds to future
+function stg { printf %s $(date -d@${1:-0} +%M:%S|tr -d :)t$(date -d@$(($(date +%s)+${1:-0})) +%H:%M:%S|tr -d :); }                                           # get end file sleep tag
+function sf1 { printf %s ${1:-$(date +%H:%M:%S)}; }                                                                                                           # get filterd t7 parm 1
+function sf2 { printf %i ${2:-24}; }                                                                                                                          # get filterd t7 parm 2
+function smn { local g=${1:-24}                  ;nu0 $((g>360?360:g<24?24:g)); }                                                                             # get max/min seconds to future (12x30/24)
+function sfn { local g=$(($(bss $1)-$(date +%s)));nu0 $((g>3?g:3))            ; }                                                                             # get min seconds to future
 function spt { [[ $(date +%s) -ge $(bss $1 6) ]]; }                                                                                                           # ideal position test (based on time)
 function ssf { [[ $1 -gt 0 ]] || return;local f=$2.s$(stg $1);touch $f;sleep $1s;rm -f $f; }                                                                  # sleep with file info
 # slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168
@@ -107,9 +107,9 @@ function urs {                                                                  
 }
 function udi { lg3 $1;nu2 $(lg5 's%.* in '); }                                                                                                                # get delay imported
 function ucl { curl -sX POST --data "{\"jsonrpc\":\"2.0\",\"method\":\"$1\",\"params\":[],\"id\":51}" "http://$ciec:8545" 2>$p03; }                           # exec RPC HTTP
-function ui0 { echo $((16#$(nu0 $(echo $@|sed -n 's%.*highestBlock" *: *"0x\([^"]*\)".*%\1%ip' 2>$p03)))); }                                                  # get el highest block
-function uc0 { echo $((16#$(nu0 $(echo $@|sed -n 's%.*currentBlock" *: *"0x\([^"]*\)".*%\1%ip' 2>$p03)))); }                                                  # get el current block
-function up0 { echo $((16#$(nu0 $(echo $@|sed -n 's%.*result" *: *"0x\([^"]*\)".*%\1%ip'       2>$p03)))); }                                                  # get el result
+function ui0 { nu0 $((16#$(nu0 $(echo $@|sed -n 's%.*highestBlock" *: *"0x\([^"]*\)".*%\1%ip' 2>$p03)))); }                                                   # get el highest block
+function uc0 { nu0 $((16#$(nu0 $(echo $@|sed -n 's%.*currentBlock" *: *"0x\([^"]*\)".*%\1%ip' 2>$p03)))); }                                                   # get el current block
+function up0 { nu0 $((16#$(nu0 $(echo $@|sed -n 's%.*result" *: *"0x\([^"]*\)".*%\1%ip'       2>$p03)))); }                                                   # get el result
 function uv0 { nn=$(nu0 $(ss1 $s11 max-peers [0-9])); }                                                                                                       # set configured peers
 function uq0 { nr=$(up0 $(ucl net_peerCount       )); }                                                                                                       # set el current peers
 function ub1 { if [[ $(echo $@|grep false) ]];then [[ $1 ]] && printf " $1";else printf ' syncing: %6i' $(($(ui0 $@)-$(uc0 $@)));fi; }                        # get el syncing blocks remaining
@@ -155,15 +155,15 @@ function blo {
   m="$m $(printf '%4i %4i %1i er: %2i %2i %3i %2i %2i %4i %3i %2i %4i %4i' $z5 $(bz0) $b0 $zk $zz $zx $zw $z1 $z2 $(bw0) $z3 $z4 $(bf0) 2>$p03) io: $(bii)"
 }
 function bio { lg6 $1;dts;m="BEIO $(nu0 $1 %6i) $dt io: $(bii)"; }                                                                                            # shw imported/observed delays
-function bcc { if bct       ;then echo c;else echo _;fi; }                                                                                                    # get change configured peers char
-function bdc { if bht && bst;then echo d;else echo _;fi; }                                                                                                    # get delete cc log day       char
+function bcc { if bct       ;then printf c;else printf _;fi; }                                                                                                # get change configured peers char
+function bdc { if bht && bst;then printf d;else printf _;fi; }                                                                                                # get delete cc log day       char
 function bmi { zk=0;zz=0;zx=0;unset v;v[1]=0;unset k;k[0]=0;unset z;z[0]=0;unset x;x[0]=0;unset w;w[0]=0;unset c;c[0]=0;unset a;a[0]=0;bm6; }                 # ini err/cnt/avg penalty arrays
 function bm0 {                                                                                                                                                # cc-daily report
   [[ -f $p12 ]] || return;bmi;b4=0;dts;bv0;bnn $(fs4 peers:);bl2;[[ -f $p14 ]] && bm4;lg6                                                                     # set vars/arrays
   l3=$(tail -n$(($(bbl)-v[1])) $p12 2>$p03|bfl);[[ $l3 ]] && bm1;bm2;bo4;bm5 ${a[$nn]};b7="peers$(bdc)$(bcc)io:"                                              # add cc lines & homologous/avg position
 }
 function bm1 {
-  local g=${1:-$bpri};l1=$(echo "$l3"|sed -nEe "s%.+node$g:.+er: +([0-9]+) +([0-9]+) +([0-9]+) +([0-9]+).+%\1\t\2\t\3\t\4%p")                                 # set paid errors for current array
+  local g=${1:-$bpri};l1=$(echo "$l3"|sed -nEe "s%.+node$g:.+er: +([0-9]+) +([0-9]+) +([0-9]+) +([0-9]+).+%\1\t\2\t\3\t\4%p" 2>$p03)                          # set paid errors for current array
   [[ $l1 ]] && { bkm $g;bzm $g;bxm $g;bwm $g;bcm $g; };((g<bprf)) && bm1 $((g+bprs))                                                                          # recursively sum paid err arrays
 }
 function bm2 { k[0]=$(($(bnk)));z[0]=$(($(bnz)));x[0]=$(($(bnx)));w[0]=$(($(bnw)));c[0]=$(($(bnc)));a[0]=$(bm3 0);bm7; }                                      # tot err/cnt/penalty arrays
@@ -182,12 +182,12 @@ function bmk { local g=${1:-$bpri};local n=${2:-13};k[$g]=${v[$n]};((g<bprf)) &&
 function bmz { local g=${1:-$bpri};local n=${2:-21};z[$g]=${v[$n]};((g<bprf)) && bmz $((g+bprs)) $((n+1)); }                                                  # set recursively failed target err array
 function bmx { local g=${1:-$bpri};local n=${2:-29};x[$g]=${v[$n]};((g<bprf)) && bmx $((g+bprs)) $((n+1)); }                                                  # set recursively failed head   err array
 function bmw { local g=${1:-$bpri};local n=${2:-37};w[$g]=${v[$n]};((g<bprf)) && bmw $((g+bprs)) $((n+1)); }                                                  # set recursively delay         err array
-function bma { local g=${2:-$bpri};if ((g<=bprf));then bma "$1 $(nu0 ${a[$g]} %4i)"      $((g+bprs));else echo "$1";fi; }                                     # sum recursively penalty       avg array
-function bnc { local g=${3:-$bpri};if ((g<=bprf));then bnc "${1:-0}${2:-+}${c[$g]}" "$2" $((g+bprs));else echo "$1";fi; }                                     # sum recursively               cnt array
-function bnk { local g=${3:-$bpri};if ((g<=bprf));then bnk "${1:-0}${2:-+}${k[$g]}" "$2" $((g+bprs));else echo "$1";fi; }                                     # sum recursively missing       err array
-function bnz { local g=${3:-$bpri};if ((g<=bprf));then bnz "${1:-0}${2:-+}${z[$g]}" "$2" $((g+bprs));else echo "$1";fi; }                                     # sum recursively failed target err array
-function bnx { local g=${3:-$bpri};if ((g<=bprf));then bnx "${1:-0}${2:-+}${x[$g]}" "$2" $((g+bprs));else echo "$1";fi; }                                     # sum recursively failed head   err array
-function bnw { local g=${3:-$bpri};if ((g<=bprf));then bnw "${1:-0}${2:-+}${w[$g]}" "$2" $((g+bprs));else echo "$1";fi; }                                     # sum recursively delay         err array
+function bma { local g=${2:-$bpri};if ((g<=bprf));then bma "$1 $(nu0 ${a[$g]} %4i)"      $((g+bprs));else printf "$1";fi; }                                   # sum recursively penalty       avg array
+function bnc { local g=${3:-$bpri};if ((g<=bprf));then bnc "${1:-0}${2:-+}${c[$g]}" "$2" $((g+bprs));else printf "$1";fi; }                                   # sum recursively               cnt array
+function bnk { local g=${3:-$bpri};if ((g<=bprf));then bnk "${1:-0}${2:-+}${k[$g]}" "$2" $((g+bprs));else printf "$1";fi; }                                   # sum recursively missing       err array
+function bnz { local g=${3:-$bpri};if ((g<=bprf));then bnz "${1:-0}${2:-+}${z[$g]}" "$2" $((g+bprs));else printf "$1";fi; }                                   # sum recursively failed target err array
+function bnx { local g=${3:-$bpri};if ((g<=bprf));then bnx "${1:-0}${2:-+}${x[$g]}" "$2" $((g+bprs));else printf "$1";fi; }                                   # sum recursively failed head   err array
+function bnw { local g=${3:-$bpri};if ((g<=bprf));then bnw "${1:-0}${2:-+}${w[$g]}" "$2" $((g+bprs));else printf "$1";fi; }                                   # sum recursively delay         err array
 function bm8 { m="$m $b7 $(printf '%4i %3i' $(bi0) $b4 2>$p03) $(bii)"; }
 #  0    1   2          3     4       5  6   7    8    9   10   11   12   13   14          15   16         17   18  19   20   21   22
 # BM    2   2 2022-11-21 23:46 node50: 55 mp:    0    0    0 1101    0    0    0 all_median: 1101 peers__io:  706 -30  470 5015 1379
@@ -218,9 +218,9 @@ function bh0 {
   bl0;swn "BL $(printf '%8i%34s%29s%13s'     $(bbl)              2>$p03)rb   nb c10 er   if  c90\n$m";bm0                                                     # last       cc report
   bmo;swn "BM $(printf '%8i%34s'             $(bml)              2>$p03)i20  i30  i40  i50  i60  i70  i80\n$m"                                                # last cc-daillast y
 }
-function btr { if srt;then echo RB;else echo $1;fi; }                                                                                                         # get tag reboot
+function btr { if srt;then printf RB;else printf $1;fi; }                                                                                                     # get tag reboot
 function bro { dts;bb0;bnn $(fs4 peers:);[[ -f $p12 ]] && swn "$(printf 'R%03i %2s %3i' $1 ${2:-$ok} $(bu0) 2>$p03) $(dnn)" >> $p12; }                        # log restart info
-function bss { echo $((${2:-0}+$(date -d$(sf1 $1) +%s))); }                                                                                                   # get sum secounds + time
+function bss { nu0 $((${2:-0}+$(date -d$(sf1 $1) +%s))); }                                                                                                    # get sum secounds + time
 function bsc { pex "grep lighthouse.$bpid].*INFO $p01"|tail -n99|grep Sync\ committee|wc -l; }                                                                # get # committee messages
 # slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168
 function brs {                                                                                                                                                # cc/vc gap restart
@@ -268,8 +268,8 @@ function bbt { [[ $(grep $d0 $p12 2>$p03|wc -l) -gt 0 ]]; }                     
 function bct { local n=$((nn-5));[[ $nm -ge $n && $(bl6 $chrs) -eq 1 ]] && ( btt || sot ); }                                                                  # change configured peers test
 function bdw { [[ -f $1 ]] || return;cp $1 $1.o;grep -v $2 $1.o > $1;grep $2 $1.o > $1.d; }                                                                   # work to delete cc log day
 function bdl { local d=$(pt0 $1 sai);[[ $d = sai ]] && return;bdw $p12 $d;bdw $p13 $d; }                                                                      #         delete cc log day
-function wst { echo $@|sed 's%[^: ]*: *%%g;s%inactive%off%;s%active%on%'; }                                                                                   # get ufw info
-function cpf { local f='';until [[ $# -lt 1 ]];do f="$f, $(basename $1)";shift;done;echo $f; }                                                                # get list basenames
+function wst { echo $@|sed 's%[^: ]*: *%%g;s%inactive%off%;s%active%on%' 2>$p03; }                                                                            # get ufw info
+function cpf { local f='';until [[ $# -lt 1 ]];do f="$f, $(basename $1)";shift;done;printf $f; }                                                              # get list basenames
 function tmp {
   local d=$(fs3|grep throttled|head -n1|sed "$r27");local e=$(fs3|grep normal|tail -n1|sed "$r27");local l=$(pex "$s27 /dev/sda")
   local g=$(echo $(echo $l|jq -r "$r41" 2>$p03) $(echo $l|jq -r "$r42" 2>$p03));local l=$(sensors 2>$p03|sed -n "$r26")
