@@ -192,7 +192,7 @@ r24='s%http://192.168.8.\([0-9]*:[0-9]*\)%\1%gp'                                
 r25='s%.*\.\([0-9]*\):[0-9]*%\1%p'                                                                                                                            # get ip      from http config
 r26='s%\(Package\|Core\|Composite\|Sensor\|temp[0-9]\).*: *\([-+][0-9][0-9]*\.[0-9]*\).*%\2%p'                                                                # temperature sensors
 r27='s%.* \([0-9]*:[0-9]*\):[0-9]*.*%\1%'                                                                                                                     # hour/minute log event
-r28='s%.*pubkey": "\([^"]*\)".*%\1%p'                                                                                                                         # key validator
+r28='s%.*pubkey": "\([^"]*\)".*%0x\1%p'                                                                                                                       # key validator
 r29='/swap/s%^%#%'                                                                                                                                            # no swap - bad for IOPS
 r30='geth\['                                                                                                                                                  # geth logs
 r31='besu\[.*|'                                                                                                                                               # besu       logs
@@ -260,7 +260,7 @@ s19='systemd-timesyncd'
 s20='named'
 s21='plexmediaserver'
 s22='nginx'
-s23='https://boost-relay.flashbots.net/relay/v1/data/validator_registration?pubkey=0x'
+s23='https://boost-relay.flashbots.net/relay/v1/data/validator_registration?pubkey='
 s24=""
 s24="$s24\n1 [$(snc $cuvc)]\tt tvc (vp,vd,cp slash -> $(snc $nxvc))"
 s24="$s24\n2\t\tsleep 7m"
@@ -269,7 +269,6 @@ s24="$s24\n4\t\tcheck slash,srv,dirs"
 s24="$s24\n5\t\trm lock;t vea\n"
 s25="JAVA_HOME='/usr/lib/jvm/java-11-openjdk-amd64'"                                                                                                          # besu needs java
 s26='0x534029B6371dc4453DD750Bc1198181F55C859fe'
-s27='smartctl --json=c -x'                                                                                                                                    # ssd command info
 
 s70='0x93bf23a587f11f9eca329a12ef51296b8a9848af8c0fe61201524b14cb85b0c6fbd3e427501cdfa3b28719bd1ed96fff'
 s71='0xb5b0fc3d2ba577f3e2c7324f7ea4306f17eeee0f12c722f4fa83e45bf6c15477d50261bb2666c30f21ab71a26aeeeafb'
@@ -293,6 +292,8 @@ s88='0x968b8658458dfd6db14e10a7c0623573113e70c890d53db598f622f5a57300f1c1bd8cd1d
 s89='0xa137c606f3f700789f2ef09bf71962b8023bee33d1b1db367a6dbb9bb3ad3d03c32247b2fec84afb57029b5de8169e7b'
 s90='0xb9c82583ba13992858faab8f813f9d1b4e50cbe5f2319b00fff781ff9e6cf5ff3e746f146f191d095cc72553597ecd2d'
 s91='0xae08e5f26f503c36ac554c5fbca45495405866ebfaa8976c3791e8461dee8ec34ce3e99e65c76db2bf7408a60d717299'
+
+s99="$s70 $s71 $s72 $s73 $s74 $s75 $s76 $s77 $s78 $s79 $s80 $s81 $s82 $s83 $s84 $s85 $s86 $s87 $s88 $s89 $s90 $s91"
 
 # iostat -d -x -m -p sda2 30 5
 # dd if=/dev/zero of=./temp-output conv=fdatasync bs=384k count=1k; rm -f ./temp-output

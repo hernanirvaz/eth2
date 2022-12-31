@@ -270,9 +270,9 @@ function bdl { local d=$(pt0 $1 sai);[[ $d = sai ]] && return;bdw $p12 $d;bdw $p
 function wst { echo $@|sed 's%[^: ]*: *%%g;s%inactive%off%;s%active%on%' 2>$p03; }                                                                            # get ufw info
 function cpf { local f='';until [[ $# -lt 1 ]];do f="$f, $(basename $1)";shift;done;printf $f; }                                                              # get list basenames
 function tmp {
-  local d=$(fs3|grep throttled|head -n1|sed "$r27");local e=$(fs3|grep normal|tail -n1|sed "$r27");local l=$(pex "$s27 /dev/sda")
+  local d=$(fs3|grep throttled|head -n1|sed "$r27");local e=$(fs3|grep normal|tail -n1|sed "$r27");local l=$(pex "smartctl --json=c -x /dev/sda")
   local g=$(echo $(echo $l|jq -r "$r41" 2>$p03) $(echo $l|jq -r "$r42" 2>$p03));local l=$(sensors 2>$p03|sed -n "$r26")
-  if [[ $cunm = $znm4 ]];then local g=$(echo $g $(pex "$s27 /dev/nvme0n1"|jq -r "$r41" 2>$p03));fi
+  if [[ $cunm = $znm4 ]];then local g=$(echo $g $(pex "smartctl --json=c -x /dev/nvme0n1"|jq -r "$r41" 2>$p03));fi
   [[ $1$d$e || $(nu2 $l) -ge 40 || $(nu2 $g) -ge 40 ]] || return
   [[ $d ]] && d="throttled: $d";[[ $e ]] && e="normal: $e";swn "TEMP $(printf '%5.1fC %10s %5s ssd: %.1fC %s %s' $(nu3 $l) $dt $(nu3 $g) $d $e 2>$p03)"       # TEMP cpu/ssd info
 }
@@ -428,9 +428,10 @@ function tvc {
   v3t && return;swn "$s24";if v2t && v0t;then swn "TRANSFERIR VC -> $nxvc (SIM/nao)?";else return;fi;local rsp=nao;read rsp
   if [[ $rsp = SIM && ! -f $p05/vc_slash && ! -f $p05/vc_lock && -f $p05/vc_keys ]];then vp;vd;swu "COPY SLASH -> $nxvc";vps;fi                               # vc stop/disable & prep slash db
 }
-function mrs { local f='';for f in $(ls $1 2>$p03);do curl -sX GET "$s23$(sed -n "$r28" $f)"|sed -n "$r23";done; }                                            # show mev validator registration
+function svr { local t='';for t in $(printf '%s\n' $@|sort -u);do curl -sX GET "$s23$t"|sed -n "$r23";done; }                                                 # show mev validator registration
+function mvr { local f=$p02/validator_keys/keystore;if [[ $(ls $f*.json 2>$p03) ]];then svr $(sed -n "$r28" $f*.json 2>$p03);else svr $s99;fi;  }             # choose validator keys
 
-[[ $1 = mr  ]] && { mrs ${2:-$p02/validator_keys/keystore\*.json}; }
+[[ $1 = mvr ]] && { mvr; }
 [[ $1 = jwt ]] && { [[ $cunm = $znm1 || $cunm = $vnm1 ]] && jw0;if [[ -f jwt ]];then sjw eth1 $p08/geth;sjw eth1 $p09/data;sjw eth2 $p16;fi; }
 [[ $1 = lpi ]] && { lpi $p02/.cargo/bin/lighthouse; }
 [[ $1 = luc ]] && { luc $p02/.cargo/bin/lighthouse $2; }
@@ -659,6 +660,7 @@ if [[ ! $1 ]];then
   m="$m\ncce\t\tcc change ec server ($znm1/$znm4)"
   m="$m\nvcc\t\tvc switch cc server order"
   m="$m\ntvc\t\tvc transfer ($cuvc -> $nxvc)"
+  m="$m\nmvr\t\tvc mev validator registration"
   m="$m\nws\t\tfirewall status"
   m="$m\nwa\t\tfirewall arranca"
   m="$m\nwpr\t\tfirewall para"
