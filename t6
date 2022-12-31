@@ -44,12 +44,12 @@ function sst { $s01 $1 2>$p03|grep "${2:-inactive\|failed}" 2>$p03; }           
 function ss1 { $s01 $1 2>$p03|sed -n "s%.*$2[ =]\(${3:-.}*\).*%\1%p" 2>$p03; }                                                                                # systemctl status 1 extraction
 function ss2 { $s01 $1 2>$p03|sed -n "s%.*Active: *\(.*\)%\1%p" 2>$p03|sed "s% *since.*;%%" 2>$p03|cut -c1-40; }                                              # systemctl status 2 extraction
 function dmr { sex "$s00 daemon-reload"; }                                                                                                                    # daemon-reload
-function dts { read d0 d1 <<< ${1:-$(date '+%F %H:%M')};dt="$d0 $d1"  ; }                                                                                     # set date/time vars
-function dtl { read dt dt dt d0 d1 dt <<< $(bff|tail -n1);dt="$d0 $d1"; }                                                                                     # set date/time vars with last beacon log
+function dts { read       d0 d1   <<< ${1:-$(date '+%F %H:%M')};dt="$d0 $d1"; }                                                                               # set date/time vars
+function dtl { read _ _ _ d0 d1 _ <<< $(bff|tail -n1)          ;dt="$d0 $d1"; }                                                                               # set date/time vars with last beacon log
 function bnn { nr=${@:$#};nm=$(printf '%i\n' $@|sort -n|head -n1 2>$p03);nd=$(nu4 $@); }                                                                      # set cur/min/std peers vars
 function dnn { printf '%10s %5s node%02i: %2i' $dt $nn $nr 2>$p03; }                                                                                          # get date/nodes info
 function tsy { if [[ $(echo $@|grep false) ]];then printf SYC;else printf NSY;fi; }                                                                           # get el SYN/NSY text
-function era { tail -n$ehrs $1 2>$p03|cut -d' ' -f1|sort -u|wc -l; }                                                                                          # get el restart activity
+function era { tail -n${2:-$ehrs} $1 2>$p03|cut -d' ' -f1|sort -u|wc -l; }                                                                                    # get el/cc restart activity
 function eh0 { [[ -f $1 ]] || return;tail -n${2:-$ehrs} $1 2>$p03; }                                                                                          # el historic report
 function eb0 { e0=$(fs0 $2 0 $3|wc -l);ok=OK;[[ $(echo $@|grep false) && ($e0 -eq $(lg0 .*sgs: $1) || $nr -lt $(eb1)) && $(era $1) -eq 1 ]] && ok=BK; }       # Imported new chain segment & OK/BK
 function eb1 { nu0 $(((nn*100-nn*30)/100)); }                                                                                                                 # get current peers-30%
@@ -131,7 +131,7 @@ function bf0 { nu0 $((90*z3))                                                   
 function bi0 { nu0 $((nd+zk*300+zz*20+zx))                                               ; }                                                                  # get delete day idx
 function bu0 { nu0 $(((z5>400?$(bz0)/z5:0)+(z2>300?$(bw0)/z2:0)+(z4>999?$(bf0)/z4:0)))   ; }                                                                  # get restart idx
 function bv0 { nn=$(nu0 $(ss1 $s12 target-peers [0-9])); }                                                                                                    # get configured peers
-function bb0 { l0=$(fs0 $bpid] 3600);bl1;bl2;[[ (1 -eq $(bl6 $chrs) && $(bu0) -ge 1) || (1 -eq $(bl6 5) && $(bu0) -ge 5) ]] && ok=BK; }                       # set ok (OK/BK)
+function bb0 { l0=$(fs0 $bpid] 3600);bl1;bl2;[[ (1 -eq $(era $p12 $chrs) && $(bu0) -ge 1) || (1 -eq $(era $p12 5) && $(bu0) -ge 5) ]] && ok=BK; }             # set ok (OK/BK)
 function bbl { cat $p12 2>$p03|wc -l; }                                                                                                                       # get cc       line count
 function bml { cat $p13 2>$p03|wc -l; }                                                                                                                       # get cc-daily line count
 function bfl { grep "BEAC.*$1"; }                                                                                                                             # filter cc lines
@@ -145,7 +145,6 @@ function bl1 {                                                                  
 function bl2 { zk=${1:-$(bl7 missing)};zz=${2:-$(bl7 target)};zx=${3:-$(bl7 head)};zw=${4:-$(bl7 had)}; }                                                     # set missing/target/head activities
 function bl3 { b0=${1:-$(fs0 Valid.block|wc -l)};if [[ $2$3 ]];then b1=$2;b5=$3;else lg6 2;fi; }                                                              # set pub-blocks & imported/observed delays
 function bl5 { sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w; }                                                                                               # get number of validators
-function bl6 { tail -n$1 $p12 2>$p03|cut -d' ' -f1|sort -u|wc -l; }                                                                                           # get cc restart activity
 function bl7 { fs0 attestation.s.*$1|bl5; }                                                                                                                   # get number of paid activities
 function bii { printf '%4i %4i %4i' $b1 $b5 $(((4*b1+b5)/5)) 2>$p03; }                                                                                        # shw imported/observed data
 #    0  1   2          3     4       5  6   7    8    9  10   11  12 13  14 15 16  17 18 19   20  21 22   23   24  25   26   27   28
@@ -265,7 +264,7 @@ function bht { [[ $b2 -gt $b3 ]]; }                                             
 function bst { [[ $(bi0) -ge 2500 ]]; }                                                                                                                       # peers standard deviation test
 function btt { bnt && bht && ! bst; }                                                                                                                         # peers change global test
 function bbt { [[ $(grep $d0 $p12 2>$p03|wc -l) -gt 0 ]]; }                                                                                                   # exists cc log day test
-function bct { local n=$((nn-5));[[ $nm -ge $n && $(bl6 $chrs) -eq 1 ]] && ( btt || sot ); }                                                                  # change configured peers test
+function bct { local n=$((nn-5));[[ $nm -ge $n && $(era $p12 $chrs) -eq 1 ]] && ( btt || sot ); }                                                             # change configured peers test
 function bdw { [[ -f $1 ]] || return;cp $1 $1.o;grep -v $2 $1.o > $1;grep $2 $1.o > $1.d; }                                                                   # work to delete cc log day
 function bdl { local d=$(pt0 $1 sai);[[ $d = sai ]] && return;bdw $p12 $d;bdw $p13 $d; }                                                                      #         delete cc log day
 function wst { echo $@|sed 's%[^: ]*: *%%g;s%inactive%off%;s%active%on%' 2>$p03; }                                                                            # get ufw info
