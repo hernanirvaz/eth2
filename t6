@@ -142,9 +142,9 @@ function bb1 { if [[ $(echo $@|grep is_syncing\":false) ]];then printf ' synced'
 function bl0 { dts;ok=OK;if [[ $(sst $s12 running) ]];then bl3;bv0;bnn $(fs4 peers:);bb0;blo;else m="BSRV NOT ON $dt";fi; }                                   # cc report
 function bl1 {                                                                                                                                                # set restart idx vars
   z1=${1:-$(echo "$l0"|grep 'RPC block'|wc -l)};z2=${2:-$(echo "$l0"|grep 'New block'|wc -l)};z3=${3:-$(echo "$l0"|grep -v ' INFO ' |wc -l)}                  # set processed/received blocks,error lines
-  z4=${4:-$(echo "$l0"|grep ' INFO '   |wc -l)};z5=${5:-$(bl4 success)};ok=${6:-OK}                                                                           # set info lines,success/had activities
+  z4=${4:-$(echo "$l0"|grep ' INFO '   |wc -l)};z5=${5:-$(bl4 success)};zw=${6:-$(bl4 had)};ok=${7:-OK}                                                       # set info lines,success/had activities
 }
-function bl2 { zk=${1:-$(bl4 missing)};zz=${2:-$(bl4 target)};zx=${3:-$(bl4 head)};zw=${4:-$(bl4 had)}; }                                                     # set missing/target/head activities
+function bl2 { zk=${1:-$(bl4 missing)};zz=${2:-$(bl4 target)};zx=${3:-$(bl4 head)}; }                                                                         # set missing/target/head activities
 function bl3 { b0=${1:-$(fs0 Valid.block|wc -l)};if [[ $2$3 ]];then b1=$2;b5=$3;else lg6 2;fi; }                                                              # set pub-blocks & imported/observed delays
 function bl4 { echo "$l5"|sed -n "s%.*$1.*validators: *\[\(.*\)\].*%\1%p"|wc -w; }                                                                            # get number of paid activities
 function bii { printf '%4i %4i %4i' $b1 $b5 $(((4*b1+b5)/5)) 2>$p03; }                                                                                        # shw imported/observed data
@@ -243,7 +243,7 @@ function brh { head -n${1:-0} $p12; }                                           
 function brl {                                                                                                                                                # recalculate cc logs
   [[ -f $p12 ]] || return;rm -f $p12.r;unset v;while read -a v;do ok=${v[1]};dts ${v[3]}\ ${v[4]};nn=${v[5]:4:2};nr=${v[6]}                                   # uncalculated vars
     if [[ ${v[0]} = BEAC ]];then
-      bl1 ${v[19]} ${v[20]} ${v[22]} ${v[23]} ${v[11]} ${v[1]};bl2 ${v[15]} ${v[16]} ${v[17]} ${v[18]};bl3 ${v[13]} ${v[26]} ${v[27]};blo                     # BEAC lines calculated output
+      bl1 ${v[19]} ${v[20]} ${v[22]} ${v[23]} ${v[11]} ${v[18]} ${v[1]};bl2 ${v[15]} ${v[16]} ${v[17]};bl3 ${v[13]} ${v[26]} ${v[27]};blo                     # BEAC lines calculated output
     else
       if [[ ${v[0]} = BSRV ]];then m="${v[0]} ${v[1]} ${v[2]} $dt";else m="${v[0]} $ok $(nu0 ${v[2]} %3i) $(dnn)";swn "$m";fi
     fi;swn "$m" >> $p12.r                                                                                                                                     # new cc output
