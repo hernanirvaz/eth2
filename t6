@@ -131,7 +131,9 @@ function bf0 { nu0 $((90*z3))                                                   
 function bi0 { nu0 $((nd+zk*300+zz*20+zx))                                               ; }                                                                  # get delete day idx
 function bu0 { nu0 $(((z5>400?$(bz0)/z5:0)+(z2>300?$(bw0)/z2:0)+(z4>999?$(bf0)/z4:0)))   ; }                                                                  # get restart idx
 function bv0 { nn=$(nu0 $(ss1 $s12 target-peers [0-9])); }                                                                                                    # get configured peers
-function bb0 { l0=$(fs0 $bpid] 3600);bl1;bl2;[[ (1 -eq $(era $p12 $chrs) && $(bu0) -ge 1) || (1 -eq $(era $p12 5) && $(bu0) -ge 5) ]] && ok=BK; }             # set ok (OK/BK)
+function bs0 { l0=$(fs0 $bpid] 3600); }                                                                                                                       # set last cc log lines
+function bs5 { l5=$(fs0 attestation.s); }                                                                                                                     # set attesta log lines
+function bb0 { bs0;bs5;bl1;bl2;[[ (1 -eq $(era $p12 $chrs) && $(bu0) -ge 1) || (1 -eq $(era $p12 5) && $(bu0) -ge 5) ]] && ok=BK; }                           # set ok (OK/BK)
 function bbl { cat $p12 2>$p03|wc -l; }                                                                                                                       # get cc       line count
 function bml { cat $p13 2>$p03|wc -l; }                                                                                                                       # get cc-daily line count
 function bfl { grep "BEAC.*$1"; }                                                                                                                             # filter cc lines
@@ -144,7 +146,7 @@ function bl1 {                                                                  
 }
 function bl2 { zk=${1:-$(bl4 missing)};zz=${2:-$(bl4 target)};zx=${3:-$(bl4 head)};zw=${4:-$(bl4 had)}; }                                                     # set missing/target/head activities
 function bl3 { b0=${1:-$(fs0 Valid.block|wc -l)};if [[ $2$3 ]];then b1=$2;b5=$3;else lg6 2;fi; }                                                              # set pub-blocks & imported/observed delays
-function bl4 { pex "sed -n s%.*lighthouse.*attestation.s.*$1.*validators:.*\[\(.*\)\].*%\1%p $p01"|wc -w; }                                                   # get number of paid activities
+function bl4 { echo "$l5"|sed -n "s%.*$1.*validators: *\[\(.*\)\].*%\1%p"|wc -w; }                                                                            # get number of paid activities
 function bii { printf '%4i %4i %4i' $b1 $b5 $(((4*b1+b5)/5)) 2>$p03; }                                                                                        # shw imported/observed data
 #    0  1   2          3     4       5  6   7    8    9  10   11  12 13  14 15 16  17 18 19   20  21 22   23   24  25   26   27   28
 # BEAC OK   0 2022-11-21 23:46 node50: 55 rp: 3728 2630 ab: 4906 1350 0 er:  0 10 103 12  0  547   0  3 3597  270 io:  370 4336 1163
@@ -157,7 +159,7 @@ function bcc { if bct       ;then printf c;else printf _;fi; }                  
 function bdc { if bht && bst;then printf d;else printf _;fi; }                                                                                                # get delete cc log day       char
 function bmi { zk=0;zz=0;zx=0;unset v;v[1]=0;unset k;k[0]=0;unset z;z[0]=0;unset x;x[0]=0;unset w;w[0]=0;unset c;c[0]=0;unset a;a[0]=0;bm6; }                 # ini err/cnt/avg penalty arrays
 function bm0 {                                                                                                                                                # cc-daily report
-  [[ -f $p12 ]] || return;bmi;b4=0;dts;bv0;bnn $(fs4 peers:);bl2;[[ -f $p14 ]] && bm4;lg6                                                                     # set vars/arrays
+  [[ -f $p12 ]] || return;bmi;b4=0;dts;bv0;bnn $(fs4 peers:);bs5;bl2;[[ -f $p14 ]] && bm4;lg6                                                                 # set vars/arrays
   l3=$(tail -n$(($(bbl)-v[1])) $p12 2>$p03|bfl);[[ $l3 ]] && bm1;bm2;bo4;bm5 ${a[$nn]};b7="peers$(bdc)$(bcc)io:"                                              # add cc lines & homologous/avg position
 }
 function bm1 {
