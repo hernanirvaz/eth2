@@ -140,12 +140,11 @@ function bb1 { if [[ $(echo $@|grep is_syncing\":false) ]];then printf ' synced'
 function bl0 { dts;ok=OK;if [[ $(sst $s12 running) ]];then bl3;bv0;bnn $(fs4 peers:);bb0;blo;else m="BSRV NOT ON $dt";fi; }                                   # cc report
 function bl1 {                                                                                                                                                # set restart idx vars
   z1=${1:-$(echo "$l0"|grep 'RPC block'|wc -l)};z2=${2:-$(echo "$l0"|grep 'New block'|wc -l)};z3=${3:-$(echo "$l0"|grep -v ' INFO ' |wc -l)}                  # set processed/received blocks,error lines
-  z4=${4:-$(echo "$l0"|grep ' INFO '   |wc -l)};z5=${5:-$(bl7 success)};ok=${6:-OK}                                                                           # set info lines,success/had activities
+  z4=${4:-$(echo "$l0"|grep ' INFO '   |wc -l)};z5=${5:-$(bl4 success)};ok=${6:-OK}                                                                           # set info lines,success/had activities
 }
-function bl2 { zk=${1:-$(bl7 missing)};zz=${2:-$(bl7 target)};zx=${3:-$(bl7 head)};zw=${4:-$(bl7 had)}; }                                                     # set missing/target/head activities
+function bl2 { zk=${1:-$(bl4 missing)};zz=${2:-$(bl4 target)};zx=${3:-$(bl4 head)};zw=${4:-$(bl4 had)}; }                                                     # set missing/target/head activities
 function bl3 { b0=${1:-$(fs0 Valid.block|wc -l)};if [[ $2$3 ]];then b1=$2;b5=$3;else lg6 2;fi; }                                                              # set pub-blocks & imported/observed delays
-function bl5 { sed 's%.*validators: *\[\(.*\)\].*%\1%'|wc -w; }                                                                                               # get number of validators
-function bl7 { fs0 attestation.s.*$1|bl5; }                                                                                                                   # get number of paid activities
+function bl4 { pex "sed -n s%.*lighthouse.*attestation.s.*$1.*validators:.*\[\(.*\)\].*%\1%p $p01"|wc -w; }                                                   # get number of paid activities
 function bii { printf '%4i %4i %4i' $b1 $b5 $(((4*b1+b5)/5)) 2>$p03; }                                                                                        # shw imported/observed data
 #    0  1   2          3     4       5  6   7    8    9  10   11  12 13  14 15 16  17 18 19   20  21 22   23   24  25   26   27   28
 # BEAC OK   0 2022-11-21 23:46 node50: 55 rp: 3728 2630 ab: 4906 1350 0 er:  0 10 103 12  0  547   0  3 3597  270 io:  370 4336 1163
