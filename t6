@@ -8,24 +8,23 @@ function nu2 { if [[ $# -gt 0 ]];then nu1 "(0$(printf '%+.0f' $@ 2>$p03))/$#"   
 function nu3 { if [[ $# -gt 0 ]];then nu1 "(0$(printf '%+.1f' $@ 2>$p03))/$#" 1 2 %.1f                                        ;else printf %i;fi; }           # get average list numbers scale 2
 function nu4 { if [[ $# -gt 0 ]];then nu1 "sqrt(((0$(printf '+%i^2' $@ 2>$p03))-(0$(printf '+%i' $@ 2>$p03))^2/$#)/$#)" 1000 5;else printf %i;fi; }           # get standard deviation list numbers
 function nu5 {                        nu1 "($1*$pmis+$2*$pmat+$3*$pmah+$4*$pdly)/${5:-1}*$rate/$decp"                   1000 5                  ; }           # get penalty
-function fs0 { pex "grep ${3:-lighthouse}.*$1 $p01"|if [[ ${2:-0} -le 0 ]];then cat;else tail -n${2:-0};fi; }                                                 # get specific syslog lines
-function fs1 { pex "grep    $r34 $p01"; }                                                                                                                     # get eth      syslog lines
-function fs2 { pex "grep -v $r34 $p01"; }                                                                                                                     # get sys      syslog lines
-function fs3 { fs2|tail -n300|grep Core.*temperature; }                                                                                                       # get tail cpu syslog lines
-function fs4 { fs0 $1 0 $2|lg1 .*$1; }                                                                                                                        # get peers    syslog lines
-function fs5 { if [[ $1 ]];then grep -i "[a-z][a-z][a-z]  *[0-9]* $1";else grep -iv '[ =]INFO ';fi; }                                                         # filter el/cl/mev log lines
+function rl0 { local f=$p16/logs/beacon.log   ;echo $H|sudo -S grep -h $r44 $f $f.1                               2>$p03|grep -v None; }                      # get cc intern lines (specific)
+function rl1 { local f=$p16/logs/beacon.log   ;echo $H|sudo -S cat          $f $f.1 $f.2 $f.3 $f.4 $f.5           2>$p03             ; }                      # get cc intern lines
+function rl2 { local f=$p17/logs/validator.log;echo $H|sudo -S cat          $f $f.1 $f.2 $f.3 $f.4 $f.5           2>$p03             ; }                      # get vc intern lines
+function rl3 { local f=$p01                   ;echo $H|sudo -S grep -h $r34 $f $f.1 $f.2 $f.3 $f.4 $f.5 $f.6 $f.7 2>$p03             ; }                      # get all eth syslog lines
+function rl4 { local f=$p01                   ;echo $H|sudo -S grep -h $r43 $f $f.1                               2>$p03             ; }                      # get all eth syslog lines
+function lg0 { sed -n "s%$1 *\([0-9]*\).*%\1%p" $2 2>$p03; }                                                                                                  # get list of numbers
+function lg1 { if [[ $l4 ]];then echo "$l4"|sed -n "$1$r35";echo "$l4"|sed -n "$1$r36";echo "$l4"|sed -n "$1$r37";else printf %i 1;fi; }                      # get s/ms delays from log lines
+function lg2 { if [[ $l4 ]];then echo "$l4"|sed -n "$1$r38";echo "$l4"|sed -n "$1$r39";echo "$l4"|sed -n "$1$r40";else printf %i 1;fi; }                      # get s/ms delays from log lines
+function lg3 { if [[ $1 -gt 0 ]];then l4=$(rl0|tail -n$1);else l4=$(rl0);fi;b1=$(nu2 $(lg1 "$r45"));b5=$(nu2 $(lg1 "$r46")); }                                # set imported/observed delays
+function fs0 { pex "grep    ${2:-$r32}.*$1 $p01"; }                                                                                                           # get specific syslog lines
+function fs1 { pex "grep    ${1:-$r34}     $p01"; }                                                                                                           # get eth      syslog lines
+function fs2 { pex "grep -v ${1:-$r34}     $p01"; }                                                                                                           # get sys      syslog lines
+function fs3 { fs0 $1 $2|lg0 .*$1 ; }                                                                                                                         # get peers    syslog lines
+function fs4 { fs0 $1   |tail -n$2; }                                                                                                                         # get specific syslog lines
+function fs5 { fs2      |tail -n300|grep Core.*temperature; }                                                                                                 # get tail cpu syslog lines
 function fs6 { if [[ $1 ]];then grep -i "[a-z][a-z][a-z]  *[0-9]* $1";else grep -i  'error'    ;fi; }                                                         # filter system    log lines
-function lg1 { sed -n "s%$1 *\([0-9]*\).*%\1%p" $2 2>$p03; }                                                                                                  # get list of numbers
-function lg2 { local e='Delayed.head.block';if [[ ${1:-0} -gt 0 ]];then l4=$(rl2 $e|grep -v None|tail -n${1:-0});else l4=$(rl2 $e|grep -v None);fi; }         # set cc specific log lines
-function lg3 { local e='Imported'          ;if [[ ${1:-0} -gt 0 ]];then l4=$(rl3 $e|tail -n${1:-0});else l4=$(rl3 $e);fi; }                                   # set ec specific log lines
-function lg4 { if [[ $l4 ]];then echo "$l4"|sed -n "$1$r35";echo "$l4"|sed -n "$1$r36";echo "$l4"|sed -n "$1$r37";else printf %i 1;fi; }                      # get s/ms delays from log lines
-function lg5 { if [[ $l4 ]];then echo "$l4"|sed -n "$1$r38";echo "$l4"|sed -n "$1$r39";echo "$l4"|sed -n "$1$r40";else printf %i 1;fi; }                      # get s/ms delays from log lines
-function lg6 { lg2 $1;b1=$(nu2 $(lg4 's%.*imported_delay: '));b5=$(nu2 $(lg4 's%.*observed_delay: ')); }                                                      # set Imported/observed delays
-function rl0 { local n=${1:-0};((n<0)) && rl0    $((n+1));local e=$p16/logs/beacon.log   ;((n>0)) && e="$e.$n";echo $H|sudo -S cat $e     2>$p03; }           # get cc intern lines
-function rl1 { local n=${2:-0};((n<7)) && rl1 $1 $((n+1));local e=$p01                   ;((n>0)) && e="$e.$n";echo $H|sudo -S grep $1 $e 2>$p03; }           # get all eth  syslog lines
-function rl2 { local n=${2:-0};((n<1)) && rl2 $1 $((n+1));local e=$p16/logs/beacon.log   ;((n>0)) && e="$e.$n";echo $H|sudo -S grep $1 $e 2>$p03; }           # get specific cc intern log lines
-function rl3 { local n=${2:-0};((n<1)) && rl3 $1 $((n+1));local e=$p01                   ;((n>0)) && e="$e.$n";echo $H|sudo -S grep $1 $e 2>$p03; }           # get ec specific log lines
-function rl4 { local n=${1:-0};((n<0)) && rl4    $((n+1));local e=$p17/logs/validator.log;((n>0)) && e="$e.$n";echo $H|sudo -S cat $e     2>$p03; }           # get cc intern lines
+function fs7 { if [[ $1 ]];then grep -i "[a-z][a-z][a-z]  *[0-9]* $1";else grep -iv '[ =]INFO ';fi; }                                                         # filter el/cl/mev log lines
 function pt0 { until [[ $# -le 1 || $1 =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]];do shift;done;printf %s $1; }                                                       # yyyy-mm-dd test
 function pt1 { until [[ $# -le 1 || $1 =~ ^[0-9]{2}:[0-9]{2}$          ]];do shift;done;printf %s $1; }                                                       # hh:mm      test
 function pt2 { until [[ $# -le 1 || $1 =~ ^[0-9]+$                     ]];do shift;done;printf %i $1; }                                                       # integer    test
@@ -48,10 +47,10 @@ function dtl { read _ _ _ d0 d1 _ <<< $(bff|tail -n1)          ;dt="$d0 $d1"; } 
 function bnn { nr=${@:$#};nm=$(printf '%i\n' $@|sort -n|head -n1 2>$p03);nd=$(nu4 $@); }                                                                      # set cur/min/std peers vars
 function dnn { printf '%10s %5s node%02i: %2i' $dt $nn $nr 2>$p03; }                                                                                          # get date/nodes info
 function tsy { if [[ $(echo $@|grep false) ]];then printf SYC;else printf NSY;fi; }                                                                           # get el SYN/NSY text
-function els { lg1 .*sgs: $1|tail -n1; }                                                                                                                      # get el last segment
+function els { lg0 .*sgs: $1|tail -n1; }                                                                                                                      # get el last segment
 function era { tail -n${2:-$ehrs} $1 2>$p03|cut -d' ' -f1|sort -u|wc -l; }                                                                                    # get el/cc restart activity
 function eh0 { [[ -f $1 ]] || return;tail -n${2:-$ehrs} $1 2>$p03; }                                                                                          # el historic report
-function eb0 { e0=$(fs0 $2 0 $3|wc -l);ok=OK;[[ $(echo $@|grep false) && ($e0 -eq $(els $1) || $nr -lt $(eb1)) && $(era $1) -eq 1 ]] && ok=BK; }              # Imported new chain segment & OK/BK
+function eb0 { e0=$(fs0 Imported $2|wc -l);ok=OK;[[ $(echo $@|grep false) && ($e0 -eq $(els $1) || $nr -lt $(eb1)) && $(era $1) -eq 1 ]] && ok=BK; }          # Imported new chain segment & OK/BK
 function eb1 { nu0 $(((nn*100-nn*30)/100)); }                                                                                                                 # get current peers-30%
 function ero { [[ -f $2 ]] || return;dts;swn "$(nu0 $1 R%03i) ${3:-RS} SRV $(dnn)" >> $2; }                                                                   # log restart info
 function sng { $p02/eth2/t7 2>$p03; }                                                                                                                         # get next gap without validator tasks
@@ -66,11 +65,11 @@ function ssf { [[ $1 -gt 0 ]] || return;local f=$2.s$(stg $1);touch $f;sleep $1s
 function ssw { while :;do local t=$(sng);if [[ $(sf2 $t) -le ${1:-36} || 24 -ge $(sfn $t) ]];then ssf $(smn $(sfn $t)) $2;else break;fi;done; }               # sleep while small (gap or remaining) time
 function sso {
   [[ $(sst $2 disabled) || ! $(sst $2 $2) ]] && return;dts;local e="$1 $(printf '%6s %10s %5s status: %-40s' $(ss1 $2 Memory:) $dt "$(ss2 $2)")"              # memory & status
-  [[ $1 = GETH ]] && bnn $(fs4 peercount= $r30) $(nu0 $(gcl net.peerCount))                                                                                   # set min peers
-  [[ $1 = GETH ]] && e="$e $(printf 'el:p%02i:m%02i p2p:%5i' $nr $nm $(ss1 $2 port     [0-9]) 2>$p03)$(gb1 synced $(gcl eth.syncing)) i2:$(gdi)"              # el peers/port tag
-  [[ $1 = BESU ]] && bnn $(fs4 Peers:     $r31) $(up0 $(ucl net_peerCount))                                                                                   # set min peers
-  [[ $1 = BESU ]] && e="$e $(printf 'el:p%02i:m%02i p2p:%5i' $nr $nm $(ss1 $2 p2p-port [0-9]) 2>$p03)$(ub1 synced $(ucl eth_syncing)) i2:$(udi)"              # el peers/port tag
-  [[ $1 = BEAC ]] && bnn $(fs4 peers:         ) $(bpc $(bcl peer_count   ))                                                                                   # set min peers
+  [[ $1 = GETH ]] && bnn $(fs3 peercount= $r30) $(nu0 $(gcl net.peerCount))                                                                                   # set min peers
+  [[ $1 = GETH ]] && e="$e $(printf 'el:p%02i:m%02i p2p:%5i' $nr $nm $(ss1 $2 port     [0-9]) 2>$p03)$(gb1 synced $(gcl eth.syncing)) i2:$(gdi 0)"            # el peers/port tag
+  [[ $1 = BESU ]] && bnn $(fs3 Peers:     $r31) $(up0 $(ucl net_peerCount))                                                                                   # set min peers
+  [[ $1 = BESU ]] && e="$e $(printf 'el:p%02i:m%02i p2p:%5i' $nr $nm $(ss1 $2 p2p-port [0-9]) 2>$p03)$(ub1 synced $(ucl eth_syncing)) i2:$(udi 0)"            # el peers/port tag
+  [[ $1 = BEAC ]] && bnn $(fs3 peers:         ) $(bpc $(bcl peer_count   ))                                                                                   # set min peers
   [[ $1 = BEAC ]] && e="$e $(printf 'cl:p%02i:m%02i p2p:%5i' $nr $nm $(ss1 $2 port     [0-9]) 2>$p03)$(bb1 $(bcl syncing))"                                   # cl peers/port tag
   [[ $1 = BEAC ]] && e="$e el:http $(ss1 $2 execution-endpoint '[^ ]'|sed -n $r24)"                                                                           # el http & delays rate
   [[ $1 = VALI ]] && { dtl;bo5;e="$e vl:c$(printf '%02i:m%02i' $b2 $b3 2>$p03) cc:http $(ss1 $2 nodes '[^ ]'|sed -n $r24)"; };swn "$e"                        # set homologous/avg & cl http
@@ -83,7 +82,7 @@ function grs {                                                                  
     if [[ $2 = RB ]];then ero $n $p10 $2;sex reboot;else sex "$s03 $s10";ssf 40 $p40;gq0;ero $n $p10 $2;fi                                                    # reboot/start el
   fi;done;rm -f $f
 }
-function gdi { lg3 $1;nu2 $(lg5 's%.*elapsed='); }                                                                                                            # get delay imported
+function gdi { if [[ $1 -gt 0 ]];then l4=$(rl4|tail -n$1);else l4=$(rl4);fi;nu2 $(lg2 "$r47"); }                                                              # get delay imported
 function gcl { $p07/geth attach --exec $1 "http://$ciec:8545"               2>$p03 ; }                                                                        # exec RPC HTTP
 function gi0 { nu0 $(echo $@|sed -n 's%.*highestBlock: *\([0-9]*\).*%\1%ip' 2>$p03); }                                                                        # get el highest block
 function gc0 { nu0 $(echo $@|sed -n 's%.*currentBlock: *\([0-9]*\).*%\1%ip' 2>$p03); }                                                                        # get el current block
@@ -92,7 +91,7 @@ function gq0 { nr=$(nu0 $(gcl net.peerCount      )); }                          
 function gb1 { if [[ $(echo $@|grep false) ]];then [[ $1 ]] && printf " $1";else printf ' syncing: %6i' $(($(gi0 $@)-$(gc0 $@)));fi; }                        # get el syncing blocks remaining
 function gl0 {                                                                                                                                                # el report
   dts;ok=OK
-  if [[ $(sst $s10 running) ]];then local e=$(gcl eth.syncing);gv0;gq0;eb0 $p10 Imported $r30 $e
+  if [[ $(sst $s10 running) ]];then local e=$(gcl eth.syncing);gv0;gq0;eb0 $p10 $r30 $e
     m="GETH $ok $(tsy $e) $(dnn) sgs: $(nu0 $e0 %4i)$(gb1 '' $e) i2: $(gdi 99)"                                                                               # OK SYC/NSY (dnn) sgs: 5 blocks: 8
   else
     m="GSRV NOT ON $dt"
@@ -105,7 +104,7 @@ function urs {                                                                  
     if [[ $2 = RB ]];then ero $n $p11 $2;sex reboot;else sex "$s03 $s11";ssf 40 $p41;uq0;ero $n $p11 $2;fi                                                    # reboot/start el
   fi;done;rm -f $f
 }
-function udi { lg3 $1;nu2 $(lg5 's%.* in '); }                                                                                                                # get delay imported
+function udi { if [[ $1 -gt 0 ]];then l4=$(rl4|tail -n$1);else l4=$(rl4);fi;nu2 $(lg2 "$r48"); }                                                              # get delay imported
 function ucl { curl -sX POST --data "{\"jsonrpc\":\"2.0\",\"method\":\"$1\",\"params\":[],\"id\":51}" "http://$ciec:8545" 2>$p03; }                           # exec RPC HTTP
 function ui0 { nu0 $((16#$(nu0 $(echo $@|sed -n 's%.*highestBlock" *: *"0x\([^"]*\)".*%\1%ip' 2>$p03)))); }                                                   # get el highest block
 function uc0 { nu0 $((16#$(nu0 $(echo $@|sed -n 's%.*currentBlock" *: *"0x\([^"]*\)".*%\1%ip' 2>$p03)))); }                                                   # get el current block
@@ -115,7 +114,7 @@ function uq0 { nr=$(up0 $(ucl net_peerCount       )); }                         
 function ub1 { if [[ $(echo $@|grep false) ]];then [[ $1 ]] && printf " $1";else printf ' syncing: %6i' $(($(ui0 $@)-$(uc0 $@)));fi; }                        # get el syncing blocks remaining
 function ul0 {                                                                                                                                                # el report
   dts;ok=OK
-  if [[ $(sst $s11 running) ]];then local e=$(ucl eth_syncing);uv0;uq0;eb0 $p11 Imported $r31 $e
+  if [[ $(sst $s11 running) ]];then local e=$(ucl eth_syncing);uv0;uq0;eb0 $p11 $r31 $e
     m="BESU $ok $(tsy $e) $(dnn) sgs: $(nu0 $e0 %4i)$(ub1 '' $e) i2: $(udi 99)"                                                                               # OK SYC/NSY (dnn) sgs: 5 blocks: 8
   else
     m="BSRV NOT ON $dt"
@@ -131,7 +130,7 @@ function bf0 { nu0 $((90*z3))                                                   
 function bi0 { nu0 $((nd+zk*300+zz*20+zx))                                               ; }                                                                  # get delete day idx
 function bu0 { nu0 $(((z5>400?$(bz0)/z5:0)+(z2>300?$(bw0)/z2:0)+(z4>999?$(bf0)/z4:0)))   ; }                                                                  # get restart idx
 function bv0 { nn=$(nu0 $(ss1 $s12 target-peers [0-9])); }                                                                                                    # get configured peers
-function bs0 { l0=$(fs0 $bpid] 3600); }                                                                                                                       # set last cc log lines
+function bs0 { l0=$(fs4 $bpid] 3600); }                                                                                                                       # set last cc log lines
 function bs5 { l5=$(fs0 attestation.s); }                                                                                                                     # set attesta log lines
 function bb0 { bs0;bs5;bl1;bl2;[[ (1 -eq $(era $p12 $chrs) && $(bu0) -ge 1) || (1 -eq $(era $p12 5) && $(bu0) -ge 5) ]] && ok=BK; }                           # set ok (OK/BK)
 function bbl { cat $p12 2>$p03|wc -l; }                                                                                                                       # get cc       line count
@@ -139,13 +138,13 @@ function bml { cat $p13 2>$p03|wc -l; }                                         
 function bfl { grep "BEAC.*$1"; }                                                                                                                             # filter cc lines
 function bff { [[ -f $p12 ]] || return;grep "BEAC.*$1" $p12; }                                                                                                # filter cc log
 function bb1 { if [[ $(echo $@|grep is_syncing\":false) ]];then printf ' synced';else printf ' syncing: %6i' $(bsd $@);fi; }                                  # get cl syncing distance remaining
-function bl0 { dts;ok=OK;if [[ $(sst $s12 running) ]];then bl3;bv0;bnn $(fs4 peers:) $(bpc $(bcl peer_count));bb0;blo;else m="BSRV NOT ON $dt";fi; }          # cc report
+function bl0 { dts;ok=OK;if [[ $(sst $s12 running) ]];then bl3;bv0;bnn $(fs3 peers:) $(bpc $(bcl peer_count));bb0;blo;else m="BSRV NOT ON $dt";fi; }          # cc report
 function bl1 {                                                                                                                                                # set restart idx vars
   z1=${1:-$(echo "$l0"|grep 'RPC block'|wc -l)};z2=${2:-$(echo "$l0"|grep 'New block'|wc -l)};z3=${3:-$(echo "$l0"|grep -v ' INFO ' |wc -l)}                  # set processed/received blocks,error lines
   z4=${4:-$(echo "$l0"|grep ' INFO '   |wc -l)};z5=${5:-$(bl4 success)};zw=${6:-$(bl4 had)};ok=${7:-OK}                                                       # set info lines,success/had activities
 }
 function bl2 { zk=${1:-$(bl4 missing)};zz=${2:-$(bl4 target)};zx=${3:-$(bl4 head)}; }                                                                         # set missing/target/head activities
-function bl3 { b0=${1:-$(fs0 Valid.block|wc -l)};if [[ $2$3 ]];then b1=$2;b5=$3;else lg6 2;fi; }                                                              # set pub-blocks & imported/observed delays
+function bl3 { b0=${1:-$(fs0 Valid.block|wc -l)};if [[ $2$3 ]];then b1=$2;b5=$3;else lg3 2;fi; }                                                              # set pub-blocks & imported/observed delays
 function bl4 { echo "$l5"|sed -n "s%.*$1.*validators: *\[\(.*\)\].*%\1%p"|wc -w; }                                                                            # get number of paid activities
 function bii { printf '%4i %4i %4i' $b1 $b5 $(((4*b1+b5)/5)) 2>$p03; }                                                                                        # shw imported/observed data
 #    0  1   2          3     4       5  6   7    8    9  10   11  12 13  14 15 16  17 18 19   20  21 22   23   24  25   26   27   28
@@ -154,12 +153,12 @@ function blo {
   m="BEAC $ok $(nu0 $(bu0) %3i) $(dnn) rp: $(nu1 "($z5*$ratt+$b0*$rblk)*$rate/$decp" 10 2 %4.0f) $(printf '%4i ab:' $(nu5 $zk $zz $zx $zw) 2>$p03)"
   m="$m $(printf '%4i %4i %1i er: %2i %2i %3i %2i %2i %4i %3i %2i %4i %4i' $z5 $(bz0) $b0 $zk $zz $zx $zw $z1 $z2 $(bw0) $z3 $z4 $(bf0) 2>$p03) io: $(bii)"
 }
-function bio { lg6 $1;dts;m="BEIO $(nu0 $1 %6i) $dt io: $(bii)"; }                                                                                            # shw imported/observed delays
+function bio { lg3 $1;dts;m="BEIO $(nu0 $1 %6i) $dt io: $(bii)"; }                                                                                            # shw imported/observed delays
 function bcc { if bct       ;then printf c;else printf _;fi; }                                                                                                # get change configured peers char
 function bdc { if bht && bst;then printf d;else printf _;fi; }                                                                                                # get delete cc log day       char
 function bmi { zk=0;zz=0;zx=0;unset v;v[1]=0;unset k;k[0]=0;unset z;z[0]=0;unset x;x[0]=0;unset w;w[0]=0;unset c;c[0]=0;unset a;a[0]=0;bm6; }                 # ini err/cnt/avg penalty arrays
 function bm0 {                                                                                                                                                # cc-daily report
-  [[ -f $p12 ]] || return;bmi;b4=0;dts;bv0;bnn $(fs4 peers:);bs5;bl2;[[ -f $p14 ]] && bm4;lg6                                                                 # set vars/arrays
+  [[ -f $p12 ]] || return;bmi;b4=0;dts;bv0;bnn $(fs3 peers:);bs5;bl2;[[ -f $p14 ]] && bm4;lg3 0                                                               # set vars/arrays
   l3=$(tail -n$(($(bbl)-v[1])) $p12 2>$p03|bfl);[[ $l3 ]] && bm1;bm2;bo4;bm5 ${a[$nn]};b7="peers$(bdc)$(bcc)io:"                                              # add cc lines & homologous/avg position
 }
 function bm1 {
@@ -205,7 +204,7 @@ function boi {
 function bo0 { [[ -f $p12 ]] || return;boi $(pt1 $@ 00:00);if [[ $(pt3 $@ s) = n ]];then b6=$b2;else b6=$(pt2 $@ 0);fi;bo6; }                                 # homologous report
 function bo1 { echo "$l2"|sort -k10n -k4r; }                                                                                                                  # get homologous cc lines sorted
 function bo2 { b2=$(bo1|grep -n ${1:-$(date '+%F')}|cut -d: -f1); }                                                                                           # set homologous position
-function bo3 { b3=$(nu2 ${b2:=0} $(lg1 BM $p13)); }                                                                                                           # set homologous avg
+function bo3 { b3=$(nu2 ${b2:=0} $(lg0 BM $p13)); }                                                                                                           # set homologous avg
 function bo4 { [[ ${b2:=0} -eq 0 && -f $p12 ]] && boi;bo3; }                                                                                                  # set homologous position/avg
 function bo5 { l2=$(bff $d1);bo2 $d0;bo3; }                                                                                                                   # set homologous position/avg
 function bo6 { bo1|head -n$((b6>b2?b6:b2<5?5:b2))|tail -n$((b6>0?b6:b2>chrs?chrs:b2<5?5:b2)); }                                                               # homologous report
@@ -220,9 +219,9 @@ function bh0 {
 }
 function btr { if srt;then printf RB;else printf $1;fi; }                                                                                                     # get tag reboot
 function bss { nu0 $((${2:-0}+$(date -d$(sf1 $1) +%s))); }                                                                                                    # get sum secounds + time
-function bsc { pex "grep lighthouse.$bpid].*INFO $p01"|tail -n99|grep Sync\ committee|wc -l; }                                                                # get # committee messages
+function bsc { fs4 $bpid].*INFO 99|grep Sync\ committee|wc -l; }                                                                                              # get # committee messages
 function bro {
-  [[ -f $p12 ]] || return;dts;bb0;bnn $(fs4 peers:) $(bpc $(bcl peer_count));swn "$(printf 'R%03i %2s %3i' $1 ${2:-$ok} $(bu0) 2>$p03) $(dnn)" >> $p12        # log restart info
+  [[ -f $p12 ]] || return;dts;bb0;bnn $(fs3 peers:) $(bpc $(bcl peer_count));swn "$(printf 'R%03i %2s %3i' $1 ${2:-$ok} $(bu0) 2>$p03) $(dnn)" >> $p12        # log restart info
 }
 # slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168
 function brs {                                                                                                                                                # cc/vc gap restart
@@ -273,7 +272,7 @@ function bdl { local d=$(pt0 $1 sai);[[ $d = sai ]] && return;bdw $p12 $d;bdw $p
 function wst { echo $@|sed 's%[^: ]*: *%%g;s%inactive%off%;s%active%on%' 2>$p03; }                                                                            # get ufw info
 function cpf { local f='';until [[ $# -lt 1 ]];do f="$f, $(basename $1)";shift;done;printf $f; }                                                              # get list basenames
 function tmp {
-  local d=$(fs3|grep throttled|head -n1|sed "$r27");local e=$(fs3|grep normal|tail -n1|sed "$r27");local l=$(pex "smartctl --json=c -x /dev/sda")
+  local d=$(fs5|grep throttled|head -n1|sed "$r27");local e=$(fs5|grep normal|tail -n1|sed "$r27");local l=$(pex "smartctl --json=c -x /dev/sda")
   local g=$(echo $(echo $l|jq -r "$r41" 2>$p03) $(echo $l|jq -r "$r42" 2>$p03));local l=$(sensors 2>$p03|sed -n "$r26")
   if [[ $cunm = $znm4 ]];then local g=$(echo $g $(pex "smartctl --json=c -x /dev/nvme0n1"|jq -r "$r41" 2>$p03));fi
   [[ $1$d$e || $(nu2 $l) -ge 40 || $(nu2 $g) -ge 40 ]] || return
@@ -284,12 +283,12 @@ function cpe {                                                                  
   if [[ $(sst $s19 masked) ]];then e="CNTP $e";m=$(ss2 ntp);else e="CSYS $e";m=$(ss2 $s19);fi
   swn "$e $(nu0 $(fs0 clock|wc -l) %3i) $dt status: $m";[[ $1 = c ]] && return;tmp;[[ $1 = p ]] && return                                                     # clock & temperature info
   if [[ $(cat $p44 2>$p03) -eq 0 ]];then e=off;else e=on;fi;if [[ $(cat $p43 2>$p03) -eq 1 ]];then d=off;else d=on;fi                                         # usb/cpu current state
-  m="INFO$(printf '%3i %3i %10s %5s' $(fs2|grep usb|grep -i error|wc -l) $(fs3|wc -l) $dt 2>$p03)"                                                            # usb/cpu erros count
+  m="INFO$(printf '%3i %3i %10s %5s' $(fs2|grep usb|grep -i error|wc -l) $(fs5|wc -l) $dt 2>$p03)"                                                            # usb/cpu erros count
   m="$m usb $e, turbo $d, ufw $(wst $(pex 'ufw status'|grep Status:))"                                                                                        # usb/cpu/ufw info
   m="$m, uptime:$(uptime|sed 's%[0-9]*:[0-9]*:[0-9]*%%;s%[0-9]* users*,%%;s% average\([^,]*\).*%\1%;s%  *% %g')";swn "$m"                                     # uptime/load info
-  local l=$(fs2|fs6|wc -l);local n=$(fs1|fs5|wc -l)
+  local l=$(fs2|fs6|wc -l);local n=$(fs1|fs7|wc -l)
   local e=$(fs2|fs6|tail -n1|sed 's%.*hrv-zotac[0-9] *\(.*\)%\1%;s%  *% %g'                         |cut -c1-70)
-  local d=$(fs1|fs5|tail -n1|sed 's%.*[0-9]*:[0-9]*:[0-9]*\.[0-9][0-9][0-9]]* *\(.*\)%\1%;s%  *% %g'|cut -c1-70)
+  local d=$(fs1|fs7|tail -n1|sed 's%.*[0-9]*:[0-9]*:[0-9]*\.[0-9][0-9][0-9]]* *\(.*\)%\1%;s%  *% %g'|cut -c1-70)
   m="ERRO$(printf '%3i %3i' $l $n 2>$p03) $dt";[[ $l -gt 0 ]] && m="$m system: $e";[[ $n -gt 0 ]] && m="$m ethrum: $d";(( l+n )) && swn "$m"                  # sys/eth errors info
   m='';srt && m="$m, reboot $(($(sra)/60/60)) hours ago";[[ $(ls $p39.* 2>$p03) ]] && m="$m$(cpf $(ls $p39.* 2>$p03))"                                        # reboot info
   [[ $(bsc) -gt 0 ]] && m="$m, committee on";[[ $m ]] && swn "INFO        $dt${m#*,}"                                                                         # committee info
@@ -368,8 +367,8 @@ function nd  { [[ $(sst $s17 loaded) ]] || return;cex "$s05 $s17"; }            
 function fd  { [[ $(sst $s18 loaded) ]] || return;cex "$s05 $s18";pai 3000/tcp 192.168.8.0/24 grafana   delete;sex 'ufw reload'; }                            # disable grafana-server
 function md  { [[ $(sst $s14 loaded) ]] || return;cex "$s05 $s14";pai 18550    192.168.8.0/24 mev-boost delete;sex 'ufw reload'; }                            # disable mev-boost
 function umt { [[ $(cat $p44 2>$p03) -eq 1 && $(fs2|grep usb|grep -i error|wc -l) -gt 10 ]]; }                                                                # usb messages test
-function t0t { [[ $(cat $p43 2>$p03) -eq 0 && $(fs3                       |wc -l) -gt 20 ]]; }                                                                # cpu no turbo recomended test
-function t1t { [[ $(cat $p43 2>$p03) -eq 1 && $(fs3                       |wc -l) -le 10 ]]; }                                                                # cpu    turbo recomended test
+function t0t { [[ $(cat $p43 2>$p03) -eq 0 && $(fs5                       |wc -l) -gt 20 ]]; }                                                                # cpu no turbo recomended test
+function t1t { [[ $(cat $p43 2>$p03) -eq 1 && $(fs5                       |wc -l) -le 10 ]]; }                                                                # cpu    turbo recomended test
 function t2t { [[ $(cat $p43 2>$p03) -eq 1 ]]; }                                                                                                              # cpu no turbo            test
 function pas { umt && sex "$p02/eth2/t5 usbstop";t1t && sex "$p02/eth2/t5 cputurbo";t0t && sex "$p02/eth2/t5 cpunoturbo"; }                                   # set usb/cpu parameters
 function paf { t2t && sex "$p02/eth2/t5 cputurbo"; }                                                                                                          # set turbo   parameter
@@ -500,14 +499,14 @@ function mvr { local f=$p02/validator_keys/keystore;if [[ $(ls $f*.json 2>$p03) 
 [[ $1 = irb ]] && { irb ${2:-3};pas; }
 [[ $1 = lp  ]] && { netstat -tulpn; }
 # outros journal system/lighthouse
-[[ $1 = sl  ]] && { fs2|fs6 $2; }
-[[ $1 = el  ]] && { if [[ $(sst $s10 running) ]];then fs0 . 0 $r30;else fs0 . 0 $r31;fi|fs5 $2; }
-[[ $1 = cl  ]] && { fs0 . 0 $r32|fs5 $2; }
-[[ $1 = ml  ]] && { fs0 . 0 $r33|fs5 $2; }
-[[ $1 = ll  ]] && { rl1 $r34|fs5 $2; }
-[[ $1 = ci  ]] && { rl0          |fs5 $2; }
-[[ $1 = vi  ]] && { rl4          |fs5 $2; }
-[[ $1 = ni  ]] && { (rl0;rl4)    |fs5 $2|sort -M; }
+[[ $1 = el  ]] && { if [[ $(sst $s10 running) ]];then fs1 $r30;else fs1 $r31;fi|fs7 $2; }
+[[ $1 = sl  ]] && { fs2      |fs6 $2; }
+[[ $1 = cl  ]] && { fs1 $r32 |fs7 $2; }
+[[ $1 = ml  ]] && { fs1 $r33 |fs7 $2; }
+[[ $1 = ll  ]] && { rl3      |fs7 $2; }
+[[ $1 = ci  ]] && { rl1      |fs7 $2; }
+[[ $1 = vi  ]] && { rl2      |fs7 $2; }
+[[ $1 = ni  ]] && { (rl1;rl2)|fs7 $2|sort -M; }
 [[ $1 = ws  ]] && { cex 'ufw status numbered'; }
 [[ $1 = wa  ]] && { wa; }
 [[ $1 = we  ]] && { yex 'ufw enable'; }
