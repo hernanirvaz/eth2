@@ -199,20 +199,18 @@ r31='besu\[.*|'                                                                 
 r32='lighthouse\['                                                                                                                                            # lighthouse logs
 r33='mev-boost\['                                                                                                                                             # mev-boost  logs
 r34="$r30\|$r31\|$r32\|$r33"                                                                                                                                  # el|cl|mev  logs
-r35='Some(\([0-9]*\)\.\([0-9][0-9][0-9]\)[0-9]*s).*%\1\2%p'                                                                                                   # get delays  sec
-r36='Some(\([0-9][0-9][0-9]\)\.[0-9]*ms).*%\1%p'                                                                                                              # get delays msec
-r37='Some(\([0-9][0-9]\)\.[0-9]*ms).*%\1%p'                                                                                                                   # get delays msec
-r38='\([0-9]*\)\.\([0-9][0-9][0-9]\)[0-9]*s.*%\1\2%p'                                                                                                         # get time  sec
-r39='\([0-9][0-9][0-9]\)\.[0-9]*ms.*%\1%p'                                                                                                                    # get time msec
-r40='\([0-9][0-9]\)\.[0-9]*ms.*%\1%p'                                                                                                                         # get time msec
-r41='.temperature.current'                                                                                                                                    # ssd current  temperature
-r42='.ata_sct_temperature_history.table|join(" ")'                                                                                                            # ssd historic temperature
-r43="\($r30\|$r31\).*Imported"                                                                                                                                # ec imported          block log lines
+r35="\($r30\|$r31\).*Imported"                                                                                                                                # ec imported block log lines
+r36='Some(\([0-9]*\)\.\([0-9][0-9][0-9]\)\([0-9]*\)s).*%\1\2.\3%p'                                                                                            # get delays  sec
+r37='Some(\([0-9]*\.[0-9]*\)ms).*%\1%p'                                                                                                                       # get delays msec
+r38='\([0-9]*\)\.\([0-9][0-9][0-9]\)\([0-9]*\)s.*%\1\2.\3%p'                                                                                                  # get time  sec
+r39='\([0-9]*\.[0-9]*\)ms.*%\1%p'                                                                                                                             # get time msec
+r40='.temperature.current'                                                                                                                                    # ssd current  temperature
+r41='.ata_sct_temperature_history.table|join(" ")'                                                                                                            # ssd historic temperature
+r42='s%.*elapsed='                                                                                                                                            # geth imported block delay
+r43='s%.* in '                                                                                                                                                # besu imported block delay
 r44='Delayed.head.block'                                                                                                                                      # cc imported/observed block log lines
 r45='s%.*imported_delay: '                                                                                                                                    # imported delay
 r46='s%.*observed_delay: '                                                                                                                                    # observed delay
-r47='s%.*elapsed='                                                                                                                                            # geth imported block delay
-r48='s%.* in '                                                                                                                                                # besu imported block delay
 
 function swb { echo -e "\n\e[5m${1^^}\e[25m\n"; }                                                                                                             # get flash
 function swu { echo -e "${1^^}"; }                                                                                                                            # get upper

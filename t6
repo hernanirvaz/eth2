@@ -4,18 +4,18 @@ source /home/eth/eth2/t1
 
 function nu0 { printf "${2:-%i}"   $1                                           2>$p03; }                                                                     # get numeric output
 function nu1 { printf "${4:-%.0f}" $(echo "scale=${3:-1};$1*${2:-1}"|bc 2>$p03) 2>$p03; }                                                                     # get arbitrary precision calculations
-function nu2 { if [[ $# -gt 0 ]];then nu1 "(0$(printf '%+.0f' $@ 2>$p03))/$#"                                                 ;else printf %i;fi; }           # get average list numbers scale 1
+function nu2 { if [[ $# -gt 0 ]];then nu1 "(0$(printf '%+.3f' $@ 2>$p03))/$#" 1 4                                             ;else printf %i;fi; }           # get average list numbers scale 1
 function nu3 { if [[ $# -gt 0 ]];then nu1 "(0$(printf '%+.1f' $@ 2>$p03))/$#" 1 2 %.1f                                        ;else printf %i;fi; }           # get average list numbers scale 2
 function nu4 { if [[ $# -gt 0 ]];then nu1 "sqrt(((0$(printf '+%i^2' $@ 2>$p03))-(0$(printf '+%i' $@ 2>$p03))^2/$#)/$#)" 1000 5;else printf %i;fi; }           # get standard deviation list numbers
 function nu5 {                        nu1 "($1*$pmis+$2*$pmat+$3*$pmah+$4*$pdly)/${5:-1}*$rate/$decp"                   1000 5                  ; }           # get penalty
-function rl0 { local f=$p16/logs/beacon.log   ;echo $H|sudo -S grep -h $r44 $f $f.1                               2>$p03|grep -v None; }                      # get cc intern lines (specific)
-function rl1 { local f=$p16/logs/beacon.log   ;echo $H|sudo -S cat          $f $f.1 $f.2 $f.3 $f.4 $f.5           2>$p03             ; }                      # get cc intern lines
-function rl2 { local f=$p17/logs/validator.log;echo $H|sudo -S cat          $f $f.1 $f.2 $f.3 $f.4 $f.5           2>$p03             ; }                      # get vc intern lines
-function rl3 { local f=$p01                   ;echo $H|sudo -S grep -h $r34 $f $f.1 $f.2 $f.3 $f.4 $f.5 $f.6 $f.7 2>$p03             ; }                      # get all eth syslog lines
-function rl4 { local f=$p01                   ;echo $H|sudo -S grep -h $r43 $f $f.1                               2>$p03             ; }                      # get all eth syslog lines
+function rl0 { local f=$p16/logs/beacon.log   ;echo $H|sudo -S grep -h $r44                               $f.1 $f 2>$p03|grep -v None; }                      # get cc intern lines (specific)
+function rl1 { local f=$p16/logs/beacon.log   ;echo $H|sudo -S cat                    $f.5 $f.4 $f.3 $f.2 $f.1 $f 2>$p03             ; }                      # get cc intern lines
+function rl2 { local f=$p17/logs/validator.log;echo $H|sudo -S cat                    $f.5 $f.4 $f.3 $f.2 $f.1 $f 2>$p03             ; }                      # get vc intern lines
+function rl3 { local f=$p01                   ;echo $H|sudo -S grep -h $r34 $f.7 $f.6 $f.5 $f.4 $f.3 $f.2 $f.1 $f 2>$p03             ; }                      # get all eth syslog lines
+function rl4 { local f=$p01                   ;echo $H|sudo -S grep -h $r35                               $f.1 $f 2>$p03             ; }                      # get all eth syslog lines
 function lg0 { sed -n "s%$1 *\([0-9]*\).*%\1%p" $2 2>$p03; }                                                                                                  # get list of numbers
-function lg1 { if [[ $l4 ]];then echo "$l4"|sed -n "$1$r35";echo "$l4"|sed -n "$1$r36";echo "$l4"|sed -n "$1$r37";else printf %i 1;fi; }                      # get s/ms delays from log lines
-function lg2 { if [[ $l4 ]];then echo "$l4"|sed -n "$1$r38";echo "$l4"|sed -n "$1$r39";echo "$l4"|sed -n "$1$r40";else printf %i 1;fi; }                      # get s/ms delays from log lines
+function lg1 { if [[ $l4 ]];then echo "$l4"|sed -n "$1$r36;$1$r37";else printf %i 1;fi; }                                                                     # get s/ms delays from log lines
+function lg2 { if [[ $l4 ]];then echo "$l4"|sed -n "$1$r38;$1$r39";else printf %i 1;fi; }                                                                     # get s/ms delays from log lines
 function lg3 { if [[ $1 -gt 0 ]];then l4=$(rl0|tail -n$1);else l4=$(rl0);fi;b1=$(nu2 $(lg1 "$r45"));b5=$(nu2 $(lg1 "$r46")); }                                # set imported/observed delays
 function fs0 { pex "grep    ${2:-$r32}.*$1 $p01"; }                                                                                                           # get specific syslog lines
 function fs1 { pex "grep    ${1:-$r34}     $p01"; }                                                                                                           # get eth      syslog lines
@@ -82,7 +82,7 @@ function grs {                                                                  
     if [[ $2 = RB ]];then ero $n $p10 $2;sex reboot;else sex "$s03 $s10";ssf 40 $p40;gq0;ero $n $p10 $2;fi                                                    # reboot/start el
   fi;done;rm -f $f
 }
-function gdi { if [[ $1 -gt 0 ]];then l4=$(rl4|tail -n$1);else l4=$(rl4);fi;nu2 $(lg2 "$r47"); }                                                              # get delay imported
+function gdi { if [[ $1 -gt 0 ]];then l4=$(rl4|tail -n$1);else l4=$(rl4);fi;nu2 $(lg2 "$r42"); }                                                              # get delay imported
 function gcl { $p07/geth attach --exec $1 "http://$ciec:8545"               2>$p03 ; }                                                                        # exec RPC HTTP
 function gi0 { nu0 $(echo $@|sed -n 's%.*highestBlock: *\([0-9]*\).*%\1%ip' 2>$p03); }                                                                        # get el highest block
 function gc0 { nu0 $(echo $@|sed -n 's%.*currentBlock: *\([0-9]*\).*%\1%ip' 2>$p03); }                                                                        # get el current block
@@ -104,7 +104,7 @@ function urs {                                                                  
     if [[ $2 = RB ]];then ero $n $p11 $2;sex reboot;else sex "$s03 $s11";ssf 40 $p41;uq0;ero $n $p11 $2;fi                                                    # reboot/start el
   fi;done;rm -f $f
 }
-function udi { if [[ $1 -gt 0 ]];then l4=$(rl4|tail -n$1);else l4=$(rl4);fi;nu2 $(lg2 "$r48"); }                                                              # get delay imported
+function udi { if [[ $1 -gt 0 ]];then l4=$(rl4|tail -n$1);else l4=$(rl4);fi;nu2 $(lg2 "$r43"); }                                                              # get delay imported
 function ucl { curl -sX POST --data "{\"jsonrpc\":\"2.0\",\"method\":\"$1\",\"params\":[],\"id\":51}" "http://$ciec:8545" 2>$p03; }                           # exec RPC HTTP
 function ui0 { nu0 $((16#$(nu0 $(echo $@|sed -n 's%.*highestBlock" *: *"0x\([^"]*\)".*%\1%ip' 2>$p03)))); }                                                   # get el highest block
 function uc0 { nu0 $((16#$(nu0 $(echo $@|sed -n 's%.*currentBlock" *: *"0x\([^"]*\)".*%\1%ip' 2>$p03)))); }                                                   # get el current block
@@ -273,8 +273,8 @@ function wst { echo $@|sed 's%[^: ]*: *%%g;s%inactive%off%;s%active%on%' 2>$p03;
 function cpf { local f='';until [[ $# -lt 1 ]];do f="$f, $(basename $1)";shift;done;printf $f; }                                                              # get list basenames
 function tmp {
   local d=$(fs5|grep throttled|head -n1|sed "$r27");local e=$(fs5|grep normal|tail -n1|sed "$r27");local l=$(pex "smartctl --json=c -x /dev/sda")
-  local g=$(echo $(echo $l|jq -r "$r41" 2>$p03) $(echo $l|jq -r "$r42" 2>$p03));local l=$(sensors 2>$p03|sed -n "$r26")
-  if [[ $cunm = $znm4 ]];then local g=$(echo $g $(pex "smartctl --json=c -x /dev/nvme0n1"|jq -r "$r41" 2>$p03));fi
+  local g=$(echo $(echo $l|jq -r "$r40" 2>$p03) $(echo $l|jq -r "$r41" 2>$p03));local l=$(sensors 2>$p03|sed -n "$r26")
+  if [[ $cunm = $znm4 ]];then local g=$(echo $g $(pex "smartctl --json=c -x /dev/nvme0n1"|jq -r "$r40" 2>$p03));fi
   [[ $1$d$e || $(nu2 $l) -ge 40 || $(nu2 $g) -ge 40 ]] || return
   [[ $d ]] && d="throttled: $d";[[ $e ]] && e="normal: $e";swn "TEMP $(printf '%5.1fC %10s %5s ssd: %.1fC %s %s' $(nu3 $l) $dt $(nu3 $g) $d $e 2>$p03)"       # TEMP cpu/ssd info
 }
@@ -506,7 +506,6 @@ function mvr { local f=$p02/validator_keys/keystore;if [[ $(ls $f*.json 2>$p03) 
 [[ $1 = ll  ]] && { rl3      |fs7 $2; }
 [[ $1 = ci  ]] && { rl1      |fs7 $2; }
 [[ $1 = vi  ]] && { rl2      |fs7 $2; }
-[[ $1 = ni  ]] && { (rl1;rl2)|fs7 $2|sort -M; }
 [[ $1 = ws  ]] && { cex 'ufw status numbered'; }
 [[ $1 = wa  ]] && { wa; }
 [[ $1 = we  ]] && { yex 'ufw enable'; }
@@ -641,7 +640,7 @@ if [[ ! $1 ]];then
   m="$m\nsl\t[hh:mm]\tsystem journal\tlog lines"
   m="$m\nll\t[hh:mm]\tel/cl\t\tlog lines (last 7 days)"
   m="$m\n[ecm]l\t[hh:mm]\tec/cc/mev\tlog lines"
-  m="$m\n[cvn]i\t[hh:mm]\tcc/vc/node\tlog lines (internal)"
+  m="$m\n[cv]i\t[hh:mm]\tcc/vc\tlog lines (internal)"
   m="$m\nbrl\t\trecalculate cc logs"
   m="$m\nbrm\t\trecalculate cc-daily logs"
   m="$m\nbsl\t\tshrink cc log using barqivo"
