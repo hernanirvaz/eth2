@@ -5,9 +5,8 @@ source /home/eth/eth2/t1
 function nu0 { printf ${2:-%i}   $1                                   2>$p03; }                                                                               # get numeric output
 function nu1 { printf ${3:-%.0f} $(echo "scale=${2:-1};$1"|bc 2>$p03) 2>$p03; }                                                                               # get arbitrary precision calculations
 function nu2 { local n=$1;local i=$2;shift;shift;if [[ $# -gt 0 ]];then nu1 "(0$(printf %+.${n}f $@ 2>$p03))/$#" $((n+1)) %.${i}f;else printf %i;fi; }        # get average list numbers
-function nu3 { nu1 "($1*$pmis+$2*$pmat+$3*$pmah+$4*$pdly)/${5:-1}*$rate/1000000"                      7; }                                                    # get penalty
-function nu4 { nu1 "($1*$ratt+$2*$rblk)*$rate/100000000"                                              7; }                                                    # get reward
-function nu5 { nu1 "sqrt(((0$(printf '+%i^2' $@ 2>$p03))-(0$(printf '+%i' $@ 2>$p03))^2/$#)/$#)*1000" 4; }                                                    # get standard deviation list numbers
+function nu3 { nu1 "($1*$pmis+$2*$pmat+$3*$pmah+$4*$pdly)/${5:-1}*$rate/1000000" 7; }                                                                         # get penalty
+function nu4 { nu1 "($1*$ratt+$2*$rblk)*$rate/100000000"                         7; }                                                                         # get reward
 function rl0 { local f=$p16/logs/beacon.log   ;echo $H|sudo -S grep -h $r44                               $f.1 $f 2>$p03|grep -v None; }                      # get cc intern lines (specific)
 function rl1 { local f=$p16/logs/beacon.log   ;echo $H|sudo -S cat                    $f.5 $f.4 $f.3 $f.2 $f.1 $f 2>$p03             ; }                      # get cc intern lines
 function rl2 { local f=$p17/logs/validator.log;echo $H|sudo -S cat                    $f.5 $f.4 $f.3 $f.2 $f.1 $f 2>$p03             ; }                      # get vc intern lines
@@ -44,7 +43,6 @@ function ss2 { $s01 $1 2>$p03|sed -n "s%.*Active: *\(.*\)%\1%p" 2>$p03|sed "s% *
 function dmr { sex "$s00 daemon-reload"; }                                                                                                                    # daemon-reload
 function dts { read       d0 d1   <<< ${1:-$(date '+%F %H:%M')};dt="$d0 $d1"; }                                                                               # set date/time vars
 function dtl { read _ _ _ d0 d1 _ <<< $(bff|tail -n1)          ;dt="$d0 $d1"; }                                                                               # set date/time vars with last beacon log
-function bnn { if [[ $# -gt 0 ]];then nr=${@:$#};nm=$(printf '%i\n' $@|sort -n|head -n1 2>$p03);nd=$(nu5 $@);else nr=0;nm=0;nd=0;fi; }                        # set cur/min/std peers vars
 function dnn { printf '%10s %5s node%02i: %2i' $dt $nn $nr 2>$p03; }                                                                                          # get date/nodes info
 function tsy { if [[ $(echo $@|grep false) ]];then printf SYC;else printf NSY;fi; }                                                                           # get el SYN/NSY text
 function els { lg0 .*sgs: $1|tail -n1; }                                                                                                                      # get el last segment
@@ -61,8 +59,14 @@ function smn { local g=${1:-24}                  ;nu0 $((g>360?360:g<24?24:g)); 
 function sfn { local g=$(($(bss $1)-$(date +%s)));nu0 $((g>3?g:3))            ; }                                                                             # get min seconds to future
 function spt { [[ $(date +%s) -ge $(bss $1 6) ]]; }                                                                                                           # ideal position test (based on time)
 function ssf { [[ $1 -gt 0 ]] || return;local f=$2.s$(stg $1);touch $f;sleep $1s;rm -f $f; }                                                                  # sleep with file info
-# slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168
 function ssw { while :;do local t=$(sng);if [[ $(sf2 $t) -le ${1:-36} || 24 -ge $(sfn $t) ]];then ssf $(smn $(sfn $t)) $2;else break;fi;done; }               # sleep while small (gap or remaining) time
+function bnn {
+  if [[ $# -gt 0 ]];then
+    nr=${@:$#};nm=$(printf '%i\n' $@|sort -n|head -n1 2>$p03);nd=$(nu1 "sqrt(((0$(printf '+%i^2' $@ 2>$p03))-(0$(printf '+%i' $@ 2>$p03))^2/$#)/$#)*1000" 4)  # set cur/min/std peers vars
+  else
+    nr=0      ;nm=0                                          ;nd=0
+  fi
+}
 function sso {
   [[ $(sst $2 disabled) || ! $(sst $2 $2) ]] && return;dts;local e="$1 $(printf '%6s %10s %5s status: %-40s' $(ss1 $2 Memory:) $dt "$(ss2 $2)")"              # memory & status
   [[ $1 = GETH ]] && bnn $(fs3 peercount= $r30) $(nu0 $(gcl net.peerCount))                                                                                   # set min peers
