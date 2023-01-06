@@ -76,7 +76,7 @@ function sso {
   [[ $1 = BEAC ]] && bnn $(fs3 peers:         ) $(bpc $(bcl peer_count   ))                                                                                   # set min peers
   [[ $1 = BEAC ]] && e="$e $(printf 'cl:p%02i:m%02i p2p:%5i' $nr $nm $(ss1 $2 port     [0-9]) 2>$p03)$(bb1 $(bcl syncing))"                                   # cl peers/port tag
   [[ $1 = BEAC ]] && e="$e el:http $(ss1 $2 execution-endpoint '[^ ]'|sed -n $r24)"                                                                           # el http
-  [[ $1 = VALI ]] && { dtl;bo5;e="$e $(printf 'vl:c%02i:m%02i' $b2 $b3 2>$p03) cc:http $(ss1 $2 nodes '[^ ]'|sed -n $r24)"; };swn "$e"                        # set homologous/avg & cl http
+  [[ $1 = VALI ]] && { dtl;bo4;e="$e $(printf 'vl:c%02i:m%02i' $b2 $b3 2>$p03) cc:http $(ss1 $2 nodes '[^ ]'|sed -n $r24)"; };swn "$e"                        # set homologous/avg & cl http
 }
 # el control commands
 function grs {                                                                                                                                                # el gap restart
@@ -163,7 +163,7 @@ function bdc { if bht && bst;then printf d;else printf _;fi; }                  
 function bmi { zk=0;zz=0;zx=0;unset v;v[1]=0;unset k;k[0]=0;unset z;z[0]=0;unset x;x[0]=0;unset w;w[0]=0;unset c;c[0]=0;unset a;a[0]=0;bm6; }                 # ini err/cnt/avg penalty arrays
 function bm0 {                                                                                                                                                # cc-daily report
   [[ -f $p12 ]] || return;bmi;b4=0;dts;bv0;bnn $(fs3 peers:);bs5;bl2;[[ -f $p14 ]] && bm4;lg3 0                                                               # set vars/arrays
-  l3=$(tail -n$(($(bbl)-v[1])) $p12 2>$p03|bfl);[[ $l3 ]] && bm1;bm2;bo4;bm5 ${a[$nn]};b7="peers$(bdc)$(bcc)io:"                                              # add cc lines & homologous/avg position
+  l3=$(tail -n$(($(bbl)-v[1])) $p12 2>$p03|bfl);[[ $l3 ]] && bm1;bm2;[[ $b2 -eq 0 ]] && boi;bo3;bm5 ${a[$nn]};b7="peers$(bdc)$(bcc)io:"                                              # add cc lines & homologous/avg position
 }
 function bm1 {
   local g=${1:-$bpri};l1=$(echo "$l3"|sed -nEe "s%.+node$g:.+er: +([0-9]+) +([0-9]+) +([0-9]+) +([0-9]+).+%\1\t\2\t\3\t\4%p" 2>$p03)                          # set paid errors for current array
@@ -202,19 +202,18 @@ function bms { m="BM $(printf '%4i %3i' $b2 $b3 2>$p03) $(dnn) $(printf 'penalty
 # BEAC 682 2022-03-16 11:03 cnt: 4 7 0 0 0 10 10 mis: 20 20 20 20 20 20 20 mat: 14 45 30 30 30 30 30 mah: 94 68 40 40 40 40 40 dly: 79 09 50 50 50 50 50
 function bno { m="BEAC $(nu0 $(bbl) %6i) $dt $(bnc 'cnt:' ' ') $(bnk 'mis:' ' ') $(bnz 'mat:' ' ') $(bnx 'mah:' ' ') $(bnw 'dly:' ' ')"; }
 function boi {
-  unset v;read -a v <<< $(bff|tail -n1);local n=0;local t=${1:-00:00};[[ $t = 00:00 ]] && t=${v[4]};b6=0;l2=$(bff $t)                                         # set homologous lines
-  while [[ $b2 -eq 0 && $n -lt 500 ]];do bo2 ${v[3]};((n+=1));v[3]=$(date -d "$n days ago $t" +%F);done                                                       # set homologous position
+  unset v;read -a v <<< $(bff|tail -n1);local n=0;local t=${1:-${v[4]}};b6=0;while :;do l2=$(bff $t);if [[ $l2 ]];then break;else t=${v[4]};fi;done           # set homologous lines
+  while :;do bo2 ${v[3]};if [[ $b2 -eq 0 && $n -lt 99 ]];then ((n+=1));v[3]=$(date -d "$n days ago $t" +%F);else break;fi;done                                # set homologous position
 }
 function bo0 { [[ -f $p12 ]] || return;boi $(pt1 $@ 00:00);if [[ $(pt3 $@ s) = n ]];then b6=$b2;else b6=$(pt2 $@ 0);fi;bo6; }                                 # homologous report
 function bo1 { echo "$l2"|sort -k10n -k4r; }                                                                                                                  # get homologous cc lines sorted
-function bo2 { b2=$(bo1|grep -n ${1:-$(date '+%F')}|cut -d: -f1);b2=${b2:-0}; }                                                                               # set homologous position
+function bo2 { b2=$(bo1|grep -n ${1:-$(date '+%F')}|cut -d: -f1); }                                                                                           # set homologous position
 function bo3 { b3=$(nu2 0 0 $b2 $(lg0 BM $p13)); }                                                                                                            # set homologous avg
-function bo4 { [[ $b2 -eq 0 && -f $p12 ]] && boi;bo3; }                                                                                                       # set homologous position/avg
-function bo5 { l2=$(bff $d1);bo2 $d0;bo3; }                                                                                                                   # set homologous position/avg
+function bo4 { l2=$(bff $d1);bo2 $d0;bo3; }                                                                                                                   # set homologous position/avg
+function bo5 { bo1|grep $(printf node%02i: $1 2>$p03); }                                                                                                      # get homologous node lines sorted
 function bo6 { bo1|head -n$((b6>b2?b6:b2<5?5:b2))|tail -n$((b6>0?b6:b2>chrs?chrs:b2<5?5:b2)); }                                                               # homologous report
-function bo7 { bo1|grep $(printf node%02i: $1 2>$p03); }                                                                                                      # get homologous node lines sorted
-function bon { [[ -f $p12 ]] || return;bv0;nn=$(pt2 $1 $nn);l2=$(bff 23:58);bo7 $nn; }                                                                        # homologous nodes report
-function boa { local g=${1:-$bpri};printf 'BO%5i %3i\n' $(bo7 $g|wc -l) $g 2>$p03;bo7 $g;((g<bprf)) && boa $((g+bprs)); }                                     # recursively show homologous nodes report
+function bon { [[ -f $p12 ]] || return;bv0;nn=$(pt2 $1 $nn);l2=$(bff 23:58);bo5 $nn; }                                                                        # homologous nodes report
+function boa { local g=${1:-$bpri};printf 'BO%5i %3i\n' $(bo5 $g|wc -l) $g 2>$p03;bo5 $g;((g<bprf)) && boa $((g+bprs)); }                                     # recursively show homologous nodes report
 function bh0 {
   [[ -f $p12 ]] || return;tail -n${1:-$chrs} $p12;[[ $1 ]] && return                                                                                          # current    cc report
   boi;swn "BO $(printf '%4i %3i%34s%29s' $b2 $(echo "$l2"|wc -l) 2>$p03)x5 x2  x1 x1";bo6                                                                     # homologous cc report
@@ -464,7 +463,7 @@ function mvr { local f=$p02/validator_keys/keystore;if [[ $(ls $f*.json 2>$p03) 
 [[ $1 = bl  ]] && { bl0;swn "$m"; }
 [[ $1 = bm  ]] && { bm0;bmo;swn "$m"; }
 [[ $1 = bn  ]] && { bm0;bno;swn "$m"; }
-[[ $1 = blf ]] && { bl0;swn "$m" >> $p12;stt && bo5 && bht && bst && bdl $d0;v2t && [[ $ok != OK ]] && brs 0;pas; }                                           # cl log/delete/restart & parameter set
+[[ $1 = blf ]] && { bl0;swn "$m" >> $p12;stt && bo4 && bht && bst && bdl $d0;v2t && [[ $ok != OK ]] && brs 0;pas; }                                           # cl log/delete/restart & parameter set
 [[ $1 = bmf ]] && { bm0;bms;bbt && swn "$m" >> $p13;bct && brs $b4 $(btr PE) 120; }
 [[ $1 = bnf ]] && { bm0;bno;swn "$m" >> $p14; }
 [[ $1 = gh  ]] && { eh0 $p10 $2;[[ $2 ]] || { gl0;swn "$m\n";ghs;cpe; } }
