@@ -76,7 +76,7 @@ function sso {
   [[ $1 = BEAC ]] && bnn $(fs3 peers:         ) $(bpc $(bcl peer_count   ))                                                                                   # set min peers
   [[ $1 = BEAC ]] && e="$e $(printf 'cl:p%02i:m%02i p2p:%5i' $nr $nm $(ss1 $2 port     [0-9]) 2>$p03)$(bb1 $(bcl syncing))"                                   # cl peers/port tag
   [[ $1 = BEAC ]] && e="$e el:http $(ss1 $2 execution-endpoint '[^ ]'|sed -n $r24)"                                                                           # el http
-  [[ $1 = VALI ]] && { dtl;bo5;e="$e vl:c$(printf '%02i:m%02i' $b2 $b3 2>$p03) cc:http $(ss1 $2 nodes '[^ ]'|sed -n $r24)"; };swn "$e"                        # set homologous/avg & cl http
+  [[ $1 = VALI ]] && { dtl;bo5;e="$e $(printf 'vl:c%02i:m%02i' $b2 $b3 2>$p03) cc:http $(ss1 $2 nodes '[^ ]'|sed -n $r24)"; };swn "$e"                        # set homologous/avg & cl http
 }
 # el control commands
 function grs {                                                                                                                                                # el gap restart
@@ -139,8 +139,8 @@ function bs5 { l5=$(fs0 attestation.s); }                                       
 function bb0 { bs0;bs5;bl1;bl2;[[ (1 -eq $(era $p12 $chrs) && $(bu0) -ge 1) || (1 -eq $(era $p12 5) && $(bu0) -ge 5) ]] && ok=BK; }                           # set ok (OK/BK)
 function bbl { cat $p12 2>$p03|wc -l; }                                                                                                                       # get cc       line count
 function bml { cat $p13 2>$p03|wc -l; }                                                                                                                       # get cc-daily line count
-function bfl { grep "BEAC.*$1"; }                                                                                                                             # filter cc lines
-function bff { [[ -f $p12 ]] || return;grep "BEAC.*$1" $p12; }                                                                                                # filter cc log
+function bfl { grep "BEAC.*$1"      2>$p03; }                                                                                                                 # filter cc lines
+function bff { grep "BEAC.*$1" $p12 2>$p03; }                                                                                                                 # filter cc log
 function bb1 { if [[ $(echo $@|grep is_syncing\":false) ]];then printf ' synced';else printf ' syncing: %6i' $(bsd $@);fi; }                                  # get cl syncing distance remaining
 function bl0 { dts;ok=OK;if [[ $(sst $s12 running) ]];then bl3;bv0;bnn $(fs3 peers:) $(bpc $(bcl peer_count));bb0;blo;else m="BSRV NOT ON $dt";fi; }          # cc report
 function bl1 {                                                                                                                                                # set restart idx vars
@@ -207,12 +207,12 @@ function boi {
 }
 function bo0 { [[ -f $p12 ]] || return;boi $(pt1 $@ 00:00);if [[ $(pt3 $@ s) = n ]];then b6=$b2;else b6=$(pt2 $@ 0);fi;bo6; }                                 # homologous report
 function bo1 { echo "$l2"|sort -k10n -k4r; }                                                                                                                  # get homologous cc lines sorted
-function bo2 { b2=$(bo1|grep -n ${1:-$(date '+%F')}|cut -d: -f1); }                                                                                           # set homologous position
-function bo3 { b3=$(nu2 0 0 ${b2:=0} $(lg0 BM $p13)); }                                                                                                       # set homologous avg
+function bo2 { local n=$(bo1|grep -n ${1:-$(date '+%F')}|cut -d: -f1);b2=${n:-0}; }                                                                                           # set homologous position
+function bo3 { b3=$(nu2 0 0 $b2 $(lg0 BM $p13)); }                                                                                                       # set homologous avg
 function bo4 { [[ ${b2:=0} -eq 0 && -f $p12 ]] && boi;bo3; }                                                                                                  # set homologous position/avg
 function bo5 { l2=$(bff $d1);bo2 $d0;bo3; }                                                                                                                   # set homologous position/avg
 function bo6 { bo1|head -n$((b6>b2?b6:b2<5?5:b2))|tail -n$((b6>0?b6:b2>chrs?chrs:b2<5?5:b2)); }                                                               # homologous report
-function bo7 { bo1|grep $(nu0 $1 node%02i:); }                                                                                                                # get homologous node lines sorted
+function bo7 { bo1|grep $(printf node%02i: $1 2>$p03); }                                                                                                      # get homologous node lines sorted
 function bon { [[ -f $p12 ]] || return;bv0;nn=$(pt2 $1 $nn);l2=$(bff 23:58);bo7 $nn; }                                                                        # homologous nodes report
 function boa { local g=${1:-$bpri};printf 'BO%5i %3i\n' $(bo7 $g|wc -l) $g 2>$p03;bo7 $g;((g<bprf)) && boa $((g+bprs)); }                                     # recursively show homologous nodes report
 function bh0 {
