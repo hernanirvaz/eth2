@@ -60,23 +60,20 @@ function sfn { local g=$(($(bss $1)-$(date +%s)));nu0 $((g>3?g:3))            ; 
 function spt { [[ $(date +%s) -ge $(bss $1 6) ]]; }                                                                                                           # ideal position test (based on time)
 function ssf { [[ $1 -gt 0 ]] || return;local f=$2.s$(stg $1);touch $f;sleep $1s;rm -f $f; }                                                                  # sleep with file info
 function ssw { while :;do local t=$(sng);if [[ $(sf2 $t) -le ${1:-36} || 24 -ge $(sfn $t) ]];then ssf $(smn $(sfn $t)) $2;else break;fi;done; }               # sleep while small (gap or remaining) time
-function bnn {
+function snn {
   if [[ $# -gt 0 ]];then
     nr=${@:$#};nm=$(printf '%i\n' $@|sort -n|head -n1 2>$p03);nd=$(nu1 "sqrt(((0$(printf '+%i^2' $@ 2>$p03))-(0$(printf '+%i' $@ 2>$p03))^2/$#)/$#)*1000" 4)  # set cur/min/std peers vars
   else
     nr=0      ;nm=0                                          ;nd=0
   fi
 }
+function sz0 { snn $(fs3 peercount= $r30) $(nu0 $(gcl net.peerCount));printf 'el:p%02i:m%02i p2p:%5i %s i2:%i' $nr $nm $(ss1 $1 port     [0-9]) $(gb1 synced $(gcl eth.syncing)) $(gdi 0) 2>$p03; }
+function sz1 { snn $(fs3 Peers:     $r31) $(up0 $(ucl net_peerCount));printf 'el:p%02i:m%02i p2p:%5i %s i2:%i' $nr $nm $(ss1 $1 p2p-port [0-9]) $(ub1 synced $(ucl eth_syncing)) $(udi 0) 2>$p03; }
+function sz2 { bnn;printf 'cl:p%02i:m%02i p2p:%5i %s el:http %s' $nr $nm $(ss1 $1 port [0-9]) $(bb1 $(bcl syncing)) $(ss1 $1 execution-endpoint '[^ ]'|sed -n $r24) 2>$p03; }
+function sz3 { dtl;bo4;printf 'vl:c%02i:m%02i cc:http %s' $b2 $b3 $(ss1 $1 nodes '[^ ]'|sed -n $r24) 2>$p03; }
 function sso {
   [[ $(sst $2 disabled) || ! $(sst $2 $2) ]] && return;dts;local e="$1 $(printf '%6s %10s %5s status: %-40s' $(ss1 $2 Memory:) $dt "$(ss2 $2)")"              # memory & status
-  [[ $1 = GETH ]] && bnn $(fs3 peercount= $r30) $(nu0 $(gcl net.peerCount))                                                                                   # set min peers
-  [[ $1 = GETH ]] && e="$e $(printf 'el:p%02i:m%02i p2p:%5i' $nr $nm $(ss1 $2 port     [0-9]) 2>$p03)$(gb1 synced $(gcl eth.syncing)) i2:$(gdi 0)"            # el peers/port tag
-  [[ $1 = BESU ]] && bnn $(fs3 Peers:     $r31) $(up0 $(ucl net_peerCount))                                                                                   # set min peers
-  [[ $1 = BESU ]] && e="$e $(printf 'el:p%02i:m%02i p2p:%5i' $nr $nm $(ss1 $2 p2p-port [0-9]) 2>$p03)$(ub1 synced $(ucl eth_syncing)) i2:$(udi 0)"            # el peers/port tag
-  [[ $1 = BEAC ]] && bnn $(fs3 peers:         ) $(bpc $(bcl peer_count   ))                                                                                   # set min peers
-  [[ $1 = BEAC ]] && e="$e $(printf 'cl:p%02i:m%02i p2p:%5i' $nr $nm $(ss1 $2 port     [0-9]) 2>$p03)$(bb1 $(bcl syncing))"                                   # cl peers/port tag
-  [[ $1 = BEAC ]] && e="$e el:http $(ss1 $2 execution-endpoint '[^ ]'|sed -n $r24)"                                                                           # el http
-  [[ $1 = VALI ]] && { dtl;bo4;e="$e $(printf 'vl:c%02i:m%02i' $b2 $b3 2>$p03) cc:http $(ss1 $2 nodes '[^ ]'|sed -n $r24)"; };swn "$e"                        # set homologous/avg & cl http
+  [[ $1 = GETH ]] && e="$e $(sz0 $2)";[[ $1 = BESU ]] && e="$e $(sz1 $2)";[[ $1 = BEAC ]] && e="$e $(sz2 $2)";[[ $1 = VALI ]] && e="$e $(sz3 $2)";swn "$e"    # set homologous/avg & cl http
 }
 # el control commands
 function grs {                                                                                                                                                # el gap restart
@@ -133,7 +130,7 @@ function bw0 { nu0 $((10*z1))                                                   
 function bf0 { nu0 $((90*z3))                                                            ; }                                                                  # get numerator general errors
 function bi0 { nu0 $((nd+zk*300+zz*20+zx))                                               ; }                                                                  # get delete day idx
 function bu0 { nu0 $(((z5>400?$(bz0)/z5:0)+(z2>300?$(bw0)/z2:0)+(z4>999?$(bf0)/z4:0)))   ; }                                                                  # get restart idx
-function bv0 { nn=$(nu0 $(ss1 $s12 target-peers [0-9])); }                                                                                                    # get configured peers
+function bv0 { nn=$(nu0 $(ss1 $s12 target-peers [0-9])); }                                                                                                    # set configured peers
 function bs0 { l0=$(fs4 $bpid] 3600); }                                                                                                                       # set last cc log lines
 function bs5 { l5=$(fs0 attestation.s); }                                                                                                                     # set attesta log lines
 function bb0 { bs0;bs5;bl1;bl2;[[ (1 -eq $(era $p12 $chrs) && $(bu0) -ge 1) || (1 -eq $(era $p12 5) && $(bu0) -ge 5) ]] && ok=BK; }                           # set ok (OK/BK)
@@ -141,8 +138,9 @@ function bbl { cat $p12 2>$p03|wc -l; }                                         
 function bml { cat $p13 2>$p03|wc -l; }                                                                                                                       # get cc-daily line count
 function bfl { grep "BEAC.*$1"      2>$p03; }                                                                                                                 # filter cc lines
 function bff { grep "BEAC.*$1" $p12 2>$p03; }                                                                                                                 # filter cc log
-function bb1 { if [[ $(echo $@|grep is_syncing\":false) ]];then printf ' synced';else printf ' syncing: %6i' $(bsd $@);fi; }                                  # get cl syncing distance remaining
-function bl0 { dts;ok=OK;if [[ $(sst $s12 running) ]];then bl3;bv0;bnn $(fs3 peers:) $(bpc $(bcl peer_count));bb0;blo;else m="BSRV NOT ON $dt";fi; }          # cc report
+function bnn { snn $(fs3 peers:) $(bpc $(bcl peer_count)); }                                                                                                  # set cur/min/std cc peers
+function bb1 { if [[ $(echo $@|grep is_syncing\":false) ]];then printf 'synced';else printf 'syncing: %6i' $(bsd $@);fi; }                                    # get cl syncing distance remaining
+function bl0 { dts;ok=OK;if [[ $(sst $s12 running) ]];then bl3;bv0;bnn;bb0;blo;else m="BSRV NOT ON $dt";fi; }                                                 # cc report
 function bl1 {                                                                                                                                                # set restart idx vars
   z1=${1:-$(echo "$l0"|grep 'RPC block'|wc -l)};z2=${2:-$(echo "$l0"|grep 'New block'|wc -l)};z3=${3:-$(echo "$l0"|grep -v ' INFO ' |wc -l)}                  # set processed/received blocks,error lines
   z4=${4:-$(echo "$l0"|grep ' INFO '   |wc -l)};z5=${5:-$(bl4 success)};zw=${6:-$(bl4 had)};ok=${7:-OK}                                                       # set info lines,success/had activities
@@ -162,7 +160,7 @@ function bcc { if bct       ;then printf c;else printf _;fi; }                  
 function bdc { if bht && bst;then printf d;else printf _;fi; }                                                                                                # get delete cc log day       char
 function bmi { zk=0;zz=0;zx=0;unset v;v[1]=0;unset k;k[0]=0;unset z;z[0]=0;unset x;x[0]=0;unset w;w[0]=0;unset c;c[0]=0;unset a;a[0]=0;bm6; }                 # ini err/cnt/avg penalty arrays
 function bm0 {                                                                                                                                                # cc-daily report
-  [[ -f $p12 ]] || return;bmi;b4=0;dts;bv0;bnn $(fs3 peers:);bs5;bl2;[[ -f $p14 ]] && bm4;lg3 0                                                               # set vars/arrays
+  [[ -f $p12 ]] || return;bmi;b4=0;dts;bv0;bnn;bs5;bl2;[[ -f $p14 ]] && bm4;lg3 0                                                                             # set vars/arrays
   l3=$(tail -n$(($(bbl)-v[1])) $p12 2>$p03|bfl);[[ $l3 ]] && bm1;bm2;[[ $b2 -eq 0 ]] && boi;bo3;bm5 ${a[$nn]};b7="peers$(bdc)$(bcc)io:"                       # add cc lines & homologous/avg position
 }
 function bm1 {
@@ -210,9 +208,9 @@ function bo1 { echo "$l2"|sort -k10r -k4n; }                                    
 function bo2 { b2=$(bo0|grep -n ${1:-$(date '+%F')}|cut -d: -f1); }                                                                                           # set homologous position
 function bo3 { b3=$(nu2 0 0 $b2 $(lg0 BM $p13)); }                                                                                                            # set homologous avg
 function bo4 { l2=$(bff $d1);bo2 $d0;bo3; }                                                                                                                   # set homologous position/avg
-function bo5 { bo0|grep $(printf node%02i: $1 2>$p03); }                                                                                                      # get homologous node lines sorted
-function bo6 { bo0|head -n$((b6>b2?b6:b2<5?5:b2))|tail -n$((b6>0?b6:b2>chrs?chrs:b2<5?5:b2)); }                                                               # homologous report
-function boa { local g=${1:-$bpri};printf 'BO%5i %3i\n' $(bo5 $g|wc -l) $g 2>$p03;bo5 $g;((g<bprf)) && boa $((g+bprs)); }                                     # recursively show homologous nodes report
+function bo5 { bo0|head -n$((b6>b2?b6:b2<5?5:b2))|tail -n$((b6>0?b6:b2>chrs?chrs:b2<5?5:b2)); }                                                               # homologous report
+function bo6 { bo0|grep $(printf node%02i: $1 2>$p03); }                                                                                                      # get homologous node lines sorted
+function boa { local g=${1:-$bpri};local e=$(bo6 $g);printf 'BO%5i %3i\n' $(echo "$e"|wc -l) $g 2>$p03;echo "$e";((g<bprf)) && boa $((g+bprs)); }             # recursively show homologous nodes report
 function bod {
   local e='';while read -a v;do
     if [[ ${v[9]} -ge $1 && $(echo "$l2"|grep ${v[5]}|wc -l) -gt $2 ]];then local e="$e ${v[3]}";l2=$(echo "$l2"|grep -v ${v[3]});fi                          # gather delete info
@@ -220,16 +218,14 @@ function bod {
 }
 function bh0 {
   [[ -f $p12 ]] || return;tail -n${1:-$chrs} $p12;[[ $1 ]] && return                                                                                          # current    cc report
-  boi;swn "BO $(printf '%4i %3i%34s%29s' $b2 $(echo "$l2"|wc -l) 2>$p03)x5 x2  x1 x1";bo6                                                                     # homologous cc report
+  boi;swn "BO $(printf '%4i %3i%34s%29s' $b2 $(echo "$l2"|wc -l) 2>$p03)x5 x2  x1 x1";bo5                                                                     # homologous cc report
   bl0;swn "BL $(printf '%8i%34s%29s%13s'     $(bbl)              2>$p03)rb   nb c10 er   if  c90\n$m";bm0                                                     # last       cc report
   bmo;swn "BM $(printf '%8i%34s'             $(bml)              2>$p03)i20  i30  i40  i50  i60  i70  i80\n$m"                                                # last cc-daillast y
 }
 function btr { if srt;then printf RB;else printf $1;fi; }                                                                                                     # get tag reboot
 function bss { nu0 $((${2:-0}+$(date -d$(sf1 $1) +%s))); }                                                                                                    # get sum secounds + time
 function bsc { fs4 $bpid].*INFO 99|grep Sync\ committee|wc -l; }                                                                                              # get # committee messages
-function bro {
-  [[ -f $p12 ]] || return;dts;bb0;bnn $(fs3 peers:) $(bpc $(bcl peer_count));swn "$(printf 'R%03i %2s %3i' $1 ${2:-$ok} $(bu0) 2>$p03) $(dnn)" >> $p12        # log restart info
-}
+function bro { [[ -f $p12 ]] || return;dts;bb0;bnn;swn "$(printf 'R%03i %2s %3i' $1 ${2:-$ok} $(bu0) 2>$p03) $(dnn)" >> $p12; }                               # log restart info
 # slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168
 function brs {                                                                                                                                                # cc/vc gap restart
   [[ $(ls $p42.* 2>$p03) || $(bsc) -gt 0 ]] && return;ssf ${3:-0} $p42;local n=${4:-60};[[ $2 = VC ]] && n=72;[[ $2 = RB ]] && n=84
@@ -484,8 +480,8 @@ function mvr { local f=$p02/validator_keys/keystore;if [[ $(ls $f*.json 2>$p03) 
 [[ $1 = shs ]] && { lhs  ; }                                                                                                                                  # slave  ec/cc/vc/system reports
 [[ $1 = cci ]] && { nu0 $(ss1 $s13 nodes            "[^$2 ]"|sed -n $r25); }                                                                                  # cc ip vc uses
 [[ $1 = eci ]] && { nu0 $(ss1 $s12 execution-endpoint '[^ ]'|sed -n $r25); }                                                                                  # ec ip cc uses
-[[ $1 = bo  && -f $p12 ]] && { boi $(pt1 $@ 00:00);if [[ $(pt3 $@ s) = n ]];then b6=$b2;else b6=$(pt2 $@ 0);fi;bo6; }
-[[ $1 = bon && -f $p12 ]] && { bv0;l2=$(bff 23:58);bo5 $(pt2 $2 $nn); }
+[[ $1 = bo  && -f $p12 ]] && { boi $(pt1 $@ 00:00);if [[ $(pt3 $@ s) = n ]];then b6=$b2;else b6=$(pt2 $@ 0);fi;bo5; }
+[[ $1 = bon && -f $p12 ]] && { bv0;l2=$(bff 23:58);bo6 $(pt2 $2 $nn); }
 [[ $1 = boc && -f $p12 ]] && { unset v;read -a v <<< $(bff|tail -n1);l2=$(bff $(pt1 $2 ${v[4]}));boa; }
 [[ $1 = bol && -f $p12 ]] && { l2=$(bff 23:58);boa; }
 [[ $1 = bod && -f $p12 ]] && { l2=$(bff 23:58);bod ${2:-0} ${3:-1}; }
