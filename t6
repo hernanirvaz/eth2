@@ -40,6 +40,9 @@ function sni { case $1 in 25) printf $znm1;;28) printf $znm2;;31) printf $znm3;;
 function sst { $s01 $1 2>$p03|grep "${2:-inactive\|failed}" 2>$p03; }                                                                                         # systemctl status word test
 function ss1 { $s01 $1 2>$p03|sed -n "s%.*$2[ =]\(${3:-.}*\).*%\1%p" 2>$p03; }                                                                                # systemctl status 1 extraction
 function ss2 { $s01 $1 2>$p03|sed -n "s%.*Active: *\(.*\)%\1%p" 2>$p03|sed "s% *since.*;%%" 2>$p03|cut -c1-40; }                                              # systemctl status 2 extraction
+function ss3 { local e=$(ss1 $1 Memory:)                     ;if [[ $e ]];then printf $e;else printf 0.0K   ;fi; }                                            # systemctl status Memory extraction
+function ss4 { local e=$(ss1 $1 $3 "[^$4 ]"|sed -n $2 2>$p03);if [[ $e ]];then printf $e;else printf 00:0000;fi; }                                            # systemctl status ip/port extraction
+function ss5 { nu0 $(ss1 $1 $2 [0-9]); }                                                                                                                      # systemctl status number extraction
 function dmr { sex "$s00 daemon-reload"; }                                                                                                                    # daemon-reload
 function dts { read       d0 d1   <<< ${1:-$(date '+%F %H:%M')};dt="$d0 $d1"; }                                                                               # set date/time vars
 function dtl { read _ _ _ d0 d1 _ <<< $(bff|tail -n1)          ;dt="$d0 $d1"; }                                                                               # set date/time vars with last beacon log
@@ -67,12 +70,12 @@ function snn {
     nr=0      ;nm=0                                          ;nd=0
   fi
 }
-function sz0 { snn $(fs3 peercount= $r30) $(nu0 $(gcl net.peerCount));printf 'el:p%02i:m%02i p2p:%5i %s i2:%i' $nr $nm $(ss1 $1 port     [0-9]) $(gb1 synced $(gcl eth.syncing)) $(gdi 0) 2>$p03; }
-function sz1 { snn $(fs3 Peers:     $r31) $(up0 $(ucl net_peerCount));printf 'el:p%02i:m%02i p2p:%5i %s i2:%i' $nr $nm $(ss1 $1 p2p-port [0-9]) $(ub1 synced $(ucl eth_syncing)) $(udi 0) 2>$p03; }
-function sz2 { bnn;printf 'cl:p%02i:m%02i p2p:%5i %s el:http %s' $nr $nm $(ss1 $1 port [0-9]) $(bb1 $(bcl syncing)) $(ss1 $1 execution-endpoint '[^ ]'|sed -n $r24) 2>$p03; }
-function sz3 { dtl;bo4;printf 'vl:c%02i:m%02i cc:http %s' $b2 $b3 $(ss1 $1 nodes '[^ ]'|sed -n $r24) 2>$p03; }
+function sz0 { gnn    ;printf 'el:p%02i:m%02i p2p:%5i %s i2:%i'       $nr $nm $(ss5 $1 port    ) "$(gb1 $(gcl eth.syncing))" $(gdi 0)                          2>$p03; }
+function sz1 { unn    ;printf 'el:p%02i:m%02i p2p:%5i %s i2:%i'       $nr $nm $(ss5 $1 p2p-port) "$(ub1 $(ucl eth_syncing))" $(udi 0)                          2>$p03; }
+function sz2 { bnn    ;printf 'cl:p%02i:m%02i p2p:%5i %s el:http %7s' $nr $nm $(ss5 $1 port)     "$(bb1 $(bcl syncing))"     $(ss4 $1 $r24 execution-endpoint) 2>$p03; }
+function sz3 { dtl;bo4;printf 'vl:c%02i:m%02i cc:http %s'             $b2 $b3                                                $(ss4 $1 $r24 nodes             ) 2>$p03; }
 function sso {
-  [[ $(sst $2 disabled) || ! $(sst $2 $2) ]] && return;dts;local e="$1 $(printf '%6s %10s %5s status: %-40s' $(ss1 $2 Memory:) $dt "$(ss2 $2)")"              # memory & status
+  [[ $(sst $2 disabled) || ! $(sst $2 $2) ]] && return;dts;local e="$1 $(printf '%6s %10s %5s status: %-40s' $(ss3 $2) $dt "$(ss2 $2)")"                      # memory & status
   [[ $1 = GETH ]] && e="$e $(sz0 $2)";[[ $1 = BESU ]] && e="$e $(sz1 $2)";[[ $1 = BEAC ]] && e="$e $(sz2 $2)";[[ $1 = VALI ]] && e="$e $(sz3 $2)";swn "$e"    # set homologous/avg & cl http
 }
 # el control commands
@@ -87,13 +90,15 @@ function gdi { if [[ $1 -gt 0 ]];then l4=$(rl4|tail -n$1);else l4=$(rl4);fi;nu2 
 function gcl { $p07/geth attach --exec $1 "http://$ciec:8545"               2>$p03 ; }                                                                        # exec RPC HTTP
 function gi0 { nu0 $(echo $@|sed -n 's%.*highestBlock: *\([0-9]*\).*%\1%ip' 2>$p03); }                                                                        # get el highest block
 function gc0 { nu0 $(echo $@|sed -n 's%.*currentBlock: *\([0-9]*\).*%\1%ip' 2>$p03); }                                                                        # get el current block
-function gv0 { nn=$(nu0 $(ss1 $s10 maxpeers [0-9])); }                                                                                                        # set configured peers
-function gq0 { nr=$(nu0 $(gcl net.peerCount      )); }                                                                                                        # set el current peers
-function gb1 { if [[ $(echo $@|grep false) ]];then [[ $1 ]] && printf " $1";else printf ' syncing: %6i' $(($(gi0 $@)-$(gc0 $@)));fi; }                        # get el syncing blocks remaining
+function gv0 { nn=$(ss5 $s10 maxpeers); }                                                                                                                     # set configured peers
+function gq0 { nr=$(nu0 $(gcl net.peerCount)); }                                                                                                              # set el current peers
+function gnn { snn $(fs3 peercount= $r30) $(nu0 $(gcl net.peerCount)); }                                                                                      # set cur/min/std el peers
+function gb1 { if [[ $(echo $@|grep false) ]];then printf 'synced';else printf  'syncing: %6i' $(($(gi0 $@)-$(gc0 $@)));fi; }                                 # get el syncing blocks remaining
+function gb2 { if [[ $(echo $@|grep false) ]];then printf         ;else printf ' syncing: %6i' $(($(gi0 $@)-$(gc0 $@)));fi; }                                 # get el syncing blocks remaining
 function gl0 {                                                                                                                                                # el report
   dts;ok=OK
   if [[ $(sst $s10 running) ]];then local e=$(gcl eth.syncing);gv0;gq0;eb0 $p10 $r30 $e
-    m="GETH $ok $(tsy $e) $(dnn) sgs: $(nu0 $e0 %4i)$(gb1 '' $e) i2: $(gdi 99)"                                                                               # OK SYC/NSY (dnn) sgs: 5 blocks: 8
+    m="GETH $ok $(tsy $e) $(dnn) sgs: $(nu0 $e0 %4i)$(gb2 $e) i2: $(gdi 99)"                                                                                  # OK SYC/NSY (dnn) sgs: 5 blocks: 8
   else
     m="GSRV NOT ON $dt"
   fi
@@ -110,13 +115,15 @@ function ucl { curl -sX POST --data "{\"jsonrpc\":\"2.0\",\"method\":\"$1\",\"pa
 function ui0 { nu0 $((16#$(nu0 $(echo $@|sed -n 's%.*highestBlock" *: *"0x\([^"]*\)".*%\1%ip' 2>$p03)))); }                                                   # get el highest block
 function uc0 { nu0 $((16#$(nu0 $(echo $@|sed -n 's%.*currentBlock" *: *"0x\([^"]*\)".*%\1%ip' 2>$p03)))); }                                                   # get el current block
 function up0 { nu0 $((16#$(nu0 $(echo $@|sed -n 's%.*result" *: *"0x\([^"]*\)".*%\1%ip'       2>$p03)))); }                                                   # get el result
-function uv0 { nn=$(nu0 $(ss1 $s11 max-peers [0-9])); }                                                                                                       # set configured peers
-function uq0 { nr=$(up0 $(ucl net_peerCount       )); }                                                                                                       # set el current peers
-function ub1 { if [[ $(echo $@|grep false) ]];then [[ $1 ]] && printf " $1";else printf ' syncing: %6i' $(($(ui0 $@)-$(uc0 $@)));fi; }                        # get el syncing blocks remaining
+function uv0 { nn=$(ss5 $s11 max-peers); }                                                                                                                    # set configured peers
+function uq0 { nr=$(up0 $(ucl net_peerCount)); }                                                                                                              # set el current peers
+function unn { snn $(fs3 Peers: $r31) $(up0 $(ucl net_peerCount)); }                                                                                          # set cur/min/std el peers
+function ub1 { if [[ $(echo $@|grep false) ]];then printf 'synced';else printf  'syncing: %6i' $(($(ui0 $@)-$(uc0 $@)));fi; }                                 # get el syncing blocks remaining
+function ub2 { if [[ $(echo $@|grep false) ]];then printf         ;else printf ' syncing: %6i' $(($(ui0 $@)-$(uc0 $@)));fi; }                                 # get el syncing blocks remaining
 function ul0 {                                                                                                                                                # el report
   dts;ok=OK
   if [[ $(sst $s11 running) ]];then local e=$(ucl eth_syncing);uv0;uq0;eb0 $p11 $r31 $e
-    m="BESU $ok $(tsy $e) $(dnn) sgs: $(nu0 $e0 %4i)$(ub1 '' $e) i2: $(udi 99)"                                                                               # OK SYC/NSY (dnn) sgs: 5 blocks: 8
+    m="BESU $ok $(tsy $e) $(dnn) sgs: $(nu0 $e0 %4i)$(ub2 $e) i2: $(udi 99)"                                                                                  # OK SYC/NSY (dnn) sgs: 5 blocks: 8
   else
     m="BSRV NOT ON $dt"
   fi
@@ -130,7 +137,7 @@ function bw0 { nu0 $((10*z1))                                                   
 function bf0 { nu0 $((90*z3))                                                            ; }                                                                  # get numerator general errors
 function bi0 { nu0 $((nd+zk*300+zz*20+zx))                                               ; }                                                                  # get delete day idx
 function bu0 { nu0 $(((z5>400?$(bz0)/z5:0)+(z2>300?$(bw0)/z2:0)+(z4>999?$(bf0)/z4:0)))   ; }                                                                  # get restart idx
-function bv0 { nn=$(nu0 $(ss1 $s12 target-peers [0-9])); }                                                                                                    # set configured peers
+function bv0 { nn=$(ss5 $s12 target-peers); }                                                                                                                 # set configured peers
 function bs0 { l0=$(fs4 $bpid] 3600); }                                                                                                                       # set last cc log lines
 function bs5 { l5=$(fs0 attestation.s); }                                                                                                                     # set attesta log lines
 function bb0 { bs0;bs5;bl1;bl2;[[ (1 -eq $(era $p12 $chrs) && $(bu0) -ge 1) || (1 -eq $(era $p12 5) && $(bu0) -ge 5) ]] && ok=BK; }                           # set ok (OK/BK)
@@ -387,10 +394,10 @@ function ah2 {                 uhx;swn "\n\n$znm2";cpe                ;bhx      
 function ah3 {                 uhx                ;cpx;swn "\n\n$znm3";bhs;cpe            ;ehx; }
 function ah4 {                 uhx                ;cpx                ;bhx;swn "\n\n$znm4";ghs;bhs;cpe; }
 function lhs {
-  if v2t;then local e=$(nu0 $(ss1 $s13 nodes "[^$1 ]"|sed -n $r25));else local e=$(ssh $(snc $cuvc) "export H=$H;~/eth2/t6 cci $1");fi                        # get master/slave cc ip
+  if v2t;then local e=$(nu0 $(ss4 $s13 $r25 nodes $1));else local e=$(ssh $(snc $cuvc) "export H=$H;~/eth2/t6 cci $1");fi                        # get master/slave cc ip
   [[ $e -gt 0 ]] || return;local i=$(sci)
   if [[ $i -eq $e ]];then                                                                                                                                     # get connected ec ip
-    local n=$(nu0 $(ss1 $s12 execution-endpoint '[^ ]'|sed -n $r25))
+    local n=$(nu0 $(ss4 $s12 $r25 execution-endpoint))
   else
     local n=$(ssh $(snc $(sni $e)) "export H=$H;~/eth2/t6 eci")
   fi;[[ $n -gt 0 ]] || return;    echo -e "\n$(sni $n)";if [[ $i -eq $n ]];then ghs;uhs;    else ssh $(snc $(sni $n)) "export H=$H;~/eth2/t6 ehs";fi          # ec historic report summary
@@ -478,8 +485,8 @@ function mvr { local f=$p02/validator_keys/keystore;if [[ $(ls $f*.json 2>$p03) 
 [[ $1 = gbs ]] && { ghs;bhs;cpe; }                                                                                                                            #        ec/cc/system    reports
 [[ $1 = mhs ]] && { lhs ,; }                                                                                                                                  # master ec/cc/vc/system reports
 [[ $1 = shs ]] && { lhs  ; }                                                                                                                                  # slave  ec/cc/vc/system reports
-[[ $1 = cci ]] && { nu0 $(ss1 $s13 nodes            "[^$2 ]"|sed -n $r25); }                                                                                  # cc ip vc uses
-[[ $1 = eci ]] && { nu0 $(ss1 $s12 execution-endpoint '[^ ]'|sed -n $r25); }                                                                                  # ec ip cc uses
+[[ $1 = cci ]] && { nu0 $(ss4 $s13 $r25 nodes $2); }                                                                                                          # cc ip vc uses
+[[ $1 = eci ]] && { nu0 $(ss4 $s12 $r25 execution-endpoint); }                                                                                                # ec ip cc uses
 [[ $1 = bo  && -f $p12 ]] && { boi $(pt1 $@ 00:00);if [[ $(pt3 $@ s) = n ]];then b6=$b2;else b6=$(pt2 $@ 0);fi;bo5; }
 [[ $1 = bon && -f $p12 ]] && { bv0;l2=$(bff 23:58);bo6 $(pt2 $2 $nn); }
 [[ $1 = boc && -f $p12 ]] && { unset v;read -a v <<< $(bff|tail -n1);l2=$(bff $(pt1 $2 ${v[4]}));boa; }
