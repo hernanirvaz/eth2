@@ -94,7 +94,7 @@ function gv0 { nn=$(ss5 $s10 maxpeers); }                                       
 function gq0 { nr=$(nu0 $(gcl net.peerCount)); }                                                                                                              # set el current peers
 function gnn { snn $(fs3 peercount= $r30) $(nu0 $(gcl net.peerCount)); }                                                                                      # set cur/min/std el peers
 function gb1 { if [[ $(echo $@|grep false) ]];then printf 'synced';else printf  'syncing: %6i' $(($(gi0 $@)-$(gc0 $@)));fi; }                                 # get el syncing blocks remaining
-function gb2 { if [[ $(echo $@|grep false) ]];then printf         ;else printf ' syncing: %6i' $(($(gi0 $@)-$(gc0 $@)));fi; }                                 # get el syncing blocks remaining
+function gb2 { if [[ $(echo $@|grep false) ]];then printf ''      ;else printf ' syncing: %6i' $(($(gi0 $@)-$(gc0 $@)));fi; }                                 # get el syncing blocks remaining
 function gl0 {                                                                                                                                                # el report
   dts;ok=OK
   if [[ $(sst $s10 running) ]];then local e=$(gcl eth.syncing);gv0;gq0;eb0 $p10 $r30 $e
@@ -119,7 +119,7 @@ function uv0 { nn=$(ss5 $s11 max-peers); }                                      
 function uq0 { nr=$(up0 $(ucl net_peerCount)); }                                                                                                              # set el current peers
 function unn { snn $(fs3 Peers: $r31) $(up0 $(ucl net_peerCount)); }                                                                                          # set cur/min/std el peers
 function ub1 { if [[ $(echo $@|grep false) ]];then printf 'synced';else printf  'syncing: %6i' $(($(ui0 $@)-$(uc0 $@)));fi; }                                 # get el syncing blocks remaining
-function ub2 { if [[ $(echo $@|grep false) ]];then printf         ;else printf ' syncing: %6i' $(($(ui0 $@)-$(uc0 $@)));fi; }                                 # get el syncing blocks remaining
+function ub2 { if [[ $(echo $@|grep false) ]];then printf ''      ;else printf ' syncing: %6i' $(($(ui0 $@)-$(uc0 $@)));fi; }                                 # get el syncing blocks remaining
 function ul0 {                                                                                                                                                # el report
   dts;ok=OK
   if [[ $(sst $s11 running) ]];then local e=$(ucl eth_syncing);uv0;uq0;eb0 $p11 $r31 $e
