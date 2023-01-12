@@ -143,8 +143,8 @@ function bs0 { l0=$(fs4 $bpid] 3600); }                                         
 function bs3 { l3=$(fs0 attestation.s); }                                                                                                                     # set attesta log lines
 function bs5 { l5=$(echo "$l1"|sed -nEe "s%.+node$g:.+er: +([0-9]+) +([0-9]+) +([0-9]+) +([0-9]+).+%\1\t\2\t\3\t\4%p" 2>$p03); }                              # set penalty errors log lines
 function bb0 { bs0;bs3;bl1;bl2;[[ (1 -eq $(era $p12 $chrs) && $(bu0) -ge 1) || (1 -eq $(era $p12 5) && $(bu0) -ge 5) ]] && ok=BK; }                           # set ok (OK/BK)
-function bbl { wc -l $p12|cut -d' ' -f1; }                                                                                                                    # get cc       line count
-function bml { wc -l $p13|cut -d' ' -f1; }                                                                                                                    # get cc-daily line count
+function bbl { wc -l $p12 2>$p03|cut -d' ' -f1; }                                                                                                             # get cc       line count
+function bml { wc -l $p13 2>$p03|cut -d' ' -f1; }                                                                                                             # get cc-daily line count
 function bfl { grep "BEAC.*$1"      2>$p03; }                                                                                                                 # filter cc lines
 function bff { grep "BEAC.*$1" $p12 2>$p03; }                                                                                                                 # filter cc log
 function bnn { snn $(fs3 peers:) $(bpc $(bcl peer_count)); }                                                                                                  # set cur/min/std cc peers
@@ -175,11 +175,11 @@ function bmo { m="BM $(printf '%4i %3i' $b2 $b3 2>$p03) $(dnn) $(bma 'mp:') all_
 function bms { m="BM $(printf '%4i %3i' $b2 $b3 2>$p03) $(dnn) penalty: $(nu0 ${a[$nn]} %4i) avg: $(bmp)"; }
 #    0   1          2     3    4 5 6 7 8 9 10 11   12 13 14 15 16 17 18 19   20 21 22 23 24 25 26 27   28 29 30 31 32 33 34 35   36 37 38 39 40 41 42 43
 # BEAC 682 2022-03-16 11:03 cnt: 4 7 0 0 0 10 10 mis: 20 20 20 20 20 20 20 mat: 14 45 30 30 30 30 30 mah: 94 68 40 40 40 40 40 dly: 79 09 50 50 50 50 50
-function bno { m="BEAC $(nu0 $(bbl) %6i) $dt $(bnc 'cnt:' ' ') $(bnk 'mis:' ' ') $(bnz 'mat:' ' ') $(bnx 'mah:' ' ') $(bnw 'dly:' ' ')"; }
+function bno { m="BEAC $(printf %6i $(bbl) 2>$p03) $dt $(bnc 'cnt:' ' ') $(bnk 'mis:' ' ') $(bnz 'mat:' ' ') $(bnx 'mah:' ' ') $(bnw 'dly:' ' ')"; }
 function bmi { zk=0;zz=0;zx=0;unset v;v[1]=0;unset k;k[0]=0;unset z;z[0]=0;unset x;x[0]=0;unset w;w[0]=0;unset c;c[0]=0;unset a;a[0]=0;bm6; }                 # ini err/cnt/avg penalty arrays
 function bm0 {                                                                                                                                                # cc-daily report
   [[ -f $p12 ]] || return;bmi;b4=0;dts;bv0;bnn;bs3;bl2;[[ -f $p14 ]] && bm4;lg3 0                                                                             # set vars/arrays
-  l1=$(tail -n$(($(bbl)-v[1])) $p12 2>$p03|bfl);[[ $l1 ]] && bm1;bm2;[[ $b2 -eq 0 ]] && boi;bo3;bm5 ${a[$nn]};b7="peers$(bdc)$(bcc)io:"                       # add cc lines & homologous/avg position
+  l1=$(tail -n$(($(nu0 $(bbl))-v[1])) $p12 2>$p03|bfl);[[ $l1 ]] && bm1;bm2;[[ $b2 -eq 0 ]] && boi;bo3;bm5 ${a[$nn]};b7="peers$(bdc)$(bcc)io:"                # add cc lines & homologous/avg position
 }
 function bm1 { local g=${1:-$bpri};bs5;[[ $l5 ]] && { bkm $g;bzm $g;bxm $g;bwm $g;bcm $g; };((g<bprf)) && bm1 $((g+bprs)); }                                  # recursively sum penalty errors arrays
 function bm2 { k[0]=$(($(bnk)));z[0]=$(($(bnz)));x[0]=$(($(bnx)));w[0]=$(($(bnw)));c[0]=$(($(bnc)));a[0]=$(bm3 0);bm7; }                                      # tot err/cnt/penalty arrays
