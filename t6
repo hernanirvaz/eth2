@@ -273,8 +273,7 @@ function bsl {                                                                  
 function bnt { [[ $b4 -ne 0 ]]; }                                                                                                                             # peers need change test
 function bht { [[ $b2 -gt $b3 ]]; }                                                                                                                           # homologous/avg position test
 function bst { [[ $(bi0) -ge 2500 ]]; }                                                                                                                       # peers standard deviation test
-function bbt { [[ $(grep $d0 $p12 2>$p03|wc -l) -gt 0 ]]; }                                                                                                   # exists cc log day test
-function bct { local n=$((nn-5));[[ $nm -ge $n && $(era $p12 $chrs) -eq 1 ]] && ( (bnt && bht && ! bst) || sot); }                                            # change configured peers test
+function bct { [[ $nm -ge $((nn-5)) && $(era $p12 $chrs) -eq 1 ]] && ( (bnt && bht && ! bst) || sot); }                                                       # change configured peers test
 function bdw { [[ -f $1 ]] || return;cp $1 $1.o;grep -v $2 $1.o > $1;grep $2 $1.o > $1.d; }                                                                   # work to delete cc log day
 function bdl { local d=$(pt0 $1 sai);[[ $d = sai ]] && return;bdw $p12 $d;bdw $p13 $d; }                                                                      #         delete cc log day
 function wst { echo $@|sed 's%[^: ]*: *%%g;s%inactive%off%;s%active%on%' 2>$p03; }                                                                            # get ufw info
@@ -469,7 +468,7 @@ function mvr { local f=$p02/validator_keys/keystore;if [[ $(ls $f*.json 2>$p03) 
 [[ $1 = bm  ]] && { bm0;bmo;swn "$m"; }
 [[ $1 = bn  ]] && { bm0;bno;swn "$m"; }
 [[ $1 = blf ]] && { bl0;swn "$m" >> $p12;stt && bo4 && bht && bst && bdl $d0;v2t && [[ $ok != OK ]] && brs 0;pas; }                                           # cl log/delete/restart & parameter set
-[[ $1 = bmf ]] && { bm0;bms;bbt && swn "$m" >> $p13;bct && brs $b4 $(btr PE) 120; }
+[[ $1 = bmf ]] && { bm0;bms;[[ $(grep $d0 $p12 2>$p03|wc -l) -gt 0 ]] && swn "$m" >> $p13;bct && brs $b4 $(btr PE) 120; }
 [[ $1 = bnf ]] && { bm0;bno;swn "$m" >> $p14; }
 [[ $1 = gh  ]] && { eh0 $p10 $2;[[ $2 ]] || { gl0;swn "$m\n";ghs;cpe; } }
 [[ $1 = uh  ]] && { eh0 $p11 $2;[[ $2 ]] || { ul0;swn "$m\n";uhs;cpe; } }
