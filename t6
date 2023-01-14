@@ -273,9 +273,8 @@ function bsl {                                                                  
 function bnt { [[ $b4 -ne 0 ]]; }                                                                                                                             # peers need change test
 function bht { [[ $b2 -gt $b3 ]]; }                                                                                                                           # homologous/avg position test
 function bst { [[ $(bi0) -ge 2500 ]]; }                                                                                                                       # peers standard deviation test
-function btt { bnt && bht && ! bst; }                                                                                                                         # peers change global test
 function bbt { [[ $(grep $d0 $p12 2>$p03|wc -l) -gt 0 ]]; }                                                                                                   # exists cc log day test
-function bct { local n=$((nn-5));[[ $nm -ge $n && $(era $p12 $chrs) -eq 1 ]] && ( btt || sot ); }                                                             # change configured peers test
+function bct { local n=$((nn-5));[[ $nm -ge $n && $(era $p12 $chrs) -eq 1 ]] && ( (bnt && bht && ! bst) || sot); }                                            # change configured peers test
 function bdw { [[ -f $1 ]] || return;cp $1 $1.o;grep -v $2 $1.o > $1;grep $2 $1.o > $1.d; }                                                                   # work to delete cc log day
 function bdl { local d=$(pt0 $1 sai);[[ $d = sai ]] && return;bdw $p12 $d;bdw $p13 $d; }                                                                      #         delete cc log day
 function wst { echo $@|sed 's%[^: ]*: *%%g;s%inactive%off%;s%active%on%' 2>$p03; }                                                                            # get ufw info
