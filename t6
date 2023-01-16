@@ -273,7 +273,7 @@ function bsl {                                                                  
   rm -f $p14.s;head -n$(($(cat $p14|wc -l)-1)) $p14 > $p14.s;tail -n1 $p14|sed 's%BEAC [0-9]*%BEAC 0%' >> $p14.s                                              # new    barqivo log output
 }
 function bnt { [[ $b4 -ne 0 ]]; }                                                                                                                             # peers need change test
-unction bht { [[ $b2 -gt $b3 ]]; }                                                                                                                           # homologous/avg position test
+function bht { [[ $b2 -gt $b3 ]]; }                                                                                                                           # homologous/avg position test
 function bst { [[ $(bi0) -ge 2500 ]]; }                                                                                                                       # peers standard deviation test
 function bct { [[ $nm -ge $((nn-5)) && $(era $p12 $chrs) -eq 1 ]] && ( (bnt && bht && ! bst && ! srt) || sot); }                                              # change configured peers test
 function bdw { [[ -f $1 ]] || return;cp $1 $1.o;grep -v $2 $1.o > $1;grep $2 $1.o > $1.d; }                                                                   # work to delete cc log day
