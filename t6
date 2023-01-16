@@ -158,7 +158,7 @@ function bdc { if bht && bst;then printf d;else printf _;fi; }                  
 function bmp { printf '%4i %9s %4i %3i %4i %4i %4i' ${a[0]} $b7 $(bi0) $b4 $b1 $b5 $(bi1) 2>$p03; }                                                           # get peer__io: partial
 function bl0 { dts;ok=OK;if [[ $(sst $s12 running) ]];then bl3;bv0;bnn;bb0;blo;else m="BSRV NOT ON $dt";fi; }                                                 # cc report
 function bl1 {                                                                                                                                                # set restart idx vars
-  z1=${1:-$(echo "$l0"|grep 'RPC block'|wc -l)};z2=${2:-$(echo "$l0"|grep 'New block'|wc -l)};z3=${3:-$(echo "$l0"|grep -v ' INFO ' |wc -l)}                  # set processed/received blocks,error lines
+  z1=${1:-$(echo "$l0"|grep 'RPC block'|wc -l)};z2=${2:-$(echo "$l0"|grep 'New block'|wc -l)};z3=${3:-$(echo "$l0"|grep -v ' INFO '|wc -l)}                   # set processed/received blocks,error lines
   z4=${4:-$(echo "$l0"|grep ' INFO '   |wc -l)};z5=${5:-$(bl4 success)};zw=${6:-$(bl4 had)};ok=${7:-OK}                                                       # set info lines,success/had activities
 }
 function bl2 { zk=${1:-$(bl4 missing)};zz=${2:-$(bl4 target)};zx=${3:-$(bl4 head)}; }                                                                         # set missing/target/head activities
@@ -273,7 +273,7 @@ function bsl {                                                                  
   rm -f $p14.s;head -n$(($(cat $p14|wc -l)-1)) $p14 > $p14.s;tail -n1 $p14|sed 's%BEAC [0-9]*%BEAC 0%' >> $p14.s                                              # new    barqivo log output
 }
 function bnt { [[ $b4 -ne 0 ]]; }                                                                                                                             # peers need change test
-function bht { [[ $b2 -gt $b3 ]]; }                                                                                                                           # homologous/avg position test
+unction bht { [[ $b2 -gt $b3 ]]; }                                                                                                                           # homologous/avg position test
 function bst { [[ $(bi0) -ge 2500 ]]; }                                                                                                                       # peers standard deviation test
 function bct { [[ $nm -ge $((nn-5)) && $(era $p12 $chrs) -eq 1 ]] && ( (bnt && bht && ! bst && ! srt) || sot); }                                              # change configured peers test
 function bdw { [[ -f $1 ]] || return;cp $1 $1.o;grep -v $2 $1.o > $1;grep $2 $1.o > $1.d; }                                                                   # work to delete cc log day
@@ -284,14 +284,14 @@ function tmp {
   local d=$(fs5|grep throttled|head -n1|sed "$r27");local e=$(fs5|grep normal|tail -n1|sed "$r27");local l=$(pex "smartctl --json=c -x /dev/sda")
   local g=$(echo $(echo $l|jq -r "$r40" 2>$p03) $(echo $l|jq -r "$r41" 2>$p03));local l=$(sensors 2>$p03|sed -n "$r26")
   if [[ $cunm = $znm4 ]];then local g=$(echo $g $(pex "smartctl --json=c -x /dev/nvme0n1"|jq -r "$r40" 2>$p03));fi
-  [[ $1$d$e || $(nu3 1 0 $l) -ge 50 || $(nu3 1 0 $g) -ge 40 ]] || return;[[ $d ]] && d="throttled: $d";[[ $e ]] && e="normal: $e"
+  [[ $1$d$e || $(nu3 1 0 $l) -ge 50 || $(nu3 1 0 $g) -ge 40 ]] || return;[[ $d ]] && local d="throttled: $d";[[ $e ]] && local e="normal: $e"
   swn "TEMP $(printf '%5.1fC %10s %5s ssd: %.1fC %s %s' $(nu3 1 1 $l) $dt $(nu3 1 1 $g) $d $e 2>$p03)"                                                        # TEMP cpu/ssd info
 }
 function cpe {                                                                                                                                                # system status
-  local e='NO';[[ $($s07|sed -n 's%.*synchronized: \([a-z]*\) *%\1%p') = yes ]] && e='OK';dts
-  if [[ $(sst $s19 masked) ]];then e="CNTP $e";m=$(ss2 ntp);else e="CSYS $e";m=$(ss2 $s19);fi
+  local e='NO';[[ $($s07|sed -n 's%.*synchronized: \([a-z]*\) *%\1%p') = yes ]] && local e='OK';dts
+  if [[ $(sst $s19 masked) ]];then local e="CNTP $e";m=$(ss2 ntp);else local e="CSYS $e";m=$(ss2 $s19);fi
   swn "$e $(nu1 %3i $(fs0 clock|wc -l)) $dt status: $m";[[ $1 = c ]] && return;tmp;[[ $1 = p ]] && return                                                     # clock & temperature info
-  if [[ $(cat $p44 2>$p03) -eq 0 ]];then e=off;else e=on;fi;if [[ $(cat $p43 2>$p03) -eq 1 ]];then d=off;else d=on;fi                                         # usb/cpu current state
+  if [[ $(cat $p44 2>$p03) -eq 0 ]];then local e=off;else local e=on;fi;if [[ $(cat $p43 2>$p03) -eq 1 ]];then local d=off;else local d=on;fi                 # usb/cpu current state
   m="INFO$(printf '%3i %3i %10s %5s' $(fs2|grep usb|grep -i error|wc -l) $(fs5|wc -l) $dt 2>$p03)"                                                            # usb/cpu erros count
   m="$m usb $e, turbo $d, ufw $(wst $(pex 'ufw status'|grep Status:))"                                                                                        # usb/cpu/ufw info
   m="$m, uptime:$(uptime|sed 's%[0-9]*:[0-9]*:[0-9]*%%;s%[0-9]* users*,%%;s% average\([^,]*\).*%\1%;s%  *% %g')";swn "$m"                                     # uptime/load info
