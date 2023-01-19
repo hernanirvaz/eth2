@@ -471,8 +471,8 @@ function mvr { local f=$p02/validator_keys/keystore;if [[ $(ls $f*.json 2>$p03) 
 [[ $1 = blf ]] && { bl0;swn "$m" >> $p12;[[ $d1 =~ 23:5[89] ]] && bo4 && tha && tsd && bdl $d0;v2t && [[ $ok != OK ]] && brs 0;pas; }                         # cl log/delete/restart & parameter set
 [[ $1 = bmf ]] && { bm0;bms;[[ $(grep $d0 $p12 2>$p03|wc -l) -gt 0 ]] && swn "$m" >> $p13;tbp && brs $b4 $(btr PE) 120; }
 [[ $1 = bnf ]] && { bm0;bno;swn "$m" >> $p14; }
-[[ $1 = gh  ]] && { eh0 $p10 $2;[[ $2 ]] || { gl0;swn "$m\n";ghs;cpe; } }
-[[ $1 = uh  ]] && { eh0 $p11 $2;[[ $2 ]] || { ul0;swn "$m\n";uhs;cpe; } }
+[[ $1 = gh  ]] && { eh0 $p10 $2;[[ $2 ]] || { gl0;swn "$m"; } }
+[[ $1 = uh  ]] && { eh0 $p11 $2;[[ $2 ]] || { ul0;swn "$m"; } }
 [[ $1 = bh  ]] && { bh0 $2; }
 [[ $1 = bio ]] && { bio ${2:-2};swn "$m"; }
 [[ $1 = ahs ]] && { [[ $cunm = $znm1 ]] && ah1;[[ $cunm = $znm2 ]] && ah2;[[ $cunm = $znm3 ]] && ah3;[[ $cunm = $znm4 ]] && ah4; }
