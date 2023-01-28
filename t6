@@ -21,7 +21,6 @@ function fs2 { pex "grep -v ${1:-$r34}     $p01"; }                             
 function fs3 { fs0 $1 $2|lg0 .*$1 ; }                                                                                                                         # get peers    syslog lines
 function fs4 { fs0 $1   |tail -n$2; }                                                                                                                         # get specific syslog lines
 function fs5 { fs2      |tail -n300|grep Core.*temperature; }                                                                                                 # get tail cpu syslog lines
-function fs6 { fs0 attestation.s; }                                                                                                                           # get attestations log lines
 function fl0 { if [[ $1 ]];then grep -i "[a-z][a-z][a-z]  *[0-9]* $1";else grep -i  'error'    ;fi; }                                                         # filter error    log lines
 function fl1 { if [[ $1 ]];then grep -i "[a-z][a-z][a-z]  *[0-9]* $1";else grep -iv '[ =]INFO ';fi; }                                                         # filter ^INFO    log lines
 function fl2 { if [[ $1 ]];then grep -i "[a-z][a-z][a-z]  *[0-9]* $1";else grep -iv 'success'  ;fi; }                                                         # filter ^success log lines
@@ -152,7 +151,7 @@ function bdp { nu2 "($1*$pmis+$2*$pmat+$3*$pmah+$4*$pdly)/${5:-1}*$rate/1000000"
 function bdr { nu2 "($1*$ratt+$2*$rblk)*$rate/100000000"                         7; }                                                                         # get reward
 function bv0 { nn=$(ss5 $s12 target-peers); }                                                                                                                 # set configured peers
 function bs0 { l0=$(fs4 $bpid] 3600); }                                                                                                                       # set last cc log lines
-function bs3 { l3=$(fs6); }                                                                                                                                   # set attesta log lines
+function bs3 { l3=$(fs0 $r48); }                                                                                                                              # set attesta log lines
 function bs5 { l5=$(echo "$l1"|sed -nEe "s%.+node$g:.+er: +([0-9]+) +([0-9]+) +([0-9]+) +([0-9]+).+%\1\t\2\t\3\t\4%p" 2>$p03); }                              # set penalty errors log lines
 function bb0 { bs0;bs3;bl1;bl2;[[ (1 -eq $(era $p12 $chrs) && $(bi2) -ge 1) || (1 -eq $(era $p12 5) && $(bi2) -ge 5) ]] && ok=BK; }                           # set ok (OK/BK)
 function bfl { grep "BEAC.*$1"      2>$p03; }                                                                                                                 # filter cc lines
@@ -169,7 +168,7 @@ function bl1 {                                                                  
   z4=${4:-$(echo "$l0"|grep ' INFO '   |wc -l)};z5=${5:-$(bl4 success)};zw=${6:-$(bl4 had)};ok=${7:-OK}                                                       # set info lines,success/had activities
 }
 function bl2 { zk=${1:-$(bl4 missing)};zz=${2:-$(bl4 target)};zx=${3:-$(bl4 head)}; }                                                                         # set missing/target/head activities
-function bl3 { b0=${1:-$(fs0 Block.from.API|wc -l)};if [[ $2$3 ]];then b1=$2;b5=$3;else lg3 2;fi; }                                                           # set pub-blocks & imported/observed delays
+function bl3 { b0=${1:-$(fs0 $r47|wc -l)};if [[ $2$3 ]];then b1=$2;b5=$3;else lg3 2;fi; }                                                                     # set pub-blocks & imported/observed delays
 function bl4 { echo "$l3"|sed -n "s%.*$1.*validators: *\[\(.*\)\].*%\1%p"|wc -w; }                                                                            # get number of paid activities
 #    0  1   2          3     4       5  6   7    8    9  10   11  12 13  14 15 16  17 18 19   20  21 22   23   24  25   26   27   28
 # BEAC OK   0 2022-11-21 23:46 node50: 55 rp: 3728 2630 ab: 4906 1350 0 er:  0 10 103 12  0  547   0  3 3597  270 io:  370 4336 1163
@@ -510,13 +509,13 @@ function mvr { local f=$p02/validator_keys/keystore;if [[ $(ls $f*.json 2>$p03) 
 [[ $1 = lp  ]] && { netstat -tulpn; }
 # outros journal system/lighthouse
 [[ $1 = el  ]] && { if [[ $(sst $s10 running) ]];then fs1 $r30;else fs1 $r31;fi|fl1 $2; }
-[[ $1 = al  ]] && { fs6      |fl2 $2; }
-[[ $1 = sl  ]] && { fs2      |fl0 $2; }
-[[ $1 = cl  ]] && { fs1 $r32 |fl1 $2; }
-[[ $1 = ml  ]] && { fs1 $r33 |fl1 $2; }
-[[ $1 = ll  ]] && { rl3      |fl1 $2; }
-[[ $1 = ci  ]] && { rl1      |fl1 $2; }
-[[ $1 = vi  ]] && { rl2      |fl1 $2; }
+[[ $1 = al  ]] && { fs0 "\($r47\|$r48\)"|fl2 $2; }
+[[ $1 = sl  ]] && { fs2                 |fl0 $2; }
+[[ $1 = cl  ]] && { fs1 $r32            |fl1 $2; }
+[[ $1 = ml  ]] && { fs1 $r33            |fl1 $2; }
+[[ $1 = ll  ]] && { rl3                 |fl1 $2; }
+[[ $1 = ci  ]] && { rl1                 |fl1 $2; }
+[[ $1 = vi  ]] && { rl2                 |fl1 $2; }
 [[ $1 = ws  ]] && { cex 'ufw status numbered'; }
 [[ $1 = wa  ]] && { wa; }
 [[ $1 = we  ]] && { yex 'ufw enable'; }

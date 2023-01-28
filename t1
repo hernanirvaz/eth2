@@ -211,6 +211,8 @@ r43='s%.* in '                                                                  
 r44='Delayed.head.block'                                                                                                                                      # cc imported/observed block log lines
 r45='s%.*imported_delay: '                                                                                                                                    # imported delay
 r46='s%.*observed_delay: '                                                                                                                                    # observed delay
+r47='Block.from.API'                                                                                                                                          # logs for new blocks
+r48='attestation.s'                                                                                                                                           # logs for attestations
 
 function swb { echo -e "\n\e[5m${1^^}\e[25m\n"; }                                                                                                             # get flash
 function swu { echo -e "${1^^}"; }                                                                                                                            # get upper
