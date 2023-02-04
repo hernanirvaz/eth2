@@ -331,8 +331,8 @@ function efw { if [[ $cust = hrv ]];then pai $1 192.168.8.0/24 $2 $3;else pai $1
 function eop { local e=30303;[[ $cunm = $znm1 ]] || e=30304;pae $e elp2p;pde 8545 elapi delete;pde 8551 eljwt delete;efw 8545 elapi       ;efw 8551 eljwt       ; }
 function eco { local e=30303;[[ $cunm = $znm1 ]] || e=30304;pde $e elp2p;pde 8545 elapi       ;pde 8551 eljwt       ;efw 8545 elapi delete;efw 8551 eljwt delete; }
 function bfw { if [[ $cust = hrv ]];then pai $1 192.168.8.0/24 $2 $3;else pai $1 $vip3 $2 $3;fi; }
-function bop { local e=9000 ;[[ $cunm = $znm3 ]] || e=9004 ;pae $e clp2p;pde 5052 clapi delete;pde 8551 cljwt delete;bfw 5052 clapi       ;bfw 8551 cljwt       ; }
-function bco { local e=9000 ;[[ $cunm = $znm3 ]] || e=9004 ;pde $e clp2p;pde 5052 clapi       ;pde 8551 cljwt       ;bfw 5052 clapi delete;bfw 8551 cljwt delete; }
+function bop { local e=9000 ;[[ $cunm = $znm4 ]] || e=9004 ;pae $e clp2p;pde 5052 clapi delete;pde 8551 cljwt delete;bfw 5052 clapi       ;bfw 8551 cljwt       ; }
+function bco { local e=9000 ;[[ $cunm = $znm4 ]] || e=9004 ;pde $e clp2p;pde 5052 clapi       ;pde 8551 cljwt       ;bfw 5052 clapi delete;bfw 8551 cljwt delete; }
 function vfw { if [[ $cust = hrv ]];then pai $1 192.168.8.0/24 $2 $3;else pai $1 $vip1 $2 $3;fi; }
 function vop { vfw 5064 vcapi       ;pde 5064 vcapi delete; }
 function vco { vfw 5064 vcapi delete;pde 5064 vcapi       ; }
