@@ -35,7 +35,7 @@ if [[ $cunm = $znm2 ]];then
   cex 'apt install nginx plexmediaserver transmission-cli transmission-common transmission-daemon -y'                                                         # install nginx/plex/transmission
   sex "usermod -a -G debian-transmission eu";sex "mkdir -p /sata/downloads";cmw /sata/downloads 775 debian-transmission                                       # prepare downloads
   cc4 $p32 "$r20"                           ;cmw $p32 644 root               ;sex "$s00 reload $s22"                                                          # nginx config for plex
-  cc1 $p33 "$r12"                           ;cmw $p33 600 debian-transmission;sex "$s00 reload $s15"                                                          # transmission config
+  cc1 $p33 "$r49"                           ;cmw $p33 600 debian-transmission;sex "$s00 reload $s15"                                                          # transmission config
 else
   cex "$s07 set-ntp on"                                                                                                                                       # use timesyncd (lightweight)
 fi

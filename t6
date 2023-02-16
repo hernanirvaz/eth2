@@ -402,8 +402,7 @@ function lhs {
 }
 function nsh { $s08 list;$s08 status;$s09 status|sed -n 's%\(Current DNS\).*:%   \1:%ip'; }                                                                   # network/dns info
 function wlp { local e="$1";shift;until [[ $# -lt 1 ]];do e="$e\|$1";shift;done;fs2|grep '\[UFW'|if [[ $e ]];then grep -v "$e";else cat;fi; }
-function c0t { [[ $(sed -n 's%.*--execution-endpoint  *[^ ]*/\([0-9\.]*\):8551.*%\1%p' $p04/$s12.service 2>$p03) = $zip1 ]]; }                                # cc choose el server test
-function c0c { local e="$r11";c0t && e="$r10";sed "$e" $s12.sav > $p04/$s12.service; }                                                                        # cc change el server
+function c0c { local e="$r11";[[ $(sed -n "$r12" $p04/$s12.service 2>$p03) = $zip1 ]] && e="$r10";sed "$e" $s12.sav > $p04/$s12.service; }                    # cc change el server
 function ble { tbf || return;cp $p04/$s12.service $p02/$s12.sav;sed "$1" $p02/$s12.sav > $p04/$s12.service;dmr; }                                             # cc service edit
 function cce { tbf || return;cp $p04/$s12.service $p02/$s12.sav;c0c;cmw $p04/$s12.service 644 eth; }                                                          # cc change el server (merge)
 function vcc { tvf || return;cp $p04/$s13.service $p02/$s13.sav;sed "$r19" $s13.sav > $p04/$s13.service;cmw $p04/$s13.service 644 eth; }                      # vc switch cc server order

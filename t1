@@ -86,13 +86,7 @@ r09="${r09}\npool 1.europe.pool.ntp.org iburst"
 r09="${r09}\npool 0.ubuntu.pool.ntp.org iburst"
 r10="s%--execution-endpoint  *\([^ ]*/\)[0-9\.]*:8551[^ ]*%--execution-endpoint \1$zip4:8551%"                                                                # cc service change to 34 (merge)
 r11="s%--execution-endpoint  *\([^ ]*/\)[0-9\.]*:8551[^ ]*%--execution-endpoint \1$zip1:8551%"                                                                # cc service change to 25 (merge)
-r12="s%download-dir\": \"[^\"]*\"%download-dir\": \"/sata/downloads\"%"                                                                                       # transmission config
-r12="$r12;s%incomplete-dir\": \"[^\"]*\"%incomplete-dir\": \"/sata/downloads\"%"
-r12="$r12;s%lpd-enabled\": .*%lpd-enabled\": true,%"
-r12="$r12;s%rpc-whitelist\": \"[^\"]*\"%rpc-whitelist\": \"127.0.0.1,192.168.8.*\"%"
-r12="$r12;s%rpc-username\": \"[^\"]*\"%rpc-username\": \"eu\"%"
-r12="$r12;s%rpc-password\": \"[^\"]*\"%rpc-password\": \"\"%"
-r12="$r12;s%umask\": [0-9]*%umask\": 2%"
+r12="s%.*--execution-endpoint  *[^ ]*/\([0-9\.]*\):8551.*%\1%p"                                                                                               # cc choose el server test
 r13='s%^ *#*NTP=.*$%NTP=time.google.com time.cloudflare.com time.facebook.com%i'                                                                              # general time servers
 r14="\n$p01\n{\n\trotate 7\n\tdaily\n\tmissingok\n\tnotifempty\n\tnocompress\n\tsharedscripts\n\tpostrotate\n\t\t/usr/lib/rsyslog/rsyslog-rotate\n\tendscript\n}"
 r15=""
@@ -213,6 +207,13 @@ r45='s%.*imported_delay: '                                                      
 r46='s%.*observed_delay: '                                                                                                                                    # observed delay
 r47='Block.from.API'                                                                                                                                          # logs for new blocks
 r48='attestation.s'                                                                                                                                           # logs for attestations
+r49="s%download-dir\": \"[^\"]*\"%download-dir\": \"/sata/downloads\"%"                                                                                       # transmission config
+r49="$r49;s%incomplete-dir\": \"[^\"]*\"%incomplete-dir\": \"/sata/downloads\"%"
+r49="$r49;s%lpd-enabled\": .*%lpd-enabled\": true,%"
+r49="$r49;s%rpc-whitelist\": \"[^\"]*\"%rpc-whitelist\": \"127.0.0.1,192.168.8.*\"%"
+r49="$r49;s%rpc-username\": \"[^\"]*\"%rpc-username\": \"eu\"%"
+r49="$r49;s%rpc-password\": \"[^\"]*\"%rpc-password\": \"\"%"
+r49="$r49;s%umask\": [0-9]*%umask\": 2%"
 
 function ga  { [[ $(sst $s10       ) ]] && cex "$s03 $s10"; }                                                                                                 # start eth-geth
 function gp  { [[ $(sst $s10 loaded) ]] && cex "$s02 $s10"; }                                                                                                 # stop eth-geth
