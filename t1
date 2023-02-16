@@ -214,6 +214,10 @@ r46='s%.*observed_delay: '                                                      
 r47='Block.from.API'                                                                                                                                          # logs for new blocks
 r48='attestation.s'                                                                                                                                           # logs for attestations
 
+function ga  { [[ $(sst $s10       ) ]] && cex "$s03 $s10"; }                                                                                                 # start eth-geth
+function gp  { [[ $(sst $s10 loaded) ]] && cex "$s02 $s10"; }                                                                                                 # stop eth-geth
+function up  { [[ $(sst $s11 loaded) ]] && cex "$s02 $s11"; }                                                                                                 # stop eth-besu
+function bp  { [[ $(sst $s12 loaded) ]] && cex "$s02 $s12"; }                                                                                                 # stop eth-beacon
 function swb { echo -e "\n\e[5m${1^^}\e[25m\n"; }                                                                                                             # get flash
 function swu { echo -e "${1^^}"; }                                                                                                                            # get upper
 function swn { echo -e "$1"; }                                                                                                                                # get normal

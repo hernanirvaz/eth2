@@ -345,7 +345,6 @@ function pe  { pai 9090/tcp 192.168.8.0/24 $s16 ;sex 'ufw reload';cex "$s04 $s16
 function ne  { sex 'ufw reload';cex "$s04 $s17"; }                                                                                                            # enable prometheus-node-exporter
 function fe  { pai 3000/tcp 192.168.8.0/24 grafana  ;sex 'ufw reload';cex "$s04 $s18"; }                                                                      # enable grafana-server
 function me  { pai 18550    192.168.8.0/24 mev-boost;sex 'ufw reload';cex "$s04 $s14"; }                                                                      # enable mev-boost
-function ga  { [[ $(sst $s10) ]] && cex "$s03 $s10"; }                                                                                                        # start eth-geth
 function ua  { [[ $(sst $s11) ]] && cex "$s03 $s11"; }                                                                                                        # start eth-besu
 function ba  { [[ $(sst $s12) ]] && cex "$s03 $s12"; }                                                                                                        # start eth-beacon
 function va  {
@@ -361,9 +360,6 @@ function wa  { if [[ $(pex 'ufw status'|grep -i inactive) ]];then yex 'ufw enabl
 function gps { [[ $(sst $s10 loaded) ]] && sex "$s02 $s10"; }                                                                                                 # silent stop eth-geth
 function ups { [[ $(sst $s11 loaded) ]] && sex "$s02 $s11"; }                                                                                                 # silent stop eth-besu
 function bps { [[ $(sst $s12 loaded) ]] && sex "$s02 $s12"; }                                                                                                 # silent stop eth-beacon
-function gp  { [[ $(sst $s10 loaded) ]] && cex "$s02 $s10"; }                                                                                                 # stop eth-geth
-function up  { [[ $(sst $s11 loaded) ]] && cex "$s02 $s11"; }                                                                                                 # stop eth-besu
-function bp  { [[ $(sst $s12 loaded) ]] && cex "$s02 $s12"; }                                                                                                 # stop eth-beacon
 function vp  { [[ $(sst $s13 loaded) ]] && cex "$s02 $s13";touch $p05/vc_slash; }                                                                             # stop eth-validator
 function pp  { [[ $(sst $s16 loaded) ]] && cex "$s02 $s16"; }                                                                                                 # stop prometheus
 function np  { [[ $(sst $s17 loaded) ]] && cex "$s02 $s17"; }                                                                                                 # stop prometheus-node-exporter
