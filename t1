@@ -215,6 +215,7 @@ r49="$r49;s%rpc-username\": \"[^\"]*\"%rpc-username\": \"eu\"%"
 r49="$r49;s%rpc-password\": \"[^\"]*\"%rpc-password\": \"\"%"
 r49="$r49;s%umask\": [0-9]*%umask\": 2%"
 
+function sst { $s01 $1 2>$p03|grep "${2:-inactive\|failed}" 2>$p03; }                                                                                         # systemctl status word test
 function ga  { [[ $(sst $s10       ) ]] && cex "$s03 $s10"; }                                                                                                 # start eth-geth
 function gp  { [[ $(sst $s10 loaded) ]] && cex "$s02 $s10"; }                                                                                                 # stop eth-geth
 function up  { [[ $(sst $s11 loaded) ]] && cex "$s02 $s11"; }                                                                                                 # stop eth-besu

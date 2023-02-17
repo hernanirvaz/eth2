@@ -44,7 +44,6 @@ function snp { [[ -f $p04/$1.service ]] || return;local n=$(($2+nn));(($2!=0&&n>
 function sra { if trf;then nu0 $(($(date +%s)-$(date -r $p45 +%s)));else printf %i;fi }                                                                       # system reboot age (secounds)
 function sci { nu0 $(ip a|sed -n 's% *inet  *192.168.8.\([0-9]*\).*%\1%p' 2>$p03); }                                                                          # get ip/24
 function sni { case $1 in 25) printf $znm1;;28) printf $znm2;;31) printf $znm3;;34) printf $znm4;;*) printf $cunm;;esac; }                                    # get name from ip/24
-function sst { $s01 $1 2>$p03|grep "${2:-inactive\|failed}" 2>$p03; }                                                                                         # systemctl status word test
 function ss1 { $s01 $1 2>$p03|sed -n "s%.*$2[ =]\(${3:-.}*\).*%\1%p" 2>$p03; }                                                                                # systemctl status 1 extraction
 function ss2 { $s01 $1 2>$p03|sed -n "s%.*Active: *\(.*\)%\1%p" 2>$p03|sed "s% *since.*;%%" 2>$p03|cut -c1-40; }                                              # systemctl status 2 extraction
 function ss3 { local e=$(ss1 $1 Memory:)                     ;if [[ $e ]];then printf $e;else printf 0.0K   ;fi; }                                            # systemctl status Memory extraction
