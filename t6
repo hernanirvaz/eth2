@@ -160,7 +160,7 @@ function bb1 { if [[ $(echo $@|grep is_syncing\":false) ]];then printf 'synced';
 function bio { lg3 $1;dts;m="BEIO $(nu1 %6i $1) $dt io: $b1 $b5 $(bi1)"; }                                                                                    # shw imported/observed delays
 function bcc { if tbp       ;then printf c;else printf _;fi; }                                                                                                # get change configured peers char
 function bdc { if tha && tsd;then printf d;else printf _;fi; }                                                                                                # get delete cc log day       char
-function bmp { printf '%4i %5s %3i %4i io: %4i %4i %4i' ${a[0]} $b7 $b4 $(bi0) $b1 $b5 $(bi1) 2>$p03; }                                                       # get peer__io: partial
+function bmp { printf 'avg: %4i %4s %4i %4i io: %4i %4i %4i' ${a[0]} $b7 $b4 $(bi0) $b1 $b5 $(bi1) 2>$p03; }                                                  # get peer__io: partial
 function bl0 { dts;ok=OK;if [[ $(sst $s12 running) ]];then bl3;bv0;bnn;bb0;blo;else m="BSRV NOT ON $dt";fi; }                                                 # cc report
 function bl1 {                                                                                                                                                # set restart idx vars
   z1=${1:-$(echo "$l0"|grep 'RPC block'|wc -l)};z2=${2:-$(echo "$l0"|grep 'New block'|wc -l)};z3=${3:-$(echo "$l0"|grep -v ' INFO '|wc -l)}                   # set processed/received blocks,error lines
@@ -177,17 +177,17 @@ function blo {
 }
 #  0    1   2          3     4       5  6   7     8     9    10    11    12    13    14   15   16    17  18   19  20   21   22   23
 # BM    8  10 2023-02-27 11:07 node20: 22 mp:   980  1164  1550  1525  1374  2158  2015 avg: 1103 pr__: -30 1254 io:  696 5340 1624
-function bmo { m="BM $(printf '%4i %3i' $b2 $b3 2>$p03) $(dnn) $(bma 'mp:') avg: $(bmp)"; }
+function bmo { m="BM $(printf '%4i %3i' $b2 $b3 2>$p03) $(dnn) $(bma 'mp:') $(bmp)"; }
 #  0    1   2          3     4       5  6   7     8    9   10    11  12   13  14   15   16   17
 # BM    2   2 2022-11-21 23:49 node50: 55 mp:  1101 avg: 1101 pr__: -30 1254 io:  696 5340 1624
-function bms { m="BM $(printf '%4i %3i' $b2 $b3 2>$p03) $(dnn) mp: $(nu1 %5i ${a[$nn]}) avg: $(bmp)"; }
+function bms { m="BM $(printf '%4i %3i' $b2 $b3 2>$p03) $(dnn) mp: $(nu1 %5i ${a[$nn]}) $(bmp)"; }
 #    0   1          2     3    4 5 6 7 8 9 10 11   12 13 14 15 16 17 18 19   20 21 22 23 24 25 26 27   28 29 30 31 32 33 34 35   36 37 38 39 40 41 42 43
 # BEAC 682 2022-03-16 11:03 cnt: 4 7 0 0 0 10 10 mis: 20 20 20 20 20 20 20 mat: 14 45 30 30 30 30 30 mah: 94 68 40 40 40 40 40 dly: 79 09 50 50 50 50 50
 function bno { m="BEAC $(nu1 %6i $(bbl)) $dt $(bnc 'cnt:' ' ') $(bnk 'mis:' ' ') $(bnz 'mat:' ' ') $(bnx 'mah:' ' ') $(bnw 'dly:' ' ')"; }
 function bmi { zk=0;zz=0;zx=0;unset v;v[1]=0;unset k;k[0]=0;unset z;z[0]=0;unset x;x[0]=0;unset w;w[0]=0;unset c;c[0]=0;unset a;a[0]=0;bm6; }                 # ini err/cnt/avg penalty arrays
 function bm0 {                                                                                                                                                # cc-daily report
   [[ -f $p12 ]] || return;bmi;b4=0;dts;bv0;bnn;bs3;bl2;[[ -f $p14 ]] && bm4;lg3 0                                                                             # set vars/arrays
-  l1=$(tail -n$(($(nu0 $(bbl))-v[1])) $p12 2>$p03|bfl);[[ $l1 ]] && bm1;bm2;[[ $b2 -eq 0 ]] && boi;bo3;bm5 ${a[$nn]};b7="pr$(bdc)$(bcc):"                     # add cc lines & homologous/avg position
+  l1=$(tail -n$(($(nu0 $(bbl))-v[1])) $p12 2>$p03|bfl);[[ $l1 ]] && bm1;bm2;[[ $b2 -eq 0 ]] && boi;bo3;bm5 ${a[$nn]};b7="p$(bdc)$(bcc):"                      # add cc lines & homologous/avg position
 }
 function bm1 { local g=${1:-$bpri};bs5;[[ $l5 ]] && { bkm $g;bzm $g;bxm $g;bwm $g;bcm $g; };((g<bprf)) && bm1 $((g+bprs)); }                                  # recursively sum penalty errors arrays
 function bm2 { k[0]=$(($(bnk)));z[0]=$(($(bnz)));x[0]=$(($(bnx)));w[0]=$(($(bnw)));c[0]=$(($(bnc)));a[0]=$(bm3 0);bm7; }                                      # tot err/cnt/penalty arrays
