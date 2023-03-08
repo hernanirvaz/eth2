@@ -500,6 +500,7 @@ function mvr { local f=$p02/validator_keys/keystore;if [[ $(ls $f*.json 2>$p03) 
 [[ $1 = grb ]] && { grs ${2:-0} RB; }
 [[ $1 = urb ]] && { urs ${2:-0} RB; }
 [[ $1 = irb ]] && { irb ${2:-3};pas; }
+[[ $1 = rsh ]] && { echo;echo $(sf1) $(sng) $(ls *.restart.* 2>$p03); }
 [[ $1 = lp  ]] && { netstat -tulpn; }
 # outros journal system/lighthouse
 [[ $1 = el  ]] && { if [[ $(sst $s10 running) ]];then fs1 $r30;else fs1 $r31;fi|fl1 $2; }
@@ -640,6 +641,7 @@ if [[ ! $1 ]];then
   m="$m\nurb [n]\t\tsystem & besu\t\t\treboot\twith n peers"
   m="$m\nbrb [n]\t\tsystem & beacon\t\t\treboot\twith n peers"
   m="$m\nirb [h]\t\tsystem (if needed)\t\treboot\tafter h hours"
+  m="$m\nrsh\t\trestart info (time & next gap without validator tasks)"
   m="$m\nyj\t\tsystem journal"
   m="$m\nsl\t[hh:mm]\tsystem journal\tlog lines"
   m="$m\nll\t[hh:mm]\tel/cl\t\tlog lines (last 7 days)"
