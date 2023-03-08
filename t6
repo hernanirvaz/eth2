@@ -58,7 +58,7 @@ function els { lg0 .*sgs: $1|tail -n1; }                                        
 function era { tail -n${2:-$ehrs} $1 2>$p03|cut -d' ' -f1|sort -u|wc -l; }                                                                                    # get el/cc restart activity
 function eh0 { [[ -f $1 ]] || return;tail -n${2:-$ehrs} $1 2>$p03; }                                                                                          # el historic report
 function eb0 { e0=$(fs0 Imported $2|wc -l);ok=OK;[[ $(echo $@|grep false) && ($e0 -eq $(els $1) || $nr -lt $(eb1)) && $(era $1) -eq 1 ]] && ok=BK; }          # Imported new chain segment & OK/BK
-function eb1 { nu0 $(((nn*100-nn*30)/100)); }                                                                                                                 # get current peers-30%
+function eb1 { nu0 $(((nn*100-nn*60)/100)); }                                                                                                                 # get current peers-30%
 function ero { [[ -f $2 ]] || return;dts;swn "$(nu1 R%03i $1) ${3:-RS} SRV $(dnn)" >> $2; }                                                                   # log restart info
 function ell { wc -l $1   2>$p03|cut -d' ' -f1; }                                                                                                             # get ec       line count
 function bbl { wc -l $p12 2>$p03|cut -d' ' -f1; }                                                                                                             # get cc       line count
