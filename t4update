@@ -2,6 +2,7 @@
 
 source /home/eth/eth2/t1
 
+function gvr { if [[ -x $p07/geth ]];then $p07/geth version 2>$p03|sed -n 's%^version: *\(.*\)%\1%ip';else printf 'not';fi; }                                 # get geth version
 function hlp {
   local e=''
   e="$e\n$(basename $0) linux|reboot|besu <version>|geth|mev|cc [version] [rust version]|cp\n"
@@ -12,11 +13,12 @@ function hlp {
 }
 
 if [[ $1 = linux || $1 = reboot || $1 = geth ]];then
+  gver=$(gvr)
   swu 'FULL-UPGRADE'
   cex 'apt update -y'    ;sudo apt full-upgrade -y && sudo apt dist-upgrade -y
-  cex 'apt autoremove -y';cex 'apt autoclean'
-  [[ $1 = geth   ]] && { gp;ga; }
-  [[ $1 = reboot ]] && { gp;up;bp;cex reboot; }
+  cex 'apt autoremove -y';sudo apt autoclean
+  [[ $1 = geth && $gver != $(gvr) ]] && { gp;ga; }
+  [[ $1 = reboot                  ]] && { gp;up;bp;cex reboot; }
 fi
 if [[ $1 = besu ]];then sex "rm -fr $p00/besu.sav"     ;sex "mv $p00/besu      $p00/besu.sav"     ;unv ${2:-23.1.0};fi                                        # save/download/install besu
 if [[ $1 = mev  ]];then sex "rm -f  $p00/mev-boost.sav";sex "mv $p00/mev-boost $p00/mev-boost.sav";mnv             ;fi                                        # save/download/install mev-boost
