@@ -3,7 +3,7 @@
 source /home/eth/eth2/t1
 
 if [[ $cunm = $znm2 || $cunm = $vnm2 ]];then                                                                                                                  # mev here
-  sex 'apt install build-essential golang-go -y';sau eth4;mnv                                                                                                 # install mev-boost
+  sau eth4;gnv $1;mnv                                                                                                                                         # install go-lang & mev-boost
   rlys='https://0x8b5d2e73e2a3a55c6c87b8b6eb92e0149a125c852751db1422fa951e42a09b82c142c3ea98d0d9930b056a3bc9896b8f@bloxroute.max-profit.blxrbdn.com'
   rlys="$rlys,https://0x98650451ba02064f7b000f5768cf0cf4d4e492317d82871bdc87ef841a0743f69f0f1eea11168503240ac35d101c9135@mainnet-relay.securerpc.com"
   rlys="$rlys,https://0xac6e77dfe25ecd6110b8e780608cce0dab71fdd5ebea22a16c0205200f2f8e2e3ad3b71d3499c54ad14d6c21b41a37ae@boost-relay.flashbots.net"
