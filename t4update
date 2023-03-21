@@ -17,8 +17,8 @@ if [[ $1 = linux || $1 = reboot || $1 = geth ]];then
   swu 'FULL-UPGRADE'
   cex 'apt update -y'    ;sudo apt full-upgrade -y && sudo apt dist-upgrade -y
   cex 'apt autoremove -y';sudo apt autoclean
-  [[ $1 = geth && $gver != $(gvr) ]] && { gp;ga; }
-  [[ $1 = reboot                  ]] && { gp;up;bp;cex reboot; }
+  [[ $1 = geth && $gver != $(gvr) ]] && { t6 grs 0;}
+  [[ $1 = reboot                  ]] && { t6 gpr;t6 upr;t6 bpr;cex reboot; }
 fi
 if [[ $1 = besu ]];then sex "rm -fr $p00/besu.sav"     ;sex "mv $p00/besu      $p00/besu.sav"     ;unv $2    ;fi                                              # save/download/install besu
 if [[ $1 = mev  ]];then sex "rm -f  $p00/mev-boost.sav";sex "mv $p00/mev-boost $p00/mev-boost.sav";gnv $2;mnv;fi                                              # save/download/install mev-boost
