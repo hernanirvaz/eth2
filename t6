@@ -280,7 +280,7 @@ function bsl {                                                                  
 function bdw { [[ -f $1 ]] || return;cp $1 $1.o;grep -v $2 $1.o > $1;grep $2 $1.o > $1.d; }                                                                   # work to delete cc log day
 function bdl { local d=$(pt0 $1 sai);[[ $d = sai ]] && return;bdw $p12 $d;bdw $p13 $d; }                                                                      #         delete cc log day
 function wst { echo $@|sed 's%[^: ]*: *%%g;s%inactive%off%;s%active%on%' 2>$p03; }                                                                            # get ufw info
-function cpf { local f='';for t in $(ls $p02/*.restart.* 2>$p03);do local f="$f, $(basename $t)";done;printf "$f"; }                                          # get list restart basenames
+function cpf { local f='';local t='';for t in $(ls $p02/*.restart.* 2>$p03);do local f="$f, $(basename $t)";done;printf "$f"; }                               # get list restart basenames
 function tmp {
   local d=$(fs5|grep throttled|head -n1|sed "$r27");local e=$(fs5|grep normal|tail -n1|sed "$r27");local l=$(pex "smartctl --json=c -x /dev/sda")
   local g=$(echo $(echo $l|jq -r "$r40" 2>$p03) $(echo $l|jq -r "$r41" 2>$p03));local l=$(sensors 2>$p03|sed -n "$r26")
