@@ -280,7 +280,7 @@ function bsl {                                                                  
 function bdw { [[ -f $1 ]] || return;cp $1 $1.o;grep -v $2 $1.o > $1;grep $2 $1.o > $1.d; }                                                                   # work to delete cc log day
 function bdl { local d=$(pt0 $1 sai);[[ $d = sai ]] && return;bdw $p12 $d;bdw $p13 $d; }                                                                      #         delete cc log day
 function wst { echo $@|sed 's%[^: ]*: *%%g;s%inactive%off%;s%active%on%' 2>$p03; }                                                                            # get ufw info
-function cpf { local f='';until [[ $# -lt 1 ]];do local f="$f, $(basename $1)";shift;done;printf "$f"; }                                                      # get list basenames
+function cpf { local f='';for t in $(ls $p02/*.restart.* 2>$p03);do local f="$f, $(basename $t)";done;printf "$f"; }                                          # get list restart basenames
 function tmp {
   local d=$(fs5|grep throttled|head -n1|sed "$r27");local e=$(fs5|grep normal|tail -n1|sed "$r27");local l=$(pex "smartctl --json=c -x /dev/sda")
   local g=$(echo $(echo $l|jq -r "$r40" 2>$p03) $(echo $l|jq -r "$r41" 2>$p03));local l=$(sensors 2>$p03|sed -n "$r26")
@@ -300,8 +300,8 @@ function cpe {                                                                  
   local e=$(fs2|fl0|tail -n1|sed 's%.*hrv-zotac[0-9] *\(.*\)%\1%;s%  *% %g'                         |cut -c1-70)
   local d=$(fs1|fl1|tail -n1|sed 's%.*[0-9]*:[0-9]*:[0-9]*\.[0-9][0-9][0-9]]* *\(.*\)%\1%;s%  *% %g'|cut -c1-70)
   m="ERRO$(printf '%3i %3i' $l $n 2>$p03) $dt";[[ $l -gt 0 ]] && m="$m system: $e";[[ $n -gt 0 ]] && m="$m ethrum: $d";(( l+n )) && swn "$m"                  # sys/eth errors info
-  m='';trf && m="$m, reboot $(($(sra)/60/60)) hours ago$(cpf $(ls $p02/*.restart.* 2>$p03))";[[ $(bsc) -gt 0 ]] && m="$m, committee on"                       # reboot/committee info
-  [[ $m ]] && swn "INFO        $dt${m#*,}";[[ $(nu0 $(/usr/lib/update-notifier/apt-check 2>&1|sed 's%;% %g')) -gt 0 ]] && { echo;apt list --upgradable; }
+  m='';trf && m="$m, reboot $(($(sra)/60/60)) hours ago$(cpf)";[[ $(bsc) -gt 0 ]] && m="$m, committee on";[[ $m ]] && swn "INFO        $dt${m#*,}"            # reboot/committee info
+  [[ $(nu0 $(/usr/lib/update-notifier/apt-check 2>&1|sed 's%;% %g')) -gt 0 ]] && { echo;apt list --upgradable; }
 }
 # Plex Media Server
 function xop { pde 80 plex/nginx delete;pai 80 192.168.8.0/24 plex/nginx       ;ide 192.168.8.0/24 1900/udp plex/upnp       ; }
@@ -503,7 +503,7 @@ function mvr { local f=$p02/validator_keys/keystore;if [[ $(ls $f*.json 2>$p03) 
 [[ $1 = grb ]] && { grs      0  RB      $2; }
 [[ $1 = urb ]] && { urs      0  RB      $2; }
 [[ $1 = irb ]] && { irb ${2:-3};pas; }
-[[ $1 = rsh ]] && { echo;echo $(sf1) $(sng)$(cpf $(ls $p02/*.restart.* 2>$p03)); }
+[[ $1 = rsh ]] && { echo;echo $(sf1) $(sng)$(cpf); }
 [[ $1 = lp  ]] && { netstat -tulpn; }
 # outros journal system/lighthouse
 [[ $1 = el  ]] && { if [[ $(sst $s10 running) ]];then fs1 $r30;else fs1 $r31;fi|fl1 $2; }
