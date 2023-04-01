@@ -71,6 +71,7 @@ if [[ $cunm = $znm1 || $cunm = $znm4 || $cunm = $vnm1 ]];then                   
   pp2p=30303                                                                                                                                                  # default
   othe=''
   othe="$othe --http.corsdomain 'chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn' --http.vhosts '*'"                                                      # for metamask
+  othe="$othe --cache 10704"                                                                                                                                  # fast sync & less DB growth
   cat <<-EOF > $s10.service
 	[Unit]
 	Description=geth service
