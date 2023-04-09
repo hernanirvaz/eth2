@@ -246,7 +246,7 @@ function gnv {
 }
 function mnv {
   local f="go/bin/mev-boost";swu 'INSTALAR MEV-BOOST';cd $p02;sex "rm -rf go"
-  /usr/local/go/bin/go install github.com/flashbots/mev-boost@latest;sex "cp $f $p00";cmw $p00/mev-boost 755 eth4
+  CGO_CFLAGS="-O -D__BLST_PORTABLE__" /usr/local/go/bin/go install github.com/flashbots/mev-boost@latest;sex "cp $f $p00";cmw $p00/mev-boost 755 eth4
 }
 
 s00='systemctl'
