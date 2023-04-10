@@ -50,7 +50,7 @@ if [[ $cust = hrv ]];then
   cc4 $p35 "$r21"                           ;cmw $p35 644 root                                                                                                # ssh config
   cc3 $p29 "$r08" "$r15"                    ;cmw $p29 644 root bind                                                                                           # named my options
   cc1 $p30 "$r02"                           ;cmw $p30 644 root                                                                                                # use only ipv4
-  cc1 $p37 "$r29"                           ;cmw $p37 644 root                                                                                                # no swap - bad for IOPS
+  cc1 $p37 "$r29;$r50;$r51"                 ;cmw $p37 644 root                                                                                                # no swap - bad for IOPS
   nex 'update-grub'
   t6 spd;t6 sea;nex "$s02 systemd-resolved";nex "$s03 systemd-resolved"                                                                                       # DNS stop & start
 else
