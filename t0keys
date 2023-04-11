@@ -2,61 +2,79 @@
 
 source /home/eth/eth2/t1
 
-if [[ $cunm = hrv-zen ]];then
-  cli="$p02/eth2.0-deposit-cli/$(basename $p19)"
-  bs1="/media/eth/cs1"
-  bs2="/media/eth/cs2"
-  cs1="$bs1/$(basename $p19)"
-  cs2="$bs2/$(basename $p19)"
-  lng="spanish"
-  chi="mainnet"
-  if [[ $chi = mainnet ]];then nmv=18;else nmv=3;fi 
-  if [[ -d $p19 && $(ls -A $p19 2>$p03) ]];then
-    swu 'CHAVES ESTAO PRONTAS'
-  elif [[ -d $cli && $(ls -A $cli 2>$p03) ]];then
-    if [[ -d $bs1 ]];then
-      if [[ -d $cs1 ]];then
-        swu "ARQUIVO OFFLINE $cs1 JA EXISTE"
-      else
-        cp -R $cli $cs1
-        sex "chown -R eu:eu $cs1"
-        sex "chmod 755 $cs1"
-        sex "chmod 644 $cs1/*"
-      fi
+function hlp {
+  local e=''
+  e="$e\n$(basename $0) linux|reboot|besu [version]|geth|mev [go version]|cc [version] [rust version]|cp\n"
+  e="$e\n  besu|geth|cc\tupgrade besu|geth|lighthouse"
+  e="$e\n  mev\t\tupgrade mev-boost"
+  e="$e\n  cp\t\tcopy & propagate  lighthouse"
+  swn "$e"
+}
+function snv {
+  local v=${1:-v2.5.0};local f="staking_deposit-cli-${2:-d7b5304}-linux-amd64.tar.gz";[[ -f $f ]] && rm $f
+  curl -LO https://github.com/ethereum/staking-deposit-cli/releases/download/$v/$f;local s=$(sha256sum $f|cut -d' ' -f1)
+  swn "INSTALAR $f ($s)?";local rsp=nao;read rsp;[[ $rsp = $s ]] || return;tar xf $f --strip-components 2
+}
+
+[[ $cunm = hrv-zen ]]         || { swu 'TEM DE ESTAR hrv-zen';      }
+ping -qnc 1 -W 1 $zipg &>$p03 && { swu 'TEM DE ESTAR OFFLINE';exit; }
+[[ -x $p02/deposit ]]         || { snv;                             }
+[[ -x $p02/deposit ]]         || { swu 'TEM DE TER DEPOSIT C';exit; }
+
+exit
+cli="$p02/eth2.0-deposit-cli/$(basename $p19)"
+bs1="/media/eth/cs1"
+bs2="/media/eth/cs2"
+cs1="$bs1/$(basename $p19)"
+cs2="$bs2/$(basename $p19)"
+lng="spanish"
+chi="mainnet"
+if [[ $chi = mainnet ]];then nmv=18;else nmv=3;fi 
+if [[ -d $p19 && $(ls -A $p19 2>$p03) ]];then
+  swu 'CHAVES ESTAO PRONTAS'
+elif [[ -d $cli && $(ls -A $cli 2>$p03) ]];then
+  if [[ -d $bs1 ]];then
+    if [[ -d $cs1 ]];then
+      swu "ARQUIVO OFFLINE $cs1 JA EXISTE"
     else
-      swu "ARQUIVO OFFLINE $bs1 NAO ESTA MONTADO"
+      cp -R $cli $cs1
+      sex "chown -R eu:eu $cs1"
+      sex "chmod 755 $cs1"
+      sex "chmod 644 $cs1/*"
     fi
-    if [[ -d $bs2 ]];then
-      if  [[ -d $cs2 ]];then
-        swu "ARQUIVO OFFLINE $cs2 JA EXISTE"
-      else
-        cp -R $cli $cs2
-        sex "chown -R eu:eu $cs2"
-        sex "chmod 755 $cs2"
-        sex "chmod 644 $cs2/*"
-      fi
-    else
-      swu "ARQUIVO OFFLINE $bs2 NAO ESTA MONTADO"
-    fi
-    cp -R $cli $p02
-    swu 'CHAVES FORAM ARQUIVADAS - VERIFICAR AQUIVO OFFLINE'
-  elif [[ -f $(dirname $cli)/README.md ]];then
-    cd $(dirname $cli)
-    swb "PARA GERAR $nmv NOVAS CHAVES CHAIN $chi"
-    swn "STORE($K)"
-    swb "PARA GERAR $nmv NOVAS CHAVES CHAIN $chi"
-    # if keystores lost to recover keys use ./deposit.sh existing-mnemonic
-    ./deposit.sh new-mnemonic --num_validators $nmv --mnemonic_language $lng --chain $chi
-    swu 'para ARQUIVAR CHAVES executar de novo - OFFLINE & com USB INSTALADOS'
   else
-    swu 'INSTALAR SCRIPT CHAVES'
-    cex 'apt install python3-pip python3-testresources git -y'
-    cd $p02
-    git clone https://github.com/ethereum/$(basename $(dirname $cli)).git
-    cd $(dirname $cli)
-    cex './deposit.sh install'
-    swu 'para GERAR CHAVES executar de novo - OFFLINE'
+    swu "ARQUIVO OFFLINE $bs1 NAO ESTA MONTADO"
   fi
+  if [[ -d $bs2 ]];then
+    if  [[ -d $cs2 ]];then
+      swu "ARQUIVO OFFLINE $cs2 JA EXISTE"
+    else
+      cp -R $cli $cs2
+      sex "chown -R eu:eu $cs2"
+      sex "chmod 755 $cs2"
+      sex "chmod 644 $cs2/*"
+    fi
+  else
+    swu "ARQUIVO OFFLINE $bs2 NAO ESTA MONTADO"
+  fi
+  cp -R $cli $p02
+  swu 'CHAVES FORAM ARQUIVADAS - VERIFICAR AQUIVO OFFLINE'
+elif [[ -f $(dirname $cli)/README.md ]];then
+  cd $(dirname $cli)
+  swb "PARA GERAR $nmv NOVAS CHAVES CHAIN $chi"
+  swn "STORE($K)"
+  swb "PARA GERAR $nmv NOVAS CHAVES CHAIN $chi"
+  # if keystores lost to recover keys use ./deposit.sh existing-mnemonic
+  ./deposit.sh new-mnemonic --num_validators $nmv --mnemonic_language $lng --chain $chi
+  swu 'para ARQUIVAR CHAVES executar de novo - OFFLINE & com USB INSTALADOS'
 else
-  swu 'TEM DE ESTAR hrv-zen'
+  swu 'INSTALAR SCRIPT CHAVES'
+  cex 'apt install python3-pip python3-testresources git -y'
+  cd $p02
+  git clone https://github.com/ethereum/$(basename $(dirname $cli)).git
+  cd $(dirname $cli)
+  cex './deposit.sh install'
+  swu 'para GERAR CHAVES executar de novo - OFFLINE'
 fi
+
+[[ $1 = cc || $1 = cp ]] || { [[ $1 ]] || hlp;exit; }
