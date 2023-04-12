@@ -13,14 +13,15 @@ function hlp {
 
 cd $p02
 
-[[ $cunm = hrv-zen ]] || { swu 'TEM DE ESTAR hrv-zen';echo exit; }
+[[ $cunm = hrv-zen ]] || { swb 'TEM DE ESTAR hrv-zen';echo exit; }
 [[ -x $p02/ethdo   ]] || { dnv                                 ; }
-[[ -x $p02/deposit ]] || { snv                                 ; }
+#[[ -x $p02/deposit ]] || { snv                                 ; }
 
-ping -qnc 1 -W 1 $zipg &>$p03 && { swu 'TEM DE ESTAR OFFLINE';echo exit; }
+ping -qnc 1 -W 1 $zipg &>$p03 && { swb 'TEM DE ESTAR OFFLINE';echo exit; }
 
-[[ -x $p02/ethdo   ]] || { swu 'TEM DE TER ETHDO'    ;echo exit; }
-[[ -x $p02/deposit ]] || { swu 'TEM DE TER DEPOSIT'  ;echo exit; }
+[[ -x $p02/ethdo   ]] || { swb 'TEM DE TER ETHDO'    ;echo exit; }
+#[[ -x $p02/deposit ]] || { swb 'TEM DE TER DEPOSIT'  ;echo exit; }
+[[ $M              ]] || { swb 'TEM DE TER M'        ;echo exit; }
 
 exit
 cli="$p02/eth2.0-deposit-cli/$(basename $p19)"
