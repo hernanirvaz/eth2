@@ -2,72 +2,62 @@
 
 source /home/eth/eth2/t1
 
-function hlp {
-  local e=''
-  e="$e\n$(basename $0) linux|reboot|besu [version]|geth|mev [go version]|cc [version] [rust version]|cp\n"
-  e="$e\n  besu|geth|cc\tupgrade besu|geth|lighthouse"
-  e="$e\n  mev\t\tupgrade mev-boost"
-  e="$e\n  cp\t\tcopy & propagate  lighthouse"
-  swn "$e"
-}
+function sbn { printf $($p02/ethdo $s27 node info 2>$p03|cut -d: -f2); }
+function obn { ping -qnc 1 -W 1 $zipg &>$p03; }
 
 cd $p02
 
-[[ $cunm = hrv-zen ]] || { swb 'TEM DE ESTAR hrv-zen';echo exit; }
-[[ -x $p02/ethdo   ]] || { dnv                                 ; }
-#[[ -x $p02/deposit ]] || { snv                                 ; }
-
-ping -qnc 1 -W 1 $zipg &>$p03 && { swb 'TEM DE ESTAR OFFLINE';echo exit; }
-
-[[ -x $p02/ethdo   ]] || { swb 'TEM DE TER ETHDO'    ;echo exit; }
-#[[ -x $p02/deposit ]] || { swb 'TEM DE TER DEPOSIT'  ;echo exit; }
-[[ $M              ]] || { swb 'TEM DE TER M'        ;echo exit; }
+[[ $cunm = hrv-zen ]] || { swb 'TEM DE ESTAR hrv-zen';exit; }
+[[ -x $p02/ethdo   ]] || { dnv                            ; }
+[[ -x $p02/ethdo   ]] || { swb 'TEM DE TER ETHDO'    ;exit; }
+#[[ -x $p02/deposit ]] || { snv                            ; }
+#[[ -x $p02/deposit ]] || { swb 'TEM DE TER DEPOSIT'  ;exit; }
+#[[ $(sbn) = false  ]] || { swb "TEM DE TER BN SYNCED";exit; }
+[[ -f $p02/$s28.json ]] || $p02/ethdo $s27 validator credentials set --prepare-offline
+[[ -f $p02/$s28.json ]] || { swb "TEM DE TER $s28.json";exit; }
+[[ -f $p02/$s29.json ]] || { if [[ $M ]];then if obn;then swb 'TEM DE ESTAR OFFLINE';else $p02/ethdo $s27 validator credentials set --offline --mnemonic="$M" --withdrawal-address=$s26;fi;else swb 'TEM DE TER M';fi; }
+[[ -f $p02/$s29.json ]] || { swb "TEM DE TER $s29.json";exit; }
+[[ -f $p02/$s29.json ]] && { if obn;then echo $p02/ethdo $s27 validator credentials set;else swb 'TEM DE ESTAR ONLINE';fi; }
 
 exit
 cli="$p02/eth2.0-deposit-cli/$(basename $p19)"
-bs1="/media/eth/cs1"
-bs2="/media/eth/cs2"
-cs1="$bs1/$(basename $p19)"
-cs2="$bs2/$(basename $p19)"
-lng="spanish"
-chi="mainnet"
-if [[ $chi = mainnet ]];then nmv=18;else nmv=3;fi 
+if [[ $s31 = mainnet ]];then nmv=18;else nmv=3;fi 
 if [[ -d $p19 && $(ls -A $p19 2>$p03) ]];then
   swu 'CHAVES ESTAO PRONTAS'
 elif [[ -d $cli && $(ls -A $cli 2>$p03) ]];then
-  if [[ -d $bs1 ]];then
-    if [[ -d $cs1 ]];then
-      swu "ARQUIVO OFFLINE $cs1 JA EXISTE"
+  if [[ -d $p46 ]];then
+    if [[ -d $p48 ]];then
+      swu "ARQUIVO OFFLINE $p48 JA EXISTE"
     else
-      cp -R $cli $cs1
-      sex "chown -R eu:eu $cs1"
-      sex "chmod 755 $cs1"
-      sex "chmod 644 $cs1/*"
+      cp -R $cli $p48
+      sex "chown -R eu:eu $p48"
+      sex "chmod 755 $p48"
+      sex "chmod 644 $p48/*"
     fi
   else
-    swu "ARQUIVO OFFLINE $bs1 NAO ESTA MONTADO"
+    swu "ARQUIVO OFFLINE $p46 NAO ESTA MONTADO"
   fi
-  if [[ -d $bs2 ]];then
-    if  [[ -d $cs2 ]];then
-      swu "ARQUIVO OFFLINE $cs2 JA EXISTE"
+  if [[ -d $p47 ]];then
+    if  [[ -d $p49 ]];then
+      swu "ARQUIVO OFFLINE $p49 JA EXISTE"
     else
-      cp -R $cli $cs2
-      sex "chown -R eu:eu $cs2"
-      sex "chmod 755 $cs2"
-      sex "chmod 644 $cs2/*"
+      cp -R $cli $p49
+      sex "chown -R eu:eu $p49"
+      sex "chmod 755 $p49"
+      sex "chmod 644 $p49/*"
     fi
   else
-    swu "ARQUIVO OFFLINE $bs2 NAO ESTA MONTADO"
+    swu "ARQUIVO OFFLINE $p47 NAO ESTA MONTADO"
   fi
   cp -R $cli $p02
   swu 'CHAVES FORAM ARQUIVADAS - VERIFICAR AQUIVO OFFLINE'
 elif [[ -f $(dirname $cli)/README.md ]];then
   cd $(dirname $cli)
-  swb "PARA GERAR $nmv NOVAS CHAVES CHAIN $chi"
+  swb "PARA GERAR $nmv NOVAS CHAVES CHAIN $s31"
   swn "STORE($K)"
-  swb "PARA GERAR $nmv NOVAS CHAVES CHAIN $chi"
+  swb "PARA GERAR $nmv NOVAS CHAVES CHAIN $s31"
   # if keystores lost to recover keys use ./deposit.sh existing-mnemonic
-  ./deposit.sh new-mnemonic --num_validators $nmv --mnemonic_language $lng --chain $chi
+  ./deposit.sh new-mnemonic --num_validators $nmv --mnemonic_language $s30 --chain $s31
   swu 'para ARQUIVAR CHAVES executar de novo - OFFLINE & com USB INSTALADOS'
 else
   swu 'INSTALAR SCRIPT CHAVES'
