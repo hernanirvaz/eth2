@@ -10,16 +10,17 @@ function hlp {
   e="$e\n  cp\t\tcopy & propagate  lighthouse"
   swn "$e"
 }
-function snv {
-  local v=${1:-v2.5.0};local f="staking_deposit-cli-${2:-d7b5304}-linux-amd64.tar.gz";[[ -f $f ]] && rm $f
-  curl -LO https://github.com/ethereum/staking-deposit-cli/releases/download/$v/$f;local s=$(sha256sum $f|cut -d' ' -f1)
-  swn "INSTALAR $f ($s)?";local rsp=nao;read rsp;[[ $rsp = $s ]] || return;tar xf $f --strip-components 2
-}
 
-[[ $cunm = hrv-zen ]]         || { swu 'TEM DE ESTAR hrv-zen';echo exit; }
+cd $p02
+
+[[ $cunm = hrv-zen ]] || { swu 'TEM DE ESTAR hrv-zen';echo exit; }
+[[ -x $p02/ethdo   ]] || { dnv                                 ; }
+[[ -x $p02/deposit ]] || { snv                                 ; }
+
 ping -qnc 1 -W 1 $zipg &>$p03 && { swu 'TEM DE ESTAR OFFLINE';echo exit; }
-[[ -x $p02/deposit ]]         || { snv;                             }
-[[ -x $p02/deposit ]]         || { swu 'TEM DE TER DEPOSIT C';exit; }
+
+[[ -x $p02/ethdo   ]] || { swu 'TEM DE TER ETHDO'    ;echo exit; }
+[[ -x $p02/deposit ]] || { swu 'TEM DE TER DEPOSIT'  ;echo exit; }
 
 exit
 cli="$p02/eth2.0-deposit-cli/$(basename $p19)"

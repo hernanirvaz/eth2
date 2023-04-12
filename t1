@@ -7,7 +7,7 @@ zip1='192.168.8.25'
 zip2='192.168.8.28'
 zip3='192.168.8.31'
 zip4='192.168.8.34'
-zipg='192.168.8.254'
+zipg=$(ip r|grep default|cut -d' ' -f3)
 znm1='hrv-zotac1'
 znm2='hrv-zotac2'
 znm3='hrv-zotac3'
@@ -238,9 +238,11 @@ function ple { local e="limit $1"                                 ;if [[ $3 ]];t
 function sis { if [[ -f $1 ]];then sex "mv $1 $p17";swb "NEW $p18";touch $p05/vc_slash;cmw $p18 600 eth3;else swb "NO NEW $1";fi; }                           # init slash db
 function snc { if [[ ${1:0:3} = hrv ]];then printf ${1/[a-z]*-/}|tr -d '[ao]';else case $1 in $vnm1) printf vpsl;;$vnm2) printf vpsm;;$vnm3) printf vpss;;esac;fi; }  # get small server name
 function sjw { [[ -d $2 ]] || return;sex "cp jwt $2";cmw $2/jwt 600 $1; }                                                                                     # install jwt
-function unv { local f=${1:-23.1.0};curl -sLO https://hyperledger.jfrog.io/artifactory/besu-binaries/besu/$f/besu-$f.tar.gz;sha256sum besu-$f.tar.gz;swn "INSTALAR BESU $f (SIM/nao)?";local rsp=nao;read rsp;[[ $rsp = SIM ]] || return;tar xvf besu-$f.tar.gz;sex "cp -a besu-$f $p00/besu";sex "chown eth1:eth1 -R $p00/besu";cmw $p00/besu 755 eth1; }
+function unv { local f=${1:-23.1.0};curl -LO https://hyperledger.jfrog.io/artifactory/besu-binaries/besu/$f/besu-$f.tar.gz;sha256sum besu-$f.tar.gz;swn "INSTALAR BESU $f (SIM/nao)?";local rsp=nao;read rsp;[[ $rsp = SIM ]] || return;tar xvf besu-$f.tar.gz;sex "cp -a besu-$f $p00/besu";sex "chown eth1:eth1 -R $p00/besu";cmw $p00/besu 755 eth1; }
 function gnv { local f="go${1:-1.20.2}.linux-amd64.tar.gz";swu "INSTALAR GO-LANG $f";cd $p02;sex "rm -f $f";wget -q https://go.dev/dl/$f;sex "rm -rf /usr/local/go";sex "tar -C /usr/local -xzf $f"; }
 function mnv { local f="go/bin/mev-boost";swu 'INSTALAR MEV-BOOST';cd $p02;sex "rm -rf go";CGO_CFLAGS="-O -D__BLST_PORTABLE__" /usr/local/go/bin/go install github.com/flashbots/mev-boost@latest;sex "cp $f $p00";cmw $p00/mev-boost 755 eth4; }
+function snv { local v=${1:-v2.5.0};local f="staking_deposit-cli-${2:-d7b5304}-linux-amd64.tar.gz";rm -f $f;curl -LO https://github.com/ethereum/staking-deposit-cli/releases/download/$v/$f;local s=$(sha256sum $f|cut -d' ' -f1);swn "INSTALAR $f ($s)?";local rsp=nao;read rsp;[[ $rsp = $s ]] || return;tar xf $f --strip-components 2; }
+function dnv { local v=${1:-1.28.5};local f="ethdo-$v-linux-amd64.tar.gz";local e="https://github.com/wealdtech/ethdo/releases/download/v$v";rm -f $f $f.sha256;curl -LO $e/$f -LO $e/$f.sha256;local s=$(sha256sum $f|cut -d' ' -f1);local r=$(cat $f.sha256);swn "INSTALAR $f ($s) [$r]";[[ $r = $s ]] || return;tar xf $f; }
 
 s00='systemctl'
 s01="$s00 status"
