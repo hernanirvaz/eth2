@@ -16,8 +16,8 @@ function snv {
   swn "INSTALAR $f ($s)?";local rsp=nao;read rsp;[[ $rsp = $s ]] || return;tar xf $f --strip-components 2
 }
 
-[[ $cunm = hrv-zen ]]         || { swu 'TEM DE ESTAR hrv-zen';      }
-ping -qnc 1 -W 1 $zipg &>$p03 && { swu 'TEM DE ESTAR OFFLINE';exit; }
+[[ $cunm = hrv-zen ]]         || { swu 'TEM DE ESTAR hrv-zen';echo exit; }
+ping -qnc 1 -W 1 $zipg &>$p03 && { swu 'TEM DE ESTAR OFFLINE';echo exit; }
 [[ -x $p02/deposit ]]         || { snv;                             }
 [[ -x $p02/deposit ]]         || { swu 'TEM DE TER DEPOSIT C';exit; }
 
