@@ -68,10 +68,6 @@ p42="$p02/beacon.restart"                                                       
 p43='/sys/devices/system/cpu/intel_pstate/no_turbo'
 p44='/sys/bus/usb/devices/1-0:1.0/authorized'
 p45='/var/run/reboot-required'
-p46="/media/eth/cs1"
-p47="/media/eth/cs2"
-p48="$p46/$(basename $p19)"
-p49="$p47/$(basename $p19)"
 
 r00='s%^ *#*NTP=.*$%NTP=192.168.8.28 ntp02.oal.ul.pt ntp04.oal.ul.pt time.google.com time.cloudflare.com time.facebook.com%i'                                 # my time servers
 r01='s%^ *ENABLED=.*$%ENABLED=0%i'                                                                                                                            # motd-news disable
@@ -283,8 +279,6 @@ s26='0x534029B6371dc4453DD750Bc1198181F55C859fe'
 s27="--connection=http://$zip4:5052 --allow-insecure-connections"
 s28='offline-preparation'
 s29='change-operations'
-s30="spanish"
-s31="mainnet"
 
 s70='0x93bf23a587f11f9eca329a12ef51296b8a9848af8c0fe61201524b14cb85b0c6fbd3e427501cdfa3b28719bd1ed96fff'
 s71='0xb5b0fc3d2ba577f3e2c7324f7ea4306f17eeee0f12c722f4fa83e45bf6c15477d50261bb2666c30f21ab71a26aeeeafb'
