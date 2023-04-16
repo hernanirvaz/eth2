@@ -10,7 +10,7 @@ function rl0 { local f=$p16/logs/beacon.log   ;echo $H|sudo -S grep -h $r44     
 function rl1 { local f=$p16/logs/beacon.log   ;echo $H|sudo -S cat                    $f.5 $f.4 $f.3 $f.2 $f.1 $f 2>$p03             ; }                      # get cc intern lines
 function rl2 { local f=$p17/logs/validator.log;echo $H|sudo -S cat                    $f.5 $f.4 $f.3 $f.2 $f.1 $f 2>$p03             ; }                      # get vc intern lines
 function rl3 { local f=$p01                   ;echo $H|sudo -S grep -h $r34 $f.7 $f.6 $f.5 $f.4 $f.3 $f.2 $f.1 $f 2>$p03             ; }                      # get all eth syslog lines
-function rl4 { local f=$p01                   ;echo $H|sudo -S grep -h $r35                               $f.1 $f 2>$p03             ; }                      # get all eth syslog lines
+function rl4 { local f=$p01                   ;echo $H|sudo -S grep -h $1                                 $f.1 $f 2>$p03             ; }                      # get all eth syslog lines
 function lg0 { sed -n "s%$1 *\([0-9]*\).*%\1%p" $2 2>$p03; }                                                                                                  # get list of numbers
 function lg1 { if [[ $l4 ]];then echo "$l4"|sed -n "$1$r36;$1$r37";else printf %i 1;fi; }                                                                     # get s/ms delays from log lines
 function lg2 { if [[ $l4 ]];then echo "$l4"|sed -n "$1$r38;$1$r39";else printf %i 1;fi; }                                                                     # get s/ms delays from log lines
@@ -79,7 +79,7 @@ function snn {
     nr=0      ;nm=0                                          ;nd=0
   fi
 }
-function sz0 { gnn    ;printf 'el:p%02i:m%02i p2p:%5i %s i2:%i'       $nr $nm $(ss5 $1 port    ) "$(gb1 $(gcl eth.syncing))" $(gdi 0)                          2>$p03; }
+function sz0 { gnn    ;printf 'el:p%02i:m%02i p2p:%5i %s i2:%i:%i'    $nr $nm $(ss5 $1 port    ) "$(gb1 $(gcl eth.syncing))" $(gdi 0) $(gdu 0)                 2>$p03; }
 function sz1 { unn    ;printf 'el:p%02i:m%02i p2p:%5i %s i2:%i'       $nr $nm $(ss5 $1 p2p-port) "$(ub1 $(ucl eth_syncing))" $(udi 0)                          2>$p03; }
 function sz2 { bnn    ;printf 'cl:p%02i:m%02i p2p:%5i %s el:http %7s' $nr $nm $(ss5 $1 port)     "$(bb1 $(bcl syncing))"     $(ss4 $1 $r24 execution-endpoint) 2>$p03; }
 function sz3 { dtl;bo4;printf 'vl:c%02i:m%02i cc:http %s'             $b2 $b3                                                $(ss4 $1 $r24 nodes             ) 2>$p03; }
@@ -95,7 +95,8 @@ function grs {                                                                  
     if [[ $2 = RB ]];then ero $n $p10 $2;sex reboot;else sex "$s03 $s10";ssf 40 $p40;gq0;ero $n $p10 $2;fi                                                    # reboot/start el
   fi;done;rm -f $f
 }
-function gdi { if [[ $1 -gt 0 ]];then l4=$(rl4|tail -n$1);else l4=$(rl4);fi;nu3 3 0 $(lg2 "$r42"); }                                                          # get delay imported
+function gdi { if [[ $1 -gt 0 ]];then l4=$(rl4 $r35|tail -n$1);else l4=$(rl4 $r35);fi;nu3 3 0 $(lg2 "$r42"); }                                                # get delay imported
+function gdu { if [[ $1 -gt 0 ]];then l4=$(rl4 $r52|tail -n$1);else l4=$(rl4 $r52);fi;nu3 3 0 $(lg2 "$r42"); }                                                # get delay Chain head updated
 function gcl { $p07/geth attach --exec $1 "http://$ciec:8545"               2>$p03 ; }                                                                        # exec RPC HTTP
 function gi0 { nu0 $(echo $@|sed -n 's%.*highestBlock: *\([0-9]*\).*%\1%ip' 2>$p03); }                                                                        # get el highest block
 function gc0 { nu0 $(echo $@|sed -n 's%.*currentBlock: *\([0-9]*\).*%\1%ip' 2>$p03); }                                                                        # get el current block
@@ -107,7 +108,7 @@ function gb2 { if [[ $(echo $@|grep false) ]];then printf ''      ;else printf '
 function gl0 {                                                                                                                                                # el report
   dts;ok=OK
   if [[ $(sst $s10 running) ]];then local e=$(gcl eth.syncing);gv0;gq0;eb0 $p10 $r30 $e
-    m="GETH $ok $(tsy $e) $(dnn) sgs: $(nu1 %4i $e0)$(gb2 $e) i2: $(gdi 99)"                                                                                  # OK SYC/NSY (dnn) sgs: 5 blocks: 8
+    m="GETH $ok $(tsy $e) $(dnn) sgs: $(nu1 %4i $e0)$(gb2 $e) i2: $(gdi 99) $(gdu 99)"                                                                        # OK SYC/NSY (dnn) sgs: 5 blocks: 8
   else
     m="GSRV NOT ON $dt"
   fi
@@ -119,7 +120,7 @@ function urs {                                                                  
     if [[ $2 = RB ]];then ero $n $p11 $2;sex reboot;else sex "$s03 $s11";ssf 40 $p41;uq0;ero $n $p11 $2;fi                                                    # reboot/start el
   fi;done;rm -f $f
 }
-function udi { if [[ $1 -gt 0 ]];then l4=$(rl4|tail -n$1);else l4=$(rl4);fi;nu3 3 0 $(lg2 "$r43"); }                                                          # get delay imported
+function udi { if [[ $1 -gt 0 ]];then l4=$(rl4 $r35|tail -n$1);else l4=$(rl4 $r35);fi;nu3 3 0 $(lg2 "$r43"); }                                                # get delay imported
 function ucl { curl -sX POST --data "{\"jsonrpc\":\"2.0\",\"method\":\"$1\",\"params\":[],\"id\":51}" "http://$ciec:8545" 2>$p03; }                           # exec RPC HTTP
 function ui0 { nu0 $((16#$(nu0 $(echo $@|sed -n 's%.*highestBlock" *: *"0x\([^"]*\)".*%\1%ip' 2>$p03)))); }                                                   # get el highest block
 function uc0 { nu0 $((16#$(nu0 $(echo $@|sed -n 's%.*currentBlock" *: *"0x\([^"]*\)".*%\1%ip' 2>$p03)))); }                                                   # get el current block
