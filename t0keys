@@ -2,15 +2,14 @@
 
 source /home/eth/eth2/t1
 
-function sbn { printf $($p02/ethdo $s27 node info 2>$p03|cut -d: -f2); }
+function sbn { printf %s $($p02/ethdo $s27 node info 2>$p03|cut -d: -f2); }
 function obn { ping -qnc 1 -W 1 $zipg &>$p03; }
 function srv { if [[ $cunm = $1 ]];then cd $p02;return;else swb "TEM DE ESTAR $1";return 1;fi; }
 function bls {
   srv hrv-zen || return
   [[ -x $p02/ethdo     ]] || { dnv                              ; }
   [[ -x $p02/ethdo     ]] || { swb 'TEM DE TER ETHDO'    ;return; }
-  [[ $(sbn) = false    ]] || { swb "TEM DE TER BN SYNCED";return; }
-  [[ -f $p02/$s28.json ]] || $p02/ethdo $s27 validator credentials set --prepare-offline
+  [[ -f $p02/$s28.json ]] || { if [[ $(sbn) = false ]];then swb "TEM DE TER BN SYNCED";return;else $p02/ethdo $s27 validator credentials set --prepare-offline;fi; }
   [[ -f $p02/$s28.json ]] || { swb "TEM DE TER $s28.json";return; }
   [[ -f $p02/$s29.json ]] || { if [[ $M ]];then if obn;then swb 'TEM DE ESTAR OFFLINE';else $p02/ethdo $s27 validator credentials set --offline --mnemonic="$M" --withdrawal-address=$s26;fi;else swb 'TEM DE TER M';fi; }
   [[ -f $p02/$s29.json ]] || { swb "TEM DE TER $s29.json";return; }
