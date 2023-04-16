@@ -270,7 +270,7 @@ function brs {                                                                  
 function bsb {                                                                                                                                                # cc/vc gap stop
   [[ $(ls $p42.* 2>$p03) || $(bsc) -gt 0 ]] && return;ssf ${3:-0} $p42;local n=${4:-72}
   ssw $n $p42 $5;local t=$(sng);local f=$p42.i$(stg);touch $f;local n=0;paf;while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p42 $t $5
-  if tip $t;then       bv0;snp $s12 $1 $bpri $bprf                         ;[[ $2 = VC ]] && sex "$s02 $s13";local rsp=sim;swn "START BN $rsp?"               # stop cc/vc/conf change
+  if tip $t;then       bv0;snp $s12 $1 $bpri $bprf                         ;[[ $2 = VC ]] && sex "$s02 $s13";local rsp=${6:-sim};swn "START BN $rsp?"         # stop cc/vc/conf change
     [[ $rsp =~ na*o* ]] || sex "$s03 $s12";if [[ $2 = VC ]];then swn "START VC $rsp?";[[ $rsp =~ na*o* ]] || sex "$s03 $s13";fi                               # start cc+vc
     rm $f;ssf 40 $p42;bro $n $2
   fi;done;rm -f $f
@@ -457,6 +457,18 @@ function tvc {
 }
 function svr { local t='';for t in $(printf '%s\n' $@|sort -u);do curl -sX GET "$s23$t"|sed -n "$r23";done; }                                                 # show mev validator registration
 function mvr { local f=$p02/validator_keys/keystore;if [[ $(ls $f*.json 2>$p03) ]];then svr $(sed -n "$r28" $f*.json 2>$p03);else svr $s99;fi;  }             # choose validator keys
+function ivk {
+  [[ -d $p19 && $(ls -A $p19 2>$p03) ]] || return;swu 'IMPORTAR NOVAS CHAVES'
+  if [[ -f $p05/vc_keys ]];then
+    bsb 0 VC 0 72 sim nao
+    sex "chown -R $meeu:$meeu $p17"
+  else
+    sex "mkdir -p $p05";cmw $p05 755 $meeu
+  fi
+  swn "STORE($K)\n"
+  $p00/lighthouse --datadir $p05 account validator import --reuse-password --directory $p19;[[ -f $p17/validator_definitions.yml ]] && touch $p05/vc_keys
+  sex "chown -R eth3:eth3 $p17";cmw $p17 700 eth3;dmr;ba;va
+}
 
 [[ $1 = mvr ]] && { mvr; }
 [[ $1 = jwt ]] && { [[ $cunm = $znm1 || $cunm = $vnm1 ]] && jw0;if [[ -f jwt ]];then sjw eth1 $p08/geth;sjw eth1 $p09/data;sjw eth2 $p16;fi; }
@@ -502,6 +514,7 @@ function mvr { local f=$p02/validator_keys/keystore;if [[ $(ls $f*.json 2>$p03) 
 [[ $1 = shs ]] && { lhs  ; }                                                                                                                                  # slave  ec/cc/vc/system reports
 [[ $1 = cci ]] && { nu0 $(ss4 $s13 $r25 nodes $2); }                                                                                                          # cc ip vc uses
 [[ $1 = eci ]] && { nu0 $(ss4 $s12 $r25 execution-endpoint); }                                                                                                # ec ip cc uses
+[[ $1 = ivk ]] && { ivk; }
 [[ $1 = bo  && -f $p12 ]] && { boi $(pt1 $@ 00:00);if [[ $(pt3 $@ s) = n ]];then b6=$b2;else b6=$(pt2 $@ 0);fi;bo5; }
 [[ $1 = bon && -f $p12 ]] && { bv0;l2=$(bff 23:58);bo6 $(pt2 $2 $nn); }
 [[ $1 = boc && -f $p12 ]] && { unset v;read -a v <<< $(bff|tail -n1);l2=$(bff $(pt1 $2 ${v[4]}));boa; }
