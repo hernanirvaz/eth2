@@ -469,9 +469,9 @@ function ibk {
 function ivk {
   v2t && [[ ! -f $p05/vc_lock && -d $p19 && $(ls -A $p19 2>$p03) ]] || return;vsb $1;[[ $(sst $s12) ]] && ibk
   if [[ $(sst $s13) ]];then
-    swb 'IMPORTAR CHAVES';echo $K>$p02/key.k;sex "chown -R $meeu:$meeu $p17";cmw $p17 755
-    $p00/lighthouse --datadir $p05 account validator import --reuse-password --password-file $p02/key.k --directory $p19
-    rm $p02/key.k;sex "chown -R eth3:eth3 $p17";cmw $p17 700
+    swb 'IMPORTAR CHAVES';sex "chown -R $meeu:$meeu $p17";cmw $p17 755;local f=$p02/key.txt;echo $K > $f
+    $p00/lighthouse --datadir $p05 account validator import --reuse-password --password-file $f --directory $p19
+    rm -f $f;sex "chown -R eth3:eth3 $p17";cmw $p17 700
     [[ -f $p05/vc_lock ]] || cex "$s03 $s13";[[ -f $p12 ]] && { dts;swn "$(printf 'LAVI VK %3i %10s %5s' $(ls -A $p19 2>$p03|wc -l) $dt 2>$p03)" >> $p12; }
   fi
 }
