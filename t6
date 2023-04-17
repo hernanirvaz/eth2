@@ -275,9 +275,9 @@ function bsb {                                                                  
     rm $f;ssf 40 $p42;bro $n $2
   fi;done;rm -f $f
 }
-function vsv {                                                                                                                                                # vc gap stop
+function vsb {                                                                                                                                                # vc gap stop
   [[ $(ls $p46.* 2>$p03) || $(bsc) -gt 0 ]] && return;local n=${1:-72};ssw $n $p46 s;local t=$(sng);local f=$p46.i$(stg);touch $f;local n=0;paf
-  while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p46 $t s;if tip $t;then cex "$s02 $s13";rm $f;fi;done;rm -f $f
+  while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p46 $t s;if tip $t;then cex "$s02 $s12";cex "$s02 $s13";rm $f;fi;done;rm -f $f
 }
 function irb { rm $p39.$1.hours 2>$p03;if trb $1;then gps;ups;bps;sex reboot;else if trf;then touch $p39.$1.hours;fi;fi; }                                    # reboot if system needs it
 function brh { head -n${1:-0} $p12; }                                                                                                                         # new cc head lines
@@ -462,7 +462,7 @@ function tvc {
 function svr { local t='';for t in $(printf '%s\n' $@|sort -u);do curl -sX GET "$s23$t"|sed -n "$r23";done; }                                                 # show mev validator registration
 function mvr { local f=$p02/validator_keys/keystore;if [[ $(ls $f*.json 2>$p03) ]];then svr $(sed -n "$r28" $f*.json 2>$p03);else svr $s99;fi;  }             # choose validator keys
 function ivk {
-  v2t && [[ -f $p05/vc_keys && -d $p19 && $(ls -A $p19 2>$p03) ]] || return;v0t && vsv $1
+  v2t && [[ -f $p05/vc_keys && -d $p19 && $(ls -A $p19 2>$p03) ]] || return;vsb $1;[[ $(sst $s12) ]] && { dmr;cex "$s03 $s12"; }
   [[ $(sst $s13) ]] && { swn "IMPORTAR CHAVES $K\n";sudo -u eth3 $p00/lighthouse --datadir $p05 account validator import --reuse-password --directory $p19;cex "$s03 $s13"; }
 }
 
