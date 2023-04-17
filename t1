@@ -68,6 +68,7 @@ p42="$p02/beacon.restart"
 p43='/sys/devices/system/cpu/intel_pstate/no_turbo'
 p44='/sys/bus/usb/devices/1-0:1.0/authorized'
 p45='/var/run/reboot-required'
+p46="$p02/validator.restart"
 
 r00='s%^ *#*NTP=.*$%NTP=192.168.8.28 ntp02.oal.ul.pt ntp04.oal.ul.pt time.google.com time.cloudflare.com time.facebook.com%i'
 r01='s%^ *ENABLED=.*$%ENABLED=0%i'

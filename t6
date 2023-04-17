@@ -270,10 +270,14 @@ function brs {                                                                  
 function bsb {                                                                                                                                                # cc/vc gap stop
   [[ $(ls $p42.* 2>$p03) || $(bsc) -gt 0 ]] && return;ssf ${3:-0} $p42;local n=${4:-72}
   ssw $n $p42 $5;local t=$(sng);local f=$p42.i$(stg);touch $f;local n=0;paf;while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p42 $t $5
-  if tip $t;then       bv0;snp $s12 $1 $bpri $bprf                         ;[[ $2 = VC ]] && sex "$s02 $s13";local rsp=${6:-sim};swn "START BN $rsp?"         # stop cc/vc/conf change
-    [[ $rsp =~ na*o* ]] || sex "$s03 $s12";if [[ $2 = VC ]];then swn "START VC $rsp?";[[ $rsp =~ na*o* ]] || sex "$s03 $s13";fi                               # start cc+vc
+  if tip $t;then       bv0;snp $s12 $1 $bpri $bprf                         ;[[ $2 = VC ]] && sex "$s02 $s13";local rsp=$6;swn "START BN $rsp?"                # stop cc/vc/conf change
+    [[ $rsp =~ na*o* ]] || sex "$s03 $s12";if [[ $2 = VC ]];then [[ $rsp =~ na*o* ]] || { swn "START VC $rsp?";sex "$s03 $s13"; };fi                          # start cc+vc
     rm $f;ssf 40 $p42;bro $n $2
   fi;done;rm -f $f
+}
+function vsv {                                                                                                                                                # vc gap stop
+  [[ $(ls $p46.* 2>$p03) || $(bsc) -gt 0 ]] && return;local n=${1:-72};ssw $n $p46 s;local t=$(sng);local f=$p46.i$(stg);touch $f;local n=0;paf
+  while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p46 $t s;if tip $t;then cex "$s02 $s13";rm $f;fi;done;rm -f $f
 }
 function irb { rm $p39.$1.hours 2>$p03;if trb $1;then gps;ups;bps;sex reboot;else if trf;then touch $p39.$1.hours;fi;fi; }                                    # reboot if system needs it
 function brh { head -n${1:-0} $p12; }                                                                                                                         # new cc head lines
@@ -458,11 +462,8 @@ function tvc {
 function svr { local t='';for t in $(printf '%s\n' $@|sort -u);do curl -sX GET "$s23$t"|sed -n "$r23";done; }                                                 # show mev validator registration
 function mvr { local f=$p02/validator_keys/keystore;if [[ $(ls $f*.json 2>$p03) ]];then svr $(sed -n "$r28" $f*.json 2>$p03);else svr $s99;fi;  }             # choose validator keys
 function ivk {
-  [[ -f $p05/vc_keys && -d $p19 && $(ls -A $p19 2>$p03) ]] || return;swu 'IMPORTAR NOVAS CHAVES';bsb 0 VC 0 72 sim nao
-  cex "chown -R $meeu:$meeu $p17"
-  swn "STORE($K)\n";$p00/lighthouse --datadir $p05 account validator import --reuse-password --directory $p19
-  cex "chown -R eth3:eth3 $p17"
-  dmr;ba;va
+  v2t && [[ -f $p05/vc_keys && -d $p19 && $(ls -A $p19 2>$p03) ]] || return;v0t && vsv $1
+  [[ $(sst $s13) ]] && { swn "IMPORTAR CHAVES $K\n";sudo -u eth3 $p00/lighthouse --datadir $p05 account validator import --reuse-password --directory $p19;cex "$s03 $s13"; }
 }
 
 [[ $1 = mvr ]] && { mvr; }
@@ -509,7 +510,7 @@ function ivk {
 [[ $1 = shs ]] && { lhs  ; }                                                                                                                                  # slave  ec/cc/vc/system reports
 [[ $1 = cci ]] && { nu0 $(ss4 $s13 $r25 nodes $2); }                                                                                                          # cc ip vc uses
 [[ $1 = eci ]] && { nu0 $(ss4 $s12 $r25 execution-endpoint); }                                                                                                # ec ip cc uses
-[[ $1 = ivk ]] && { ivk; }
+[[ $1 = ivk ]] && { ivk $2; }
 [[ $1 = bo  && -f $p12 ]] && { boi $(pt1 $@ 00:00);if [[ $(pt3 $@ s) = n ]];then b6=$b2;else b6=$(pt2 $@ 0);fi;bo5; }
 [[ $1 = bon && -f $p12 ]] && { bv0;l2=$(bff 23:58);bo6 $(pt2 $2 $nn); }
 [[ $1 = boc && -f $p12 ]] && { unset v;read -a v <<< $(bff|tail -n1);l2=$(bff $(pt1 $2 ${v[4]}));boa; }
@@ -674,6 +675,7 @@ if [[ ! $1 ]];then
   m="$m\nurb [s/n]\tsystem & besu\t\t\treboot\ts/n prints sleep times"
   m="$m\nbrb [s/n]\tsystem & beacon\t\t\treboot\ts/n prints sleep times"
   m="$m\nirb [h]\t\tsystem (if needed)\t\treboot\tafter h hours"
+  m="$m\nivk [s]\t\timport validator keys\t\tsearch [s]econds of inctivity"
   m="$m\nrsh\t\trestart info (time & next gap without validator tasks)"
   m="$m\nyj\t\tsystem journal"
   m="$m\nsl\t[hh:mm]\tsystem journal\tlog lines"
