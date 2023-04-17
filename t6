@@ -462,8 +462,13 @@ function tvc {
 function svr { local t='';for t in $(printf '%s\n' $@|sort -u);do curl -sX GET "$s23$t"|sed -n "$r23";done; }                                                 # show mev validator registration
 function mvr { local f=$p02/validator_keys/keystore;if [[ $(ls $f*.json 2>$p03) ]];then svr $(sed -n "$r28" $f*.json 2>$p03);else svr $s99;fi;  }             # choose validator keys
 function ivk {
-  v2t && [[ -f $p05/vc_keys && -d $p19 && $(ls -A $p19 2>$p03) ]] || return;vsb $1;[[ $(sst $s12) ]] && { dmr;cex "$s03 $s12"; }
-  [[ $(sst $s13) ]] && { swn "IMPORTAR CHAVES $K\n";sudo -u eth3 $p00/lighthouse --datadir $p05 account validator import --reuse-password --directory $p19;cex "$s03 $s13"; }
+  v2t && [[ ! -f $p05/vc_lock && -d $p19 && $(ls -A $p19 2>$p03) ]] || return;vsb $1;[[ $(sst $s12) ]] && { dmr;cex "$s03 $s12"; }
+  if [[ $(sst $s13) ]];then 
+    swn "IMPORTAR CHAVES\n";echo $K>$p02/key.k;sex "chown -R $meeu:$meeu $p17";cmw $p17 755
+    $p00/lighthouse --datadir $p05 account validator import --reuse-password --password-file $p02/key.k --directory $p19
+    rm $p02/key.k;sex "chown -R eth3:eth3 $p17";cmw $p17 700
+    cex "$s03 $s13";[[ -f $p12 ]] && { dts;swn "$(printf 'LAVI VK %3i %10s %5s' $(ls -A $p19 2>$p03|wc -l) $dt 2>$p03)" >> $p12; }
+  fi
 }
 
 [[ $1 = mvr ]] && { mvr; }
