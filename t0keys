@@ -37,7 +37,7 @@ function vwt {
 
 if [[ ! $1 ]];then
   m=''
-  m="$m\nbls\t\tBLS withdrawal credentials"
+  m="$m\nbls\t\tBLS Withdrawal Credentials"
   m="$m\nvwt\t\tNext Withdrawal Information"
   m="$m\nsdc [v] [n]\tStaking Deposit Cli\t\tv=chaves, n=chaves anteriores"
   swn "$m\n"
