@@ -463,7 +463,7 @@ function svr { local t='';for t in $(printf '%s\n' $@|sort -u);do curl -sX GET "
 function mvr { local f=$p02/validator_keys/keystore;if [[ $(ls $f*.json 2>$p03) ]];then svr $(sed -n "$r28" $f*.json 2>$p03);else svr $s99;fi;  }             # choose validator keys
 function ibk {
   local f="$p02/pubkeys.old";sex "cp $p16/pubkeys $f";sex "chown eth:eth $f"
-  echo "$(cat $f)$(for f in $(ls -A $p19);do printf %s ",$(cat $p19/$f|jq -r .pubkey)";done)" > $p02/pubkeys.new
+  echo "$(cat $f)$(for f in $(ls -A $p19/keystore*.json 2>$p03);do printf %s ",$(cat $p19/$f|jq -r .pubkey)";done)" > $p02/pubkeys.new
   local f="$p16/pubkeys";sex "cp $p02/pubkeys.new $f";sex "chown eth2:eth2 $f";cmw $f 600;dmr;cex "$s03 $s12"
 }
 function ivk {
