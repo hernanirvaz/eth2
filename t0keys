@@ -5,7 +5,16 @@ source /home/eth/eth2/t1
 function sbn { printf %s $($p02/ethdo $s27 node info 2>$p03|cut -d: -f2); }
 function obn { ping -qnc 1 -W 1 $zipg &>$p03; }
 function srv { if [[ $cunm = $1 ]];then cd $p02;return;else swb "TEM DE ESTAR $1";return 1;fi; }
-function bls {
+function dsd {
+  srv hrv-zen || return
+  [[ -x $p02/deposit ]] || { snv                            ; }
+  [[ -x $p02/deposit ]] || { swb 'TEM DE TER DEPOSIT';return; }
+  [[ -d $p19 && $(ls -A $p19 2>$p03) ]] && { swb 'CHAVES JA EXISTEM';return; }
+  local v=${1:-3};local n=${2:-22}
+  if [[ $M ]];then if obn;then swb 'TEM DE ESTAR OFFLINE';else swb "GERAR $v CHAVES A PARTIR DE $n";$p02/deposit --language English --non_interactive existing-mnemonic --mnemonic "$M" --validator_start_index $n --num_validators $v --chain mainnet --keystore_password $K --execution_address $s30;fi;else swb 'TEM DE TER M';fi
+  [[ -d $p19 && $(ls -A $p19 2>$p03) ]] && { swb 'DEVE ARQUIVAR CHAVES & ACTUALIZAR VARS';local f='';for f in $(ls -A $p19/keystore*.json 2>$p03);do cat $p19/$f|jq -r .pubkey;done; }
+}
+function ewc {
   srv hrv-zen || return
   [[ -x $p02/ethdo     ]] || { dnv                              ; }
   [[ -x $p02/ethdo     ]] || { swb 'TEM DE TER ETHDO'    ;return; }
@@ -16,30 +25,21 @@ function bls {
   [[ -f $p02/$s29.done ]] || { if obn;then swb 'Changing withdrawal credentials';echo $p02/ethdo $s27 validator credentials set;cp $p02/$s29.json $p02/$s29.done;else swb 'TEM DE ESTAR ONLINE';fi; }
   if obn;then local v='';for v in $@;do swn "Indice $v: $($p02/ethdo $s27 validator credentials get --validator=$v)";done;else swb 'TEM DE ESTAR ONLINE';fi
 }
-function sdc {
-  srv hrv-zen || return
-  [[ -x $p02/deposit ]] || { snv                            ; }
-  [[ -x $p02/deposit ]] || { swb 'TEM DE TER DEPOSIT';return; }
-  [[ -d $p19 && $(ls -A $p19 2>$p03) ]] && { swb 'CHAVES JA EXISTEM';return; }
-  local v=${1:-3};local n=${2:-22}
-  if [[ $M ]];then if obn;then swb 'TEM DE ESTAR OFFLINE';else swb "GERAR $v CHAVES A PARTIR DE $n";$p02/deposit --language English --non_interactive existing-mnemonic --mnemonic "$M" --validator_start_index $n --num_validators $v --chain mainnet --keystore_password $K --execution_address $s30;fi;else swb 'TEM DE TER M';fi
-  [[ -d $p19 && $(ls -A $p19 2>$p03) ]] && { swb 'DEVE ARQUIVAR CHAVES & ACTUALIZAR VARS';local f='';for f in $(ls -A $p19/keystore*.json 2>$p03);do cat $p19/$f|jq -r .pubkey;done; }
-}
-function vwt {
+function ewi {
   srv hrv-zen || return
   [[ -x $p02/ethdo ]] || { dnv                          ; }
   [[ -x $p02/ethdo ]] || { swb 'TEM DE TER ETHDO';return; }
   if obn;then for v in $@;do swn "Indice $v: $($p02/ethdo $s27 validator withdrawal --validator=$v)";done;else swb 'TEM DE ESTAR ONLINE';fi
 }
 
-[[ $1 = bls ]] && { bls $s99 ; }
-[[ $1 = sdc ]] && { sdc $2 $3; }
-[[ $1 = vwt ]] && { vwt $s99 ; }
+[[ $1 = dsd ]] && { dsd $2 $3; }
+[[ $1 = ewc ]] && { ewc $s99 ; }
+[[ $1 = ewi ]] && { ewi $s99 ; }
 
 if [[ ! $1 ]];then
   m=''
-  m="$m\nbls\t\tBLS Withdrawal Credentials"
-  m="$m\nvwt\t\tNext Withdrawal Information"
-  m="$m\nsdc [v] [n]\tStaking Deposit Cli\t\tv=chaves, n=chaves anteriores"
+  m="$m\ndsd [v] [n]\tStaking Deposit\t v=chaves, n=chaves anteriores"
+  m="$m\newc\t\tBLS Withdrawal Credentials"
+  m="$m\newi\t\tNext Withdrawal Information"
   swn "$m\n"
 fi
