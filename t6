@@ -460,7 +460,7 @@ function tvc {
   if [[ $rsp = SIM && ! -f $p05/vc_slash && ! -f $p05/vc_lock && -f $p05/vc_keys ]];then vp;vd;swu "COPY SLASH -> $nxvc";vps;fi                               # vc stop/disable & prep slash db
 }
 function svr { local t='';for t in $(printf '%s\n' $@|sort -u);do curl -sX GET "$s23$t"|sed -n "$r23";done; }                                                 # show mev validator registration
-function mvr { if [[ $(ls -A $p19/key*.json 2>$p03) ]];then svr $(sed -n "$r28" $p19/key*.json 2>$p03);else svr $s99;fi;  }                                   # choose validator keys
+function mvr { if [[ $(ls -A $p19/key*.json 2>$p03) ]];then svr $(sed -n "$r28" $p19/key*.json 2>$p03);else svr $s99;fi; }                                    # choose validator keys
 function ibk {
   local f="$p02/pubkeys.old";sex "cp $p16/pubkeys $f";sex "chown eth:eth $f"
   echo "$(cat $f)$(for f in $(ls -A $p19/keystore*.json 2>$p03);do printf %s ",$(cat $p19/$f|jq -r .pubkey)";done)" > $p02/pubkeys.new
