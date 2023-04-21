@@ -96,7 +96,7 @@ else
   # othe="$othe --monitoring-endpoint https://beaconcha.in/api/v1/client/metrics?apikey=$B&machine=$(snc $cunm)"                                              # monitor data for beaconcha.in app
   # othe="$othe --builder-proposals"                                                                                                                          # mev-boost
   sau eth3;cd $p02
-  if [[ ! -f $p05/vc_keys && -d $p19 && $(ls -A $p19 2>$p03) ]];then
+  if [[ ! -f $p05/vc_keys && -d $p19 && $(ls $p19 2>$p03) ]];then
     swu 'IMPORT KEYS';sex "mkdir -p $p05";cmw $p05 755 $meeu
     swn "STORE($K)\n";lighthouse --datadir $p05 account validator import --directory $p19                                                                     # import keys
     [[ -f $p17/validator_definitions.yml ]] && touch $p05/vc_keys                                                                                             # check work
