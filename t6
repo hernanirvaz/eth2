@@ -463,9 +463,9 @@ function svr { local t='';for t in $(printf '%s\n' $@|sort -u);do curl -sX GET "
 function mvr { if [[ $(ls -A $p19/key*.json 2>$p03) ]];then svr $(sed -n "$r28" $p19/key*.json 2>$p03);else svr $s99;fi; }                                    # choose validator keys
 function ibk {
   local f="$p02/pubkeys.old";sex "cp $p16/pubkeys $f";sex "chown eth:eth $f"
-  #echo "$(cat $f)$(for f in $(ls -A $p19/keystore*.json 2>$p03);do printf %s ",$(cat $p19/$f|jq -r .pubkey)";done)" > $p02/pubkeys.new
   echo "$(cat $f)$(for f in $(jq -r .pubkey $p19/key*.json 2>$p03);do printf %s ",0x$f";done)" > $p02/pubkeys.new
-  local f="$p16/pubkeys";sex "cp $p02/pubkeys.new $f";sex "chown eth2:eth2 $f";cmw $f 600;dmr;cex "$s03 $s12"
+  #local f="$p16/pubkeys";sex "cp $p02/pubkeys.new $f";sex "chown eth2:eth2 $f";cmw $f 600;dmr;cex "$s03 $s12"
+  local f="$p16/pubkeys";sex "cp $p02/pubkeys.new $f";sex "chown eth2:eth2 $f";cmw $f 600;dmr;echo "$s03 $s12"
 }
 function ivk {
   v2t && [[ ! -f $p05/vc_lock && -d $p19 && $(ls -A $p19 2>$p03) ]] || return;vsb $1;[[ $(sst $s12) ]] && ibk
@@ -473,7 +473,8 @@ function ivk {
     swb 'IMPORTAR CHAVES';sex "chown -R $meeu:$meeu $p17";cmw $p17 755;local f=$p02/key.txt;echo $K > $f
     $p00/lighthouse --datadir $p05 account validator import --reuse-password --password-file $f --directory $p19
     rm -f $f;sex "chown -R eth3:eth3 $p17";cmw $p17 700
-    [[ -f $p05/vc_lock ]] || echo "$s03 $s13";[[ -f $p12 ]] && { dts;swn "$(printf 'LAVI VK %3i %10s %5s' $(ls -A $p19 2>$p03|wc -l) $dt 2>$p03)" >> $p12; }
+    #[[ -f $p05/vc_lock ]] || cex "$s03 $s13";[[ -f $p12 ]] && { dts;swn "$(printf 'LAVI VK %3i %10s %5s' $(ls -A $p19 2>$p03|wc -l) $dt 2>$p03)" >> $p12; }
+    [[ -f $p05/vc_lock ]] || echo "$s03 $s13";[[ -f $p12 ]] && { cex "$s02 $s10";dts;swn "$(printf 'LAVI VK %3i %10s %5s' $(ls -A $p19 2>$p03|wc -l) $dt 2>$p03)" >> $p12;cex reboot; }
   fi
 }
 
