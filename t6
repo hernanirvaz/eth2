@@ -533,8 +533,8 @@ function ivk {
 [[ $1 = cpe ]] && { cpe $2; }
 [[ $1 = gpn ]] && { if [[ $(sst $s10 running) ]];then gp;cex "du -h $p08";sudo -u eth1 $p07/geth --datadir $p08 snapshot prune-state;cex "du -h $p08";dmr;ga;fi; }
 [[ $1 = gpg ]] && { if [[ $(sst $s10 running) ]];then gp;cex "du -h $p08";sudo -u eth1 $p07/geth --datadir $p08 removedb            ;cex "du -h $p08";dmr;ga;fi; }
-[[ $1 = grs ]] && { grs ${2:-0}           ; }
-[[ $1 = urs ]] && { urs ${2:-0}           ; }
+[[ $1 = grs ]] && { grs ${2:-0} SR   ${4:-36} $3; }
+[[ $1 = urs ]] && { urs ${2:-0} SR   ${4:-36} $3; }
 [[ $1 = bsb ]] && { bsb ${2:-0} BN 0 ${4:-60} $3; }
 [[ $1 = brs ]] && { brs ${2:-0} BN 0 ${4:-60} $3; }
 [[ $1 = bsv ]] && { bsb      0  VC 0 ${3:-72} $2; }

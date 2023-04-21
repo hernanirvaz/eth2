@@ -17,7 +17,7 @@ if [[ $1 = linux || $1 = reboot || $1 = geth ]];then
   swu 'FULL-UPGRADE'
   cex 'apt update -y'    ;sudo apt full-upgrade -y && sudo apt dist-upgrade -y
   cex 'apt autoremove -y';sudo apt autoclean
-  [[ $1 = geth && $gver != $(gvr) ]] && { swb 'GETH SAFE RESTART';t6 grs ; }
+  [[ $1 = geth && $gver != $(gvr) ]] && { swb 'GETH SAFE RESTART';t6 grs 0 s 60; }
   [[ $1 = reboot                  ]] && { t6 gpr;t6 upr;t6 bpr;cex reboot; }
 fi
 if [[ $1 = besu ]];then sex "rm -fr $p00/besu.sav"     ;sex "mv $p00/besu      $p00/besu.sav"     ;unv $2    ;fi                                              # save/download/install besu
