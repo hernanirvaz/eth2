@@ -160,7 +160,7 @@ function bff { grep "BEAC.*$1" $p12 2>$p03; }                                   
 function bnn { snn $(fs3 peers:) $(bpc $(bcl peer_count)); }                                                                                                  # set cur/min/std cc peers
 function bb1 { if [[ $(echo $@|grep is_syncing\":false) ]];then printf 'synced';else printf 'syncing: %6i' $(bsd $@);fi; }                                    # get cl syncing distance remaining
 function bio { lg3 $1;dts;m="BEIO $(nu1 %6i $1) $dt io: $b1 $b5 $(bi1)"; }                                                                                    # shw imported/observed delays
-function bcc { if tbp       ;then printf c;else printf _;fi; }                                                                                                # get change configured peers char
+function bcc { if tbp       ;then if trb;then printf r;else printf c;fi;else printf _;fi; }                                                                   # get change configured peers char
 function bdc { if tha && tsd;then printf d;else printf _;fi; }                                                                                                # get delete cc log day       char
 function bmp { printf 'avg: %4i %4s %4i %4i io: %4i %4i %4i' ${a[0]} $b7 $b4 $(bi0) $b1 $b5 $(bi1) 2>$p03; }                                                  # get peer__io: partial
 function bl0 { dts;ok=OK;if [[ $(sst $s12 running) ]];then bl3;bv0;bnn;bb0;blo;else m="BSRV NOT ON $dt";fi; }                                                 # cc report
