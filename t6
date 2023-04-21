@@ -144,7 +144,7 @@ function bsd { nu0 $(echo $@|sed -n 's%.*"sync_distance" *: *"\([^"]*\)".*%\1%ip
 function bpc { nu0 $(echo $@|sed -n 's%.*"connected" *: *"\([^"]*\)".*%\1%ip'     2>$p03); }                                                                  # get cl peers connected
 function bz0 { nu2 "(30.0*(0.4*$zk+0.3*$zz+0.2*$zx+0.1*$zw))"                            ; }                                                                  # get numerator paid errors
 function bw0 { nu0 $((9*z1))                                                             ; }                                                                  # get numerator processed blocks
-function bf0 { nu0 $((99*z3))                                                            ; }                                                                  # get numerator general errors
+function bf0 { nu0 $((59*z3))                                                            ; }                                                                  # get numerator general errors
 function bi0 { nu0 $((nd+zk*300+zz*20+zx))                                               ; }                                                                  # get delete day idx
 function bi1 { nu0 $(((4*b1+b5)/5))                                                      ; }                                                                  # shw imported/observed data
 function bi2 { nu0 $(((z5>400?$(bz0)/z5:0)+(z2>300?$(bw0)/z2:0)+(z4>999?$(bf0)/z4:0)))   ; }                                                                  # get restart idx
