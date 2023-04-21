@@ -135,7 +135,7 @@ function ul0 {                                                                  
   if [[ $(sst $s11 running) ]];then local e=$(ucl eth_syncing);uv0;uq0;eb0 $p11 $r31 $e
     m="BESU $ok $(tsy $e) $(dnn) sgs: $(nu1 %4i $e0)$(ub2 $e) i2: $(udi 99)"                                                                                  # OK SYC/NSY (dnn) sgs: 5 blocks: 8
   else
-    m="BSRV NOT ON $dt"
+    m="USRV NOT ON $dt"
   fi
 }
 # cc control commands
@@ -286,7 +286,7 @@ function brl {                                                                  
     if [[ ${v[0]} = BEAC ]];then
       bl1 ${v[19]} ${v[20]} ${v[22]} ${v[23]} ${v[11]} ${v[18]} ${v[1]};bl2 ${v[15]} ${v[16]} ${v[17]};bl3 ${v[13]} ${v[26]} ${v[27]};blo                     # BEAC lines calculated output
     else
-      if [[ ${v[0]} = BSRV ]];then m="${v[0]} ${v[1]} ${v[2]} $dt";else m="${v[0]} $ok $(nu1 %3i ${v[2]}) $(dnn)";swn "$m";fi
+      m="${v[0]} $ok $(nu1 %3i ${v[2]})";if [[ ${v[0]} = BSRV ]];then m="$m $dt";else m="$m $(dnn)";fi;swn "$m"
     fi;swn "$m" >> $p12.r                                                                                                                                     # new cc output
   done <<< $(cat $p12)
 }
@@ -472,7 +472,7 @@ function ivk {
     swb 'IMPORTAR CHAVES';sex "chown -R $meeu:$meeu $p17";cmw $p17 755;local f=$p02/key.txt;echo $K > $f
     $p00/lighthouse --datadir $p05 account validator import --reuse-password --password-file $f --directory $p19
     rm -f $f;sex "chown -R eth3:eth3 $p17";cmw $p17 700
-    [[ -f $p05/vc_lock ]] || cex "$s03 $s13";[[ -f $p12 ]] && { dts;swn "$(printf 'LAVI VK %3i %10s %5s' $(ls $p19 2>$p03|wc -l) $dt 2>$p03)" >> $p12; }
+    [[ -f $p05/vc_lock ]] || cex "$s03 $s13";[[ -f $p12 ]] && { dts;swn "$(printf 'BSRV VK %3i %10s %5s' $(ls $p19 2>$p03|wc -l) $dt 2>$p03)" >> $p12; }
   fi
 }
 
