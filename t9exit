@@ -2,18 +2,16 @@
 
 source /home/eth/eth2/t1
 
-swu 'WARNING: WARNING: THIS IS AN IRREVERSIBLE OPERATION'
-swu 'WARNING: WITHDRAWING STAKED ETH WILL NOT BE POSSIBLE UNTIL THE MERGE'
-swu 'WARNING: TO ENTER AGAIN YOU GO TO A LONG QUEUE'
-swu 'QUER MESMO EXIT MY VALIDATORS?';read rsp
-if [[ $rsp = sim && ! -f $p05/vc_slash && ! -f $p05/vc_lock && -f $p05/vc_keys && -x $p00/lighthouse ]];then
-  swu 'EXIT VALIDATORS'
-  if [[ -f $p17/validator_definitions.yml ]];then
-    swn "STORE($K) WALLET($W)";for kst in $(ls $p17/*.json);do swn "$p00/lighthouse --datadir $p05 account validator exit --keystore $kst";done
-  else
-    swu '\nCHAVES AINDA NAO FORAM IMPORTADAS'
-  fi
-  swu 'LIGTH: CONFIGURE VALIDATOR'
-else
-  swu 'NAO EXISTEM VALIDATORS TO EXIT'
+function tve { local f='';echo;for f in $(ls $p19/key*.json 2>$p03);do echo $(basename $f);done;echo;swn 'QUER MESMO SAIR ESTES VALIDATORS (SIM/nao)?';read rsp;if [[ $rsp = SIM ]];then swn "STORE($K) EXIT-PHRASE(Exit my validator)";return;else return 1;fi; }
+function lve { [[ -d $p19 && $(ls $p19/key*.json 2>$p03) ]] && tve && { local f='';for f in $(ls $p19/key*.json 2>$p03);do echo $p00/lighthouse --datadir $p05 account validator exit --keystore $f --beacon-node $1;done; }; }
+
+[[ $1 = le1 ]] && { lve $s31; }
+[[ $1 = le2 ]] && { lve $s32; }
+
+if [[ ! $1 ]];then
+  m=''
+  m="$m\nle1\t\tinitiate voluntary exit\t(lighthouse) ($s31)"
+  m="$m\nle2\t\tinitiate voluntary exit\t(lighthouse) ($s32)"
+  m="$m\neve\t\tinitiate voluntary exit\t(ethdo)"
+  swn "$m\n"
 fi

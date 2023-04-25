@@ -282,6 +282,8 @@ s27="--connection=http://$zip4:5052 --allow-insecure-connections"
 s28='offline-preparation'
 s29='change-operations'
 s30='0x27C7f54e48956A906aF2CBFBC8684b437776403d'
+s31="http://$zip4:5052"
+s32="https://beaconcha.in/tools/broadcast"
 
 s70='0x93bf23a587f11f9eca329a12ef51296b8a9848af8c0fe61201524b14cb85b0c6fbd3e427501cdfa3b28719bd1ed96fff'
 s71='0xb5b0fc3d2ba577f3e2c7324f7ea4306f17eeee0f12c722f4fa83e45bf6c15477d50261bb2666c30f21ab71a26aeeeafb'
