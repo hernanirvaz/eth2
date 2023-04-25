@@ -2,16 +2,26 @@
 
 source /home/eth/eth2/t1
 
+function srv { if [[ $cunm = $1 ]];then cd $p02;return;else swb "TEM DE ESTAR $1";return 1;fi; }
 function tve { local f='';echo;for f in $(ls $p19/key*.json 2>$p03);do echo $(basename $f);done;echo;swn 'QUER MESMO SAIR ESTES VALIDATORS (SIM/nao)?';read rsp;if [[ $rsp = SIM ]];then swn "STORE($K) EXIT-PHRASE(Exit my validator)";return;else return 1;fi; }
 function lve { [[ -d $p19 && $(ls $p19/key*.json 2>$p03) ]] && tve && { local f='';for f in $(ls $p19/key*.json 2>$p03);do echo $p00/lighthouse --datadir $p05 account validator exit --keystore $f --beacon-node $1;done; }; }
+function eve {
+  srv hrv-zen || return
+  [[ -x $p02/ethdo     ]] || { dnv                              ; }
+  [[ -x $p02/ethdo     ]] || { swb 'TEM DE TER ETHDO'    ;return; }
+  [[ -d $p19 && $(ls $p19/key*.json 2>$p03) ]] && tve && { local f='';for f in $(ls $p19/key*.json 2>$p03);do echo $p02/ethdo $1 validator exit --validator=$f --passphrase="$K";done; }
+}
 
-[[ $1 = le1 ]] && { lve $s31; }
-[[ $1 = le2 ]] && { lve $s32; }
+[[ $1 = ee1 ]] && { eve $s27; }
+[[ $1 = ee2 ]] && { eve $s28; }
+[[ $1 = le1 ]] && { lve $s29; }
+[[ $1 = le2 ]] && { lve $s30; }
 
 if [[ ! $1 ]];then
   m=''
-  m="$m\nle1\t\tinitiate voluntary exit\t(lighthouse) ($s31)"
-  m="$m\nle2\t\tinitiate voluntary exit\t(lighthouse) ($s32)"
-  m="$m\neve\t\tinitiate voluntary exit\t(ethdo)"
+  m="$m\nee1\t\tvoluntary exit\t(ethdo      $s27)"
+  m="$m\nee2\t\tvoluntary exit\t(ethdo      $s28)"
+  m="$m\nle1\t\tvoluntary exit\t(lighthouse --beacon-node $s29)"
+  m="$m\nle2\t\tvoluntary exit\t(lighthouse --beacon-node $s30)"
   swn "$m\n"
 fi
