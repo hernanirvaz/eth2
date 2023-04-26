@@ -5,6 +5,13 @@ source /home/eth/eth2/t1
 function sbn { printf %s $($p02/ethdo $s27 node info 2>$p03|cut -d: -f2); }
 function obn { ping -qnc 1 -W 1 $zipg &>$p03; }
 function srv { if [[ $cunm = $1 ]];then cd $p02;return;else swb "TEM DE ESTAR $1";return 1;fi; }
+function tve { local f='';echo;for f in $(ls $p19/key*.json 2>$p03);do echo $(basename $f);done;echo;swn 'QUER MESMO SAIR ESTES VALIDATORS (SIM/nao)?';read rsp;if [[ $rsp = SIM ]];then return;else return 1;fi; }
+function lve { [[ -d $p19 && $(ls $p19/key*.json 2>$p03) ]] && tve && { echo;swn "STORE($K) EXIT-PHRASE(Exit my validator)";echo;local f='';for f in $(ls $p19/key*.json 2>$p03);do echo $p00/lighthouse --datadir $p05 account validator exit --keystore $f --beacon-node http://$zip4:5052;done; }; }
+function eve {
+  [[ -x $p02/ethdo     ]] || { dnv                              ; }
+  [[ -x $p02/ethdo     ]] || { swb 'TEM DE TER ETHDO'    ;return; }
+  [[ -d $p19 && $(ls $p19/key*.json 2>$p03) ]] && tve && { local f='';for f in $(ls $p19/key*.json 2>$p03);do echo $p02/ethdo $s27 validator exit --validator=$f --passphrase="$K";done; }
+}
 function dsd {
   srv hrv-zen || return
   [[ -x $p02/deposit ]] || { snv                            ; }
@@ -34,11 +41,15 @@ function ewi {
 [[ $1 = dsd ]] && { dsd $2 $3; }
 [[ $1 = ewc ]] && { ewc $s99 ; }
 [[ $1 = ewi ]] && { ewi $s99 ; }
+[[ $1 = eve ]] && { eve; }
+[[ $1 = lve ]] && { lve; }
 
 if [[ ! $1 ]];then
   m=''
-  m="$m\ndsd [v] [n]\tStaking Deposit\t v=chaves, n=chaves anteriores"
+  m="$m\ndsd [v] [n]\tStaking Deposit\t\t\t(v=chaves, n=chaves anteriores)"
   m="$m\newc\t\tBLS Withdrawal Credentials"
   m="$m\newi\t\tNext Withdrawal Information"
+  m="$m\neve\t\tvoluntary exit\t\t\t(ethdo)"
+  m="$m\nlve\t\tvoluntary exit\t\t\t(lighthouse)"
   swn "$m\n"
 fi
