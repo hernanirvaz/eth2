@@ -17,11 +17,11 @@ function ewc {
   srv hrv-zen || return
   [[ -x $p02/ethdo     ]] || { dnv                              ; }
   [[ -x $p02/ethdo     ]] || { swb 'TEM DE TER ETHDO'    ;return; }
-  [[ -f $p02/$s32.json ]] || { if [[ $(sbn) = false ]];then $p02/ethdo $s27 validator credentials set --prepare-offline;else swb "TEM DE TER BN SYNCED";return;fi; }
-  [[ -f $p02/$s32.json ]] || { swb "TEM DE TER $s32.json";return; }
-  [[ -f $p02/$s31.json ]] || { if [[ $M ]];then if obn;then swb 'TEM DE ESTAR OFFLINE';else $p02/ethdo $s27 validator credentials set --offline --mnemonic="$M" --withdrawal-address=$s25;fi;else swb 'TEM DE TER M';fi; }
-  [[ -f $p02/$s31.json ]] || { swb "TEM DE TER $s31.json";return; }
-  [[ -f $p02/$s31.done ]] || { if obn;then swb 'Changing withdrawal credentials';$p02/ethdo $s27 validator credentials set;touch $p02/$s31.done;else swb 'TEM DE ESTAR ONLINE';fi; }
+  [[ -f $p02/$s29.json ]] || { if [[ $(sbn) = false ]];then $p02/ethdo $s27 validator credentials set --prepare-offline;else swb "TEM DE TER BN SYNCED";return;fi; }
+  [[ -f $p02/$s29.json ]] || { swb "TEM DE TER $s29.json";return; }
+  [[ -f $p02/$s30.json ]] || { if [[ $M ]];then if obn;then swb 'TEM DE ESTAR OFFLINE';else $p02/ethdo $s27 validator credentials set --offline --mnemonic="$M" --withdrawal-address=$s25;fi;else swb 'TEM DE TER M';fi; }
+  [[ -f $p02/$s30.json ]] || { swb "TEM DE TER $s30.json";return; }
+  [[ -f $p02/$s30.done ]] || { if obn;then swb 'Changing withdrawal credentials';$p02/ethdo $s27 validator credentials set;touch $p02/$s30.done;else swb 'TEM DE ESTAR ONLINE';fi; }
   if obn;then local v='';for v in $@;do swn "Indice $v: $($p02/ethdo $s27 validator credentials get --validator=$v)";done;else swb 'TEM DE ESTAR ONLINE';fi
 }
 function ewi {
