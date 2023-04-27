@@ -309,7 +309,7 @@ function tmp {
   local d=$(fs5|grep throttled|head -n1|sed "$r27");local e=$(fs5|grep normal|tail -n1|sed "$r27");local l=$(pex "smartctl --json=c -x /dev/sda")
   local g=$(echo $(echo $l|jq -r "$r40" 2>$p03) $(echo $l|jq -r "$r41" 2>$p03));local l=$(sensors 2>$p03|sed -n "$r26")
   if [[ $cunm = $znm4 ]];then local g=$(echo $g $(pex "smartctl --json=c -x /dev/nvme0n1"|jq -r "$r40" 2>$p03));fi
-  [[ $1$d$e || $(nu3 1 0 $l) -ge 50 || $(nu3 1 0 $g) -ge 40 ]] || return;[[ $d ]] && local d="throttled: $d";[[ $e ]] && local e="normal: $e"
+  [[ $1$d$e || $(nu3 1 0 $l) -ge 55 || $(nu3 1 0 $g) -ge 45 ]] || return;[[ $d ]] && local d="throttled: $d";[[ $e ]] && local e="normal: $e"
   swn "TEMP $(printf '%5.1fC %10s %5s ssd: %.1fC %s %s' $(nu3 1 1 $l) $dt $(nu3 1 1 $g) $d $e 2>$p03)"                                                        # TEMP cpu/ssd info
 }
 function cpe {                                                                                                                                                # system status
