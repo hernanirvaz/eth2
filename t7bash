@@ -1,0 +1,57 @@
+#!/bin/bash
+
+# Set the number of slots per epoch and the number of seconds per slot
+SLOTS_PER_EPOCH=32
+SECONDS_PER_SLOT=12
+
+# Define the function that gets the API endpoint data
+function api_get {
+  curl -s -H "Content-Type: application/json" -X GET "$1" | jq .
+}
+
+# Define the function that posts the data to the API endpoint
+function api_post {
+  curl -s -H "Content-Type: application/json" -X POST -d "$2" "$1" | jq .
+}
+
+# Define the main function
+function main {
+  # Define the variables and set the default values
+  local vidx=21766
+  local url="http://127.0.0.1:5052/eth/v1/"
+
+  # Call the api_get and api_post functions with the corresponding endpoint and data
+  local head_slot=$(api_get "${url}beacon/headers/head" | jq -r '.data.header.message.slot')
+  local epoch=$((head_slot / SLOTS_PER_EPOCH))
+  local ced=$(api_post "${url}validator/duties/attester/${epoch}" "[${vidx}]" | jq -r '.data')
+  local ned=$(api_post "${url}validator/duties/attester/$((epoch + 1))" "[${vidx}]" | jq -r '.data')
+  local attestation_duties=$(echo "${ced}${ned}" | jq -s '[group_by(.slot | tonumber)[] | {(.[0].slot | tonumber): [.[].validator_index | tonumber]}] | add')
+  local first_slot_epoch_p2=$(( (epoch + 2) * SLOTS_PER_EPOCH))
+  attestation_duties=$(echo "${attestation_duties}" | jq --argjson slot "${first_slot_epoch_p2}" '.[$slot] = []')
+
+  local prev_end_time=$(date +%s)
+  local longest_gap=0
+  local gap_time_range=(0 0)
+
+  for slot in $(echo "${attestation_duties}" | jq -r 'keys | .[]'); do
+    local slot_start=$(date -d "@$((1606824023 + slot * SECONDS_PER_SLOT))")
+    local slot_end=$(date -d "@$((1606824023 + (slot + 1) * SECONDS_PER_SLOT))")
+    local gap=$((slot_start - prev_end_time))
+    if [[ -n $(echo "${attestation_duties}" | jq ".[${slot}][0]") ]]; then
+      local nado=0
+    else
+      assert $((slot % SLOTS_PER_EPOCH)) -eq 0
+    fi
+    if (( gap > longest_gap )); then
+      longest_gap=$gap
+      gap_time_range=($prev_end_time $slot_start)
+    fi
+    prev_end_time=$(date -d "${slot_end}" +%s)
+  done
+
+  echo "$(date -d "@${gap_time_range[0]}" "+%H:%M:%S") $((longest_gap / SECONDS_PER_SLOT))"
+}
+
+# Call the main function
+main
+
