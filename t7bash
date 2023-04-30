@@ -14,11 +14,12 @@ function main {
   local ced=$(crp "${s31}validator/duties/attester/${epoch}" | jq -r '.data')
   local ned=$(crp "${s31}validator/duties/attester/$((epoch + 1))" | jq -r '.data')
   echo ${ced} ${ned} >> at1.out
-  return
   #local attestation_duties=$(echo "${ced}${ned}" | jq -s '[group_by(.slot | tonumber)[] | {(.[0].slot | tonumber): [.[].validator_index | tonumber]}] | add')
   #local attestation_duties=$(echo "${ced}${ned}" | jq '[group_by(.slot | tonumber)[] | {(.[0].slot): [.[].validator_index | tonumber]}] | add')
+  return
   attestation_duties=()
   for duty in $ced $ned; do
+      echo "$duty" 
       slot=$(echo "$duty" | jq -r '.slot')
       validator_index=$(echo "$duty" | jq -r '.validator_index')
       attestation_duties[$slot]+=" $validator_index"
@@ -67,8 +68,6 @@ function main {
 main
 
 exit
-
-#!/bin/bash
 
 # Set constants
 SLOTS_PER_EPOCH=32
