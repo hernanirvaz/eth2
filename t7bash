@@ -13,34 +13,36 @@ function main {
   local epoch=$((head_slot / 32))
   local ced=$(crp "${s31}validator/duties/attester/${epoch}" | jq -r '.data')
   local ned=$(crp "${s31}validator/duties/attester/$((epoch + 1))" | jq -r '.data')
-  echo ${ced} ${ned}
+  echo "${ced}${ned}" >> at1.out
   #local attestation_duties=$(echo "${ced}${ned}" | jq -s '[group_by(.slot | tonumber)[] | {(.[0].slot | tonumber): [.[].validator_index | tonumber]}] | add')
   local attestation_duties=$(echo "${ced}${ned}" | jq '[group_by(.slot | tonumber)[] | {(.[0].slot): [.[].validator_index | tonumber]}] | add')
-  echo $attestation_duties
-  echo "$(((epoch+2)*32))"
-  attestation_duties=$(echo "${attestation_duties}" | jq --argjson slot "$(((epoch+2)*32))" '.[$slot] = []')
+  echo "$attestation_duties" >> at2.out
+  attestation_duties=$(echo "${attestation_duties}" | jq --arg slot $(((epoch+2)*32)) '.[$slot] = []')
+  echo "$attestation_duties" >> at3.out
 
   local prev_end_time=$(date +%s)
   local longest_gap=0
-  local gap_time_range=(0 0)
+  local gap_time_range="(0 0)"
 
   for slot in $(echo "${attestation_duties}" | jq -r 'keys | .[]'); do
-    local slot_start=$(date -d "@$((1606824023 + slot * 12))")
-    local slot_end=$(date -d "@$((1606824023 + (slot + 1) * 12))")
+    local slot_start=$(date +%s -d "@$((1606824023 + slot * 12))")
+    local slot_end=$(date +%s -d "@$((1606824023 + (slot + 1) * 12))")
     local gap=$((slot_start - prev_end_time))
+    echo "${attestation_duties}" | jq ".[${slot}][0]"
     if [[ -n $(echo "${attestation_duties}" | jq ".[${slot}][0]") ]]; then
       local nado=0
     else
-      assert $((slot % 32)) -eq 0
+       [[ $((slot % 32)) -eq 0 ]] && break
     fi
     if (( gap > longest_gap )); then
       longest_gap=$gap
-      gap_time_range=($prev_end_time $slot_start)
+      gap_time_range="($prev_end_time $slot_start)"
     fi
-    prev_end_time=$(date -d "${slot_end}" +%s)
+    prev_end_time=$(date +%s -d "@${slot_end}")
   done
 
-  echo "$(date -d "@${gap_time_range[0]}" "+%H:%M:%S") $((longest_gap / 12))"
+  #echo "$(date "+%H:%M:%S" -d "@${gap_time_range[0]}") $((longest_gap / 12))"
+  echo "date "+%H:%M:%S" -d "@${gap_time_range[0]}" $((longest_gap / 12))"
 }
 
 # Call the main function
