@@ -13,38 +13,128 @@ function main {
   local epoch=$((head_slot / 32))
   local ced=$(crp "${s31}validator/duties/attester/${epoch}" | jq -r '.data')
   local ned=$(crp "${s31}validator/duties/attester/$((epoch + 1))" | jq -r '.data')
-  echo "${ced}${ned}" >> at1.out
+  echo ${ced} ${ned} >> at1.out
+  return
   #local attestation_duties=$(echo "${ced}${ned}" | jq -s '[group_by(.slot | tonumber)[] | {(.[0].slot | tonumber): [.[].validator_index | tonumber]}] | add')
-  local attestation_duties=$(echo "${ced}${ned}" | jq '[group_by(.slot | tonumber)[] | {(.[0].slot): [.[].validator_index | tonumber]}] | add')
-  echo "$attestation_duties" >> at2.out
-  attestation_duties=$(echo "${attestation_duties}" | jq --arg slot $(((epoch+2)*32)) '.[$slot] = []')
-  echo "$attestation_duties" >> at3.out
-
-  local prev_end_time=$(date +%s)
-  local longest_gap=0
-  local gap_time_range="(0 0)"
-
-  for slot in $(echo "${attestation_duties}" | jq -r 'keys | .[]'); do
-    local slot_start=$(date +%s -d "@$((1606824023 + slot * 12))")
-    local slot_end=$(date +%s -d "@$((1606824023 + (slot + 1) * 12))")
-    local gap=$((slot_start - prev_end_time))
-    echo "${attestation_duties}" | jq ".[${slot}][0]"
-    if [[ -n $(echo "${attestation_duties}" | jq ".[${slot}][0]") ]]; then
-      local nado=0
-    else
-       [[ $((slot % 32)) -eq 0 ]] && break
-    fi
-    if (( gap > longest_gap )); then
-      longest_gap=$gap
-      gap_time_range="($prev_end_time $slot_start)"
-    fi
-    prev_end_time=$(date +%s -d "@${slot_end}")
+  #local attestation_duties=$(echo "${ced}${ned}" | jq '[group_by(.slot | tonumber)[] | {(.[0].slot): [.[].validator_index | tonumber]}] | add')
+  attestation_duties=()
+  for duty in $ced $ned; do
+      slot=$(echo "$duty" | jq -r '.slot')
+      validator_index=$(echo "$duty" | jq -r '.validator_index')
+      attestation_duties[$slot]+=" $validator_index"
   done
+  echo "${!attestation_duties[@]}" >> at2.out
+  return
+  # Filter out duties before current head slot
+  for slot in "${!attestation_duties[@]}"; do
+      if (($slot <= $head_slot)); then
+          unset attestation_duties[$slot]
+      fi
+  done
+  echo "${!attestation_duties[@]}" >> at3.out
+  # Add empty duty list for first slot of next epoch + 2
+  first_slot_epoch_p2=$((($epoch + 2) * SLOTS_PER_EPOCH))
+  attestation_duties[$first_slot_epoch_p2]=""
+  echo "${!attestation_duties[@]}" >> at4.out
 
-  #echo "$(date "+%H:%M:%S" -d "@${gap_time_range[0]}") $((longest_gap / 12))"
-  echo "date "+%H:%M:%S" -d "@${gap_time_range[0]}" $((longest_gap / 12))"
+  # Find longest gap between duties and its time range
+  prev_end_time=$(date +%s)
+  longest_gap=0
+  gap_time_range=()
+  for slot in "${!attestation_duties[@]}"; do
+      slot_start=$(date -d "@$((1606824023 + slot * SECONDS_PER_SLOT))")
+      slot_end=$(date -d "@$((1606824023 + slot * SECONDS_PER_SLOT + SECONDS_PER_SLOT))")
+      gap=$((slot_start - prev_end_time))
+      if [[ -n "${attestation_duties[$slot]}" ]]; then
+          nado=0
+      else
+          if (($slot % SLOTS_PER_EPOCH != 0)); then
+              echo "Error: empty duty list not at epoch boundary" >&2
+              exit 1
+          fi
+      fi
+      if (($gap > $longest_gap)); then
+          longest_gap=$gap
+          gap_time_range=($(date -d "@$prev_end_time" +%T) $(date -d "@$((prev_end_time + longest_gap))" +%s))
+      fi
+      prev_end_time=$(date -d "@$((1606824023 + slot * SECONDS_PER_SLOT + SECONDS_PER_SLOT))" +%s)
+  done
+  # Print results
+  echo "$(date -d "@${gap_time_range[0]}" +%T) $longest_gap"
 }
 
 # Call the main function
 main
+
+exit
+
+#!/bin/bash
+
+# Set constants
+SLOTS_PER_EPOCH=32
+SECONDS_PER_SLOT=12
+
+# Define API helper functions
+api_get() {
+    endpoint=$1
+    curl -s "http://127.0.0.1:5052/eth/v1/$endpoint"
+}
+api_post() {
+    endpoint=$1
+    data=$2
+    curl -s -H "Content-Type: application/json" -X POST -d "$data" "http://127.0.0.1:5052/eth/v1/$endpoint"
+}
+
+# Main function
+main() {
+    # Get current head slot
+    head_slot=$(api_get "beacon/headers/head" | jq -r '.data.header.message.slot')
+    # Calculate current epoch
+    epoch=$((head_slot / SLOTS_PER_EPOCH))
+    # Get current and next epoch attestation duties for given validator indices
+    ced=$(api_post "validator/duties/attester/$epoch" "[11766, 11767]" | jq -r '.data[]')
+    ned=$(api_post "validator/duties/attester/$(($epoch + 1))" "[11766, 11767]" | jq -r '.data[]')
+    # Combine duties into a dict with slot numbers as keys and validator indices as values
+    attestation_duties=()
+    for duty in $ced $ned; do
+        slot=$(echo "$duty" | jq -r '.slot')
+        validator_index=$(echo "$duty" | jq -r '.validator_index')
+        attestation_duties[$slot]+=" $validator_index"
+    done
+    # Filter out duties before current head slot
+    for slot in "${!attestation_duties[@]}"; do
+        if (($slot <= $head_slot)); then
+            unset attestation_duties[$slot]
+        fi
+    done
+    # Add empty duty list for first slot of next epoch + 2
+    first_slot_epoch_p2=$((($epoch + 2) * SLOTS_PER_EPOCH))
+    attestation_duties[$first_slot_epoch_p2]=""
+    # Find longest gap between duties and its time range
+    prev_end_time=$(date +%s)
+    longest_gap=0
+    gap_time_range=()
+    for slot in "${!attestation_duties[@]}"; do
+        slot_start=$(date -d "@$((1606824023 + slot * SECONDS_PER_SLOT))")
+        slot_end=$(date -d "@$((1606824023 + slot * SECONDS_PER_SLOT + SECONDS_PER_SLOT))")
+        gap=$((slot_start - prev_end_time))
+        if [[ -n "${attestation_duties[$slot]}" ]]; then
+            nado=0
+        else
+            if (($slot % SLOTS_PER_EPOCH != 0)); then
+                echo "Error: empty duty list not at epoch boundary" >&2
+                exit 1
+            fi
+        fi
+        if (($gap > $longest_gap)); then
+            longest_gap=$gap
+            gap_time_range=($(date -d "@$prev_end_time" +%T) $(date -d "@$((prev_end_time + longest_gap))" +%s))
+        fi
+        prev_end_time=$(date -d "@$((1606824023 + slot * SECONDS_PER_SLOT + SECONDS_PER_SLOT))" +%s)
+    done
+    # Print results
+    echo "$(date -d "@${gap_time_range[0]}" +%T) $longest_gap"
+}
+
+# Call main function if script is run directly
 
