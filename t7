@@ -4,8 +4,6 @@ source /home/eth/eth2/t1
 
 function nu { m=0;[[ -f /var/lib/update-notifier/updates-available ]] && m=$(egrep '^[0-9]+  *update' /var/lib/update-notifier/updates-available|cut -d' ' -f1); }
 
-#lksjdgkjgf
-
 [[ $1 = GETHSTP ]] && { swn "Subject: GETH STOPPED $(date '+%F %H:%M')\n\n$(uname -n)\nSERVICE_RESULT=$2\nEXIT_CODE=$3\nEXIT_STATUS=$4\n"|ssmtp hernanilr@gmail.com; }
 [[ $1 = BESUSTP ]] && { swn "Subject: BESU STOPPED $(date '+%F %H:%M')\n\n$(uname -n)\nSERVICE_RESULT=$2\nEXIT_CODE=$3\nEXIT_STATUS=$4\n"|ssmtp hernanilr@gmail.com; }
 [[ $1 = BEACSTP ]] && { swn "Subject: BEAC STOPPED $(date '+%F %H:%M')\n\n$(uname -n)\nSERVICE_RESULT=$2\nEXIT_CODE=$3\nEXIT_STATUS=$4\n"|ssmtp hernanilr@gmail.com; }
