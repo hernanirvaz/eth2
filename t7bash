@@ -1,33 +1,13 @@
 #!/bin/bash
 
-source /home/eth/eth2/t1
+t0="http://192.168.8.34:5052/eth/v1"
+t1="$t0/validator/duties/attester"
+t2=1606824023
 
-function crg { curl -sH "Content-Type: application/json" -X GET "$1"; }
-function crp { curl -sH "Content-Type: application/json" -X POST -d "[11766,11767,11770,11771,11772,11773,11774,11775,11776,11777,11778,11779,11780,11782,11783,11784,11786,11788,449113,449114,449115,449116,590905,590906,590907]" "$1"; }
+function crp { curl -sH 'Content-Type: application/json' -X POST -d '[11766,11767,11770,11771,11772,11773,11774,11775,11776,11777,11778,11779,11780,11782,11783,11784,11786,11788,449113,449114,449115,449116,590905,590906,590907]' $1|jq -r '.data[]'; }
 
-h=$(crg $s31/beacon/headers/head|jq -r '.data.header.message.slot');e=$((h/32))
-a=();for d in $(echo $(crp $s32/$e|jq -r $s33) $(crp $s32/$((e+1))|jq -r $s33)|jq -r '.slot+":"+.validator_index');do a[${d%:[0-9]*}]+=" ${d#[0-9]*:}";done
-for s in $(echo ${!a[@]}|sort -n);do ((s<=h)) && unset a[$s];done
-a[$(((e+2)*32))]=" "
-
-longest_gap=0
-gap_time_range=()
-for s in $(echo ${!a[@]}|sort -n); do
-    slot_str=$(date -d "@$((1606824023 + s * 12))" +%s)
-    slot_end=$(date -d "@$((1606824023 + s * 12 + 12))" +%s)
-    gap=$((slot_str - s34))
-    if [[ -n "${a[$s]}" ]]; then
-        nado=0
-    else
-        if (($s % 32 != 0)); then
-            echo "Error: empty duty list not at epoch boundary" >&2
-            exit 1
-        fi
-    fi
-    if (($gap > $longest_gap)); then
-        longest_gap=$gap
-        gap_time_range=($(date -d "@$s34" +%s) $(date -d "@$((s34 + longest_gap))" +%s))
-    fi
-    s34=$(date -d "@$((1606824023 + s * 12 + 12))" +%s)
-done
-echo "$(date -d "@${gap_time_range[0]}" +%T) $longest_gap"
+t4=$(curl -sH 'Content-Type: application/json' -X GET $t0/beacon/headers/head|jq -r '.data.header.message.slot');t5=$((t4/32));a0=();a0[$(((t5+2)*32))]=' '
+for s in $(echo $(crp $t1/$t5) $(crp $t1/$((t5+1)))|jq -r '.slot+":"+.validator_index');do a0[${s%:[0-9]*}]+=" ${s#[0-9]*:}";done
+for s in $(echo ${!a0[@]}|sort -n);do ((s<=t4)) && unset a0[$s];done;t3=$(date +%s);t7=0;t8=0
+for s in $(echo ${!a0[@]}|sort -n);do [[ -z ${a0[$s]} ]] && ((s%32!=0)) && { t7=0;t8=$(date +%s);break; };t6=$(($(date -d@$((t2+s*12)) +%s)-t3));((t6>t7)) && { t7=$t6;t8=$(date -d@$t3 +%s); };t3=$(date -d@$((t2+s*12+12)) +%s);done
+echo $(date -d@$t8 +%T) $t7
