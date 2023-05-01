@@ -63,7 +63,6 @@ function ero { [[ -f $2 ]] || return;dts;swn "$(nu1 R%03i $1) ${3:-RS} SRV $(dnn
 function ell { wc -l $1   2>$p03|cut -d' ' -f1; }                                                                                                             # get ec       line count
 function bbl { wc -l $p12 2>$p03|cut -d' ' -f1; }                                                                                                             # get cc       line count
 function bml { wc -l $p13 2>$p03|cut -d' ' -f1; }                                                                                                             # get cc-daily line count
-function sng { $p02/eth2/t7 2>$p03; }                                                                                                                         # get next gap without validator tasks
 function stg { printf %s $(date -d@${1:-0} +%M:%S|tr -d :)t$(date -d@$(($(date +%s)+${1:-0})) +%H:%M:%S|tr -d :); }                                           # get end file sleep tag
 function sf1 { printf %s ${1:-$(date +%H:%M:%S)}; }                                                                                                           # get filterd t7 parm 1
 function sf2 { printf %i ${2:-24}; }                                                                                                                          # get filterd t7 parm 2
@@ -475,7 +474,19 @@ function ivk {
     [[ -f $p05/vc_lock ]] || cex "$s03 $s13";[[ -f $p12 ]] && { dts;swn "$(printf 'BSRV VK %3i %10s %5s' $(ls $p19 2>$p03|wc -l) $dt 2>$p03)" >> $p12; }
   fi
 }
+function crp { curl -sH 'Content-Type: application/json' -X POST -d '[11766,11767,11770,11771,11772,11773,11774,11775,11776,11777,11778,11779,11780,11782,11783,11784,11786,11788,449113,449114,449115,449116,590905,590906,590907]' $1|jq -r '.data[]'; }
+function sng {
+  local t0="http://$zip4:5052/eth/v1"
+  local t1="$t0/validator/duties/attester"
+  local t2=1606824023
+  local t4=$(curl -sH 'Content-Type: application/json' -X GET $t0/beacon/headers/head|jq -r '.data.header.message.slot');local t5=$((t4/32));local a0=();local a0[$(((t5+2)*32))]=' ';local t9=0
+  for t9 in $(echo $(crp $t1/$t5) $(crp $t1/$((t5+1)))|jq -r '.slot+":"+.validator_index');do local a0[${t9%:[0-9]*}]+=" ${t9#[0-9]*:}";done
+  for t9 in $(echo ${!a0[@]}|sort -n);do ((t9<=t4)) && unset a0[$t9];done;local t7=0;local t8=0;local t3=$(date +%s)
+  for t9 in $(echo ${!a0[@]}|sort -n);do [[ -z ${a0[$t9]} ]] && ((t9%32!=0)) && { local t7=0;local t8=$(date +%s);break; };local t6=$(($(date -d@$((t2+t9*12)) +%s)-t3));((t6>t7)) && { local t7=$t6;local t8=$(date -d@$t3 +%s); };local t3=$(date -d@$((t2+t9*12+12)) +%s);done
+  echo $(date -d@$t8 +%T) $t7
+}
 
+[[ $1 = sng ]] && { sng; }
 [[ $1 = mvr ]] && { mvr; }
 [[ $1 = jwt ]] && { [[ $cunm = $znm1 || $cunm = $vnm1 ]] && jw0;if [[ -f jwt ]];then sjw eth1 $p08/geth;sjw eth1 $p09/data;sjw eth2 $p16;fi; }
 [[ $1 = lpi ]] && { lpi $p02/.cargo/bin/lighthouse; }
