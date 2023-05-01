@@ -459,7 +459,7 @@ function tvc {
   if [[ $rsp = SIM && ! -f $p05/vc_slash && ! -f $p05/vc_lock && -f $p05/vc_keys ]];then vp;vd;swu "COPY SLASH -> $nxvc";vps;fi                               # vc stop/disable & prep slash db
 }
 function svr { local t='';for t in $(printf '%s\n' $@|sort -u);do curl -sX GET "$s23$t"|sed -n "$r23";done; }                                                 # show mev validator registration
-function mvr { if [[ $(ls $p19/key*.json 2>$p03) ]];then svr $(sed -n "$r28" $p19/key*.json 2>$p03);else svr $s99;fi; }                                       # choose validator keys
+function mvr { if [[ $(ls $p19/key*.json 2>$p03) ]];then svr $(sed -n "$r28" $p19/key*.json 2>$p03);else svr ${b[@]};fi; }                                    # choose validator keys
 function ibk {
   local f="$p02/pubkeys.old";sex "cp $p16/pubkeys $f";sex "chown eth:eth $f"
   echo "$(cat $f)$(for f in $(jq -r .pubkey $p19/key*.json 2>$p03);do printf %s ",0x$f";done)" > $p02/pubkeys.new
@@ -474,16 +474,12 @@ function ivk {
     [[ -f $p05/vc_lock ]] || cex "$s03 $s13";[[ -f $p12 ]] && { dts;swn "$(printf 'BSRV VK %3i %10s %5s' $(ls $p19 2>$p03|wc -l) $dt 2>$p03)" >> $p12; }
   fi
 }
-function crp { curl -sH 'Content-Type: application/json' -X POST -d '[11766,11767,11770,11771,11772,11773,11774,11775,11776,11777,11778,11779,11780,11782,11783,11784,11786,11788,449113,449114,449115,449116,590905,590906,590907]' $1|jq -r '.data[]'; }
+function crp { curl -sH 'Content-Type: application/json' -X POST -d "[$(echo ${!b[@]}|tr ' ' ',')]" $1|jq -r '.data[]'; }
 function sng {
-  local t0="http://$zip4:5052/eth/v1"
-  local t1="$t0/validator/duties/attester"
-  local t2=1606824023
-  local t4=$(curl -sH 'Content-Type: application/json' -X GET $t0/beacon/headers/head|jq -r '.data.header.message.slot');local t5=$((t4/32));local a0=();local a0[$(((t5+2)*32))]=' ';local t9=0
-  for t9 in $(echo $(crp $t1/$t5) $(crp $t1/$((t5+1)))|jq -r '.slot+":"+.validator_index');do local a0[${t9%:[0-9]*}]+=" ${t9#[0-9]*:}";done
-  for t9 in $(echo ${!a0[@]}|sort -n);do ((t9<=t4)) && unset a0[$t9];done;local t7=0;local t8=0;local t3=$(date +%s)
-  for t9 in $(echo ${!a0[@]}|sort -n);do [[ -z ${a0[$t9]} ]] && ((t9%32!=0)) && { local t7=0;local t8=$(date +%s);break; };local t6=$(($(date -d@$((t2+t9*12)) +%s)-t3));((t6>t7)) && { local t7=$t6;local t8=$(date -d@$t3 +%s); };local t3=$(date -d@$((t2+t9*12+12)) +%s);done
-  echo $(date -d@$t8 +%T) $t7
+  local h=$(curl -sH 'Content-Type: application/json' -X GET $s33/beacon/headers/head|jq -r '.data.header.message.slot');local g=$((h/32));unset d;local d[$(((g+2)*32))]=' ';local s=0;local n=0
+  for s in $(echo $(crp $s34/$g) $(crp $s34/$((g+1)))|jq -r '.slot+":"+.validator_index');do n=${s%:[0-9]*};((n>h)) && d[$n]+=" ${s#[0-9]*:}";done;local e=0;local i=0;local t=$(date +%s)
+  for s in $(echo ${!d[@]}|sort -n);do n=$(($(date -d@$((s35+s*12)) +%s)-t));((n>e)) && { e=$n;i=$(date -d@$t +%s); };t=$(date -d@$((s35+s*12+12)) +%s);done
+  echo $(date -d@$i +%T) $e
 }
 
 [[ $1 = sng ]] && { sng; }

@@ -39,8 +39,8 @@ function ewi {
 }
 
 [[ $1 = dsd ]] && { dsd $2 $3; }
-[[ $1 = ewc ]] && { ewc $s99 ; }
-[[ $1 = ewi ]] && { ewi $s99 ; }
+[[ $1 = ewc ]] && { ewc ${b[@]}; }
+[[ $1 = ewi ]] && { ewi ${b[@]}; }
 [[ $1 = eve ]] && { eve; }
 [[ $1 = lve ]] && { lve; }
 
