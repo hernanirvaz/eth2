@@ -35,7 +35,7 @@ if [[ $cunm = $znm2 || $cunm = $vnm2 ]];then                                    
 	Restart=always
 	RestartSec=10
 	ExecStart=$p00/mev-boost -mainnet -log-no-version $epmv
-	ExecStopPost=$p02/eth2/t8mail MEVBSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
+	ExecStopPost=$p02/eth2/t7 MEVBSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 	
 	[Install]
 	WantedBy=multi-user.target
