@@ -1,0 +1,15 @@
+#!/bin/bash
+
+source /home/eth/eth2/t1
+
+function nu { m=0;[[ -f /var/lib/update-notifier/updates-available ]] && m=$(egrep '^[0-9]+  *update' /var/lib/update-notifier/updates-available|cut -d' ' -f1); }
+
+#lksjdgkjgf
+
+[[ $1 = GETHSTP ]] && { swn "Subject: GETH STOPPED $(date '+%F %H:%M')\n\n$(uname -n)\nSERVICE_RESULT=$2\nEXIT_CODE=$3\nEXIT_STATUS=$4\n"|ssmtp hernanilr@gmail.com; }
+[[ $1 = BESUSTP ]] && { swn "Subject: BESU STOPPED $(date '+%F %H:%M')\n\n$(uname -n)\nSERVICE_RESULT=$2\nEXIT_CODE=$3\nEXIT_STATUS=$4\n"|ssmtp hernanilr@gmail.com; }
+[[ $1 = BEACSTP ]] && { swn "Subject: BEAC STOPPED $(date '+%F %H:%M')\n\n$(uname -n)\nSERVICE_RESULT=$2\nEXIT_CODE=$3\nEXIT_STATUS=$4\n"|ssmtp hernanilr@gmail.com; }
+[[ $1 = VALISTP ]] && { swn "Subject: VALI STOPPED $(date '+%F %H:%M')\n\n$(uname -n)\nSERVICE_RESULT=$2\nEXIT_CODE=$3\nEXIT_STATUS=$4\n"|ssmtp hernanilr@gmail.com; }
+[[ $1 = MEVBSTP ]] && { swn "Subject: MEVB STOPPED $(date '+%F %H:%M')\n\n$(uname -n)\nSERVICE_RESULT=$2\nEXIT_CODE=$3\nEXIT_STATUS=$4\n"|ssmtp hernanilr@gmail.com; }
+
+[[ $1 = UPDTCHK ]] && { nu;[[ $m -gt 0 ]] && swn "Subject: $m UPDATES ON $(uname -n)\n\n$(apt list --upgradable 2>$p03)"|ssmtp hernanilr@gmail.com; }
