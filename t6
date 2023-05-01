@@ -238,25 +238,9 @@ function bh0 {
 }
 function btr { if trf;then printf RB;else printf $1;fi; }                                                                                                     # get tag reboot
 function bss { nu0 $((${2:-0}+$(date -d$(sf1 $1) +%s))); }                                                                                                    # get sum secounds + time
-# BEACON_NODE="http://localhost:5052"
-# VALIDATOR_LIST=$(echo "$@" | tr ' ' '|')
-# epoch_to_time(){ expr 1606824000 + \( $1 \* 384 \); }
-# time_to_epoch(){ expr \( $1 - 1606824000 \) / 384; }
-# get_committee(){ URLSTEM="${BEACON_NODE}/eth/v1/beacon/states/finalized";curl -X GET "${URLSTEM}/sync_committees?epoch=$1" 2> /dev/null | sed -e 's/["]/''/g' | cut -d'[' -f2 | cut -d']' -f1 | tr ',' '\n'; }
-# search_committee(){ get_committee $2 | grep -Ex $VALIDATOR_LIST | awk -v c=$1 '{print "validator:", $1, "found in", c, "sync committee"}'; }
-# display_epoch(){ echo "epoch: $1 : $(date -d@$(epoch_to_time $1)) <-- $2"; }
-# CURR_EPOCH=$(time_to_epoch $(date +%s))
-# CURR_START_EPOCH=`expr \( $CURR_EPOCH / 256 \) \* 256`
-# NEXT_START_EPOCH=`expr $CURR_START_EPOCH + 256`
-# NEXTB1_START_EPOCH=`expr $NEXT_START_EPOCH + 256`
-# echo
-# display_epoch $CURR_START_EPOCH   "current sync committee start"
-# display_epoch $CURR_EPOCH         "now"
-# display_epoch $NEXT_START_EPOCH   "next sync committee start"
-# display_epoch $NEXTB1_START_EPOCH "next-but-one sync committee start"
-# echo
-# if [ "$#" -gt 0 ];then search_committee "current" $CURR_EPOCH;search_committee "next" $NEXT_START_EPOCH;fi
-function bsc { fs4 $bpid].*INFO 99|grep Sync\ committee|wc -l; }                                                                                              # get # committee messages
+function gcm { until [[ $# -le 1 ]];do curl -sH "$s37" $s36$1 2>$p03|jq -r "$s38" 2>$p03;shift;done; }
+#function bsc { fs4 $bpid].*INFO 99|grep Sync\ committee|wc -l; }
+function bsc { gcm $s39 $((s39+264*1)) $((s39+264*2))|grep -Ex $(echo ${!b[@]}|tr ' ' '|')|wc -l; }                                                           # get # validators in sync committee
 function bro { [[ -f $p12 ]] || return;dts;bb0;bnn;swn "$(printf 'R%03i %2s %3i' $1 ${2:-$ok} $(bi2) 2>$p03) $(dnn)" >> $p12; }                               # log restart info
 # slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168
 function brs {                                                                                                                                                # cc/vc gap restart
@@ -474,15 +458,14 @@ function ivk {
     [[ -f $p05/vc_lock ]] || cex "$s03 $s13";[[ -f $p12 ]] && { dts;swn "$(printf 'BSRV VK %3i %10s %5s' $(ls $p19 2>$p03|wc -l) $dt 2>$p03)" >> $p12; }
   fi
 }
-function crp { curl -sH 'Content-Type: application/json' -X POST -d "[$(echo ${!b[@]}|tr ' ' ',')]" $1|jq -r '.data[]'; }
+function crp { curl -sH "$s37" -X POST -d "[$(echo ${!b[@]}|tr ' ' ',')]" $1 2>$p03|jq -r '.data[]'; }
 function sng {
-  local h=$(curl -sH 'Content-Type: application/json' -X GET $s33/beacon/headers/head|jq -r '.data.header.message.slot');local g=$((h/32));unset d;local d[$(((g+2)*32))]=' ';local s=0;local n=0
+  local h=$(curl -sH "$s37" -X GET $s33/beacon/headers/head 2>$p03|jq -r '.data.header.message.slot');local g=$((h/32));unset d;local d[$(((g+2)*32))]=' ';local s=0;local n=0
   for s in $(echo $(crp $s34/$g) $(crp $s34/$((g+1)))|jq -r '.slot+":"+.validator_index');do n=${s%:[0-9]*};((n>h)) && d[$n]+=" ${s#[0-9]*:}";done;local e=0;local i=0;local t=$(date +%s)
   for s in $(echo ${!d[@]}|sort -n);do n=$(($(date -d@$((s35+s*12)) +%s)-t));((n>e)) && { e=$n;i=$(date -d@$t +%s); };t=$(date -d@$((s35+s*12+12)) +%s);done
   echo $(date -d@$i +%T) $e
 }
 
-[[ $1 = sng ]] && { sng; }
 [[ $1 = mvr ]] && { mvr; }
 [[ $1 = jwt ]] && { [[ $cunm = $znm1 || $cunm = $vnm1 ]] && jw0;if [[ -f jwt ]];then sjw eth1 $p08/geth;sjw eth1 $p09/data;sjw eth2 $p16;fi; }
 [[ $1 = lpi ]] && { lpi $p02/.cargo/bin/lighthouse; }

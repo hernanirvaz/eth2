@@ -285,6 +285,10 @@ s30='change-operations'
 s33="http://$zip4:5052/eth/v1"
 s34="$s33/validator/duties/attester"
 s35=1606824023
+s36="http://$zip4:5052/eth/v1/beacon/states/finalized/sync_committees?epoch="
+s37='Content-Type: application/json'
+s38='.data.validators[],.data.validator_aggregates[][]'
+s39=$((($(date +%s)-$s35)/384))
 
 b[11766]='0x93bf23a587f11f9eca329a12ef51296b8a9848af8c0fe61201524b14cb85b0c6fbd3e427501cdfa3b28719bd1ed96fff'
 b[11767]='0xb5b0fc3d2ba577f3e2c7324f7ea4306f17eeee0f12c722f4fa83e45bf6c15477d50261bb2666c30f21ab71a26aeeeafb'
