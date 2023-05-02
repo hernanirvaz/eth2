@@ -458,19 +458,11 @@ function ivk {
     [[ -f $p05/vc_lock ]] || cex "$s03 $s13";[[ -f $p12 ]] && { dts;swn "$(printf 'BSRV VK %3i %10s %5s' $(ls $p19 2>$p03|wc -l) $dt 2>$p03)" >> $p12; }
   fi
 }
-function crp { curl -sH "$s37" -X POST -d "[$(echo ${!b[@]}|tr ' ' ',')]" $1 2>$p03|jq -r '.data[]'; }
+function crp { local f="[$(echo ${!b[@]}|tr ' ' ',')]";curl -sH "$s37" -X POST -d$f $s34/$1 2>$p03|jq -r '.data[]' 2>$p03;curl -sH "$s37" -X POST -d$f $s34/$(($1+1)) 2>$p03|jq -r '.data[]' 2>$p03; }
 function sng {
-  local h=$(curl -sH "$s37" -X GET $s33/beacon/headers/head 2>$p03|jq -r '.data.header.message.slot');local g=$((h/32));unset d;local d[$(((g+2)*32))]='';local s=0;local n=0
-  for s in $(echo $(crp $s34/$g) $(crp $s34/$((g+1)))|jq -r '.slot+":"+.validator_index');do n=${s%:[0-9]*};((n>h)) && d[$n]+=" ${s#[0-9]*:}";done;local e=0;local i=0;local t=$(date +%s)
-  #echo $(((g+2)*32)) zzz${d[$(((g+2)*32))]}xxx
-  for s in $(echo ${!d[@]}|sort -n);do
-    n=$(($(date -d@$((s35+s*12)) +%s)-t))
-    #if ((n>e));then e=$n;i=$(date -d@$t +%s);printf '%8s %2i %i %s\n' $(date -d@$i +%T) $e $s "${d[$s]}";fi
-    if ((n>e));then e=$n;i=$(date -d@$t +%s);fi
-    t=$(date -d@$((s35+s*12+12)) +%s)
-  done
-  #printf '\n\n%8s %2i\n' $(date -d@$i +%T) $e
-  printf '%8s %2i' $(date -d@$i +%T) $e
+  local h=$(curl -sH "$s37" -X GET $s33/beacon/headers/head 2>$p03|jq -r '.data.header.message.slot');local g=$((h/32));unset d;local d[$(((g+2)*32))]=fim;local s=0;local n=0
+  for s in $(crp $g|jq -r '.slot+":"+.validator_index'|sort -nu);do n=${s%:[0-9]*};((n>h)) && d[$n]+=" ${s#[0-9]*:}";done;local e=0;local i=0;local t=$(date +%s)
+  for s in $(echo ${!d[@]}|sort -n);do n=$(($(date -d@$((s35+s*12)) +%s)-t));if ((n>e));then e=$n;i=$(date -d@$t +%s);fi;t=$(date -d@$((s35+s*12+12)) +%s);done;printf '%8s %2i' $(date -d@$i +%T) $e
 }
 
 [[ $1 = mvr ]] && { mvr; }
@@ -540,8 +532,7 @@ function sng {
 [[ $1 = grb ]] && { grs      0  RB   ${3:-36} $2; }
 [[ $1 = urb ]] && { urs      0  RB   ${3:-36} $2; }
 [[ $1 = irb ]] && { irb ${2:-3};pas; }
-#[[ $1 = rsh ]] && { echo;sft $(sng); }
-[[ $1 = rsh ]] && { date +%T;sng;echo; }
+[[ $1 = rsh ]] && { echo;sft $(sng); }
 [[ $1 = lp  ]] && { netstat -tulpn; }
 # outros journal system/lighthouse
 [[ $1 = el  ]] && { if [[ $(sst $s10 running) ]];then fs1 $r30;else fs1 $r31;fi|fl1 $2; }
