@@ -458,11 +458,34 @@ function ivk {
     [[ -f $p05/vc_lock ]] || cex "$s03 $s13";[[ -f $p12 ]] && { dts;swn "$(printf 'BSRV VK %3i %10s %5s' $(ls $p19 2>$p03|wc -l) $dt 2>$p03)" >> $p12; }
   fi
 }
-function crp { local f="[$(echo ${!b[@]}|tr ' ' ',')]";curl -sH "$s37" -X POST -d$f $s34/$1 2>$p03|jq -r '.data[]' 2>$p03;curl -sH "$s37" -X POST -d$f $s34/$(($1+1)) 2>$p03|jq -r '.data[]' 2>$p03; }
+: '
+function sn2 { local f=$(($1/32));for f in $f $((f+1));do curl -sH "$s37" -X POST -d"[$(echo ${!b[@]}|tr ' ' ',')]" $s34/$f 2>$p03|jq -r '.data[]' 2>$p03;done; }
 function sng {
   local h=$(curl -sH "$s37" -X GET $s33/beacon/headers/head 2>$p03|jq -r '.data.header.message.slot');local g=$((h/32));unset d;local d[$(((g+2)*32))]=fim;local s=0;local n=0
-  for s in $(crp $g|jq -r '.slot+":"+.validator_index'|sort -nu);do n=${s%:[0-9]*};((n>h)) && d[$n]+=" ${s#[0-9]*:}";done;local e=0;local i=0;local t=$(date +%s)
-  for s in $(echo ${!d[@]}|sort -n);do n=$(($(date -d@$((s35+s*12)) +%s)-t));if ((n>e));then e=$n;i=$(date -d@$t +%s);fi;t=$(date -d@$((s35+s*12+12)) +%s);done;printf '%8s %2i' $(date -d@$i +%T) $e
+  for s in $(sn2 $h|jq -r '.slot+":"+.validator_index'|sort -nu);do
+    n=${s%:[0-9]*}
+    ((n>h)) && d[$n]+=" ${s#[0-9]*:}"
+  done
+  local e=0;local i=0;local t=$(date +%s)
+  for s in $(printf '%i\n' ${!d[@]}|sort -n);do
+    n=$(($(date -d@$((s35+s*12)) +%s)-t))
+    if ((n>e));then e=$n;i=$(date -d@$t +%s);fi
+    t=$(date -d@$((s35+s*12+12)) +%s)
+  done
+  printf '%8s %2i' $(date -d@$i +%T) $e
+}
+'
+function sn0 { curl -sH "$s37" -X GET $s33/beacon/headers/head 2>$p03|jq -r '.data.header.message.slot' 2>$p03; }
+function sn1 { local f=$(($1/32));for f in $f $((f+1));do curl -sH "$s37" -X POST -d"[$(echo ${!b[@]}|tr ' ' ',')]" $s34/$f 2>$p03|jq -r '.data[].slot' 2>$p03;done;echo $1; }
+function sn2 { local f=$(($1/32));sn1 $1|sort -nur|sed "/$1/,\$d";echo $(((f+2)*32)); }
+function sng {
+  local n=0;local e=0;local i=0;local t=$(date +%s);local s=0
+  for s in $(sn2 $(sn0)|sort -n);do
+    n=$(($(date -d@$((s35+s*12)) +%s)-t))
+    if ((n>e));then e=$n;i=$(date -d@$t +%s);fi
+    t=$(date -d@$((s35+s*12+12)) +%s)
+  done
+  printf '%s %i' $(date -d@$i +%T) $e
 }
 
 [[ $1 = mvr ]] && { mvr; }
