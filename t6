@@ -461,7 +461,7 @@ function ivk {
 function sn0 { curl -sH "$s37" -X GET $s33/beacon/headers/head 2>$p03|jq -r "$s40" 2>$p03; }
 function sn1 { local n=$(($1/32));for n in $n $((n+1));do curl -sH "$s37" -X POST -d"[$(echo ${!b[@]}|tr ' ' ',')]" $s34/$n 2>$p03|jq -r "$s41" 2>$p03;done;echo $1; }
 function sn2 { sn1 $1|sort -nur|sed -n "/$1/q;p";echo $((($1/32+2)*32)); }
-function sng { while :;do local e=0;local t=$(sn0);local i=$((t+1));local s=0;for s in $(sn2 $t|sort -n);do if ((s-t>e));then e=$((s-t));i=$t;fi;t=$((s+1));done;[[ $(date -d@$((s35+(i-1)*12)) +%s) -gt $(date +%s) ]] && break;sleep 12;done;printf '%s %i' $(date -d@$((s35+i*12)) +%T) $((e*12)); }
+function sng { local t=$(sn0);local e=0;local i=0;local s=0;local g=$(($(date +%s)+4*12));for s in $(sn2 $t|sort -n);do if ((s-t>e&&(s35+t*12)>g));then e=$((s-t));i=$t;fi;t=$((s+1));done;printf '%s %i' $(date -d@$((s35+i*12)) +%T) $((e*12)); }
 
 [[ $1 = mvr ]] && { mvr; }
 [[ $1 = jwt ]] && { [[ $cunm = $znm1 || $cunm = $vnm1 ]] && jw0;if [[ -f jwt ]];then sjw eth1 $p08/geth;sjw eth1 $p09/data;sjw eth2 $p16;fi; }
