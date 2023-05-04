@@ -238,7 +238,7 @@ function bh0 {
 }
 function btr { if trf;then printf RB;else printf $1;fi; }                                                                                                     # get tag reboot
 function bss { nu0 $((${2:-0}+$(date -d$(sf1 $1) +%s))); }                                                                                                    # get sum secounds + time
-function gcm { until [[ $# -lt 1 ]];do curl -sH "$s37" $s35$1 2>$p03|jq -r "$s38" 2>$p03;shift;done; }
+function gcm { until [[ $# -lt 1 ]];do curl -sH "$s37" "$s35?epoch=$1" 2>$p03|jq -r "$s38" 2>$p03;shift;done; }
 #function bsc { fs4 $bpid].*INFO 99|grep Sync\ committee|wc -l; }
 function bsc { gcm $s40 $((s40+264*1))|grep -Ex $(echo ${!b[@]}|tr ' ' '|')|wc -l; }                                                                          # get # validators in sync committee
 function bro { [[ -f $p12 ]] || return;dts;bb0;bnn;swn "$(printf 'R%03i %2s %3i' $1 ${2:-$ok} $(bi2) 2>$p03) $(dnn)" >> $p12; }                               # log restart info
@@ -458,10 +458,8 @@ function ivk {
     [[ -f $p05/vc_lock ]] || cex "$s03 $s13";[[ -f $p12 ]] && { dts;swn "$(printf 'BSRV VK %3i %10s %5s' $(ls $p19 2>$p03|wc -l) $dt 2>$p03)" >> $p12; }
   fi
 }
-#s41=$(curl -sH "$s37" -X GET $s33/beacon/headers/head 2>$p03|jq -r '.data.header.message.slot' 2>$p03)
-function sn1 { local n=0;for n in $s40 $((s40+1));do curl -sH "$s37" -X POST -d"[$(echo ${!b[@]}|tr ' ' ',')]" $s34/$n 2>$p03|jq -r "$s39" 2>$p03;done;echo $s41; }
-function sn2 { sn1|sort -nur|sed -n "/$s41/q;p";echo $((($s40+2)*32)); }
-function sng { local t=$(($s41+1));local e=0;local i=0;local s=0;for s in $(sn2|sort -n);do if (((s-t)>e));then e=$((s-t));i=$t;fi;t=$((s+1));done;printf '%s %i' $(date -d@$((s36+i*12)) +%T) $((e*12)); }
+function sn0 { until [[ $# -lt 1 ]];do curl -sH "$s37" -X POST -d"[$(echo ${!b[@]}|tr ' ' ',')]" "$s34/$1" 2>$p03|jq -r "$s39" 2>$p03;shift;done;echo $((($s40+2)*32)); }
+function sng { local t=$(((($(date +%s)-s36)/12)+2));local e=0;local i=0;local s=0;for s in $(sn0 $s40 $((s40+1))|sort -nu);do if ((s<t));then continue;else if (((s-t)>e));then e=$((s-t));i=$t;fi;fi;t=$((s+1));done;printf '%s %i' $(date -d@$((s36+i*12)) +%T) $((e*12)); }
 
 [[ $1 = mvr ]] && { mvr; }
 [[ $1 = jwt ]] && { [[ $cunm = $znm1 || $cunm = $vnm1 ]] && jw0;if [[ -f jwt ]];then sjw eth1 $p08/geth;sjw eth1 $p09/data;sjw eth2 $p16;fi; }
@@ -531,6 +529,7 @@ function sng { local t=$(($s41+1));local e=0;local i=0;local s=0;for s in $(sn2|
 [[ $1 = urb ]] && { urs      0  RB   ${3:-36} $2; }
 [[ $1 = irb ]] && { irb ${2:-3};pas; }
 [[ $1 = rsh ]] && { echo;sft $(sng); }
+#[[ $1 = rsh ]] && { echo;sng; }
 [[ $1 = lp  ]] && { netstat -tulpn; }
 # outros journal system/lighthouse
 [[ $1 = el  ]] && { if [[ $(sst $s10 running) ]];then fs1 $r30;else fs1 $r31;fi|fl1 $2; }
