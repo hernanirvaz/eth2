@@ -4,7 +4,7 @@ source /home/eth/eth2/t1
 
 function jva { local f=$(basename $1);cp $1 $f.sav;cp $1 $f.new;echo -e "$2" >> $f.new;sex "cp $f.new $1"; }                                                  # add lines to end file
 
-swu 'INSTALAR BESU';sex 'apt install default-jdk libjemalloc-dev -y';jva $p36 "$s28";cmw $p36 644 root                                                        # besu execution client needs
+swu 'INSTALAR BESU';sex 'apt install default-jdk libjemalloc-dev -y';jva $p36 "$s23";cmw $p36 644 root                                                        # besu execution client needs
 sex "mkdir -p $p09/data";sau eth1;cmw $p09 755 eth1;cmw $p09/data 700 eth1                                                                                    # create dir & user for ec
 unv $1                                                                                                                                                        # download/install besu binaries
 alow='192.168.8.25,192.168.8.31,192.168.8.34'                                                                                                                 # my servers
