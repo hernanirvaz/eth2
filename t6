@@ -237,6 +237,7 @@ function bh0 {
   bmo;swn "BM $(printf '%8i%34s'             $(bml)              2>$p03) i20   i30   i40   i50   i60   i70   i80\n$m"                                         # last cc-daillast y
 }
 function btr { if trf;then printf RB;else printf $1;fi; }                                                                                                     # get tag reboot
+function btg { if trf;then printf 84;else printf $1;fi; }                                                                                                     # get gap reboot
 function bss { nu0 $((${2:-0}+$(date -d$(sf1 $1) +%s))); }                                                                                                    # get sum secounds + time
 #function bsc { fs4 $bpid].*INFO 99|grep Sync\ committee|wc -l; }
 function bwc { bwd|grep -Ex "$(echo ${!b[@]}|tr ' ' '|')"|wc -l; }                                                                                            # get my # validators
@@ -244,8 +245,8 @@ function bwd { local n=$s32;for n in $n $((n+1));do curl -sH "$s28" -X POST -d"[
 function bro { [[ -f $p12 ]] || return;dts;bb0;bnn;swn "$(printf 'R%03i %2s %3i' $1 ${2:-$ok} $(bi2) 2>$p03) $(dnn)" >> $p12; }                               # log restart info
 # slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168
 function brs {                                                                                                                                                # cc/vc gap restart
-  [[ $(ls $p42.* 2>$p03) || $(bwc) -gt 0 ]] && return;ssf $3 $p42;local n=$4;[[ $2 = RB ]] && n=84
-  ssw $n $p42 $5;local t=$(sng);local f=$p42.i$(stg);touch $f;local n=0;paf;while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p42 $t $5
+  [[ $(ls $p42.* 2>$p03) || $(bwc) -gt 0 ]] && return;ssf $3 $p42
+  ssw $4 $p42 $5;local t=$(sng);local f=$p42.i$(stg);touch $f;local n=0;paf;while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p42 $t $5
   if tip $t;then rm $f;bv0;snp $s12 $1 $bpri $bprf                         ;[[ $2 = VC ]] && sex "$s02 $s13"                                                  # stop cc/conf change?/stop vc?
     if [[ $2 = RB ]];then bro $n $2;gps;ups;sex reboot;else sex "$s03 $s12";[[ $2 = VC ]] && sex "$s03 $s13";ssf 40 $p42;bro $n $2;fi                         # stop ec/reboot|start cc+vc
   fi;done;rm -f $f
@@ -259,7 +260,7 @@ function bsb {                                                                  
   fi;done;rm -f $f
 }
 function vsb {                                                                                                                                                # vc gap stop
-  [[ $(ls $p46.* 2>$p03) || $(bwc) -gt 0 ]] && return;local n=${1:-72};ssw $n $p46 s;local t=$(sng);local f=$p46.i$(stg);touch $f;local n=0;paf
+  [[ $(ls $p46.* 2>$p03) || $(bwc) -gt 0 ]] && return;ssw ${1:-72} $p46 s;local t=$(sng);local f=$p46.i$(stg);touch $f;local n=0;paf
   while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p46 $t s;if tip $t;then cex "$s02 $s12";cex "$s02 $s13";rm $f;fi;done;rm -f $f
 }
 function irb { rm $p39.*.hours 2>$p03;if trb $1;then gps;ups;bps;sex reboot;else if trf;then touch $p39.$1.hours;fi;fi; }                                     # reboot if system needs it
@@ -497,7 +498,7 @@ function snt {
 [[ $1 = bm  ]] && { bm0;bmo;swn "$m"; }
 [[ $1 = bn  ]] && { bm0;bno;swn "$m"; }
 [[ $1 = blf ]] && { bl0;swn "$m" >> $p12;[[ $d1 =~ 23:5[89] ]] && bo4 && tha && tsd && bdl $d0;v2t && [[ $ok != OK ]] && brs 0 $ok 0 48;pas; }
-[[ $1 = bmf ]] && { bm0;bms;[[ $(grep $d0 $p12 2>$p03|wc -l) -gt 0 ]] && swn "$m" >> $p13;tbp && brs $b4 $(btr PE) 120 48; }
+[[ $1 = bmf ]] && { bm0;bms;[[ $(grep $d0 $p12 2>$p03|wc -l) -gt 0 ]] && swn "$m" >> $p13;tbp && brs $b4 $(btr PE) 120 $(btg 48); }
 [[ $1 = bnf ]] && { bm0;bno;swn "$m" >> $p14; }
 [[ $1 = gh  ]] && { eh0 $p10 $2;[[ $2 ]] || { gl0;swn "GL $(printf '%8i' $(ell $p10) 2>$p03)\n$m"; } }
 [[ $1 = uh  ]] && { eh0 $p11 $2;[[ $2 ]] || { ul0;swn "UL $(printf '%8i' $(ell $p11) 2>$p03)\n$m"; } }
@@ -670,8 +671,8 @@ if [[ ! $1 ]];then
   m="$m\ngl[f]\t\tec log report"
   m="$m\ngpn\t\t$s10 pruNe DB - TAKES HOURS"
   m="$m\ngpg\t\t$s10 purGe DB - KEEP ANCIENT"
-  m="$m\ngrs [n]\t\t$s10\t\t\trestart\twith n peers"
-  m="$m\nurs [n]\t\t$s11\t\t\trestart\twith n peers"
+  m="$m\ngrs [n] [p] [g]\t\t$s10\t\t\trestart\twith n peers, s/n prints sleep times, mim gap time"
+  m="$m\nurs [n] [p] [g]\t\t$s11\t\t\trestart\twith n peers, s/n prints sleep times, mim gap time"
   m="$m\nbrs [n] [p] [g]\t$s12\t\t\trestart\twith n peers, s/n prints sleep times, mim gap time"
   m="$m\nbsb [n] [p] [g]\t$s12\t\t\tstop\twith n peers, s/n prints sleep times, mim gap time"
   m="$m\ncrs [p] [g]\t$s12/$s13\trestart\ts/n prints sleep times, mim gap time"
