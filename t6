@@ -70,7 +70,7 @@ function sft { echo $(sf1) $1 $2$(cpf); }                                       
 function smn { local g=${1:-24}                  ;nu0 $((g>360?360:g<24?24:g)); }                                                                             # get max/min seconds to future (12x30/24)
 function sfn { local g=$(($(bss $1)-$(date +%s)));nu0 $((g>3?g:3))            ; }                                                                             # get min seconds to future
 function ssf { [[ $1 -gt 0 ]] || return;local f=$2.s$(stg $1);touch $f;[[ $5 =~ si*m* ]] && sft $3 $4;sleep $1s;rm -f $f; }                                   # sleep with file info
-function ssw { while :;do local t=$(sng);if [[ $(sf2 $t) -le ${1:-36} || 24 -ge $(sfn $t) ]];then ssf $(smn $(sfn $t)) $2 $t $3;else break;fi;done; }         # sleep while small (gap or remaining) time
+function ssw { while :;do local t=$(sng);if [[ $(sf2 $t) -lt $1 || 24 -ge $(sfn $t) ]];then ssf $(smn $(sfn $t)) $2 $t $3;else break;fi;done; }               # sleep while small (gap or remaining) time
 function snn {
   if [[ $# -gt 0 ]];then
     nr=${@:$#};nm=$(printf '%i\n' $@ 2>$p03|sort -n|head -n1);nd=$(nu2 "sqrt(((0$(printf '+%i^2' $@ 2>$p03))-(0$(printf '+%i' $@ 2>$p03))^2/$#)/$#)*1000" 4)  # set cur/min/std peers vars
@@ -260,7 +260,7 @@ function bsb {                                                                  
   fi;done;rm -f $f
 }
 function vsb {                                                                                                                                                # vc gap stop
-  [[ $(ls $p46.* 2>$p03) || $(bwc) -gt 0 ]] && return;ssw ${1:-72} $p46 s;local t=$(sng);local f=$p46.i$(stg);touch $f;local n=0;paf
+  [[ $(ls $p46.* 2>$p03) || $(bwc) -gt 0 ]] && return;ssw $1 $p46 s;local t=$(sng);local f=$p46.i$(stg);touch $f;local n=0;paf
   while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p46 $t s;if tip $t;then cex "$s02 $s12";cex "$s02 $s13";rm $f;fi;done;rm -f $f
 }
 function irb { rm $p39.*.hours 2>$p03;if trb $1;then gps;ups;bps;sex reboot;else if trf;then touch $p39.$1.hours;fi;fi; }                                     # reboot if system needs it
@@ -490,31 +490,41 @@ function snt {
 [[ $1 = nsh ]] && { nsh; }
 [[ $1 = tvc ]] && { tvc; }
 [[ $1 = tmp ]] && { dts;tmp s; }
+# slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168
+[[ $1 = grs ]] && { grs ${2:-0} SR   ${4:-48} $3; }
+[[ $1 = urs ]] && { urs ${2:-0} SR   ${4:-48} $3; }
+[[ $1 = bsb ]] && { bsb ${2:-0} BN 0 ${4:-60} $3; }
+[[ $1 = brs ]] && { brs ${2:-0} BN 0 ${4:-60} $3; }
+[[ $1 = bsv ]] && { bsb      0  VC 0 ${3:-72} $2; }
+[[ $1 = crs ]] && { brs      0  VC 0 ${3:-72} $2; }
+[[ $1 = ivk ]] && { ivk              ${2:-84}   ; }
+[[ $1 = brb ]] && { brs      0  RB 0 ${3:-96} $2; }
+[[ $1 = grb ]] && { grs      0  RB   ${3:-96} $2; }
+[[ $1 = urb ]] && { urs      0  RB   ${3:-96} $2; }
 [[ $1 = ul  ]] && { ul0;swn "$m"; }
-[[ $1 = ulf ]] && { ul0;swn "$m" >> $p11;[[ $ok != OK ]] && urs 0 $ok 36;pas; }
+[[ $1 = ulf ]] && { ul0;swn "$m" >> $p11;[[ $ok != OK ]] && urs 0 $ok 48;pas; }
 [[ $1 = gl  ]] && { gl0;swn "$m"; }
-[[ $1 = glf ]] && { gl0;swn "$m" >> $p10;[[ $ok != OK ]] && grs 0 $ok 36;pas; }
+[[ $1 = glf ]] && { gl0;swn "$m" >> $p10;[[ $ok != OK ]] && grs 0 $ok 48;pas; }
 [[ $1 = bl  ]] && { bl0;swn "$m"; }
 [[ $1 = bm  ]] && { bm0;bmo;swn "$m"; }
 [[ $1 = bn  ]] && { bm0;bno;swn "$m"; }
-[[ $1 = blf ]] && { bl0;swn "$m" >> $p12;if [[ $d1 = 23:58 ]];then if bo4 && tha && tsd;then bdl $d0;else if [[ $(bbl) -gt 7128 ]];then bod 0 1;fi;fi;fi;v2t && [[ $ok != OK ]] && brs 0 $ok 0 48;pas; }
-[[ $1 = bmf ]] && { bm0;bms;[[ $(grep $d0 $p12 2>$p03|wc -l) -gt 0 ]] && swn "$m" >> $p13;tbp && brs $b4 $(btr PE) 120 $(btg 48); }
+[[ $1 = blf ]] && { bl0;swn "$m" >> $p12;if [[ $d1 = 23:58 ]];then if bo4 && tha && tsd;then bdl $d0;else if [[ $(bbl) -gt 7128 ]];then bod 0 1;fi;fi;fi;v2t && [[ $ok != OK ]] && brs 0 $ok 0 60;pas; }
+[[ $1 = bmf ]] && { bm0;bms;[[ $(grep $d0 $p12 2>$p03|wc -l) -gt 0 ]] && swn "$m" >> $p13;tbp && brs $b4 $(btr PE) 120 $(btg 60); }
 [[ $1 = bnf ]] && { bm0;bno;swn "$m" >> $p14; }
 [[ $1 = gh  ]] && { eh0 $p10 $2;[[ $2 ]] || { gl0;swn "GL $(printf '%8i' $(ell $p10) 2>$p03)\n$m"; } }
 [[ $1 = uh  ]] && { eh0 $p11 $2;[[ $2 ]] || { ul0;swn "UL $(printf '%8i' $(ell $p11) 2>$p03)\n$m"; } }
 [[ $1 = bh  ]] && { bh0 $2; }
 [[ $1 = bio ]] && { bio ${2:-2};swn "$m"; }
 [[ $1 = ahs ]] && { [[ $cunm = $znm1 ]] && ah1;[[ $cunm = $znm2 ]] && ah2;[[ $cunm = $znm3 ]] && ah3;[[ $cunm = $znm4 ]] && ah4; }
-[[ $1 = ghs ]] && { ghs    ;cpe; }                                                                                                                            #        ec/system       reports
-[[ $1 = uhs ]] && { uhs    ;cpe; }                                                                                                                            #        ec/system       reports
-[[ $1 = bhs ]] && { bhs    ;cpe; }                                                                                                                            #        cl/system       reports
-[[ $1 = ehs ]] && { ghs;uhs;cpe; }                                                                                                                            #        el/system       reports
-[[ $1 = gbs ]] && { ghs;bhs;cpe; }                                                                                                                            #        ec/cc/system    reports
-[[ $1 = mhs ]] && { lhs ,; }                                                                                                                                  # master ec/cc/vc/system reports
-[[ $1 = shs ]] && { lhs  ; }                                                                                                                                  # slave  ec/cc/vc/system reports
-[[ $1 = cci ]] && { nu0 $(ss4 $s13 $r25 nodes $2); }                                                                                                          # cc ip vc uses
-[[ $1 = eci ]] && { nu0 $(ss4 $s12 $r25 execution-endpoint); }                                                                                                # ec ip cc uses
-[[ $1 = ivk ]] && { ivk $2; }
+[[ $1 = ghs ]] && { ghs    ;cpe; }
+[[ $1 = uhs ]] && { uhs    ;cpe; }
+[[ $1 = bhs ]] && { bhs    ;cpe; }
+[[ $1 = ehs ]] && { ghs;uhs;cpe; }
+[[ $1 = gbs ]] && { ghs;bhs;cpe; }
+[[ $1 = mhs ]] && { lhs ,; }
+[[ $1 = shs ]] && { lhs  ; }
+[[ $1 = cci ]] && { nu0 $(ss4 $s13 $r25 nodes $2); }
+[[ $1 = eci ]] && { nu0 $(ss4 $s12 $r25 execution-endpoint); }
 [[ $1 = bo  && -f $p12 ]] && { boi $(pt1 $@ 00:00);if [[ $(pt3 $@ s) = n ]];then b6=$b2;else b6=$(pt2 $@ 0);fi;bo5; }
 [[ $1 = bon && -f $p12 ]] && { bv0;l2=$(bff 23:58);bo6 $(pt2 $2 $nn); }
 [[ $1 = boc && -f $p12 ]] && { unset v;read -a v <<< $(bff|tail -n1);l2=$(bff $(pt1 $2 ${v[4]}));boa; }
@@ -527,16 +537,6 @@ function snt {
 [[ $1 = cpe ]] && { cpe $2; }
 [[ $1 = gpn ]] && { if [[ $(sst $s10 running) ]];then gp;cex "du -h $p08";sudo -u eth1 $p07/geth --datadir $p08 snapshot prune-state;cex "du -h $p08";dmr;ga;fi; }
 [[ $1 = gpg ]] && { if [[ $(sst $s10 running) ]];then gp;cex "du -h $p08";sudo -u eth1 $p07/geth --datadir $p08 removedb            ;cex "du -h $p08";dmr;ga;fi; }
-# slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168
-[[ $1 = grs ]] && { grs ${2:-0} SR   ${4:-36} $3; }
-[[ $1 = urs ]] && { urs ${2:-0} SR   ${4:-36} $3; }
-[[ $1 = bsb ]] && { bsb ${2:-0} BN 0 ${4:-48} $3; }
-[[ $1 = brs ]] && { brs ${2:-0} BN 0 ${4:-48} $3; }
-[[ $1 = bsv ]] && { bsb      0  VC 0 ${3:-60} $2; }
-[[ $1 = crs ]] && { brs      0  VC 0 ${3:-60} $2; }
-[[ $1 = brb ]] && { brs      0  RB 0 ${3:-84} $2; }
-[[ $1 = grb ]] && { grs      0  RB   ${3:-84} $2; }
-[[ $1 = urb ]] && { urs      0  RB   ${3:-84} $2; }
 [[ $1 = irb ]] && { irb ${2:-3};pas; }
 [[ $1 = rst ]] && { echo;snt; }
 [[ $1 = rsh ]] && { echo;sft $(sng); }
