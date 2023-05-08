@@ -31,7 +31,7 @@ function pt3 { until [[ $# -le 1 || $1 =~ ^[a-z]+$                     ]];do shi
 function trb { [[ $(sra) -ge $((60*60*${1:-24})) ]]; }                                                                                                        # 24 hours reboot test
 function tip { [[ $(date +%s) -ge $(bss $1 6) ]]; }                                                                                                           # ideal position test (based on time)
 function tpc { [[ $b4 -ne 0 ]]; }                                                                                                                             # peers need change test
-function tha { [[ $((b2-b3)) -ge 2 ]]; }                                                                                                                      # homologous/avg position test
+function tha { [[ $((b2-b3)) -ge 5 ]]; }                                                                                                                      # homologous/avg position test
 function tsd { [[ $(bi0) -ge 2000 ]]; }                                                                                                                       # peers standard deviation test
 function tbp { [[ $nm -ge $((nn-5)) && $(era $p12 $chrs) -eq 1 ]] && ( (tpc && tha && ! tsd && ! trf) || trb); }                                              # change configured peers test
 function trf { [[ -f $p45 ]]; }                                                                                                                               # system needs reboot test
