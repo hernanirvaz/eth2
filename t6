@@ -251,6 +251,13 @@ function brs {                                                                  
     if [[ $2 = RB ]];then bro $n $2;gps;ups;sex reboot;else sex "$s03 $s12";[[ $2 = VC ]] && sex "$s03 $s13";ssf 40 $p42;bro $n $2;fi                         # stop ec/reboot|start cc+vc
   fi;done;rm -f $f
 }
+function brz {                                                                                                                                                # cc/vc gap restart
+  [[ $(ls $p42.* 2>$p03) || $(bwc) -gt 0 ]] && return;echo ssf $3 $p42;ssf $3 $p42
+  echo ssw $4 $p42 $5;ssw $4 $p42 $5;local t=$(sng);local f=$p42.i$(stg);touch $f;local n=0;paf;while [[ -f $f ]];do ((n+=$(sfn $t)));echo ssf $(sfn $t) $p42 $t $5;ssf $(sfn $t) $p42 $t $5
+  if tip $t;then rm $f;echo bv0;echo snp $s12 $1 $bpri $bprf                         ;[[ $2 = VC ]] && echo sex "$s02 $s13"                                                  # stop cc/conf change?/stop vc?
+    if [[ $2 = RB ]];then echo bro $n $2;echo gps;echo ups;echo sex reboot;else echo sex "$s03 $s12";[[ $2 = VC ]] && echo sex "$s03 $s13";echo ssf 40 $p42;ssf 40 $p42;echo bro $n $2;fi                         # stop ec/reboot|start cc+vc
+  fi;done;rm -f $f
+}
 function bsb {                                                                                                                                                # cc/vc gap stop
   [[ $(ls $p42.* 2>$p03) || $(bwc) -gt 0 ]] && return;ssf $3 $p42
   ssw $4 $p42 $5;local t=$(sng);local f=$p42.i$(stg);touch $f;local n=0;paf;while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p42 $t $5
@@ -510,6 +517,7 @@ function snt {
 [[ $1 = bn  ]] && { bm0;bno;swn "$m"; }
 [[ $1 = blf ]] && { bl0;swn "$m" >> $p12;if [[ $d1 = 23:58 ]];then if bo4 && tha && tsd;then bdl $d0;else if [[ $(bbl) -gt 7128 ]];then bod 0 1;fi;fi;fi;v2t && [[ $ok != OK ]] && brs 0 $ok 0 60;pas; }
 [[ $1 = bmf ]] && { bm0;bms;[[ $(grep $d0 $p12 2>$p03|wc -l) -gt 0 ]] && swn "$m" >> $p13;tbp && brs $b4 $(btr PE) 120 $(btg 60); }
+[[ $1 = bmz ]] && { brz 0 PE 120 60 s; }
 [[ $1 = bnf ]] && { bm0;bno;swn "$m" >> $p14; }
 [[ $1 = gh  ]] && { eh0 $p10 $2;[[ $2 ]] || { gl0;swn "GL $(printf '%8i' $(ell $p10) 2>$p03)\n$m"; } }
 [[ $1 = uh  ]] && { eh0 $p11 $2;[[ $2 ]] || { ul0;swn "UL $(printf '%8i' $(ell $p11) 2>$p03)\n$m"; } }
