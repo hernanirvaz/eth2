@@ -508,7 +508,8 @@ function snt {
 [[ $1 = bl  ]] && { bl0;swn "$m"; }
 [[ $1 = bm  ]] && { bm0;bmo;swn "$m"; }
 [[ $1 = bn  ]] && { bm0;bno;swn "$m"; }
-[[ $1 = blf ]] && { bl0;swn "$m" >> $p12;if [[ $d1 = 23:58 ]];then if bo4 && tha && tsd;then bdl $d0;else if [[ $(bbl) -gt 7128 ]];then bod 0 1;fi;fi;fi;v2t && [[ $ok != OK ]] && brs 0 $ok 0 60;pas; }
+#[[ $1 = blf ]] && { bl0;swn "$m" >> $p12;if [[ $d1 = 23:58 ]];then if bo4 && tha && tsd;then bdl $d0;else if [[ $(bbl) -gt 7128 ]];then bod 0 1;fi;fi;fi;v2t && [[ $ok != OK ]] && brs 0 $ok 0 60;pas; }
+[[ $1 = blf ]] && { bl0;swn "$m" >> $p12;if [[ $d1 = 23:58 ]];then if bo4 && tha && tsd;then bdl $d0;else if [[ $(bbl) -gt 7128 ]];then bod 0 1;fi;fi;fi;pas; }
 [[ $1 = bmf ]] && { bm0;bms;[[ $(grep $d0 $p12 2>$p03|wc -l) -gt 0 ]] && swn "$m" >> $p13;tbp && brs $b4 $(btr PE) 120 $(btg 60); }
 [[ $1 = bnf ]] && { bm0;bno;swn "$m" >> $p14; }
 [[ $1 = gh  ]] && { eh0 $p10 $2;[[ $2 ]] || { gl0;swn "GL $(printf '%8i' $(ell $p10) 2>$p03)\n$m"; } }
