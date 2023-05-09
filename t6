@@ -500,10 +500,10 @@ function snt {
 # slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168
 [[ $1 = grs ]] && { grs ${2:-0} SR   ${4:-48} $3; }
 [[ $1 = urs ]] && { urs ${2:-0} SR   ${4:-48} $3; }
-[[ $1 = bsb ]] && { bsb ${2:-0} BN 0 ${4:-60} $3; }
-[[ $1 = brs ]] && { brs ${2:-0} BN 0 ${4:-60} $3; }
-[[ $1 = bsv ]] && { bsb      0  VC 0 ${3:-72} $2; }
-[[ $1 = crs ]] && { brs      0  VC 0 ${3:-72} $2; }
+[[ $1 = bsb ]] && { bsb ${2:-0} BN 0 ${4:-72} $3; }
+[[ $1 = brs ]] && { brs ${2:-0} BN 0 ${4:-72} $3; }
+[[ $1 = bsv ]] && { bsb      0  VC 0 ${3:-84} $2; }
+[[ $1 = crs ]] && { brs      0  VC 0 ${3:-84} $2; }
 [[ $1 = ivk ]] && { ivk              ${2:-84}   ; }
 [[ $1 = brb ]] && { brs      0  RB 0 ${3:-96} $2; }
 [[ $1 = grb ]] && { grs      0  RB   ${3:-96} $2; }
@@ -515,9 +515,9 @@ function snt {
 [[ $1 = bl  ]] && { bl0;swn "$m"; }
 [[ $1 = bm  ]] && { bm0;bmo;swn "$m"; }
 [[ $1 = bn  ]] && { bm0;bno;swn "$m"; }
-[[ $1 = blf ]] && { bl0;swn "$m" >> $p12;if [[ $d1 = 23:58 ]];then if bo4 && tha && tsd;then bdl $d0;else if [[ $(bbl) -gt 7128 ]];then bod 0 1;fi;fi;fi;v2t && [[ $ok != OK ]] && brs 0 $ok 0 60;pas; }
-[[ $1 = bmf ]] && { bm0;bms;[[ $(grep $d0 $p12 2>$p03|wc -l) -gt 0 ]] && swn "$m" >> $p13;tbp && brs $b4 $(btr PE) 120 $(btg 60); }
-[[ $1 = bmz ]] && { brz 0 PE 120 60 s; }
+[[ $1 = blf ]] && { bl0;swn "$m" >> $p12;if [[ $d1 = 23:58 ]];then if bo4 && tha && tsd;then bdl $d0;else if [[ $(bbl) -gt 7128 ]];then bod 0 1;fi;fi;fi;v2t && [[ $ok != OK ]] && brs 0 $ok 0 72;pas; }
+[[ $1 = bmf ]] && { bm0;bms;[[ $(grep $d0 $p12 2>$p03|wc -l) -gt 0 ]] && swn "$m" >> $p13;tbp && brs $b4 $(btr PE) 120 $(btg 72); }
+[[ $1 = bmz ]] && { brz 0 PE 0 72 s; }
 [[ $1 = bnf ]] && { bm0;bno;swn "$m" >> $p14; }
 [[ $1 = gh  ]] && { eh0 $p10 $2;[[ $2 ]] || { gl0;swn "GL $(printf '%8i' $(ell $p10) 2>$p03)\n$m"; } }
 [[ $1 = uh  ]] && { eh0 $p11 $2;[[ $2 ]] || { ul0;swn "UL $(printf '%8i' $(ell $p11) 2>$p03)\n$m"; } }
