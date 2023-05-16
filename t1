@@ -219,6 +219,7 @@ r49="$r49;s%umask\": [0-9]*%umask\": 2%"
 r50='/  *\/  *ext4  *defaults  */s%defaults%defaults,noatime%'
 r51='/  *\/sata  *ext4  *defaults  */s%defaults%defaults,noatime%'
 r52="$r30.*Chain.head"
+r53='latency:'
 
 function sst { $s01 $1 2>$p03|grep "${2:-inactive\|failed}" 2>$p03; }
 function swb { echo -e "\n\e[5m${1^^}\e[25m\n"; }
