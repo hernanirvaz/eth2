@@ -37,10 +37,11 @@ function tip { [[ $(date +%s) -ge $(bss $1 6) ]]; }                             
 function tpc { [[ $b4 -ne 0 ]]; }                                                                                                                             # peers need change test
 function tha { [[ $((b2-b3)) -ge 3 ]]; }                                                                                                                      # homologous/avg position test
 function tsd { [[ $(bi0) -ge 2000 ]]; }                                                                                                                       # peers standard deviation test
-function tbp { [[ $nm -ge $((nn-5)) && $(era $p12 $chrs) -eq 1 ]] && ( (tpc && tha && ! tsd && ! trf) || trb); }                                              # change configured peers test
+function tpm { [[ $nm -ge $((nn-5)) ]]; }                                                                                                                     # min peers test
 function trf { [[ -f $p45 ]]; }                                                                                                                               # system needs reboot test
 function tbf { [[ -f $p04/$s12.service ]]; }                                                                                                                  # cc service file test
 function tvf { [[ -f $p04/$s13.service ]]; }                                                                                                                  # vc service file test
+function tbp { [[ $(era $p12 $chrs) -eq 1 ]] && ( (tpm && tpc && tha && ! tsd && ! trf) || trb); }                                                            # change configured peers test
 function tll { [[ $(grep '\-all-' $p04/$s12.service 2>$p03) ]]; }                                                                                             # cc long-lived   test
 function jsh { cex "journalctl --no-hostname --no-full -f $1"; }                                                                                              # my journal   format
 function spc { nn=$2;cp $p04/$1.service $p02/$1.sav;sed "s%peers\([ =]*\)[0-9]*%peers\1$2%" $p02/$1.sav > $p04/$1.service; }                                  # service configuration change
