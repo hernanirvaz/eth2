@@ -165,7 +165,7 @@ function bb1 { if [[ $(echo $@|grep is_syncing\":false) ]];then printf 'synced';
 function bio { lg3 $1;dts;m="BEIO $(nu1 %6i $1) $dt io: $b1 $b5 $(bi1)"; }                                                                                    # shw imported/observed delays
 function bcc { if tbp       ;then if trb;then printf r;else printf c;fi;else printf _;fi; }                                                                   # get change configured peers char
 function bdc { if tha && tsd;then printf d;else printf _;fi; }                                                                                                # get delete cc log day       char
-function bmp { printf 'avg: %4i %4s %4i %4i io: %4i %4i %4i lt: %3i %3i' ${a[0]} $b7 $b4 $(bi0) $b1 $b5 $(bi1) $b8 $b9 2>$p03; }                              # get peer__io: partial
+function bmp { printf 'avg: %4i %4s %4i %4i io: %4i %4i %4i lt: %4i %4i' ${a[0]} $b7 $b4 $(bi0) $b1 $b5 $(bi1) $b8 $b9 2>$p03; }                              # get peer__io: partial
 function bl0 { dts;ok=OK;if [[ $(sst $s12 running) ]];then bl3;bl5;bv0;bnn;bb0;blo;else m="BSRV NOT ON $dt";fi; }                                             # cc report
 function bl1 {                                                                                                                                                # set restart idx vars
   z1=${1:-$(echo "$l0"|grep 'RPC block'|wc -l)};z2=${2:-$(echo "$l0"|grep 'New block'|wc -l)};z3=${3:-$(echo "$l0"|grep -v ' INFO '|wc -l)}                   # set processed/received blocks,error lines
@@ -175,17 +175,17 @@ function bl2 { zk=${1:-$(bl4 missing)};zz=${2:-$(bl4 target)};zx=${3:-$(bl4 head
 function bl3 { b0=${1:-$(fs0 $r47|wc -l)};if [[ $2$3 ]];then b1=$2;b5=$3;else lg3 2;fi; }                                                                     # set pub-blocks & imported/observed delays
 function bl4 { echo "$l3"|sed -n "s%.*$1.*validators: *\[\(.*\)\].*%\1%p"|wc -w; }                                                                            # get number of paid activities
 function bl5 { if [[ $1$2 ]];then b8=$1;b9=$2;else lg5 200;fi; }
-#    0  1   2          3     4       5  6   7    8    9  10   11  12 13  14 15 16  17 18 19  20  21 22   23   24  25   26   27   28  29  30  31
-# BEAC OK   0 2023-05-16 11:22 node60: 66 rp: 2052 2032 ab: 2700  579 0 er:  0  8  78 13  0 507   0  2 3598  118 io:  614 4859 1463 lt: 250 790
+#    0  1   2          3     4       5  6   7    8    9  10   11  12 13  14 15 16  17 18 19  20  21 22   23   24  25   26   27   28  29   30   31
+# BEAC OK   0 2023-05-16 11:22 node60: 66 rp: 2052 2032 ab: 2700  579 0 er:  0  8  78 13  0 507   0  2 3598  118 io:  614 4859 1463 lt:  250  790
 function blo {
   m="BEAC $ok $(printf '%3i' $(bi2) 2>$p03) $(dnn) $(printf 'rp: %4.0f %4.0f ab: %4i %4i %1i' $(bdr $z5 $b0) $(bdp $zk $zz $zx $zw) $z5 $(bz0) $b0 2>$p03)"
-  m="$m $(printf 'er: %2i %2i %3i %2i %2i %3i %3i %2i %4i %4i io: %4i %4i %4i lt: %3i %3i' $zk $zz $zx $zw $z1 $z2 $(bw0) $z3 $z4 $(bf0) $b1 $b5 $(bi1) $b8 $b9 2>$p03)"
+  m="$m $(printf 'er: %2i %2i %3i %2i %2i %3i %3i %2i %4i %4i io: %4i %4i %4i lt: %4i %4i' $zk $zz $zx $zw $z1 $z2 $(bw0) $z3 $z4 $(bf0) $b1 $b5 $(bi1) $b8 $b9 2>$p03)"
 }
-#  0    1   2          3     4       5  6   7     8     9    10    11    12    13    14   15   16   17   18   19  20   21   22   23  24  25  26
-# BM   10   4 2023-05-16 11:41 node60: 66 mp:  1168  1509  1550  1525  1018  2158  2015 avg: 1412 p__:    0 1447 io:  841 4309 1534 lt: 499 742
+#  0    1   2          3     4       5  6   7     8     9    10    11    12    13    14   15   16   17   18   19  20   21   22   23  24   25   26
+# BM   10   4 2023-05-16 11:41 node60: 66 mp:  1168  1509  1550  1525  1018  2158  2015 avg: 1412 p__:    0 1447 io:  841 4309 1534 lt:  499  742
 function bmo { m="BM $(printf '%4i %3i' $b2 $b3 2>$p03) $(dnn) $(bma 'mp:') $(bmp)"; }
-#  0    1   2          3     4       5  6   7     8    9   10   11   12   13  14   15   16   17  18  19  20
-# BM   10   4 2023-05-16 11:44 node60: 60 mp:  1018 avg: 1412 p__:    0 1450 io:  841 4309 1534 lt: 499 742
+#  0    1   2          3     4       5  6   7     8    9   10   11   12   13  14   15   16   17  18   19   20
+# BM   10   4 2023-05-16 11:44 node60: 60 mp:  1018 avg: 1412 p__:    0 1450 io:  841 4309 1534 lt:  499  742
 function bms { m="BM $(printf '%4i %3i' $b2 $b3 2>$p03) $(dnn) mp: $(nu1 %5i ${a[$nn]}) $(bmp)"; }
 #    0   1          2     3    4 5 6 7 8 9 10 11   12 13 14 15 16 17 18 19   20 21 22 23 24 25 26 27   28 29 30 31 32 33 34 35   36 37 38 39 40 41 42 43
 # BEAC 682 2022-03-16 11:03 cnt: 4 7 0 0 0 10 10 mis: 20 20 20 20 20 20 20 mat: 14 45 30 30 30 30 30 mah: 94 68 40 40 40 40 40 dly: 79 09 50 50 50 50 50
