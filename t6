@@ -164,9 +164,8 @@ function bff { grep "BEAC.*$1" $p12 2>$p03; }                                   
 function bnn { snn $(fs3 peers:) $(bpc $(bcl peer_count)); }                                                                                                  # set cur/min/std cc peers
 function bb1 { if [[ $(echo $@|grep is_syncing\":false) ]];then printf 'synced';else printf 'syncing: %6i' $(bsd $@);fi; }                                    # get cl syncing distance remaining
 function bio { lg3 $1;dts;m="BEIO $(nu1 %6i $1) $dt io: $b1 $b5 $(bi1)"; }                                                                                    # shw imported/observed delays
-function bcc { if tbp       ;then if trb;then printf r;else printf c;fi;else printf _;fi; }                                                                   # get change configured peers char
-function bdc { if tha && tsd;then printf d;else printf _;fi; }                                                                                                # get delete cc log day       char
-function bmp { printf 'avg: %4i %4s %3i %5i io: %4i %4i %4i lt: %4i %4i' ${a[0]} $b7 $b4 $(bi0) $b1 $b5 $(bi1) $b8 $b9 2>$p03; }                              # get peer__io: partial
+function bcc { if tbp;then if trb;then printf r;else printf c;fi;else if tha && tsd;then printf d;else printf _;fi;fi; }                                      # get change/reboot/delete char
+function bmp { printf 'avg: %4i %3s %3i %6i io: %4i %4i %4i lt: %4i %4i' ${a[0]} $b7 $b4 $(bi0) $b1 $b5 $(bi1) $b8 $b9 2>$p03; }                              # get peer__io: partial
 function bl0 { dts;ok=OK;if [[ $(sst $s12 running) ]];then bl3;bl5;bv0;bnn;bb0;blo;else m="BSRV NOT ON $dt";fi; }                                             # cc report
 function bl1 {                                                                                                                                                # set restart idx vars
   z1=${1:-$(echo "$l0"|grep 'RPC block'|wc -l)};z2=${2:-$(echo "$l0"|grep 'New block'|wc -l)};z3=${3:-$(echo "$l0"|grep -v ' INFO '|wc -l)}                   # set processed/received blocks,error lines
@@ -194,7 +193,7 @@ function bno { m="BEAC $(nu1 %6i $(bbl)) $dt $(bnc 'cnt:' ' ') $(bnk 'mis:' ' ')
 function bmi { zk=0;zz=0;zx=0;unset v;v[1]=0;unset k;k[0]=0;unset z;z[0]=0;unset x;x[0]=0;unset w;w[0]=0;unset c;c[0]=0;unset a;a[0]=0;bm6; }                 # ini err/cnt/avg penalty arrays
 function bm0 {                                                                                                                                                # cc-daily report
   [[ -f $p12 ]] || return;bmi;b4=0;dts;bv0;bnn;bs3;bl2;[[ -f $p14 ]] && bm4;lg3 0;lg5 0                                                                       # set vars/arrays
-  l1=$(tail -n$(($(nu0 $(bbl))-v[1])) $p12 2>$p03|bfl);[[ $l1 ]] && bm1;bm2;[[ $b2 -eq 0 ]] && boi;bo3;bm5 ${a[$nn]};b7="p$(bdc)$(bcc):"                      # add cc lines & homologous/avg position
+  l1=$(tail -n$(($(nu0 $(bbl))-v[1])) $p12 2>$p03|bfl);[[ $l1 ]] && bm1;bm2;[[ $b2 -eq 0 ]] && boi;bo3;bm5 ${a[$nn]};b7="p$(bcc):"                            # add cc lines & homologous/avg position
 }
 function bm1 { local g=${1:-$bpri};bs5;[[ $l5 ]] && { bkm $g;bzm $g;bxm $g;bwm $g;bcm $g; };((g<bprf)) && bm1 $((g+bprs)); }                                  # recursively sum penalty errors arrays
 function bm2 { k[0]=$(($(bnk)));z[0]=$(($(bnz)));x[0]=$(($(bnx)));w[0]=$(($(bnw)));c[0]=$(($(bnc)));a[0]=$(bm3 0);bm7; }                                      # tot err/cnt/penalty arrays
