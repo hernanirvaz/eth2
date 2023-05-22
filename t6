@@ -165,7 +165,7 @@ function bnn { snn $(fs3 peers:) $(bpc $(bcl peer_count)); }                    
 function bb1 { if [[ $(echo $@|grep is_syncing\":false) ]];then printf 'synced';else printf 'syncing: %6i' $(bsd $@);fi; }                                    # get cl syncing distance remaining
 function bio { lg3 $1;dts;m="BEIO $(nu1 %6i $1) $dt io: $b1 $b5 $(bi1)"; }                                                                                    # shw imported/observed delays
 function bcc { if tbp;then if trb;then printf r;else printf c;fi;else if tha && tsd;then printf d;else printf _;fi;fi; }                                      # get change/reboot/delete char
-function bmp { printf 'avg: %4i %3s %3i %6i io: %4i %4i %4i lt: %4i %4i' ${a[0]} $b7 $b4 $(bi0) $b1 $b5 $(bi1) $b8 $b9 2>$p03; }                              # get peer__io: partial
+function bmp { printf '%5i %3s %3i %10i io: %4i %4i %4i lt: %4i %4i' ${a[0]} $b7 $b4 $(bi0) $b1 $b5 $(bi1) $b8 $b9 2>$p03; }                                  # get peer__io: partial
 function bl0 { dts;ok=OK;if [[ $(sst $s12 running) ]];then bl3;bl5;bv0;bnn;bb0;blo;else m="BSRV NOT ON $dt";fi; }                                             # cc report
 function bl1 {                                                                                                                                                # set restart idx vars
   z1=${1:-$(echo "$l0"|grep 'RPC block'|wc -l)};z2=${2:-$(echo "$l0"|grep 'New block'|wc -l)};z3=${3:-$(echo "$l0"|grep -v ' INFO '|wc -l)}                   # set processed/received blocks,error lines
@@ -239,7 +239,7 @@ function bh0 {
   [[ -f $p12 ]] || return;tail -n${1:-$chrs} $p12;[[ $1 ]] && return                                                                                          # current    cc report
   boi;swn "BO $(printf '%4i %3i%34s%29s' $b2 $(echo "$l2"|wc -l) 2>$p03)x5 x2  x1 x1";bo5                                                                     # homologous cc report
   bl0;swn "BL $(printf '%8i%34s%29s%13s'     $(bbl)              2>$p03)rb  nb c10 er   if  c90\n$m";bm0                                                      # last       cc report
-  bmo;swn "BM $(printf '%8i%34s'             $(bml)              2>$p03) i20   i30   i40   i50   i60   i70   i80\n$m"                                         # last cc-daillast y
+  bmo;swn "BM $(printf '%8i%34s'             $(bml)              2>$p03) i20   i30   i40   i50   i60   i70   i80   avg\n$m"                                   # last cc-daillast y
 }
 function btr { if trf;then printf RB;else printf $1;fi; }                                                                                                     # get tag reboot
 function btg { if trf;then printf 84;else printf $1;fi; }                                                                                                     # get gap reboot
