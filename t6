@@ -236,7 +236,7 @@ function bod {
   done <<< $(bo1);if [[ $e ]];then local e=${e:1};local e=${e// /\\|};bdw $p12 $e;bdw $p13 $e;fi                                                              # perform logs delete
 }
 function bh0 {
-  [[ -f $p12 ]] || return;tail -n${1:-$chrs} $p12;[[ $1 ]] && return;local e='x5 x2  x1 x1 rb  nb c10 er   if  c90'
+  [[ -f $p12 ]] || return;tail -n${1:-$chrs} $p12;[[ $1 ]] && return;local e='x5 x2  x1 x1 rb  nb c10 er   if  c90' #sfdsdfsdf
   boi;swn "BO $(printf '%4i %3i%34s%29s' $b2 $(echo "$l2"|wc -l) 2>$p03)$e";bo5                                                                               # homologous cc report
   bl0;swn "BL $(printf '%8i%34s%29s'         $(bbl)              2>$p03)$e\n$m";bm0                                                                           # last       cc report
   bmo;swn "BM $(printf '%8i%34s'             $(bml)              2>$p03) i20   i30   i40   i50   i60   i70   i80   avg\n$m"                                   # last cc-daillast y
