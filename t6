@@ -96,7 +96,7 @@ function grs {                                                                  
   [[ $(ls $p40.* 2>$p03) ]] && return;ssw $3 $p40 $4
   local t=$(sng);local f=$p40.i$(stg);touch $f;local n=0;paf;while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p40 $t $4
   if tip $t;then rm $f;gv0;[[ $2 = RB ]] && gq0;snp $s10 $1 10 50                                                                                             # change peers/stop el
-    if [[ $2 = RB ]];then ero $n $p10 $2;sex reboot;else sex "$s03 $s10";ssf 40 $p40;gq0;ero $n $p10 $2;fi                                                    # reboot/start el
+    if [[ $2 = RB ]];then ero $n $p10 $2;sex reboot;else sex "$s03 $s10";ssf 50 $p40;gq0;ero $n $p10 $2;fi                                                    # reboot/start el
   fi;done;rm -f $f
 }
 function gdi { if [[ $1 -gt 0 ]];then l4=$(rl4 $r35|tail -n$1);else l4=$(rl4 $r35);fi;nu3 3 0 $(lg2 "$r42"); }                                                # get delay imported
@@ -121,7 +121,7 @@ function urs {                                                                  
   [[ $(ls $p41.* 2>$p03) ]] && return;ssw $3 $p41 $4
   local t=$(sng);local f=$p41.i$(stg);touch $f;local n=0;paf;while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p41 $t $4
   if tip $t;then rm $f;uv0;[[ $2 = RB ]] && uq0;snp $s11 $1 10 50                                                                                             # change peers/stop el
-    if [[ $2 = RB ]];then ero $n $p11 $2;sex reboot;else sex "$s03 $s11";ssf 40 $p41;uq0;ero $n $p11 $2;fi                                                    # reboot/start el
+    if [[ $2 = RB ]];then ero $n $p11 $2;sex reboot;else sex "$s03 $s11";ssf 50 $p41;uq0;ero $n $p11 $2;fi                                                    # reboot/start el
   fi;done;rm -f $f
 }
 function udi { if [[ $1 -gt 0 ]];then l4=$(rl4 $r35|tail -n$1);else l4=$(rl4 $r35);fi;nu3 3 0 $(lg2 "$r43"); }                                                # get delay imported
@@ -253,7 +253,7 @@ function brs {                                                                  
   [[ $(ls $p42.* 2>$p03) || $(bwc) -gt 0 ]] && return;ssf $3 $p42
   ssw $4 $p42 $5;local t=$(sng);local f=$p42.i$(stg);touch $f;local n=0;paf;while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p42 $t $5
   if tip $t;then rm $f;bv0;snp $s12 $1 $bpri $bprf                         ;[[ $2 = VC ]] && sex "$s02 $s13"                                                  # stop cc/conf change?/stop vc?
-    if [[ $2 = RB ]];then bro $n $2;gps;ups;sex reboot;else sex "$s03 $s12";[[ $2 = VC ]] && sex "$s03 $s13";ssf 40 $p42;bro $n $2;fi                         # stop ec/reboot|start cc+vc
+    if [[ $2 = RB ]];then bro $n $2;gps;ups;sex reboot;else sex "$s03 $s12";[[ $2 = VC ]] && sex "$s03 $s13";ssf 50 $p42;bro $n $2;fi                         # stop ec/reboot|start cc+vc
   fi;done;rm -f $f
 }
 function bsb {                                                                                                                                                # cc/vc gap stop
@@ -261,7 +261,7 @@ function bsb {                                                                  
   ssw $4 $p42 $5;local t=$(sng);local f=$p42.i$(stg);touch $f;local n=0;paf;while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p42 $t $5
   if tip $t;then       bv0;snp $s12 $1 $bpri $bprf                         ;[[ $2 = VC ]] && sex "$s02 $s13";local rsp=$6;swn "START BN $rsp?"                # stop cc/vc/conf change
     [[ $rsp =~ na*o* ]] || sex "$s03 $s12";if [[ $2 = VC ]];then [[ $rsp =~ na*o* ]] || { swn "START VC $rsp?";sex "$s03 $s13"; };fi                          # start cc+vc
-    rm $f;ssf 40 $p42;bro $n $2
+    rm $f;ssf 50 $p42;bro $n $2
   fi;done;rm -f $f
 }
 function vsb {                                                                                                                                                # vc gap stop
