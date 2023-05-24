@@ -36,7 +36,7 @@ function trb { [[ $(sra) -ge $((60*60*${1:-24})) ]]; }                          
 function tip { [[ $(date +%s) -ge $(bss $1 6) ]]; }                                                                                                           # ideal position test (based on time)
 function tpc { [[ $b4 -ne 0 ]]; }                                                                                                                             # peers need change test
 function tha { [[ $((b2-b3)) -ge 3 ]]; }                                                                                                                      # homologous/avg position test
-function tsd { [[ $(bi0) -ge 2000 ]]; }                                                                                                                       # peers standard deviation test
+function tsd { [[ $((nd+$(bi0))) -ge 2000 ]]; }                                                                                                               # peers standard deviation test
 function tpm { [[ $nm -ge $((nn-5)) ]]; }                                                                                                                     # min peers test
 function trf { [[ -f $p45 ]]; }                                                                                                                               # system needs reboot test
 function tbf { [[ -f $p04/$s12.service ]]; }                                                                                                                  # cc service file test
@@ -149,7 +149,7 @@ function bpc { nu0 $(echo $@|sed -n 's%.*"connected" *: *"\([^"]*\)".*%\1%ip'   
 function bz0 { nu2 "(30.0*(0.4*$zk+0.3*$zz+0.2*$zx+0.1*$zw))"                            ; }                                                                  # get numerator paid errors
 function bw0 { nu0 $((9*z1))                                                             ; }                                                                  # get numerator processed blocks
 function bf0 { nu0 $((59*z3))                                                            ; }                                                                  # get numerator general errors
-function bi0 { nu0 $((nd+zk*300+zz*20+zx))                                               ; }                                                                  # get delete day idx
+function bi0 { nu0 $((zk*300+zz*20+zx))                                                  ; }                                                                  # get delete day idx
 function bi1 { nu0 $(((4*b1+b5)/5))                                                      ; }                                                                  # shw imported/observed data
 function bi2 { nu0 $(((z5>400?$(bz0)/z5:0)+(z2>300?$(bw0)/z2:0)+(z4>999?$(bf0)/z4:0)))   ; }                                                                  # get restart idx
 function bdp { nu2 "($1*$pmis+$2*$pmat+$3*$pmah+$4*$pdly)/${5:-1}*$rate/1000000" 7; }                                                                         # get penalty
@@ -282,7 +282,7 @@ function brl {                                                                  
 function brm {                                                                                                                                                # recalculate cc-daily logs
   [[ -f $p12 && -f $p13 ]] || return;rm -f $p13.r;bmi;local d=0000-00-00;local l=0;local n=0;local h=0;local g=0;unset v;while read -a v;do
     d=${v[3]};h=$g;g=$(grep -n "$d 23:58" $p12|cut -d: -f1);[[ ${g:=$h} -le $h ]] && continue;dts $d\ ${v[4]};nn=${v[5]:4:2}                                  # get next cc log position
-    nr=${v[6]};nd=${v[13]};zx=$((v[12]-nd));l2=$(brh $g|bfl 23:58);bo2 $d;((l+=b2));((n+=1));b3=$(nu2 $l/$n)                                                  # cur/avg homologous position
+    nr=${v[6]};zx=${v[12]};nd=${v[13]};l2=$(brh $g|bfl 23:58);bo2 $d;((l+=b2));((n+=1));b3=$(nu2 $l/$n)                                                       # cur/avg homologous position
     l1=$(brh $g|tail -n$((g-h))|bfl);[[ $l1 ]] && bm1;bm2;b7=${v[10]};b4=${v[11]};b1=${v[15]};b5=${v[16]};b8=${v[19]};b9=${v[20]};bms;swn "$m" >> $p13.r      # sum err arrays & new cc-daily output
   done <<< $(cat $p13)
 }
