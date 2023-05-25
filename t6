@@ -164,7 +164,7 @@ function bff { grep "BEAC.*$1" $p12 2>$p03; }                                   
 function bnn { snn $(fs3 peers:) $(bpc $(bcl peer_count)); }                                                                                                  # set cur/min/std cc peers
 function bb1 { if [[ $(echo $@|grep is_syncing\":false) ]];then printf 'synced';else printf 'syncing: %6i' $(bsd $@);fi; }                                    # get cl syncing distance remaining
 function bio { lg3 $1;dts;m="BEIO $(nu1 %6i $1) $dt io: $b1 $b5 $(bi1)"; }                                                                                    # shw imported/observed delays
-function bcc { if tbp;then if trb;then printf r;else printf c;fi;else if tha && tsd;then printf d;else printf _;fi;fi; }                                      # get change/reboot/delete char
+function bcc { if tbp;then if trb;then printf r;else printf c;fi;else if tsd;then printf d;else printf _;fi;fi; }                                             # get change/reboot/delete char
 function bmp { printf '%5i %3s %3i %5i %4i io: %4i %4i %4i lt: %4i %4i' ${a[0]} $b7 $b4 $nd $(bi0) $b1 $b5 $(bi1) $b8 $b9 2>$p03; }                           # get peer__io: partial
 function bl0 { dts;ok=OK;if [[ $(sst $s12 running) ]];then bl3;bl5;bv0;bnn;bb0;blo;else m="BSRV NOT ON $dt";fi; }                                             # cc report
 function bl1 {                                                                                                                                                # set restart idx vars
@@ -443,6 +443,7 @@ function v0t { [[ $(sst $s13 running) ]]; }                                     
 function v1t { [[ $cunm = $nxvc ]]; }                                                                                                                         # vc next     test
 function v2t { [[ $cunm = $cuvc ]]; }                                                                                                                         # vc current  test
 function v3t { [[ $cuvc = $nxvc ]]; }                                                                                                                         # vc transfer test
+function v4t { [[ $cunm = $znm4 && $ok != OK ]]; }                                                                                                            # bn restart  test
 function vps { local f=$p02/$(basename $p18);sex "cp $p18 $p02";cmw $f 666 eth;scp $f $(snc $nxvc):~;sex "rm $f"; }                                           # prep slash db
 function tvc {
   v3t && return;swn "$s24";if v2t && v0t;then swn "TRANSFERIR VC -> $nxvc (SIM/nao)?";else return;fi;local rsp=nao;read rsp
@@ -505,7 +506,7 @@ function sng { local t=$(((($(date +%s)-s31)/12)+s36));local e=0;local i=0;local
 [[ $1 = bl  ]] && { bl0;swn "$m"; }
 [[ $1 = bm  ]] && { bm0;bmo;swn "$m"; }
 [[ $1 = bn  ]] && { bm0;bno;swn "$m"; }
-[[ $1 = blf ]] && { bl0;swn "$m" >> $p12;if [[ $d1 = 23:58 ]];then if bo4 && tha && tsd;then bdl $d0;else if [[ $(bbl) -gt 7128 ]];then bod 0 1;fi;fi;fi;v2t && [[ $ok != OK ]] && brs 0 $ok 0 72;pas; }
+[[ $1 = blf ]] && { bl0;swn "$m" >> $p12;if [[ $d1 = 23:58 ]];then if tsd;then bdl $d0;else if [[ $(bbl) -gt 7128 ]];then bod 0 1;fi;fi;fi;v4t && brs 0 $ok 0 72;pas; }
 [[ $1 = bmf ]] && { bm0;bms;[[ $(grep $d0 $p12 2>$p03|wc -l) -gt 0 ]] && swn "$m" >> $p13;tbp && brs $b4 $(btr PE) 120 $(btg 72); }
 [[ $1 = bnf ]] && { bm0;bno;swn "$m" >> $p14; }
 [[ $1 = gh  ]] && { eh0 $p10 $2;[[ $2 ]] || { gl0;swn "GL $(printf '%8i' $(ell $p10) 2>$p03)\n$m"; } }
