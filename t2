@@ -22,7 +22,7 @@ else
   cex 'ufw status numbered'                                                                                                                                   # show
 fi
 [[ -f $p04/$s10.service || -f $p04/$s11.service || -f $p04/$s12.service || -f $p04/$s13.service ]] && exit                                                    # ec/cl instalados -> exit
-swu 'UPDATE LINUX'       ;t4update linux
+swu 'UPDATE LINUX'       ;t4 linux
 swu 'ADDITIONAL LINUX'   ;sex 'apt install python3-pip net-tools apt-listchanges landscape-common software-properties-common smartmontools jq -y'
 swu 'UNATTENDED UPGRADES';cex 'apt install unattended-upgrades update-notifier-common -y'
 swu 'LINUX CONFIGS'
