@@ -64,36 +64,6 @@ cc1 $p25 "$r04"                             ;cmw $p25 755 root                  
 cc1 $p27 "s%^ *$p01%# $p01%";cc2 $p27 "$r14";cmw $p27 644 root                                                                                                # new logrotate add
 [[ -x $p28 ]] && sex "chmod -x $p28"                                                                                                                          # motd overlayroot unexecute
 nex "$s00 daemon-reload";sudo dpkg-reconfigure -plow unattended-upgrades                                                                                      # unattended upgrades
-if [[ $cunm = $znm1 || $cunm = $znm4 || $cunm = $vnm1 ]];then                                                                                                 # ec here
-  swu 'INSTALAR GETH';t6 jwt;sex 'add-apt-repository -y ppa:ethereum/ethereum';sex 'apt update -y';cex 'apt install ethereum -y'                              # geth execution client needs
-  sex "mkdir -p $p08/geth";sau eth1;cmw $p08 755 eth1;cmw $p08/geth 700 eth1                                                                                  # create dir & user for ec
-  maxp=50                                                                                                                                                     # default
-  pp2p=30303                                                                                                                                                  # default
-  othe=''
-  othe="$othe --http.corsdomain 'chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn' --http.vhosts '*'"                                                      # for metamask
-  othe="$othe --cache 10704"                                                                                                                                  # fast sync & less DB growth
-  cat <<-EOF > $s10.service
-	[Unit]
-	Description=geth service
-	Wants=network-online.target
-	After=network-online.target
-	
-	[Service]
-	User=eth1
-	Group=eth1
-	Restart=always
-	RestartSec=10
-	TimeoutStopSec=300
-	ExecStart=$p07/geth --datadir $p08 --port $pp2p --http --http.addr $zip1$othe --maxpeers $maxp --authrpc.addr $zip1 --authrpc.jwtsecret $p08/geth/jwt
-	ExecStopPost=$p02/eth2/t7 GETHSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
-	
-	[Install]
-	WantedBy=multi-user.target
-	EOF
-  sex "mv $s10.service $p04";cmw $p04/$s10.service 644
-  if [[ -f jwt ]];then sjw eth1 $p08/geth;else swb "needs $p08/geth/jwt secret";fi
-  t8besu                                                                                                                                                      # instalar besu
-fi
 swn 'sudo netplan apply'
 swn 'AND reboot'
-swn 'para iniciar ec: t6 jwt;t gea'
+if [[ $cunm = $znm1 || $cunm = $znm4 || $cunm = $vnm1 ]];then swb 'AND INSTALAR EL (t8geth, t8besu)';fi
