@@ -73,16 +73,7 @@ p46="$p02/validator.restart"
 r00='s%^ *#*NTP=.*$%NTP=192.168.8.28 ntp02.oal.ul.pt ntp04.oal.ul.pt time.google.com time.cloudflare.com time.facebook.com%i'
 r01='s%^ *ENABLED=.*$%ENABLED=0%i'
 r02='s%bind[^"]*"%bind -4"%'
-r03='s%^ */*\(.*codename}-updates.*$\)%\1%i'
-r03="${r03};s%^ */* *Unattended-Upgrade::Mail .*$%Unattended-Upgrade::Mail \"hernanilr@gmail.com\";%i"
-r03="${r03};/^ *Unattended-Upgrade::Package-Blacklist/a \\"
-r03="${r03}\t\"abigen\";"
-r03="${r03}\n\t\"bootnode\";"
-r03="${r03}\n\t\"clef\";"
-r03="${r03}\n\t\"ethereum\";"
-r03="${r03}\n\t\"evm\";"
-r03="${r03}\n\t\"geth\";"
-r03="${r03}\n\t\"rlpdump\";"
+r03='s%^ */*\(.*codename}-updates.*$\)%\1%i;s%^ */* *Unattended-Upgrade::Mail .*$%Unattended-Upgrade::Mail "hernanilr@gmail.com";%i'
 r04='s%^ *printf%# printf%i'
 r05='printf "Welcome to %s %s\\n" "$(uname -n)" "$DISTRIB_DESCRIPTION"'
 r06='s%timeout *=.*$%timeout=1%i'
