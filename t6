@@ -25,9 +25,9 @@ function fs2 { pex "grep -v ${1:-$r34}     $p01"; }                             
 function fs3 { fs0 $1 $2|lg0 .*$1 ; }                                                                                                                         # get peers    syslog lines
 function fs4 { fs0 $1   |tail -n$2; }                                                                                                                         # get specific syslog lines
 function fs5 { fs2      |tail -n300|grep Core.*temperature; }                                                                                                 # get tail cpu syslog lines
-function fl0 { if [[ $1 ]];then grep -i "[a-z][a-z][a-z]  *[0-9]* $1";else grep -i  'error'    ;fi; }                                                         # filter error    log lines
-function fl1 { if [[ $1 ]];then grep -i "[a-z][a-z][a-z]  *[0-9]* $1";else grep -iv '[ =]INFO ';fi; }                                                         # filter ^INFO    log lines
-function fl2 { if [[ $1 ]];then grep -i "[a-z][a-z][a-z]  *[0-9]* $1";else grep -iv 'success'  ;fi; }                                                         # filter ^success log lines
+function fl0 { if [[ $1 ]];then grep -i "^[a-z][a-z][a-z]  *[0-9][0-9]*  *$1";else grep -i  'error'    ;fi; }                                                 # filter error    log lines
+function fl1 { if [[ $1 ]];then grep -i "^[a-z][a-z][a-z]  *[0-9][0-9]*  *$1";else grep -iv '[ =]INFO ';fi; }                                                 # filter ^INFO    log lines
+function fl2 { if [[ $1 ]];then grep -i "^[a-z][a-z][a-z]  *[0-9][0-9]*  *$1";else grep -iv 'success'  ;fi; }                                                 # filter ^success log lines
 function pt0 { until [[ $# -le 1 || $1 =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]];do shift;done;printf %s $1; }                                                       # yyyy-mm-dd test
 function pt1 { until [[ $# -le 1 || $1 =~ ^[0-9]{2}:[0-9]{2}$          ]];do shift;done;printf %s $1; }                                                       # hh:mm      test
 function pt2 { until [[ $# -le 1 || $1 =~ ^[0-9]+$                     ]];do shift;done;printf %i $1; }                                                       # integer    test
@@ -539,14 +539,14 @@ function sng { local t=$(((($(date +%s)-s31)/12)+s36));local e=0;local i=0;local
 [[ $1 = rsh ]] && { echo;sft $(sng); }
 [[ $1 = lp  ]] && { netstat -tulpn; }
 # outros journal system/lighthouse
-[[ $1 = el  ]] && { if [[ $(sst $s10 running) ]];then fs1 $r30;else fs1 $r31;fi|fl1 $2; }
-[[ $1 = al  ]] && { fs0 "\($r47\|$r48\)"|fl2 $2; }
 [[ $1 = sl  ]] && { fs2                 |fl0 $2; }
-[[ $1 = cl  ]] && { fs1 $r32            |fl1 $2; }
-[[ $1 = ml  ]] && { fs1 $r33            |fl1 $2; }
-[[ $1 = ll  ]] && { rl3                 |fl1 $2; }
 [[ $1 = ci  ]] && { rl1                 |fl1 $2; }
 [[ $1 = vi  ]] && { rl2                 |fl1 $2; }
+[[ $1 = el  ]] && { fs1 "\($r30\|$r31\)"|fl1 $2|sed "s%^.*$cunm *%%"; }
+[[ $1 = al  ]] && { fs0 "\($r47\|$r48\)"|fl2 $2|sed "s%^.*$cunm *%%"; }
+[[ $1 = cl  ]] && { fs1 $r32            |fl1 $2|sed "s%^.*$cunm *%%"; }
+[[ $1 = ml  ]] && { fs1 $r33            |fl1 $2|sed "s%^.*$cunm *%%"; }
+[[ $1 = ll  ]] && { rl3                 |fl1 $2|sed "s%^.*$cunm *%%"; }
 [[ $1 = ws  ]] && { cex 'ufw status numbered'; }
 [[ $1 = wa  ]] && { wa; }
 [[ $1 = we  ]] && { yex 'ufw enable'; }
