@@ -49,7 +49,7 @@ function spc { nn=$2;cp $p04/$1.service $p02/$1.sav;sed "s%peers\([ =]*\)[0-9]*%
 function snp { [[ -f $p04/$1.service ]] || return;local n=$(($2+nn));(($2!=0&&n>=$3&&n<=$4)) && spc $1 $n;sex "$s02 $1";sex "$s00 daemon-reload"; }           # service peers change/stop/reload
 function sra { if trf;then nu0 $(($(date +%s)-$(date -r $p45 +%s)));else printf %i;fi }                                                                       # system reboot age (secounds)
 function sci { nu0 $(ip a|sed -n 's% *inet  *192.168.8.\([0-9]*\).*%\1%p' 2>$p03); }                                                                          # get ip/24
-function sni { case $1 in 25) printf $znm1;;28) printf $znm2;;31) printf $znm3;;34) printf $znm4;;*) printf $cunm;;esac; }                                    # get name from ip/24
+function sni { case $1 in 25) printf $znm1;;28) printf $znm2;;31) printf $znm3;;34) printf $znm4;;37) printf $inm5;;*) printf $cunm;;esac; }                  # get name from ip/24
 function ss1 { $s01 $1 2>$p03|sed -n "s%.*$2[ =]\(${3:-.}*\).*%\1%p" 2>$p03; }                                                                                # systemctl status 1 extraction
 function ss2 { $s01 $1 2>$p03|sed -n "s%.*Active: *\(.*\)%\1%p" 2>$p03|sed "s% *since.*;%%" 2>$p03|cut -c1-40; }                                              # systemctl status 2 extraction
 function ss3 { local e=$(ss1 $1 Memory:)                     ;if [[ $e ]];then printf $e;else printf 0.0K   ;fi; }                                            # systemctl status Memory extraction
@@ -340,8 +340,8 @@ function sp  { [[ $(sst $s20 loaded) ]] && cex "$s02 $s20"; }                   
 function sd  { cex "$s05 $s20";sco;sex 'ufw reload'; }                                                                                                        # disable named
 # el/cc/vc
 function efw { if [[ $cust = hrv ]];then pai $1 192.168.8.0/24 $2 $3;else pai $1 $vip1 $2 $3;pai $1 $vip3 $2 $3;fi; }
-function eop { local e=30303;[[ $cunm = $znm1 ]] || e=30304;pae $e elp2p;pde 8545 elapi delete;pde 8551 eljwt delete;efw 8545 elapi       ;efw 8551 eljwt       ; }
-function eco { local e=30303;[[ $cunm = $znm1 ]] || e=30304;pde $e elp2p;pde 8545 elapi       ;pde 8551 eljwt       ;efw 8545 elapi delete;efw 8551 eljwt delete; }
+function eop { local e=30303;[[ $cunm = $inm5 ]] || e=30304;pae $e elp2p;pde 8545 elapi delete;pde 8551 eljwt delete;efw 8545 elapi       ;efw 8551 eljwt       ; }
+function eco { local e=30303;[[ $cunm = $inm5 ]] || e=30304;pde $e elp2p;pde 8545 elapi       ;pde 8551 eljwt       ;efw 8545 elapi delete;efw 8551 eljwt delete; }
 function bfw { if [[ $cust = hrv ]];then pai $1 192.168.8.0/24 $2 $3;else pai $1 $vip3 $2 $3;fi; }
 function bop { local e=9000 ;[[ $cunm = $znm4 ]] || e=9004 ;pae $e clp2p;pde 5052 clapi delete;pde 8551 cljwt delete;bfw 5052 clapi       ;bfw 8551 cljwt       ; }
 function bco { local e=9000 ;[[ $cunm = $znm4 ]] || e=9004 ;pde $e clp2p;pde 5052 clapi       ;pde 8551 cljwt       ;bfw 5052 clapi delete;bfw 8551 cljwt delete; }

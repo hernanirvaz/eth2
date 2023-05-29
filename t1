@@ -20,8 +20,8 @@ vip3='161.97.85.32'
 vnm1='vmi1007895.contaboserver.net'
 vnm2='vmi1007895.contaboserver.net'
 vnm3='vmi1007895.contaboserver.net'
-if [[ $cust = hrv ]];then ciec=$zip1;else ciec=$vip1;fi;[[ $cunm = $znm4 ]] && ciec=$zip4
-if [[ $cust = hrv ]];then cicc=$zip3;else cicc=$vip1;fi;[[ $cunm = $znm4 ]] && cicc=$zip4
+if [[ $cust = hrv ]];then ciec=$zip4;else ciec=$vip1;fi;[[ $cunm = $inm5 ]] && ciec=$int5
+if [[ $cust = hrv ]];then cicc=$zip3;else cicc=$vip1;fi;[[ $cunm = $inm5 ]] && cicc=$int5
 cuvc=$znm4
 nxvc=$znm4
 
@@ -30,11 +30,11 @@ p01='/var/log/syslog'
 p02='/home/eth'
 p03='/dev/null'
 p04='/etc/systemd/system'
-p05='/var/lib/lighthouse';[[ $cunm = $znm2 ]] && p05='/sata/lighthouse';[[ $cunm = $znm4 ]] && p05='/sata/lighthouse'
-p06='/sata/eth';[[ $cunm = $vnm1 ]] && p06=$p02
+p05='/var/lib/lighthouse'  ;[[ $cunm = $znm2 ]] && p05='/sata/lighthouse';[[ $cunm = $znm4 ]] && p05='/sata/lighthouse'
+p06='/sata/eth'            ;[[ $cunm = $vnm1 ]] && p06=$p02
 p07='/usr/bin'
-p08='/var/lib/goethereum'
-p09='/var/lib/javaethereum'
+p08='/var/lib/goethereum'  ;[[ $cunm = $inm5 ]] && p08='/el/goethereum'
+p09='/var/lib/javaethereum';[[ $cunm = $inm5 ]] && p09='/el/javaethereum'
 p10="$p02/geth.log"
 p11="$p02/besu.log"
 p12="$p02/beacon.log"
@@ -246,7 +246,7 @@ function pai { local e="allow from $2 to any port ${1/\// proto }";if [[ $4 ]];t
 function pae { local e="allow $1"                                 ;if [[ $3 ]];then nex "ufw $3 $e";else nex "ufw $e comment $2";fi; }
 function ple { local e="limit $1"                                 ;if [[ $3 ]];then nex "ufw $3 $e";else nex "ufw $e comment $2";fi; }
 function sis { if [[ -f $1 ]];then sex "mv $1 $p17";swb "NEW $p18";touch $p05/vc_slash;cmw $p18 600 eth3;else swb "NO NEW $1";fi; }
-function snc { if [[ ${1:0:3} = hrv ]];then printf ${1/[a-z]*-/}|tr -d '[ao]';else case $1 in $vnm1) printf vpsl;;$vnm2) printf vpsm;;$vnm3) printf vpss;;esac;fi; }
+function snc { if [[ ${1:0:3} = hrv ]];then printf ${1/[a-z]*-/}|tr -d '[aoel]';else case $1 in $vnm1) printf vpsl;;$vnm2) printf vpsm;;$vnm3) printf vpss;;esac;fi; }
 function sjw { [[ -d $2 ]] || return;sex "cp jwt $2";cmw $2/jwt 600 $1; }
 function unv { local f=${1:-23.1.0};curl -LO https://hyperledger.jfrog.io/artifactory/besu-binaries/besu/$f/besu-$f.tar.gz;sha256sum besu-$f.tar.gz;swn "INSTALAR BESU $f (SIM/nao)?";local rsp=nao;read rsp;[[ $rsp = SIM ]] || return;tar xvf besu-$f.tar.gz;sex "cp -a besu-$f $p00/besu";sex "chown eth1:eth1 -R $p00/besu";cmw $p00/besu 755 eth1; }
 function gnv { local f="go${1:-1.20.2}.linux-amd64.tar.gz";swu "INSTALAR GO-LANG $f";cd $p02;sex "rm -f $f";wget -q https://go.dev/dl/$f;sex "rm -rf /usr/local/go";sex "tar -C /usr/local -xzf $f"; }
