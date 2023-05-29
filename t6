@@ -24,7 +24,7 @@ function fs0 { pex "grep    ${2:-$r32}.*$1 $p01"; }                             
 function fs1 { pex "grep    ${1:-$r34}     $p01"; }                                                                                                           # get eth      syslog lines
 function fs2 { pex "grep -v ${1:-$r34}     $p01"; }                                                                                                           # get sys      syslog lines
 function fs3 { fs0 $1 $2|lg0 .*$1 ; }                                                                                                                         # get peers    syslog lines
-function fs4 { fs0 $1   |tail -n$2; }                                                                                                                         # get specific syslog lines
+function fs4 { fs0 $1 $2|tail -n$3; }                                                                                                                         # get specific syslog lines
 function fs5 { fs2      |tail -n300|grep Core.*temperature; }                                                                                                 # get tail cpu syslog lines
 function fl0 { if [[ $1 ]];then grep -i "^[a-z][a-z][a-z]  *[0-9][0-9]*  *$1";else grep -i  'error'    ;fi; }                                                 # filter error    log lines
 function fl1 { if [[ $1 ]];then grep -i "^[a-z][a-z][a-z]  *[0-9][0-9]*  *$1";else grep -iv '[ =]INFO ';fi; }                                                 # filter ^INFO    log lines
@@ -112,7 +112,7 @@ function gb1 { if [[ $(echo $@|grep false) ]];then printf 'synced';else printf  
 function gb2 { if [[ $(echo $@|grep false) ]];then printf ''      ;else printf ' syncing: %6i' $(($(gi0 $@)-$(gc0 $@)));fi; }                                 # get el syncing blocks remaining
 function gl0 {                                                                                                                                                # el report
   dts;ok=OK
-  if [[ $(sst $s10 running) ]];then local e=$(gcl eth.syncing);local n=$(nu4 0 $(fs0 . $r30|tail -n8000|grep rejected=|lg0 .*rejected=));gv0;gq0;eb0 $p10 $r30 $n $e
+  if [[ $(sst $s10 running) ]];then local e=$(gcl eth.syncing);local n=$(nu4 0 $(fs4 . $r30 8000|grep rejected=|lg0 .*rejected=));gv0;gq0;eb0 $p10 $r30 $n $e
     m="GETH $ok $(tsy $e) $(dnn) sgs: $(nu1 %4i $e0)$(gb2 $e) $(printf 'i2: %3i %1i rj: %6i' $(gdi 99) $(gdu 99) $n 2>$p03)"                                  # OK SYC/NSY (dnn) sgs: 5 blocks: 8
   else
     m="GSRV NOT ON $dt"
@@ -156,7 +156,7 @@ function bi2 { nu0 $(((z5>400?$(bz0)/z5:0)+(z2>300?$(bw0)/z2:0)+(z4>999?$(bf0)/z
 function bdp { nu2 "($1*$pmis+$2*$pmat+$3*$pmah+$4*$pdly)/${5:-1}*$rate/1000000" 7; }                                                                         # get penalty
 function bdr { nu2 "($1*$ratt+$2*$rblk)*$rate/100000000"                         7; }                                                                         # get reward
 function bv0 { nn=$(ss5 $s12 target-peers); }                                                                                                                 # set configured peers
-function bs0 { l0=$(fs4 $bpid] 3600); }                                                                                                                       # set last cc log lines
+function bs0 { l0=$(fs4 $bpid] $r32 3600); }                                                                                                                  # set last cc log lines
 function bs3 { l3=$(fs0 $r48); }                                                                                                                              # set attesta log lines
 function bs5 { l5=$(echo "$l1"|sed -nEe "s%.+node$g:.+er: +([0-9]+) +([0-9]+) +([0-9]+) +([0-9]+).+%\1\t\2\t\3\t\4%p" 2>$p03); }                              # set penalty errors log lines
 function bb0 { bs0;bs3;bl1;bl2;[[ (1 -eq $(era $p12 $chrs) && $(bi2) -ge 1) || (1 -eq $(era $p12 5) && $(bi2) -ge 5) ]] && ok=BK; }                           # set ok (OK/BK)
@@ -245,7 +245,7 @@ function bh0 {
 function btr { if trf;then printf RB;else printf $1;fi; }                                                                                                     # get tag reboot
 function btg { if trf;then printf 84;else printf $1;fi; }                                                                                                     # get gap reboot
 function bss { nu0 $((${2:-0}+$(date -d$(sf1 $1) +%s))); }                                                                                                    # get sum secounds + time
-#function bsc { fs4 $bpid].*INFO 99|grep Sync\ committee|wc -l; }
+#function bsc { fs4 $bpid].*INFO $r32 99|grep Sync\ committee|wc -l; }
 function bwc { bwd|grep -Ex "$(echo ${!b[@]}|tr ' ' '|')"|wc -l; }                                                                                            # get my # validators
 function bwd { local n=$((($(date +%s)-s31)/(12*32)));for n in $n $((n+1));do curl -sH "$s28" -X POST -d"[$(echo ${!b[@]}|tr ' ' ',')]" "$s32/sync/$n";curl -sH "$s28" -X GET "$s32/proposer/$n";done 2>$p03|jq -r "$s35"; }
 function bro { [[ -f $p12 ]] || return;dts;bb0;bnn;swn "$(printf 'R%03i %2s %3i' $1 ${2:-$ok} $(bi2) 2>$p03) $(dnn)" >> $p12; }                               # log restart info
