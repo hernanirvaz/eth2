@@ -112,7 +112,7 @@ function gb1 { if [[ $(echo $@|grep false) ]];then printf 'synced';else printf  
 function gb2 { if [[ $(echo $@|grep false) ]];then printf ''      ;else printf ' syncing: %6i' $(($(gi0 $@)-$(gc0 $@)));fi; }                                 # get el syncing blocks remaining
 function gl0 {                                                                                                                                                # el report
   dts;ok=OK
-  if [[ $(sst $s10 running) ]];then local e=$(gcl eth.syncing);local n=$(nu4 0 $(fs4 . $r30 4000|lg0 .*rejected=));gv0;gq0;eb0 $p10 $r30 $n $e
+  if [[ $(sst $s10 running) ]];then local e=$(gcl eth.syncing);local n=$(nu4 0 $(fs4 . $r30 3600|lg0 .*rejected=));gv0;gq0;eb0 $p10 $r30 $n $e
     m="GETH $ok $(tsy $e) $(dnn) sgs: $(nu1 %4i $e0)$(gb2 $e) $(printf 'i2: %3i %1i rj: %6i' $(gdi 99) $(gdu 99) $n 2>$p03)"                                  # OK SYC/NSY (dnn) sgs: 5 blocks: 8
   else
     m="GSRV NOT ON $dt"
