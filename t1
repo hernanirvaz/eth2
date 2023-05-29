@@ -7,11 +7,13 @@ zip1='192.168.8.25'
 zip2='192.168.8.28'
 zip3='192.168.8.31'
 zip4='192.168.8.34'
+int5='192.168.8.37'
 zipg=$(ip r|grep default|cut -d' ' -f3)
 znm1='hrv-zotac1'
 znm2='hrv-zotac2'
 znm3='hrv-zotac3'
 znm4='hrv-zotac4'
+inm5='hrv-intel5'
 vip1='161.97.85.32'
 vip2='161.97.85.32'
 vip3='161.97.85.32'
@@ -122,6 +124,7 @@ for m in $(ip l|sed -n 's%.* \([a-z0-9]*\): .* state UP .*%\1%p'|tail -n1);do
   [[ $cunm = $znm2 ]] && r16="$r16\n      addresses: [192.168.8.28/24]"
   [[ $cunm = $znm3 ]] && r16="$r16\n      addresses: [192.168.8.31/24]"
   [[ $cunm = $znm4 ]] && r16="$r16\n      addresses: [192.168.8.34/24]"
+  [[ $cunm = $inm5 ]] && r16="$r16\n      addresses: [192.168.8.37/24]"
   r16="$r16\n      critical: true"
   r16="$r16\n      routes:"
   r16="$r16\n        - to: 0.0.0.0/0"
@@ -129,10 +132,7 @@ for m in $(ip l|sed -n 's%.* \([a-z0-9]*\): .* state UP .*%\1%p'|tail -n1);do
   r16="$r16\n          metric: 100"
   r16="$r16\n          on-link: true"
   r16="$r16\n      nameservers:"
-  [[ $cunm = $znm1 ]] && r16="$r16\n        addresses: [192.168.8.28, 192.168.8.31]"
-  [[ $cunm = $znm2 ]] && r16="$r16\n        addresses: [192.168.8.28, 192.168.8.31]"
-  [[ $cunm = $znm3 ]] && r16="$r16\n        addresses: [192.168.8.28, 192.168.8.31]"
-  [[ $cunm = $znm4 ]] && r16="$r16\n        addresses: [192.168.8.28, 192.168.8.31]"
+  r16="$r16\n        addresses: [192.168.8.28, 192.168.8.31]"
   r16="$r16\n      link-local: [ ]"
 done
 for m in $(ip l|sed -n 's%.* \([a-z0-9]*\): .* state DOWN .*%\1%p');do
@@ -176,15 +176,17 @@ r20="$r20\nproxy_buffering off;"
 r20="$r20\nlocation / { proxy_pass http://plex_backend; }"
 r20="$r20\n}"
 r21=""
-[[ $cunm = $znm1 ]] && r21="$r21\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/id_ed25519"
-[[ $cunm = $znm2 ]] && r21="$r21\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/id_ed25519"
-[[ $cunm = $znm3 ]] && r21="$r21\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/id_ed25519"
-[[ $cunm = $znm4 ]] && r21="$r21\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/id_ed25519"
+[[ $cunm = $znm1 ]] && r21="$r21\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int5\n  Port 2025\n  IdentityFile ~/.ssh/id_ed25519"
+[[ $cunm = $znm2 ]] && r21="$r21\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int5\n  Port 2025\n  IdentityFile ~/.ssh/id_ed25519"
+[[ $cunm = $znm3 ]] && r21="$r21\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int5\n  Port 2025\n  IdentityFile ~/.ssh/id_ed25519"
+[[ $cunm = $znm4 ]] && r21="$r21\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int5\n  Port 2025\n  IdentityFile ~/.ssh/id_ed25519"
+[[ $cunm = $inm5 ]] && r21="$r21\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/id_ed25519"
 r22="s%hrv-zotac\([0-9]\).*%hrv-zotac\1 ztc\1%;/127.0.1.1/a \\"
-[[ $cunm = $znm1 ]] && r22="$r22\n192.168.8.28\thrv-zotac2 ztc2\n192.168.8.31\thrv-zotac3 ztc3\n192.168.8.34\thrv-zotac4 ztc4"
-[[ $cunm = $znm2 ]] && r22="$r22\n192.168.8.25\thrv-zotac1 ztc1\n192.168.8.31\thrv-zotac3 ztc3\n192.168.8.34\thrv-zotac4 ztc4"
-[[ $cunm = $znm3 ]] && r22="$r22\n192.168.8.25\thrv-zotac1 ztc1\n192.168.8.28\thrv-zotac2 ztc2\n192.168.8.34\thrv-zotac4 ztc4"
-[[ $cunm = $znm4 ]] && r22="$r22\n192.168.8.25\thrv-zotac1 ztc1\n192.168.8.28\thrv-zotac2 ztc2\n192.168.8.31\thrv-zotac3 ztc3"
+[[ $cunm = $znm1 ]] && r22="$r22\n192.168.8.28\thrv-zotac2 ztc2\n192.168.8.31\thrv-zotac3 ztc3\n192.168.8.34\thrv-zotac4 ztc4\n192.168.8.37\thrv-intel5 int5"
+[[ $cunm = $znm2 ]] && r22="$r22\n192.168.8.25\thrv-zotac1 ztc1\n192.168.8.31\thrv-zotac3 ztc3\n192.168.8.34\thrv-zotac4 ztc4\n192.168.8.37\thrv-intel5 int5"
+[[ $cunm = $znm3 ]] && r22="$r22\n192.168.8.25\thrv-zotac1 ztc1\n192.168.8.28\thrv-zotac2 ztc2\n192.168.8.34\thrv-zotac4 ztc4\n192.168.8.37\thrv-intel5 int5"
+[[ $cunm = $znm4 ]] && r22="$r22\n192.168.8.25\thrv-zotac1 ztc1\n192.168.8.28\thrv-zotac2 ztc2\n192.168.8.31\thrv-zotac3 ztc3\n192.168.8.37\thrv-intel5 int5"
+[[ $cunm = $inm5 ]] && r22="$r22\n192.168.8.25\thrv-zotac1 ztc1\n192.168.8.28\thrv-zotac2 ztc2\n192.168.8.31\thrv-zotac3 ztc3\n192.168.8.34\thrv-zotac4 ztc4"
 r22="$r22\n207.180.214.8\tvpsl"
 r22="$r22\n173.249.42.190\tvpsm"
 r22="$r22\n164.68.107.45\tvpss"

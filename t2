@@ -17,6 +17,7 @@ if [[ $(pex 'ufw status'|grep -i inactive) ]];then
   [[ $cunm = $znm2 ]] && { ple 2022/tcp nssh;pai 123/udp 192.168.8.0/24 ntp; }                                                                                # limit ssh;allow ntp
   [[ $cunm = $znm3 ]] && { ple 2023/tcp nssh; }                                                                                                               # limit ssh
   [[ $cunm = $znm4 ]] && { ple 2024/tcp nssh; }                                                                                                               # limit ssh
+  [[ $cunm = $inm5 ]] && { ple 2025/tcp nssh; }                                                                                                               # limit ssh
   sex 'ufw reload';yex 'ufw enable'                                                                                                                           # reload/enable
 else
   cex 'ufw status numbered'                                                                                                                                   # show
