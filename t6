@@ -428,9 +428,9 @@ function trs { if [[ $(sst $s19 masked) ]];then nex "$s06 ntp";else nex "$s06 $s
 function dpa { nex "$s02 $s20";nex "$s02 systemd-resolved";nex "$s03 $s20";nex "$s03 systemd-resolved"; }                                                     # DNS stop/start
 function nrs { nex 'netplan apply';dpa; }                                                                                                                     # netplan/DNS restart
 function lcp { local f=$1;shift;[[ -x $f ]] && until [[ $# -lt 1 ]];do if [[ $1 = $(snc $cunm) ]];then lci $f;else scp $f $1:$p02;fi;shift;done; }            # propagate lighthouse
-function lci { [[ -x $1 && ! -d $1      ]] || return;sex "mv $p00/lighthouse $p00/lighthouse.sav";sex "cp $1 $p00"; }                                         # lighthouse binary install
+function lci { [[ -x $1 && ! -d $1   ]] || return;sex "mv $p00/lighthouse $p00/lighthouse.sav";sex "cp $1 $p00"; }                                            # lighthouse binary install
 function lmd { [[ -x $p00/lighthouse ]] || return;cmw $p00/lighthouse 755 eth;swb 'LIGHT INSTALADO'; }                                                        # lighthouse set permissions
-function lpi { [[ $cunm = $znm2 ]] && lcp $1 ztc2 ztc3;[[ $cunm = $znm4 ]] && lcp $1 ztc4;[[ $cunm = $vnm1 ]] && lcp $1 vpsl;lci $p02/lighthouse;sex "rm $p02/lighthouse";lmd; }
+function lpi { [[ $cunm = $znm2 ]] && lcp $1 ztc2 ztc3;[[ $cunm = $znm4 ]] && lcp $1 ztc4;[[ $cunm = $inm5 ]] && lcp $1 int5;[[ $cunm = $vnm1 ]] && lcp $1 vpsl;lci $p02/lighthouse;sex "rm $p02/lighthouse";lmd; }
 function luc {                                                                                                                                                # lighthouse upgrade/compile
   if [[ -f $p06/lighthouse/README.md ]];then
     cd $p06/lighthouse;make clean;cargo clean                                                                                                                 # clean compile dirs

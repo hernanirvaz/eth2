@@ -4,7 +4,7 @@ source /home/eth/eth2/t1
 
 function hlp { swn "\n\ninstall consencus client with lighthouse-${1:-stable} source using rust-${2:-stable}\n"; }
 
-if [[ $cunm = $znm4 || $cunm = $znm2 || $cunm = $vnm1 ]];then
+if [[ $cunm = $znm4 || $cunm = $znm2 || $cunm = $inm5 || $cunm = $vnm1 ]];then
   hlp
   if [[ -x $p02/.cargo/bin/rustup ]];then
     t6 ruv $2                                                                                                                                                 # rust update
@@ -33,33 +33,33 @@ else
   [[ $cunm = $znm2 ]] && http=" --http-address $zip2"
   [[ $cunm = $znm3 ]] && http=" --http-address $zip3"
   [[ $cunm = $znm4 ]] && http=" --http-address $zip4"
+  [[ $cunm = $inm5 ]] && http=" --http-address $int5"
   [[ $cunm = $vnm1 ]] && http=" --http-address $vip1"
   epec=" --eth1-endpoints http://$zip1:8545,https://eth-mainnet.alchemyapi.io/v2/vzq1DD3EX7ipGuKck4440uRuccDdVvTm,https://mainnet.infura.io/v3/65be3572c577449f86d92b2e69cd6b06,https://mainnet.infura.io/v3/2c680650de0443cf8ab433565e47a42d"
   epec=" --eth1-endpoints http://$zip4:8545,http://$zip1:8545"
-  epec=" --execution-endpoint http://$zip1:8551 --execution-jwt $p16/jwt"                                                                                     # MERGE
+  epec=" --execution-endpoint http://$int5:8551 --execution-jwt $p16/jwt"                                                                                     # MERGE
   epec="$epec --execution-timeout-multiplier 1"                                                                                                               # multiply default execution timeouts
   epec="$epec --suggested-fee-recipient $s26"                                                                                                                 # cc level fees
   othe=''
   othe="$othe --subscribe-all-subnets --import-all-attestations"                                                                                              # 5% more profitable
   othe="$othe --validator-monitor-file $p16/pubkeys"                                                                                                          # monitor validators
   if [[ $cust = hrv ]];then                                                                                                                                   # syncing from finalized checkpoint
-    othe="$othe --checkpoint-sync-url http://192.168.8.34:5052"
+    othe="$othe --checkpoint-sync-url http://$zip4:5052"
   else
     # othe="$othe --checkpoint-sync-url https://1q1s6o6cB6Jysu7KKlbLUYiOdAM:8974468780164028652df958a69fbd30@eth2-beacon-mainnet.infura.io"
     othe="$othe --checkpoint-sync-url https://mainnet.checkpoint.sigp.io"
   fi
   othe="$othe --prune-payloads true"                                                                                                                          # fetch/keep execution payloads default true
-  othe="$othe --builder http://192.168.8.28:18550"                                                                                                            # external payload mev-boost
+  othe="$othe --builder http://$zip2:18550"                                                                                                                   # external payload mev-boost
   othe="$othe --builder-profit-threshold 20000000000000000"                                                                                                   # external payload only if reward >= 0.02 ETH
   othe="$othe --disable-upnp"                                                                                                                                 # disable UPnP support
   # othe="$othe --disable-lock-timeouts"                                                                                                                      # disable timeouts on internal locks
   # othe="$othe --slasher"
   # othe="$othe --monitoring-endpoint https://beaconcha.in/api/v1/client/metrics?apikey=$B&machine=$(snc $cunm)"                                              # monitor data for beaconcha.in app
-  swu 'CONFIGURE BEACON';sex "mkdir -p $p16";cmw $p05 755 $meeu;sau eth2
-  echo "$s70,$s71,$s72,$s73,$s74,$s75,$s76,$s77,$s78,$s79,$s80,$s81,$s82,$s83,$s84,$s85,$s86,$s87,$s88,$s89,$s90,$s91" > $p05/pubkeys
-  sex "mv $p05/pubkeys $p16";cmw $p16/pubkeys 600 eth2
+  swu 'CONFIGURE BEACON';sex "mkdir -p $p16";cmw $p05 755 $meeu;sau eth2;if [[ -f jwt ]];then sjw eth2 $p16;else swb "needs $p16/jwt";fi
+  echo ${!b[@]}|tr ' ' ',' > $p05/pubkeys;sex "mv $p05/pubkeys $p16";cmw $p16/pubkeys 600 eth2
   cmw $p16 700 eth2;touch $p05/vc_lock;cd $p02                                                                                                                # IMPORTANTE LOCK vc
-  pp2p=9000                                                                                                                                                   # default
+  pp2p=9004                                                                                                                                                   # default
   cat <<-EOF > $s12.service
 	[Unit]
 	Description=beacon service
@@ -78,7 +78,6 @@ else
 	WantedBy=multi-user.target
 	EOF
   sex "mv $s12.service $p04";cmw $p04/$s12.service 644
-  if [[ -f jwt ]];then sjw eth2 $p16;else swb "needs $p16/jwt secret";fi
 fi
 if [[ $cunm != $cuvc || $cunm != $nxvc || -f $p05/vc_lock || -f $p04/$s13.service ]];then                                                                     # vc not here
   if [[ -f $p04/$s13.service ]];then swu "vc ja instalado";else swu 'vc NAO PODE SER INSTALADO AQUI';fi
