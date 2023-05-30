@@ -19,7 +19,7 @@ function lg1 { if [[ $l4 ]];then echo "$l4"|sed -n "$1$r36;$1$r37";else printf %
 function lg2 { if [[ $l4 ]];then echo "$l4"|sed -n "$1$r38;$1$r39";else printf %i 1;fi; }                                                                     # get s/ms delays from log lines
 function lg3 { if [[ $1 -gt 0 ]];then l4=$(rl0|tail -n$1);else l4=$(rl0);fi;b1=$(nu3 3 0 $(lg1 "$r45"));b5=$(nu3 3 0 $(lg1 "$r46")); }                        # set imported/observed delays
 function lg4 { echo "$l6"|sed -n "s%.*$r53  *\([0-9]*\).*$1.*%\1%p" 2>$p03; }                                                                                 # get list of latencies
-function lg5 { if v2t;then if [[ $1 -gt 0 ]];then l6=$(rl5|tail -n$1);else l6=$(rl5);fi;b8=$(nu5 $(lg4 $zip4));b9=$(nu5 $(lg4 $zip3));else b8=0;b9=0;fi; }    # set latency delays
+function lg5 { if v2t;then if [[ $1 -gt 0 ]];then l6=$(rl5|tail -n$1);else l6=$(rl5);fi;b8=$(nu5 $(lg4 $zip4));b9=$(nu5 $(lg4 $int5));else b8=0;b9=0;fi; }    # set latency delays
 function fs0 { pex "grep    ${2:-$r32}.*$1 $p01"; }                                                                                                           # get specific syslog lines
 function fs1 { pex "grep    ${1:-$r34}     $p01"; }                                                                                                           # get eth      syslog lines
 function fs2 { pex "grep -v ${1:-$r34}     $p01"; }                                                                                                           # get sys      syslog lines
