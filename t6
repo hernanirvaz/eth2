@@ -295,10 +295,12 @@ function bdw { [[ -f $1 ]] || return;cp $1 $1.o;grep -v $2 $1.o > $1;grep $2 $1.
 function bdl { local d=$(pt0 $1 sai);[[ $d = sai ]] && return;bdw $p12 $d;bdw $p13 $d; }                                                                      #         delete cc log day
 function wst { echo $@|sed 's%[^: ]*: *%%g;s%inactive%off%;s%active%on%' 2>$p03; }                                                                            # get ufw info
 function cpf { local f='';local t='';for t in $(ls $p02/*.restart.* 2>$p03);do local f="$f, $(basename $t)";done;printf "$f"; }                               # get list restart basenames
+function sm0 { local s='smartctl --json=c -x';pex "$s /dev/nvme0"|jq -r "$r54" 2>$p03; }
+function sm1 { local s='smartctl --json=c -x';pex "$s /dev/nvme0"|jq -r "$r54" 2>$p03;pex "$s /dev/nvme1"|jq -r "$r54" 2>$p03;pex "$s /dev/nvme2"|jq -r "$r54" 2>$p03; }
+function sm2 { local s=$(pex "smartctl --json=c -x /dev/sda");echo $s|jq -r "$r40" 2>$p03;echo $s|jq -r "$r41" 2>$p03; }
 function tmp {
-  local d=$(fs5|grep throttled|head -n1|sed "$r27");local e=$(fs5|grep normal|tail -n1|sed "$r27");local l=$(pex "smartctl --json=c -x /dev/sda")
-  local g=$(echo $(echo $l|jq -r "$r40" 2>$p03) $(echo $l|jq -r "$r41" 2>$p03));local l=$(sensors 2>$p03|sed -n "$r26")
-  if [[ $cunm = $znm4 ]];then local g=$(echo $g $(pex "smartctl --json=c -x /dev/nvme0n1"|jq -r "$r40" 2>$p03));fi
+  local d=$(fs5|grep throttled|head -n1|sed "$r27");local e=$(fs5|grep normal|tail -n1|sed "$r27");local g=''
+  if [[ $cunm = $znm4 ]];then local g=$(echo $g $(sm0));fi;if [[ $cunm = $inm5 ]];then local g=$(echo $g $(sm1));else local g=$(echo $g $(sm2));fi;local l=$(sensors 2>$p03|sed -n "$r26")
   [[ $1$d$e || $(nu3 1 0 $l) -ge 60 || $(nu3 1 0 $g) -ge 50 ]] || return;[[ $d ]] && local d="throttled: $d";[[ $e ]] && local e="normal: $e"
   swn "TEMP $(printf '%5.1fC %10s %5s ssd: %.1fC %s %s' $(nu3 1 1 $l) $dt $(nu3 1 1 $g) $d $e 2>$p03)"                                                        # TEMP cpu/ssd info
 }
