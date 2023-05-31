@@ -100,9 +100,9 @@ r15="$r15\n\tversion \"not currently available\";"
 r15="$r15\n\trecursion yes;"
 r15="$r15\n\tallow-recursion { localhost; 192.168.8.0/24; };"
 r15="$r15\n\tallow-query { localhost; 192.168.8.0/24; };"
-if [[ $cunm = $znm2 ]];then
-  r15="$r15\n\tallow-transfer { 192.168.8.25; 192.168.8.31; 192.168.8.34; };"
-  r15="$r15\n\talso-notify { 192.168.8.25; 192.168.8.31; 192.168.8.34; };"
+if [[ $cunm = $znm1 || $cunm = $znm2 ]];then
+  r15="$r15\n\tallow-transfer { $zip1; $zip3; $zip4; $int5; };"
+  r15="$r15\n\talso-notify { $zip1; $zip3; $zip4; $int5; };"
   r15="$r15\n\tmax-cache-size 50%;"
 else
   r15="$r15\n\tallow-transfer { none; };"
