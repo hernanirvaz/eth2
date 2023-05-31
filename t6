@@ -547,9 +547,9 @@ function sng { local t=$(((($(date +%s)-s31)/12)+s36));local e=0;local i=0;local
 [[ $1 = ci  ]] && { rl1                 |fl1 $2; }
 [[ $1 = vi  ]] && { rl2                 |fl1 $2; }
 [[ $1 = el  ]] && { fs1 "\($r30\|$r31\)"|fl1 $2|sed "s%^.*$cunm *%%"; }
-[[ $1 = al  ]] && { fs0 "\($r47\|$r48\)"|fl2 $2|sed "s%$cunm *%%;s%: [a-z]* [0-9]* [0-9]*:[0-9]*:[0-9]*\.[0-9]*%%i"; }
-[[ $1 = cl  ]] && { fs1 $r32            |fl1 $2|sed "s%$cunm *%%;s%: [a-z]* [0-9]* [0-9]*:[0-9]*:[0-9]*\.[0-9]*%%i"; }
-[[ $1 = clp ]] && { fs0 peers:                 |sed "s%$cunm *%%;s%: [a-z]* [0-9]* [0-9]*:[0-9]*:[0-9]*\.[0-9]*.*peers:% peers:%i"|grep -v "peers: *$(($(ss5 $s12 target-peers)/10))[0-9]"; }
+[[ $1 = al  ]] && { fs0 "\($r47\|$r48\)"|fl2 $2|sed "s%$cunm lighthouse%lh%;s%: [a-z]* [0-9]* [0-9]*:[0-9]*:[0-9]*\.% %i"; }
+[[ $1 = cl  ]] && { fs1 $r32            |fl1 $2|sed "s%$cunm lighthouse%lh%;s%: [a-z]* [0-9]* [0-9]*:[0-9]*:[0-9]*\.% %i"; }
+[[ $1 = clp ]] && { fs0 peers:                 |sed "s%$cunm lighthouse%lh%;s%: [a-z]* [0-9]* [0-9]*:[0-9]*:[0-9]*\.[0-9]*.*peers:% peers:%i"|grep -v "peers: *$(($(ss5 $s12 target-peers)/10))[0-9]"; }
 #: May 31 02:36:53.001 INFO
 [[ $1 = ml  ]] && { fs1 $r33            |fl1 $2|sed "s%^.*$cunm *%%"; }
 [[ $1 = ll  ]] && { rl3                 |fl1 $2|sed "s%^.*$cunm *%%"; }
