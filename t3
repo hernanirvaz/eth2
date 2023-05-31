@@ -43,7 +43,7 @@ else
   othe=''
   othe="$othe --subscribe-all-subnets --import-all-attestations"                                                                                              # 5% more profitable
   othe="$othe --validator-monitor-file $p16/pubkeys"                                                                                                          # monitor validators
-  othe="$othe --prune-payloads true"                                                                                                                          # fetch/keep execution payloads default true
+  othe="$othe --prune-payloads false"                                                                                                                         # fetch/keep execution payloads default true
   othe="$othe --builder http://$zip1:18550"                                                                                                                   # external payload mev-boost
   othe="$othe --builder-profit-threshold 20000000000000000"                                                                                                   # external payload only if reward >= 0.02 ETH
   othe="$othe --disable-upnp"                                                                                                                                 # disable UPnP support
