@@ -460,10 +460,10 @@ function trf { [[ -f $p45 ]]; }
 function tbf { [[ -f $p04/$s12.service ]]; }
 function tvf { [[ -f $p04/$s13.service ]]; }
 function tcf { [[ -f $p04/$s12.service || -f $p04/$s13.service ]]; }
-function tbp { [[ $(era $p12 $chrs) -eq 1 ]] && ( (tpm && tpc && tha && ! tsd && ! trf) || trb); }
+function tbp { [[ $(era $p12 $chrs) -eq 1 ]] && ( (tpc && tpm && tha && ! tsd && ! trf) || trb); }
 function btr { if trf;then printf RB  ;else printf PE  ;fi; }
 function btg { if trf;then printf $s37;else printf $s39;fi; }
-function irb { rm $p39.*.hours 2>$p03;if trb $1;then if tcf;then brs 0 RB 0 $s37;else gps;ups;bps;sex reboot;fi;else if trf;then touch $p39.$1.hours;fi;fi; }
+function irb { rm $p39.*.hours 2>$p03;if trb $1;then if tcf;then brs 0 RB 120 $s37;else gps;ups;bps;sex reboot;fi;else if trf;then touch $p39.$1.hours;fi;fi; }
 
 [[ $1 = irb ]] && { irb ${2:-3};pas; }
 [[ $1 = bmf ]] && { bm0;bms;[[ $(grep $d0 $p12 2>$p03|wc -l) -gt 0 ]] && swn "$m" >> $p13;tbp && brs $b4 $(btr) 120 $(btg); }
