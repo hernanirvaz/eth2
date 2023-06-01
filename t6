@@ -33,16 +33,6 @@ function pt0 { until [[ $# -le 1 || $1 =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]];do shi
 function pt1 { until [[ $# -le 1 || $1 =~ ^[0-9]{2}:[0-9]{2}$          ]];do shift;done;printf %s $1; }                                                       # hh:mm      test
 function pt2 { until [[ $# -le 1 || $1 =~ ^[0-9]+$                     ]];do shift;done;printf %i $1; }                                                       # integer    test
 function pt3 { until [[ $# -le 1 || $1 =~ ^[a-z]+$                     ]];do shift;done;printf %s $1; }                                                       # string     test
-function trb { [[ $(sra) -ge $((60*60*${1:-24})) ]]; }                                                                                                        # 24 hours reboot test
-function tip { [[ $(date +%s) -ge $(bss $1 6) ]]; }                                                                                                           # ideal position test (based on time)
-function tpc { [[ $b4 -ne 0 ]]; }                                                                                                                             # peers need change test
-function tha { [[ $b2 -gt $((b3*2)) ]]; }                                                                                                                     # homologous/avg position test
-function tsd { [[ $((nd+$(bi0))) -ge 2000 ]]; }                                                                                                               # peers standard deviation test
-function tpm { [[ $nm -ge $((nn-5)) ]]; }                                                                                                                     # min peers test
-function trf { [[ -f $p45 ]]; }                                                                                                                               # system needs reboot test
-function tbf { [[ -f $p04/$s12.service ]]; }                                                                                                                  # cc service file test
-function tvf { [[ -f $p04/$s13.service ]]; }                                                                                                                  # vc service file test
-function tbp { [[ $(era $p12 $chrs) -eq 1 ]] && ( (tpm && tpc && tha && ! tsd && ! trf) || trb); }                                                            # change configured peers test
 function tll { [[ $(grep '\-all-' $p04/$s12.service 2>$p03) ]]; }                                                                                             # cc long-lived   test
 function jsh { cex "journalctl --no-hostname --no-full -f $1"; }                                                                                              # my journal   format
 function spc { nn=$2;cp $p04/$1.service $p02/$1.sav;sed "s%peers\([ =]*\)[0-9]*%peers\1$2%" $p02/$1.sav > $p04/$1.service; }                                  # service configuration change
@@ -242,34 +232,23 @@ function bh0 {
   bl0;swn "BL $(printf '%8i%34s%29s'         $(bbl)              2>$p03)$e\n$m";bm0                                                                           # last       cc report
   bmo;swn "BM $(printf '%8i%34s'             $(bml)              2>$p03) i20   i30   i40   i50   i60   i70   i80   avg\n$m"                                   # last cc-daillast y
 }
-function btr { if trf;then printf RB;else printf $1;fi; }                                                                                                     # get tag reboot
-function btg { if trf;then printf 84;else printf $1;fi; }                                                                                                     # get gap reboot
 function bss { nu0 $((${2:-0}+$(date -d$(sf1 $1) +%s))); }                                                                                                    # get sum secounds + time
 #function bsc { fs4 $bpid].*INFO $r32 99|grep Sync\ committee|wc -l; }
 function bwc { bwd|grep -Ex "$(echo ${!b[@]}|tr ' ' '|')"|wc -l; }                                                                                            # get my # validators
 function bwd { local n=$((($(date +%s)-s31)/(12*32)));for n in $n $((n+1));do curl -sH "$s28" -X POST -d"[$(echo ${!b[@]}|tr ' ' ',')]" "$s32/sync/$n";curl -sH "$s28" -X GET "$s32/proposer/$n";done 2>$p03|jq -r "$s35"; }
 function bro { [[ -f $p12 ]] || return;dts;bb0;bnn;swn "$(printf 'R%03i %2s %3i' $1 ${2:-$ok} $(bi2) 2>$p03) $(dnn)" >> $p12; }                               # log restart info
 # slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168
-function brs {                                                                                                                                                # cc/vc gap restart
+function brs {
   [[ $(ls $p42.* 2>$p03) || $(bwc) -gt 0 ]] && return;ssf $3 $p42
   ssw $4 $p42 $5;local t=$(sng);local f=$p42.i$(stg);touch $f;local n=0;paf;while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p42 $t $5
-  if tip $t;then rm $f;bv0;snp $s12 $1 $bpri $bprf                         ;[[ $2 = VC ]] && sex "$s02 $s13"                                                  # stop cc/conf change?/stop vc?
-    if [[ $2 = RB ]];then bro $n $2;gps;ups;sex reboot;else sex "$s03 $s12";[[ $2 = VC ]] && sex "$s03 $s13";ssf 50 $p42;bro $n $2;fi                         # stop ec/reboot|start cc+vc
-  fi;done;rm -f $f
-}
-function bsb {                                                                                                                                                # cc/vc gap stop
-  [[ $(ls $p42.* 2>$p03) || $(bwc) -gt 0 ]] && return;ssf $3 $p42
-  ssw $4 $p42 $5;local t=$(sng);local f=$p42.i$(stg);touch $f;local n=0;paf;while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p42 $t $5
-  if tip $t;then       bv0;snp $s12 $1 $bpri $bprf                         ;[[ $2 = VC ]] && sex "$s02 $s13";local rsp=$6;swn "START BN $rsp?"                # stop cc/vc/conf change
-    [[ $rsp =~ na*o* ]] || sex "$s03 $s12";if [[ $2 = VC ]];then [[ $rsp =~ na*o* ]] || { swn "START VC $rsp?";sex "$s03 $s13"; };fi                          # start cc+vc
-    rm $f;ssf 50 $p42;bro $n $2
+  if tip $t;then rm $f;bv0;snp $s12 $1 $bpri $bprf                         ;[[ $2 = VC ]] && sex "$s02 $s13"
+    if [[ $2 = RB ]];then bro $n $2;gps;ups;sex reboot;else sex "$s03 $s12";[[ $2 = VC ]] && sex "$s03 $s13";ssf 50 $p42;bro $n $2;fi
   fi;done;rm -f $f
 }
 function vsb {                                                                                                                                                # vc gap stop
   [[ $(ls $p46.* 2>$p03) || $(bwc) -gt 0 ]] && return;ssw $1 $p46 s;local t=$(sng);local f=$p46.i$(stg);touch $f;local n=0;paf
   while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p46 $t s;if tip $t;then cex "$s02 $s12";cex "$s02 $s13";rm $f;fi;done;rm -f $f
 }
-function irb { rm $p39.*.hours 2>$p03;if trb $1;then gps;ups;bps;sex reboot;else if trf;then touch $p39.$1.hours;fi;fi; }                                     # reboot if system needs it
 function brh { head -n${1:-0} $p12; }                                                                                                                         # new cc head lines
 function brl {                                                                                                                                                # recalculate cc logs
   [[ -f $p12 ]] || return;rm -f $p12.r;unset v;while read -a v;do ok=${v[1]};dts ${v[3]}\ ${v[4]};nn=${v[5]:4:2};nr=${v[6]}                                   # uncalculated vars
@@ -447,10 +426,10 @@ function v1t { [[ $cunm = $nxvc ]]; }                                           
 function v2t { [[ $cunm = $cuvc ]]; }                                                                                                                         # vc current  test
 function v3t { [[ $cuvc = $nxvc ]]; }                                                                                                                         # vc transfer test
 function v4t { [[ $cunm = $znm4 && $ok != OK ]]; }                                                                                                            # bn restart  test
-function vps { local f=$p02/$(basename $p18);sex "cp $p18 $p02";cmw $f 666 eth;scp $f $(snc $nxvc):~;sex "rm $f"; }                                           # prep slash db
+function vsp { local f=$p02/$(basename $p18);sex "cp $p18 $p02";cmw $f 666 eth;scp $f $(snc $nxvc):~;sex "rm $f"; }                                           # prep slash db
 function tvc {
   v3t && return;swn "$s24";if v2t && v0t;then swn "TRANSFERIR VC -> $nxvc (SIM/nao)?";else return;fi;local rsp=nao;read rsp
-  if [[ $rsp = SIM && ! -f $p05/vc_slash && ! -f $p05/vc_lock && -f $p05/vc_keys ]];then vp;vd;swu "COPY SLASH -> $nxvc";vps;fi                               # vc stop/disable & prep slash db
+  if [[ $rsp = SIM && ! -f $p05/vc_slash && ! -f $p05/vc_lock && -f $p05/vc_keys ]];then vp;vd;swu "COPY SLASH -> $nxvc";vsp;fi                               # vc stop/disable & prep slash db
 }
 function svr { local t='';for t in $(printf '%s\n' $@|sort -u);do curl -sX GET "$s33=$t"|sed -n "$r23";done; }                                                # show mev validator registration
 function mvr { if [[ $(ls $p19/key*.json 2>$p03) ]];then svr $(sed -n "$r28" $p19/key*.json 2>$p03);else svr ${b[@]};fi; }                                    # choose validator keys
@@ -470,6 +449,24 @@ function ivk {
 }
 function sn0 { local n=$((($1-s36)/32));for n in $n $((n+1));do curl -sH "$s28" -X POST -d"[$(echo ${!b[@]}|tr ' ' ',')]" "$s32/attester/$n"|jq -r "$s34";done 2>$p03;echo $(((n+1)*32)); }
 function sng { local t=$(((($(date +%s)-s31)/12)+s36));local e=0;local i=0;local s=0;for s in $(sn0 $t|sort -nu);do if ((s<t));then continue;else if (((s-t)>e));then e=$((s-t));i=$t;fi;fi;t=$((s+1));done;printf '%s %i' $(date -d@$((s31+i*12)) +%T) $((e*12)); }
+
+function trb { [[ $(sra) -ge $((60*60*${1:-24})) ]]; }
+function tip { [[ $(date +%s) -ge $(bss $1 6) ]]; }
+function tpc { [[ $b4 -ne 0 ]]; }
+function tha { [[ $b2 -gt $((b3*2)) ]]; }
+function tsd { [[ $((nd+$(bi0))) -ge 2000 ]]; }
+function tpm { [[ $nm -ge $((nn-5)) ]]; }
+function trf { [[ -f $p45 ]]; }
+function tbf { [[ -f $p04/$s12.service ]]; }
+function tvf { [[ -f $p04/$s13.service ]]; }
+function tcf { [[ -f $p04/$s12.service || -f $p04/$s13.service ]]; }
+function tbp { [[ $(era $p12 $chrs) -eq 1 ]] && ( (tpm && tpc && tha && ! tsd && ! trf) || trb); }
+function btr { if trf;then printf RB  ;else printf PE  ;fi; }
+function btg { if trf;then printf $s37;else printf $s39;fi; }
+function irb { rm $p39.*.hours 2>$p03;if trb $1;then if tcf;then brs 0 RB 0 $s37;else gps;ups;bps;sex reboot;fi;else if trf;then touch $p39.$1.hours;fi;fi; }
+
+[[ $1 = irb ]] && { irb ${2:-3};pas; }
+[[ $1 = bmf ]] && { bm0;bms;[[ $(grep $d0 $p12 2>$p03|wc -l) -gt 0 ]] && swn "$m" >> $p13;tbp && brs $b4 $(btr) 120 $(btg); }
 
 [[ $1 = snr ]] && { cex "$s02 snapd";cex "$s02 snapd.socket";cex "$s05 snapd";cex "$s05 snapd.socket"; }
 [[ $1 = mvr ]] && { mvr; }
@@ -493,26 +490,23 @@ function sng { local t=$(((($(date +%s)-s31)/12)+s36));local e=0;local i=0;local
 [[ $1 = tvc ]] && { tvc; }
 [[ $1 = tmp ]] && { dts;tmp s; }
 # slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168
-[[ $1 = grs ]] && { grs ${2:-0} SR   ${4:-48} $3; }
-[[ $1 = urs ]] && { urs ${2:-0} SR   ${4:-48} $3; }
-[[ $1 = bsb ]] && { bsb ${2:-0} BN 0 ${4:-72} $3; }
-[[ $1 = brs ]] && { brs ${2:-0} BN 0 ${4:-72} $3; }
-[[ $1 = bsv ]] && { bsb      0  VC 0 ${3:-84} $2; }
-[[ $1 = crs ]] && { brs      0  VC 0 ${3:-84} $2; }
-[[ $1 = ivk ]] && { ivk              ${2:-84}   ; }
-[[ $1 = brb ]] && { brs      0  RB 0 ${3:-96} $2; }
-[[ $1 = grb ]] && { grs      0  RB   ${3:-96} $2; }
-[[ $1 = urb ]] && { urs      0  RB   ${3:-96} $2; }
+[[ $1 = grs ]] && { grs ${2:-0} SR   ${4:-$s40} $3; }
+[[ $1 = urs ]] && { urs ${2:-0} SR   ${4:-$s40} $3; }
+[[ $1 = brs ]] && { brs ${2:-0} BN 0 ${4:-$s39} $3; }
+[[ $1 = crs ]] && { brs      0  VC 0 ${3:-$s38} $2; }
+[[ $1 = ivk ]] && { ivk              ${2:-$s38}   ; }
+[[ $1 = brb ]] && { brs      0  RB 0 ${3:-$s37} $2; }
+[[ $1 = grb ]] && { grs      0  RB   ${3:-$s37} $2; }
+[[ $1 = urb ]] && { urs      0  RB   ${3:-$s37} $2; }
 [[ $1 = ul  ]] && { ul0;swn "$m"; }
-[[ $1 = ulf ]] && { ul0;swn "$m" >> $p11;[[ $ok != OK ]] && urs 0 $ok 48;pas; }
+[[ $1 = ulf ]] && { ul0;swn "$m" >> $p11;[[ $ok != OK ]] && urs 0 $ok $s40;pas; }
 [[ $1 = gl  ]] && { gl0;swn "$m"; }
-[[ $1 = glf ]] && { gl0;swn "$m" >> $p10;[[ $ok != OK ]] && grs 0 $ok 48;pas; }
+[[ $1 = glf ]] && { gl0;swn "$m" >> $p10;[[ $ok != OK ]] && grs 0 $ok $s40;pas; }
 [[ $1 = bl  ]] && { bl0;swn "$m"; }
-[[ $1 = bm  ]] && { bm0;bmo;swn "$m"; }
+[[ $1 = blf ]] && { bl0;swn "$m" >> $p12;if [[ $d1 = 23:58 ]];then if tsd;then bdl $d0;else if [[ $(bbl) -gt 7128 ]];then bod 0 1;fi;fi;fi;v4t && brs 0 $ok 0 $s39;pas; }
 [[ $1 = bn  ]] && { bm0;bno;swn "$m"; }
-[[ $1 = blf ]] && { bl0;swn "$m" >> $p12;if [[ $d1 = 23:58 ]];then if tsd;then bdl $d0;else if [[ $(bbl) -gt 7128 ]];then bod 0 1;fi;fi;fi;v4t && brs 0 $ok 0 72;pas; }
-[[ $1 = bmf ]] && { bm0;bms;[[ $(grep $d0 $p12 2>$p03|wc -l) -gt 0 ]] && swn "$m" >> $p13;tbp && brs $b4 $(btr PE) 120 $(btg 72); }
 [[ $1 = bnf ]] && { bm0;bno;swn "$m" >> $p14; }
+[[ $1 = bm  ]] && { bm0;bmo;swn "$m"; }
 [[ $1 = gh  ]] && { eh0 $p10 $2;[[ $2 ]] || { gl0;swn "GL $(printf '%8i' $(ell $p10) 2>$p03)\n$m"; } }
 [[ $1 = uh  ]] && { eh0 $p11 $2;[[ $2 ]] || { ul0;swn "UL $(printf '%8i' $(ell $p11) 2>$p03)\n$m"; } }
 [[ $1 = bh  ]] && { bh0 $2; }
@@ -539,7 +533,6 @@ function sng { local t=$(((($(date +%s)-s31)/12)+s36));local e=0;local i=0;local
 [[ $1 = cpe ]] && { cpe $2; }
 [[ $1 = gpn ]] && { if [[ $(sst $s10 running) ]];then gp;cex "du -h $p08";sudo -u eth1 geth --datadir $p08 snapshot prune-state;cex "du -h $p08";dmr;ga;fi; }
 [[ $1 = gpg ]] && { if [[ $(sst $s10 running) ]];then gp;cex "du -h $p08";sudo -u eth1 geth --datadir $p08 removedb            ;cex "du -h $p08";dmr;ga;fi; }
-[[ $1 = irb ]] && { irb ${2:-3};pas; }
 [[ $1 = rsh ]] && { echo;sft $(sng); }
 [[ $1 = lp  ]] && { netstat -tulpn; }
 # outros journal system/lighthouse
@@ -677,9 +670,7 @@ if [[ ! $1 ]];then
   m="$m\ngrs [n] [p] [g]\t\t$s10\t\t\trestart\twith n peers, s/n prints sleep times, mim gap time"
   m="$m\nurs [n] [p] [g]\t\t$s11\t\t\trestart\twith n peers, s/n prints sleep times, mim gap time"
   m="$m\nbrs [n] [p] [g]\t$s12\t\t\trestart\twith n peers, s/n prints sleep times, mim gap time"
-  m="$m\nbsb [n] [p] [g]\t$s12\t\t\tstop\twith n peers, s/n prints sleep times, mim gap time"
   m="$m\ncrs [p] [g]\t$s12/$s13\trestart\ts/n prints sleep times, mim gap time"
-  m="$m\nbsv [p] [g]\t$s12/$s13\tstop\ts/n prints sleep times, mim gap time"
   m="$m\ngrb [p] [g]\tsystem & geth\t\t\treboot\ts/n prints sleep times, mim gap time"
   m="$m\nurb [p] [g]\tsystem & besu\t\t\treboot\ts/n prints sleep times, mim gap time"
   m="$m\nbrb [p] [g]\tsystem & beacon\t\t\treboot\ts/n prints sleep times, mim gap time"
