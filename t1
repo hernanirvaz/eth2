@@ -72,6 +72,7 @@ p44='/sys/bus/usb/devices/1-0:1.0/authorized'
 p45='/var/run/reboot-required'
 p46="$p02/validator.restart"
 p47='/etc/apt/preferences.d'
+p48='/etc/default/grub'
 
 r00='s%^ *#*NTP=.*$%NTP=192.168.8.28 ntp02.oal.ul.pt ntp04.oal.ul.pt time.google.com time.cloudflare.com time.facebook.com%i'
 r01='s%^ *ENABLED=.*$%ENABLED=0%i'
@@ -232,6 +233,7 @@ r51='/  *\/sata  *ext4  *defaults  */s%defaults%defaults,noatime%'
 r52="$r30.*Chain.head"
 r53='latency:'
 r54='.nvme_smart_health_information_log.temperature_sensors|join(" ")'
+r55='s%GRUB_CMDLINE_LINUX_DEFAULT *= *"\(..*\)"%GRUB_CMDLINE_LINUX_DEFAULT="\1 pcie_aspm=off"%;s%GRUB_CMDLINE_LINUX_DEFAULT *= *""%GRUB_CMDLINE_LINUX_DEFAULT="pcie_aspm=off"%'
 
 function sst { $s01 $1 2>$p03|grep "${2:-inactive\|failed}" 2>$p03; }
 function swb { echo -e "\n\e[5m${1^^}\e[25m\n"; }

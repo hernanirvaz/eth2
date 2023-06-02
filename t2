@@ -47,6 +47,7 @@ if [[ $cust = hrv ]];then
   cc1 $p21 "$r01"                           ;cmw $p21 644 root                                                                                                # motd-news disable
   cc4 $p22 "$r16"                           ;cmw $p22 644 root                                                                                                # new netplan
   cc1 $p26 "$r06"                           ;cmw $p26 755 root                                                                                                # grub timeout
+  cc1 $p48 "$r55"                           ;cmw $p48 644 root                                                                                                # grub no PCIe active state power management
   cc1 $p34 "$r22"                           ;cmw $p34 644 root                                                                                                # hosts config
   cc4 $p35 "$r21"                           ;cmw $p35 644 root                                                                                                # ssh config
   cc3 $p29 "$r08" "$r15"                    ;cmw $p29 644 root bind                                                                                           # named my options
