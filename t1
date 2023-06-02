@@ -123,8 +123,6 @@ r16="$r16\n  renderer: networkd"
 r16="$r16\n  ethernets:"
 for m in $(ip l|sed -n 's%.* \([a-z0-9]*\): .* state UP .*%\1%p'|tail -n1);do
   r16="$r16\n    $m:"
-  r16="$r16\n      match:"
-  r16="$r16\n        macaddress: $(cat /sys/class/net/$m/address)"
   r16="$r16\n      dhcp4: false"
   [[ $cunm = $znm1 ]] && r16="$r16\n      addresses: [$zip1/24]"
   [[ $cunm = $znm2 ]] && r16="$r16\n      addresses: [$zip2/24]"
