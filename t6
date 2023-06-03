@@ -432,7 +432,7 @@ function v0t { [[ $(sst $s13 running) ]]; }                                     
 function v1t { [[ $cunm = $nxvc ]]; }                                                                                                                         # vc next     test
 function v2t { [[ $cunm = $cuvc ]]; }                                                                                                                         # vc current  test
 function v3t { [[ $cuvc = $nxvc ]]; }                                                                                                                         # vc transfer test
-function v4t { [[ $cunm = $znm4 && $ok != OK ]]; }                                                                                                            # bn restart  test
+function v4t { [[ $cunm = $inm5 && $ok != OK ]]; }                                                                                                            # bn restart  test
 function vsp { local f=$p02/$(basename $p18);sex "cp $p18 $p02";cmw $f 666 eth;scp $f $(snc $nxvc):~;sex "rm $f"; }                                           # prep slash db
 function tvc {
   v3t && return;swn "$s24";if v2t && v0t;then swn "TRANSFERIR VC -> $nxvc (SIM/nao)?";else return;fi;local rsp=nao;read rsp
