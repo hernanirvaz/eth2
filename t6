@@ -518,6 +518,7 @@ function irb { rm $p39.*.hours 2>$p03;if trb $1;then if tcf;then brs 0 RB 120 $s
 [[ $1 = bm  ]] && { bm0;bmo;swn "$m"; }
 [[ $1 = gh  ]] && { eh0 $p10 $2;[[ $2 ]] || { gl0;swn "GL $(printf '%8i' $(ell $p10) 2>$p03)\n$m"; } }
 [[ $1 = uh  ]] && { eh0 $p11 $2;[[ $2 ]] || { ul0;swn "UL $(printf '%8i' $(ell $p11) 2>$p03)\n$m"; } }
+[[ $1 = vh  ]] && { eh0 $p49 $2;[[ $2 ]] || { vl0;swn "VL $(printf '%8i' $(ell $p49) 2>$p03)\n$m"; } }
 [[ $1 = bh  ]] && { bh0 $2; }
 [[ $1 = bio ]] && { bio ${2:-2};swn "$m"; }
 [[ $1 = ahs ]] && { [[ $cunm = $znm1 ]] && ah1;[[ $cunm = $znm2 ]] && ah2;[[ $cunm = $znm3 ]] && ah3;[[ $cunm = $znm4 ]] && ah4; }
