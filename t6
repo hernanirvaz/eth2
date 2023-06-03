@@ -143,7 +143,7 @@ function bz0 { nu2 "(30.0*(0.4*$zk+0.3*$zz+0.2*$zx+0.1*$zw))"                   
 function bw0 { nu0 $((9*z1))                                                             ; }                                                                  # get numerator processed blocks
 function bf0 { nu0 $((59*z3))                                                            ; }                                                                  # get numerator general errors
 function bi0 { nu0 $((zk*9+zz*5+zx))                                                     ; }                                                                  # get delete day idx
-function bi1 { nu0 $(((4*b1+b5)/5))                                                      ; }                                                                  # shw imported/observed data
+function bi1 { nu0 $(((8*b1+2*b5)/10))                                                   ; }                                                                  # shw imported/observed data
 function bi2 { nu0 $(((z5>400?$(bz0)/z5:0)+(z2>300?$(bw0)/z2:0)+(z4>999?$(bf0)/z4:0)))   ; }                                                                  # get restart idx
 function bdp { nu2 "($1*$pmis+$2*$pmat+$3*$pmah+$4*$pdly)/${5:-1}*$rate/1000000" 7; }                                                                         # get penalty
 function bdr { nu2 "($1*$ratt+$2*$rblk)*$rate/100000000"                         7; }                                                                         # get reward
