@@ -167,9 +167,9 @@ function bl2 { zk=${1:-$(bl4 missing)};zz=${2:-$(bl4 target)};zx=${3:-$(bl4 head
 function bl3 { b0=${1:-$(fs0 $r47|wc -l)};if [[ $2$3 ]];then b1=$2;b5=$3;else lg3 2;fi; }                                                                     # set pub-blocks & imported/observed delays
 function bl4 { echo "$l3"|sed -n "s%.*$1.*validators: *\[\(.*\)\].*%\1%p"|wc -w; }                                                                            # get number of paid activities
 function vl0 { dts;ok=OK;if [[ $(sst $s13 running) ]];then lg5 200;vlo;else m="VSRV NOT ON $dt";fi; }
-#    0  1              2     3     4    5     6    7
-# VALI OK     2023-06-03 20:49 ztc4:  700 int5:  240
-function vlo { m="VALI $ok     $dt $(printf '%s: %4i %s: %4i' $(snc $znm4) $b8 $(snc $inm5) $b9 2>$p03)"; }
+#    0  1              2     3     4   5     6   7
+# VALI OK     2023-06-03 20:49 ztc4: 700 int5: 240
+function vlo { m="VALI $ok     $dt $(printf '%s: %3i %s: %3i' $(snc $znm4) $b8 $(snc $inm5) $b9 2>$p03)"; }
 #    0  1   2          3     4       5  6   7    8    9  10   11  12 13  14 15 16  17 18 19  20  21 22   23   24  25   26   27   28
 # BEAC OK   0 2023-05-16 11:22 node60: 66 rp: 2052 2032 ab: 2700  579 0 er:  0  8  78 13  0 507   0  2 3598  118 io:  614 4859 1463
 function blo {
