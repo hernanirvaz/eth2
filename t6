@@ -74,11 +74,10 @@ function snn {
     nr=0      ;nm=0                                          ;nd=0
   fi
 }
-function vo0 { dtl;bo4;lg5 20000; }
-function sz0 { gnn;printf 'el:p%02i:m%02i p2p:%5i %s i2:%i:%i'    $nr $nm $(ss5 $1 port    ) "$(gb1 $(gcl eth.syncing))" $(gdi 0) $(gdu 0)                 2>$p03; }
-function sz1 { unn;printf 'el:p%02i:m%02i p2p:%5i %s i2:%i'       $nr $nm $(ss5 $1 p2p-port) "$(ub1 $(ucl eth_syncing))" $(udi 0)                          2>$p03; }
-function sz2 { bnn;printf 'cl:p%02i:m%02i p2p:%5i %s el:http %7s' $nr $nm $(ss5 $1 port)     "$(bb1 $(bcl syncing))"     $(ss4 $1 $r24 execution-endpoint) 2>$p03; }
-function sz3 { vo0;printf 'vl:c%02i:m%02i cc:http %13s %s:%i %s:%i' $b2 $b3 $(ss4 $1 $r24 nodes) $(snc $znm4) $b8 $(snc $inm5) $b9 2>$p03; }
+function sz0 { gnn        ;printf 'el:p%02i:m%02i p2p:%5i %s i2:%i:%i'              $nr $nm $(ss5 $1 port    ) "$(gb1 $(gcl eth.syncing))" $(gdi 0) $(gdu 0)                     2>$p03; }
+function sz1 { unn        ;printf 'el:p%02i:m%02i p2p:%5i %s i2:%i'                 $nr $nm $(ss5 $1 p2p-port) "$(ub1 $(ucl eth_syncing))" $(udi 0)                              2>$p03; }
+function sz2 { dtl;bo4;bnn;printf 'cl:p%02i:m%02i p2p:%5i %s el:%7s mp:c%02i:m%02i' $nr $nm $(ss5 $1 port)     "$(bb1 $(bcl syncing))" $(ss4 $1 $r24 execution-endpoint) $b2 $b3 2>$p03; }
+function sz3 { lg5 20000  ;printf 'vl:%03i:%03i cc:%13s'                            $b8 $b9 $(ss4 $1 $r24 nodes)                                                                 2>$p03; }
 function sso {
   [[ $(sst $2 disabled) || ! $(sst $2 $2) ]] && return;dts;local e="$1 $(printf '%6s %10s %5s status: %-40s' $(ss3 $2) $dt "$(ss2 $2)" 2>$p03)"               # memory & status
   [[ $1 = GETH ]] && e="$e $(sz0 $2)";[[ $1 = BESU ]] && e="$e $(sz1 $2)";[[ $1 = BEAC ]] && e="$e $(sz2 $2)";[[ $1 = VALI ]] && e="$e $(sz3 $2)";swn "$e"    # set homologous/avg & cl http
@@ -385,14 +384,15 @@ function pas { umt && sex "$p02/eth2/t5 usbstop";t1t && sex "$p02/eth2/t5 cputur
 function paf { t2t && sex "$p02/eth2/t5 cputurbo"; }                                                                                                          # set turbo   parameter
 function ghs { sso GETH $s10; }
 function uhs { sso BESU $s11; }
-function bhs { sso BEAC $s12;sso VALI $s13; }
+function bhs { sso BEAC $s12; }
+function vhs { sso VALI $s13; }
 function lhs {
   if v2t;then local e=$(nu0 $(ss4 $s13 $r25 nodes $1));else local e=$(ssh $(snc $cuvc) "export H=$H;~/eth2/t6 cci $1");fi
   [[ $e -gt 0 ]] || return;local i=$(sci)
   if [[ $i -eq $e ]];then local n=$(nu0 $(ss4 $s12 $r25 execution-endpoint));else local n=$(ssh $(snc $(sni $e)) "export H=$H;~/eth2/t6 eci");fi
   [[ $n -gt 0 ]] || return;echo -e "\n$(sni $n)"
-  if [[ $i -eq $n ]];then ghs;uhs;else ssh $(snc $(sni $n)) "export H=$H;~/eth2/t6 ehs";fi;[[ $n -eq $e ]] || echo -e "\n$(sni $e)"
-  if [[ $i -eq $e ]];then bhs;cpe;else ssh $(snc $(sni $e)) "export H=$H;~/eth2/t6 bhs";fi
+  if [[ $i -eq $n ]];then ghs;uhs;    else ssh $(snc $(sni $n)) "export H=$H;~/eth2/t6 ehs";fi;[[ $n -eq $e ]] || echo -e "\n$(sni $e)"
+  if [[ $i -eq $e ]];then bhs;vhs;cpe;else ssh $(snc $(sni $e)) "export H=$H;~/eth2/t6 chs";fi
 }
 function nsh { $s08 list;$s08 status;$s09 status|sed -n 's%\(Current DNS\).*:%   \1:%ip'; }                                                                   # network/dns info
 function wlp { local e="$1";shift;until [[ $# -lt 1 ]];do e="$e\|$1";shift;done;fs2|grep '\[UFW'|if [[ $e ]];then grep -v "$e";else cat;fi; }
@@ -514,7 +514,9 @@ function irb { rm $p39.*.hours 2>$p03;if trb $1;then if tcf;then brs 0 RB 120 $s
 [[ $1 = ghs ]] && { ghs;cpe; }
 [[ $1 = uhs ]] && { uhs;cpe; }
 [[ $1 = bhs ]] && { bhs;cpe; }
+[[ $1 = vhs ]] && { if v2t;then vhs;cpe;else ssh $(snc $cuvc) "export H=$H;~/eth2/t6 vhs";fi; }
 [[ $1 = ehs ]] && { ghs;uhs; }
+[[ $1 = chs ]] && { bhs;vhs;cpe; }
 [[ $1 = mhs ]] && { lhs ,; }
 [[ $1 = shs ]] && { lhs  ; }
 [[ $1 = cci ]] && { nu0 $(ss4 $s13 $r25 nodes $2); }
