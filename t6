@@ -386,23 +386,13 @@ function paf { t2t && sex "$p02/eth2/t5 cputurbo"; }                            
 function ghs { sso GETH $s10; }
 function uhs { sso BESU $s11; }
 function bhs { sso BEAC $s12;sso VALI $s13; }
-function uhx { swn "\n\n$znm1";ssh ztc1 "export H=$H;~/eth2/t6 uhs"; }
-function cpx { swn "\n\n$znm2";ssh ztc2 "export H=$H;~/eth2/t6 cpe"; }
-function bhx { swn "\n\n$znm3";ssh ztc3 "export H=$H;~/eth2/t6 bhs"; }
-function ehx { swn "\n\n$znm4";ssh ztc4 "export H=$H;~/eth2/t6 gbs"; }
-function ah1 { swn "\n\n$znm1";uhs;cpe            ;cpx                ;bhx                ;ehx; }
-function ah2 {                 uhx;swn "\n\n$znm2";cpe                ;bhx                ;ehx; }
-function ah3 {                 uhx                ;cpx;swn "\n\n$znm3";bhs;cpe            ;ehx; }
-function ah4 {                 uhx                ;cpx                ;bhx;swn "\n\n$znm4";ghs;bhs;cpe; }
 function lhs {
-  if v2t;then local e=$(nu0 $(ss4 $s13 $r25 nodes $1));else local e=$(ssh $(snc $cuvc) "export H=$H;~/eth2/t6 cci $1");fi                                     # get master/slave cc ip
+  if v2t;then local e=$(nu0 $(ss4 $s13 $r25 nodes $1));else local e=$(ssh $(snc $cuvc) "export H=$H;~/eth2/t6 cci $1");fi
   [[ $e -gt 0 ]] || return;local i=$(sci)
-  if [[ $i -eq $e ]];then                                                                                                                                     # get connected ec ip
-    local n=$(nu0 $(ss4 $s12 $r25 execution-endpoint))
-  else
-    local n=$(ssh $(snc $(sni $e)) "export H=$H;~/eth2/t6 eci")
-  fi;[[ $n -gt 0 ]] || return;    echo -e "\n$(sni $n)";if [[ $i -eq $n ]];then ghs;uhs;    else ssh $(snc $(sni $n)) "export H=$H;~/eth2/t6 ehs";fi          # ec historic report summary
-  [[ $i -eq $e && $i -eq $n ]] || echo -e "\n$(sni $e)";if [[ $i -eq $e ]];then bhs    ;cpe;else ssh $(snc $(sni $e)) "export H=$H;~/eth2/t6 bhs";fi          # cc historic report summary
+  if [[ $i -eq $e ]];then local n=$(nu0 $(ss4 $s12 $r25 execution-endpoint));else local n=$(ssh $(snc $(sni $e)) "export H=$H;~/eth2/t6 eci");fi
+  [[ $n -gt 0 ]] || return;echo -e "\n$(sni $n)"
+  if [[ $i -eq $n ]];then ghs;uhs;else ssh $(snc $(sni $n)) "export H=$H;~/eth2/t6 ehs";fi;[[ $n -eq $e ]] || echo -e "\n$(sni $e)"
+  if [[ $i -eq $e ]];then bhs;cpe;else ssh $(snc $(sni $e)) "export H=$H;~/eth2/t6 bhs";fi
 }
 function nsh { $s08 list;$s08 status;$s09 status|sed -n 's%\(Current DNS\).*:%   \1:%ip'; }                                                                   # network/dns info
 function wlp { local e="$1";shift;until [[ $# -lt 1 ]];do e="$e\|$1";shift;done;fs2|grep '\[UFW'|if [[ $e ]];then grep -v "$e";else cat;fi; }
@@ -521,12 +511,10 @@ function irb { rm $p39.*.hours 2>$p03;if trb $1;then if tcf;then brs 0 RB 120 $s
 [[ $1 = vh  ]] && { eh0 $p49 $2;[[ $2 ]] || { vl0;swn "VL $(printf '%8i' $(ell $p49) 2>$p03)\n$m"; } }
 [[ $1 = bh  ]] && { bh0 $2; }
 [[ $1 = bio ]] && { bio ${2:-2};swn "$m"; }
-[[ $1 = ahs ]] && { [[ $cunm = $znm1 ]] && ah1;[[ $cunm = $znm2 ]] && ah2;[[ $cunm = $znm3 ]] && ah3;[[ $cunm = $znm4 ]] && ah4; }
-[[ $1 = ghs ]] && { ghs    ;cpe; }
-[[ $1 = uhs ]] && { uhs    ;cpe; }
-[[ $1 = bhs ]] && { bhs    ;cpe; }
-[[ $1 = ehs ]] && { ghs;uhs;cpe; }
-[[ $1 = gbs ]] && { ghs;bhs;cpe; }
+[[ $1 = ghs ]] && { ghs;cpe; }
+[[ $1 = uhs ]] && { uhs;cpe; }
+[[ $1 = bhs ]] && { bhs;cpe; }
+[[ $1 = ehs ]] && { ghs;uhs; }
 [[ $1 = mhs ]] && { lhs ,; }
 [[ $1 = shs ]] && { lhs  ; }
 [[ $1 = cci ]] && { nu0 $(ss4 $s13 $r25 nodes $2); }
@@ -708,7 +696,6 @@ if [[ ! $1 ]];then
   m="$m\nbn[f]\t\tarqivo report [file add]"
   m="$m\n[gub]h[s]\tgeth|besu|beacon\thistoric report [summary]"
   m="$m\nehs\t\tgeth|besu\t\thistoric report summary"
-  m="$m\ngbs\t\tgeth/beacon\t\thistoric report summary"
   m="$m\n[m|s]hs\t\t[master|slave] el/cl\thistoric report summary"
   m="$m\ncla\t\tcc add    long-lived parms"
   m="$m\nclr\t\tcc remove long-lived parms"
