@@ -74,10 +74,10 @@ function snn {
     nr=0      ;nm=0                                          ;nd=0
   fi
 }
-function sz0 { gnn        ;printf 'el:p%02i:m%02i p2p:%5i %s i2:%i:%i'              $nr $nm $(ss5 $1 port    ) "$(gb1 $(gcl eth.syncing))" $(gdi 0) $(gdu 0)                     2>$p03; }
-function sz1 { unn        ;printf 'el:p%02i:m%02i p2p:%5i %s i2:%i'                 $nr $nm $(ss5 $1 p2p-port) "$(ub1 $(ucl eth_syncing))" $(udi 0)                              2>$p03; }
-function sz2 { dtl;bo4;bnn;printf 'cl:p%02i:m%02i p2p:%5i %s el:%7s mp:c%02i:m%02i' $nr $nm $(ss5 $1 port)     "$(bb1 $(bcl syncing))" $(ss4 $1 $r24 execution-endpoint) $b2 $b3 2>$p03; }
-function sz3 { lg5 20000  ;printf 'vl:%03i:%03i cc:%13s'                            $b8 $b9 $(ss4 $1 $r24 nodes)                                                                 2>$p03; }
+function sz0 { gnn              ;printf 'el:p%02i:m%02i p2p:%5i %s i2:%i:%i'                      $nr $nm $(ss5 $1 port    ) "$(gb1 $(gcl eth.syncing))" $(gdi 0) $(gdu 0)                                2>$p03; }
+function sz1 { unn              ;printf 'el:p%02i:m%02i p2p:%5i %s i2:%i'                         $nr $nm $(ss5 $1 p2p-port) "$(ub1 $(ucl eth_syncing))" $(udi 0)                                         2>$p03; }
+function sz2 { dtl;bo4;lg3 0;bnn;printf 'cl:p%02i:m%02i p2p:%5i %s mp:c%i:m%i io:%i:%i:%i el:%7s' $nr $nm $(ss5 $1 port) "$(bb1 $(bcl syncing))" $b2 $b3 $b1 $b5 $(bi1) $(ss4 $1 $r24 execution-endpoint) 2>$p03; }
+function sz3 { lg5 20000        ;printf 'vl:%03i:%03i cc:%13s'                                    $b8 $b9 $(ss4 $1 $r24 nodes)                                                                            2>$p03; }
 function sso {
   [[ $(sst $2 disabled) || ! $(sst $2 $2) ]] && return;dts;local e="$1 $(printf '%6s %10s %5s status: %-40s' $(ss3 $2) $dt "$(ss2 $2)" 2>$p03)"               # memory & status
   [[ $1 = GETH ]] && e="$e $(sz0 $2)";[[ $1 = BESU ]] && e="$e $(sz1 $2)";[[ $1 = BEAC ]] && e="$e $(sz2 $2)";[[ $1 = VALI ]] && e="$e $(sz3 $2)";swn "$e"    # set homologous/avg & cl http
