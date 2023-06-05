@@ -87,8 +87,8 @@ function sso {
 function grs {                                                                                                                                                # el gap restart
   tsf $p40 && return;touch $p40.a$(stg);ssw $3 $p40 $4;tsf $p40 || return
   local t=$(sng);local f=$p40.i$(stg);touch $f;local n=0;paf;while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p40 $t $4
-  if tip $t;then rm $f;gv0;[[ $2 = RB ]] && gq0;echo snp $s10 $1 10 50                                                                                             # change peers/stop el
-    if [[ $2 = RB ]];then ero $n $p10 $2;sex reboot;else echo sex "$s03 $s10";ssf 50 $p40;gq0;echo ero $n $p10 $2;fi                                                    # reboot/start el
+  if tip $t;then rm $f;gv0;[[ $2 = RB ]] && gq0;snp $s10 $1 10 50                                                                                             # change peers/stop el
+    if [[ $2 = RB ]];then ero $n $p10 $2;sex reboot;else sex "$s03 $s10";ssf 50 $p40;gq0;ero $n $p10 $2;fi                                                    # reboot/start el
   fi;done;rm -f $p40.*
 }
 function gdi { if [[ $1 -gt 0 ]];then l4=$(rl4 $r35|tail -n$1);else l4=$(rl4 $r35);fi;nu3 3 0 $(lg2 "$r42"); }                                                # get delay imported
@@ -245,11 +245,18 @@ function bro { [[ -f $p12 ]] || return;dts;bb0;bnn;swn "$(printf 'R%03i %2s %3i'
 function tsb { [[ $(bwc) -gt 0 ]]; }
 # slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168
 function brs {
-  tsf $p42 && return;tsb && return;touch $p42.a$(stg);if [[ $3 -gt 0 ]];then ssf $3 $p42;tsf $p42 || return;tsb && return;fi;touch $p42.b$(stg);ssw $4 $p42 $5;tsf $p42 || return;tsb && return
+  tsf $p42 && return;tsb && return;touch $p42.a$(stg);if [[ $3 -gt 0 ]];then ssf $3 $p42;tsf $p42 || return;tsb && return;touch $p42.b$(stg);fi;ssw $4 $p42 $5;tsf $p42 || return;tsb && return
   local t=$(sng);local f=$p42.i$(stg);touch $f;local n=0;paf;while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p42 $t $5
   if tip $t;then rm $f;bv0;snp $s12 $1 $bpri $bprf                         ;[[ $2 = VC ]] && sex "$s02 $s13"
     if [[ $2 = RB ]];then bro $n $2;gps;ups;sex reboot;else sex "$s03 $s12";[[ $2 = VC ]] && sex "$s03 $s13";ssf 50 $p42;bro $n $2;fi
   fi;done;rm -f $p42.*
+}
+function brz {
+  tsf $p42 && return;tsb && return;touch $p42.a$(stg);if [[ $3 -gt 0 ]];then ssf $3 $p42;tsf $p42 || return;tsb && return;touch $p42.b$(stg);fi;ssw $4 $p42 $5;tsf $p42 || return;tsb && return
+  local t=$(sng);local f=$p42.i$(stg);touch $f;local n=0;paf;while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p42 $t $5
+  if tip $t;then rm $f;bv0;echo snp $s12 $1 $bpri $bprf                         ;[[ $2 = VC ]] && echo sex "$s02 $s13"
+    if [[ $2 = RB ]];then echo bro $n $2;echo gps;echo ups;echo sex reboot;else echo sex "$s03 $s12";[[ $2 = VC ]] && echo sex "$s03 $s13";ssf 50 $p42;echo bro $n $2;fi
+  fi;done
 }
 function vsb {                                                                                                                                                # vc gap stop
   tsf $p46 && return;tsb && return;touch $p42.a$(stg);ssw $1 $p46 s;tsf $p46 || return;tsb && return
@@ -280,7 +287,7 @@ function bsl {                                                                  
 function bdw { [[ -f $1 ]] || return;cp $1 $1.o;grep -v $2 $1.o > $1;grep $2 $1.o > $1.d; }                                                                   # work to delete cc log day
 function bdl { local d=$(pt0 $1 sai);[[ $d = sai ]] && return;bdw $p12 $d;bdw $p13 $d; }                                                                      #         delete cc log day
 function wst { echo $@|sed 's%[^: ]*: *%%g;s%inactive%off%;s%active%on%' 2>$p03; }                                                                            # get ufw info
-function cpf { local f='';local t='';for t in $(ls $p02/*.restart.* 2>$p03|sort -t. -k3 -k4n);do local f="$f, $(basename $t)";done;printf "$f"; }             # get list restart basenames
+function cpf { local f='';local t='';for t in $(ls $p02/*.restart.* 2>$p03|sort -t. -k4n);do local f="$f, $(basename $t)";done;printf "$f"; }             # get list restart basenames
 function sm0 { local s='smartctl --json=c -x';pex "$s /dev/nvme0"|jq -r "$r54" 2>$p03; }
 function sm1 { local s='smartctl --json=c -x';pex "$s /dev/nvme0"|jq -r "$r54" 2>$p03;pex "$s /dev/nvme1"|jq -r "$r54" 2>$p03;pex "$s /dev/nvme2"|jq -r "$r54" 2>$p03; }
 function sm2 { local s=$(pex "smartctl --json=c -x /dev/sda");echo $s|jq -r "$r40" 2>$p03;echo $s|jq -r "$r41" 2>$p03; }
@@ -494,6 +501,7 @@ function irb { rm $p39.*.hours 2>$p03;if trb $1;then if v2t;then brs 0 RB $s45 $
 [[ $1 = urs ]] && { urs ${2:-0} SR   ${4:-$s40} $3; }
 [[ $1 = brs ]] && { brs ${2:-0} BN 0 ${4:-$s39} $3; }
 [[ $1 = crs ]] && { brs      0  VC 0 ${3:-$s38} $2; }
+[[ $1 = brz ]] && { brz ${2:-0} BN 0 ${4:-$s40} $3; }
 [[ $1 = ivk ]] && { ivk              ${2:-$s38}   ; }
 [[ $1 = brb ]] && { brs      0  RB 0 ${3:-$s37} $2; }
 [[ $1 = grb ]] && { grs      0  RB   ${3:-$s37} $2; }
