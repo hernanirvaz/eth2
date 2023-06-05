@@ -66,8 +66,8 @@ function sft { echo $(sf1) $1 $2$(cpf); }                                       
 function smn { local g=${1:-24}                  ;nu0 $((g>360?360:g<24?24:g)); }                                                                             # get max/min seconds to future (12x30/24)
 function sfn { local g=$(($(bss $1)-$(date +%s)));nu0 $((g>3?g:3))            ; }                                                                             # get min seconds to future
 function tsf { [[ $(ls $1.* 2>$p03|wc -l) -gt 0 ]]; }
-function ssf { [[ $1 -gt 0 ]] || return;local f=$2.s$(stg $1);touch $f;[[ $5 =~ si*m* ]] && echo $(sf1) $3 $4, $(basename $f);sleep $1s; }                    # sleep with file info
-function ssw { while :;do local t=$(sng);if [[ $(sf2 $t) -lt $1 || 24 -ge $(sfn $t) ]];then ssf $(smn $(sfn $t)) $2 $t $3;else break;fi;tsf $2 || break;done; }
+function ssf { [[ $1 -gt 0 ]] || return;local f=$2.s$(stg $1);touch $f;[[ -f $p50 ]] && echo $(sf1) ${3:-$(date +%H:%M:%S)} ${4:-00}, $(basename $f);sleep $1s; }
+function ssw { while :;do local t=$(sng);if [[ $(sf2 $t) -lt $1 || 24 -ge $(sfn $t) ]];then ssf $(smn $(sfn $t)) $2 $t;else break;fi;tsf $2 || break;done; }
 function snn {
   if [[ $# -gt 0 ]];then
     nr=${@:$#};nm=$(printf '%i\n' $@ 2>$p03|sort -n|head -n1);nd=$(nu2 "sqrt(((0$(printf '+%i^2' $@ 2>$p03))-(0$(printf '+%i' $@ 2>$p03))^2/$#)/$#)*1000" 4)  # set cur/min/std peers vars
@@ -85,11 +85,11 @@ function sso {
 }
 # el control commands
 function grs {                                                                                                                                                # el gap restart
-  tsf $p40 && return;touch $p40.a$(stg);ssw $3 $p40 $4;tsf $p40 || return
-  local t=$(sng);local f=$p40.i$(stg);touch $f;local n=0;paf;while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p40 $t $4
+  tsf $p40 && return;touch $p40.a$(stg);ssw $3 $p40;tsf $p40 || return
+  local t=$(sng);local f=$p40.i$(stg);touch $f;local n=0;paf;while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p40 $t
   if tip $t;then rm $f;gv0;[[ $2 = RB ]] && gq0;snp $s10 $1 10 50                                                                                             # change peers/stop el
     if [[ $2 = RB ]];then ero $n $p10 $2;sex reboot;else sex "$s03 $s10";ssf 50 $p40;gq0;ero $n $p10 $2;fi                                                    # reboot/start el
-  fi;done;rm -f $p40.*
+  fi;done;rm -f $p50 $p40.*
 }
 function gdi { if [[ $1 -gt 0 ]];then l4=$(rl4 $r35|tail -n$1);else l4=$(rl4 $r35);fi;nu3 3 0 $(lg2 "$r42"); }                                                # get delay imported
 function gdu { if [[ $1 -gt 0 ]];then l4=$(rl4 $r52|tail -n$1);else l4=$(rl4 $r52);fi;nu3 3 0 $(lg2 "$r42"); }                                                # get delay Chain head updated
@@ -110,11 +110,11 @@ function gl0 {                                                                  
   fi
 }
 function urs {                                                                                                                                                # el gap restart
-  tsf $p41 && return;touch $p41.a$(stg);ssw $3 $p41 $4;tsf $p41 || return
-  local t=$(sng);local f=$p41.i$(stg);touch $f;local n=0;paf;while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p41 $t $4
+  tsf $p41 && return;touch $p41.a$(stg);ssw $3 $p41;tsf $p41 || return
+  local t=$(sng);local f=$p41.i$(stg);touch $f;local n=0;paf;while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p41 $t
   if tip $t;then rm $f;uv0;[[ $2 = RB ]] && uq0;snp $s11 $1 10 50                                                                                             # change peers/stop el
     if [[ $2 = RB ]];then ero $n $p11 $2;sex reboot;else sex "$s03 $s11";ssf 50 $p41;uq0;ero $n $p11 $2;fi                                                    # reboot/start el
-  fi;done;rm -f $p41.*
+  fi;done;rm -f $p50 $p41.*
 }
 function udi { if [[ $1 -gt 0 ]];then l4=$(rl4 $r35|tail -n$1);else l4=$(rl4 $r35);fi;nu3 3 0 $(lg2 "$r43"); }                                                # get delay imported
 function ucl { curl -sX POST --data "{\"jsonrpc\":\"2.0\",\"method\":\"$1\",\"params\":[],\"id\":51}" "http://$ciec:8545" 2>$p03; }                           # exec RPC HTTP
@@ -245,23 +245,16 @@ function bro { [[ -f $p12 ]] || return;dts;bb0;bnn;swn "$(printf 'R%03i %2s %3i'
 function tsb { [[ $(bwc) -gt 0 ]]; }
 # slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168
 function brs {
-  tsf $p42 && return;tsb && return;touch $p42.a$(stg);if [[ $3 -gt 0 ]];then ssf $3 $p42;tsf $p42 || return;tsb && return;touch $p42.b$(stg);fi;ssw $4 $p42 $5;tsf $p42 || return;tsb && return
-  local t=$(sng);local f=$p42.i$(stg);touch $f;local n=0;paf;while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p42 $t $5
+  tsf $p42 && return;tsb && return;touch $p42.a$(stg);if [[ $3 -gt 0 ]];then ssf $3 $p42;tsf $p42 || return;tsb && return;touch $p42.b$(stg);fi;ssw $4 $p42;tsf $p42 || return;tsb && return
+  local t=$(sng);local f=$p42.i$(stg);touch $f;local n=0;paf;while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p42 $t
   if tip $t;then rm $f;bv0;snp $s12 $1 $bpri $bprf                         ;[[ $2 = VC ]] && sex "$s02 $s13"
     if [[ $2 = RB ]];then bro $n $2;gps;ups;sex reboot;else sex "$s03 $s12";[[ $2 = VC ]] && sex "$s03 $s13";ssf 50 $p42;bro $n $2;fi
-  fi;done;rm -f $p42.*
+  fi;done;rm -f $p50 $p42.*
 }
-function brz {
-  tsf $p42 && return;tsb && return;touch $p42.a$(stg);if [[ $3 -gt 0 ]];then ssf $3 $p42;tsf $p42 || return;tsb && return;touch $p42.b$(stg);fi;ssw $4 $p42 $5;tsf $p42 || return;tsb && return
-  local t=$(sng);local f=$p42.i$(stg);touch $f;local n=0;paf;while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p42 $t $5
-  if tip $t;then rm $f;bv0;echo snp $s12 $1 $bpri $bprf                         ;[[ $2 = VC ]] && echo sex "$s02 $s13"
-    if [[ $2 = RB ]];then echo bro $n $2;echo gps;echo ups;echo sex reboot;else echo sex "$s03 $s12";[[ $2 = VC ]] && echo sex "$s03 $s13";ssf 50 $p42;echo bro $n $2;fi
-  fi;done
-}
-function vsb {                                                                                                                                                # vc gap stop
-  tsf $p46 && return;tsb && return;touch $p42.a$(stg);ssw $1 $p46 s;tsf $p46 || return;tsb && return
+function vsb {
+  tsf $p46 && return;tsb && return;touch $p50;touch $p42.a$(stg);ssw $1 $p46;tsf $p46 || return;tsb && return
   local t=$(sng);local f=$p46.i$(stg);touch $f;local n=0;paf
-  while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p46 $t s;if tip $t;then cex "$s02 $s12";cex "$s02 $s13";rm $f;fi;done;rm -f $p46.*
+  while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p46 $t;if tip $t;then cex "$s02 $s12";cex "$s02 $s13";rm $f;fi;done;rm -f $p50 $p46.*
 }
 function brh { head -n${1:-0} $p12; }                                                                                                                         # new cc head lines
 function brl {                                                                                                                                                # recalculate cc logs
@@ -497,15 +490,14 @@ function irb { rm $p39.*.hours 2>$p03;if trb $1;then if v2t;then brs 0 RB $s45 $
 [[ $1 = tvc ]] && { tvc; }
 [[ $1 = tmp ]] && { dts;tmp s; }
 # slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168
-[[ $1 = grs ]] && { grs ${2:-0} SR   ${4:-$s40} $3; }
-[[ $1 = urs ]] && { urs ${2:-0} SR   ${4:-$s40} $3; }
-[[ $1 = brs ]] && { brs ${2:-0} BN 0 ${4:-$s39} $3; }
-[[ $1 = crs ]] && { brs      0  VC 0 ${3:-$s38} $2; }
-[[ $1 = brz ]] && { brz ${2:-0} BN 0 ${4:-$s40} $3; }
-[[ $1 = ivk ]] && { ivk              ${2:-$s38}   ; }
-[[ $1 = brb ]] && { brs      0  RB 0 ${3:-$s37} $2; }
-[[ $1 = grb ]] && { grs      0  RB   ${3:-$s37} $2; }
-[[ $1 = urb ]] && { urs      0  RB   ${3:-$s37} $2; }
+[[ $1 = grs ]] && { grs ${2:-0} SR   ${3:-$s40}; }
+[[ $1 = urs ]] && { urs ${2:-0} SR   ${3:-$s40}; }
+[[ $1 = brs ]] && { brs ${2:-0} BN 0 ${3:-$s39}; }
+[[ $1 = crs ]] && { brs ${2:-0} VC 0 ${3:-$s38}; }
+[[ $1 = grb ]] && { grs      0  RB   ${2:-$s37}; }
+[[ $1 = urb ]] && { urs      0  RB   ${2:-$s37}; }
+[[ $1 = brb ]] && { brs      0  RB 0 ${2:-$s37}; }
+[[ $1 = ivk ]] && { ivk              ${2:-$s38}; }
 [[ $1 = ul  ]] && { ul0;swn "$m"; }
 [[ $1 = ulf ]] && { ul0;swn "$m" >> $p11;[[ $ok != OK ]] && urs 0 $ok $s40; }
 [[ $1 = gl  ]] && { gl0;swn "$m"; }
@@ -678,15 +670,15 @@ if [[ ! $1 ]];then
   m="$m\ngl[f]\t\tec log report"
   m="$m\ngpn\t\t$s10 pruNe DB - TAKES HOURS"
   m="$m\ngpg\t\t$s10 purGe DB - KEEP ANCIENT"
-  m="$m\ngrs [n] [p] [g]\t$s10\t\t\trestart\twith n peers, s/n prints sleep times, mim gap time"
-  m="$m\nurs [n] [p] [g]\t$s11\t\t\trestart\twith n peers, s/n prints sleep times, mim gap time"
-  m="$m\nbrs [n] [p] [g]\t$s12\t\t\trestart\twith n peers, s/n prints sleep times, mim gap time"
-  m="$m\ncrs [p] [g]\t$s12/$s13\trestart\ts/n prints sleep times, mim gap time"
-  m="$m\ngrb [p] [g]\tsystem & geth\t\t\treboot\ts/n prints sleep times, mim gap time"
-  m="$m\nurb [p] [g]\tsystem & besu\t\t\treboot\ts/n prints sleep times, mim gap time"
-  m="$m\nbrb [p] [g]\tsystem & beacon\t\t\treboot\ts/n prints sleep times, mim gap time"
-  m="$m\nirb [h]\t\tsystem (if needed)\t\treboot\tafter h hours"
+  m="$m\ngrs [n] [g]\t$s10\t\t\trestart\twith n peers, mim gap time"
+  m="$m\nurs [n] [g]\t$s11\t\t\trestart\twith n peers, mim gap time"
+  m="$m\nbrs [n] [g]\t$s12\t\t\trestart\twith n peers, mim gap time"
+  m="$m\ncrs [n] [g]\t$s12/$s13\trestart\twith n peers, mim gap time"
+  m="$m\ngrb [g]\t\tsystem & geth\t\t\treboot\tmim gap time"
+  m="$m\nurb [g]\t\tsystem & besu\t\t\treboot\tmim gap time"
+  m="$m\nbrb [g]\t\tsystem & beacon\t\t\treboot\tmim gap time"
   m="$m\nivk [g]\t\timport validator keys\t\tmim gap time"
+  m="$m\nirb [h]\t\tsystem (if needed)\t\treboot\tafter h hours"
   m="$m\nrsh\t\trestart info (time & next gap without validator tasks)"
   m="$m\nyj\t\tsystem journal"
   m="$m\nsl\t[hh:mm]\tsystem journal\tlog lines"

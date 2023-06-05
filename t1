@@ -74,6 +74,7 @@ p46="$p02/validator.restart"
 p47='/etc/apt/preferences.d'
 p48='/etc/default/grub'
 p49="$p02/validator.log"
+p50="$p02/sprint"
 
 r00='s%^ *#*NTP=.*$%NTP=192.168.8.28 ntp02.oal.ul.pt ntp04.oal.ul.pt time.google.com time.cloudflare.com time.facebook.com%i'
 r01='s%^ *ENABLED=.*$%ENABLED=0%i'
