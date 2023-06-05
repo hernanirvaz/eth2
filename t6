@@ -156,7 +156,7 @@ function bff { grep "BEAC.*$1" $p12 2>$p03; }                                   
 function bnn { snn $(fs3 peers:) $(bpc $(bcl peer_count)); }                                                                                                  # set cur/min/std cc peers
 function bb1 { if [[ $(echo $@|grep is_syncing\":false) ]];then printf 'synced';else printf 'syncing: %6i' $(bsd $@);fi; }                                    # get cl syncing distance remaining
 function bio { lg3 $1;dts;m="BEIO $(nu1 %6i $1) $dt io: $b1 $b5 $(bi1)"; }                                                                                    # shw imported/observed delays
-function bcc { if tbp;then if trb;then printf r;else printf c;fi;else if tsd;then printf d;else printf _;fi;fi; }                                             # get change/reboot/delete char
+function bcc { if v4t;then if tbp;then if trb;then printf r;else printf c;fi;else if tsd;then printf d;else printf _;fi;fi;else if tsr;then printf r;else if tsd;then printf d;else printf _;fi;fi;fi; }
 function bmp { printf '%5i %3s %3i %5i %4i io: %4i %4i %4i' ${a[0]} $b7 $b4 $nd $(bi0) $b1 $b5 $(bi1) 2>$p03; }                                               # get peer__io: partial
 function bl0 { dts;ok=OK;if [[ $(sst $s12 running) ]];then bl3;bv0;bnn;bb0;blo;else m="BSRV NOT ON $dt";fi; }                                                 # cc report
 function bl1 {                                                                                                                                                # set restart idx vars
@@ -422,7 +422,7 @@ function v0t { [[ $(sst $s13 running) ]]; }                                     
 function v1t { [[ $cunm = $nxvc ]]; }                                                                                                                         # vc next     test
 function v2t { [[ $cunm = $cuvc ]]; }                                                                                                                         # vc current  test
 function v3t { [[ $cuvc = $nxvc ]]; }                                                                                                                         # vc transfer test
-function v4t { [[ $cunm = $inm5 && $ok != OK ]]; }                                                                                                            # bn restart  test
+function v4t { if v2t;then local e=$(nu0 $(ss4 $s13 $r25 nodes ,));else local e=$(ssh $(snc $cuvc) "export H=$H;~/eth2/t6 cci ,");fi;[[ $cunm = $(sni $e) ]]; }
 function vsp { local f=$p02/$(basename $p18);sex "cp $p18 $p02";cmw $f 666 eth;scp $f $(snc $nxvc):~;sex "rm $f"; }                                           # prep slash db
 function tvc {
   v3t && return;swn "$s24";if v2t && v0t;then swn "TRANSFERIR VC -> $nxvc (SIM/nao)?";else return;fi;local rsp=nao;read rsp
@@ -448,6 +448,7 @@ function sn0 { local n=$((($1-s36)/32));for n in $n $((n+1));do curl -sH "$s28" 
 function sng { local t=$(((($(date +%s)-s31)/12)+s36));local e=0;local i=0;local s=0;for s in $(sn0 $t|sort -nu);do if ((s<t));then continue;else if (((s-t)>e));then e=$((s-t));i=$t;fi;fi;t=$((s+1));done;printf '%s %i' $(date -d@$((s31+i*12)) +%T) $((e*12)); }
 
 function trb { [[ $(sra) -ge $((60*60*${1:-12})) ]]; }
+function tsr { trb 9; }
 function tip { [[ $(date +%s) -ge $(bss $1 6) ]]; }
 function tpc { [[ $b4 -ne 0 ]]; }
 function tha { [[ $b2 -gt $((b3*2)) ]]; }
@@ -463,7 +464,7 @@ function btg { if trf;then printf $s37;else printf $s39;fi; }
 function irb { rm $p39.*.hours 2>$p03;if trb $1;then if tcf;then brs 0 RB 120 $s37;else gps;ups;bps;sex reboot;fi;else if trf;then touch $p39.$1.hours;fi;fi; }
 
 [[ $1 = irb ]] && { irb ${2:-3};pas; }
-[[ $1 = bmf ]] && { bm0;bms;[[ $(grep $d0 $p12 2>$p03|wc -l) -gt 0 ]] && swn "$m" >> $p13;tbp && brs $b4 $(btr) 120 $(btg); }
+[[ $1 = bmf ]] && { bm0;bms;[[ $(grep $d0 $p12 2>$p03|wc -l) -gt 0 ]] && swn "$m" >> $p13;if v4t;then tbp && brs $b4 $(btr) 120 $(btg);else tsr && brs 0 RB 120 $s37;fi; }
 
 [[ $1 = snr ]] && { cex "$s42 lxd";cex "$s42 core20";cex "$s42 snapd";cex 'apt remove --autoremove snapd -y';echo -e "$s41" > nosnap.pref;cex "mv nosnap.pref $p47";cmw $p47/nosnap.pref 644 root;cex 'apt update'; }
 [[ $1 = mvr ]] && { mvr; }
@@ -500,7 +501,7 @@ function irb { rm $p39.*.hours 2>$p03;if trb $1;then if tcf;then brs 0 RB 120 $s
 [[ $1 = gl  ]] && { gl0;swn "$m"; }
 [[ $1 = glf ]] && { gl0;swn "$m" >> $p10;[[ $ok != OK ]] && grs 0 $ok $s40; }
 [[ $1 = bl  ]] && { bl0;swn "$m"; }
-[[ $1 = blf ]] && { bl0;swn "$m" >> $p12;if [[ $d1 = 23:58 ]];then if tsd;then bdl $d0;else if [[ $(bbl) -gt 7128 ]];then bod 0 1;fi;fi;fi;v4t && brs 0 $ok 0 $s39;pas; }
+[[ $1 = blf ]] && { bl0;swn "$m" >> $p12;if [[ $d1 = 23:58 ]];then if tsd;then bdl $d0;else if [[ $(bbl) -gt 7128 ]];then bod 0 1;fi;fi;fi;[[ $ok != OK ]] && v4t && brs 0 $ok 0 $s39;pas; }
 [[ $1 = vl  ]] && { vl0;swn "$m"; }
 [[ $1 = vlf ]] && { vl0;swn "$m" >> $p49; }
 [[ $1 = bn  ]] && { bm0;bno;swn "$m"; }
