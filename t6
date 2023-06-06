@@ -65,9 +65,8 @@ function sf2 { printf %i ${2:-24}; }                                            
 function sft { echo $(sf1) $1 $2$(cpf); }                                                                                                                     # print restart info line
 function smn { local g=${1:-24}                  ;nu0 $((g>360?360:g<24?24:g)); }                                                                             # get max/min seconds to future (12x30/24)
 function sfn { local g=$(($(bss $1)-$(date +%s)));nu0 $((g>3?g:3))            ; }                                                                             # get min seconds to future
-function tsf { [[ $(ls $1.* 2>$p03|wc -l) -gt 0 ]]; }
 function ssf { [[ $1 -gt 0 ]] || return;local f=$2.s$(stg $1);touch $f;[[ -f $p50 ]] && echo $(sf1) ${3:-$(date +%H:%M:%S)} ${4:-00}, $(basename $f);sleep $1s; }
-function ssw { while :;do local t=$(sng);if [[ $(sf2 $t) -lt $1 || 24 -ge $(sfn $t) ]];then ssf $(smn $(sfn $t)) $2 $t;else break;fi;tsf $2 || break;done; }
+function ssw { while :;do local t=$(sng);if [[ $(sf2 $t) -lt $1 || 24 -ge $(sfn $t) ]];then ssf $(smn $(sfn $t)) $2 $t;else break;fi;ts0 $2 && break;done; }
 function snn {
   if [[ $# -gt 0 ]];then
     nr=${@:$#};nm=$(printf '%i\n' $@ 2>$p03|sort -n|head -n1);nd=$(nu2 "sqrt(((0$(printf '+%i^2' $@ 2>$p03))-(0$(printf '+%i' $@ 2>$p03))^2/$#)/$#)*1000" 4)  # set cur/min/std peers vars
@@ -85,7 +84,7 @@ function sso {
 }
 # el control commands
 function grs {                                                                                                                                                # el gap restart
-  tsf $p40 && return;touch $p40.a$(stg);ssw $3 $p40;tsf $p40 || return
+  ts1 $p40 && return;touch $p40.a$(stg);ssw $3 $p40;ts0 $p40 && return
   local t=$(sng);local f=$p40.i$(stg);touch $f;local n=0;paf;while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p40 $t
   if tip $t;then rm $f;gv0;[[ $2 = RB ]] && gq0;snp $s10 $1 10 50
     if [[ $2 = RB ]];then ero $n $p10 $2;sex reboot;else sex "$s03 $s10";ssf 50 $p40;gq0;ero $n $p10 $2;fi
@@ -110,7 +109,7 @@ function gl0 {                                                                  
   fi
 }
 function urs {                                                                                                                                                # el gap restart
-  tsf $p41 && return;touch $p41.a$(stg);ssw $3 $p41;tsf $p41 || return
+  ts1 $p41 && return;touch $p41.a$(stg);ssw $3 $p41;ts0 $p41 && return
   local t=$(sng);local f=$p41.i$(stg);touch $f;local n=0;paf;while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p41 $t
   if tip $t;then rm $f;uv0;[[ $2 = RB ]] && uq0;snp $s11 $1 10 50
     if [[ $2 = RB ]];then ero $n $p11 $2;sex reboot;else sex "$s03 $s11";ssf 50 $p41;uq0;ero $n $p11 $2;fi
@@ -242,17 +241,21 @@ function bss { nu0 $((${2:-0}+$(date -d$(sf1 $1) +%s))); }                      
 function bwc { bwd|grep -Ex "$(echo ${!b[@]}|tr ' ' '|')"|wc -l; }                                                                                            # get my # validators
 function bwd { local n=$((($(date +%s)-s31)/(12*32)));for n in $n $((n+1));do curl -sH "$s28" -X POST -d"[$(echo ${!b[@]}|tr ' ' ',')]" "$s32/sync/$n";curl -sH "$s28" -X GET "$s32/proposer/$n";done 2>$p03|jq -r "$s35"; }
 function bro { [[ -f $p12 ]] || return;dts;bb0;bnn;swn "$(printf 'R%03i %2s %3i' $1 ${2:-$ok} $(bi2) 2>$p03) $(dnn)" >> $p12; }                               # log restart info
+function ts1 { [[ $(ls $1.* 2>$p03|wc -l) -gt 0 ]]; }
+function ts0 { [[ $(ls $1.* 2>$p03|wc -l) -eq 0 ]]; }
 function tsb { [[ $(bwc) -gt 0 ]]; }
+function tsi { ts1 $1 || tsb; }
+function tso { ts0 $1 || tsb; }
 # slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168
 function brs {
-  tsf $p42 && return;tsb && return;touch $p42.a$(stg);if [[ $3 -gt 0 ]];then ssf $3 $p42;tsf $p42 || return;tsb && return;touch $p42.b$(stg);fi;ssw $4 $p42;tsf $p42 || return;tsb && return
+  tsi $p42 && return;touch $p42.a$(stg);if [[ $3 -gt 0 ]];then ssf $3 $p42;tso $p42 && return;touch $p42.b$(stg);fi;ssw $4 $p42;tso $p42 && return
   local t=$(sng);local f=$p42.i$(stg);touch $f;local n=0;paf;while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p42 $t
   if tip $t;then rm $f;bv0;snp $s12 $1 $bpri $bprf                         ;[[ $2 = VC ]] && sex "$s02 $s13"
     if [[ $2 = RB ]];then bro $n $2;gps;ups;sex reboot;else sex "$s03 $s12";[[ $2 = VC ]] && sex "$s03 $s13";ssf 50 $p42;bro $n $2;fi
   fi;done;rm -f $p50 $p42.*
 }
 function vsb {
-  tsf $p46 && return;tsb && return;touch $p50;touch $p46.a$(stg);ssw $1 $p46;tsf $p46 || return;tsb && return;local t=$(sng);local f=$p46.i$(stg);touch $f;local n=0;paf
+  tsi $p46 && return;touch $p50;touch $p46.a$(stg);ssw $1 $p46;tso $p46 && return;local t=$(sng);local f=$p46.i$(stg);touch $f;local n=0;paf
   while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p46 $t;if tip $t;then cex "$s02 $s12";cex "$s02 $s13";rm $f;fi;done;rm -f $p50 $p46.*
 }
 function brh { head -n${1:-0} $p12; }                                                                                                                         # new cc head lines
