@@ -256,8 +256,8 @@ function brs {
   fi;done;rm -f $p50 $p42.*
 }
 function vrs {
-  tsi $p46 && return;touch $p46.a$(stg);ssw $1 $p46;tso $p46 && return;local t=$(sng);local f=$p46.i$(stg);touch $f;local n=0;paf
-  while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p46 $t;if tip $t;then rm $f;sex "$s02 $s13";dmr;sex "$s03 $s13";vro $n SR;fi;done;rm -f $p50 $p46.*
+  tsi $p46 && return;touch $p50;touch $p46.a$(stg);ssw $1 $p46;tso $p46 && return;local t=$(sng);local f=$p46.i$(stg);touch $f;local n=0;paf
+  while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p46 $t;if tip $t;then rm $f;cex "$s02 $s13";dmr;cex "$s03 $s13";vro $n SR;fi;done;rm -f $p50 $p46.*
 }
 function brz {
   tsi $p42 && return;touch $p50;touch $p42.a$(stg);if [[ $3 -gt 0 ]];then ssf $3 $p42;tso $p42 && return;touch $p42.b$(stg);fi;ssw $4 $p42;tso $p42 && return
@@ -265,10 +265,6 @@ function brz {
   if tip $t;then rm $f;bv0;echo snp $s12 $1 $bpri $bprf                         ;[[ $2 = VC ]] && echo sex "$s02 $s13"
     if [[ $2 = RB ]];then echo bro $n $2;echo gps;echo ups;echo sex reboot;else echo sex "$s03 $s12";[[ $2 = VC ]] && echo sex "$s03 $s13";ssf 50 $p42;echo bro $n $2;fi
   fi;done;rm -f $p50 $p42.*
-}
-function vrz {
-  tsi $p46 && return;touch $p46.a$(stg);ssw $1 $p46;tso $p46 && return;local t=$(sng);local f=$p46.i$(stg);touch $f;local n=0;paf
-  while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p46 $t;if tip $t;then rm $f;echo sex "$s02 $s13";echo dmr;echo sex "$s03 $s13";echo vro $n SR;fi;done;rm -f $p50 $p46.*
 }
 function vsb {
   tsi $p46 && return;touch $p50;touch $p46.a$(stg);ssw $1 $p46;tso $p46 && return;local t=$(sng);local f=$p46.i$(stg);touch $f;local n=0;paf
@@ -512,11 +508,11 @@ function irb { rm $p39.*.hours 2>$p03;if trb $1;then if v2t;then brs 0 RB $s45 $
 [[ $1 = urs ]] && { urs ${2:-0} SR   ${3:-$s40}; }
 [[ $1 = brs ]] && { brs ${2:-0} BN 0 ${3:-$s39}; }
 [[ $1 = crs ]] && { brs ${2:-0} VC 0 ${3:-$s38}; }
+[[ $1 = vrs ]] && { vrs              ${2:-$s38}; }
 [[ $1 = grb ]] && { grs      0  RB   ${2:-$s37}; }
 [[ $1 = urb ]] && { urs      0  RB   ${2:-$s37}; }
 [[ $1 = brb ]] && { brs      0  RB 0 ${2:-$s37}; }
 [[ $1 = brz ]] && { brz ${2:-0} BN 0 ${3:-$s39}; }
-[[ $1 = vrz ]] && { vrz              ${2:-$s40}; }
 [[ $1 = ivk ]] && { ivk              ${2:-$s38}; }
 [[ $1 = ul  ]] && { ul0;swn "$m"; }
 [[ $1 = ulf ]] && { ul0;swn "$m" >> $p11;[[ $ok != OK ]] && urs 0 $ok $s40; }
