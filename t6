@@ -241,6 +241,7 @@ function bss { nu0 $((${2:-0}+$(date -d$(sf1 $1) +%s))); }                      
 function bwc { bwd|grep -Ex "$(echo ${!b[@]}|tr ' ' '|')"|wc -l; }                                                                                            # get my # validators
 function bwd { local n=$((($(date +%s)-s31)/(12*32)));for n in $n $((n+1));do curl -sH "$s28" -X POST -d"[$(echo ${!b[@]}|tr ' ' ',')]" "$s32/sync/$n";curl -sH "$s28" -X GET "$s32/proposer/$n";done 2>$p03|jq -r "$s35"; }
 function bro { [[ -f $p12 ]] || return;dts;bb0;bnn;swn "$(printf 'R%03i %2s %3i' $1 ${2:-$ok} $(bi2) 2>$p03) $(dnn)" >> $p12; }                               # log restart info
+function vro { [[ -f $p49 ]] || return;dts;        swn "$(printf 'R%03i %2s %3s' $1 ${2:-$ok} 2>$p03) $(dnn)" >> $p49; }                               # log restart info
 function ts1 { [[ $(ls $1.* 2>$p03|wc -l) -gt 0 ]]; }
 function ts0 { [[ $(ls $1.* 2>$p03|wc -l) -eq 0 ]]; }
 function tsb { [[ $(bwc) -gt 0 ]]; }
@@ -254,9 +255,24 @@ function brs {
     if [[ $2 = RB ]];then bro $n $2;gps;ups;sex reboot;else sex "$s03 $s12";[[ $2 = VC ]] && sex "$s03 $s13";ssf 50 $p42;bro $n $2;fi
   fi;done;rm -f $p50 $p42.*
 }
+function vrs {
+  tsi $p46 && return;touch $p46.a$(stg);ssw $1 $p46;tso $p46 && return;local t=$(sng);local f=$p46.i$(stg);touch $f;local n=0;paf
+  while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p46 $t;if tip $t;then rm $f;sex "$s02 $s13";dmr;sex "$s03 $s13";vro $n SR;fi;done;rm -f $p50 $p46.*
+}
+function brz {
+  tsi $p42 && return;touch $p50;touch $p42.a$(stg);if [[ $3 -gt 0 ]];then ssf $3 $p42;tso $p42 && return;touch $p42.b$(stg);fi;ssw $4 $p42;tso $p42 && return
+  local t=$(sng);local f=$p42.i$(stg);touch $f;local n=0;paf;while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p42 $t
+  if tip $t;then rm $f;bv0;echo snp $s12 $1 $bpri $bprf                         ;[[ $2 = VC ]] && echo sex "$s02 $s13"
+    if [[ $2 = RB ]];then echo bro $n $2;echo gps;echo ups;echo sex reboot;else echo sex "$s03 $s12";[[ $2 = VC ]] && echo sex "$s03 $s13";ssf 50 $p42;echo bro $n $2;fi
+  fi;done;rm -f $p50 $p42.*
+}
+function vrz {
+  tsi $p46 && return;touch $p46.a$(stg);ssw $1 $p46;tso $p46 && return;local t=$(sng);local f=$p46.i$(stg);touch $f;local n=0;paf
+  while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p46 $t;if tip $t;then rm $f;echo sex "$s02 $s13";echo dmr;echo sex "$s03 $s13";echo vro $n SR;fi;done;rm -f $p50 $p46.*
+}
 function vsb {
   tsi $p46 && return;touch $p50;touch $p46.a$(stg);ssw $1 $p46;tso $p46 && return;local t=$(sng);local f=$p46.i$(stg);touch $f;local n=0;paf
-  while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p46 $t;if tip $t;then cex "$s02 $s12";cex "$s02 $s13";rm $f;fi;done;rm -f $p50 $p46.*
+  while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p46 $t;if tip $t;then rm $f;cex "$s02 $s12";cex "$s02 $s13";fi;done;rm -f $p50 $p46.*
 }
 function brh { head -n${1:-0} $p12; }                                                                                                                         # new cc head lines
 function brl {                                                                                                                                                # recalculate cc logs
@@ -499,6 +515,8 @@ function irb { rm $p39.*.hours 2>$p03;if trb $1;then if v2t;then brs 0 RB $s45 $
 [[ $1 = grb ]] && { grs      0  RB   ${2:-$s37}; }
 [[ $1 = urb ]] && { urs      0  RB   ${2:-$s37}; }
 [[ $1 = brb ]] && { brs      0  RB 0 ${2:-$s37}; }
+[[ $1 = brz ]] && { brz ${2:-0} BN 0 ${3:-$s39}; }
+[[ $1 = vrz ]] && { vrz              ${2:-$s40}; }
 [[ $1 = ivk ]] && { ivk              ${2:-$s38}; }
 [[ $1 = ul  ]] && { ul0;swn "$m"; }
 [[ $1 = ulf ]] && { ul0;swn "$m" >> $p11;[[ $ok != OK ]] && urs 0 $ok $s40; }
