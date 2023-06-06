@@ -75,6 +75,7 @@ p47='/etc/apt/preferences.d'
 p48='/etc/default/grub'
 p49="$p02/validator.log"
 p50="$p02/sprint"
+p51='/etc/apt/apt.conf.d/20auto-upgrades'
 
 r00='s%^ *#*NTP=.*$%NTP=192.168.8.28 ntp02.oal.ul.pt ntp04.oal.ul.pt time.google.com time.cloudflare.com time.facebook.com%i'
 r01='s%^ *ENABLED=.*$%ENABLED=0%i'
@@ -236,6 +237,10 @@ r52="$r30.*Chain.head"
 r53='latency:'
 r54='.nvme_smart_health_information_log.temperature_sensors|join(" ")'
 r55='s%GRUB_CMDLINE_LINUX_DEFAULT *= *"\(..*\)"%GRUB_CMDLINE_LINUX_DEFAULT="\1 pcie_aspm=off"%;s%GRUB_CMDLINE_LINUX_DEFAULT *= *""%GRUB_CMDLINE_LINUX_DEFAULT="pcie_aspm=off"%'
+r56="s%APT::Periodic::Update-Package-Lists *\".*\";%APT::Periodic::Update-Package-Lists \"1\";%"
+r56="${r56};s%APT::Periodic::Unattended-Upgrade *\".*\";%APT::Periodic::Unattended-Upgrade \"1\";%"
+r56="${r56};/APT::Periodic::Unattended-Upgrade/a \\"
+r56="${r56}APT::Periodic::AutocleanInterval \"1\";"
 
 function sst { $s01 $1 2>$p03|grep "${2:-inactive\|failed}" 2>$p03; }
 function swb { echo -e "\n\e[5m${1^^}\e[25m\n"; }
