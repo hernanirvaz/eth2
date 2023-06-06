@@ -66,7 +66,7 @@ cc1 $p24 "$r04";cc2 $p24 "$r05"             ;cmw $p24 755 root                  
 cc1 $p25 "$r04"                             ;cmw $p25 755 root                                                                                                # help-text delete
 cc1 $p27 "s%^ *$p01%# $p01%";cc2 $p27 "$r14";cmw $p27 644 root                                                                                                # new logrotate add
 [[ -x $p28 ]] && sex "chmod -x $p28"                                                                                                                          # motd overlayroot unexecute
-nex "$s00 daemon-reload";sudo dpkg-reconfigure -plow unattended-upgrades;sex "$s06 unattended-upgrades";systemctl status unattended-upgrades                  # unattended upgrades
+nex "$s00 daemon-reload";sudo dpkg-reconfigure -plow unattended-upgrades;sex "$s06 unattended-upgrades"                                                       # unattended upgrades
 swn 'sudo netplan apply'
 swn 'AND reboot'
 if [[ $cunm = $znm1 || $cunm = $znm4 || $cunm = $vnm1 ]];then swb 'AND INSTALAR EL (t8geth, t8besu)';fi
