@@ -87,8 +87,8 @@ function sso {
 function grs {                                                                                                                                                # el gap restart
   tsf $p40 && return;touch $p40.a$(stg);ssw $3 $p40;tsf $p40 || return
   local t=$(sng);local f=$p40.i$(stg);touch $f;local n=0;paf;while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p40 $t
-  if tip $t;then rm $f;gv0;[[ $2 = RB ]] && gq0;snp $s10 $1 10 50                                                                                             # change peers/stop el
-    if [[ $2 = RB ]];then ero $n $p10 $2;sex reboot;else sex "$s03 $s10";ssf 50 $p40;gq0;ero $n $p10 $2;fi                                                    # reboot/start el
+  if tip $t;then rm $f;gv0;[[ $2 = RB ]] && gq0;snp $s10 $1 10 50
+    if [[ $2 = RB ]];then ero $n $p10 $2;sex reboot;else sex "$s03 $s10";ssf 50 $p40;gq0;ero $n $p10 $2;fi
   fi;done;rm -f $p50 $p40.*
 }
 function gdi { if [[ $1 -gt 0 ]];then l4=$(rl4 $r35|tail -n$1);else l4=$(rl4 $r35);fi;nu3 3 0 $(lg2 "$r42"); }                                                # get delay imported
@@ -112,8 +112,8 @@ function gl0 {                                                                  
 function urs {                                                                                                                                                # el gap restart
   tsf $p41 && return;touch $p41.a$(stg);ssw $3 $p41;tsf $p41 || return
   local t=$(sng);local f=$p41.i$(stg);touch $f;local n=0;paf;while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p41 $t
-  if tip $t;then rm $f;uv0;[[ $2 = RB ]] && uq0;snp $s11 $1 10 50                                                                                             # change peers/stop el
-    if [[ $2 = RB ]];then ero $n $p11 $2;sex reboot;else sex "$s03 $s11";ssf 50 $p41;uq0;ero $n $p11 $2;fi                                                    # reboot/start el
+  if tip $t;then rm $f;uv0;[[ $2 = RB ]] && uq0;snp $s11 $1 10 50
+    if [[ $2 = RB ]];then ero $n $p11 $2;sex reboot;else sex "$s03 $s11";ssf 50 $p41;uq0;ero $n $p11 $2;fi
   fi;done;rm -f $p50 $p41.*
 }
 function udi { if [[ $1 -gt 0 ]];then l4=$(rl4 $r35|tail -n$1);else l4=$(rl4 $r35);fi;nu3 3 0 $(lg2 "$r43"); }                                                # get delay imported
@@ -252,8 +252,7 @@ function brs {
   fi;done;rm -f $p50 $p42.*
 }
 function vsb {
-  tsf $p46 && return;tsb && return;touch $p50;touch $p42.a$(stg);ssw $1 $p46;tsf $p46 || return;tsb && return
-  local t=$(sng);local f=$p46.i$(stg);touch $f;local n=0;paf
+  tsf $p46 && return;tsb && return;touch $p50;touch $p46.a$(stg);ssw $1 $p46;tsf $p46 || return;tsb && return;local t=$(sng);local f=$p46.i$(stg);touch $f;local n=0;paf
   while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p46 $t;if tip $t;then cex "$s02 $s12";cex "$s02 $s13";rm $f;fi;done;rm -f $p50 $p46.*
 }
 function brh { head -n${1:-0} $p12; }                                                                                                                         # new cc head lines
