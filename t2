@@ -28,43 +28,43 @@ swu 'ADDITIONAL LINUX'   ;sex 'apt install python3-pip net-tools apt-listchanges
 swu 'UNATTENDED UPGRADES';cex 'apt install unattended-upgrades update-notifier-common -y'
 swu 'LINUX CONFIGS'
 if [[ $cunm = $znm2 ]];then
-  cex "$s07 set-ntp no"                                                                                                                                       # use ntp       (sophisticated)
+  cex "$s07 set-ntp no"                                                                                                                                       # use ntp (sophisticated)
   cex 'apt install apt-transport-https curl ntp -y'                                                                                                           # install dependencies & ntp
-  cc1 $p31 "$r09"                           ;cmw $p31 644 root;nex "$s06 ntp"                                                                                 # ntp config for time synchronization
+  cc1 $p31 "$r09"              ;cmw $p31 644 root;nex "$s06 ntp"                                                                                              # ntp config for time synchronization
   echo deb https://downloads.plex.tv/repo/deb public main | sudo tee /etc/apt/sources.list.d/plexmediaserver.list                                             # add apt source for plex
   curl https://downloads.plex.tv/plex-keys/PlexSign.key | sudo apt-key add -;sex 'apt update'                                                                 # add apt key    for plex
   cex 'apt install nginx plexmediaserver transmission-cli transmission-common transmission-daemon -y'                                                         # install nginx/plex/transmission
   sex "usermod -a -G debian-transmission eu";sex "mkdir -p /sata/downloads";cmw /sata/downloads 775 debian-transmission                                       # prepare downloads
-  cc4 $p32 "$r20"                           ;cmw $p32 644 root               ;sex "$s00 reload $s22"                                                          # nginx config for plex
-  cc1 $p33 "$r49"                           ;cmw $p33 600 debian-transmission;sex "$s00 reload $s15"                                                          # transmission config
+  cc4 $p32 "$r20"              ;cmw $p32 644 root               ;sex "$s00 reload $s22"                                                                       # nginx config for plex
+  cc1 $p33 "$r49"              ;cmw $p33 600 debian-transmission;sex "$s00 reload $s15"                                                                       # transmission config
 else
   cex "$s07 set-ntp on"                                                                                                                                       # use timesyncd (lightweight)
 fi
 if [[ $cust = hrv ]];then
   swu 'ROOTKIT SCANNER';sex 'apt install lm-sensors chkrootkit bind9 bind9utils -y';cex 'chkrootkit'
   sex "$s07 set-timezone Europe/Lisbon"
-  cc1 $p20 "$r00"                                                                                                                                             # my      time servers
-  cc1 $p21 "$r01"                           ;cmw $p21 644 root                                                                                                # motd-news disable
-  cc4 $p22 "$r16"                           ;cmw $p22 644 root                                                                                                # new netplan
-  cc1 $p26 "$r06"                           ;cmw $p26 755 root                                                                                                # grub timeout
-  cc1 $p48 "$r55"                           ;cmw $p48 644 root                                                                                                # grub no PCIe active state power management
-  cc1 $p34 "$r22"                           ;cmw $p34 644 root                                                                                                # hosts config
-  cc4 $p35 "$r21"                           ;cmw $p35 644 root                                                                                                # ssh config
-  cc3 $p29 "$r08" "$r15"                    ;cmw $p29 644 root bind                                                                                           # named my options
-  cc1 $p30 "$r02"                           ;cmw $p30 644 root                                                                                                # use only ipv4
-  cc1 $p37 "$r29;$r50;$r51"                 ;cmw $p37 644 root                                                                                                # no swap - bad for IOPS
+  cc1 $p20 "$r00"                                                                                                                                             # my time servers
+  cc1 $p21 "$r01"              ;cmw $p21 644 root                                                                                                             # motd-news disable
+  cc4 $p22 "$r16"              ;cmw $p22 644 root                                                                                                             # new netplan
+  cc1 $p26 "$r06"              ;cmw $p26 755 root                                                                                                             # grub timeout
+  cc1 $p48 "$r55"              ;cmw $p48 644 root                                                                                                             # grub no PCIe active state power management
+  cc1 $p34 "$r22"              ;cmw $p34 644 root                                                                                                             # hosts config
+  cc4 $p35 "$r21"              ;cmw $p35 644 root                                                                                                             # ssh config
+  cc3 $p29 "$r08" "$r15"       ;cmw $p29 644 root bind                                                                                                        # named my options
+  cc1 $p30 "$r02"              ;cmw $p30 644 root                                                                                                             # use only ipv4
+  cc1 $p37 "$r29;$r50;$r51"    ;cmw $p37 644 root                                                                                                             # no swap - bad for IOPS
   nex 'update-grub'
   t6 spd;t6 sea;nex "$s02 systemd-resolved";nex "$s03 systemd-resolved"                                                                                       # DNS stop & start
 else
   sex "$s07 set-timezone Europe/Berlin"
   cc1 $p20 "$r13"                                                                                                                                             # general time servers
   nex "mv -f /etc/motd $p02/motd.sav"                                                                                                                         # no contabo info
-fi                                          ;cmw $p20 644 root;nex "$s06 $s19"                                                                                # timesyncd cmod & restart
-cc1 $p23 "$r03"                             ;cmw $p23 644 root                                                                                                # unattended-upgrades
-cc1 $p51 "$r56"                             ;cmw $p51 644 root                                                                                                # unattended-upgrades
-cc1 $p24 "$r04";cc2 $p24 "$r05"             ;cmw $p24 755 root                                                                                                # header add my motd
-cc1 $p25 "$r04"                             ;cmw $p25 755 root                                                                                                # help-text delete
-cc1 $p27 "s%^ *$p01%# $p01%";cc2 $p27 "$r14";cmw $p27 644 root                                                                                                # new logrotate add
+fi                             ;cmw $p20 644 root;nex "$s06 $s19"                                                                                             # timesyncd cmod & restart
+cc1 $p23 "$r03"                ;cmw $p23 644 root                                                                                                             # unattended-upgrades
+cc1 $p51 "$r56"                ;cmw $p51 644 root                                                                                                             # unattended-upgrades
+cc1 $p24 "$r04";cc2 $p24 "$r05";cmw $p24 755 root                                                                                                             # header add my motd
+cc1 $p25 "$r04"                ;cmw $p25 755 root                                                                                                             # help-text delete
+cc1 $p27 "$r57";cc2 $p27 "$r14";cmw $p27 644 root                                                                                                             # new logrotate add
 [[ -x $p28 ]] && sex "chmod -x $p28"                                                                                                                          # motd overlayroot unexecute
 nex "$s00 daemon-reload";sudo dpkg-reconfigure -plow unattended-upgrades;sex "$s06 unattended-upgrades"                                                       # unattended upgrades
 swn 'sudo netplan apply'

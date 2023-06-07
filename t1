@@ -241,6 +241,7 @@ r56="s%APT::Periodic::Update-Package-Lists.*$%APT::Periodic::Update-Package-List
 r56="${r56};s%APT::Periodic::Unattended-Upgrade.*$%APT::Periodic::Unattended-Upgrade \"1\";%i"
 r56="${r56};/APT::Periodic::Unattended-Upgrade/a \\"
 r56="${r56}APT::Periodic::AutocleanInterval \"1\";"
+r57="s%^ *$p01%# $p01%"
 
 function sst { $s01 $1 2>$p03|grep "${2:-inactive\|failed}" 2>$p03; }
 function swb { echo -e "\n\e[5m${1^^}\e[25m\n"; }
