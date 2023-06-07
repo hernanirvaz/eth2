@@ -65,7 +65,7 @@ function sf2 { printf %i ${2:-24}; }                                            
 function sft { echo $(sf1) $1 $2$(cpf); }                                                                                                                     # print restart info line
 function smn { local g=${1:-24}                  ;nu0 $((g>360?360:g<24?24:g)); }                                                                             # get max/min seconds to future (12x30/24)
 function sfn { local g=$(($(bss $1)-$(date +%s)));nu0 $((g>3?g:3))            ; }                                                                             # get min seconds to future
-function ssf { [[ $1 -gt 0 ]] || return;local f=$2.s$(stg $1);touch $f;[[ -f $p50 ]] && echo $(sf1) ${3:-$(date +%H:%M:%S)} ${4:-00}, $(basename $f);sleep $1s; }
+function ssf { [[ $1 -gt 0 ]] || return;local f=$2.s$(stg $1);touch $f;[[ -f $p50 ]] && sft ${3:-$(date +%H:%M:%S)} ${4:-00};sleep $1s; }
 function ssw { while :;do local t=$(sng);if [[ $(sf2 $t) -lt $1 || 24 -ge $(sfn $t) ]];then ssf $(smn $(sfn $t)) $2 $t;else break;fi;ts0 $2 && break;done; }
 function snn {
   if [[ $# -gt 0 ]];then
@@ -240,8 +240,8 @@ function bss { nu0 $((${2:-0}+$(date -d$(sf1 $1) +%s))); }                      
 #function bsc { fs4 $bpid].*INFO $r32 99|grep Sync\ committee|wc -l; }
 function bwc { bwd|grep -Ex "$(echo ${!b[@]}|tr ' ' '|')"|wc -l; }                                                                                            # get my # validators
 function bwd { local n=$((($(date +%s)-s31)/(12*32)));for n in $n $((n+1));do curl -sH "$s28" -X POST -d"[$(echo ${!b[@]}|tr ' ' ',')]" "$s32/sync/$n";curl -sH "$s28" -X GET "$s32/proposer/$n";done 2>$p03|jq -r "$s35"; }
-function bro { [[ -f $p12 ]] || return;dts;bb0;bnn;swn "$(printf 'R%03i %2s %3i' $1 ${2:-$ok} $(bi2) 2>$p03) $(dnn)" >> $p12; }                               # log restart info
-function vro { [[ -f $p49 ]] || return;dts;        swn "$(printf 'R%03i %2s %3s' $1 ${2:-$ok} 2>$p03) $(dnn)" >> $p49; }                               # log restart info
+function bro { [[ -f $p12 ]] || return;dts;bb0;bnn;swn "$(printf 'R%03i %2s %3i' $1 ${2:-$ok} $(bi2) 2>$p03) $(dnn)" >> $p12; }
+function vro { [[ -f $p49 ]] || return;dts;        swn "$(printf 'R%03i %2s     %10s %5s' $1 ${2:-$ok} $dt 2>$p03)"  >> $p49; }
 function ts1 { [[ $(ls $1.* 2>$p03|wc -l) -gt 0 ]]; }
 function ts0 { [[ $(ls $1.* 2>$p03|wc -l) -eq 0 ]]; }
 function tsb { [[ $(bwc) -gt 0 ]]; }
@@ -258,13 +258,6 @@ function brs {
 function vrs {
   tsi $p46 && return;touch $p50;touch $p46.a$(stg);ssw $1 $p46;tso $p46 && return;local t=$(sng);local f=$p46.i$(stg);touch $f;local n=0;paf
   while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p46 $t;if tip $t;then rm $f;cex "$s02 $s13";dmr;cex "$s03 $s13";vro $n SR;fi;done;rm -f $p50 $p46.*
-}
-function brz {
-  tsi $p42 && return;touch $p50;touch $p42.a$(stg);if [[ $3 -gt 0 ]];then ssf $3 $p42;tso $p42 && return;touch $p42.b$(stg);fi;ssw $4 $p42;tso $p42 && return
-  local t=$(sng);local f=$p42.i$(stg);touch $f;local n=0;paf;while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p42 $t
-  if tip $t;then rm $f;bv0;echo snp $s12 $1 $bpri $bprf                         ;[[ $2 = VC ]] && echo sex "$s02 $s13"
-    if [[ $2 = RB ]];then echo bro $n $2;echo gps;echo ups;echo sex reboot;else echo sex "$s03 $s12";[[ $2 = VC ]] && echo sex "$s03 $s13";ssf 50 $p42;echo bro $n $2;fi
-  fi;done;rm -f $p50 $p42.*
 }
 function vsb {
   tsi $p46 && return;touch $p50;touch $p46.a$(stg);ssw $1 $p46;tso $p46 && return;local t=$(sng);local f=$p46.i$(stg);touch $f;local n=0;paf
@@ -294,7 +287,7 @@ function bsl {                                                                  
 function bdw { [[ -f $1 ]] || return;cp $1 $1.o;grep -v $2 $1.o > $1;grep $2 $1.o > $1.d; }                                                                   # work to delete cc log day
 function bdl { local d=$(pt0 $1 sai);[[ $d = sai ]] && return;bdw $p12 $d;bdw $p13 $d; }                                                                      #         delete cc log day
 function wst { echo $@|sed 's%[^: ]*: *%%g;s%inactive%off%;s%active%on%' 2>$p03; }                                                                            # get ufw info
-function cpf { local f='';local t='';for t in $(ls $p02/*.restart.* 2>$p03|sort -t. -k4n);do local f="$f, $(basename $t)";done;printf "$f"; }             # get list restart basenames
+function cpf { local f='';local t='';for t in $(ls $p02/*.rs.* 2>$p03|sort -t. -k4n);do local f="$f, $(basename $t)";done;printf "$f"; }                      # get list restart basenames
 function sm0 { local s='smartctl --json=c -x';pex "$s /dev/nvme0"|jq -r "$r54" 2>$p03; }
 function sm1 { local s='smartctl --json=c -x';pex "$s /dev/nvme0"|jq -r "$r54" 2>$p03;pex "$s /dev/nvme1"|jq -r "$r54" 2>$p03;pex "$s /dev/nvme2"|jq -r "$r54" 2>$p03; }
 function sm2 { local s=$(pex "smartctl --json=c -x /dev/sda");echo $s|jq -r "$r40" 2>$p03;echo $s|jq -r "$r41" 2>$p03; }
@@ -512,7 +505,6 @@ function irb { rm $p39.*.hours 2>$p03;if trb $1;then if v2t;then brs 0 RB $s45 $
 [[ $1 = grb ]] && { grs      0  RB   ${2:-$s37}; }
 [[ $1 = urb ]] && { urs      0  RB   ${2:-$s37}; }
 [[ $1 = brb ]] && { brs      0  RB 0 ${2:-$s37}; }
-[[ $1 = brz ]] && { brz ${2:-0} BN 0 ${3:-$s39}; }
 [[ $1 = ivk ]] && { ivk              ${2:-$s38}; }
 [[ $1 = ul  ]] && { ul0;swn "$m"; }
 [[ $1 = ulf ]] && { ul0;swn "$m" >> $p11;[[ $ok != OK ]] && urs 0 $ok $s40; }
