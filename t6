@@ -432,10 +432,9 @@ function v1t { [[ $cunm = $nxvc ]]; }                                           
 function v2t { [[ $cunm = $cuvc ]]; }                                                                                                                         # vc current  test
 function v3t { [[ $cuvc = $nxvc ]]; }                                                                                                                         # vc transfer test
 function v4t { if v2t;then local e=$(nu0 $(ss4 $s13 $r25 nodes ,));else local e=$(ssh $(snc $cuvc) "export H=$H;~/eth2/t6 cci ,");fi;[[ $cunm = $(sni $e) ]]; }
-function vsp { local f=$p02/$(basename $p18);sex "cp $p18 $p02";cmw $f 666 eth;scp $f $(snc $nxvc):~;sex "rm $f"; }                                           # prep slash db
 function tvc {
-  v3t && return;swn "$s24";if v2t && v0t;then swn "TRANSFERIR VC -> $nxvc (SIM/nao)?";else return;fi;local rsp=nao;read rsp
-  if [[ $rsp = SIM && ! -f $p05/vc_slash && ! -f $p05/vc_lock && -f $p05/vc_keys ]];then vp;vd;swu "COPY SLASH -> $nxvc";vsp;fi                               # vc stop/disable & prep slash db
+  swn "$s24";v3t && return;if v2t && v0t;then swn "TRANSFERIR VC -> $(snc $nxvc) (SIM/nao)?";else return;fi;local rsp=nao;read rsp
+  if [[ $rsp = SIM && ! -f $p05/vc_slash && ! -f $p05/vc_lock && -f $p05/vc_keys ]];then vp;vd;swu "COPY SLASH -> $nxvc";local f=$p02/$(basename $p18);sex "cp $p18 $p02";cmw $f 666 eth;scp $f $(snc $nxvc):~;sex "rm $f";fi
 }
 function svr { local t='';for t in $(printf '%s\n' $@|sort -u);do curl -sX GET "$s33=$t"|sed -n "$r23";done; }                                                # show mev validator registration
 function mvr { if [[ $(ls $p19/key*.json 2>$p03) ]];then svr $(sed -n "$r28" $p19/key*.json 2>$p03);else svr ${b[@]};fi; }                                    # choose validator keys
@@ -447,9 +446,7 @@ function ibk {
 function ivk {
   v2t && [[ ! -f $p05/vc_lock && -d $p19 && $(ls $p19 2>$p03) ]] || return;vsb $1;[[ $(sst $s12) ]] && ibk
   if [[ $(sst $s13) ]];then
-    swb 'IMPORTAR CHAVES';sex "chown -R $meeu:$meeu $p17";cmw $p17 755;local f=$p02/key.txt;echo $K > $f
-    $p00/lighthouse --datadir $p05 account validator import --reuse-password --password-file $f --directory $p19
-    rm -f $f;sex "chown -R eth3:eth3 $p17";cmw $p17 700
+    swb 'IMPORTAR CHAVES';sex "chown -R $meeu:$meeu $p17";cmw $p17 755;imk;sex "chown -R eth3:eth3 $p17";cmw $p17 700
     [[ -f $p05/vc_lock ]] || cex "$s03 $s13";[[ -f $p12 ]] && { dts;swn "$(printf 'BSRV VK %3i %10s %5s' $(ls $p19 2>$p03|wc -l) $dt 2>$p03)" >> $p12; }
   fi
 }
