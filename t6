@@ -26,9 +26,8 @@ function fs2 { pex "grep -v ${1:-$r34}     $p01"; }                             
 function fs3 { fs0 $1 $2|lg0 .*$1 ; }                                                                                                                         # get peers    syslog lines
 function fs4 { fs0 $1 $2|tail -n$3; }                                                                                                                         # get specific syslog lines
 function fs5 { fs2      |tail -n300|grep Core.*temperature; }                                                                                                 # get tail cpu syslog lines
-function fl0 { if [[ $1 ]];then grep -i "^[a-z][a-z][a-z]  *[0-9][0-9]*  *$1";else grep -i  'error'    ;fi; }                                                 # filter error    log lines
-function fl1 { if [[ $1 ]];then grep -i "^[a-z][a-z][a-z]  *[0-9][0-9]*  *$1";else grep -iv '[ =]INFO ';fi; }                                                 # filter ^INFO    log lines
-function fl2 { if [[ $1 ]];then grep -i "^[a-z][a-z][a-z]  *[0-9][0-9]*  *$1";else grep -iv 'success'  ;fi; }                                                 # filter ^success log lines
+function fle { if [[ $3 ]];then grep -i "^[a-z][a-z][a-z]  *[0-9][0-9]*  *$3";else grep -i  "$1";fi|grep -iv "$2"; }                                          # filter error    log lines
+function fln { if [[ $2 ]];then grep -i "^[a-z][a-z][a-z]  *[0-9][0-9]*  *$2";else grep -iv "$1";fi; }                                                        # filter ^INFO    log lines
 function pt0 { until [[ $# -le 1 || $1 =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]];do shift;done;printf %s $1; }                                                       # yyyy-mm-dd test
 function pt1 { until [[ $# -le 1 || $1 =~ ^[0-9]{2}:[0-9]{2}$          ]];do shift;done;printf %s $1; }                                                       # hh:mm      test
 function pt2 { until [[ $# -le 1 || $1 =~ ^[0-9]+$                     ]];do shift;done;printf %i $1; }                                                       # integer    test
@@ -297,7 +296,7 @@ function tmp {
   [[ $1$d$e || $(nu3 1 0 $l) -ge 60 || $(nu3 1 0 $g) -ge 50 ]] || return;[[ $d ]] && local d="throttled: $d";[[ $e ]] && local e="normal: $e"
   swn "TEMP $(printf '%5.1fC %10s %5s ssd: %.1fC %s %s' $(nu3 1 1 $l) $dt $(nu3 1 1 $g) $d $e 2>$p03)"                                                        # TEMP cpu/ssd info
 }
-function nus { fs2|fl0|grep usb|wc -l; }
+function nus { fs2|fle "$r61" "$r64"|grep usb|wc -l; }
 function ncp { fs5|wc -l             ; }
 function cpe {                                                                                                                                                # system status
   local e='NO';[[ $($s07|sed -n 's%.*synchronized: \([a-z]*\) *%\1%p') = yes ]] && local e='OK';dts
@@ -307,9 +306,9 @@ function cpe {                                                                  
   m="INFO$(printf '%3i %3i %10s %5s' $(nus) $(ncp) $dt 2>$p03)"                                                                                               # usb/cpu erros count
   m="$m usb $e, turbo $d, ufw $(wst $(pex 'ufw status'|grep Status:))"                                                                                        # usb/cpu/ufw info
   m="$m, uptime:$(uptime|sed 's%[0-9]*:[0-9]*:[0-9]*%%;s%[0-9]* users*,%%;s% average\([^,]*\).*%\1%;s%  *% %g')";swn "$m"                                     # uptime/load info
-  local l=$(fs2|fl0|wc -l);local n=$(fs1|fl1|wc -l)
-  local e=$(fs2|fl0|tail -n1|sed 's%.*hrv-zotac[0-9] *\(.*\)%\1%;s%  *% %g'                         |cut -c1-70)
-  local d=$(fs1|fl1|tail -n1|sed 's%.*[0-9]*:[0-9]*:[0-9]*\.[0-9][0-9][0-9]]* *\(.*\)%\1%;s%  *% %g'|cut -c1-70)
+  local l=$(fs2|fle "$r61" "$r64"|wc -l);local n=$(fs1|fln "$r62"|wc -l)
+  local e=$(fs2|fle "$r61" "$r64"|tail -n1|sed 's%.*hrv-zotac[0-9] *\(.*\)%\1%;s%  *% %g'                  |cut -c1-70)
+  local d=$(fs1|fln "$r62"|tail -n1|sed 's%.*[0-9]*:[0-9]*:[0-9]*\.[0-9][0-9][0-9]]* *\(.*\)%\1%;s%  *% %g'|cut -c1-70)
   m="ERRO$(printf '%3i %3i' $l $n 2>$p03) $dt";[[ $l -gt 0 ]] && m="$m system: $e";[[ $n -gt 0 ]] && m="$m ethrum: $d";(( l+n )) && swn "$m"                  # sys/eth errors info
   m='';trf && m="$m, reboot $(($(sra)/60/60)) hours ago$(cpf)";[[ $(bwc) -gt 0 ]] && m="$m, sync/propose duties on";[[ $m ]] && swn "INFO        $dt${m#*,}"  # reboot/duties info
   [[ $(nu0 $(/usr/lib/update-notifier/apt-check 2>&1|sed 's%;% %g')) -gt 0 ]] && { echo;apt list --upgradable; }
@@ -547,16 +546,15 @@ function irb { rm $p39.*.hours 2>$p03;if trb $1;then if v2t;then brs 0 RB $s45 $
 [[ $1 = rsh ]] && { echo;sft $(sng); }
 [[ $1 = lp  ]] && { netstat -tulpn; }
 # outros journal system/lighthouse
-[[ $1 = sl  ]] && { fs2                 |fl0 $2; }
-[[ $1 = ci  ]] && { rl1                 |fl1 $2; }
-[[ $1 = vi  ]] && { rl2                 |fl1 $2; }
-[[ $1 = el  ]] && { fs1 "\($r30\|$r31\)"|fl1 $2|sed "s%^.*$cunm *%%"; }
-[[ $1 = al  ]] && { fs0 "\($r47\|$r48\)"|fl2 $2|sed "s%$cunm lighthouse%lh%;s%: [a-z]* [0-9]* [0-9]*:[0-9]*:[0-9]*\.% %i"; }
-[[ $1 = cl  ]] && { fs1 $r32            |fl1 $2|sed "s%$cunm lighthouse%lh%;s%: [a-z]* [0-9]* [0-9]*:[0-9]*:[0-9]*\.% %i"; }
-[[ $1 = clp ]] && { fs0 peers:                 |sed "s%$cunm lighthouse%lh%;s%: [a-z]* [0-9]* [0-9]*:[0-9]*:[0-9]*\.[0-9]*.*peers:% peers:%i"|grep -v "peers: *$(($(ss5 $s12 target-peers)/10))[0-9]"; }
-#: May 31 02:36:53.001 INFO
-[[ $1 = ml  ]] && { fs1 $r33            |fl1 $2|sed "s%^.*$cunm *%%"; }
-[[ $1 = ll  ]] && { rl3                 |fl1 $2|sed "s%^.*$cunm *%%"; }
+[[ $1 = sl  ]] && { fs2                 |fle "$r61" "$r64" $2; }
+[[ $1 = el  ]] && { fs1 "\($r30\|$r31\)"|fln "$r62" $2|sed "$r60"; }
+[[ $1 = ml  ]] && { fs1 "$r33"          |fln "$r62" $2|sed "$r60"; }
+[[ $1 = cl  ]] && { fs1 "$r32"          |fln "$r62" $2|sed "$r58"; }
+[[ $1 = al  ]] && { fs0 "\($r47\|$r48\)"|fln "$r63" $2|sed "$r58"; }
+[[ $1 = clp ]] && { fs0 peers:                        |sed "$r59"|grep -v "peers: *$(($(ss5 $s12 target-peers)/10))[0-9]"; }
+[[ $1 = ci  ]] && { rl1                 |fln "$r62" $2; }
+[[ $1 = vi  ]] && { rl2                 |fln "$r62" $2; }
+[[ $1 = ll  ]] && { rl3                 |fln "$r62" $2|sed "$r60"; }
 [[ $1 = ws  ]] && { cex 'ufw status numbered'; }
 [[ $1 = wa  ]] && { wa; }
 [[ $1 = we  ]] && { yex 'ufw enable'; }

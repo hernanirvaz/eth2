@@ -242,6 +242,13 @@ r56="${r56};s%APT::Periodic::Unattended-Upgrade.*$%APT::Periodic::Unattended-Upg
 r56="${r56};/APT::Periodic::Unattended-Upgrade/a \\"
 r56="${r56}APT::Periodic::AutocleanInterval \"1\";"
 r57="s%^ *$p01%# $p01%"
+r58="s%$cunm lighthouse%lh%;s%: [a-z]* [0-9]* [0-9]*:[0-9]*:[0-9]*\.% %i"
+r59="s%$cunm lighthouse%lh%;s%: [a-z]* [0-9]* [0-9]*:[0-9]*:[0-9]*\.[0-9]*.*peers:% peers:%i"
+r60="s%^.*$cunm *%%"
+r61='error'
+r62='[ =]INFO '
+r63='success'
+r64='app-snap'
 
 function sst { $s01 $1 2>$p03|grep "${2:-inactive\|failed}" 2>$p03; }
 function swb { echo -e "\n\e[5m${1^^}\e[25m\n"; }
