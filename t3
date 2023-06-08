@@ -80,11 +80,11 @@ else
 	EOF
   sex "mv $s12.service $p04";cmw $p04/$s12.service 644
 fi
-if [[ $cunm != $cuvc || $cunm != $nxvc || -f $p04/$s13.service ]];then
+if [[ ($cunm != $cuvc && $cunm != $nxvc) || -f $p04/$s13.service ]];then
   if [[ -f $p04/$s13.service ]];then swu "vc ja instalado";else swu 'vc NAO PODE SER INSTALADO AQUI';fi
 else
   if [[ $cust = hrv ]];then
-    epcc=" --beacon-nodes http://$int5:5052,http://$zip4:5052"
+    epcc=" --beacon-nodes http://$iip5:5052,http://$zip4:5052"
   else
     epcc=" --beacon-nodes http://$vip1:5052"
   fi
