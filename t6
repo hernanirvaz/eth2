@@ -50,8 +50,8 @@ function dtl { read _ _ _ d0 d1 _ <<< $(bff|tail -n1)          ;dt="$d0 $d1"; } 
 function dnn { printf '%10s %5s node%02i: %2i' $dt $nn $nr 2>$p03; }                                                                                          # get date/nodes info
 function tsy { if [[ $(echo $@|grep false) ]];then printf SYC;else printf NSY;fi; }                                                                           # get el SYN/NSY text
 function els { lg0 .*sgs: $1|tail -n1; }                                                                                                                      # get el last segment
-function era { tail -n${2:-$ehrs} $1 2>$p03|cut -d' ' -f1|sort -u|wc -l; }                                                                                    # get el/cc restart activity
-function eh0 { [[ -f $1 ]] || return;tail -n${2:-$ehrs} $1 2>$p03; }                                                                                          # el historic report
+function era { tail -n${2:-$s53} $1 2>$p03|cut -d' ' -f1|sort -u|wc -l; }                                                                                     # get el/cc restart activity
+function eh0 { [[ -f $1 ]] || return;tail -n${2:-$s53} $1 2>$p03; }                                                                                           # el historic report
 function eb0 { e0=$(fs0 Imported $2|wc -l);ok=OK;[[ $(echo $@|grep false) && ($e0 -eq $(els $1) || $3 -gt 100000) && $(era $1) -eq 1 ]] && ok=BK; }
 function eb1 { nu0 $(((nn*100-nn*60)/100)); } # $nr -lt $(eb1)                                                                                                # get current peers-30%
 function ero { [[ -f $2 ]] || return;dts;swn "$(nu1 R%03i $1) ${3:-RS} SRV $(dnn)" >> $2; }                                                                   # log restart info
@@ -143,13 +143,13 @@ function bf0 { nu0 $((59*z3))                                                   
 function bi0 { nu0 $((zk*9+zz*5+zx))                                                     ; }                                                                  # get delete day idx
 function bi1 { nu0 $(((8*b1+2*b5)/10))                                                   ; }                                                                  # shw imported/observed data
 function bi2 { nu0 $(((z5>400?$(bz0)/z5:0)+(z2>300?$(bw0)/z2:0)+(z4>999?$(bf0)/z4:0)))   ; }                                                                  # get restart idx
-function bdp { nu2 "($1*$pmis+$2*$pmat+$3*$pmah+$4*$pdly)/${5:-1}*$rate/1000000" 7; }                                                                         # get penalty
-function bdr { nu2 "($1*$ratt+$2*$rblk)*$rate/100000000"                         7; }                                                                         # get reward
+function bdp { nu2 "($1*$s48+$2*$s49+$3*$s50+$4*$s51)/${5:-1}*$s55/1000000" 7; }                                                                              # get penalty
+function bdr { nu2 "($1*$s47+$2*$s46)*$s55/100000000"                       7; }                                                                              # get reward
 function bv0 { nn=$(ss5 $s12 target-peers); }                                                                                                                 # set configured peers
-function bs0 { l0=$(fs4 $bpid] $r32 3600); }                                                                                                                  # set last cc log lines
+function bs0 { l0=$(fs4 $s54] $r32 3600); }                                                                                                                   # set last cc log lines
 function bs3 { l3=$(fs0 $r48); }                                                                                                                              # set attesta log lines
 function bs5 { l5=$(echo "$l1"|sed -nEe "s%.+node$g:.+er: +([0-9]+) +([0-9]+) +([0-9]+) +([0-9]+).+%\1\t\2\t\3\t\4%p" 2>$p03); }                              # set penalty errors log lines
-function bb0 { bs0;bs3;bl1;bl2;[[ (1 -eq $(era $p12 $chrs) && $(bi2) -ge 1) || (1 -eq $(era $p12 5) && $(bi2) -ge 5) ]] && ok=BK; }                           # set ok (OK/BK)
+function bb0 { bs0;bs3;bl1;bl2;[[ (1 -eq $(era $p12 $s52) && $(bi2) -ge 1) || (1 -eq $(era $p12 5) && $(bi2) -ge 5) ]] && ok=BK; }                            # set ok (OK/BK)
 function bfl { grep "BEAC.*$1"      2>$p03; }                                                                                                                 # filter cc lines
 function bff { grep "BEAC.*$1" $p12 2>$p03; }                                                                                                                 # filter cc log
 function bnn { snn $(fs3 peers:) $(bpc $(bcl peer_count)); }                                                                                                  # set cur/min/std cc peers
@@ -189,29 +189,29 @@ function bm0 {                                                                  
   [[ -f $p12 ]] || return;bmi;b4=0;dts;bv0;bnn;bs3;bl2;[[ -f $p14 ]] && bm4;lg3 0                                                                             # set vars/arrays
   l1=$(tail -n$(($(nu0 $(bbl))-v[1])) $p12 2>$p03|bfl);[[ $l1 ]] && bm1;bm2;[[ $b2 -eq 0 ]] && boi;bo3;bm5 ${a[$nn]};b7="p$(bcc):"                            # add cc lines & homologous/avg position
 }
-function bm1 { local g=${1:-$bpri};bs5;[[ $l5 ]] && { bkm $g;bzm $g;bxm $g;bwm $g;bcm $g; };((g<bprf)) && bm1 $((g+bprs)); }                                  # recursively sum penalty errors arrays
+function bm1 { local g=${1:-$s56};bs5;[[ $l5 ]] && { bkm $g;bzm $g;bxm $g;bwm $g;bcm $g; };((g<s57)) && bm1 $((g+s58)); }                                     # recursively sum penalty errors arrays
 function bm2 { k[0]=$(($(bnk)));z[0]=$(($(bnz)));x[0]=$(($(bnx)));w[0]=$(($(bnw)));c[0]=$(($(bnc)));a[0]=$(bm3 0);bm7; }                                      # tot err/cnt/penalty arrays
 function bm3 { bdp ${k[$1]} ${z[$1]} ${x[$1]} ${w[$1]} ${c[$1]} ; }                                                                                           # get penalty from paid err arrays
 function bm4 { read -a v <<< $(tail -n1 $p14);bmk;bmz;bmx;bmw;bmc; }                                                                                          # set err/cnt penalty arrays from barqivo
-function bm5 { local g=${2:-$bpri};local n=$1;if ((a[g]<n));then b4=$((g-nn));n=${a[$g]};fi;((g<bprf)) && bm5 $n $((g+bprs)); }                               # set recursively peer change <- min penalties
-function bm6 { local g=${1:-$bpri};k[$g]=0;z[$g]=0;x[$g]=0;w[$g]=0;c[$g]=0;a[$g]=0         ;((g<bprf)) && bm6    $((g+bprs)); }                               # ini recursively penalty arrays
-function bm7 { local g=${1:-$bpri};a[$g]=$(bm3 $g)                                         ;((g<bprf)) && bm7    $((g+bprs)); }                               # avg recursively penalty arrays
-function bcm { local g=${1:-$bpri};((c[g]+=$(echo "$l5"|wc -l 2>$p03)                        )); }                                                            # sum               cnt array
-function bkm { local g=${1:-$bpri};((k[g]+=$((0$(printf '+%i' $(echo "$l5"|cut -f1) 2>$p03))))); }                                                            # sum missing       err array
-function bzm { local g=${1:-$bpri};((z[g]+=$((0$(printf '+%i' $(echo "$l5"|cut -f2) 2>$p03))))); }                                                            # sum failed target err array
-function bxm { local g=${1:-$bpri};((x[g]+=$((0$(printf '+%i' $(echo "$l5"|cut -f3) 2>$p03))))); }                                                            # sum failed head   err array
-function bwm { local g=${1:-$bpri};((w[g]+=$((0$(printf '+%i' $(echo "$l5"|cut -f4) 2>$p03))))); }                                                            # sum delay         err array
-function bmc { local g=${1:-$bpri};local n=${2:-5 };c[$g]=${v[$n]};((g<bprf)) && bmc $((g+bprs)) $((n+1)); }                                                  # set recursively               cnt array
-function bmk { local g=${1:-$bpri};local n=${2:-13};k[$g]=${v[$n]};((g<bprf)) && bmk $((g+bprs)) $((n+1)); }                                                  # set recursively missing       err array
-function bmz { local g=${1:-$bpri};local n=${2:-21};z[$g]=${v[$n]};((g<bprf)) && bmz $((g+bprs)) $((n+1)); }                                                  # set recursively failed target err array
-function bmx { local g=${1:-$bpri};local n=${2:-29};x[$g]=${v[$n]};((g<bprf)) && bmx $((g+bprs)) $((n+1)); }                                                  # set recursively failed head   err array
-function bmw { local g=${1:-$bpri};local n=${2:-37};w[$g]=${v[$n]};((g<bprf)) && bmw $((g+bprs)) $((n+1)); }                                                  # set recursively delay         err array
-function bma { local g=${2:-$bpri};if ((g<=bprf));then bma "$1 $(nu1 %5i ${a[$g]})"      $((g+bprs));else printf "$1";fi; }                                   # sum recursively penalty       avg array
-function bnc { local g=${3:-$bpri};if ((g<=bprf));then bnc "${1:-0}${2:-+}${c[$g]}" "$2" $((g+bprs));else printf "$1";fi; }                                   # sum recursively               cnt array
-function bnk { local g=${3:-$bpri};if ((g<=bprf));then bnk "${1:-0}${2:-+}${k[$g]}" "$2" $((g+bprs));else printf "$1";fi; }                                   # sum recursively missing       err array
-function bnz { local g=${3:-$bpri};if ((g<=bprf));then bnz "${1:-0}${2:-+}${z[$g]}" "$2" $((g+bprs));else printf "$1";fi; }                                   # sum recursively failed target err array
-function bnx { local g=${3:-$bpri};if ((g<=bprf));then bnx "${1:-0}${2:-+}${x[$g]}" "$2" $((g+bprs));else printf "$1";fi; }                                   # sum recursively failed head   err array
-function bnw { local g=${3:-$bpri};if ((g<=bprf));then bnw "${1:-0}${2:-+}${w[$g]}" "$2" $((g+bprs));else printf "$1";fi; }                                   # sum recursively delay         err array
+function bm5 { local g=${2:-$s56};local n=$1;if ((a[g]<n));then b4=$((g-nn));n=${a[$g]};fi;((g<s57)) && bm5 $n $((g+s58)); }                                  # set recursively peer change <- min penalties
+function bm6 { local g=${1:-$s56};k[$g]=0;z[$g]=0;x[$g]=0;w[$g]=0;c[$g]=0;a[$g]=0         ;((g<s57)) && bm6    $((g+s58)); }                                  # ini recursively penalty arrays
+function bm7 { local g=${1:-$s56};a[$g]=$(bm3 $g)                                         ;((g<s57)) && bm7    $((g+s58)); }                                  # avg recursively penalty arrays
+function bcm { local g=${1:-$s56};((c[g]+=$(echo "$l5"|wc -l 2>$p03)                        )); }                                                             # sum               cnt array
+function bkm { local g=${1:-$s56};((k[g]+=$((0$(printf '+%i' $(echo "$l5"|cut -f1) 2>$p03))))); }                                                             # sum missing       err array
+function bzm { local g=${1:-$s56};((z[g]+=$((0$(printf '+%i' $(echo "$l5"|cut -f2) 2>$p03))))); }                                                             # sum failed target err array
+function bxm { local g=${1:-$s56};((x[g]+=$((0$(printf '+%i' $(echo "$l5"|cut -f3) 2>$p03))))); }                                                             # sum failed head   err array
+function bwm { local g=${1:-$s56};((w[g]+=$((0$(printf '+%i' $(echo "$l5"|cut -f4) 2>$p03))))); }                                                             # sum delay         err array
+function bmc { local g=${1:-$s56};local n=${2:-5 };c[$g]=${v[$n]};((g<s57)) && bmc $((g+s58)) $((n+1)); }                                                     # set recursively               cnt array
+function bmk { local g=${1:-$s56};local n=${2:-13};k[$g]=${v[$n]};((g<s57)) && bmk $((g+s58)) $((n+1)); }                                                     # set recursively missing       err array
+function bmz { local g=${1:-$s56};local n=${2:-21};z[$g]=${v[$n]};((g<s57)) && bmz $((g+s58)) $((n+1)); }                                                     # set recursively failed target err array
+function bmx { local g=${1:-$s56};local n=${2:-29};x[$g]=${v[$n]};((g<s57)) && bmx $((g+s58)) $((n+1)); }                                                     # set recursively failed head   err array
+function bmw { local g=${1:-$s56};local n=${2:-37};w[$g]=${v[$n]};((g<s57)) && bmw $((g+s58)) $((n+1)); }                                                     # set recursively delay         err array
+function bma { local g=${2:-$s56};if ((g<=s57));then bma "$1 $(nu1 %5i ${a[$g]})"      $((g+s58));else printf "$1";fi; }                                      # sum recursively penalty       avg array
+function bnc { local g=${3:-$s56};if ((g<=s57));then bnc "${1:-0}${2:-+}${c[$g]}" "$2" $((g+s58));else printf "$1";fi; }                                      # sum recursively               cnt array
+function bnk { local g=${3:-$s56};if ((g<=s57));then bnk "${1:-0}${2:-+}${k[$g]}" "$2" $((g+s58));else printf "$1";fi; }                                      # sum recursively missing       err array
+function bnz { local g=${3:-$s56};if ((g<=s57));then bnz "${1:-0}${2:-+}${z[$g]}" "$2" $((g+s58));else printf "$1";fi; }                                      # sum recursively failed target err array
+function bnx { local g=${3:-$s56};if ((g<=s57));then bnx "${1:-0}${2:-+}${x[$g]}" "$2" $((g+s58));else printf "$1";fi; }                                      # sum recursively failed head   err array
+function bnw { local g=${3:-$s56};if ((g<=s57));then bnw "${1:-0}${2:-+}${w[$g]}" "$2" $((g+s58));else printf "$1";fi; }                                      # sum recursively delay         err array
 function boi {
   unset v;read -a v <<< $(bff|tail -n1);local n=0;local t=${1:-${v[4]}};b6=0;while :;do l2=$(bff $t);if [[ $l2 ]];then break;else t=${v[4]};fi;done           # set homologous lines
   while :;do bo2 ${v[3]};if [[ $b2 -eq 0 && $n -lt 99 ]];then ((n+=1));v[3]=$(date -d "$n days ago $t" +%F);else break;fi;done                                # set homologous position
@@ -221,22 +221,22 @@ function bo1 { echo "$l2"|sort -k10r -k4n; }                                    
 function bo2 { b2=$(bo0|grep -n ${1:-$(date '+%F')}|cut -d: -f1); }                                                                                           # set homologous position
 function bo3 { b3=$(nu3 0 0 $b2 $(lg0 BM $p13)); }                                                                                                            # set homologous avg
 function bo4 { l2=$(bff $d1);bo2 $d0;bo3; }                                                                                                                   # set homologous position/avg
-function bo5 { bo0|head -n$((b6>b2?b6:b2<5?5:b2))|tail -n$((b6>0?b6:b2>chrs?chrs:b2<5?5:b2)); }                                                               # homologous report
+function bo5 { bo0|head -n$((b6>b2?b6:b2<5?5:b2))|tail -n$((b6>0?b6:b2>s52?s52:b2<5?5:b2)); }                                                                 # homologous report
 function bo6 { bo0|grep $(printf node%02i: $1 2>$p03); }                                                                                                      # get homologous node lines sorted
-function boa { local g=${1:-$bpri};local e=$(bo6 $g);printf 'BO%5i %3i\n' $(echo "$e"|wc -l) $g 2>$p03;echo "$e";((g<bprf)) && boa $((g+bprs)); }             # recursively show homologous nodes report
+function boa { local g=${1:-$s56};local e=$(bo6 $g);printf 'BO%5i %3i\n' $(echo "$e"|wc -l) $g 2>$p03;echo "$e";((g<s57)) && boa $((g+s58)); }                # recursively show homologous nodes report
 function bod {
   [[ -f $p12 ]] || return;l2=$(bff 23:58);local e='';while read -a v;do
     if [[ ${v[9]} -ge $1 && $(echo "$l2"|grep ${v[5]}|wc -l) -gt $2 ]];then local e="$e ${v[3]}";l2=$(echo "$l2"|grep -v ${v[3]});fi                          # gather delete info
   done <<< $(bo1);if [[ $e ]];then local e=${e:1};local e=${e// /\\|};bdw $p12 $e;bdw $p13 $e;fi                                                              # perform logs delete
 }
 function bh0 {
-  [[ -f $p12 ]] || return;tail -n${1:-$chrs} $p12;[[ $1 ]] && return;local e='x9 x5  x1 x0 rb  nb c10 er   if  c90'
+  [[ -f $p12 ]] || return;tail -n${1:-$s52} $p12;[[ $1 ]] && return;local e='x9 x5  x1 x0 rb  nb c10 er   if  c90'
   boi;swn "BO $(printf '%4i %3i%34s%29s' $b2 $(echo "$l2"|wc -l) 2>$p03)$e";bo5                                                                               # homologous cc report
   bl0;swn "BL $(printf '%8i%34s%29s'         $(bbl)              2>$p03)$e\n$m";bm0                                                                           # last       cc report
   bmo;swn "BM $(printf '%8i%34s'             $(bml)              2>$p03) i20   i30   i40   i50   i60   i70   i80   avg\n$m"                                   # last cc-daillast y
 }
 function bss { nu0 $((${2:-0}+$(date -d$(sf1 $1) +%s))); }                                                                                                    # get sum secounds + time
-#function bsc { fs4 $bpid].*INFO $r32 99|grep Sync\ committee|wc -l; }
+#function bsc { fs4 $s54].*INFO $r32 99|grep Sync\ committee|wc -l; }
 function bwc { bwd|grep -Ex "$(echo ${!b[@]}|tr ' ' '|')"|wc -l; }                                                                                            # get my # validators
 function bwd { local n=$((($(date +%s)-s31)/(12*32)));for n in $n $((n+1));do curl -sH "$s28" -X POST -d"[$(echo ${!b[@]}|tr ' ' ',')]" "$s32/sync/$n";curl -sH "$s28" -X GET "$s32/proposer/$n";done 2>$p03|jq -r "$s35"; }
 function bro { [[ -f $p12 ]] || return;dts;bb0;bnn;swn "$(printf 'R%03i %2s %3i' $1 ${2:-$ok} $(bi2) 2>$p03) $(dnn)" >> $p12; }
@@ -250,7 +250,7 @@ function tso { ts0 $1 || tsb; }
 function brs {
   tsi $p42 && return;touch $p42.a$(stg);if [[ $3 -gt 0 ]];then ssf $3 $p42;tso $p42 && return;touch $p42.b$(stg);fi;ssw $4 $p42;tso $p42 && return
   local t=$(sng);local f=$p42.i$(stg);touch $f;local n=0;paf;while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p42 $t
-  if tip $t;then rm $f;bv0;snp $s12 $1 $bpri $bprf                         ;[[ $2 = VC ]] && sex "$s02 $s13"
+  if tip $t;then rm $f;bv0;snp $s12 $1 $s56 $s57                         ;[[ $2 = VC ]] && sex "$s02 $s13"
     if [[ $2 = RB ]];then bro $n $2;gps;ups;sex reboot;else sex "$s03 $s12";[[ $2 = VC ]] && sex "$s03 $s13";ssf 50 $p42;bro $n $2;fi
   fi;done;rm -f $p50 $p42.*
 }
@@ -293,7 +293,7 @@ function sm2 { local s=$(pex "smartctl --json=c -x /dev/sda");echo $s|jq -r "$r4
 function tmp {
   local d=$(fs5|grep throttled|head -n1|sed "$r27");local e=$(fs5|grep normal|tail -n1|sed "$r27");local g=''
   if [[ $cunm = $znm4 ]];then local g=$(echo $g $(sm0));fi;if [[ $cunm = $inm5 ]];then local g=$(echo $g $(sm1));else local g=$(echo $g $(sm2));fi;local l=$(sensors 2>$p03|sed -n "$r26")
-  [[ $1$d$e || $(nu3 1 0 $l) -ge 60 || $(nu3 1 0 $g) -ge 50 ]] || return;[[ $d ]] && local d="throttled: $d";[[ $e ]] && local e="normal: $e"
+  [[ $1$d$e || $(nu3 1 0 $l) -ge $s59 || $(nu3 1 0 $g) -ge $s59 ]] || return;[[ $d ]] && local d="throttled: $d";[[ $e ]] && local e="normal: $e"
   swn "TEMP $(printf '%5.1fC %10s %5s ssd: %.1fC %s %s' $(nu3 1 1 $l) $dt $(nu3 1 1 $g) $d $e 2>$p03)"                                                        # TEMP cpu/ssd info
 }
 function nus { fs2|fle "$r61" "$r64"|grep usb|wc -l; }
@@ -462,7 +462,7 @@ function tpm { [[ $nm -ge $((nn-5)) ]]; }
 function trf { [[ -f $p45 ]]; }
 function tbf { [[ -f $p04/$s12.service ]]; }
 function tvf { [[ -f $p04/$s13.service ]]; }
-function tbp { [[ $(era $p12 $chrs) -eq 1 ]] && ( (tpc && tpm && tha && ! tsd && ! trf) || trb); }
+function tbp { [[ $(era $p12 $s52) -eq 1 ]] && ( (tpc && tpm && tha && ! tsd && ! trf) || trb); }
 function btr { if trf;then printf RB  ;else printf PE  ;fi; }
 function btg { if trf;then printf $s37;else printf $s39;fi; }
 function btw { if trf;then printf $s44;else printf $s43;fi; }

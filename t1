@@ -331,6 +331,20 @@ s42='snap remove --purge'
 s43=120
 s44=32400 #  9h
 s45=64800 # 18h
+s46=22238623
+s47=19000
+s48=10000
+s49=18800
+s50=4500
+s51=500
+s52=24
+s53=12
+s54=$($s01 $s12 2>$p03|sed -n 's%.*PID: *\([0-9]*\).*%\1%p')
+s55=4000;[[ $s55 -eq 0 ]] && s55=$(curl -sX GET 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=ETH&convert=EUR&CMC_PRO_API_KEY=3ae5f3df-bd71-489d-a9dd-b626995fba31'|sed 's%.*price.:\([0-9]*\.[0-9]*\).*%\1%')
+s56=20
+s57=80
+s58=10
+s59=70
 
 b[ 11766]='0x93bf23a587f11f9eca329a12ef51296b8a9848af8c0fe61201524b14cb85b0c6fbd3e427501cdfa3b28719bd1ed96fff'
 b[ 11767]='0xb5b0fc3d2ba577f3e2c7324f7ea4306f17eeee0f12c722f4fa83e45bf6c15477d50261bb2666c30f21ab71a26aeeeafb'
@@ -357,18 +371,3 @@ b[449116]='0xae08e5f26f503c36ac554c5fbca45495405866ebfaa8976c3791e8461dee8ec34ce
 b[590905]='0xa8b644d7ea657f9abef0256155a08aac46f16a7ea083e53916c004702ffc8e93aed2d28114fe924653a0c2e570d82cf8'
 b[590906]='0xa15449ffda354fc6f9de4bd6f020b419bf23e4256d6396213e81c302f7814a259931bd8f4c8e1e285a0f5222c5a1fa80'
 b[590907]='0x82b93acde57a8c5ef6da79e79a8aca4438e035ec890f1bd7db7c356de4926841ab649e3d25c67e7714c976bc49e5a034'
-
-bpid=$($s01 $s12 2>$p03|sed -n 's%.*PID: *\([0-9]*\).*%\1%p')
-rblk=22238623
-ratt=19000
-pmis=10000
-pmat=18800
-pmah=4500
-pdly=500
-chrs=24
-ehrs=12
-rate=4000
-bpri=20
-bprs=10
-bprf=80
-[[ $rate -eq 0 ]] && rate=$(curl -sX GET 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=ETH&convert=EUR&CMC_PRO_API_KEY=3ae5f3df-bd71-489d-a9dd-b626995fba31'|sed 's%.*price.:\([0-9]*\.[0-9]*\).*%\1%')
