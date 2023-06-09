@@ -101,7 +101,7 @@ function gb1 { if [[ $(echo $@|grep false) ]];then printf 'synced';else printf  
 function gb2 { if [[ $(echo $@|grep false) ]];then printf ''      ;else printf ' syncing: %6i' $(($(gi0 $@)-$(gc0 $@)));fi; }                                 # get el syncing blocks remaining
 function gl0 {                                                                                                                                                # el report
   dts;ok=OK
-  if [[ $(sst $s10 running) ]];then local e=$(gcl eth.syncing);local n=$(nu4 0 $(fs4 . $r30 3600|lg0 .*rejected=));gv0;gq0;eb0 $p10 $r30 $n $e
+  if tsa $s10;then local e=$(gcl eth.syncing);local n=$(nu4 0 $(fs4 . $r30 3600|lg0 .*rejected=));gv0;gq0;eb0 $p10 $r30 $n $e
     m="GETH $ok $(tsy $e) $(dnn) sgs: $(nu1 %4i $e0)$(gb2 $e) $(printf 'i2: %3i %1i rj: %6i' $(gdi 99) $(gdu 99) $n 2>$p03)"                                  # OK SYC/NSY (dnn) sgs: 5 blocks: 8
   else
     m="GSRV NOT ON $dt"
@@ -126,7 +126,7 @@ function ub1 { if [[ $(echo $@|grep false) ]];then printf 'synced';else printf  
 function ub2 { if [[ $(echo $@|grep false) ]];then printf ''      ;else printf ' syncing: %6i' $(($(ui0 $@)-$(uc0 $@)));fi; }                                 # get el syncing blocks remaining
 function ul0 {                                                                                                                                                # el report
   dts;ok=OK
-  if [[ $(sst $s11 running) ]];then local e=$(ucl eth_syncing);uv0;uq0;eb0 $p11 $r31 0 $e
+  if tsa $s11;then local e=$(ucl eth_syncing);uv0;uq0;eb0 $p11 $r31 0 $e
     m="BESU $ok $(tsy $e) $(dnn) sgs: $(nu1 %4i $e0)$(ub2 $e) i2: $(udi 99)"                                                                                  # OK SYC/NSY (dnn) sgs: 5 blocks: 8
   else
     m="USRV NOT ON $dt"
@@ -157,7 +157,7 @@ function bb1 { if [[ $(echo $@|grep is_syncing\":false) ]];then printf 'synced';
 function bio { lg3 $1;dts;m="BEIO $(nu1 %6i $1) $dt io: $b1 $b5 $(bi1)"; }                                                                                    # shw imported/observed delays
 function bcc { if v4t;then if tbp;then if trb;then printf r;else printf c;fi;else if tsd;then printf d;else printf _;fi;fi;else if trb;then printf r;else if tsd;then printf d;else printf _;fi;fi;fi; }
 function bmp { printf '%5i %3s %3i %5i %4i io: %4i %4i %4i' ${a[0]} $b7 $b4 $nd $(bi0) $b1 $b5 $(bi1) 2>$p03; }                                               # get peer__io: partial
-function bl0 { dts;ok=OK;if [[ $(sst $s12 running) ]];then bl3;bv0;bnn;bb0;blo;else m="BSRV NOT ON $dt";fi; }                                                 # cc report
+function bl0 { dts;ok=OK;if tsa $s12;then bl3;bv0;bnn;bb0;blo;else m="BSRV NOT ON $dt";fi; }                                                                  # cc report
 function bl1 {                                                                                                                                                # set restart idx vars
   z1=${1:-$(echo "$l0"|grep 'RPC block'|wc -l)};z2=${2:-$(echo "$l0"|grep 'New block'|wc -l)};z3=${3:-$(echo "$l0"|grep -v ' INFO '|wc -l)}                   # set processed/received blocks,error lines
   z4=${4:-$(echo "$l0"|grep ' INFO '   |wc -l)};z5=${5:-$(bl4 success)};zw=${6:-$(bl4 had)};ok=${7:-OK}                                                       # set info lines,success/had activities
@@ -165,7 +165,7 @@ function bl1 {                                                                  
 function bl2 { zk=${1:-$(bl4 missing)};zz=${2:-$(bl4 target)};zx=${3:-$(bl4 head)}; }                                                                         # set missing/target/head activities
 function bl3 { b0=${1:-$(fs0 $r47|wc -l)};if [[ $2$3 ]];then b1=$2;b5=$3;else lg3 2;fi; }                                                                     # set pub-blocks & imported/observed delays
 function bl4 { echo "$l3"|sed -n "s%.*$1.*validators: *\[\(.*\)\].*%\1%p"|wc -w; }                                                                            # get number of paid activities
-function vl0 { dts;ok=OK;if [[ $(sst $s13 running) ]];then lg5 200;vlo;else m="VSRV NOT ON $dt";fi; }
+function vl0 { dts;ok=OK;if tsa $s13;then lg5 200;vlo;else m="VSRV NOT ON $dt";fi; }
 #    0  1              2     3     4   5     6   7
 # VALI OK     2023-06-03 20:49 ztc4: 700 int5: 240
 function vlo { m="VALI $ok     $dt $(printf '%s: %3i %s: %3i' $(snc $znm4) $b8 $(snc $inm5) $b9 2>$p03)"; }
@@ -317,22 +317,22 @@ function cpe {                                                                  
 function xop { pde 80 plex/nginx delete;pai 80 192.168.8.0/24 plex/nginx       ;ide 192.168.8.0/24 1900/udp plex/upnp       ; }
 function xco { pde 80 plex/nginx       ;pai 80 192.168.8.0/24 plex/nginx delete;ide 192.168.8.0/24 1900/udp plex/upnp delete; }
 function xe  { xop;sex 'ufw reload';cex "$s04 $s22";cex "$s04 $s21"; }                                                                                        # enable  plexmediaserver
-function xa  { [[ $(sst $s22       ) ]] && cex "$s03 $s22";[[ $(sst $s21       ) ]] && cex "$s03 $s21"; }                                                     # start   plexmediaserver
-function xp  { [[ $(sst $s22 loaded) ]] && cex "$s02 $s22";[[ $(sst $s21 loaded) ]] && cex "$s02 $s21"; }                                                     # stop    plexmediaserver
+function xa  { tsf $s22 && cex "$s03 $s22";tsf $s21 && cex "$s03 $s21"; }                                                                                     # start   plexmediaserver
+function xp  { tsa $s22 && cex "$s02 $s22";tsa $s21 && cex "$s02 $s21"; }                                                                                     # stop    plexmediaserver
 function xd  { cex "$s05 $s21";cex "$s05 $s22";xco;sex 'ufw reload'; }                                                                                        # disable plexmediaserver
 # Transmission BitTorrent Daemon
 function rop { pae 51413 torrent;pde 9091 torrent delete;pai 9091 192.168.8.0/24 torrent       ; }
 function rco { pde 51413 torrent;pde 9091 torrent       ;pai 9091 192.168.8.0/24 torrent delete; }
 function re  { rop;sex 'ufw reload';cex "$s04 $s15"; }                                                                                                        # enable  transmission-daemon
-function ra  { [[ $(sst $s15       ) ]] && cex "$s03 $s15"; }                                                                                                 # start   transmission-daemon
-function rp  { [[ $(sst $s15 loaded) ]] && cex "$s02 $s15"; }                                                                                                 # stop    transmission-daemon
+function ra  { tsf $s15 && cex "$s03 $s15"; }                                                                                                                 # start   transmission-daemon
+function rp  { tsa $s15 && cex "$s02 $s15"; }                                                                                                                 # stop    transmission-daemon
 function rd  { cex "$s05 $s15";rco;sex 'ufw reload'; }                                                                                                        # disable transmission-daemon
 # Bind9
 function sop { pai 53 192.168.8.0/24 dns       ; }
 function sco { pai 53 192.168.8.0/24 dns delete; }
 function se  { sop;sex 'ufw reload';cex "$s04 $s20"; }                                                                                                        # enable  named
-function sa  { [[ $(sst $s20       ) ]] && cex "$s03 $s20"; }                                                                                                 # start   named
-function sp  { [[ $(sst $s20 loaded) ]] && cex "$s02 $s20"; }                                                                                                 # stop    named
+function sa  { tsf $s20 && cex "$s03 $s20"; }                                                                                                                 # start   named
+function sp  { tsa $s20 && cex "$s02 $s20"; }                                                                                                                 # stop    named
 function sd  { cex "$s05 $s20";sco;sex 'ufw reload'; }                                                                                                        # disable named
 # el/cc/vc
 function efw { if [[ $cust = hrv ]];then pai $1 192.168.8.0/24 $2 $3;else pai $1 $vip1 $2 $3;pai $1 $vip3 $2 $3;fi; }
@@ -353,38 +353,38 @@ function pe  { pai 9090/tcp 192.168.8.0/24 $s16 ;sex 'ufw reload';cex "$s04 $s16
 function ne  { sex 'ufw reload';cex "$s04 $s17"; }                                                                                                            # enable prometheus-node-exporter
 function fe  { pai 3000/tcp 192.168.8.0/24 grafana  ;sex 'ufw reload';cex "$s04 $s18"; }                                                                      # enable grafana-server
 function me  { pai 18550    192.168.8.0/24 mev-boost;sex 'ufw reload';cex "$s04 $s14"; }                                                                      # enable mev-boost
-function ga  { [[ $(sst $s10) ]] && cex "$s03 $s10"; }                                                                                                        # start eth-geth
-function ua  { [[ $(sst $s11) ]] && cex "$s03 $s11"; }                                                                                                        # start eth-besu
-function ba  { [[ $(sst $s12) ]] && cex "$s03 $s12"; }                                                                                                        # start eth-beacon
+function ga  { tsf $s10 && cex "$s03 $s10"; }                                                                                                                 # start eth-geth
+function ua  { tsf $s11 && cex "$s03 $s11"; }                                                                                                                 # start eth-besu
+function ba  { tsf $s12 && cex "$s03 $s12"; }                                                                                                                 # start eth-beacon
 function va  {
-  v2t && [[ -f $p05/vc_keys && $(sst $s13) ]] || return                                                                                                       # cannot start eth-validator
+  v2t && [[ -f $p05/vc_keys ]] && tsf $s13 || return                                                                                                          # cannot start eth-validator
   if [[ -f $p05/vc_lock ]];then sis $p02/$(basename $p18);else cex "$s03 $s13";rm -f $p05/vc_slash;fi                                                         # start eth-validator
 }
-function pa  { [[ $(sst $s16) ]] && cex "$s03 $s16"; }                                                                                                        # start prometheus
-function na  { [[ $(sst $s17) ]] && cex "$s03 $s17"; }                                                                                                        # start prometheus-node-exporter
-function fa  { [[ $(sst $s18) ]] && cex "$s03 $s18"; }                                                                                                        # start grafana-server
-function ma  { [[ $(sst $s14) ]] && cex "$s03 $s14"; }                                                                                                        # start mev-boost
+function pa  { tsf $s16 && cex "$s03 $s16"; }                                                                                                                 # start prometheus
+function na  { tsf $s17 && cex "$s03 $s17"; }                                                                                                                 # start prometheus-node-exporter
+function fa  { tsf $s18 && cex "$s03 $s18"; }                                                                                                                 # start grafana-server
+function ma  { tsf $s14 && cex "$s03 $s14"; }                                                                                                                 # start mev-boost
 function wa  { if [[ $(pex 'ufw status'|grep -i inactive) ]];then yex 'ufw enable';else swu 'FIREWALL ALREADY ACTIVE';fi; }                                   # enable ufw : Proceed with operation (y|n)?
 # stop/disable eth-geth eth-beacon eth-validator prometheus prometheus-node-exporter grafana-server mev-boost
-function gps { [[ $(sst $s10 loaded) ]] && sex "$s02 $s10"; }                                                                                                 # silent stop eth-geth
-function ups { [[ $(sst $s11 loaded) ]] && sex "$s02 $s11"; }                                                                                                 # silent stop eth-besu
-function bps { [[ $(sst $s12 loaded) ]] && sex "$s02 $s12"; }                                                                                                 # silent stop eth-beacon
-function gp  { [[ $(sst $s10 loaded) ]] && cex "$s02 $s10"; }                                                                                                 # stop eth-geth
-function up  { [[ $(sst $s11 loaded) ]] && cex "$s02 $s11"; }                                                                                                 # stop eth-besu
-function bp  { [[ $(sst $s12 loaded) ]] && cex "$s02 $s12"; }                                                                                                 # stop eth-beacon
-function vp  { [[ $(sst $s13 loaded) ]] && cex "$s02 $s13";touch $p05/vc_slash; }                                                                             # stop eth-validator
-function pp  { [[ $(sst $s16 loaded) ]] && cex "$s02 $s16"; }                                                                                                 # stop prometheus
-function np  { [[ $(sst $s17 loaded) ]] && cex "$s02 $s17"; }                                                                                                 # stop prometheus-node-exporter
-function fp  { [[ $(sst $s18 loaded) ]] && cex "$s02 $s18"; }                                                                                                 # stop grafana-server
-function mp  { [[ $(sst $s14 loaded) ]] && cex "$s02 $s14"; }                                                                                                 # stop mev-boost
+function gps { tsa $s10 && sex "$s02 $s10"; }                                                                                                                 # silent stop eth-geth
+function ups { tsa $s11 && sex "$s02 $s11"; }                                                                                                                 # silent stop eth-besu
+function bps { tsa $s12 && sex "$s02 $s12"; }                                                                                                                 # silent stop eth-beacon
+function gp  { tsa $s10 && cex "$s02 $s10"; }                                                                                                                 # stop eth-geth
+function up  { tsa $s11 && cex "$s02 $s11"; }                                                                                                                 # stop eth-besu
+function bp  { tsa $s12 && cex "$s02 $s12"; }                                                                                                                 # stop eth-beacon
+function vp  { tsa $s13 && cex "$s02 $s13";touch $p05/vc_slash; }                                                                                             # stop eth-validator
+function pp  { tsa $s16 && cex "$s02 $s16"; }                                                                                                                 # stop prometheus
+function np  { tsa $s17 && cex "$s02 $s17"; }                                                                                                                 # stop prometheus-node-exporter
+function fp  { tsa $s18 && cex "$s02 $s18"; }                                                                                                                 # stop grafana-server
+function mp  { tsa $s14 && cex "$s02 $s14"; }                                                                                                                 # stop mev-boost
 function gd  { cex "$s05 $s10";eco;sex 'ufw reload'; }                                                                                                        # disable eth-geth
 function ud  { cex "$s05 $s11";eco;sex 'ufw reload'; }                                                                                                        # disable eth-besu
 function bd  { cex "$s05 $s12";bco;sex 'ufw reload'; }                                                                                                        # disable eth-beacon
 function vd  { cex "$s05 $s13";vco;sex 'ufw reload';touch $p05/vc_lock; }                                                                                     # disable eth-validator
-function pd  { [[ $(sst $s16 loaded) ]] || return;cex "$s05 $s16";pai 9090/tcp 192.168.8.0/24 $s16  delete;sex 'ufw reload'; }                                # disable prometheus
-function nd  { [[ $(sst $s17 loaded) ]] || return;cex "$s05 $s17"; }                                                                                          # disable prometheus-node-exporter
-function fd  { [[ $(sst $s18 loaded) ]] || return;cex "$s05 $s18";pai 3000/tcp 192.168.8.0/24 grafana   delete;sex 'ufw reload'; }                            # disable grafana-server
-function md  { [[ $(sst $s14 loaded) ]] || return;cex "$s05 $s14";pai 18550    192.168.8.0/24 mev-boost delete;sex 'ufw reload'; }                            # disable mev-boost
+function pd  { cex "$s05 $s16";pai 9090/tcp 192.168.8.0/24 $s16  delete;sex 'ufw reload'; }                                                                   # disable prometheus
+function nd  { cex "$s05 $s17"; }                                                                                                                             # disable prometheus-node-exporter
+function fd  { cex "$s05 $s18";pai 3000/tcp 192.168.8.0/24 grafana   delete;sex 'ufw reload'; }                                                               # disable grafana-server
+function md  { cex "$s05 $s14";pai 18550    192.168.8.0/24 mev-boost delete;sex 'ufw reload'; }                                                               # disable mev-boost
 function umt { [[ $(cat $p44 2>$p03) -eq 1 && $(nus) -gt 10 ]]; }                                                                                             # usb messages test
 function t0t { [[ $(cat $p43 2>$p03) -eq 0 && $(ncp) -gt 20 ]]; }                                                                                             # cpu no turbo recomended test
 function t1t { [[ $(cat $p43 2>$p03) -eq 1 && $(ncp) -le 10 ]]; }                                                                                             # cpu    turbo recomended test
@@ -427,7 +427,7 @@ function luc {                                                                  
 }
 function jw0 { [[ -f jwt ]] && return;openssl rand -hex 32|tr -d '\n'|tee jwt 1>$p03; }                                                                       # create jwt file
 function ruv { if [[ $1 ]];then swn "RUST OVERRIDE SET $1";rustup override set $1;else swn 'RUST UPDATE';rustup update stable;fi; }                           # set/update rust version
-function v0t { [[ $(sst $s13 running) ]]; }                                                                                                                   # vc running  test
+function v0t { tsa $s13; }                                                                                                                                    # vc running  test
 function v1t { [[ $cunm = $nxvc ]]; }                                                                                                                         # vc next     test
 function v2t { [[ $cunm = $cuvc ]]; }                                                                                                                         # vc current  test
 function v3t { [[ $cuvc = $nxvc ]]; }                                                                                                                         # vc transfer test
@@ -444,8 +444,8 @@ function ibk {
   local f="$p16/pubkeys";sex "cp $p02/pubkeys.new $f";sex "chown eth2:eth2 $f";cmw $f 600;dmr;cex "$s03 $s12"
 }
 function ivk {
-  v2t && [[ ! -f $p05/vc_lock && -d $p19 && $(ls $p19 2>$p03) ]] || return;vsb $1;[[ $(sst $s12) ]] && ibk
-  if [[ $(sst $s13) ]];then
+  v2t && [[ ! -f $p05/vc_lock && -d $p19 && $(ls $p19 2>$p03) ]] || return;vsb $1;tsf $s12 && ibk
+  if tsf $s13;then
     swb 'IMPORTAR CHAVES';sex "chown -R $meeu:$meeu $p17";cmw $p17 755;imk;sex "chown -R eth3:eth3 $p17";cmw $p17 700
     [[ -f $p05/vc_lock ]] || cex "$s03 $s13";[[ -f $p12 ]] && { dts;swn "$(printf 'BSRV VK %3i %10s %5s' $(ls $p19 2>$p03|wc -l) $dt 2>$p03)" >> $p12; }
   fi
@@ -538,8 +538,8 @@ function irb { rm $p39.*.hours 2>$p03;if trb $1;then if v2t;then brs 0 RB $s45 $
 [[ $1 = brm ]] && { brm; }
 [[ $1 = bsl ]] && { bsl; }
 [[ $1 = cpe ]] && { cpe $2; }
-[[ $1 = gpn ]] && { if [[ $(sst $s10 running) ]];then gp;cex "du -h $p08";sudo -u eth1 geth --datadir $p08 snapshot prune-state;cex "du -h $p08";dmr;ga;fi; }
-[[ $1 = gpg ]] && { if [[ $(sst $s10 running) ]];then gp;cex "du -h $p08";sudo -u eth1 geth --datadir $p08 removedb            ;cex "du -h $p08";dmr;ga;fi; }
+[[ $1 = gpn ]] && { if tsa $s10;then gp;cex "du -h $p08";sudo -u eth1 geth --datadir $p08 snapshot prune-state;cex "du -h $p08";dmr;ga;fi; }
+[[ $1 = gpg ]] && { if tsa $s10;then gp;cex "du -h $p08";sudo -u eth1 geth --datadir $p08 removedb            ;cex "du -h $p08";dmr;ga;fi; }
 [[ $1 = rsh ]] && { echo;sft $(sng); }
 [[ $1 = lp  ]] && { netstat -tulpn; }
 # outros journal system/lighthouse

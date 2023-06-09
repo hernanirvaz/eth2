@@ -251,6 +251,9 @@ r63='success'
 r64='app-snap'
 
 function sst { $s01 $1 2>$p03|grep "${2:-inactive\|failed}" 2>$p03; }
+function tsa { $s00 is-active --quiet $1; }
+function tsf { ! tsa $1; }
+#function tsf { $s00 is-failed --quiet $1; }
 function swb { echo -e "\n\e[5m${1^^}\e[25m\n"; }
 function swu { echo -e "${1^^}"; }
 function swn { echo -e "$1"; }
