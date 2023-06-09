@@ -457,7 +457,7 @@ function trb { [[ $(sra) -ge $((60*60*${1:-12})) ]]; }
 function tip { [[ $(date +%s) -ge $(bss $1 6) ]]; }
 function tpc { [[ $b4 -ne 0 ]]; }
 function tha { [[ $b2 -gt $((b3*2)) ]]; }
-function tsd { [[ $((nd+$(bi0))) -ge 1500 ]]; }
+function tsd { [[ $((nd+$(bi0))) -ge $s60 ]]; }
 function tpm { [[ $nm -ge $((nn-5)) ]]; }
 function trf { [[ -f $p45 ]]; }
 function tbf { [[ -f $p04/$s12.service ]]; }
