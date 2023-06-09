@@ -26,8 +26,8 @@ function fs2 { pex "grep -v ${1:-$r34}     $p01"; }                             
 function fs3 { fs0 $1 $2|lg0 .*$1 ; }                                                                                                                         # get peers    syslog lines
 function fs4 { fs0 $1 $2|tail -n$3; }                                                                                                                         # get specific syslog lines
 function fs5 { fs2      |tail -n300|grep Core.*temperature; }                                                                                                 # get tail cpu syslog lines
-function fle { if [[ $3 ]];then grep -i "^[a-z][a-z][a-z]  *[0-9][0-9]*  *$3";else grep -i  "$1";fi|grep -iv "$2"; }                                          # filter error    log lines
-function fln { if [[ $2 ]];then grep -i "^[a-z][a-z][a-z]  *[0-9][0-9]*  *$2";else grep -iv "$1";fi; }                                                        # filter ^INFO    log lines
+function fln { if [[ $2 ]];then grep -i "^[a-z][a-z][a-z]  *[0-9][0-9]*  *$2";else grep -iv "$1";fi; }
+function fle { fln "$r64" $1|grep -i "$r61"; }
 function pt0 { until [[ $# -le 1 || $1 =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]];do shift;done;printf %s $1; }                                                       # yyyy-mm-dd test
 function pt1 { until [[ $# -le 1 || $1 =~ ^[0-9]{2}:[0-9]{2}$          ]];do shift;done;printf %s $1; }                                                       # hh:mm      test
 function pt2 { until [[ $# -le 1 || $1 =~ ^[0-9]+$                     ]];do shift;done;printf %i $1; }                                                       # integer    test
@@ -78,7 +78,7 @@ function sz1 { unn              ;printf 'el:p%02i:m%02i p2p:%5i %s i2:%i'       
 function sz2 { dtl;bo4;lg3 0;bnn;printf 'cl:p%02i:m%02i p2p:%5i %s mp:c%i:m%i io:%i:%i:%i el:%7s' $nr $nm $(ss5 $1 port) "$(bb1 $(bcl syncing))" $b2 $b3 $b1 $b5 $(bi1) $(ss4 $1 $r24 execution-endpoint) 2>$p03; }
 function sz3 { lg5 20000        ;printf 'vl:%03i:%03i cc:%13s'                                    $b8 $b9 $(ss4 $1 $r24 nodes)                                                                            2>$p03; }
 function sso {
-  [[ $(sst $2 disabled) || ! $(sst $2 $2) ]] && return;dts;local e="$1 $(printf '%6s %10s %5s status: %-40s' $(ss3 $2) $dt "$(ss2 $2)" 2>$p03)"               # memory & status
+  tse $2 || return;dts;local e="$1 $(printf '%6s %10s %5s status: %-40s' $(ss3 $2) $dt "$(ss2 $2)" 2>$p03)"                                                   # memory & status
   [[ $1 = GETH ]] && e="$e $(sz0 $2)";[[ $1 = BESU ]] && e="$e $(sz1 $2)";[[ $1 = BEAC ]] && e="$e $(sz2 $2)";[[ $1 = VALI ]] && e="$e $(sz3 $2)";swn "$e"    # set homologous/avg & cl http
 }
 # el control commands
@@ -296,18 +296,18 @@ function tmp {
   [[ $1$d$e || $(nu3 1 0 $l) -ge $s59 || $(nu3 1 0 $g) -ge $s59 ]] || return;[[ $d ]] && local d="throttled: $d";[[ $e ]] && local e="normal: $e"
   swn "TEMP $(printf '%5.1fC %10s %5s ssd: %.1fC %s %s' $(nu3 1 1 $l) $dt $(nu3 1 1 $g) $d $e 2>$p03)"                                                        # TEMP cpu/ssd info
 }
-function nus { fs2|fle "$r61" "$r64"|grep usb|wc -l; }
-function ncp { fs5|wc -l             ; }
+function nus { fs2|fle|grep usb|wc -l; }
+function ncp { fs5|wc -l; }
 function cpe {                                                                                                                                                # system status
   local e='NO';[[ $($s07|sed -n 's%.*synchronized: \([a-z]*\) *%\1%p') = yes ]] && local e='OK';dts
-  if [[ $(sst $s19 masked) ]];then local e="CNTP $e";m=$(ss2 ntp);else local e="CSYS $e";m=$(ss2 $s19);fi
+  if tsa $s19;then local e="CSYS $e";m=$(ss2 $s19);else local e="CNTP $e";m=$(ss2 ntp);fi
   swn "$e $(nu1 %3i $(fs0 clock|wc -l)) $dt status: $m";[[ $1 = c ]] && return;tmp;[[ $1 = p ]] && return                                                     # clock & temperature info
   if [[ $(cat $p44 2>$p03) -eq 0 ]];then local e=off;else local e=on;fi;if [[ $(cat $p43 2>$p03) -eq 1 ]];then local d=off;else local d=on;fi                 # usb/cpu current state
   m="INFO$(printf '%3i %3i %10s %5s' $(nus) $(ncp) $dt 2>$p03)"                                                                                               # usb/cpu erros count
   m="$m usb $e, turbo $d, ufw $(wst $(pex 'ufw status'|grep Status:))"                                                                                        # usb/cpu/ufw info
   m="$m, uptime:$(uptime|sed 's%[0-9]*:[0-9]*:[0-9]*%%;s%[0-9]* users*,%%;s% average\([^,]*\).*%\1%;s%  *% %g')";swn "$m"                                     # uptime/load info
-  local l=$(fs2|fle "$r61" "$r64"|wc -l);local n=$(fs1|fln "$r62"|wc -l)
-  local e=$(fs2|fle "$r61" "$r64"|tail -n1|sed 's%.*hrv-zotac[0-9] *\(.*\)%\1%;s%  *% %g'                  |cut -c1-70)
+  local l=$(fs2|fle       |wc -l);local n=$(fs1|fln "$r62"|wc -l)
+  local e=$(fs2|fle       |tail -n1|sed 's%.*hrv-zotac[0-9] *\(.*\)%\1%;s%  *% %g'                         |cut -c1-70)
   local d=$(fs1|fln "$r62"|tail -n1|sed 's%.*[0-9]*:[0-9]*:[0-9]*\.[0-9][0-9][0-9]]* *\(.*\)%\1%;s%  *% %g'|cut -c1-70)
   m="ERRO$(printf '%3i %3i' $l $n 2>$p03) $dt";[[ $l -gt 0 ]] && m="$m system: $e";[[ $n -gt 0 ]] && m="$m ethrum: $d";(( l+n )) && swn "$m"                  # sys/eth errors info
   m='';trf && m="$m, reboot $(($(sra)/60/60)) hours ago$(cpf)";[[ $(bwc) -gt 0 ]] && m="$m, sync/propose duties on";[[ $m ]] && swn "INFO        $dt${m#*,}"  # reboot/duties info
@@ -317,21 +317,21 @@ function cpe {                                                                  
 function xop { pde 80 plex/nginx delete;pai 80 192.168.8.0/24 plex/nginx       ;ide 192.168.8.0/24 1900/udp plex/upnp       ; }
 function xco { pde 80 plex/nginx       ;pai 80 192.168.8.0/24 plex/nginx delete;ide 192.168.8.0/24 1900/udp plex/upnp delete; }
 function xe  { xop;sex 'ufw reload';cex "$s04 $s22";cex "$s04 $s21"; }                                                                                        # enable  plexmediaserver
-function xa  { tsf $s22 && cex "$s03 $s22";tsf $s21 && cex "$s03 $s21"; }                                                                                     # start   plexmediaserver
+function xa  { tsa $s22 || cex "$s03 $s22";tsa $s21 || cex "$s03 $s21"; }                                                                                     # start   plexmediaserver
 function xp  { tsa $s22 && cex "$s02 $s22";tsa $s21 && cex "$s02 $s21"; }                                                                                     # stop    plexmediaserver
 function xd  { cex "$s05 $s21";cex "$s05 $s22";xco;sex 'ufw reload'; }                                                                                        # disable plexmediaserver
 # Transmission BitTorrent Daemon
 function rop { pae 51413 torrent;pde 9091 torrent delete;pai 9091 192.168.8.0/24 torrent       ; }
 function rco { pde 51413 torrent;pde 9091 torrent       ;pai 9091 192.168.8.0/24 torrent delete; }
 function re  { rop;sex 'ufw reload';cex "$s04 $s15"; }                                                                                                        # enable  transmission-daemon
-function ra  { tsf $s15 && cex "$s03 $s15"; }                                                                                                                 # start   transmission-daemon
+function ra  { tsa $s15 || cex "$s03 $s15"; }                                                                                                                 # start   transmission-daemon
 function rp  { tsa $s15 && cex "$s02 $s15"; }                                                                                                                 # stop    transmission-daemon
 function rd  { cex "$s05 $s15";rco;sex 'ufw reload'; }                                                                                                        # disable transmission-daemon
 # Bind9
 function sop { pai 53 192.168.8.0/24 dns       ; }
 function sco { pai 53 192.168.8.0/24 dns delete; }
 function se  { sop;sex 'ufw reload';cex "$s04 $s20"; }                                                                                                        # enable  named
-function sa  { tsf $s20 && cex "$s03 $s20"; }                                                                                                                 # start   named
+function sa  { tsa $s20 || cex "$s03 $s20"; }                                                                                                                 # start   named
 function sp  { tsa $s20 && cex "$s02 $s20"; }                                                                                                                 # stop    named
 function sd  { cex "$s05 $s20";sco;sex 'ufw reload'; }                                                                                                        # disable named
 # el/cc/vc
@@ -353,17 +353,17 @@ function pe  { pai 9090/tcp 192.168.8.0/24 $s16 ;sex 'ufw reload';cex "$s04 $s16
 function ne  { sex 'ufw reload';cex "$s04 $s17"; }                                                                                                            # enable prometheus-node-exporter
 function fe  { pai 3000/tcp 192.168.8.0/24 grafana  ;sex 'ufw reload';cex "$s04 $s18"; }                                                                      # enable grafana-server
 function me  { pai 18550    192.168.8.0/24 mev-boost;sex 'ufw reload';cex "$s04 $s14"; }                                                                      # enable mev-boost
-function ga  { tsf $s10 && cex "$s03 $s10"; }                                                                                                                 # start eth-geth
-function ua  { tsf $s11 && cex "$s03 $s11"; }                                                                                                                 # start eth-besu
-function ba  { tsf $s12 && cex "$s03 $s12"; }                                                                                                                 # start eth-beacon
+function ga  { tsa $s10 || cex "$s03 $s10"; }                                                                                                                 # start eth-geth
+function ua  { tsa $s11 || cex "$s03 $s11"; }                                                                                                                 # start eth-besu
+function ba  { tsa $s12 || cex "$s03 $s12"; }                                                                                                                 # start eth-beacon
 function va  {
-  v2t && [[ -f $p05/vc_keys ]] && tsf $s13 || return                                                                                                          # cannot start eth-validator
+  v2t && [[ -f $p05/vc_keys ]] && ! tsa $s13 || return                                                                                                        # cannot start eth-validator
   if [[ -f $p05/vc_lock ]];then sis $p02/$(basename $p18);else cex "$s03 $s13";rm -f $p05/vc_slash;fi                                                         # start eth-validator
 }
-function pa  { tsf $s16 && cex "$s03 $s16"; }                                                                                                                 # start prometheus
-function na  { tsf $s17 && cex "$s03 $s17"; }                                                                                                                 # start prometheus-node-exporter
-function fa  { tsf $s18 && cex "$s03 $s18"; }                                                                                                                 # start grafana-server
-function ma  { tsf $s14 && cex "$s03 $s14"; }                                                                                                                 # start mev-boost
+function pa  { tsa $s16 || cex "$s03 $s16"; }                                                                                                                 # start prometheus
+function na  { tsa $s17 || cex "$s03 $s17"; }                                                                                                                 # start prometheus-node-exporter
+function fa  { tsa $s18 || cex "$s03 $s18"; }                                                                                                                 # start grafana-server
+function ma  { tsa $s14 || cex "$s03 $s14"; }                                                                                                                 # start mev-boost
 function wa  { if [[ $(pex 'ufw status'|grep -i inactive) ]];then yex 'ufw enable';else swu 'FIREWALL ALREADY ACTIVE';fi; }                                   # enable ufw : Proceed with operation (y|n)?
 # stop/disable eth-geth eth-beacon eth-validator prometheus prometheus-node-exporter grafana-server mev-boost
 function gps { tsa $s10 && sex "$s02 $s10"; }                                                                                                                 # silent stop eth-geth
@@ -395,6 +395,7 @@ function ghs { sso GETH $s10; }
 function uhs { sso BESU $s11; }
 function bhs { sso BEAC $s12; }
 function vhs { sso VALI $s13; }
+function ohs { sso MEVB $s14; }
 function lhs {
   if v2t;then local e=$(nu0 $(ss4 $s13 $r25 nodes $1));else local e=$(ssh $(snc $cuvc) "export H=$H;~/eth2/t6 cci $1");fi
   [[ $e -gt 0 ]] || return;local i=$(sci)
@@ -409,7 +410,7 @@ function c0c { local e="$r11";[[ $(sed -n "$r12" $p04/$s12.service 2>$p03) = $zi
 function ble { tbf || return;cp $p04/$s12.service $p02/$s12.sav;sed "$1" $p02/$s12.sav > $p04/$s12.service;dmr; }                                             # cc service edit
 function cce { tbf || return;cp $p04/$s12.service $p02/$s12.sav;c0c;cmw $p04/$s12.service 644 eth; }                                                          # cc change el server (merge)
 function vcc { tvf || return;cp $p04/$s13.service $p02/$s13.sav;sed "$r19" $s13.sav > $p04/$s13.service;cmw $p04/$s13.service 644 eth; }                      # vc switch cc server order
-function trs { if [[ $(sst $s19 masked) ]];then nex "$s06 ntp";else nex "$s06 $s19";fi; }                                                                     # systemd-timesyncd/ntp restart
+function trs { if tsa $s19;then nex "$s06 $s19";else nex "$s06 ntp";fi; }                                                                                     # systemd-timesyncd/ntp restart
 function dpa { nex "$s02 $s20";nex "$s02 systemd-resolved";nex "$s03 $s20";nex "$s03 systemd-resolved"; }                                                     # DNS stop/start
 function nrs { nex 'netplan apply';dpa; }                                                                                                                     # netplan/DNS restart
 function lcp { local f=$1;shift;[[ -x $f ]] && until [[ $# -lt 1 ]];do if [[ $1 = $(snc $cunm) ]];then lci $f;else scp $f $1:$p02;fi;shift;done; }            # propagate lighthouse
@@ -444,8 +445,8 @@ function ibk {
   local f="$p16/pubkeys";sex "cp $p02/pubkeys.new $f";sex "chown eth2:eth2 $f";cmw $f 600;dmr;cex "$s03 $s12"
 }
 function ivk {
-  v2t && [[ ! -f $p05/vc_lock && -d $p19 && $(ls $p19 2>$p03) ]] || return;vsb $1;tsf $s12 && ibk
-  if tsf $s13;then
+  v2t && [[ ! -f $p05/vc_lock && -d $p19 && $(ls $p19 2>$p03) ]] || return;vsb $1;tsa $s12 || ibk
+  if ! tsa $s13;then
     swb 'IMPORTAR CHAVES';sex "chown -R $meeu:$meeu $p17";cmw $p17 755;imk;sex "chown -R eth3:eth3 $p17";cmw $p17 700
     [[ -f $p05/vc_lock ]] || cex "$s03 $s13";[[ -f $p12 ]] && { dts;swn "$(printf 'BSRV VK %3i %10s %5s' $(ls $p19 2>$p03|wc -l) $dt 2>$p03)" >> $p12; }
   fi
@@ -524,6 +525,7 @@ function irb { rm $p39.*.hours 2>$p03;if trb $1;then if v2t;then brs 0 RB $s45 $
 [[ $1 = vhs ]] && { if v2t;then vhs;cpe;else ssh $(snc $cuvc) "export H=$H;~/eth2/t6 vhs";fi; }
 [[ $1 = ehs ]] && { ghs;uhs; }
 [[ $1 = chs ]] && { bhs;vhs;cpe; }
+[[ $1 = ohs ]] && { ohs;cpe; }
 [[ $1 = mhs ]] && { lhs ,; }
 [[ $1 = shs ]] && { lhs  ; }
 [[ $1 = cci ]] && { nu0 $(ss4 $s13 $r25 nodes $2); }
@@ -543,7 +545,7 @@ function irb { rm $p39.*.hours 2>$p03;if trb $1;then if v2t;then brs 0 RB $s45 $
 [[ $1 = rsh ]] && { echo;sft $(sng); }
 [[ $1 = lp  ]] && { netstat -tulpn; }
 # outros journal system/lighthouse
-[[ $1 = sl  ]] && { fs2                 |fle "$r61" "$r64" $2; }
+[[ $1 = sl  ]] && { fs2                 |fle $2; }
 [[ $1 = el  ]] && { fs1 "\($r30\|$r31\)"|fln "$r62" $2|sed "$r60"; }
 [[ $1 = ml  ]] && { fs1 "$r33"          |fln "$r62" $2|sed "$r60"; }
 [[ $1 = cl  ]] && { fs1 "$r32"          |fln "$r62" $2|sed "$r58"; }
