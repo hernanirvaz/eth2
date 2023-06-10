@@ -249,6 +249,7 @@ r61='error'
 r62='[ =]INFO '
 r63='success'
 r64='app-snap\|number.of.Error.Log.entries.increased'
+r65='reorg_distance:'
 
 function tsa { $s00 is-active  --quiet $1 2>$p03; }
 function tse { $s00 is-enabled --quiet $1 2>$p03; }
