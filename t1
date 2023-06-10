@@ -248,7 +248,7 @@ r60="s%^.*$cunm *%%"
 r61='error'
 r62='[ =]INFO '
 r63='success'
-r64='app-snap'
+r64='app-snap\|number.of.Error.Log.entries.increased'
 
 function tsa { $s00 is-active  --quiet $1 2>$p03; }
 function tse { $s00 is-enabled --quiet $1 2>$p03; }
