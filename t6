@@ -104,7 +104,7 @@ function gb2 { if [[ $(echo $@|grep false) ]];then printf ''      ;else printf '
 function gl0 {                                                                                                                                                # el report
   dts;ok=OK
   if tsa $s10;then local e=$(gcl eth.syncing);gnn 99;gv0;eb0 $p10 $r30 $e
-    m="GETH $ok $(tsy $e) $(dnn) sgs: $(nu1 %4i $e0)$(gb2 $e) $(printf 'i2r: %3i %1i %5i %4i' $e1 $e2 $e3 $(ei0) 2>$p03)"
+    m="GETH $ok $(tsy $e) $(dnn) sgs: $(nu1 %4i $e0)$(gb2 $e) $(printf 'i2r: %3i %1i %5i %2i' $e1 $e2 $e3 $(ei0) 2>$p03)"
   else
     m="GSRV NOT ON $dt"
   fi
@@ -123,7 +123,7 @@ function uc0 { nu0 $((16#$(nu0 $(echo $@|sed -n 's%.*currentBlock" *: *"0x\([^"]
 function up0 { nu0 $((16#$(nu0 $(echo $@|sed -n 's%.*result" *: *"0x\([^"]*\)".*%\1%ip'       2>$p03)))); }                                                   # get el result
 function uv0 { nn=$(ss5 $s11 max-peers); }                                                                                                                    # set configured peers
 function uq0 { nr=$(up0 $(ucl net_peerCount)); }                                                                                                              # set el current peers
-function unn { snn $(fs3 Peers: $r31) $(up0 $(ucl net_peerCount));udi $1; }                                                                                   # set cur/min/std el peers
+function unn { snn $(fs3 Peers: $r31) $(up0 $(ucl net_peerCount));udi $1;e2=0;e3=0; }                                                                         # set cur/min/std el peers
 function ub1 { if [[ $(echo $@|grep false) ]];then printf 'synced';else printf  'syncing: %6i' $(($(ui0 $@)-$(uc0 $@)));fi; }                                 # get el syncing blocks remaining
 function ub2 { if [[ $(echo $@|grep false) ]];then printf ''      ;else printf ' syncing: %6i' $(($(ui0 $@)-$(uc0 $@)));fi; }                                 # get el syncing blocks remaining
 function ul0 {                                                                                                                                                # el report
@@ -145,7 +145,7 @@ function bf0 { nu0 $((59*z3))                                                   
 function bi0 { nu0 $((zk*9+zz*5+zx))                                                     ; }                                                                  # get delete day idx
 function bi1 { nu0 $(((5*b1+2*b5+3*b8)/10))                                              ; }                                                                  # shw imported/observed/reorg data
 function bi2 { nu0 $(((z5>400?$(bz0)/z5:0)+(z2>300?$(bw0)/z2:0)+(z4>999?$(bf0)/z4:0)))   ; }                                                                  # get restart idx
-function ei0 { nu0 $(((5*e1+3*e2+2*e3)/10))                                              ; }                                                                  # shw imported/head/rejected data
+function ei0 { nu2 "(0.6666*$e1+0.3333*$e2+0.0001*$e3)"                                  ; }                                                                  # shw imported/head/rejected data
 function bdp { nu2 "($1*$s48+$2*$s49+$3*$s50+$4*$s51)/${5:-1}*$s55/1000000" 7; }                                                                              # get penalty
 function bdr { nu2 "($1*$s47+$2*$s46)*$s55/100000000"                       7; }                                                                              # get reward
 function bv0 { nn=$(ss5 $s12 target-peers); }                                                                                                                 # set configured peers
