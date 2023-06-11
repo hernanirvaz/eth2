@@ -21,6 +21,7 @@ function lg2 { if [[ $l4 ]];then echo "$l4"|sed -n "$1$r38;$1$r39";else printf %
 function lg3 { if [[ ${1:-0} -gt 0 ]];then l4=$(rl0|tail -n${1:-0});else l4=$(rl0);fi;b1=$(nu3 3 0 $(lg1 "$r45"));b5=$(nu3 3 0 $(lg1 "$r46"));b8=$(nu4 0 $(rl6|lg0 .*$r65)); }
 function lg4 { echo "$l6"|sed -n "s%.*$r53  *\([0-9]*\).*$1.*%\1%p" 2>$p03; }                                                                                 # get list of vc latencies
 function lg5 { if v2t;then l6=$(rl5|tail -n$1);v0=$(nu5 $(lg4 $zip4));v1=$(nu5 $(lg4 $iip5));else v0=0;v1=0;fi; }                                             # set latency vc delays
+function lg6 { rl2|fln "$r66" $1; }
 function fs0 { pex "grep    ${2:-$r32}.*$1 $p01"; }                                                                                                           # get specific syslog lines
 function fs1 { pex "grep    ${1:-$r34}     $p01"; }                                                                                                           # get eth      syslog lines
 function fs2 { pex "grep -v ${1:-$r34}     $p01"; }                                                                                                           # get sys      syslog lines
@@ -169,7 +170,7 @@ function bl4 { echo "$l3"|sed -n "s%.*$1.*validators: *\[\(.*\)\].*%\1%p"|wc -w;
 function vl0 { dts;ok=OK;if tsa $s13;then lg5 $s62;vlo;else m="VSRV NOT ON $dt";fi; }
 #    0  1              2     3     4   5     6   7
 # VALI OK     2023-06-03 20:49 ztc4: 700 int5: 240
-function vlo { m="VALI $ok     $dt $(printf '%s: %4i %s: %4i' $(snc $znm4) $v0 $(snc $inm5) $v1 2>$p03)"; }
+function vlo { m="VALI $ok $(printf '%3i' $(lg6|wc -l) 2>$p03) $dt $(printf '%s: %4i %s: %4i' $(snc $znm4) $v0 $(snc $inm5) $v1 2>$p03)"; }
 #    0  1   2          3     4       5  6   7    8    9  10   11  12 13  14 15 16  17 18 19  20  21 22   23   24   25   26   27 28   29
 # BEAC OK   0 2023-06-10 22:01 node20: 22 rp: 3952 3579 ab: 5200  939 0 er:  0 19 117 22  0 506   0  1 3599   59 ior:  720 3718 31 1181
 function blo {
@@ -553,7 +554,7 @@ function irb { rm $p39.*.hours 2>$p03;if trb $1;then if v2t;then brs 0 RB $s45 $
 [[ $1 = al  ]] && { fs0 "\($r47\|$r48\)"|fln "$r63" $2|sed "$r58"; }
 [[ $1 = clp ]] && { fs0 peers:                        |sed "$r59"|grep -v "peers: *$(($(ss5 $s12 target-peers)/10))[0-9]"; }
 [[ $1 = ci  ]] && { rl1                 |fln "$r62" $2; }
-[[ $1 = vi  ]] && { rl2                 |fln "$r66" $2; }
+[[ $1 = vi  ]] && { lg6 $2; }
 [[ $1 = ll  ]] && { rl3                 |fln "$r62" $2|sed "$r60"; }
 [[ $1 = ws  ]] && { cex 'ufw status numbered'; }
 [[ $1 = wa  ]] && { wa; }
