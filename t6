@@ -14,7 +14,7 @@ function rl2 { local f=$p17/logs/validator.log;echo $H|sudo -S cat              
 function rl3 { local f=$p01                   ;echo $H|sudo -S grep -h $r34 $f.7 $f.6 $f.5 $f.4 $f.3 $f.2 $f.1 $f 2>$p03             ; }                      # get all eth syslog lines
 function rl4 { local f=$p01                   ;echo $H|sudo -S grep -h $1                                 $f.1 $f 2>$p03             ; }                      # get all eth syslog lines
 function rl5 { local f=$p17/logs/validator.log;echo $H|sudo -S grep -h $r53                                    $f 2>$p03             ; }                      # get latency vc lines
-function rl6 { local f=$p01                   ;echo $H|sudo -S grep -h $r32                                    $f 2>$p03             ; }                      # get all vc/cc lines
+function rl6 { local f=$p01                   ;echo $H|sudo -S grep -h $r32.*$r65                              $f 2>$p03             ; }                      # get all vc/cc lines
 function lg0 { sed -n "s%$1 *\([0-9]*\).*%\1%p" $2 2>$p03; }                                                                                                  # get list of numbers
 function lg1 { if [[ $l4 ]];then echo "$l4"|sed -n "$1$r36;$1$r37";else printf %i 1;fi; }                                                                     # get s/ms delays from log lines
 function lg2 { if [[ $l4 ]];then echo "$l4"|sed -n "$1$r38;$1$r39";else printf %i 1;fi; }                                                                     # get s/ms delays from log lines
