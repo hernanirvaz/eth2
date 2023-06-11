@@ -14,14 +14,14 @@ function rl2 { local f=$p17/logs/validator.log;echo $H|sudo -S cat              
 function rl3 { local f=$p01                   ;echo $H|sudo -S grep -h $r34 $f.7 $f.6 $f.5 $f.4 $f.3 $f.2 $f.1 $f 2>$p03             ; }                      # get all eth syslog lines
 function rl4 { local f=$p01                   ;echo $H|sudo -S grep -h $1                                 $f.1 $f 2>$p03             ; }                      # get all eth syslog lines
 function rl5 { local f=$p17/logs/validator.log;echo $H|sudo -S grep -h $r53                                    $f 2>$p03             ; }                      # get latency vc lines
-function rl6 { local f=$p01                   ;echo $H|sudo -S grep -h $r32.*$r65                              $f 2>$p03             ; }                      # get reorg cc lines
+function rl6 { local f=$p01                   ;echo $H|sudo -S grep -h $r32.*$r65                              $f 2>$p03|lg0 .*$r65  ; }                      # get reorgs
 function lg0 { sed -n "s%$1 *\([0-9]*\).*%\1%p" $2 2>$p03; }                                                                                                  # get list of numbers
 function lg1 { if [[ $l4 ]];then echo "$l4"|sed -n "$1$r36;$1$r37";else printf %i 1;fi; }                                                                     # get s/ms delays from log lines
 function lg2 { if [[ $l4 ]];then echo "$l4"|sed -n "$1$r38;$1$r39";else printf %i 1;fi; }                                                                     # get s/ms delays from log lines
-function lg3 { if [[ ${1:-0} -gt 0 ]];then l4=$(rl0|tail -n${1:-0});else l4=$(rl0);fi;b1=$(nu3 3 0 $(lg1 "$r45"));b5=$(nu3 3 0 $(lg1 "$r46"));b8=$(nu4 0 $(rl6|lg0 .*$r65)); }
+function lg3 { if [[ ${1:-0} -gt 0 ]];then l4=$(rl0|tail -n${1:-0});else l4=$(rl0);fi;b1=$(nu3 3 0 $(lg1 "$r45"));b5=$(nu3 3 0 $(lg1 "$r46"));b8=$(nu4 0 $(rl6)); }
 function lg4 { echo "$l6"|sed -n "s%.*$r53  *\([0-9]*\).*$1.*%\1%p" 2>$p03; }                                                                                 # get list of vc latencies
 function lg5 { if v2t;then l6=$(rl5|tail -n$1);v0=$(nu5 $(lg4 $zip4));v1=$(nu5 $(lg4 $iip5));else v0=0;v1=0;fi; }                                             # set latency vc delays
-function lg6 { rl2|fln "$r66" $1; }
+function lg6 { rl2|fln "$r66" $1; }                                                                                                                           # get vc intern lines
 function fs0 { pex "grep    ${2:-$r32}.*$1 $p01"; }                                                                                                           # get specific syslog lines
 function fs1 { pex "grep    ${1:-$r34}     $p01"; }                                                                                                           # get eth      syslog lines
 function fs2 { pex "grep -v ${1:-$r34}     $p01"; }                                                                                                           # get sys      syslog lines
