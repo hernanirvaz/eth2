@@ -241,16 +241,18 @@ r56="s%APT::Periodic::Update-Package-Lists.*$%APT::Periodic::Update-Package-List
 r56="${r56};s%APT::Periodic::Unattended-Upgrade.*$%APT::Periodic::Unattended-Upgrade \"1\";%i"
 r56="${r56};/APT::Periodic::Unattended-Upgrade/a \\"
 r56="${r56}APT::Periodic::AutocleanInterval \"1\";"
-r57="s%^ *$p01%# $p01%"
-r58="s%$cunm lighthouse%lh%;s%: [a-z]* [0-9]* [0-9]*:[0-9]*:[0-9]*\.% %i;s%0x[a-z0-9]{64}%0x..%gi"
+r57='s%0x[a-z0-9]{64}%0x..%gi'
+r58="s%$cunm lighthouse%lh%;s%: [a-z]* [0-9]* [0-9]*:[0-9]*:[0-9]*\.% %i;$r57"
 r59="s%$cunm lighthouse%lh%;s%: [a-z]* [0-9]* [0-9]*:[0-9]*:[0-9]*\.[0-9]*.*peers:% peers:%i"
-r60="s%^.*$cunm *%%;s%0x[a-z0-9]{64}%0x..%gi;s%lighthouse%lh%;s%geth%eg%;s%besu%eu%"
+r60="s%^.*$cunm *%%;$r57;s%lighthouse%lh%;s%geth%eg%;s%besu%eu%;s%<html>.*</html>%%"
 r61='error'
 r62='[ =]INFO '
 r63='success'
 r64='app-snap\|number.of.Error.Log.entries.increased'
 r65='reorg_distance:'
 r66="\($r62\| DEBG \)"
+r67='time_taken_ms:'
+r68="s%^ *$p01%# $p01%"
 
 function tsa { $s00 is-active  --quiet $1 2>$p03; }
 function tse { $s00 is-enabled --quiet $1 2>$p03; }
