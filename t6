@@ -549,14 +549,14 @@ function irb { rm $p39.*.hours 2>$p03;if trb $1;then if v2t;then brs 0 RB $s45 $
 [[ $1 = lp  ]] && { netstat -tulpn; }
 # outros journal system/lighthouse
 [[ $1 = sl  ]] && { fs2                 |fle $2; }
-[[ $1 = el  ]] && { fs1 "\($r30\|$r31\)"|fln "$r62" $2|sed "$r60"; }
-[[ $1 = ml  ]] && { fs1 "$r33"          |fln "$r62" $2|sed "$r60"; }
-[[ $1 = cl  ]] && { fs1 "$r32"          |fln "$r62" $2|sed "$r58"; }
-[[ $1 = al  ]] && { fs0 "\($r47\|$r48\)"|fln "$r63" $2|sed "$r58"; }
-[[ $1 = clp ]] && { fs0 peers:                        |sed "$r59"|grep -v "peers: *$(($(ss5 $s12 target-peers)/10))[0-9]"; }
+[[ $1 = el  ]] && { fs1 "\($r30\|$r31\)"|fln "$r62" $2|sed -E "$r60"; }
+[[ $1 = ml  ]] && { fs1 "$r33"          |fln "$r62" $2|sed -E "$r60"; }
+[[ $1 = cl  ]] && { fs1 "$r32"          |fln "$r62" $2|sed -E "$r58"; }
+[[ $1 = al  ]] && { fs0 "\($r47\|$r48\)"|fln "$r63" $2|sed -E "$r58"; }
+[[ $1 = clp ]] && { fs0 peers:                        |sed -E "$r59"|grep -v "peers: *$(($(ss5 $s12 target-peers)/10))[0-9]"; }
+[[ $1 = ll  ]] && { rl3                 |fln "$r62" $2|sed -E "$r60"; }
 [[ $1 = ci  ]] && { rl1                 |fln "$r62" $2; }
 [[ $1 = vi  ]] && { lg6 $2; }
-[[ $1 = ll  ]] && { rl3                 |fln "$r62" $2|sed "$r60"; }
 [[ $1 = ws  ]] && { cex 'ufw status numbered'; }
 [[ $1 = wa  ]] && { wa; }
 [[ $1 = we  ]] && { yex 'ufw enable'; }
