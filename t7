@@ -1,9 +1,9 @@
 #!/bin/bash
 
-source /home/eth/eth2/t1
+p02='/home/eth'
 
-[[ $1 = GETHSTP ]] && { swn "GETH STOPED $(date '+%F %H:%M') SERVICE_RESULT=$2\tEXIT_CODE=$3\tEXIT_STATUS=$4" >> $p02/mail.log; }
-[[ $1 = BESUSTP ]] && { swn "BESU STOPED $(date '+%F %H:%M') SERVICE_RESULT=$2\tEXIT_CODE=$3\tEXIT_STATUS=$4" >> $p02/mail.log; }
-[[ $1 = BEACSTP ]] && { swn "BEAC STOPED $(date '+%F %H:%M') SERVICE_RESULT=$2\tEXIT_CODE=$3\tEXIT_STATUS=$4" >> $p02/mail.log; }
-[[ $1 = VALISTP ]] && { swn "VALI STOPED $(date '+%F %H:%M') SERVICE_RESULT=$2\tEXIT_CODE=$3\tEXIT_STATUS=$4" >> $p02/mail.log; }
-[[ $1 = MEVBSTP ]] && { swn "MEVB STOPED $(date '+%F %H:%M') SERVICE_RESULT=$2\tEXIT_CODE=$3\tEXIT_STATUS=$4" >> $p02/mail.log; }
+[[ $1 = GETHSTP ]] && { echo -e "GETH STOPED $(date '+%F %H:%M') SERVICE_RESULT=$2\tEXIT_CODE=$3\tEXIT_STATUS=$4" >> $p02/mail.log; }
+[[ $1 = BESUSTP ]] && { echo -e "BESU STOPED $(date '+%F %H:%M') SERVICE_RESULT=$2\tEXIT_CODE=$3\tEXIT_STATUS=$4" >> $p02/mail.log; }
+[[ $1 = BEACSTP ]] && { echo -e "BEAC STOPED $(date '+%F %H:%M') SERVICE_RESULT=$2\tEXIT_CODE=$3\tEXIT_STATUS=$4" >> $p02/mail.log; }
+[[ $1 = VALISTP ]] && { echo -e "VALI STOPED $(date '+%F %H:%M') SERVICE_RESULT=$2\tEXIT_CODE=$3\tEXIT_STATUS=$4" >> $p02/mail.log; }
+[[ $1 = MEVBSTP ]] && { echo -e "MEVB STOPED $(date '+%F %H:%M') SERVICE_RESULT=$2\tEXIT_CODE=$3\tEXIT_STATUS=$4" >> $p02/mail.log; }

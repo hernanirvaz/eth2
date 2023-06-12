@@ -34,6 +34,7 @@ Group=eth4
 Restart=always
 RestartSec=10
 ExecStart=$p00/mev-boost -mainnet -log-no-version $epmv
+PermissionsStartOnly=true
 ExecStopPost=$p02/eth2/t7 MEVBSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 
 [Install]

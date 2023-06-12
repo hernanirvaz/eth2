@@ -31,6 +31,7 @@ Restart=always
 RestartSec=10
 TimeoutStopSec=300
 ExecStart=$p00/besu/bin/besu --data-path=$p09/data $epec
+PermissionsStartOnly=true
 ExecStopPost=$p02/eth2/t7 BESUSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 
 [Install]
