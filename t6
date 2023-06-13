@@ -46,7 +46,7 @@ function ss1 { $s01 $1 2>$p03|sed -n "s%.*$2[ =]\(${3:-.}*\).*%\1%p" 2>$p03; }  
 function ss2 { $s01 $1 2>$p03|sed -n "s%.*Active: *\(.*\)%\1%p" 2>$p03|sed "s% *since.*;%%" 2>$p03|cut -c1-40; }                                              # systemctl status 2 extraction
 function ss3 { local e=$(ss1 $1 Memory:)                     ;if [[ $e ]];then printf $e;else printf 0.0K   ;fi; }                                            # systemctl status Memory extraction
 function ss4 { local e=$(ss1 $1 $3 "[^$4 ]"|sed -n $2 2>$p03);if [[ $e ]];then printf $e;else printf 00:0000;fi; }                                            # systemctl status ip/port extraction
-function ss5 { nu0 $(ss1 $1 $2 [0-9]); }                                                                                                                      # systemctl status number extraction
+function ss5 { nu0 $(($(ss1 $1 $2 [0-9])/${3:-1})); }                                                                                                         # systemctl status number extraction
 function dmr { sex "$s00 daemon-reload"; }                                                                                                                    # daemon-reload
 function dts { read       d0 d1   <<< ${1:-$(date '+%F %H:%M')};dt="$d0 $d1"; }                                                                               # set date/time vars
 function dtl { read _ _ _ d0 d1 _ <<< $(bff|tail -n1)          ;dt="$d0 $d1"; }                                                                               # set date/time vars with last beacon log
@@ -159,7 +159,7 @@ function bff { grep "BEAC.*$1" $p12 2>$p03; }                                   
 function bnn { snn $(fs3 peers:) $(bpc $(bcl peer_count)); }                                                                                                  # set cur/min/std cc peers
 function bb1 { if [[ $(echo $@|grep is_syncing\":false) ]];then printf 'synced';else printf 'syncing: %6i' $(bsd $@);fi; }                                    # get cl syncing distance remaining
 function bio { lg3 $1;dts;m="BEIO $(nu1 %6i $1) $dt ior: $b1 $b5 $b8 $(bi1)"; }
-function bcc { if v4t;then if tbp;then if trb;then printf r;else printf c;fi;else if tsd;then printf d;else printf _;fi;fi;else if trb;then printf r;else if tsd;then printf d;else printf _;fi;fi;fi; }
+function bcc { printf p;if v4t;then if tbp;then if trb;then printf r;else printf c;fi;else if tsd;then printf d;else printf _;fi;fi;else if trb;then printf r;else if tsd;then printf d;else printf _;fi;fi;fi;printf :; }
 function bmp { printf '%5i %3s %3i %5i %4i ior: %4i %4i %2i %4i' ${a[0]} $b7 $b4 $nd $(bi0) $b1 $b5 $b8 $(bi1) 2>$p03; }
 function bl0 { dts;ok=OK;if tsa $s12;then bl3;bv0;bnn;bb0;blo;else m="BSRV NOT ON $dt";fi; }                                                                  # cc report
 function bl1 {                                                                                                                                                # set restart idx vars
@@ -195,7 +195,7 @@ function bno { m="BEAC $(nu1 %6i $(bbl)) $dt $(bnc 'cnt:' ' ') $(bnk 'mis:' ' ')
 function bmi { zk=0;zz=0;zx=0;unset v;v[1]=0;unset k;k[0]=0;unset z;z[0]=0;unset x;x[0]=0;unset w;w[0]=0;unset c;c[0]=0;unset a;a[0]=0;bm6; }                 # ini err/cnt/avg penalty arrays
 function bm0 {                                                                                                                                                # cc-daily report
   [[ -f $p12 ]] || return;bmi;b4=0;dts;bv0;bnn;bs3;bl2;[[ -f $p14 ]] && bm4;lg3                                                                               # set vars/arrays
-  l1=$(tail -n$(($(nu0 $(bbl))-v[1])) $p12 2>$p03|bfl);[[ $l1 ]] && bm1;bm2;[[ $b2 -eq 0 ]] && boi;bo3;bm5 ${a[$nn]};b7="p$(bcc):"                            # add cc lines & homologous/avg position
+  l1=$(tail -n$(($(nu0 $(bbl))-v[1])) $p12 2>$p03|bfl);[[ $l1 ]] && bm1;bm2;[[ $b2 -eq 0 ]] && boi;bo3;bm5 ${a[$nn]};b7=$(bcc)                                # add cc lines & homologous/avg position
 }
 function bm1 { local g=${1:-$s56};bs5;[[ $l5 ]] && { bkm $g;bzm $g;bxm $g;bwm $g;bcm $g; };((g<s57)) && bm1 $((g+s58)); }                                     # recursively sum penalty errors arrays
 function bm2 { k[0]=$(($(bnk)));z[0]=$(($(bnz)));x[0]=$(($(bnx)));w[0]=$(($(bnw)));c[0]=$(($(bnc)));a[0]=$(bm3 0);bm7; }                                      # tot err/cnt/penalty arrays
@@ -565,7 +565,7 @@ function irb { rm $p39.*.hours 2>$p03;if trb $1;then if v2t;then brs 0 RB $s45 $
 [[ $1 = ll  ]] && { rl3                 |fln "$r62" $2|sed -E "$r60"; }
 [[ $1 = ci  ]] && { rl1                 |fln "$r66" $2|sed -E "$r57"; }
 [[ $1 = vi  ]] && { rl2                 |fln "$r66" $2|sed -E "$r57"; }
-[[ $1 = clp ]] && { fs0 peers:                        |sed -E "$r59"|grep -v "peers: *$(($(ss5 $s12 target-peers)/10))[0-9]"; }
+[[ $1 = clp ]] && { fs0 peers:                        |sed -E "$r59"|grep -v "peers: *$(ss5 $s12 target-peers 10)[${2:-0}-9]"; }
 [[ $1 = ws  ]] && { cex 'ufw status numbered'; }
 [[ $1 = wa  ]] && { wa; }
 [[ $1 = we  ]] && { yex 'ufw enable'; }
@@ -719,6 +719,7 @@ if [[ ! $1 ]];then
   m="$m\n[gub]h[s]\tgeth|besu|beacon\thistoric report [summary]"
   m="$m\nehs\t\tgeth|besu\t\thistoric report summary"
   m="$m\n[m|s]hs\t\t[master|slave] el/cl\thistoric report summary"
+  m="$m\nclp [i]\t\tshow peers excluding [$(ss5 $s12 target-peers 10)][i(0)-9]"
   m="$m\ncla\t\tcc add    long-lived parms"
   m="$m\nclr\t\tcc remove long-lived parms"
   m="$m\ncce\t\tcc change ec server ($znm1/$znm4)"
