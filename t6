@@ -22,8 +22,8 @@ function lg2 { if [[ $l4 ]];then echo "$l4"|sed -n "$1$r38;$1$r39";else printf %
 function lg3 { if [[ ${1:-0} -gt 0 ]];then l4=$(ll0|tail -n${1:-0});else l4=$(ll0);fi;b1=$(nu3 3 0 $(lg1 "$r45"));b5=$(nu3 3 0 $(lg1 "$r46"));b8=$(nu4 0 $(ll5)); }
 function lg4 { echo "$l6"|sed -n "s%.*$r53  *\([0-9]*\).*$1.*%\1%p" 2>$p03; }                                                                                 # get list of vc latencies
 function lg5 { if v2t;then l6=$(ll7 $1);v0=$(nu5 1 $(lg4 $zip4));v1=$(nu5 1 $(lg4 $iip5));v2=$(nu5 1 $(ll6 $(($1/2))));else v0=0;v1=0;v2=0;fi; }              # set vc delays
-function fs0 { pex "grep    ${2:-$r32}.*$1 $p01"; }                                                                                                           # get specific syslog lines
-function fs1 { pex "grep    ${1:-$r34}     $p01"; }                                                                                                           # get eth      syslog lines
+function fs0 { pex "grep -h ${2:-$r32}.*$1 $p01"; }                                                                                                           # get specific syslog lines
+function fs1 { pex "grep -h ${1:-$r34}     $p01"; }                                                                                                           # get eth      syslog lines
 function fs2 { pex "grep -v ${1:-$r34}     $p01"; }                                                                                                           # get sys      syslog lines
 function fs3 { fs0 $1 $2|lg0 .*$1 ; }                                                                                                                         # get numbers  syslog lines
 function fs4 { fs0 $1 $2|tail -n$3; }                                                                                                                         # get specific syslog lines
@@ -558,13 +558,13 @@ function irb { rm $p39.*.hours 2>$p03;if trb $1;then if v2t;then brs 0 RB $s45 $
 [[ $1 = lp  ]] && { netstat -tulpn; }
 # outros journal system/lighthouse
 [[ $1 = sl  ]] && { fs2                 |flp "$r61" $2              ; }
-[[ $1 = el  ]] && { fs1 "\($r30\|$r31\)"|fln "$r62" $2|sed -E "$r60"; }
+[[ $1 = el  ]] && { fs1 "\($r30\|$r31\)"|fln "$r62" $2|sed -E "$r58"; }
 [[ $1 = rl  ]] && { fs1 "$r33"          |fln "$r62" $2|sed -E "$r60"; }
 [[ $1 = cl  ]] && { fs1 "$r32"          |fln "$r62" $2|sed -E "$r58"; }
 [[ $1 = al  ]] && { fs0 "\($r47\|$r48\)"|fln "$r63" $2|sed -E "$r58"; }
 [[ $1 = ll  ]] && { ll3                 |fln "$r62" $2|sed -E "$r60"; }
-[[ $1 = ci  ]] && { ll1                 |fln "$r66" $2|sed -E "$r57"; }
-[[ $1 = vi  ]] && { ll2                 |fln "$r66" $2|sed -E "$r57"; }
+[[ $1 = ci  ]] && { ll1                 |fln "$r66" $2|sed -E "$r69"; }
+[[ $1 = vi  ]] && { ll2                 |fln "$r66" $2|sed -E "$r69"; }
 [[ $1 = clp ]] && { fs0 peers:                        |sed -E "$r59"|grep -v "peers: *$(ss5 $s12 target-peers 10)[${2:-0}-9]"; }
 [[ $1 = ws  ]] && { cex 'ufw status numbered'; }
 [[ $1 = wa  ]] && { wa; }
