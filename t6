@@ -9,8 +9,8 @@ function nu3 { local n=$1;local i=$2;shift;shift;if [[ $# -gt 0 ]];then nu2 "(0$
 function nu4 { local n=$1;                 shift;if [[ $# -gt 0 ]];then nu2 "(0$(printf %+.${n}f $@ 2>$p03))"          $((n+1)) %.${n}f;else printf %i;fi; }  # get precision sum     list numbers
 function nu5 { local n=$1;                 shift;if [[ $# -gt 0 ]];then nu2 "(0$(printf %+.${n}f $@ 2>$p03))/$#*10^$n" $((n+1))        ;else printf %i;fi; }  # get precision average int  numbers
 function ll0 { local f=$p16/logs/beacon.log   ;echo $H|sudo -S grep -h $r44                               $f.1 $f 2>$p03|grep -v None          ; }            # get cc intern lines (specific)
-function ll1 { local f=$p16/logs/beacon.log   ;echo $H|sudo -S cat                    $f.5 $f.4 $f.3 $f.2 $f.1 $f 2>$p03                       ; }            # get cc intern lines
-function ll2 { local f=$p17/logs/validator.log;echo $H|sudo -S cat                    $f.5 $f.4 $f.3 $f.2 $f.1 $f 2>$p03                       ; }            # get vc intern lines
+function ll1 { local f=$p16/logs/beacon.log   ;echo $H|sudo -S cat                                             $f 2>$p03                       ; }            # get cc intern lines
+function ll2 { local f=$p17/logs/validator.log;echo $H|sudo -S cat                                             $f 2>$p03                       ; }            # get vc intern lines
 function ll3 { local f=$p01                   ;echo $H|sudo -S grep -h $r34 $f.7 $f.6 $f.5 $f.4 $f.3 $f.2 $f.1 $f 2>$p03                       ; }            # get all eth syslog lines
 function ll4 { local f=$p01                   ;echo $H|sudo -S grep -h $1                                 $f.1 $f 2>$p03                       ; }            # get all eth syslog lines
 function ll5 { local f=$p01                   ;echo $H|sudo -S grep -h $r32.*$r65                              $f 2>$p03|lg0 .*$r65            ; }            # get reorgs
