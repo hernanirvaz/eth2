@@ -242,23 +242,38 @@ r56="s%APT::Periodic::Update-Package-Lists.*$%APT::Periodic::Update-Package-List
 r56="${r56};s%APT::Periodic::Unattended-Upgrade.*$%APT::Periodic::Unattended-Upgrade \"1\";%i"
 r56="${r56};/APT::Periodic::Unattended-Upgrade/a \\"
 r56="${r56}APT::Periodic::AutocleanInterval \"1\";"
-r57="s% *0x[a-z0-9]*…[a-z0-9]*%0x%gi;s% *… *% %g"
-r57="$r57;s% *[a-z0-9]*\.\.[a-z0-9]*%0x%gi"
-r57="$r57;s% *0x[a-z0-9]{64}%0x%gi"
-r57="$r57;s% *[a-z0-9]{64}%0x%gi"
-r57="$r57;s%192\.168\.8\.%%g"
+r57="s%192\.168\.8\.%%g"
+r57="$r57;s% *0x[a-z0-9]*…[a-z0-9]*%%gi;s% *… *% %g"
+r57="$r57;s% *[a-z0-9]*\.\.[a-z0-9]*%%gi"
+r57="$r57;s% *0x[a-z0-9]{96}%%gi"
+r57="$r57;s% *0x[a-z0-9]{64}%%gi"
+r57="$r57;s% *[a-z0-9]{64}%%gi"
+r57="$r57;s% *[a-z0-9]{32}%%gi"
 r58="$r57;s%^.*$cunm *%%"
 r58="$r58;s%lighthouse%lh%"
 r58="$r58;s%geth%eg%"
 r58="$r58;s%besu%eu%"
+r58="$r58;s% *finalized_root.*verified.,%%"
 r59="$r58;s%(\.[0-9][0-9][0-9]) *.*peers:%\1 peers:%i"
 r60="$r58;s%mev-boost%mv%"
+r60="$r60;s%\{.*\}%%"
 r60="$r60;s%<html>.*</html>%%"
-r60="$r60;s%ua *= *[^ ]*%%"
+r60="$r60;s% +/ +(\\\[rn])*%%"
+r60="$r60;s%ua *= *[^ ]* *%%"
 r60="$r60;s%https?://([a-z\.-]+)(/[a-z0-9]+)*%\1%g"
 r60="$r60;s%registerValidator%rV%g"
 r60="$r60;s%numRegistrations%nR%g"
-r60="$r60;s%level *= *%\t%g"
+r60="$r60;s%blockHash *= *%%"
+r60="$r60;s%parentHash *= *%%"
+r60="$r60;s%pubkey *= *%%"
+r60="$r60;s%txRoot *= *%%"
+r60="$r60;s%level *= *%%"
+r60="$r60;s%msg *= *%\tmsg=%"
+r60="$r60;s%time *= *\"([^\"]+)\"%\1%"
+r60="$r60;s%Get *..[^\" ]+..: *%GET %"
+r60="$r60;s%Post *..[^\" ]+..: *%POST %"
+r60="$r60;s%context deadline exceeded *%deadline %"
+r60="$r60;s%\(Client.Timeout exceeded while awaiting headers\) *%(Timeout headers)%"
 r61='error'
 r62='[ =]INFO '
 r63='success'
@@ -370,7 +385,7 @@ s60=900
 s61=2
 s62=200
 s63=20000
-s64=500000
+s64=300000
 
 b[ 11766]='0x93bf23a587f11f9eca329a12ef51296b8a9848af8c0fe61201524b14cb85b0c6fbd3e427501cdfa3b28719bd1ed96fff'
 b[ 11767]='0xb5b0fc3d2ba577f3e2c7324f7ea4306f17eeee0f12c722f4fa83e45bf6c15477d50261bb2666c30f21ab71a26aeeeafb'

@@ -559,9 +559,9 @@ function irb { rm $p39.*.hours 2>$p03;if trb $1;then if v2t;then brs 0 RB $s45 $
 # outros journal system/lighthouse
 [[ $1 = sl  ]] && { fs2                 |flp "$r61" $2              ; }
 [[ $1 = el  ]] && { fs1 "\($r30\|$r31\)"|fln "$r62" $2|sed -E "$r58"; }
-[[ $1 = rl  ]] && { fs1 "$r33"          |fln "$r62" $2|sed -E "$r60"; }
-[[ $1 = cl  ]] && { fs1 "$r32"          |fln "$r62" $2|sed -E "$r58"; }
 [[ $1 = al  ]] && { fs0 "\($r47\|$r48\)"|fln "$r63" $2|sed -E "$r58"; }
+[[ $1 = cl  ]] && { fs1 "$r32"          |fln "$r62" $2|sed -E "$r58"; }
+[[ $1 = rl  ]] && { fs1 "$r33"          |fln "$r62" $2|sed -E "$r60"; }
 [[ $1 = ll  ]] && { ll3                 |fln "$r62" $2|sed -E "$r60"; }
 [[ $1 = ci  ]] && { ll1                 |fln "$r66" $2|sed -E "$r69"; }
 [[ $1 = vi  ]] && { ll2                 |fln "$r66" $2|sed -E "$r69"; }
