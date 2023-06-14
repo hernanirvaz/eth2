@@ -375,7 +375,7 @@ s49=18800
 s50=4500
 s51=500
 s52=24
-s53=33
+s53=42
 s54=$($s01 $s12 2>$p03|sed -n 's%.*PID: *\([0-9]*\).*%\1%p')
 s55=4000;[[ $s55 -eq 0 ]] && s55=$(curl -sX GET 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=ETH&convert=EUR&CMC_PRO_API_KEY=3ae5f3df-bd71-489d-a9dd-b626995fba31'|sed 's%.*price.:\([0-9]*\.[0-9]*\).*%\1%')
 s56=20
@@ -386,7 +386,7 @@ s60=1800
 s61=2
 s62=200
 s63=20000
-s64=200000
+s64=100000
 
 b[ 11766]='0x93bf23a587f11f9eca329a12ef51296b8a9848af8c0fe61201524b14cb85b0c6fbd3e427501cdfa3b28719bd1ed96fff'
 b[ 11767]='0xb5b0fc3d2ba577f3e2c7324f7ea4306f17eeee0f12c722f4fa83e45bf6c15477d50261bb2666c30f21ab71a26aeeeafb'
