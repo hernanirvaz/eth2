@@ -76,10 +76,10 @@ function snn {
     nr=0      ;nm=0                                          ;nd=0
   fi
 }
-function sz0 { gnn 0          ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s i2r:%i:%i:%i:%i'                   $nr $nm $nd $(ss5 $1 port    ) "$(gb1 $(gcl eth.syncing))" $e1 $e2 $e3 $(ei0)                                           2>$p03; }
-function sz1 { unn 0          ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s i:%i'                              $nr $nm $nd $(ss5 $1 p2p-port) "$(ub1 $(ucl eth_syncing))" $e1                                                          2>$p03; }
-function sz2 { dtl;bo4;lg3;bnn;printf 'cl:p%02i:m%02i:d%04i p2p:%5i %s mp:c%i:m%i ior:%i:%i:%i:%i el:%7s' $nr $nm $nd $(ss5 $1 port)     "$(bb1 $(bcl syncing))"     $b2 $b3 $b1 $b5 $b8 $(bi1) $(ss4 $1 $r24 execution-endpoint) 2>$p03; }
-function sz3 { lg5 $s63       ;printf 'vl:b%02i:m%02i:c%02i cc:%13s'                                      $v0 $v1 $v2 $(ss4 $1 $r24 nodes)                                                                                        2>$p03; }
+function sz0 { gnn 0          ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s i2r:%03i:%01i:%07i:%02i'                   $nr $nm $nd $(ss5 $1 port    ) "$(gb1 $(gcl eth.syncing))" $e1 $e2 $e3 $(ei0)                                           2>$p03; }
+function sz1 { unn 0          ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s i:%i'                                      $nr $nm $nd $(ss5 $1 p2p-port) "$(ub1 $(ucl eth_syncing))" $e1                                                          2>$p03; }
+function sz2 { dtl;bo4;lg3;bnn;printf 'cl:p%02i:m%02i:d%04i p2p:%5i %s ior:%03i:%04i:%02i:%04i op:c%i:m%i el:%7s' $nr $nm $nd $(ss5 $1 port)     "$(bb1 $(bcl syncing))"     $b1 $b5 $b8 $(bi1) $b2 $b3 $(ss4 $1 $r24 execution-endpoint) 2>$p03; }
+function sz3 { lg5 $s63       ;printf 'vl:b%02i:m%02i:c%02i cc:%13s'                                              $v0 $v1 $v2 $(ss4 $1 $r24 nodes)                                                                                        2>$p03; }
 function sso {
   tse $2 || return;dts;local e="$1 $(printf '%6s %10s %5s status: %-40s' $(ss3 $2) $dt "$(ss2 $2)" 2>$p03)"                                                   # memory & status
   [[ $1 = GETH ]] && e="$e $(sz0 $2)";[[ $1 = BESU ]] && e="$e $(sz1 $2)";[[ $1 = BEAC ]] && e="$e $(sz2 $2)";[[ $1 = VALI ]] && e="$e $(sz3 $2)";swn "$e"    # set homologous/avg & cl http
@@ -138,15 +138,15 @@ function ul0 {                                                                  
 # cc control commands
 # curl 192.168.8.37:5052/lighthouse/peers | jq -r '.[] | select(.peer_info.connection_direction=="Incoming") | .peer_info.seen_addresses | .[]'
 function bcl { curl -sX GET "http://$cicc:5052/eth/v1/node/$1" -H "accept: application/json" 2>$p03; }                                                        # exec RPC HTTP
-function bsd { nu0 $(echo $@|sed -n 's%.*"sync_distance" *: *"\([^"]*\)".*%\1%ip' 2>$p03); }                                                                  # get cl syncing distance
-function bpc { nu0 $(echo $@|sed -n 's%.*"connected" *: *"\([^"]*\)".*%\1%ip'     2>$p03); }                                                                  # get cl peers connected
-function bz0 { nu2 "(30.0*(0.4*$zk+0.3*$zz+0.2*$zx+0.1*$zw))"                            ; }                                                                  # get numerator paid errors
-function bw0 { nu0 $((9*z1))                                                             ; }                                                                  # get numerator processed blocks
-function bf0 { nu0 $((59*z3))                                                            ; }                                                                  # get numerator general errors
-function bi0 { nu0 $((zk*9+zz*5+zx))                                                     ; }                                                                  # get delete day idx
-function bi1 { nu0 $(((5*b1+2*b5+3*b8)/10))                                              ; }                                                                  # shw imported/observed/reorg data
-function bi2 { nu0 $(((z5>400?$(bz0)/z5:0)+(z2>300?$(bw0)/z2:0)+(z4>999?$(bf0)/z4:0)))   ; }                                                                  # get restart idx
-function ei0 { nu2 "(0.6666*$e1+0.3333*$e2+0.0001*$e3)"                                  ; }                                                                  # shw imported/head/rejected data
+function bsd { nu0 $(echo $@|jq -r .data.sync_distance 2>$p03)                        ; }                                                                     # get cl syncing distance
+function bpc { nu0 $(echo $@|jq -r .data.connected     2>$p03)                        ; }                                                                     # get cl peers connected
+function bz0 { nu2 "(30.0*(0.4*$zk+0.3*$zz+0.2*$zx+0.1*$zw))"                         ; }                                                                     # get numerator paid errors
+function bw0 { nu0 $((9*z1))                                                          ; }                                                                     # get numerator processed blocks
+function bf0 { nu0 $((59*z3))                                                         ; }                                                                     # get numerator general errors
+function bi0 { nu0 $((zk*9+zz*5+zx))                                                  ; }                                                                     # get delete day idx
+function bi1 { nu0 $(((5*b1+2*b5+3*b8)/10))                                           ; }                                                                     # shw imported/observed/reorg data
+function bi2 { nu0 $(((z5>400?$(bz0)/z5:0)+(z2>300?$(bw0)/z2:0)+(z4>999?$(bf0)/z4:0))); }                                                                     # get restart idx
+function ei0 { nu2 "(0.6666*$e1+0.3333*$e2+0.0001*$e3)"                               ; }                                                                     # shw imported/head/rejected data
 function bdp { nu2 "($1*$s48+$2*$s49+$3*$s50+$4*$s51)/${5:-1}*$s55/1000000" 7; }                                                                              # get penalty
 function bdr { nu2 "($1*$s47+$2*$s46)*$s55/100000000"                       7; }                                                                              # get reward
 function bv0 { nn=$(ss5 $s12 target-peers); }                                                                                                                 # set configured peers
@@ -157,7 +157,7 @@ function bb0 { bs0;bs3;bl1;bl2;[[ (1 -eq $(era $p12 $s52) && $(bi2) -ge 1) || (1
 function bfl { grep "BEAC.*$1"      2>$p03; }                                                                                                                 # filter cc lines
 function bff { grep "BEAC.*$1" $p12 2>$p03; }                                                                                                                 # filter cc log
 function bnn { snn $(fs3 peers:) $(bpc $(bcl peer_count)); }                                                                                                  # set cur/min/std cc peers
-function bb1 { if [[ $(echo $@|grep is_syncing\":false) ]];then printf 'synced';else printf 'syncing: %6i' $(bsd $@);fi; }                                    # get cl syncing distance remaining
+function bb1 { if [[ $(echo $@|jq -r .data.is_syncing) = false ]];then printf 'synced';else printf 'syncing: %6i' $(bsd $@);fi; }                                    # get cl syncing distance remaining
 function bio { lg3 $1;dts;m="BEIO $(nu1 %6i $1) $dt ior: $b1 $b5 $b8 $(bi1)"; }
 function bcc { printf p;if v4t;then if tbp;then if trb;then printf r;else printf c;fi;else if tsd;then printf d;else printf _;fi;fi;else if trb;then printf r;else if tsd;then printf d;else printf _;fi;fi;fi;printf :; }
 function bmp { printf '%5i %3s %3i %5i %4i ior: %4i %4i %2i %4i' ${a[0]} $b7 $b4 $nd $(bi0) $b1 $b5 $b8 $(bi1) 2>$p03; }
