@@ -76,9 +76,9 @@ function snn {
     nr=0      ;nm=0                                          ;nd=0
   fi
 }
-function sz0 { gnn 0          ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s i2r:%03i:%01i:%07i:%02i'                   $nr $nm $nd $(ss5 $1 port    ) "$(gb1 $(gcl eth.syncing))" $e1 $e2 $e3 $(ei0)                                           2>$p03; }
+function sz0 { gnn 0          ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s i2r:%04i:%01i:%07i:%02i'                   $nr $nm $nd $(ss5 $1 port    ) "$(gb1 $(gcl eth.syncing))" $e1 $e2 $e3 $(ei0)                                           2>$p03; }
 function sz1 { unn 0          ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s i:%i'                                      $nr $nm $nd $(ss5 $1 p2p-port) "$(ub1 $(ucl eth_syncing))" $e1                                                          2>$p03; }
-function sz2 { dtl;bo4;lg3;bnn;printf 'cl:p%02i:m%02i:d%04i p2p:%5i %s ior:%03i:%04i:%02i:%04i op:c%i:m%i el:%7s' $nr $nm $nd $(ss5 $1 port)     "$(bb1 $(bcl syncing))"     $b1 $b5 $b8 $(bi1) $b2 $b3 $(ss4 $1 $r24 execution-endpoint) 2>$p03; }
+function sz2 { dtl;bo4;lg3;bnn;printf 'cl:p%02i:m%02i:d%04i p2p:%5i %s ior:%04i:%04i:%02i:%04i op:c%i:m%i el:%7s' $nr $nm $nd $(ss5 $1 port)     "$(bb1 $(bcl syncing))"     $b1 $b5 $b8 $(bi1) $b2 $b3 $(ss4 $1 $r24 execution-endpoint) 2>$p03; }
 function sz3 { lg5 $s63       ;printf 'vl:b%02i:m%02i:c%02i cc:%13s'                                              $v0 $v1 $v2 $(ss4 $1 $r24 nodes)                                                                                        2>$p03; }
 function sso {
   tse $2 || return;dts;local e="$1 $(printf '%6s %10s %5s status: %-40s' $(ss3 $2) $dt "$(ss2 $2)" 2>$p03)"                                                   # memory & status
