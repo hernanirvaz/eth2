@@ -76,7 +76,7 @@ function snn {
     nr=0      ;nm=0                                          ;nd=0
   fi
 }
-function sz0 { gnn 0          ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s i2r:%4i %1i %7i %2i'                       $nr $nm $nd $(ss5 $1 port    ) "$(gb1 $(gcl eth.syncing))" $e1 $e2 $e3 $(ei0)                                           2>$p03; }
+function sz0 { gnn 0          ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s i2r:%4i %4i %4i %2i'                       $nr $nm $nd $(ss5 $1 port    ) "$(gb1 $(gcl eth.syncing))" $e1 $e2 $e3 $(ei0)                                           2>$p03; }
 function sz1 { unn 0          ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s i:%i'                                      $nr $nm $nd $(ss5 $1 p2p-port) "$(ub1 $(ucl eth_syncing))" $e1                                                          2>$p03; }
 function sz2 { dtl;bo4;lg3;bnn;printf 'cl:p%02i:m%02i:d%04i p2p:%5i %s ior:%4i %4i %2i %4i op:c%02i:m%02i el:%7s' $nr $nm $nd $(ss5 $1 port)     "$(bb1 $(bcl syncing))"     $b1 $b5 $b8 $(bi1) $b2 $b3 $(ss4 $1 $r24 execution-endpoint) 2>$p03; }
 function sz3 { lg5 $s63       ;printf 'vl:b%02i:m%02i:c%02i cc:%13s'                                              $v0 $v1 $v2 $(ss4 $1 $r24 nodes)                                                                                        2>$p03; }
@@ -99,13 +99,14 @@ function gi0 { nu0 $(echo $@|sed -n 's%.*highestBlock: *\([0-9]*\).*%\1%ip' 2>$p
 function gc0 { nu0 $(echo $@|sed -n 's%.*currentBlock: *\([0-9]*\).*%\1%ip' 2>$p03); }                                                                        # get el current block
 function gv0 { nn=$(ss5 $s10 maxpeers); }                                                                                                                     # set configured peers
 function gq0 { nr=$(nu0 $(gcl net.peerCount)); }                                                                                                              # set el current peers
-function gnn { snn $(fs3 peercount= $r30) $(nu0 $(gcl net.peerCount));gdi $1;gdu $1;e3=$(nu4 0 $(fs3 rejected= $r30)); }                                      # set cur/min/std el peers
+function gll { grep "GETH.*$d0" $p10 2>$p03|wc -l; }                                                                                                          # get day geth log lines
+function gnn { snn $(fs3 peercount= $r30) $(nu0 $(gcl net.peerCount));gdi $1;gdu $1;e3=$(nu2 "$(nu4 0 $(fs3 rejected= $r30))/$(gll)"); }                      # set cur/min/std el peers
 function gb1 { if [[ $(echo $@|grep false) ]];then printf 'synced';else printf  'syncing: %6i' $(($(gi0 $@)-$(gc0 $@)));fi; }                                 # get el syncing blocks remaining
 function gb2 { if [[ $(echo $@|grep false) ]];then printf ''      ;else printf ' syncing: %6i' $(($(gi0 $@)-$(gc0 $@)));fi; }                                 # get el syncing blocks remaining
 function gl0 {                                                                                                                                                # el report
   dts;ok=OK
   if tsa $s10;then local e=$(gcl eth.syncing);gnn 99;gv0;eb0 $p10 $r30 $e
-    m="GETH $ok $(tsy $e) $(dnn) sgs: $(nu1 %4i $e0)$(gb2 $e) $(printf 'i2r: %3i %1i %5i %2i' $e1 $e2 $e3 $(ei0) 2>$p03)"
+    m="GETH $ok $(tsy $e) $(dnn) sgs: $(nu1 %4i $e0)$(gb2 $e) $(printf 'i2r: %3i %1i %4i %2i' $e1 $e2 $e3 $(ei0) 2>$p03)"
   else
     m="GSRV NOT ON $dt"
   fi
