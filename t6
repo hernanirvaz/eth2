@@ -408,8 +408,8 @@ function hs0 {
   if v2t;then local e=$(nu0 $(ss4 $s13 $r25 nodes $1));else local e=$(ssh $(snc $cuvc) "export H=$H;~/eth2/t6 cci $1");fi
   [[ $e -gt 0 ]] || return;local i=$(sci)
   if [[ $i -eq $e ]];then local n=$(nu0 $(ss4 $s12 $r25 execution-endpoint));else local n=$(ssh $(snc $(sni $e)) "export H=$H;~/eth2/t6 eci");fi
-  [[ $n -gt 0 ]] || return;echo -e "\n$(sni $n)"
-  if [[ $i -eq $n ]];then hsg;hsu;    else ssh $(snc $(sni $n)) "export H=$H;~/eth2/t6 hse";fi;[[ $n -eq $e ]] || echo -e "\n$(sni $e)"
+  [[ $n -gt 0 ]] || return;echo $(sni $n)
+  if [[ $i -eq $n ]];then hsg;hsu;    else ssh $(snc $(sni $n)) "export H=$H;~/eth2/t6 hse";fi;[[ $n -eq $e ]] || echo $(sni $e)
   if [[ $i -eq $e ]];then hsb;hsv;cpe;else ssh $(snc $(sni $e)) "export H=$H;~/eth2/t6 hsc";fi
 }
 function nsh { $s08 list;$s08 status;$s09 status|sed -n 's%\(Current DNS\).*:%   \1:%ip'; }                                                                   # network/dns info
