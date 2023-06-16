@@ -147,7 +147,7 @@ function bf0 { nu0 $((59*z3))                                                   
 function bi0 { nu0 $((zk*9+zz*5+zx))                                                  ; }                                                                     # get delete day idx
 function bi1 { nu2 "(0.6*$b1+0.2*$b5+0.2*$b8)"                                        ; }                                                                     # shw imported/observed/reorg data
 function bi2 { nu0 $(((z5>400?$(bz0)/z5:0)+(z2>300?$(bw0)/z2:0)+(z4>999?$(bf0)/z4:0))); }                                                                     # get restart idx
-function ei0 { nu2 "(0.6666*$e1+0.3333*$e2+0.0001*$e3)"                               ; }                                                                     # shw imported/head/rejected data
+function ei0 { nu2 "(0.66*$e1+0.33*$e2+0.01*$e3)"                                     ; }                                                                     # shw imported/head/rejected data
 function bdp { nu2 "($1*$s48+$2*$s49+$3*$s50+$4*$s51)/${5:-1}*$s55/1000000" 7; }                                                                              # get penalty
 function bdr { nu2 "($1*$s47+$2*$s46)*$s55/100000000"                       7; }                                                                              # get reward
 function bv0 { nn=$(ss5 $s12 target-peers); }                                                                                                                 # set configured peers
