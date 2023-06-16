@@ -405,12 +405,9 @@ function hsb { sso BEAC $s12; }
 function hsv { sso VALI $s13; }
 function hsm { sso MEVB $s14; }
 function hs0 {
-  if v2t;then local e=$(nu0 $(ss4 $s13 $r25 nodes $1));else local e=$(ssh $(snc $cuvc) "$p53 cci $1");fi
-  [[ $e -gt 0 ]] || return;local i=$(sci)
-  if [[ $i -eq $e ]];then local n=$(nu0 $(ss4 $s12 $r25 execution-endpoint));else local n=$(ssh $(snc $(sni $e)) "$p53 eci");fi
-  [[ $n -gt 0 ]] || return;echo $(sni $n)
-  if [[ $i -eq $n ]];then hsg;hsu;    else ssh $(snc $(sni $n)) "$p53 hse";fi;[[ $n -eq $e ]] || echo $(sni $e)
-  if [[ $i -eq $e ]];then hsb;hsv;cpe;else ssh $(snc $(sni $e)) "$p53 hsc";fi
+  if [[ $cunm = $1 ]];then local n=$(nu0 $(ss4 $s12 $r25 execution-endpoint));else local n=$(ssh $(snc $1) "$p53 eci");fi;[[ $n -gt 0 ]] || return;echo $(sni $n)
+  if [[ $cunm = $(sni $n) ]];then hsg;hsu;    else ssh $(snc $(sni $n)) "$p53 hse";fi;[[ $(sni $n) = $1 ]] || echo $1
+  if [[ $cunm = $1        ]];then hsb;hsv;cpe;else ssh $(snc $1       ) "$p53 hsc";fi
 }
 function nsh { $s08 list;$s08 status;$s09 status|sed -n 's%\(Current DNS\).*:%   \1:%ip'; }                                                                   # network/dns info
 function wlp { local e="$1";shift;until [[ $# -lt 1 ]];do e="$e\|$1";shift;done;fs2|grep '\[UFW'|if [[ $e ]];then grep -v "$e";else cat;fi; }
@@ -440,7 +437,7 @@ function v0t { tsa $s13; }                                                      
 function v1t { [[ $cunm = $nxvc ]]; }                                                                                                                         # vc next     test
 function v2t { [[ $cunm = $cuvc ]]; }                                                                                                                         # vc current  test
 function v3t { [[ $cuvc = $nxvc ]]; }                                                                                                                         # vc transfer test
-function v4t { if v2t;then local e=$(nu0 $(ss4 $s13 $r25 nodes ,));else local e=$(ssh $(snc $cuvc) "$p53 cci ,");fi;[[ $cunm = $(sni $e) ]]; }
+function v4t { [[ $cunm = $cub1 ]]; }
 function tvc {
   swn "$s24";v3t && return;if v2t && v0t;then swn "TRANSFERIR VC -> $(snc $nxvc) (SIM/nao)?";else return;fi;local rsp=nao;read rsp
   if [[ $rsp = SIM && ! -f $p05/vc_slash && ! -f $p05/vc_lock && -f $p05/vc_keys ]];then vp;vd;swu "COPY SLASH -> $nxvc";local f=$p02/$(basename $p18);sex "cp $p18 $p02";cmw $f 666 eth;scp $f $(snc $nxvc):~;sex "rm $f";fi
@@ -530,9 +527,9 @@ function irb { rm $p39.*.hours 2>$p03;if trb $1;then if v2t;then brs 0 RB $s45 $
 [[ $1 = vh  ]] && { sh0 $p49 $2;[[ $2 ]] || { vl0;swn "VL $(printf '%8i' $(ell $p49) 2>$p03)\n$m"; } }
 [[ $1 = mh  ]] && { sh0 $p52 $2;[[ $2 ]] || { ml0;swn "ML $(printf '%8i' $(ell $p52) 2>$p03)\n$m"; } }
 [[ $1 = bio ]] && { bio ${2:-$s61};swn "$m"; }
-[[ $1 = hs0 ]] && { hs0 ,;hs0; }
-[[ $1 = hs1 ]] && { hs0 ,; }
-[[ $1 = hs2 ]] && { hs0  ; }
+[[ $1 = hs0 ]] && { hs0 $cub1;hs0 $cub2; }
+[[ $1 = hs1 ]] && { hs0 $cub1; }
+[[ $1 = hs2 ]] && { hs0 $cub2; }
 [[ $1 = hse ]] && { hsg;hsu; }
 [[ $1 = hsc ]] && { hsb;hsv;cpe; }
 [[ $1 = hsg ]] && { hsg;cpe; }
