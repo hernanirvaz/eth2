@@ -477,7 +477,6 @@ function irb { rm $p39.*.hours 2>$p03;if trb $1;then if v2t;then brs 0 RB $s45 $
 
 [[ $1 = irb ]] && { irb ${2:-3};pas; }
 [[ $1 = bmf ]] && { bm0;bms;[[ $(grep $d0 $p12 2>$p03|wc -l) -gt 0 ]] && swn "$m" >> $p13;if v4t;then tbp && brs $b4 $(btr) $(btw) $(btg);else trb && brs 0 RB $s43 $s37;fi; }
-
 [[ $1 = snr ]] && { cex "$s42 lxd";cex "$s42 core20";cex "$s42 snapd";cex 'apt remove --autoremove snapd -y';echo -e "$s41" > nosnap.pref;cex "mv nosnap.pref $p47";cmw $p47/nosnap.pref 644 root;cex 'apt update'; }
 [[ $1 = mvr ]] && { mvr; }
 [[ $1 = jwt ]] && { [[ $cunm = $znm1 || $cunm = $vnm1 ]] && jw0;if [[ -f jwt ]];then sjw eth1 $p08/geth;sjw eth1 $p09/data;sjw eth2 $p16;fi; }
