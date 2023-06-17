@@ -8,7 +8,7 @@ function nu2 { printf ${3:-%.0f} $(echo "scale=${2:-1};$1"|bc 2>$p03) 2>$p03; } 
 function nu3 { local n=$1;local i=$2;shift;shift;if [[ $# -gt 0 ]];then nu2 "(0$(printf %+.${n}f $@ 2>$p03))/$#"       $((n+1)) %.${i}f;else printf %i;fi; }  # get precision average list numbers
 function nu4 { local n=$1;                 shift;if [[ $# -gt 0 ]];then nu2 "(0$(printf %+.${n}f $@ 2>$p03))"          $((n+1)) %.${n}f;else printf %i;fi; }  # get precision sum     list numbers
 function nu5 { local n=$1;                 shift;if [[ $# -gt 0 ]];then nu2 "(0$(printf %+.${n}f $@ 2>$p03))/$#*10^$n" $((n+1))        ;else printf %i;fi; }  # get precision average int  numbers
-function ll0 { local f=$p16/logs/beacon.log   ;echo $H|sudo -S grep -h $r44           $f.5 $f.4 $f.3 $f.2 $f.1 $f 2>$p03|grep -v None          ; }            # get cc intern lines (specific)
+function ll0 { local f=$p16/logs/beacon.log   ;echo $H|sudo -S grep -h $r44                                    $f 2>$p03|grep -v None          ; }            # get cc intern lines (specific)
 function ll1 { local f=$p16/logs/beacon.log   ;echo $H|sudo -S grep -h $r70                                    $f 2>$p03                       ; }            # get cc intern lines (specific)
 function ll2 { local f=$p16/logs/beacon.log   ;echo $H|sudo -S cat                                             $f 2>$p03                       ; }            # get cc intern lines
 function ll3 { local f=$p01                   ;echo $H|sudo -S grep -h $r34                                    $f 2>$p03                       ; }            # get all eth syslog lines
@@ -20,7 +20,7 @@ function ll8 { local f=$p17/logs/validator.log;echo $H|sudo -S cat              
 function lg0 { sed -n "s%$1 *\([0-9]*\).*%\1%p" $2 2>$p03; }                                                                                                  # get list of numbers
 function lg1 { if [[ $l4 ]];then echo "$l4"|gawk "$1";else printf %i 1;fi; }                                                                                  # get s/ms delays from log lines
 function lg2 { echo "$l6"|sed -n "s%.*$r53  *\([0-9]*\).*$1.*%\1%p" 2>$p03; }                                                                                 # get list of vc latencies
-function lg3 { local n=${1:-0};if [[ $n -gt 0 ]];then l4=$(ll0|tail -n$n);else l4=$(ll0);fi;b1=$(nu3 3 0 $(lg1 "$w0$r45$w2"));b5=$(nu3 3 0 $(lg1 "$w0$r46$w2"));b8=$(nu4 0 $(ll5));if [[ $n -gt 0 ]];then l4=$(ll1|tail -n$((1000*n)));else l4=$(ll1);fi;b9=$(nu3 3 0 $(lg1 "$w0$r71$w1")); }
+function lg3 { local n=${1:-0};if [[ $n -gt 0 ]];then l4=$(ll0|tail -n$n);else l4=$(ll0);fi;b1=$(nu3 3 0 $(lg1 "$w0$r45$w2"));b5=$(nu3 3 0 $(lg1 "$w0$r46$w2"));b8=$(nu4 0 $(ll5));if [[ $n -gt 0 ]];then l4=$(ll1|tail -n$((1000*n)));else l4=$(ll1);fi;b9=$(nu3 0 0 $(lg1 "$w0$r71$w1")); }
 function lg4 { if v2t;then l6=$(ll7 $1);v0=$(nu5 1 $(lg2 $zip4));v1=$(nu5 1 $(lg2 $iip5));v2=$(nu5 1 $(ll6 $(($1/2))));else v0=0;v1=0;v2=0;fi; }              # set vc delays
 function fs0 { pex "grep -h ${2:-$r32}.*$1 $p01"; }                                                                                                           # get specific syslog lines
 function fs1 { pex "grep -h ${1:-$r34}     $p01"; }                                                                                                           # get eth      syslog lines
@@ -105,7 +105,7 @@ function gb1 { if [[ $(echo $@|grep false) ]];then printf 'synced';else printf  
 function gb2 { if [[ $(echo $@|grep false) ]];then printf ''      ;else printf ' syncing: %6i' $(($(gi0 $@)-$(gc0 $@)));fi; }                                 # get el syncing blocks remaining
 function gl0 {                                                                                                                                                # el report
   dts;ok=OK
-  if tsa $s10;then local e=$(gcl eth.syncing);gnn 99;gv0;eb0 $p10 $r30 $e
+  if tsa $s10;then local e=$(gcl eth.syncing);gnn $s65;gv0;eb0 $p10 $r30 $e
     m="GETH $ok $(tsy $e) $(dnn) sgs: $(nu1 %4i $e0)$(gb2 $e) $(printf 'i2r: %3i %1i %4i %2i' $e1 $e2 $e3 $(ei0) 2>$p03)"
   else
     m="GSRV NOT ON $dt"
@@ -130,7 +130,7 @@ function ub1 { if [[ $(echo $@|grep false) ]];then printf 'synced';else printf  
 function ub2 { if [[ $(echo $@|grep false) ]];then printf ''      ;else printf ' syncing: %6i' $(($(ui0 $@)-$(uc0 $@)));fi; }                                 # get el syncing blocks remaining
 function ul0 {                                                                                                                                                # el report
   dts;ok=OK
-  if tsa $s11;then local e=$(ucl eth_syncing);unn 99;uv0;eb0 $p11 $r31 $e
+  if tsa $s11;then local e=$(ucl eth_syncing);unn $s65;uv0;eb0 $p11 $r31 $e
     m="BESU $ok $(tsy $e) $(dnn) sgs: $(nu1 %4i $e0)$(ub2 $e) i: $e1"
   else
     m="USRV NOT ON $dt"

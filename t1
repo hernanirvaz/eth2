@@ -222,7 +222,7 @@ r38='\([0-9]*\)\.\([0-9][0-9][0-9]\)\([0-9]*\)s.*%\1\2.\3%p'
 r39='\([0-9]*\.[0-9]*\)ms.*%\1%p'
 r40='.temperature.current'
 r41='.ata_sct_temperature_history.table|join(" ")'
-r42='elapsed='
+r42='elapsed= *'
 r43=' in '
 r44='Delayed.head.block'
 r45='imported_delay: +Some\('
@@ -296,11 +296,11 @@ r67='time_taken_ms:'
 r68="s%^ *$p01%# $p01%"
 r69="$r57;s%,* *module: *[a-z_:0-9]*%%"
 r70='Processed.HTTP.API.request'
-r71='elapsed: +'
+r71='elapsed: *'
 
 w0='{if(match($0,/'
-w1='([0-9]+(\.[0-9]+)?)(µs|ms|s)/,m)){if(m[3]=="s"){m[1]*=1000000};if(m[3]=="ms"){m[1]*=1000};printf("%.1f\n",m[1])}}'
-w2='([0-9]+(\.[0-9]+)?)(µs|ms|s)/,m)){if(m[3]=="s"){m[1]*=1000};if(m[3]=="µs"){m[1]/=1000};printf("%.6f\n",m[1])}}'
+w1='([0-9]+(\.[0-9]+)?)(µs|ms|s)/,m)){if(m[3]=="s"){m[1]*=1000000};if(m[3]=="ms"){m[1]*=1000};printf("%.0f\n",m[1])}}'
+w2='([0-9]+(\.[0-9]+)?)(µs|ms|s)/,m)){if(m[3]=="s"){m[1]*=1000};if(m[3]=="µs"){m[1]/=1000};printf("%.3f\n",m[1])}}'
 
 function tsa { $s00 is-active  --quiet $1 2>$p03; }
 function tse { $s00 is-enabled --quiet $1 2>$p03; }
@@ -404,6 +404,7 @@ s61=2
 s62=200
 s63=20000
 s64=2000
+s65=99
 
 b[ 11766]='0x93bf23a587f11f9eca329a12ef51296b8a9848af8c0fe61201524b14cb85b0c6fbd3e427501cdfa3b28719bd1ed96fff'
 b[ 11767]='0xb5b0fc3d2ba577f3e2c7324f7ea4306f17eeee0f12c722f4fa83e45bf6c15477d50261bb2666c30f21ab71a26aeeeafb'
