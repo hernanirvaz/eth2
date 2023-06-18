@@ -526,7 +526,7 @@ function irb { rm $p39.*.hours 2>$p03;if trb $1;then if v2t;then brs 0 RB $s43 $
 [[ $1 = vh  ]] && { sh0 $p49 $2;[[ $2 ]] || { vl0;swn "VL $(printf '%8i' $(ell $p49) 2>$p03)\n$m"; } }
 [[ $1 = mh  ]] && { sh0 $p52 $2;[[ $2 ]] || { ml0;swn "ML $(printf '%8i' $(ell $p52) 2>$p03)\n$m"; } }
 [[ $1 = bio ]] && { bio ${2:-$s61};swn "$m"; }
-[[ $1 = hs0 ]] && { hs0 $cub1;hs0 $cub2; }
+[[ $1 = hs0 ]] && { hs0 $cub2;hs0 $cub1; }
 [[ $1 = hs1 ]] && { hs0 $cub1; }
 [[ $1 = hs2 ]] && { hs0 $cub2; }
 [[ $1 = hse ]] && { hsg;hsu; }
