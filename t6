@@ -551,7 +551,7 @@ function irb { rm $p39.*.hours 2>$p03;if trb $1;then if v2t;then brs 0 RB $s45 $
 [[ $1 = cpe ]] && { cpe $2; }
 [[ $1 = gpn ]] && { if tsa $s10;then gp;cex "du -h $p08";sudo -u eth1 geth --datadir $p08 snapshot prune-state;cex "du -h $p08";dmr;ga;fi; }
 [[ $1 = gpg ]] && { if tsa $s10;then gp;cex "du -h $p08";sudo -u eth1 geth --datadir $p08 removedb            ;cex "du -h $p08";dmr;ga;fi; }
-[[ $1 = rsh ]] && { echo;sft $(sng); }
+[[ $1 = rsh ]] && { echo $(sf1) $(sng);cd $p02;ls -rtGg *.rs.*; }
 [[ $1 = rpt ]] && { touch $p50; }
 [[ $1 = lp  ]] && { netstat -tulpn; }
 # outros journal system/lighthouse
