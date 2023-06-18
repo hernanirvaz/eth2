@@ -76,7 +76,7 @@ function snn {
     nr=0      ;nm=0                                          ;nd=0
   fi
 }
-function sz0 { gnn 0          ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s  i2r:%4i %7i %4i %4i'                           $nr $nm $nd $(ss5 $1 port    ) "$(gb1 $(gcl eth.syncing))" $e1 $e2 $e3 $(ei0)                                               2>$p03; }
+function sz0 { gnn 0          ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s irut:%4i %4i %2i %4i %4i'                       $nr $nm $nd $(ss5 $1 port    ) "$(gb1 $(gcl eth.syncing))" $e1 $e3 $e2 $e4 $(ei0)                                               2>$p03; }
 function sz1 { unn 0          ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s    i:%i'                                        $nr $nm $nd $(ss5 $1 p2p-port) "$(ub1 $(ucl eth_syncing))" $e1                                                              2>$p03; }
 function sz2 { dtl;bo4;lg3;bnn;printf 'cl:p%02i:m%02i:d%04i p2p:%5i %s iorh:%4i %4i %2i %4i %4i op:c%02i:m%02i el:%7s' $nr $nm $nd $(ss5 $1 port)     "$(bb1 $(bcl syncing))"     $b1 $b5 $b8 $b9 $(bi1) $b2 $b3 $(ss4 $1 $r24 execution-endpoint) 2>$p03; }
 function sz3 { lg4 $s63       ;printf 'vl:b%02i:m%02i:c%02i cc:%13s'                                                   $v0 $v1 $v2 $(ss4 $1 $r24 nodes)                                                                                            2>$p03; }
@@ -94,19 +94,20 @@ function grs {
 }
 function gdi { if [[ $1 -gt 0 ]];then l4=$(ll4 $r35|tail -n$1);else l4=$(ll4 $r35);fi;e1=$(nu3 3 0 $(lg1 "$w0$r42$w2")); }                                    # get delay imported
 function gdu { if [[ $1 -gt 0 ]];then l4=$(ll4 $r52|tail -n$1);else l4=$(ll4 $r52);fi;e2=$(nu3 3 0 $(lg1 "$w0$r42$w2")); }                                    # get delay Chain head updated
+function gdt { if [[ $1 -gt 0 ]];then l4=$(ll4 $r72|tail -n1 );else l4=$(ll4 $r72);fi;e4=$(nu3 3 0 $(lg1 "$w0$r42$w2")); }                                    # get delay Persisted the clean trie cache
 function gcl { geth attach --exec $1 "http://$ciec:8545" 2>$p03; }                                                                                            # exec RPC HTTP
 function gi0 { nu0 $(echo $@|sed -n 's%.*highestBlock: *\([0-9]*\).*%\1%ip' 2>$p03); }                                                                        # get el highest block
 function gc0 { nu0 $(echo $@|sed -n 's%.*currentBlock: *\([0-9]*\).*%\1%ip' 2>$p03); }                                                                        # get el current block
 function gv0 { nn=$(ss5 $s10 maxpeers); }                                                                                                                     # set configured peers
 function gq0 { nr=$(nu0 $(gcl net.peerCount)); }                                                                                                              # set el current peers
 function gll { grep "GETH.*$d0" $p10 2>$p03|wc -l; }                                                                                                          # get day geth log lines
-function gnn { snn $(fs3 peercount= $r30) $(nu0 $(gcl net.peerCount));gdi $1;gdu $1;e3=$(nu2 "$(nu4 0 $(fs3 rejected= $r30))/$(gll)"); }                      # set cur/min/std el peers
+function gnn { snn $(fs3 peercount= $r30) $(nu0 $(gcl net.peerCount));gdi $1;gdu $1;e3=$(nu2 "$(nu4 0 $(fs3 rejected= $r30))/$(gll)");gdt $1; }
 function gb1 { if [[ $(echo $@|grep false) ]];then printf 'synced';else printf  'syncing: %6i' $(($(gi0 $@)-$(gc0 $@)));fi; }                                 # get el syncing blocks remaining
 function gb2 { if [[ $(echo $@|grep false) ]];then printf ''      ;else printf ' syncing: %6i' $(($(gi0 $@)-$(gc0 $@)));fi; }                                 # get el syncing blocks remaining
 function gl0 {                                                                                                                                                # el report
   dts;ok=OK
   if tsa $s10;then local e=$(gcl eth.syncing);gnn $s45;gv0;eb0 $p10 $r30 $e
-    m="GETH $ok $(tsy $e) $(dnn) sgs: $(nu1 %4i $e0)$(gb2 $e) $(printf 'i2r: %3i %1i %4i %2i' $e1 $e2 $e3 $(ei0) 2>$p03)"
+    m="GETH $ok $(tsy $e) $(dnn) sgs: $(nu1 %4i $e0)$(gb2 $e) $(printf 'irut: %3i %3i %1i %4i %2i' $e1 $e3 $e2 $e4 $(ei0) 2>$p03)"
   else
     m="GSRV NOT ON $dt"
   fi
@@ -147,7 +148,7 @@ function bf0 { nu0 $((59*z3))                                                   
 function bi0 { nu0 $((zk*9+zz*5+zx))                                                  ; }                                                                     # get delete day idx
 function bi1 { nu2 "(0.7*$b1+0.16*$b5+0.12*$b8+0.02*$b9)"                             ; }                                                                     # shw imported/observed/reorg/http data
 function bi2 { nu0 $(((z5>400?$(bz0)/z5:0)+(z2>300?$(bw0)/z2:0)+(z4>999?$(bf0)/z4:0))); }                                                                     # get restart idx
-function ei0 { nu2 "(0.66*$e1+0.33*$e2+0.01*$e3)"                                     ; }                                                                     # shw imported/head/rejected data
+function ei0 { nu2 "(0.86*$e1+0.11*$e2+0.01*$e3+0.02*$e4)"                            ; }                                                                     # shw imported/head/rejected/trie data
 function bdp { nu2 "($1*$s48+$2*$s49+$3*$s50+$4*$s51)/${5:-1}*$s55/1000000" 7; }                                                                              # get penalty
 function bdr { nu2 "($1*$s47+$2*$s46)*$s55/100000000"                       7; }                                                                              # get reward
 function bv0 { nn=$(ss5 $s12 target-peers); }                                                                                                                 # set configured peers
@@ -475,7 +476,7 @@ function btg { if trf;then printf $s37;else printf $s39;fi; }
 function irb { rm $p39.*.hours 2>$p03;if trb $1;then if v2t;then brs 0 RB $s43 $s37;else gps;ups;bps;sex reboot;fi;else if trf;then touch $p39.$1.hours;fi;fi; }
 
 [[ $1 = irb ]] && { irb $2;pas; }
-[[ $1 = bmf ]] && { bm0;bms;[[ $(grep $d0 $p12 2>$p03|wc -l) -gt 0 ]] && swn "$m" >> $p13;if v4t;then tbp $s44 && brs $b4 $(btr) $s43 $(btg);else trb && brs 0 RB $s43 $s37;fi; }
+[[ $1 = bmf ]] && { bm0;bms;[[ $(grep $d0 $p12 2>$p03|wc -l) -gt 0 ]] && swn "$m" >> $p13;if v4t;then tbp $s44 && brs $b4 $(btr) $s43 $(btg);else trb && brs 0 RB $s43 $s39;fi; }
 [[ $1 = snr ]] && { cex "$s42 lxd";cex "$s42 core20";cex "$s42 snapd";cex 'apt remove --autoremove snapd -y';echo -e "$s41" > nosnap.pref;cex "mv nosnap.pref $p47";cmw $p47/nosnap.pref 644 root;cex 'apt update'; }
 [[ $1 = mvr ]] && { mvr; }
 [[ $1 = jwt ]] && { [[ $cunm = $znm1 || $cunm = $vnm1 ]] && jw0;if [[ -f jwt ]];then sjw eth1 $p08/geth;sjw eth1 $p09/data;sjw eth2 $p16;fi; }
