@@ -76,10 +76,10 @@ function snn {
     nr=0      ;nm=0                                          ;nd=0
   fi
 }
-function sz0 { gnn 0          ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s irut:%4i %4i %2i %4i %4i'                       $nr $nm $nd $(ss5 $1 port    ) "$(gb1 $(gcl eth.syncing))" $e1 $e3 $e2 $e4 $(ei0)                                               2>$p03; }
-function sz1 { unn 0          ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s    i:%i'                                        $nr $nm $nd $(ss5 $1 p2p-port) "$(ub1 $(ucl eth_syncing))" $e1                                                              2>$p03; }
-function sz2 { dtl;bo4;lg3;bnn;printf 'cl:p%02i:m%02i:d%04i p2p:%5i %s iorh:%4i %4i %2i %4i %4i op:c%02i:m%02i el:%7s' $nr $nm $nd $(ss5 $1 port)     "$(bb1 $(bcl syncing))"     $b1 $b5 $b8 $b9 $(bi1) $b2 $b3 $(ss4 $1 $r24 execution-endpoint) 2>$p03; }
-function sz3 { lg4 $s63       ;printf 'vl:b%02i:m%02i:c%02i cc:%13s'                                                   $v0 $v1 $v2 $(ss4 $1 $r24 nodes)                                                                                            2>$p03; }
+function sz0 { gnn 0          ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s irut:%4i %4i %2i %4i %4i'                $nr $nm $nd $(ss5 $1 port    ) "$(gb1 $(gcl eth.syncing))" $e1 $e3 $e2 $e4 $(ei0)         2>$p03; }
+function sz1 { unn 0          ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s    i:%i'                                 $nr $nm $nd $(ss5 $1 p2p-port) "$(ub1 $(ucl eth_syncing))" $e1                            2>$p03; }
+function sz2 { dtl;bo4;lg3;bnn;printf 'cl:p%02i:m%02i:d%04i p2p:%5i %s iorh:%4i %4i %2i %4i %4i op:c%02i:m%02i' $nr $nm $nd $(ss5 $1 port)     "$(bb1 $(bcl syncing))"     $b1 $b5 $b8 $b9 $(bi1) $b2 $b3 2>$p03; }
+function sz3 { lg4 $s63       ;printf 'vl:b%02i:m%02i:c%02i cc:%13s'                                            $v0 $v1 $v2 $(ss4 $1 $r24 nodes)                                                          2>$p03; }
 function sso {
   tse $2 || return;dts;local e="$1 $(printf '%6s %10s %5s status: %-40s' $(ss3 $2) $dt "$(ss2 $2)" 2>$p03)"                                                   # memory & status
   [[ $1 = GETH ]] && e="$e $(sz0 $2)";[[ $1 = BESU ]] && e="$e $(sz1 $2)";[[ $1 = BEAC ]] && e="$e $(sz2 $2)";[[ $1 = VALI ]] && e="$e $(sz3 $2)";swn "$e"    # set homologous/avg & cl http
@@ -316,9 +316,9 @@ function cpe {                                                                  
   m="$m usb $e, turbo $d, ufw $(wst $(pex 'ufw status'|grep Status:))"                                                                                        # usb/cpu/ufw info
   m="$m, uptime:$(uptime|sed 's%[0-9]*:[0-9]*:[0-9]*%%;s%[0-9]* users*,%%;s% average\([^,]*\).*%\1%;s%  *% %g')";swn "$m"                                     # uptime/load info
   local l=$(fs2|flp "$r61"|wc -l);local n=$(fs1|fln "$r62"|wc -l)
-  local e=$(fs2|flp "$r61"|tail -n1|sed 's%.*hrv-zotac[0-9] *\(.*\)%\1%;s%  *% %g'                         |cut -c1-70)
-  local d=$(fs1|fln "$r62"|tail -n1|sed 's%.*[0-9]*:[0-9]*:[0-9]*\.[0-9][0-9][0-9]]* *\(.*\)%\1%;s%  *% %g'|cut -c1-70)
-  m="ERRO$(printf '%3i %3i' $l $n 2>$p03) $dt";[[ $l -gt 0 ]] && m="$m system: $e";[[ $n -gt 0 ]] && m="$m ethrum: $d";(( l+n )) && swn "$m"                  # sys/eth errors info
+  local e=$(fs2|flp "$r61"|tail -n1|sed 's%.*hrv-zotac[0-9] *\(.*\)%\1%;s%  *% %g'                         )
+  local d=$(fs1|fln "$r62"|tail -n1|sed 's%.*[0-9]*:[0-9]*:[0-9]*\.[0-9][0-9][0-9]]* *\(.*\)%\1%;s%  *% %g')
+  m="ERRO$(printf '%3i %3i' $l $n 2>$p03) $dt";if [[ $l -gt 0 ]];then if [[ $n -gt 0 ]];then m="$m sl: ${e:0:56}";m="$m cl: ${d:0:56}";else m="$m sl: ${e:0:117}";fi;else if [[ $n -gt 0 ]];then m="$m cl: ${d:0:117}";fi;fi;(( l+n )) && swn "$m"
   m='';trf && m="$m, reboot $(($(sra)/60/60)) hours ago$(cpf)";[[ $(bwc) -gt 0 ]] && m="$m, sync/propose duties on";[[ $m ]] && swn "INFO        $dt${m#*,}"  # reboot/duties info
   [[ $(nu0 $(/usr/lib/update-notifier/apt-check 2>&1|sed 's%;% %g')) -gt 0 ]] && { echo;apt list --upgradable; }
 }
