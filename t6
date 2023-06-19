@@ -147,8 +147,8 @@ function bw0 { nu0 $((9*z1))                                                    
 function bf0 { nu0 $((59*z3))                                                         ; }                                                                     # get numerator general errors
 function bi0 { nu0 $((zk*9+zz*5+zx))                                                  ; }                                                                     # get delete day idx
 function bi2 { nu0 $(((z5>400?$(bz0)/z5:0)+(z2>300?$(bw0)/z2:0)+(z4>999?$(bf0)/z4:0))); }                                                                     # get restart idx
-function ei0 { nu2 "(0.80*$e1+0.01*$e3+0.17*$e2+0.02*$e4)"                            ; }                                                                     # shw imported/rejected/updated/trie data
-function bi1 { nu2 "(0.80*$b1+0.11*$b5+0.07*$b8+0.02*$b9)"                            ; }                                                                     # shw imported/observed/reorg/http data
+function ei0 { nu2 "(0.80*$e1+0.01*$e3+0.17*$e2+0.02*$e4)"                            ; }                                                                     # get imported/rejected/updated/trie data
+function bi1 { nu2 "(0.80*$b1+0.11*$b5+0.07*$b8+0.02*$b9)"                            ; }                                                                     # get imported/observed/reorg/http data
 function bdp { nu2 "($1*$s48+$2*$s49+$3*$s50+$4*$s51)/${5:-1}*$s55/1000000" 7; }                                                                              # get penalty
 function bdr { nu2 "($1*$s47+$2*$s46)*$s55/100000000"                       7; }                                                                              # get reward
 function bv0 { nn=$(ss5 $s12 target-peers); }                                                                                                                 # set configured peers
