@@ -238,7 +238,7 @@ r49="$r49;s%rpc-password\": \"[^\"]*\"%rpc-password\": \"\"%"
 r49="$r49;s%umask\": [0-9]*%umask\": 2%"
 r50='/  *\/  *ext4  *defaults  */s%defaults%defaults,noatime%'
 r51='/  *\/sata  *ext4  *defaults  */s%defaults%defaults,noatime%'
-r52="$r30.*Chain.head.updated"
+r52="$r30.*Chain.head.was.updated"
 r53='latency:'
 r54='.nvme_smart_health_information_log.temperature_sensors|join(" ")'
 r55='s%GRUB_CMDLINE_LINUX_DEFAULT *= *"\(..*\)"%GRUB_CMDLINE_LINUX_DEFAULT="\1 pcie_aspm=off"%;s%GRUB_CMDLINE_LINUX_DEFAULT *= *""%GRUB_CMDLINE_LINUX_DEFAULT="pcie_aspm=off"%'
