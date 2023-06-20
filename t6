@@ -46,7 +46,7 @@ function ss1 { $s01 $1 2>$p03|sed -n "s%.*$2[ =]\(${3:-.}*\).*%\1%p" 2>$p03; }  
 function ss2 { $s01 $1 2>$p03|sed -n "s%.*Active: *\(.*\)%\1%p" 2>$p03|sed "s% *since.*;%%" 2>$p03|cut -c1-40; }                                              # systemctl status 2 extraction
 function ss3 { local e=$(ss1 $1 Memory:)                     ;if [[ $e ]];then printf $e;else printf 0.0K   ;fi; }                                            # systemctl status Memory extraction
 function ss4 { local e=$(ss1 $1 $3 "[^$4 ]"|sed -n $2 2>$p03);if [[ $e ]];then printf $e;else printf 00:0000;fi; }                                            # systemctl status ip/port extraction
-function ss5 { nu0 $(($(ss1 $1 $2 [0-9])/${3:-1})); }                                                                                                         # systemctl status number extraction
+function ss5 { if [[ -f $p04/$1.service ]];then nu0 $(($(ss1 $1 $2 [0-9])/${3:-1}));else printf %i;fi; }                                                      # systemctl status number extraction
 function dmr { sex "$s00 daemon-reload"; }                                                                                                                    # daemon-reload
 function dts { read       d0 d1   <<< ${1:-$(date '+%F %H:%M')};dt="$d0 $d1"; }                                                                               # set date/time vars
 function dtl { read _ _ _ d0 d1 _ <<< $(bff|tail -n1)          ;dt="$d0 $d1"; }                                                                               # set date/time vars with last beacon log
@@ -473,7 +473,7 @@ function tvf { [[ -f $p04/$s13.service ]]; }
 function tbp { [[ $(era $p12 $s52) -eq 1 ]] && ( (tpc && tpm && tha && ! tsd && ! trf) || trb $1); }
 function btr { if trf;then printf RB  ;else printf PE  ;fi; }
 function btg { if trf;then printf $s37;else printf $s39;fi; }
-function irb { rm $p39.*.hours 2>$p03;if trb $1;then if v2t;then brs 0 RB $s43 $s37;else gps;ups;bps;sex reboot;fi;else if trf;then touch $p39.$1.hours;fi;fi; }
+function irb { rm $p39.*.hours 2>$p03;if trb $1;then if v2t;then brs 0 RB 0 $s37;else gps;ups;bps;sex reboot;fi;else if trf;then touch $p39.$1.hours;fi;fi; }
 
 [[ $1 = irb ]] && { irb $2;pas; }
 [[ $1 = bmf ]] && { bm0;bms;[[ $(grep $d0 $p12 2>$p03|wc -l) -gt 0 ]] && swn "$m" >> $p13;if v4t;then tbp $s44 && brs $b4 $(btr) $s43 $(btg);else trb && brs 0 RB $s43 $s39;fi; }
