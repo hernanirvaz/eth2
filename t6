@@ -37,7 +37,7 @@ function pt2 { until [[ $# -le 1 || $1 =~ ^[0-9]+$                     ]];do shi
 function pt3 { until [[ $# -le 1 || $1 =~ ^[a-z]+$                     ]];do shift;done;printf %s $1; }                                                       # string     test
 function tll { [[ $(grep '\-all-' $p04/$s12.service 2>$p03) ]]; }                                                                                             # cc long-lived   test
 function jsh { cex "journalctl --no-hostname --no-full -f $1"; }                                                                                              # my journal   format
-function spc { nn=$2;cp $p04/$1.service $p02/$1.sav;sed "s%peers\([ =]*\)[0-9]*%peers\1$2%" $p02/$1.sav > $p04/$1.service;sex "$s00 daemon-reload"; }         # service configuration change/reload
+function spc { nn=$2;cp $p04/$1.service $p02/$1.sav;sed "s%peers\([ =]*\)[0-9]*%peers\1$2%" $p02/$1.sav > $p04/$1.service;dmr; }                              # service configuration change/reload
 function snp { [[ -f $p04/$1.service ]] || return;local n=$(($2+nn));(($2!=0&&n>=$3&&n<=$4)) && spc $1 $n;tsa $1 && sex "$s02 $1"; }                          # service peers change/stop
 function sra { if trf;then nu0 $(($(date +%s)-$(date -r $p45 +%s)));else printf %i;fi }                                                                       # system reboot age (secounds)
 function sci { nu0 $(ip a|sed -n 's% *inet  *192.168.8.\([0-9]*\).*%\1%p' 2>$p03); }                                                                          # get ip/24
@@ -245,7 +245,6 @@ function bh0 {
   bmo;swn "BM $(printf '%8i%34s'             $(bml)              2>$p03) i20   i30   i40   i50   i60   i70   i80   avg\n$m"                                   # last cc-daillast y
 }
 function bss { nu0 $((${2:-0}+$(date -d$(sf1 $1) +%s))); }                                                                                                    # get sum secounds + time
-#function bsc { fs4 $s54].*INFO $r32 99|grep Sync\ committee|wc -l; }
 function bwc { bwd|grep -Ex "$(echo ${!b[@]}|tr ' ' '|')"|wc -l; }                                                                                            # get my # validators
 function bwd { local n=$((($(date +%s)-s31)/(12*32)));for n in $n $((n+1));do curl -sH "$s28" -X POST -d"[$(echo ${!b[@]}|tr ' ' ',')]" "$s32/sync/$n";curl -sH "$s28" -X GET "$s32/proposer/$n";done 2>$p03|jq -r "$s35"; }
 function bro { [[ -f $p12 ]] || return;dts;bb0;bnn;swn "$(printf 'R%03i %2s %3i' $1 ${2:-$ok} $(bi2) 2>$p03) $(dnn)" >> $p12; }
@@ -265,11 +264,7 @@ function brs {
 }
 function vrs {
   tsi $p46 && return;touch $p50;touch $p46.a$(stg);ssw $1 $p46;tso $p46 && return;local t=$(sng);local f=$p46.i$(stg);touch $f;local n=0;paf
-  while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p46 $t;if tip $t;then rm $f;cex "$s02 $s13";dmr;cex "$s03 $s13";vro $n SR;fi;done;rm -f $p50 $p46.*
-}
-function vsb {
-  tsi $p46 && return;touch $p50;touch $p46.a$(stg);ssw $1 $p46;tso $p46 && return;local t=$(sng);local f=$p46.i$(stg);touch $f;local n=0;paf
-  while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p46 $t;if tip $t;then rm $f;cex "$s02 $s12";cex "$s02 $s13";fi;done;rm -f $p50 $p46.*
+  while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p46 $t;if tip $t;then rm $f;cex "$s02 $s13";dmr;if [[ $2 = RS ]];then cex "$s03 $s13";else cex "$s02 $s12";fi;vro $n $2;fi;done;rm -f $p50 $p46.*
 }
 function brh { head -n${1:-0} $p12; }                                                                                                                         # new cc head lines
 function brl {                                                                                                                                                # recalculate cc logs
@@ -452,7 +447,7 @@ function ibk {
   local f="$p16/pubkeys";sex "cp $p02/pubkeys.new $f";sex "chown eth2:eth2 $f";cmw $f 600;dmr;cex "$s03 $s12"
 }
 function ivk {
-  v2t && [[ ! -f $p05/vc_lock && -d $p19 && $(ls $p19 2>$p03) ]] || return;vsb $1;tsa $s12 || ibk
+  v2t && [[ ! -f $p05/vc_lock && -d $p19 && $(ls $p19 2>$p03) ]] || return;vrs $1 PR;tsa $s12 || ibk
   if ! tsa $s13;then
     swb 'IMPORTAR CHAVES';sex "chown -R $meeu:$meeu $p17";cmw $p17 755;imk;sex "chown -R eth3:eth3 $p17";cmw $p17 700
     [[ -f $p05/vc_lock ]] || cex "$s03 $s13";[[ -f $p12 ]] && { dts;swn "$(printf 'BSRV VK %3i %10s %5s' $(ls $p19 2>$p03|wc -l) $dt 2>$p03)" >> $p12; }
@@ -504,7 +499,7 @@ function irb { rm $p39.*.hours 2>$p03;if trb $1;then if v2t;then brs 0 RB 0 $s37
 [[ $1 = urs ]] && { urs ${2:-0} SR   ${3:-$s40}; }
 [[ $1 = brs ]] && { brs ${2:-0} BN 0 ${3:-$s39}; }
 [[ $1 = crs ]] && { brs ${2:-0} VC 0 ${3:-$s38}; }
-[[ $1 = vrs ]] && { vrs              ${2:-$s38}; }
+[[ $1 = vrs ]] && { vrs              ${2:-$s38} RS; }
 [[ $1 = grb ]] && { grs      0  RB   ${2:-$s38}; }
 [[ $1 = urb ]] && { urs      0  RB   ${2:-$s38}; }
 [[ $1 = brb ]] && { brs      0  RB 0 ${2:-$s37}; }
