@@ -460,7 +460,7 @@ function bcc { printf p;if v4t;then if tbp $s44;then if trb $s44;then printf r;e
 function trb { [[ $(sra) -ge $((60*60*${1:-9})) ]]; }
 function tip { [[ $(date +%s) -ge $(bss $1 6) ]]; }
 function tpc { [[ $b4 -ne 0 ]]; }
-function tha { [[ $b2 -gt $((b3*2)) ]]; }
+function tha { [[ $b2 -gt $((b3*3)) ]]; }
 function tsd { [[ $((nd+$(bi0))) -ge $s60 ]]; }
 function tpm { [[ $nm -ge $((nn-5)) ]]; }
 function trf { [[ -f $p45 ]]; }
