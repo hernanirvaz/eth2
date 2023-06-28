@@ -81,7 +81,7 @@ function sz1 { unn 0          ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s    i:%i' 
 function sz2 { dtl;bo4;lg3;bnn;printf 'cl:p%02i:m%02i:d%04i p2p:%5i %s iorh:%4i %4i %2i %4i %4i op:c%02i:m%02i:%i' $nr $nm $nd $(ss5 $1 port)     "$(bb1 $(bcl syncing))"     $b1 $b5 $b8 $b9 $(bi1) $b2 $b3 $ln 2>$p03; }
 function sz3 { lg4 $s63       ;printf 'vl:b%02i:m%02i:c%02i cc:%13s'                                               $v0 $v1 $v2 $(ss4 $1 $r24 nodes)                                                              2>$p03; }
 function sso {
-  tse $2 || return;dts;local e="$1 $(printf '%6s %10s %5s status: %-40s' $(ss3 $2) $dt "$(ss2 $2)" 2>$p03)"                                                   # memory & status
+  tse $2 || return;dts;local e="$1 $(printf '%6s %10s %5s %-40s' $(ss3 $2) $dt "$(ss2 $2)" 2>$p03)"                                                           # memory & status
   [[ $1 = GETH ]] && e="$e $(sz0 $2)";[[ $1 = BESU ]] && e="$e $(sz1 $2)";[[ $1 = BEAC ]] && e="$e $(sz2 $2)";[[ $1 = VALI ]] && e="$e $(sz3 $2)";swn "$e"    # set homologous/avg & cl http
 }
 # el control commands
@@ -305,15 +305,15 @@ function ncp { fs5|wc -l; }
 function cpe {                                                                                                                                                # system status
   local e='NO';[[ $($s07|sed -n 's%.*synchronized: \([a-z]*\) *%\1%p') = yes ]] && local e='OK';dts
   if tsa $s19;then local e="CSYS $e";m=$(ss2 $s19);else local e="CNTP $e";m=$(ss2 ntp);fi
-  swn "$e $(nu1 %3i $(fs0 clock|wc -l)) $dt status: $m";[[ $1 = c ]] && return;tmp;[[ $1 = p ]] && return                                                     # clock & temperature info
+  swn "$e $(nu1 %3i $(fs0 clock|wc -l)) $dt $m";[[ $1 = c ]] && return;tmp;[[ $1 = p ]] && return                                                             # clock & temperature info
   if [[ $(cat $p44 2>$p03) -eq 0 ]];then local e=off;else local e=on;fi;if [[ $(cat $p43 2>$p03) -eq 1 ]];then local d=off;else local d=on;fi                 # usb/cpu current state
   m="INFO$(printf '%3i %3i %10s %5s' $(nus) $(ncp) $dt 2>$p03)"                                                                                               # usb/cpu erros count
   m="$m usb $e, turbo $d, ufw $(wst $(pex 'ufw status'|grep Status:))"                                                                                        # usb/cpu/ufw info
-  m="$m, uptime:$(uptime|sed 's%[0-9]*:[0-9]*:[0-9]*%%;s%[0-9]* users*,%%;s% average\([^,]*\).*%\1%;s%  *% %g')";swn "$m"                                     # uptime/load info
+  m="$m, uptime:$(uptime|sed "$r75")";swn "$m"
   local l=$(fs2|flp "$r61"|wc -l);local n=$(fs1|fln "$r62"|wc -l)
-  local e=$(fs2|flp "$r61"|tail -n1|sed 's%.*hrv-zotac[0-9] *\(.*\)%\1%;s%  *% %g'                         )
-  local d=$(fs1|fln "$r62"|tail -n1|sed 's%.*[0-9]*:[0-9]*:[0-9]*\.[0-9][0-9][0-9]]* *\(.*\)%\1%;s%  *% %g')
-  m="ERRO$(printf '%3i %3i' $l $n 2>$p03) $dt";if [[ $l -gt 0 ]];then if [[ $n -gt 0 ]];then m="$m sl: ${e:0:56}";m="$m cl: ${d:0:56}";else m="$m sl: ${e:0:117}";fi;else if [[ $n -gt 0 ]];then m="$m cl: ${d:0:117}";fi;fi;(( l+n )) && swn "$m"
+  local e=$(fs2|flp "$r61"|tail -n1|sed "$r73")
+  local d=$(fs1|fln "$r62"|tail -n1|sed "$r74")
+  m="ERRO$(printf '%3i %3i' $l $n 2>$p03) $dt";if [[ $l -gt 0 ]];then if [[ $n -gt 0 ]];then m="$m sl: ${e:0:53}";m="$m cl: ${d:0:54}";else m="$m sl: ${e:0:112}";fi;else if [[ $n -gt 0 ]];then m="$m cl: ${d:0:112}";fi;fi;(( l+n )) && swn "$m"
   m='';trf && m="$m, reboot $(($(sra)/60/60)) hours ago$(cpf)";[[ $(bwc) -gt 0 ]] && m="$m, sync/propose duties on";[[ $m ]] && swn "INFO        $dt${m#*,}"  # reboot/duties info
   [[ $(nu0 $(/usr/lib/update-notifier/apt-check 2>&1|sed 's%;% %g')) -gt 0 ]] && { echo;apt list --upgradable; }
 }
