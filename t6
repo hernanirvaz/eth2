@@ -400,12 +400,7 @@ function hsu { sso BESU $s11; }
 function hsb { sso BEAC $s12; }
 function hsv { sso VALI $s13; }
 function hsm { sso MEVB $s14; }
-function hs0 {
-  if [[ $cunm = $1 ]];then local n=$(nu0 $(ss4 $s12 $r25 execution-endpoint));else local n=$(ssh $(snc $1) "$p53 eci");fi;[[ $n -gt 0 ]] || return;echo $(sni $n)
-  if [[ $cunm = $(sni $n) ]];then hsg;hsu;    else ssh $(snc $(sni $n)) "$p53 hse";fi;[[ $(sni $n) = $1 ]] || echo $1
-  if [[ $cunm = $1        ]];then hsb;hsv;cpe;else ssh $(snc $1       ) "$p53 hsc";fi
-}
-function hs3 { if v2t;then hsv;cpe;else echo $cuvc;ssh $(snc $cuvc) "$p53 hsv";fi; }
+function hs0 { echo $1;if [[ $cunm = $1 ]];then hsg;hsu;else ssh $(snc $1) "$p53 hse";fi;[[ $1 = $2 ]] || echo $2;if [[ $cunm = $2 ]];then hsb;hsv;cpe;else ssh $(snc $2) "$p53 hsc";fi; }
 function nsh { $s08 list;$s08 status;$s09 status|sed -n 's%\(Current DNS\).*:%   \1:%ip'; }                                                                   # network/dns info
 function wlp { local e="$1";shift;until [[ $# -lt 1 ]];do e="$e\|$1";shift;done;fs2|grep '\[UFW'|if [[ $e ]];then grep -v "$e";else cat;fi; }
 function c0c { local e="$r11";[[ $(sed -n "$r12" $p04/$s12.service 2>$p03) = $zip1 ]] && e="$r10";sed "$e" $s12.sav > $p04/$s12.service; }                    # cc change el server
@@ -523,18 +518,13 @@ function irb { rm $p39.*.hours 2>$p03;if trb $1;then if v2t;then brs 0 RB 0 $s37
 [[ $1 = vh  ]] && { sh0 $p49 $2;[[ $2 ]] || { vl0;swn "VL $(printf '%8i' $(ell $p49) 2>$p03)\n$m"; } }
 [[ $1 = mh  ]] && { sh0 $p52 $2;[[ $2 ]] || { ml0;swn "ML $(printf '%8i' $(ell $p52) 2>$p03)\n$m"; } }
 [[ $1 = bio ]] && { bio ${2:-$s61};swn "$m"; }
-[[ $1 = hs0 ]] && { hs0 $cub2;hs0 $cub1;hs3; }
-[[ $1 = hs1 ]] && { hs0 $cub1; }
-[[ $1 = hs2 ]] && { hs0 $cub2; }
+[[ $1 = hs0 ]] && { hs0 $cue1 $cub1;hs0 $cue2 $cub2;if v2t;then hsv;cpe;else echo $cuvc;ssh $(snc $cuvc) "$p53 hsv";fi; }
+[[ $1 = hs1 ]] && { hs0 $cue1 $cub1; }
+[[ $1 = hs2 ]] && { hs0 $cue2 $cub2; }
 [[ $1 = hse ]] && { hsg;hsu; }
 [[ $1 = hsc ]] && { hsb;hsv;cpe; }
-[[ $1 = hsg ]] && { hsg;cpe; }
-[[ $1 = hsu ]] && { hsu;cpe; }
-[[ $1 = hsb ]] && { hsb;cpe; }
-[[ $1 = hsv ]] && { hs3; }
+[[ $1 = hsv ]] && { hsv;cpe; }
 [[ $1 = hsm ]] && { hsm;cpe; }
-[[ $1 = cci ]] && { nu0 $(ss4 $s13 $r25 nodes $2); }
-[[ $1 = eci ]] && { nu0 $(ss4 $s12 $r25 execution-endpoint); }
 [[ $1 = bo  && -f $p12 ]] && { boi $(pt1 $@ 00:00);if [[ $(pt3 $@ s) = n ]];then b6=$b2;else b6=$(pt2 $@ 0);fi;bo5; }
 [[ $1 = bon && -f $p12 ]] && { bv0;l2=$(bff 23:58);bo6 $(pt2 $2 $nn); }
 [[ $1 = boc && -f $p12 ]] && { unset v;read -a v <<< $(bff|tail -n1);l2=$(bff $(pt1 $2 ${v[4]}));boa; }
