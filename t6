@@ -463,7 +463,7 @@ function tbf { [[ -f $p04/$s12.service ]]; }
 function tvf { [[ -f $p04/$s13.service ]]; }
 function tbp { [[ $(era $p12 $s52) -eq 1 ]] && ( (tpc && tpm && tha && ! tsd && ! trf) || trb $1); }
 function btr { if trf;then printf RB  ;else printf PE  ;fi; }
-function btg { if trf;then printf $s37;else printf $s39;fi; }
+function btg { if trf;then printf $s38;else printf $s39;fi; }
 function irb { rm $p39.*.hours 2>$p03;if trb $1;then if v2t;then brs 0 RB 0 $s37;else gps;ups;bps;sex reboot;fi;else if trf;then touch $p39.$1.hours;fi;fi; }
 
 [[ $1 = irb ]] && { irb $2;pas; }
