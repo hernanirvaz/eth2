@@ -21,7 +21,7 @@ function lg0 { sed -n "s%$1 *\([0-9]*\).*%\1%p" $2 2>$p03; }                    
 function lg1 { if [[ $l4 ]];then echo "$l4"|gawk "$1";else printf %i 1;fi; }                                                                                  # get s/ms delays from log lines
 function lg2 { echo "$l6"|sed -n "s%.*$r53  *\([0-9]*\).*$1.*%\1%p" 2>$p03; }                                                                                 # get list of vc latencies
 function lg3 { local n=${1:-0};if [[ $n -gt 0 ]];then l4=$(ll0|tail -n$n);else l4=$(ll0);fi;b1=$(nu3 3 0 $(lg1 "$w0$r45$w2"));b5=$(nu3 3 0 $(lg1 "$w0$r46$w2"));b8=$(nu4 0 $(ll5));if [[ $n -gt 0 ]];then l4=$(ll1|tail -n$((1000*n)));else l4=$(ll1);fi;b9=$(nu3 0 0 $(lg1 "$w0$r71$w1")); }
-function lg4 { if v2t;then l6=$(ll7 $1);v0=$(nu5 1 $(lg2 $zip4));v1=$(nu5 1 $(lg2 $iip5));v2=$(nu5 1 $(ll6 $(($1/2))));else v0=0;v1=0;v2=0;fi; }              # set vc delays
+function lg4 { if v2t;then l6=$(ll7 $1);v0=$(nu5 1 $(lg2 $iip5));v1=$(nu5 1 $(lg2 $zip4));v2=$(nu5 1 $(ll6 $(($1/2))));else v0=0;v1=0;v2=0;fi; }              # set vc delays
 function fs0 { pex "grep -h ${2:-$r32}.*$1 $p01"; }                                                                                                           # get specific syslog lines
 function fs1 { pex "grep -h ${1:-$r34}     $p01"; }                                                                                                           # get eth      syslog lines
 function fs2 { pex "grep -v ${1:-$r34}     $p01"; }                                                                                                           # get sys      syslog lines
@@ -80,7 +80,7 @@ function snn {
 function sz0 { gnn 0          ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s irut:%4i %4i %2i %4i %4i'                   $nr $nm $nd $(ss5 $1 port    ) "$(gb1 $(gcl eth.syncing))" $e1 $e3 $e2 $e4 $(ei0)             2>$p03; }
 function sz1 { unn 0          ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s    i:%i'                                    $nr $nm $nd $(ss5 $1 p2p-port) "$(ub1 $(ucl eth_syncing))" $e1                                2>$p03; }
 function sz2 { dtl;bo4;lg3;bnn;printf 'cl:p%02i:m%02i:d%04i p2p:%5i %s iorh:%4i %4i %2i %4i %4i op:c%02i:m%02i:%i' $nr $nm $nd $(ss5 $1 port)     "$(bb1 $(bcl syncing))"     $b1 $b5 $b8 $b9 $(bi1) $b2 $b3 $ln 2>$p03; }
-function sz3 { lg4 $s63       ;printf 'vl:b%02i:m%02i:c%02i cc:%13s'                                               $v0 $v1 $v2 $(ss4 $1 $r24 nodes)                                                              2>$p03; }
+function sz3 { lg4 $s63       ;printf 'vl:m%02i:b%02i:c%02i cc:%13s'                                               $v0 $v1 $v2 $(ss4 $1 $r24 nodes)                                                              2>$p03; }
 function sso {
   tse $2 || return;dts;local e="$1 $(printf '%6s %10s %5s %-40s' $(ss3 $2) $dt "$(ss2 $2)" 2>$p03)"                                                           # memory & status
   [[ $1 = GETH ]] && e="$e $(sz0 $2)";[[ $1 = BESU ]] && e="$e $(sz1 $2)";[[ $1 = BEAC ]] && e="$e $(sz2 $2)";[[ $1 = VALI ]] && e="$e $(sz3 $2)";swn "$e"    # set homologous/avg & cl http
@@ -177,8 +177,8 @@ function vl0 { dts;ok=OK;if tsa $s13;then lg4 $s62;vlo;else m="VSRV NOT ON $dt";
 # MEVB OK  11 2023-06-13 01:10 http_avg:  84
 function mlo { m="MEVB $ok $(printf '%3i' $(fs1 "$r33"|fln "$r62"|wc -l) 2>$p03) $dt $(printf 'http_avg: %3i' $m0 2>$p03)"; }
 #    0  1              2     3     4   5     6   7
-# VALI OK     2023-06-03 20:49 ztc4: 700 int5: 240
-function vlo { m="VALI $ok $(printf '%3i' $(ll8|fln "$r66"|wc -l) 2>$p03) $dt $(printf '%s: %2i %s: %2i casp: %2i' $(snc $znm4) $v0 $(snc $inm5) $v1 $v2 2>$p03)"; }
+# VALI OK     2023-06-03 20:49 int5: 700 ztc4: 240
+function vlo { m="VALI $ok $(printf '%3i' $(ll8|fln "$r66"|wc -l) 2>$p03) $dt $(printf '%s: %2i %s: %2i casp: %2i' $(snc $inm5) $v0 $(snc $znm4) $v1 $v2 2>$p03)"; }
 #    0  1   2          3     4       5  6   7    8    9  10   11  12 13  14 15 16  17 18 19  20  21 22   23   24    25   26   27 28   29   30
 # BEAC OK   0 2023-06-17 03:29 node60: 66 rp:  608  261 ab:  800   78 0 er:  0  1  10  3  0 511   0  3 3597  177 iorh:  423 5097  5 1545 1274
 function blo {
