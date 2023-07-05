@@ -264,7 +264,7 @@ function brs {
   fi;done;rm -f $p50 $p42.*
 }
 function vrs {
-  tsi $p46 && return;touch $p50;touch $p46.a$(stg);ssw $1 $p46;tso $p46 && return;local t=$(sng);local f=$p46.i$(stg);touch $f;local n=0;paf
+  tsi $p46 && return;touch $p46.a$(stg);ssw $1 $p46;tso $p46 && return;local t=$(sng);local f=$p46.i$(stg);touch $f;local n=0;paf
   while [[ -f $f ]];do ((n+=$(sfn $t)));ssf $(sfn $t) $p46 $t;if tip $t;then rm $f;cex "$s02 $s13";dmr;if [[ $2 = RS ]];then cex "$s03 $s13";else cex "$s02 $s12";fi;vro $n $2;fi;done;rm -f $p50 $p46.*
 }
 function brh { head -n${1:-0} $p12; }                                                                                                                         # new cc head lines
@@ -498,7 +498,7 @@ function irb { rm $p39.*.hours 2>$p03;if trb $1;then if v2t;then brs 0 RB 0 $s37
 [[ $1 = grb ]] && { touch $p50;grs      0  RB   ${2:-$s38}; }
 [[ $1 = urb ]] && { touch $p50;urs      0  RB   ${2:-$s38}; }
 [[ $1 = brb ]] && { touch $p50;brs      0  RB 0 ${2:-$s37}; }
-[[ $1 = ivk ]] && { ivk              ${2:-$s38}; }
+[[ $1 = ivk ]] && { touch $p50;ivk              ${2:-$s38}; }
 [[ $1 = ul  ]] && { ul0;swn "$m"; }
 [[ $1 = ulf ]] && { ul0;swn "$m" >> $p11;[[ $ok != OK ]] && urs 0 $ok $s40; }
 [[ $1 = gl  ]] && { gl0;swn "$m"; }
