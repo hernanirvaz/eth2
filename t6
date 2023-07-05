@@ -21,7 +21,7 @@ function lg0 { sed -n "s%$1 *\([0-9]*\).*%\1%p" $2 2>$p03; }                    
 function lg1 { if [[ $l4 ]];then echo "$l4"|gawk "$1";else printf %i 1;fi; }                                                                                  # get s/ms delays from log lines
 function lg2 { echo "$l6"|sed -n "s%.*$r53  *\([0-9]*\).*$1.*%\1%p" 2>$p03; }                                                                                 # get list of vc latencies
 function lg3 { local n=${1:-0};if [[ $n -gt 0 ]];then l4=$(ll0|tail -n$n);else l4=$(ll0);fi;b1=$(nu3 3 0 $(lg1 "$w0$r45$w2"));b5=$(nu3 3 0 $(lg1 "$w0$r46$w2"));b8=$(nu4 0 $(ll5));if [[ $n -gt 0 ]];then l4=$(ll1|tail -n$((1000*n)));else l4=$(ll1);fi;b9=$(nu3 0 0 $(lg1 "$w0$r71$w1")); }
-function lg4 { if v2t;then l6=$(ll7 $1);v0=$(nu5 1 $(lg2 $zip4));v1=$(nu5 1 $(lg2 $iip5));v2=$(nu5 1 $(ll6 $(($1/2))));else v0=0;v1=0;v2=0;fi; }              # set vc delays
+function lg4 { if v2t;then l6=$(ll7 $1);v0=$(nu5 1 $(lg2 $iip5));v1=$(nu5 1 $(lg2 $zip4));v2=$(nu5 1 $(ll6 $(($1/2))));else v0=0;v1=0;v2=0;fi; }              # set vc delays
 function fs0 { pex "grep -h ${2:-$r32}.*$1 $p01"; }                                                                                                           # get specific syslog lines
 function fs1 { pex "grep -h ${1:-$r34}     $p01"; }                                                                                                           # get eth      syslog lines
 function fs2 { pex "grep -v ${1:-$r34}     $p01"; }                                                                                                           # get sys      syslog lines
@@ -64,10 +64,11 @@ function bml { pt2 $(wc -l $p13 2>$p03) 0; }                                    
 function stg { local n=${1:-0};if ((n>3599));then printf %s $(($(date -d@$n +%H)-1))h;fi;if ((n>0));then printf %s $(date -d@$n +%Mm%Ss);fi;printf %s .$(date -d@$(($(date +%s)+$n)) +%H%M%S); }
 function sf1 { printf %s ${1:-$(date +%H:%M:%S)}; }                                                                                                           # get filterd t7 parm 1
 function sf2 { printf %i ${2:-24}; }                                                                                                                          # get filterd t7 parm 2
-function sft { echo $(sf1) $1 $2$(cpf); }                                                                                                                     # print restart info line
+function sft { echo $(sf1) $1 $2 $(basename $f 2>$p03); }                                                                                                     # print restart info line
+function cpf { basename $(ls $p02/*.rs.* 2>$p03|sort -t. -k4n|tail -n1) 2>$p03; }                                                                             # get last restart basename
 function smn { local g=${1:-24}                  ;nu0 $((g>360?360:g<24?24:g)); }                                                                             # get max/min seconds to future (12x30/24)
 function sfn { local g=$(($(bss $1)-$(date +%s)));nu0 $((g>3?g:3))            ; }                                                                             # get min seconds to future
-function ssf { [[ $1 -gt 0 ]] || return;local f=$2.s$(stg $1);touch $f;[[ -f $p50 ]] && sft ${3:-$(date +%H:%M:%S)} ${4:-00};sleep $1s; }
+function ssf { [[ $1 -gt 0 ]] || return;local f=$2.s$(stg $1);touch $f;[[ -f $p50 ]] && sft ${3:-$(date +%H:%M:%S)} ${4:-00} $f;sleep $1s; }
 function ssw { while :;do local t=$(sng);if [[ $(sf2 $t) -lt $1 || 24 -ge $(sfn $t) ]];then ssf $(smn $(sfn $t)) $2 $t;else break;fi;ts0 $2 && break;done; }
 function snn {
   if [[ $# -gt 0 ]];then
@@ -76,12 +77,12 @@ function snn {
     nr=0      ;nm=0                                          ;nd=0
   fi
 }
-function sz0 { gnn 0          ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s irut:%4i %4i %2i %4i %4i'                $nr $nm $nd $(ss5 $1 port    ) "$(gb1 $(gcl eth.syncing))" $e1 $e3 $e2 $e4 $(ei0)         2>$p03; }
-function sz1 { unn 0          ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s    i:%i'                                 $nr $nm $nd $(ss5 $1 p2p-port) "$(ub1 $(ucl eth_syncing))" $e1                            2>$p03; }
-function sz2 { dtl;bo4;lg3;bnn;printf 'cl:p%02i:m%02i:d%04i p2p:%5i %s iorh:%4i %4i %2i %4i %4i op:c%02i:m%02i' $nr $nm $nd $(ss5 $1 port)     "$(bb1 $(bcl syncing))"     $b1 $b5 $b8 $b9 $(bi1) $b2 $b3 2>$p03; }
-function sz3 { lg4 $s63       ;printf 'vl:b%02i:m%02i:c%02i cc:%13s'                                            $v0 $v1 $v2 $(ss4 $1 $r24 nodes)                                                          2>$p03; }
+function sz0 { gnn 0          ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s irut:%4i %4i %2i %4i %4i'                   $nr $nm $nd $(ss5 $1 port    ) "$(gb1 $(gcl eth.syncing))" $e1 $e3 $e2 $e4 $(ei0)             2>$p03; }
+function sz1 { unn 0          ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s    i:%i'                                    $nr $nm $nd $(ss5 $1 p2p-port) "$(ub1 $(ucl eth_syncing))" $e1                                2>$p03; }
+function sz2 { dtl;bo4;lg3;bnn;printf 'cl:p%02i:m%02i:d%04i p2p:%5i %s iorh:%4i %4i %2i %4i %4i op:c%02i:m%02i:%i' $nr $nm $nd $(ss5 $1 port)     "$(bb1 $(bcl syncing))"     $b1 $b5 $b8 $b9 $(bi1) $b2 $b3 $ln 2>$p03; }
+function sz3 { lg4 $s63       ;printf 'vl:m%02i:b%02i:c%02i cc:%13s'                                               $v0 $v1 $v2 $(ss4 $1 $r24 nodes)                                                              2>$p03; }
 function sso {
-  tse $2 || return;dts;local e="$1 $(printf '%6s %10s %5s status: %-40s' $(ss3 $2) $dt "$(ss2 $2)" 2>$p03)"                                                   # memory & status
+  tse $2 || return;dts;local e="$1 $(printf '%6s %10s %5s %-40s' $(ss3 $2) $dt "$(ss2 $2)" 2>$p03)"                                                           # memory & status
   [[ $1 = GETH ]] && e="$e $(sz0 $2)";[[ $1 = BESU ]] && e="$e $(sz1 $2)";[[ $1 = BEAC ]] && e="$e $(sz2 $2)";[[ $1 = VALI ]] && e="$e $(sz3 $2)";swn "$e"    # set homologous/avg & cl http
 }
 # el control commands
@@ -176,8 +177,8 @@ function vl0 { dts;ok=OK;if tsa $s13;then lg4 $s62;vlo;else m="VSRV NOT ON $dt";
 # MEVB OK  11 2023-06-13 01:10 http_avg:  84
 function mlo { m="MEVB $ok $(printf '%3i' $(fs1 "$r33"|fln "$r62"|wc -l) 2>$p03) $dt $(printf 'http_avg: %3i' $m0 2>$p03)"; }
 #    0  1              2     3     4   5     6   7
-# VALI OK     2023-06-03 20:49 ztc4: 700 int5: 240
-function vlo { m="VALI $ok $(printf '%3i' $(ll8|fln "$r66"|wc -l) 2>$p03) $dt $(printf '%s: %2i %s: %2i casp: %2i' $(snc $znm4) $v0 $(snc $inm5) $v1 $v2 2>$p03)"; }
+# VALI OK     2023-06-03 20:49 int5: 700 ztc4: 240
+function vlo { m="VALI $ok $(printf '%3i' $(ll8|fln "$r66"|wc -l) 2>$p03) $dt $(printf '%s: %2i %s: %2i casp: %2i' $(snc $inm5) $v0 $(snc $znm4) $v1 $v2 2>$p03)"; }
 #    0  1   2          3     4       5  6   7    8    9  10   11  12 13  14 15 16  17 18 19  20  21 22   23   24    25   26   27 28   29   30
 # BEAC OK   0 2023-06-17 03:29 node60: 66 rp:  608  261 ab:  800   78 0 er:  0  1  10  3  0 511   0  3 3597  177 iorh:  423 5097  5 1545 1274
 function blo {
@@ -223,13 +224,13 @@ function bnx { local g=${3:-$s56};if ((g<=s57));then bnx "${1:-0}${2:-+}${x[$g]}
 function bnw { local g=${3:-$s56};if ((g<=s57));then bnw "${1:-0}${2:-+}${w[$g]}" "$2" $((g+s58));else printf "$1";fi; }                                      # sum recursively delay         err array
 function boi {
   unset v;read -a v <<< $(bff|tail -n1);local n=0;local t=${1:-${v[4]}};b6=0;while :;do l2=$(bff $t);if [[ $l2 ]];then break;else t=${v[4]};fi;done           # set homologous lines
-  while :;do bo2 ${v[3]};if [[ $b2 -eq 0 && $n -lt 99 ]];then ((n+=1));v[3]=$(date -d "$n days ago $t" +%F);else break;fi;done                                # set homologous position
+  while :;do bo2 ${v[3]};if [[ $b2 -eq 0 && $n -lt 99 ]];then ((n+=1));v[3]=$(date -d "$n days ago $t" +%F);else break;fi;done;ln=$(echo "$l2"|wc -l)         # set homologous position
 }
 function bo0 { echo "$l2"|sort -k10n -k4r; }                                                                                                                  # get homologous lines sorted
 function bo1 { echo "$l2"|sort -k10r -k4n; }                                                                                                                  # get homologous lines reversed
 function bo2 { b2=$(bo0|grep -n ${1:-$(date '+%F')}|cut -d: -f1); }                                                                                           # set homologous position
 function bo3 { b3=$(nu3 0 0 $b2 $(lg0 BM $p13)); }                                                                                                            # set homologous avg
-function bo4 { l2=$(bff $d1);bo2 $d0;bo3; }                                                                                                                   # set homologous position/avg
+function bo4 { l2=$(bff $d1);bo2 $d0;bo3;ln=$(echo "$l2"|wc -l); }                                                                                                                   # set homologous position/avg
 function bo5 { bo0|head -n$((b6>b2?b6:b2<5?5:b2))|tail -n$((b6>0?b6:b2>s52?s52:b2<5?5:b2)); }                                                                 # homologous report
 function bo6 { bo0|grep $(printf node%02i: $1 2>$p03); }                                                                                                      # get homologous node lines sorted
 function boa { local g=${1:-$s56};local e=$(bo6 $g);printf 'BO%5i %3i\n' $(echo "$e"|wc -l) $g 2>$p03;echo "$e";((g<s57)) && boa $((g+s58)); }                # recursively show homologous nodes report
@@ -240,9 +241,9 @@ function bod {
 }
 function bh0 {
   [[ -f $p12 ]] || return;tail -n${1:-$s52} $p12;[[ $1 ]] && return;local e='x9 x5  x1 x0 rb  nb c10 er   if  c90'
-  boi;swn "BO $(printf '%4i %3i%34s%29s' $b2 $(echo "$l2"|wc -l) 2>$p03)$e";bo5                                                                               # homologous cc report
-  bl0;swn "BL $(printf '%8i%34s%29s'         $(bbl)              2>$p03)$e\n$m";bm0                                                                           # last       cc report
-  bmo;swn "BM $(printf '%8i%34s'             $(bml)              2>$p03) i20   i30   i40   i50   i60   i70   i80   avg\n$m"                                   # last cc-daillast y
+  boi;swn "BO $(printf '%4i %3i%34s%29s' $b2 $ln    2>$p03)$e";bo5
+  bl0;swn "BL $(printf '%8i%34s%29s'         $(bbl) 2>$p03)$e\n$m";bm0
+  bmo;swn "BM $(printf '%8i%34s'             $(bml) 2>$p03) i20   i30   i40   i50   i60   i70   i80   avg\n$m"
 }
 function bss { nu0 $((${2:-0}+$(date -d$(sf1 $1) +%s))); }                                                                                                    # get sum secounds + time
 function bwc { bwd|grep -Ex "$(echo ${!b[@]}|tr ' ' '|')"|wc -l; }                                                                                            # get my # validators
@@ -290,7 +291,6 @@ function bsl {                                                                  
 function bdw { [[ -f $1 ]] || return;cp $1 $1.o;grep -v $2 $1.o > $1;grep $2 $1.o > $1.d; }                                                                   # work to delete cc log day
 function bdl { local d=$(pt0 $1 sai);[[ $d = sai ]] && return;bdw $p12 $d;bdw $p13 $d; }                                                                      #         delete cc log day
 function wst { echo $@|sed 's%[^: ]*: *%%g;s%inactive%off%;s%active%on%' 2>$p03; }                                                                            # get ufw info
-function cpf { local f='';local t='';for t in $(ls $p02/*.rs.* 2>$p03|sort -t. -k4n);do local f="$f, $(basename $t)";done;printf "$f"; }                      # get list restart basenames
 function sm0 { local s='smartctl --json=c -x';pex "$s /dev/nvme0"|jq -r "$r54" 2>$p03; }
 function sm1 { local s='smartctl --json=c -x';pex "$s /dev/nvme0"|jq -r "$r54" 2>$p03;pex "$s /dev/nvme1"|jq -r "$r54" 2>$p03;pex "$s /dev/nvme2"|jq -r "$r54" 2>$p03; }
 function sm2 { local s=$(pex "smartctl --json=c -x /dev/sda");echo $s|jq -r "$r40" 2>$p03;echo $s|jq -r "$r41" 2>$p03; }
@@ -305,16 +305,16 @@ function ncp { fs5|wc -l; }
 function cpe {                                                                                                                                                # system status
   local e='NO';[[ $($s07|sed -n 's%.*synchronized: \([a-z]*\) *%\1%p') = yes ]] && local e='OK';dts
   if tsa $s19;then local e="CSYS $e";m=$(ss2 $s19);else local e="CNTP $e";m=$(ss2 ntp);fi
-  swn "$e $(nu1 %3i $(fs0 clock|wc -l)) $dt status: $m";[[ $1 = c ]] && return;tmp;[[ $1 = p ]] && return                                                     # clock & temperature info
+  swn "$e $(nu1 %3i $(fs0 clock|wc -l)) $dt $m";[[ $1 = c ]] && return;tmp;[[ $1 = p ]] && return                                                             # clock & temperature info
   if [[ $(cat $p44 2>$p03) -eq 0 ]];then local e=off;else local e=on;fi;if [[ $(cat $p43 2>$p03) -eq 1 ]];then local d=off;else local d=on;fi                 # usb/cpu current state
   m="INFO$(printf '%3i %3i %10s %5s' $(nus) $(ncp) $dt 2>$p03)"                                                                                               # usb/cpu erros count
   m="$m usb $e, turbo $d, ufw $(wst $(pex 'ufw status'|grep Status:))"                                                                                        # usb/cpu/ufw info
-  m="$m, uptime:$(uptime|sed 's%[0-9]*:[0-9]*:[0-9]*%%;s%[0-9]* users*,%%;s% average\([^,]*\).*%\1%;s%  *% %g')";swn "$m"                                     # uptime/load info
+  m="$m, uptime:$(uptime|sed "$r75")";swn "$m"
   local l=$(fs2|flp "$r61"|wc -l);local n=$(fs1|fln "$r62"|wc -l)
-  local e=$(fs2|flp "$r61"|tail -n1|sed 's%.*hrv-zotac[0-9] *\(.*\)%\1%;s%  *% %g'                         )
-  local d=$(fs1|fln "$r62"|tail -n1|sed 's%.*[0-9]*:[0-9]*:[0-9]*\.[0-9][0-9][0-9]]* *\(.*\)%\1%;s%  *% %g')
-  m="ERRO$(printf '%3i %3i' $l $n 2>$p03) $dt";if [[ $l -gt 0 ]];then if [[ $n -gt 0 ]];then m="$m sl: ${e:0:56}";m="$m cl: ${d:0:56}";else m="$m sl: ${e:0:117}";fi;else if [[ $n -gt 0 ]];then m="$m cl: ${d:0:117}";fi;fi;(( l+n )) && swn "$m"
-  m='';trf && m="$m, reboot $(($(sra)/60/60)) hours ago$(cpf)";[[ $(bwc) -gt 0 ]] && m="$m, sync/propose duties on";[[ $m ]] && swn "INFO        $dt${m#*,}"  # reboot/duties info
+  local e=$(fs2|flp "$r61"|tail -n1|sed "$r73")
+  local d=$(fs1|fln "$r62"|tail -n1|sed "$r74")
+  m="ERRO$(printf '%3i %3i' $l $n 2>$p03) $dt";if [[ $l -gt 0 ]];then if [[ $n -gt 0 ]];then m="$m sl: ${e:0:53}";m="$m cl: ${d:0:54}";else m="$m sl: ${e:0:112}";fi;else if [[ $n -gt 0 ]];then m="$m cl: ${d:0:112}";fi;fi;(( l+n )) && swn "$m"
+  m='';trf && m="$m, reboot $(($(sra)/60/60)) hours ago $(cpf)";[[ $(bwc) -gt 0 ]] && m="$m, sync/propose duties on";[[ $m ]] && swn "INFO        $dt${m#*,}" # reboot/duties info
   [[ $(nu0 $(/usr/lib/update-notifier/apt-check 2>&1|sed 's%;% %g')) -gt 0 ]] && { echo;apt list --upgradable; }
 }
 # Plex Media Server
@@ -400,12 +400,7 @@ function hsu { sso BESU $s11; }
 function hsb { sso BEAC $s12; }
 function hsv { sso VALI $s13; }
 function hsm { sso MEVB $s14; }
-function hs0 {
-  if [[ $cunm = $1 ]];then local n=$(nu0 $(ss4 $s12 $r25 execution-endpoint));else local n=$(ssh $(snc $1) "$p53 eci");fi;[[ $n -gt 0 ]] || return;echo $(sni $n)
-  if [[ $cunm = $(sni $n) ]];then hsg;hsu;    else ssh $(snc $(sni $n)) "$p53 hse";fi;[[ $(sni $n) = $1 ]] || echo $1
-  if [[ $cunm = $1        ]];then hsb;hsv;cpe;else ssh $(snc $1       ) "$p53 hsc";fi
-}
-function hs3 { if v2t;then hsv;cpe;else echo $cuvc;ssh $(snc $cuvc) "$p53 hsv";fi; }
+function hs0 { echo $1;if [[ $cunm = $1 ]];then hsg;hsu;else ssh $(snc $1) "$p53 hse";fi;[[ $1 = $2 ]] || echo $2;if [[ $cunm = $2 ]];then hsb;hsv;cpe;else ssh $(snc $2) "$p53 hsc";fi; }
 function nsh { $s08 list;$s08 status;$s09 status|sed -n 's%\(Current DNS\).*:%   \1:%ip'; }                                                                   # network/dns info
 function wlp { local e="$1";shift;until [[ $# -lt 1 ]];do e="$e\|$1";shift;done;fs2|grep '\[UFW'|if [[ $e ]];then grep -v "$e";else cat;fi; }
 function c0c { local e="$r11";[[ $(sed -n "$r12" $p04/$s12.service 2>$p03) = $zip1 ]] && e="$r10";sed "$e" $s12.sav > $p04/$s12.service; }                    # cc change el server
@@ -460,7 +455,7 @@ function bcc { printf p;if v4t;then if tbp $s44;then if trb $s44;then printf r;e
 function trb { [[ $(sra) -ge $((60*60*${1:-9})) ]]; }
 function tip { [[ $(date +%s) -ge $(bss $1 6) ]]; }
 function tpc { [[ $b4 -ne 0 ]]; }
-function tha { [[ $b2 -gt $((b3*2)) ]]; }
+function tha { [[ $b2 -gt $((b3*4)) ]]; }
 function tsd { [[ $((nd+$(bi0))) -ge $s60 ]]; }
 function tpm { [[ $nm -ge $((nn-5)) ]]; }
 function trf { [[ -f $p45 ]]; }
@@ -468,7 +463,7 @@ function tbf { [[ -f $p04/$s12.service ]]; }
 function tvf { [[ -f $p04/$s13.service ]]; }
 function tbp { [[ $(era $p12 $s52) -eq 1 ]] && ( (tpc && tpm && tha && ! tsd && ! trf) || trb $1); }
 function btr { if trf;then printf RB  ;else printf PE  ;fi; }
-function btg { if trf;then printf $s37;else printf $s39;fi; }
+function btg { if trf;then printf $s38;else printf $s39;fi; }
 function irb { rm $p39.*.hours 2>$p03;if trb $1;then if v2t;then brs 0 RB 0 $s37;else gps;ups;bps;sex reboot;fi;else if trf;then touch $p39.$1.hours;fi;fi; }
 
 [[ $1 = irb ]] && { irb $2;pas; }
@@ -523,18 +518,13 @@ function irb { rm $p39.*.hours 2>$p03;if trb $1;then if v2t;then brs 0 RB 0 $s37
 [[ $1 = vh  ]] && { sh0 $p49 $2;[[ $2 ]] || { vl0;swn "VL $(printf '%8i' $(ell $p49) 2>$p03)\n$m"; } }
 [[ $1 = mh  ]] && { sh0 $p52 $2;[[ $2 ]] || { ml0;swn "ML $(printf '%8i' $(ell $p52) 2>$p03)\n$m"; } }
 [[ $1 = bio ]] && { bio ${2:-$s61};swn "$m"; }
-[[ $1 = hs0 ]] && { hs0 $cub2;hs0 $cub1;hs3; }
-[[ $1 = hs1 ]] && { hs0 $cub1; }
-[[ $1 = hs2 ]] && { hs0 $cub2; }
+[[ $1 = hs0 ]] && { hs0 $cue1 $cub1;hs0 $cue2 $cub2;if v2t;then hsv;cpe;else echo $cuvc;ssh $(snc $cuvc) "$p53 hsv";fi; }
+[[ $1 = hs1 ]] && { hs0 $cue1 $cub1; }
+[[ $1 = hs2 ]] && { hs0 $cue2 $cub2; }
 [[ $1 = hse ]] && { hsg;hsu; }
 [[ $1 = hsc ]] && { hsb;hsv;cpe; }
-[[ $1 = hsg ]] && { hsg;cpe; }
-[[ $1 = hsu ]] && { hsu;cpe; }
-[[ $1 = hsb ]] && { hsb;cpe; }
-[[ $1 = hsv ]] && { hs3; }
+[[ $1 = hsv ]] && { hsv;cpe; }
 [[ $1 = hsm ]] && { hsm;cpe; }
-[[ $1 = cci ]] && { nu0 $(ss4 $s13 $r25 nodes $2); }
-[[ $1 = eci ]] && { nu0 $(ss4 $s12 $r25 execution-endpoint); }
 [[ $1 = bo  && -f $p12 ]] && { boi $(pt1 $@ 00:00);if [[ $(pt3 $@ s) = n ]];then b6=$b2;else b6=$(pt2 $@ 0);fi;bo5; }
 [[ $1 = bon && -f $p12 ]] && { bv0;l2=$(bff 23:58);bo6 $(pt2 $2 $nn); }
 [[ $1 = boc && -f $p12 ]] && { unset v;read -a v <<< $(bff|tail -n1);l2=$(bff $(pt1 $2 ${v[4]}));boa; }
@@ -548,6 +538,7 @@ function irb { rm $p39.*.hours 2>$p03;if trb $1;then if v2t;then brs 0 RB 0 $s37
 [[ $1 = gpn ]] && { if tsa $s10;then gp;cex "du -h $p08";sudo -u eth1 geth --datadir $p08 snapshot prune-state;cex "du -h $p08";dmr;ga;fi; }
 [[ $1 = gpg ]] && { if tsa $s10;then gp;cex "du -h $p08";sudo -u eth1 geth --datadir $p08 removedb            ;cex "du -h $p08";dmr;ga;fi; }
 [[ $1 = rsh ]] && { cd $p02;ls -rtGg *.rs.*;echo $(sf1) $(sng); }
+[[ $1 = rst ]] && { cd $p02;rm -f    *.rs.*; }
 [[ $1 = rpt ]] && { touch $p50; }
 [[ $1 = lp  ]] && { netstat -tulpn; }
 # outros journal system/lighthouse
