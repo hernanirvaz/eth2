@@ -341,6 +341,7 @@ function dnv { local v=${1:-1.30.0};local f="ethdo-$v-linux-amd64.tar.gz";local 
 function gtv { local f="geth-linux-amd64-${1:-1.12.0}-${2:-e501b3b0}";rm -rf $f*;curl -LO https://gethstore.blob.core.windows.net/builds/$f.tar.gz;local s=$(md5sum $f.tar.gz|cut -d' ' -f1);swn "\nINSTALAR $f ($s)?";local rsp=nao;read rsp;[[ $rsp = $s ]] || return;tar xf $f.tar.gz;sex "cp $f/geth $p00";cmw $p00/geth 755 root; }
 function imk { local f="$p02/key.txt";echo $K > $f;$p00/lighthouse --datadir $p05 account validator import --reuse-password --password-file $f --directory $p19;rm -f $f; }
 
+# sdkfjsdfl
 s00='systemctl'
 s01="$s00 status"
 s02="$s00 stop"
