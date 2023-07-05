@@ -495,14 +495,14 @@ function irb { rm $p39.*.hours 2>$p03;if trb $1;then if v2t;then brs 0 RB 0 $s37
 [[ $1 = tvc ]] && { tvc; }
 [[ $1 = tmp ]] && { dts;tmp s; }
 # slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168
-[[ $1 = grs ]] && { grs ${2:-0} SR   ${3:-$s40}; }
-[[ $1 = urs ]] && { urs ${2:-0} SR   ${3:-$s40}; }
-[[ $1 = brs ]] && { brs ${2:-0} BN 0 ${3:-$s39}; }
-[[ $1 = crs ]] && { brs ${2:-0} VC 0 ${3:-$s38}; }
-[[ $1 = vrs ]] && { vrs              ${2:-$s38} RS; }
-[[ $1 = grb ]] && { grs      0  RB   ${2:-$s38}; }
-[[ $1 = urb ]] && { urs      0  RB   ${2:-$s38}; }
-[[ $1 = brb ]] && { brs      0  RB 0 ${2:-$s37}; }
+[[ $1 = grs ]] && { touch $p50;grs ${2:-0} SR   ${3:-$s40}; }
+[[ $1 = urs ]] && { touch $p50;urs ${2:-0} SR   ${3:-$s40}; }
+[[ $1 = brs ]] && { touch $p50;brs ${2:-0} BN 0 ${3:-$s39}; }
+[[ $1 = crs ]] && { touch $p50;brs ${2:-0} VC 0 ${3:-$s38}; }
+[[ $1 = vrs ]] && { touch $p50;vrs              ${2:-$s38} RS; }
+[[ $1 = grb ]] && { touch $p50;grs      0  RB   ${2:-$s38}; }
+[[ $1 = urb ]] && { touch $p50;urs      0  RB   ${2:-$s38}; }
+[[ $1 = brb ]] && { touch $p50;brs      0  RB 0 ${2:-$s37}; }
 [[ $1 = ivk ]] && { ivk              ${2:-$s38}; }
 [[ $1 = ul  ]] && { ul0;swn "$m"; }
 [[ $1 = ulf ]] && { ul0;swn "$m" >> $p11;[[ $ok != OK ]] && urs 0 $ok $s40; }
@@ -697,7 +697,7 @@ if [[ ! $1 ]];then
   m="$m\nbrb [g]\t\tsystem & beacon\t\t\treboot\tmim gap time"
   m="$m\nivk [g]\t\timport validator keys\t\tmim gap time"
   m="$m\nirb [h]\t\tsystem (if needed)\t\treboot\tafter h hours"
-  m="$m\nrsh\t\trestart info (time & next gap without validator tasks)"
+  m="$m\nr[sh|pt]\tshow|print restart info (time & next gap without validator tasks)"
   m="$m\nyj\t\tsystem journal"
   m="$m\nsl\t[hh:mm]\tsystem journal\tlog lines"
   m="$m\nll\t[hh:mm]\tel/cl\t\tlog lines (last 7 days)"
