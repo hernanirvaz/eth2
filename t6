@@ -313,7 +313,7 @@ function cpe {                                                                  
   local l=$(fs2|flp "$r61"|wc -l);local n=$(fs1|fln "$r62"|wc -l)
   local e=$(fs2|flp "$r61"|tail -n1|sed "$r73")
   local d=$(fs1|fln "$r62"|tail -n1|sed "$r74")
-  m="ERRO$(printf '%3i %3i' $l $n 2>$p03) $dt";if [[ $l -gt 0 ]];then if [[ $n -gt 0 ]];then m="$m sl: ${e:0:53}";m="$m cl: ${d:0:54}";else m="$m sl: ${e:0:112}";fi;else if [[ $n -gt 0 ]];then m="$m cl: ${d:0:112}";fi;fi;(( l+n )) && swn "$m"
+  m="ERRO$(printf '%3i %3i' $l $n 2>$p03) $dt";if [[ $l -gt 0 ]];then if [[ $n -gt 0 ]];then m="$m sl: ${e:0:53}";m="$m cl: ${d:0:54}";else m="$m sl: ${e:0:112}";fi;else if [[ $n -gt 0 ]];then m="$m cl: ${d:0:112}";fi;fi;(( l+n )) && echo "$m"
   m='';trf && m="$m, reboot $(($(sra)/60/60)) hours ago $(cpf)";[[ $(bwc) -gt 0 ]] && m="$m, sync/propose duties on";[[ $m ]] && swn "INFO        $dt${m#*,}" # reboot/duties info
   [[ $(nu0 $(/usr/lib/update-notifier/apt-check 2>&1|sed 's%;% %g')) -gt 0 ]] && { echo;apt list --upgradable; }
 }
