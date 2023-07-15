@@ -466,6 +466,7 @@ function tbp { [[ $(era $p12 $s52) -eq 1 ]] && ( (tpc && tpm && tha && ! tsd && 
 function btr { if trf;then printf RB  ;else printf PE  ;fi; }
 function btg { if trf;then printf $s38;else printf $s39;fi; }
 function irb { rm $p39.*.hours 2>$p03;if trb $1;then if v2t;then brs 0 RB 0 $s37;else gps;ups;bps;sex reboot;fi;else if trf;then touch $p39.$1.hours;fi;fi; }
+function gp0 { if tsa $s10;then bp;gp;local i=$(pt2 $(pex "du -s $p08"));sudo -u eth1 geth --datadir $p08 $@;local n=$(pt2 $(pex "du -s $p08"));echo "fs-diff $(((i-n)/1024/1024))M $@";dmr;ga;ba;fi; }
 
 [[ $1 = irb ]] && { irb $2;pas; }
 [[ $1 = bmf ]] && { bm0;[[ $2 ]] && b4=$2;bms;v5t && swn "$m" >> $p13;if v4t;then tbp $s44 && brs $b4 $(btr) $s43 $(btg);else trb && brs 0 RB $s43 $s39;fi; }
@@ -536,8 +537,8 @@ function irb { rm $p39.*.hours 2>$p03;if trb $1;then if v2t;then brs 0 RB 0 $s37
 [[ $1 = brm ]] && { brm; }
 [[ $1 = bsl ]] && { bsl; }
 [[ $1 = cpe ]] && { cpe $2; }
-[[ $1 = gpn ]] && { if tsa $s10;then gp;cex "du -h $p08";sudo -u eth1 geth --datadir $p08 snapshot prune-state;cex "du -h $p08";dmr;ga;fi; }
-[[ $1 = gpg ]] && { if tsa $s10;then gp;cex "du -h $p08";sudo -u eth1 geth --datadir $p08 removedb            ;cex "du -h $p08";dmr;ga;fi; }
+[[ $1 = gpn ]] && { gp0 snapshot prune-state; }
+[[ $1 = gpg ]] && { gp0 removedb; }
 [[ $1 = rsh ]] && { cd $p02;ls -rtGg *.rs.*;echo $(sf1) $(sng); }
 [[ $1 = rst ]] && { cd $p02;rm -f    *.rs.*; }
 [[ $1 = rpt ]] && { touch $p50; }
