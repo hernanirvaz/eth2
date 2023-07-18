@@ -72,7 +72,7 @@ else
 	Group=eth2
 	Restart=always
 	RestartSec=10
-	ExecStart=$p00/lighthouse --datadir $p05 bn --port $pp2p --target-peers $tarp$http --staking$epec$othe
+	ExecStart=$p00/lighthouse --datadir $p05 bn --network mainnet --port $pp2p --target-peers $tarp$http --staking$epec$othe
 	PermissionsStartOnly=true
 	ExecStopPost=$p02/eth2/t7 BEACSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 	
@@ -85,9 +85,9 @@ if [[ ($cunm != $cuvc && $cunm != $nxvc) || -f $p04/$s13.service ]];then
   if [[ -f $p04/$s13.service ]];then swu "vc ja instalado";else swu 'vc NAO PODE SER INSTALADO AQUI';fi
 else
   if [[ $cust = hrv ]];then
-    epcc=" --beacon-nodes http://$iip5:5052,http://$zip4:5052"
+    epcc="--beacon-nodes http://$iip5:5052,http://$zip4:5052"
   else
-    epcc=" --beacon-nodes http://$vip1:5052"
+    epcc="--beacon-nodes http://$vip1:5052"
   fi
   othe=''
   othe="$othe --suggested-fee-recipient $s26"                                                                                                                 # vc level fees
@@ -110,7 +110,7 @@ else
 		Group=eth3
 		Restart=always
 		RestartSec=10
-		ExecStart=$p00/lighthouse --datadir $p05 vc$epcc$othe
+		ExecStart=$p00/lighthouse --datadir $p05 vc --network mainnet $epcc$othe
 		PermissionsStartOnly=true
 		ExecStopPost=$p02/eth2/t7 VALISTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 		
