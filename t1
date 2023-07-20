@@ -226,7 +226,7 @@ r40='.temperature.current'
 r41='.ata_sct_temperature_history.table|join(" ")'
 r42='elapsed= *'
 r43=' in '
-r44='Delayed.head.block'
+r44='DEBG.Delayed.head.block'
 r45='imported_delay: +Some\('
 r46='observed_delay: +Some\('
 r47='Block.from.API'
@@ -301,7 +301,7 @@ r66="\($r62\| DEBG \)"
 r67='time_taken_ms:'
 r68="s%^ *$p01%# $p01%"
 r69="$r57;s%,* *module: *[a-z_:0-9]*%%"
-r70='Processed.HTTP.API.request'
+r70='DEBG.Processed.HTTP.API.request'
 r71='elapsed: *'
 r72="$r30.*Persisted.the.clean.trie"
 r73='s%.*hrv-\(zotac\|intel\)[0-9] *\(.*\)%\2%;s%  *% %g'
