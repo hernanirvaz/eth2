@@ -152,7 +152,7 @@ function bdr { nu2 "($1*$s47+$2*$s46)*$s55/100000000"                       7; }
 function bv0 { nn=$(ss5 $s12 target-peers); }                                                                                                                 # set configured peers
 function bs0 { l0=$(fs4 $s54] $r32 3600); }                                                                                                                   # set last cc log lines
 function bs3 { l3=$(fs0 $r48); }                                                                                                                              # set attesta log lines
-function bs5 { l5=$(echo "$l1"|sed -nEe "s%.+node$g:.+er: +([0-9]+) +([0-9]+) +([0-9]+) +([0-9]+).+%\1\t\2\t\3\t\4%p" 2>$p03); }                              # set penalty errors log lines
+function bs5 { l5=$(echo "$l1"|sed -nEe "s%.+node$1:.+er: +([0-9]+) +([0-9]+) +([0-9]+) +([0-9]+).+%\1\t\2\t\3\t\4%p" 2>$p03); }                              # set penalty errors log lines
 function bb0 { bs0;bs3;bl1;bl2;[[ (1 -eq $(era $p12 $s52) && $(bi2) -ge 1) || (1 -eq $(era $p12 5) && $(bi2) -ge 5) ]] && ok=BK; }                            # set ok (OK/BK)
 function bfl { grep "BEAC.*$1"      2>$p03; }                                                                                                                 # filter cc lines
 function bff { grep "BEAC.*$1" $p12 2>$p03; }                                                                                                                 # filter cc log
@@ -196,7 +196,7 @@ function bm0 {                                                                  
   [[ -f $p12 ]] || return;bmi;b4=0;dts;bv0;bnn;bs3;bl2;[[ -f $p14 ]] && bm4;lg3                                                                               # set vars/arrays
   l1=$(tail -n$(($(nu0 $(bbl))-v[1])) $p12 2>$p03|bfl);[[ $l1 ]] && bm1;bm2;[[ $b2 -eq 0 ]] && boi;bo3;bm5 ${a[$nn]};b5=$(bcc)                                # add cc lines & homologous/avg position
 }
-function bm1 { local g=${1:-$s56};bs5;[[ $l5 ]] && { bkm $g;bzm $g;bxm $g;bwm $g;bcm $g; };((g<s57)) && bm1 $((g+s58)); }                                     # recursively sum penalty errors arrays
+function bm1 { local g=${1:-$s56};bs5 $g;[[ $l5 ]] && { bkm $g;bzm $g;bxm $g;bwm $g;bcm $g; };((g<s57)) && bm1 $((g+s58)); }                                  # recursively sum penalty errors arrays
 function bm2 { k[0]=$(($(bnk)));z[0]=$(($(bnz)));x[0]=$(($(bnx)));w[0]=$(($(bnw)));c[0]=$(($(bnc)));a[0]=$(bm3 0);bm7; }                                      # tot err/cnt/penalty arrays
 function bm3 { bdp ${k[$1]} ${z[$1]} ${x[$1]} ${w[$1]} ${c[$1]} ; }                                                                                           # get penalty from paid err arrays
 function bm4 { read -a v <<< $(tail -n1 $p14);bmk;bmz;bmx;bmw;bmc; }                                                                                          # set err/cnt penalty arrays from barqivo
@@ -227,10 +227,9 @@ function bo0 { echo "$l2"|sort -k10n -k4r; }                                    
 function bo1 { echo "$l2"|sort -k10r -k4n; }                                                                                                                  # get homologous lines reversed
 function bo2 { b2=$(bo0|grep -n ${1:-$(date '+%F')}|cut -d: -f1); }                                                                                           # set homologous position
 function bo3 { b3=$(nu3 0 0 $b2 $(lg0 BM $p13)); }                                                                                                            # set homologous avg
-function bo4 { l2=$(bff $d1);bo2 $d0;bo3;ln=$(echo "$l2"|wc -l); }                                                                                                                   # set homologous position/avg
+function bo4 { bo0|grep $(printf node%02i: $1 2>$p03); }                                                                                                      # get homologous node lines sorted
 function bo5 { bo0|head -n$((b6>b2?b6:b2<5?5:b2))|tail -n$((b6>0?b6:b2>s52?s52:b2<5?5:b2)); }                                                                 # homologous report
-function bo6 { bo0|grep $(printf node%02i: $1 2>$p03); }                                                                                                      # get homologous node lines sorted
-function boa { local g=${1:-$s56};local e=$(bo6 $g);printf 'BO%5i %3i\n' $(echo "$e"|wc -l) $g 2>$p03;echo "$e";((g<s57)) && boa $((g+s58)); }                # recursively show homologous nodes report
+function boa { local g=${1:-$s56};local e=$(bo4 $g);printf 'BO%5i %3i\n' $(echo "$e"|wc -l) $g 2>$p03;echo "$e";((g<s57)) && boa $((g+s58)); }                # recursively show homologous nodes report
 function bod {
   [[ -f $p12 ]] || return;l2=$(bff 23:58);local e='';while read -a v;do
     if [[ ${v[9]} -ge $1 && $(echo "$l2"|grep ${v[5]}|wc -l) -gt $2 ]];then local e="$e ${v[3]}";l2=$(echo "$l2"|grep -v ${v[3]});fi                          # gather delete info
@@ -530,7 +529,7 @@ function gp0 { if tsa $s10;then bp;gp;local i=$(pt2 $(pex "du -s $p08"));sudo -u
 [[ $1 = hsv ]] && { hsv;cpe; }
 [[ $1 = hsm ]] && { hsm;cpe; }
 [[ $1 = bo  && -f $p12 ]] && { boi $(pt1 $@ 00:00);if [[ $(pt3 $@ s) = n ]];then b6=$b2;else b6=$(pt2 $@ 0);fi;bo5; }
-[[ $1 = bon && -f $p12 ]] && { bv0;l2=$(bff 23:58);bo6 $(pt2 $2 $nn); }
+[[ $1 = bon && -f $p12 ]] && { bv0;l2=$(bff 23:58);bo4 $(pt2 $2 $nn); }
 [[ $1 = boc && -f $p12 ]] && { unset v;read -a v <<< $(bff|tail -n1);l2=$(bff $(pt1 $2 ${v[4]}));boa; }
 [[ $1 = bol && -f $p12 ]] && { l2=$(bff 23:58);boa; }
 [[ $1 = bod ]] && { bod ${2:-0} ${3:-1}; }
