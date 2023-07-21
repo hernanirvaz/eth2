@@ -13,16 +13,16 @@ function ll1 { local f=$p16/logs/beacon.log   ;echo $H|sudo -S grep -h $1      $
 function ll2 { local f=$p01                   ;echo $H|sudo -S grep -h $1      $f 2>$p03          ; }                                                         # get all eth syslog lines
 function ll3 { local f=$p17/logs/validator.log;echo $H|sudo -S cat             $f 2>$p03          ; }                                                         # get vc intern lines
 function ll4 { local f=$p17/logs/validator.log;echo $H|sudo -S grep -h $1 $f.1 $f 2>$p03|tail -n$2; }                                                         # get vc intern lines (specific)
-function lg0 { sed -n "s%$1 *\([0-9]*\).*%\1%p" $2 2>$p03; }                                                                                                  # get list of numbers
-function lg1 { echo "$l4"|sed -En "s%.*score: +-([0-9]+\.[0-9]+).*%\1%p" 2>$p03; }                                                                            # get list of peers score
-function lg2 { echo "$l6"|sed -n  "s%.*$r53  *\([0-9]*\).*$1.*%\1%p"     2>$p03; }                                                                            # get list of vc latencies
-function lg3 { local n=${1:-0};if [[ $n -gt 0 ]];then l4=$(ll1 $r44|tail -n$n);else l4=$(ll1 $r44);fi;i0=$(nu3 3 0 $(lg5 "$w0$r45$w2"));i1=$(nu3 3 0 $(lg5 "$w0$r46$w2"));b1=$(nu4 0 $(ll2 $r32.*$r65|lg0 .*$r65));if [[ $n -gt 0 ]];then l4=$(ll1 $r70|tail -n$((1000*n)));else l4=$(ll1 $r70);fi;i2=$(nu3 0 0 $(lg5 "$w0$r71$w1"));if [[ $n -gt 0 ]];then l4=$(ll1 $r36|tail -n$((20*n)));else l4=$(ll1 $r36);fi;i3=$(nu3 2 0 $(lg1)); }
-function lg4 { if v2t;then l6=$(ll4 $r53 $1);v0=$(nu5 1 $(lg2 $iip5));v1=$(nu5 1 $(lg2 $zip4));v2=$(nu5 1 $(ll4 $r67 $(($1/2))|lg0 .*$r67));else v0=0;v1=0;v2=0;fi; }
+function lg0 {            sed -En "s%.*$1 *([0-9]+).*%\1%p" $2         2>$p03; }                                                                              # get list of numbers
+function lg1 { echo "$l4"|sed -En "s%.*$r36 *-([0-9]+\.[0-9]+).*%\1%p" 2>$p03; }                                                                              # get list of peers score
+function lg2 { echo "$l6"|sed -En "s%.*$r53 *([0-9]+).*$1.*%\1%p"      2>$p03; }                                                                              # get list of vc latencies
+function lg3 { local n=${1:-0};if [[ $n -gt 0 ]];then l4=$(ll1 $r44|tail -n$n);else l4=$(ll1 $r44);fi;i0=$(nu3 3 0 $(lg5 "$w0$r45$w2"));i1=$(nu3 3 0 $(lg5 "$w0$r46$w2"));b1=$(nu4 0 $(ll2 $r32.*$r65|lg0 $r65));if [[ $n -gt 0 ]];then l4=$(ll1 $r70|tail -n$((1000*n)));else l4=$(ll1 $r70);fi;i2=$(nu3 0 0 $(lg5 "$w0$r71$w1"));if [[ $n -gt 0 ]];then l4=$(ll1 $r38|tail -n$((20*n)));else l4=$(ll1 $r38);fi;i3=$(nu3 2 0 $(lg1)); }
+function lg4 { if v2t;then l6=$(ll4 $r37 $1);v0=$(nu5 1 $(lg2 $iip5));v1=$(nu5 1 $(lg2 $zip4));v2=$(nu5 1 $(ll4 $r39 $(($1/2))|lg0 $r67));else v0=0;v1=0;v2=0;fi; }
 function lg5 { if [[ $l4 ]];then echo "$l4"|gawk "$1";else printf %i 1;fi; }                                                                                  # get s/ms delays from log lines
 function fs0 { pex "grep -h ${2:-$r32}.*$1 $p01"; }                                                                                                           # get specific syslog lines
 function fs1 { pex "grep -h ${1:-$r34}     $p01"; }                                                                                                           # get eth      syslog lines
 function fs2 { pex "grep -v ${1:-$r34}     $p01"; }                                                                                                           # get sys      syslog lines
-function fs3 { fs0 $1 $2|lg0 .*$1 ; }                                                                                                                         # get numbers  syslog lines
+function fs3 { fs0 $1 $2|lg0 $1 ; }                                                                                                                           # get numbers  syslog lines
 function fs4 { fs0 $1 $2|tail -n$3; }                                                                                                                         # get specific syslog lines
 function fs5 { fs2      |tail -n300|grep -i Core.*temperature; }                                                                                              # get tail cpu syslog lines
 function fs6 { fs0 $1 $2|sed -n "s%.*$1 *\([0-9]*\.[0-9]*\).*%\1%p" 2>$p03; }                                                                                 # get floats   syslog lines
@@ -49,10 +49,9 @@ function dts { read       d0 d1   <<< ${1:-$(date '+%F %H:%M')};dt="$d0 $d1"; } 
 function dtl { read _ _ _ d0 d1 _ <<< $(bff|tail -n1)          ;dt="$d0 $d1"; }                                                                               # set date/time vars with last beacon log
 function dnn { printf '%10s %5s node%02i: %2i' $dt $nn $nr 2>$p03; }                                                                                          # get date/nodes info
 function tsy { if [[ $(echo $@|grep false) ]];then printf SYC;else printf NSY;fi; }                                                                           # get el SYN/NSY text
-function els { lg0 .*sgs: $1|tail -n1; }                                                                                                                      # get el last segment
 function era { tail -n${2:-$s53} $1 2>$p03|cut -d' ' -f1|sort -u|wc -l; }                                                                                     # get el/cc restart activity
 function sh0 { [[ -f $1 ]] || return;tail -n${2:-$s53} $1 2>$p03; }                                                                                           # simple historic report
-function eb0 { e0=$(fs0 Imported $2|wc -l);ok=OK;[[ $(echo $@|grep false) && ($e0 -eq $(els $1) || $e3 -gt $s64) && $(era $1) -eq 1 ]] && ok=BK; }
+function eb0 { e0=$(fs0 Imported $2|wc -l);ok=OK;[[ $(echo $@|grep false) && ($e0 -eq $(lg0 sgs: $1|tail -n1) || $e3 -gt $s64) && $(era $1) -eq 1 ]] && ok=BK; }
 function eb1 { nu0 $(((nn*100-nn*60)/100)); } # $nr -lt $(eb1)                                                                                                # get current peers-30%
 function ero { [[ -f $2 ]] || return;dts;swn "$(nu1 R%03i $1) ${3:-RS} SRV $(dnn)" >> $2; }                                                                   # log restart info
 function ell { pt2 $(wc -l $1   2>$p03) 0; }                                                                                                                  # get ec       line count
