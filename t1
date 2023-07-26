@@ -28,6 +28,7 @@ cub1=$inm5
 cub2=$znm4
 cue1=$inm5
 cue2=$znm4
+cumv=$znm1
 
 p00='/usr/local/bin'
 p01='/var/log/syslog'
