@@ -59,12 +59,12 @@ function sft { [[ -f $p04/$1.service ]]; }
 function bpt { [[ $(era $p12 $s52) -eq 1 ]] && ( (pct && pmt && hat && ! sdt && ! fft $p45) || rbt $1); }
 function llc { pt2 $(wc -l $1 2>$p03) 0; }                                                                                                                    # get log line count
 function jsh { cex "journalctl --no-hostname --no-full -f $1"; }                                                                                              # my journal   format
+function dmr { sex "$s00 daemon-reload"; }                                                                                                                    # daemon-reload
 function svi { local n=${1:-0};if [[ $n -gt 0 ]];then l4=$(ll1 $r44|tail -n$n);else l4=$(ll1 $r44);fi;i0=$(nu5 3 $(ln2 "$w0$r45$w2"));i1=$(nu5 3 $(ln2 "$w0$r46$w2"));l6=$(ll2 $r32.*$r65);b1=$(nu3 $(ln1 $r65));if [[ $n -gt 0 ]];then l4=$(ll1 $r70|tail -n$((1000*n)));else l4=$(ll1 $r70);fi;i2=$(nu5 0 $(ln2 "$w0$r71$w1"));if [[ $n -gt 0 ]];then l6=$(ll1 $r38|tail -n$((20*n)));else l6=$(ll1 $r38);fi;i3=$(nu5 2 $(ln1 $r36)); }
 function svv { if v2t;then l6=$(ll5 $r37 $1);v0=$(nu4 1 $(ln1 $r53 ".*$iip5"));v1=$(nu4 1 $(ln1 $r53 ".*$zip4"));l6=$(ll5 $r39 $(($1/2)));v2=$(nu4 1 $(ln1 $r67));else v0=0;v1=0;v2=0;fi; }
 function spc { nn=$2;cp $p04/$1.service $p02/$1.sav;sed "s%peers\([ =]*\)[0-9]*%peers\1$2%" $p02/$1.sav > $p04/$1.service;dmr; }                              # service configuration change/reload
 function snp { sft $1 || return;local n=$(($2+nn));(($2!=0&&n>=$3&&n<=$4)) && spc $1 $n;tsa $1 && sex "$s02 $1"; }                                            # service peers change/stop
 function sra { if fft $p45;then nu0 $(($(date +%s)-$(date -r $p45 +%s)));else printf %i;fi }                                                                  # system reboot age (secounds)
-function dmr { sex "$s00 daemon-reload"; }                                                                                                                    # daemon-reload
 function dts { read       d0 d1   <<< ${1:-$(date '+%F %H:%M')};dt="$d0 $d1"; }                                                                               # set date/time vars
 function dtl { read _ _ _ d0 d1 _ <<< $(bff|tail -n1)          ;dt="$d0 $d1"; }                                                                               # set date/time vars with last beacon log
 function dnn { printf '%10s %5s node%02i: %2i' $dt $nn $nr 2>$p03; }                                                                                          # get date/nodes info
@@ -110,8 +110,8 @@ function gdi { if [[ $1 -gt 0 ]];then l4=$(ll2 $r35|tail -n$1);else l4=$(ll2 $r3
 function gdu { if [[ $1 -gt 0 ]];then l4=$(ll2 $r52|tail -n$1);else l4=$(ll2 $r52);fi;e2=$(nu4 1 $(ln2 "$w0$r42$w2")); }                                      # get delay Chain head was updated
 function gtd { if [[ $1 -gt 0 ]];then l4=$(ll2 $r72|tail -n1 );else l4=$(ll2 $r72);fi;e4=$(nu5 3 $(ln2 "$w0$r42$w2")); }                                      # get delay Persisted the clean trie cache
 function gcl { geth attach --exec $1 "http://$ciec:8545" 2>$p03; }                                                                                            # exec RPC HTTP
-function gi0 { nu0 $(echo $@|sed -n 's%.*highestBlock: *\([0-9]*\).*%\1%ip' 2>$p03); }                                                                        # get el highest block
-function gc0 { nu0 $(echo $@|sed -n 's%.*currentBlock: *\([0-9]*\).*%\1%ip' 2>$p03); }                                                                        # get el current block
+function gi0 { nu0 $(echo $@|sed -En 's%.*highestBlock: *([0-9]+).*%\1%ip' 2>$p03); }                                                                         # get el highest block
+function gc0 { nu0 $(echo $@|sed -En 's%.*currentBlock: *([0-9]+).*%\1%ip' 2>$p03); }                                                                         # get el current block
 function gv0 { nn=$(ss5 $s10 maxpeers); }                                                                                                                     # set configured peers
 function gq0 { nr=$(nu0 $(gcl net.peerCount)); }                                                                                                              # set el current peers
 function gll { grep "GETH.*$d0" $p10 2>$p03|wc -l; }                                                                                                          # get day geth log lines
@@ -135,9 +135,9 @@ function urs {
 }
 function udi { if [[ $1 -gt 0 ]];then l4=$(ll2 $r35|tail -n$1);else l4=$(ll2 $r35);fi;e1=$(nu5 3 $(ln2 "$w0$r43$w2")); }                                      # get delay imported
 function ucl { curl -sX POST --data "{\"jsonrpc\":\"2.0\",\"method\":\"$1\",\"params\":[],\"id\":51}" "http://$ciec:8545" 2>$p03; }                           # exec RPC HTTP
-function ui0 { nu0 $((16#$(nu0 $(echo $@|sed -n 's%.*highestBlock" *: *"0x\([^"]*\)".*%\1%ip' 2>$p03)))); }                                                   # get el highest block
-function uc0 { nu0 $((16#$(nu0 $(echo $@|sed -n 's%.*currentBlock" *: *"0x\([^"]*\)".*%\1%ip' 2>$p03)))); }                                                   # get el current block
-function up0 { nu0 $((16#$(nu0 $(echo $@|sed -n 's%.*result" *: *"0x\([^"]*\)".*%\1%ip'       2>$p03)))); }                                                   # get el result
+function ui0 { nu0 $((16#$(nu0 $(echo $@|sed -En 's%.*highestBlock" *: *"0x([^"]+)".*%\1%ip' 2>$p03)))); }                                                    # get el highest block
+function uc0 { nu0 $((16#$(nu0 $(echo $@|sed -En 's%.*currentBlock" *: *"0x([^"]+)".*%\1%ip' 2>$p03)))); }                                                    # get el current block
+function up0 { nu0 $((16#$(nu0 $(echo $@|sed -En 's%.*result" *: *"0x([^"]+)".*%\1%ip'       2>$p03)))); }                                                    # get el result
 function uv0 { nn=$(ss5 $s11 max-peers); }                                                                                                                    # set configured peers
 function uq0 { nr=$(up0 $(ucl net_peerCount)); }                                                                                                              # set el current peers
 function unn { snn $(ln3 Peers: $r31) $(up0 $(ucl net_peerCount));udi $1;e3=0;e2=0;e4=0; }                                                                    # set cur/min/std el peers
@@ -167,7 +167,7 @@ function bi2 { nu0 $(((z5>400?$(bz0)/z5:0)+(z2>300?$(bw0)/z2:0)+(z4>999?$(bf0)/z
 function bv0 { nn=$(ss5 $s12 target-peers); }                                                                                                                 # set configured peers
 function bs0 { l0=$(ll2 $r32.*$s54]|tail -n3600); }                                                                                                           # set last cc log lines
 function bs3 { l3=$(ll2 $r32.*$r48); }                                                                                                                        # set attesta log lines
-function bs5 { l5=$(echo "$l1"|sed -nEe "s%.+node$1:.+er: +([0-9]+) +([0-9]+) +([0-9]+) +([0-9]+).+%\1\t\2\t\3\t\4%p" 2>$p03); }                              # set penalty errors log lines
+function bs5 { l5=$(echo "$l1"|sed -En "s%.+node$1:.+er: +([0-9]+) +([0-9]+) +([0-9]+) +([0-9]+).+%\1\t\2\t\3\t\4%p" 2>$p03); }                               # set penalty errors log lines
 function bb0 { bs0;bs3;bl1;bl2;[[ (1 -eq $(era $p12 $s52) && $(bi2) -ge 1) || (1 -eq $(era $p12 5) && $(bi2) -ge 5) ]] && ok=BK; }                            # set ok (OK/BK)
 function bfl { grep "BEAC.*$1"      2>$p03; }                                                                                                                 # filter cc lines
 function bff { grep "BEAC.*$1" $p12 2>$p03; }                                                                                                                 # filter cc log
@@ -182,7 +182,7 @@ function bl1 {                                                                  
 }
 function bl2 { zk=${1:-$(bl4 missing)};zz=${2:-$(bl4 target)};zx=${3:-$(bl4 head)}; }                                                                         # set missing/target/head activities
 function bl3 { b0=${1:-$(ll2 $r32.*$r47|wc -l)};if [[ $2$3$4$5$6 ]];then i0=$2;i1=$3;b1=$4;i2=$5;i3=$6;else svi $s61;fi; }                                    # set pub-blocks & imported/observed delays
-function bl4 { echo "$l3"|sed -n "s%.*$1.*validators: *\[\(.*\)\].*%\1%p"|wc -w; }                                                                            # get number of paid activities
+function bl4 { echo "$l3"|sed -En "s%.*$1.*validators: *\[(.*)\].*%\1%p"|wc -w; }                                                                             # get number of paid activities
 function ml0 { dts;ok=OK;if tsa $s14;then m0=$(nu4 3 $(ln3 duration= $r33));mlo;else m="MSRV NOT ON $dt";fi; }
 function vl0 { dts;ok=OK;if tsa $s13;then svv $s62;vlo;else m="VSRV NOT ON $dt";fi; }
 #    0  1              2     3         4   5
@@ -446,7 +446,6 @@ function ivk {
 }
 function sn0 { local n=$((($1-s36)/32));for n in $n $((n+1));do curl -sH "$s28" -X POST -d"[$(echo ${!b[@]}|tr ' ' ',')]" "$s32/attester/$n"|jq -r "$s34";done 2>$p03;echo $(((n+1)*32)); }
 function sng { local t=$(((($(date +%s)-s31)/12)+s36));local e=0;local i=0;local s=0;for s in $(sn0 $t|sort -nu);do if ((s<t));then continue;else if (((s-t)>e));then e=$((s-t));i=$t;fi;fi;t=$((s+1));done;printf '%s %i' $(date -d@$((s31+i*12)) +%T) $((e*12)); }
-
 function bcc { printf p;if v4t;then if bpt $s44;then if rbt $s44;then printf r;else printf c;fi;else if sdt;then printf d;else printf _;fi;fi;else if rbt;then printf r;else if sdt;then printf d;else printf _;fi;fi;fi;printf :; }
 function btr { if fft $p45;then printf RB  ;else printf PE  ;fi; }
 function btg { if fft $p45;then printf $s38;else printf $s39;fi; }
