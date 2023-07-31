@@ -115,7 +115,7 @@ function gc0 { nu0 $(echo $@|sed -En 's%.*currentBlock: *([0-9]+).*%\1%ip' 2>$p0
 function gv0 { nn=$(ss5 $s10 maxpeers); }                                                                                                                     # set configured peers
 function gq0 { nr=$(nu0 $(gcl net.peerCount)); }                                                                                                              # set el current peers
 function gll { grep "GETH.*$d0" $p10 2>$p03|wc -l; }                                                                                                          # get day geth log lines
-function gnn { snn $(ln3 peercount= $r30) $(nu0 $(gcl net.peerCount));gdi $1;e3=$(nu2 "$(nu3 $(ln3 rejected= $r30))/$(gll)");gdu $1;gtd $1; }
+function gnn { snn $(ln3 peercount= $r30) $(nu0 $(gcl net.peerCount));gdi $1;e3=$(nu2 "(0$(printf %+.0f $(ln3 rejected= $r30) 2>$p03))/$(gll)");gdu $1;gtd $1; }
 function gb1 { if [[ $(echo $@|grep false) ]];then printf 'synced';else printf  'syncing: %6i' $(($(gi0 $@)-$(gc0 $@)));fi; }                                 # get el syncing blocks remaining
 function gb2 { if [[ $(echo $@|grep false) ]];then printf ''      ;else printf ' syncing: %6i' $(($(gi0 $@)-$(gc0 $@)));fi; }                                 # get el syncing blocks remaining
 function gl0 {                                                                                                                                                # el report
