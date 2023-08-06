@@ -61,7 +61,9 @@ function bpt { [[ $(era $p12 $s52) -eq 1 ]] && ( (pct && pmt && hat && ! sdt && 
 function llc { pt2 $(wc -l $1 2>$p03) 0; }                                                                                                                    # get log line count
 function jsh { cex "journalctl --no-hostname --no-full -f $1"; }                                                                                              # my journal   format
 function dmr { sex "$s00 daemon-reload"; }                                                                                                                    # daemon-reload
-function svi { local n=${1:-0};if g0t $n;then l4=$(ll1 $r44|tail -n$n);else l4=$(ll1 $r44);fi;i0=$(nu5 3 $(ln2 "$w0$r45$w2"));i1=$(nu5 3 $(ln2 "$w0$r46$w2"));l6=$(ll2 $r32.*$r65);b1=$(nu3 $(ln1 $r65));if g0t $n;then l4=$(ll1 $r70|tail -n$((1000*n)));else l4=$(ll1 $r70);fi;i2=$(nu5 0 $(ln2 "$w0$r71$w1"));if g0t $n;then l6=$(ll1 $r38|tail -n$((20*n)));else l6=$(ll1 $r38);fi;i3=$(nu5 2 $(ln1 $r36)); }
+function si2 { local n=${1:-0};printf %i $((1000*n)) 2>$p03; }
+function si3 { local n=${1:-0};printf %i $((20*n))   2>$p03; }
+function svi { local n=${1:-0};if g0t $n;then l4=$(ll1 $r44|tail -n$n);else l4=$(ll1 $r44);fi;i0=$(nu5 3 $(ln2 "$w0$r45$w2"));i1=$(nu5 3 $(ln2 "$w0$r46$w2"));l6=$(ll2 $r32.*$r65);b1=$(nu3 $(ln1 $r65));if g0t $n;then l4=$(ll1 $r70|tail -n$(si2 $n));else l4=$(ll1 $r70);fi;i2=$(nu5 0 $(ln2 "$w0$r71$w1"));if g0t $n;then l6=$(ll1 $r38|tail -n$(si3 $n));else l6=$(ll1 $r38);fi;i3=$(nu5 2 $(ln1 $r36)); }
 function svv { if v2t;then l6=$(ll5 $r37 $1);v0=$(nu4 1 $(ln1 $r53 ".*$iip5"));v1=$(nu4 1 $(ln1 $r53 ".*$zip4"));l6=$(ll5 $r39 $(($1/2)));v2=$(nu4 1 $(ln1 $r67));else v0=0;v1=0;v2=0;fi; }
 function spc { nn=$2;cp $p04/$1.service $p02/$1.sav;sed "s%peers\([ =]*\)[0-9]*%peers\1$2%" $p02/$1.sav > $p04/$1.service;dmr; }                              # service configuration change/reload
 function snp { sft $1 || return;local n=$(($2+nn));(($2!=0&&n>=$3&&n<=$4)) && spc $1 $n;tsa $1 && sex "$s02 $1"; }                                            # service peers change/stop
@@ -529,22 +531,25 @@ function gp0 { if tsa $s10;then bp;gp;local i=$(pt2 $(pex "du -s $p08"));sudo -u
 [[ $1 = rpt ]] && { touch $p50; }
 [[ $1 = lp  ]] && { netstat -tulpn; }
 # outros journal system/lighthouse
-[[ $1 = sl  ]] && { ll3                 |flp "$r61" $2              ; }
-[[ $1 = el  ]] && { ll2 "\($r30\|$r31\)"|fln "$r62" $2|sed -E "$r58"; }
+[[ $1 = sl  ]] && { ll3                       |flp "$r61" $2              ; }
+[[ $1 = el  ]] && { ll2 "\($r30\|$r31\)"      |fln "$r62" $2|sed -E "$r58"; }
 [[ $1 = al  ]] && { ll2 "$r32.*\($r47\|$r48\)"|fln "$r63" $2|sed -E "$r58"; }
-[[ $1 = cl  ]] && { ll2 "$r32"          |fln "$r62" $2|sed -E "$r58"; }
-[[ $1 = rl  ]] && { ll2 "$r33"          |fln "$r62" $2|sed -E "$r60"; }
-[[ $1 = ll  ]] && { ll2 "$r34"          |fln "$r62" $2|sed -E "$r60"; }
-[[ $1 = ci  ]] && { ll0                 |fln "$r66" $2|sed -E "$r69"; }
-[[ $1 = vi  ]] && { ll4                 |fln "$r66" $2|sed -E "$r69"; }
-[[ $1 = clp ]] && { ll2 "$r32.*peers:"                |sed -E "$r59"|grep -v "peers: *$(ss5 $s12 target-peers 10)[${2:-0}-9]"; }
-[[ $1 = elz ]] && { ll2 "\($r30\|$r31\)"|fln "$r62" $2; }
+[[ $1 = cl  ]] && { ll2 "$r32"                |fln "$r62" $2|sed -E "$r58"; }
+[[ $1 = cli ]] && { ll1 "$r44"|tail -n${2:-$s61}            |sed -E "$r60"; }
+[[ $1 = clh ]] && { ll1 "$r70"|tail -n${2:-$(si2 $s61)}     |sed -E "$r60"; }
+[[ $1 = clp ]] && { ll1 "$r38"|tail -n${2:-$(si3 $s61)}     |sed -E "$r60"; }
+[[ $1 = rl  ]] && { ll2 "$r33"                |fln "$r62" $2|sed -E "$r60"; }
+[[ $1 = ll  ]] && { ll2 "$r34"                |fln "$r62" $2|sed -E "$r60"; }
+[[ $1 = ci  ]] && { ll0                       |fln "$r66" $2|sed -E "$r69"; }
+[[ $1 = vi  ]] && { ll4                       |fln "$r66" $2|sed -E "$r69"; }
+[[ $1 = csp ]] && { ll2 "$r32.*peers:"                      |sed -E "$r59"|grep -v "peers: *$(ss5 $s12 target-peers 10)[${2:-0}-9]"; }
+[[ $1 = elz ]] && { ll2 "\($r30\|$r31\)"      |fln "$r62" $2; }
 [[ $1 = alz ]] && { ll2 "$r32.*\($r47\|$r48\)"|fln "$r63" $2; }
-[[ $1 = clz ]] && { ll2 "$r32"          |fln "$r62" $2; }
-[[ $1 = rlz ]] && { ll2 "$r33"          |fln "$r62" $2; }
-[[ $1 = llz ]] && { ll2 "$r34"          |fln "$r62" $2; }
-[[ $1 = ciz ]] && { ll0                 |fln "$r66" $2; }
-[[ $1 = viz ]] && { ll4                 |fln "$r66" $2; }
+[[ $1 = clz ]] && { ll2 "$r32"                |fln "$r62" $2; }
+[[ $1 = rlz ]] && { ll2 "$r33"                |fln "$r62" $2; }
+[[ $1 = llz ]] && { ll2 "$r34"                |fln "$r62" $2; }
+[[ $1 = ciz ]] && { ll0                       |fln "$r66" $2; }
+[[ $1 = viz ]] && { ll4                       |fln "$r66" $2; }
 [[ $1 = ws  ]] && { cex 'ufw status numbered'; }
 [[ $1 = wa  ]] && { wa; }
 [[ $1 = we  ]] && { yex 'ufw enable'; }
@@ -697,7 +702,7 @@ if [[ ! $1 ]];then
   m="$m\n[gubvm]l[f]\t[geth|besu|beacon|vc|mev]\tmy progress report [file add]"
   m="$m\n[gubvm]h\t[geth|besu|beacon|vc|mev]\tmy historic report"
   m="$m\nhs[012ecgubvm]\thistoric summary report [0-both|1-main|2-backup|el|cc|geth|besu|beacon|vc|mev]"
-  m="$m\nclp [i]\t\tshow peers excluding [$(ss5 $s12 target-peers 10)][i(0)-9]"
+  m="$m\ncsp [i]\t\tshow peers excluding [$(ss5 $s12 target-peers 10)][i(0)-9]"
   m="$m\ncla\t\tcc add    long-lived parms"
   m="$m\nclr\t\tcc remove long-lived parms"
   m="$m\ncce\t\tcc change ec server ($znm1/$znm4)"
