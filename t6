@@ -74,7 +74,7 @@ function dnn { printf '%10s %5s node%02i: %2i' $dt $nn $nr 2>$p03; }            
 function tsy { if [[ $(echo $@|grep false) ]];then printf SYC;else printf NSY;fi; }                                                                           # get el SYN/NSY text
 function era { tail -n${2:-$s53} $1 2>$p03|cut -d' ' -f1|sort -u|wc -l; }                                                                                     # get el/cc restart activity
 function sh0 { fft $1 || return;tail -n${2:-$s53} $1 2>$p03; }                                                                                                # simple historic report
-function eb0 { e0=$(ll2 $2.*Imported|wc -l);ok=OK;[[ $(echo $@|grep false) && ($e0 -eq $(ln0 sgs: $1|tail -n1) || $e3 -gt $s64) && $(era $1) -eq 1 ]] && ok=BK; }
+function eb0 { e0=$(ll2 $r35|wc -l);ok=OK;[[ $(echo $@|grep false) && ($e0 -eq $(ln0 sgs: $1|tail -n1) || $e3 -gt $s64) && $(era $1) -eq 1 ]] && ok=BK; }
 function eb1 { nu0 $(((nn*100-nn*60)/100)); } # $nr -lt $(eb1)                                                                                                # get current peers-30%
 function ero { fft $1 || return;dts;swn "$(nu1 R%03i $2) ${3:-RS} SRV $(dnn)" >> $1; }                                                                        # log restart info
 function stg { local n=${1:-0};if ((n>3599));then printf %s $(($(date -d@$n +%H)-1))h;fi;if ((n>0));then printf %s $(date -d@$n +%Mm%Ss);fi;printf %s .$(date -d@$(($(date +%s)+$n)) +%H%M%S); }
@@ -123,7 +123,7 @@ function gb1 { if [[ $(echo $@|grep false) ]];then printf 'synced';else printf  
 function gb2 { if [[ $(echo $@|grep false) ]];then printf ''      ;else printf ' syncing: %6i' $(($(gi0 $@)-$(gc0 $@)));fi; }                                 # get el syncing blocks remaining
 function gl0 {                                                                                                                                                # el report
   dts;ok=OK
-  if tsa $s10;then local e=$(gcl eth.syncing);gnn $s45;gv0;eb0 $p10 $r30 $e
+  if tsa $s10;then local e=$(gcl eth.syncing);gnn $s45;gv0;eb0 $p10 $e
     m="GETH $ok $(tsy $e) $(dnn) sgs: $(nu1 %4i $e0)$(gb2 $e) $(printf 'irut: %3i %3i %2i %4i %3i' $e1 $e3 $e2 $e4 $(ei0) 2>$p03)"
   else
     m="GSRV NOT ON $dt"
@@ -148,7 +148,7 @@ function ub1 { if [[ $(echo $@|grep false) ]];then printf 'synced';else printf  
 function ub2 { if [[ $(echo $@|grep false) ]];then printf ''      ;else printf ' syncing: %6i' $(($(ui0 $@)-$(uc0 $@)));fi; }                                 # get el syncing blocks remaining
 function ul0 {                                                                                                                                                # el report
   dts;ok=OK
-  if tsa $s11;then local e=$(ucl eth_syncing);unn $s45;uv0;eb0 $p11 $r31 $e
+  if tsa $s11;then local e=$(ucl eth_syncing);unn $s45;uv0;eb0 $p11 $e
     m="BESU $ok $(tsy $e) $(dnn) sgs: $(nu1 %4i $e0)$(ub2 $e) $(printf 'i: %3i' $e1 2>$p03)"
   else
     m="USRV NOT ON $dt"
@@ -533,11 +533,14 @@ function gp0 { if tsa $s10;then bp;gp;local i=$(pt2 $(pex "du -s $p08"));sudo -u
 # outros journal system/lighthouse
 [[ $1 = sl  ]] && { ll3                       |flp "$r61" $2              ; }
 [[ $1 = el  ]] && { ll2 "\($r30\|$r31\)"      |fln "$r62" $2|sed -E "$r58"; }
+[[ $1 = eli ]] && { ll2 "$r35"|tail -n${2:-$s45}            |sed -E "$r58"; }
+[[ $1 = elu ]] && { ll2 "$r52"|tail -n${2:-$s45}            |sed -E "$r58"; }
+[[ $1 = elt ]] && { ll2 "$r72"|tail -n${2:-$s45}            |sed -E "$r58"; }
 [[ $1 = al  ]] && { ll2 "$r32.*\($r47\|$r48\)"|fln "$r63" $2|sed -E "$r58"; }
 [[ $1 = cl  ]] && { ll2 "$r32"                |fln "$r62" $2|sed -E "$r58"; }
-[[ $1 = cli ]] && { ll1 "$r44"|tail -n${2:-$s61}            |sed -E "$r60"; }
-[[ $1 = clh ]] && { ll1 "$r70"|tail -n${2:-$(si2 $s61)}     |sed -E "$r60"; }
-[[ $1 = clp ]] && { ll1 "$r38"|tail -n${2:-$(si3 $s61)}     |sed -E "$r60"; }
+[[ $1 = cli ]] && { ll1 "$r44"|tail -n${2:-$s61}            |sed -E "$r58"; }
+[[ $1 = clh ]] && { ll1 "$r70"|tail -n${2:-$(si2 $s61)}     |sed -E "$r58"; }
+[[ $1 = clp ]] && { ll1 "$r38"|tail -n${2:-$(si3 $s61)}     |sed -E "$r58"; }
 [[ $1 = rl  ]] && { ll2 "$r33"                |fln "$r62" $2|sed -E "$r60"; }
 [[ $1 = ll  ]] && { ll2 "$r34"                |fln "$r62" $2|sed -E "$r60"; }
 [[ $1 = ci  ]] && { ll0                       |fln "$r66" $2|sed -E "$r69"; }
