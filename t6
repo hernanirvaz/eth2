@@ -87,7 +87,7 @@ function sfn { local g=$(($(bss $1)-$(date +%s)));nu0 $((g>3?g:3))            ; 
 function ssf { g0t $1 || return;local f=$2.s$(stg $1);touch $f;[[ -f $p50 ]] && rsi ${3:-$(date +%H:%M:%S)} ${4:-00} ${5:-00} $f;sleep $1s; }
 function ssw { while :;do local t=$(sng);if [[ $(sf2 $t) -lt $1 || 24 -ge $(sfn $t) ]];then ssf $(smn $(sfn $t)) $2 $t $1;else break;fi;s1t $2 && break;done; }
 function snn {
-  if g0t $#;then
+  if g0t $#;then # stdev=sqrt((1/N)*(sum(v-mean)^2))=sqrt((1/N)*((sum(v^2))-(((sum(v))^2)/N)))
     nr=${@:$#};nm=$(printf '%i\n' $@ 2>$p03|sort -n|head -n1);nd=$(nu2 "sqrt(((0$(printf +%i^2 $@ 2>$p03))-(0$(printf +%i $@ 2>$p03))^2/$#)/$#)*1000" 4)      # set cur/min/std peers vars
   else
     nr=0      ;nm=0                                          ;nd=0
