@@ -15,8 +15,8 @@ function ll3 { local f=$p01                   ;echo $H|sudo -S grep -hv $r34    
 function ll4 { local f=$p17/logs/validator.log;echo $H|sudo -S cat         $f.1 $f 2>$p03|tail -n$s65; }                                                      # get vc intern lines
 function ll5 { local f=$p17/logs/validator.log;echo $H|sudo -S grep -h  $1 $f.1 $f 2>$p03|tail -n$2  ; }                                                      # get vc intern lines (specific)
 function ln0 {                              sed -En "s%.*$1 *([0-9]+).*%\1%p"              $2 2>$p03; }                                                       # get sed list of numbers (file)
-function ln1 { if [[ $l6 ]];then echo "$l6"|sed -En "s%.*$1 *-?([0-9]*\.?[0-9]+)$2.*%\1%p"    2>$p03;else printf %i;fi; }                                     # get sed list of numbers (stdin)
-function ln2 { if [[ $l4 ]];then echo "$l4"|gawk "$1"                                         2>$p03;else printf %i;fi; }                                     # get awk list of numbers (µs|ms|s)
+function ln1 { if [[ $l6 ]];then echo "$l6"|sed -En "s%.*$1 *-?([0-9]*\.?[0-9]+)$2.*%\1%p"    2>$p03;fi; }                                                    # get sed list of numbers (stdin)
+function ln2 { if [[ $l4 ]];then echo "$l4"|gawk "$1"                                         2>$p03;fi; }                                                    # get awk list of numbers (µs|ms|s)
 function ln3 { l6=$(ll2 $2.*$1);ln1 $1; }                                                                                                                     # get numbers  syslog lines
 function fl0 { ll3|tail -n300|grep -i Core.*temperature; }                                                                                                    # get tail  cpu syslog lines
 function fl1 { fl0|wc -l; }                                                                                                                                   # get error cpu count
@@ -123,7 +123,7 @@ function gb1 { if [[ $(echo $@|grep false) ]];then printf 'synced';else printf  
 function gb2 { if [[ $(echo $@|grep false) ]];then printf ''      ;else printf ' syncing: %6i' $(($(gi0 $@)-$(gc0 $@)));fi; }                                 # get el syncing blocks remaining
 function gl0 {                                                                                                                                                # el report
   dts;ok=OK
-  if tsa $s10;then local e=$(gcl eth.syncing);gnn $s45;gv0;eb0 $p10 $e
+  if tsa $s10;then local e=$(gcl eth.syncing);gv0;gnn $s45;eb0 $p10 $e
     m="GETH $ok $(tsy $e) $(dnn) sgs: $(nu1 %4i $e0)$(gb2 $e) $(printf 'irut: %3i %3i %2i %4i %3i' $e1 $e3 $e2 $e4 $(ei0) 2>$p03)"
   else
     m="GSRV NOT ON $dt"
@@ -148,7 +148,7 @@ function ub1 { if [[ $(echo $@|grep false) ]];then printf 'synced';else printf  
 function ub2 { if [[ $(echo $@|grep false) ]];then printf ''      ;else printf ' syncing: %6i' $(($(ui0 $@)-$(uc0 $@)));fi; }                                 # get el syncing blocks remaining
 function ul0 {                                                                                                                                                # el report
   dts;ok=OK
-  if tsa $s11;then local e=$(ucl eth_syncing);unn $s45;uv0;eb0 $p11 $e
+  if tsa $s11;then local e=$(ucl eth_syncing);uv0;unn $s45;eb0 $p11 $e
     m="BESU $ok $(tsy $e) $(dnn) sgs: $(nu1 %4i $e0)$(ub2 $e) $(printf 'i: %3i' $e1 2>$p03)"
   else
     m="USRV NOT ON $dt"
