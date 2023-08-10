@@ -260,7 +260,11 @@ function bh0 {
   bmo;swn "BM $(printf '%8i%34s'             $(llc $p13) 2>$p03) i20   i30   i40   i50   i60   i70   i80   avg\n$m"
 }
 function bss { nu0 $((${2:-0}+$(date -d$(sf1 $1) +%s))); }                                                                                                    # get sum secounds + time
-function bwd { local n=$((($(date +%s)-s31)/(12*32)));for n in $n $((n+1));do curl -sH "$s28" -X POST -d"[$(echo ${!b[@]}|tr ' ' ',')]" "$s32/sync/$n";curl -sH "$s28" -X GET "$s32/proposer/$n";done 2>$p03|jq -r "$s35"; }
+# get attestation reward info for validators
+# s68="http://$cicc:5052/eth/v1/beacon/rewards"
+# s69='.data.total_rewards[]'
+# function brd { local n=$((($(date +%s)-s31)/(12*32)-2));curl -sH "$s28" -X POST -d"[\"$(echo ${!b[@]}|sed 's% %","%g')\"]" "$s68/attestations/$n" 2>$p03|jq -r $s69; }
+function bwd { local n=$((($(date +%s)-s31)/(12*32)-0));for n in $n $((n+1));do curl -sH "$s28" -X POST -d"[$(echo ${!b[@]}|tr ' ' ',')]" "$s32/sync/$n";curl -sH "$s28" -X GET "$s32/proposer/$n";done 2>$p03|jq -r $s35; }
 function bwc { bwd|grep -Ex "$(echo ${!b[@]}|tr ' ' '|')"|wc -l; }                                                                                            # get my # validators
 function bro { fft $p12 || return;dts;bb0;bnn;swn "$(printf 'R%03i %2s %3i' $1 ${2:-$ok} $(bi2) 2>$p03) $(dnn)" >> $p12; }
 function vro { fft $p49 || return;dts;        swn "$(printf 'R%03i %2s     %10s %5s' $1 ${2:-$ok} $dt 2>$p03)"  >> $p49; }
@@ -447,7 +451,7 @@ function ivk {
     fft $p05/vc_lock || cex "$s03 $s13";[[ -f $p12 ]] && { dts;swn "$(printf 'BSRV VK %3i %10s %5s' $(ls $p19 2>$p03|wc -l) $dt 2>$p03)" >> $p12; }
   fi
 }
-function sn0 { local n=$((($1-s36)/32));for n in $n $((n+1));do curl -sH "$s28" -X POST -d"[$(echo ${!b[@]}|tr ' ' ',')]" "$s32/attester/$n"|jq -r "$s34";done 2>$p03;echo $(((n+1)*32)); }
+function sn0 { local n=$((($1-s36)/32));for n in $n $((n+1));do curl -sH "$s28" -X POST -d"[$(echo ${!b[@]}|tr ' ' ',')]" "$s32/attester/$n"|jq -r $s34;done 2>$p03;echo $(((n+1)*32)); }
 function sng { local t=$(((($(date +%s)-s31)/12)+s36));local e=0;local i=0;local s=0;for s in $(sn0 $t|sort -nu);do if ((s<t));then continue;else if (((s-t)>e));then e=$((s-t));i=$t;fi;fi;t=$((s+1));done;printf '%s %i' $(date -d@$((s31+i*12)) +%T) $((e*12)); }
 function bcc { printf p;if v4t;then if bpt $s44;then if rbt $s44;then printf r;else printf c;fi;else if sdt;then printf d;else printf _;fi;fi;else if rbt;then printf r;else if sdt;then printf d;else printf _;fi;fi;fi;printf :; }
 function btr { if fft $p45;then printf RB  ;else printf PE  ;fi; }
