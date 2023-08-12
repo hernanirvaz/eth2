@@ -93,7 +93,7 @@ function snn {
     nr=0      ;nm=0                                          ;nd=0
   fi
 }
-function sz0 { gnn 0      ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s  irut:%4i %4i %2i %4i %4i'     $nr $nm $nd $(ss5 $1 port    ) "$(gb1 $(gcl eth.syncing))" $e1 $e3 $e2 $e4 $(ei0)     2>$p03; }
+function sz0 { gnn 0      ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s   iru:%4i %4i %2i %4i'         $nr $nm $nd $(ss5 $1 port    ) "$(gb1 $(gcl eth.syncing))" $e1 $e3 $e2 $(ei0)         2>$p03; }
 function sz1 { unn 0      ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s     i:%i'                      $nr $nm $nd $(ss5 $1 p2p-port) "$(ub1 $(ucl eth_syncing))" $e1                        2>$p03; }
 function sz2 { dtl;svi;bnn;printf 'cl:p%02i:m%02i:d%04i p2p:%5i %s iorhp:%4i %4i %2i %4i %4i %4i' $nr $nm $nd $(ss5 $1 port)     "$(bb1 $(bcl syncing))"     $i0 $i1 $b1 $i2 $i3 $(bi1) 2>$p03; }
 function sz3 { svv $s63   ;printf 'vl:m%02i:b%02i:c%02i cc:%13s'                                  $v0 $v1 $v2 $(ss4 $1 $r24 nodes)                                                      2>$p03; }
@@ -110,21 +110,20 @@ function grs {
   fi;done;rm -f $p50 $p40.*
 }
 function gdi { if g0t $1;then l4=$(ll2 $r35|tail -n$1);else l4=$(ll2 $r35);fi;e1=$(nu5 3 $(ln2 "$w0$r42$w2")); }                                              # get delay imported
-function gdu { if g0t $1;then l4=$(ll2 $r52|tail -n$1);else l4=$(ll2 $r52);fi;e2=$(nu4 1 $(ln2 "$w0$r42$w2")); }                                              # get delay Chain head was updated
-function gtd { if g0t $1;then l4=$(ll2 $r72|tail -n1 );else l4=$(ll2 $r72);fi;e4=$(nu5 3 $(ln2 "$w0$r42$w2")); }                                              # get delay Persisted the clean trie cache
+function gdu { if g0t $1;then l4=$(ll2 $r52|tail -n$1);else l4=$(ll2 $r52);fi;e2=$(nu5 3 $(ln2 "$w0$r42$w2")); }                                              # get delay Chain head was updated
 function gcl { geth attach --exec $1 "http://$ciec:8545" 2>$p03; }                                                                                            # exec RPC HTTP
 function gi0 { nu0 $(echo $@|sed -En 's%.*highestBlock: *([0-9]+).*%\1%ip' 2>$p03); }                                                                         # get el highest block
 function gc0 { nu0 $(echo $@|sed -En 's%.*currentBlock: *([0-9]+).*%\1%ip' 2>$p03); }                                                                         # get el current block
 function gv0 { nn=$(ss5 $s10 maxpeers); }                                                                                                                     # set configured peers
 function gq0 { nr=$(nu0 $(gcl net.peerCount)); }                                                                                                              # set el current peers
 function gll { grep "GETH.*$d0" $p10 2>$p03|wc -l; }                                                                                                          # get day geth log lines
-function gnn { snn $(ln3 peercount= $r30) $(nu0 $(gcl net.peerCount));gdi $1;e3=$(nu2 "(0$(printf %+.0f $(ln3 rejected= $r30) 2>$p03))/$(gll)");gdu $1;gtd $1; }
+function gnn { snn $(ln3 peercount= $r30) $(nu0 $(gcl net.peerCount));gdi $1;e3=$(nu2 "(0$(printf %+.0f $(ln3 rejected= $r30) 2>$p03))/$(gll)");gdu $1; }
 function gb1 { if [[ $(echo $@|grep false) ]];then printf 'synced';else printf  'syncing: %6i' $(($(gi0 $@)-$(gc0 $@)));fi; }                                 # get el syncing blocks remaining
 function gb2 { if [[ $(echo $@|grep false) ]];then printf ''      ;else printf ' syncing: %6i' $(($(gi0 $@)-$(gc0 $@)));fi; }                                 # get el syncing blocks remaining
 function gl0 {                                                                                                                                                # el report
   dts;ok=OK
   if tsa $s10;then local e=$(gcl eth.syncing);gv0;gnn $s45;eb0 $p10 $e
-    m="GETH $ok $(tsy $e) $(dnn) sgs: $(nu1 %4i $e0)$(gb2 $e) $(printf 'irut: %3i %3i %2i %4i %3i' $e1 $e3 $e2 $e4 $(ei0) 2>$p03)"
+    m="GETH $ok $(tsy $e) $(dnn) sgs: $(nu1 %4i $e0)$(gb2 $e) $(printf 'iru: %3i %3i %2i %3i' $e1 $e3 $e2 $(ei0) 2>$p03)"
   else
     m="GSRV NOT ON $dt"
   fi
@@ -143,7 +142,7 @@ function uc0 { nu0 $((16#$(nu0 $(echo $@|sed -En 's%.*currentBlock" *: *"0x([^"]
 function up0 { nu0 $((16#$(nu0 $(echo $@|sed -En 's%.*result" *: *"0x([^"]+)".*%\1%ip'       2>$p03)))); }                                                    # get el result
 function uv0 { nn=$(ss5 $s11 max-peers); }                                                                                                                    # set configured peers
 function uq0 { nr=$(up0 $(ucl net_peerCount)); }                                                                                                              # set el current peers
-function unn { snn $(ln3 Peers: $r31) $(up0 $(ucl net_peerCount));udi $1;e3=0;e2=0;e4=0; }                                                                    # set cur/min/std el peers
+function unn { snn $(ln3 Peers: $r31) $(up0 $(ucl net_peerCount));udi $1;e3=0;e2=0; }                                                                    # set cur/min/std el peers
 function ub1 { if [[ $(echo $@|grep false) ]];then printf 'synced';else printf  'syncing: %6i' $(($(ui0 $@)-$(uc0 $@)));fi; }                                 # get el syncing blocks remaining
 function ub2 { if [[ $(echo $@|grep false) ]];then printf ''      ;else printf ' syncing: %6i' $(($(ui0 $@)-$(uc0 $@)));fi; }                                 # get el syncing blocks remaining
 function ul0 {                                                                                                                                                # el report
@@ -157,7 +156,7 @@ function ul0 {                                                                  
 # cc control commands
 function bcl { curl -sX GET "http://$cicc:5052/eth/v1/node/$1" -H "accept: application/json" 2>$p03; }                                                        # exec RPC HTTP
 function bz0 { nu2 "(30.0*(0.4*$zk+0.3*$zz+0.2*$zx+0.1*$zw))"                         ; }                                                                     # get numerator paid errors
-function ei0 { nu2 "(0.80*$e1+0.01*$e3+0.17*$e2+0.02*$e4)"                            ; }                                                                     # get imported/rejected/updated/trie data
+function ei0 { nu2 "(0.80*$e1+0.03*$e3+0.17*$e2)"                                     ; }                                                                     # get imported/rejected/updated data
 function bi1 { nu2 "(0.70*$i0+0.10*$i1+0.08*$b1+0.02*$i2+0.10*$i3)"                   ; }                                                                     # get imported/observed/reorg/http/pscore data
 function bdp { nu2 "($1*$s48+$2*$s49+$3*$s50+$4*$s51)/${5:-1}*$s55/1000000" 7         ; }                                                                     # get penalty
 function bdr { nu2 "($1*$s47+$2*$s46)*$s55/100000000"                       7         ; }                                                                     # get reward
@@ -321,7 +320,7 @@ function cpe {                                                                  
   if [[ $(cat $p44 2>$p03) -eq 0 ]];then local e=off;else local e=on;fi;if [[ $(cat $p43 2>$p03) -eq 1 ]];then local d=off;else local d=on;fi                 # usb/cpu current state
   m="INFO$(printf '%3i %3i %10s %5s' $(fl2) $(fl1) $dt 2>$p03)"                                                                                               # usb/cpu erros count
   m="$m usb $e, turbo $d, ufw $(wif $(pex 'ufw status'|grep Status:))"                                                                                        # usb/cpu/ufw info
-  m="$m, uptime:$(uptime|sed "$r75")";swn "$m"
+  m="$m, uptime:$(uptime|sed "$r72")";swn "$m"
   local l=$(ll3|flp "$r61"|wc -l);local n=$(ll2 "$r34"|fln "$r62"|wc -l)
   local e=$(ll3|flp "$r61"|tail -n1|sed "$r73")
   local d=$(ll2 "$r34"|fln "$r62"|tail -n1|sed "$r74")
@@ -541,7 +540,6 @@ function gp0 { if tsa $s10;then bp;gp;local i=$(pt2 $(pex "du -s $p08"));sudo -u
 [[ $1 = el  ]] && { ll2 "\($r30\|$r31\)"      |fln "$r62" $2|sed -E "$r58"; }
 [[ $1 = eli ]] && { ll2 "$r35"|tail -n${2:-$s45}            |sed -E "$r58"; }
 [[ $1 = elu ]] && { ll2 "$r52"|tail -n${2:-$s45}            |sed -E "$r58"; }
-[[ $1 = elt ]] && { ll2 "$r72"|tail -n${2:-$s45}            |sed -E "$r58"; }
 [[ $1 = al  ]] && { ll2 "$r32.*\($r47\|$r48\)"|fln "$r63" $2|sed -E "$r58"; }
 [[ $1 = cl  ]] && { ll2 "$r32"                |fln "$r62" $2|sed -E "$r58"; }
 [[ $1 = rl  ]] && { ll2 "$r33"                |fln "$r62" $2|sed -E "$r60"; }
