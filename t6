@@ -61,8 +61,8 @@ function bpt { [[ $(era $p12 $s52) -eq 1 ]] && ( (pct && pmt && hat && ! sdt && 
 function llc { pt2 $(wc -l $1 2>$p03) 0; }                                                                                                                    # get log line count
 function jsh { cex "journalctl --no-hostname --no-full -f $1"; }                                                                                              # my journal   format
 function dmr { sex "$s00 daemon-reload"; }                                                                                                                    # daemon-reload
-function si2 { local n=${1:-0};printf %i $((1000*n)) 2>$p03; }
-function si3 { local n=${1:-0};printf %i $((20*n))   2>$p03; }
+function si2 { local n=${1:-0};printf %i $((400*n)) 2>$p03; }
+function si3 { local n=${1:-0};printf %i $((10*n))  2>$p03; }
 function svi { local n=${1:-0};if g0t $n;then l4=$(ll1 $r44|tail -n$n);else l4=$(ll1 $r44);fi;i0=$(nu5 3 $(ln2 "$w0$r45$w2"));i1=$(nu5 3 $(ln2 "$w0$r46$w2"));l6=$(ll2 $r32.*$r65);b1=$(nu3 $(ln1 $r65));if g0t $n;then l4=$(ll1 $r70|tail -n$(si2 $n));else l4=$(ll1 $r70);fi;i2=$(nu5 0 $(ln2 "$w0$r71$w1"));if g0t $n;then l6=$(ll1 $r38|tail -n$(si3 $n));else l6=$(ll1 $r38);fi;i3=$(nu5 2 $(ln1 $r36)); }
 function svv { if v2t;then l6=$(ll5 $r37 $1);v0=$(nu4 1 $(ln1 $r53 ".*$iip5"));v1=$(nu4 1 $(ln1 $r53 ".*$zip4"));l6=$(ll5 $r39 $(($1/2)));v2=$(nu4 1 $(ln1 $r67));else v0=0;v1=0;v2=0;fi; }
 function spc { nn=$2;cp $p04/$1.service $p02/$1.sav;sed "s%peers\([ =]*\)[0-9]*%peers\1$2%" $p02/$1.sav > $p04/$1.service;dmr; }                              # service configuration change/reload
