@@ -160,7 +160,7 @@ function ei0 { nu2 "(0.80*$e1+0.03*$e3+0.17*$e2)"                               
 function bi1 { nu2 "(0.70*$i0+0.10*$i1+0.08*$b1+0.02*$i2+0.10*$i3)"                   ; }                                                                     # get imported/observed/reorg/http/pscore data
 function bdp { nu2 "($1*$s48+$2*$s49+$3*$s50+$4*$s51)/${5:-1}*$s55/1000000" 7         ; }                                                                     # get penalty
 function bdr { nu2 "($1*$s47+$2*$s46)*$s55/100000000"                       7         ; }                                                                     # get reward
-function bsd { nu0 $(echo $@|jq -r .data.sync_distance 2>$p03)                        ; }                                                                     # get cl syncing distance
+function bsi { nu0 $(echo $@|jq -r .data.sync_distance 2>$p03)                        ; }                                                                     # get cl syncing distance
 function bpc { nu0 $(echo $@|jq -r .data.connected     2>$p03)                        ; }                                                                     # get cl peers connected
 function bw0 { nu0 $((3*z1))                                                          ; }                                                                     # get numerator processed blocks
 function bf0 { nu0 $((15*z3))                                                         ; }                                                                     # get numerator general errors
@@ -174,7 +174,7 @@ function bb0 { bs0;bs3;bl1;bl2;[[ (1 -eq $(era $p12 $s52) && $(bi2) -ge 1) || (1
 function bfl { grep "BEAC.*$1"      2>$p03; }                                                                                                                 # filter cc lines
 function bff { grep "BEAC.*$1" $p12 2>$p03; }                                                                                                                 # filter cc log
 function bnn { snn $(ln3 peers: $r32) $(bpc $(bcl peer_count)); }                                                                                             # set cur/min/std cc peers
-function bb1 { if [[ $(echo $@|jq -r .data.is_syncing) = false ]];then printf 'synced';else printf 'syncing: %6i' $(bsd $@);fi; }                             # get cl syncing distance remaining
+function bb1 { if [[ $(echo $@|jq -r .data.is_syncing) = false ]];then printf 'synced';else printf 'syncing: %6i' $(bsi $@);fi; }                             # get cl syncing distance remaining
 function bio { svi $1;dts;m="BEIO $(nu1 %6i $1) $dt iorhp: $i0 $i1 $b1 $i2 $i3 $(bi1)"; }
 function bmp { printf '%5i %3s %3i %5i %4i iorhp: %4i %4i %2i %4i %4i %4i' ${a[0]} $b5 $b4 $nd $(bi0) $i0 $i1 $b1 $i2 $i3 $(bi1) 2>$p03; }
 function bl0 { dts;ok=OK;if tsa $s12;then bl3;bv0;bnn;bb0;blo;else m="BSRV NOT ON $dt";fi; }                                                                  # cc report
@@ -267,12 +267,12 @@ function bwd { local n=$((($(date +%s)-s31)/(12*32)-0));for n in $n $((n+1));do 
 function bwc { bwd|grep -Ex "$(sn1)"|wc -l; }                                                                                                                 # get my # validators
 function bro { fft $p12 || return;dts;bb0;bnn;swn "$(printf 'R%03i %2s %3i' $1 ${2:-$ok} $(bi2) 2>$p03) $(dnn)" >> $p12; }
 function vro { fft $p49 || return;dts;        swn "$(printf 'R%03i %2s     %10s %5s' $1 ${2:-$ok} $dt 2>$p03)"  >> $p49; }
-# slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168
+# slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168; $2 = RB SD VC PE BN BK
 function brs {
   s3t $p42 && return;touch $p42.a$(stg);if g0t $3;then ssf $3 $p42;s4t $p42 && return;touch $p42.b$(stg);fi;ssw $4 $p42;s4t $p42 && return
   local t=$(sng);local f=$p42.i$(stg);touch $f;local n=0;paf;while fft $f;do ((n+=$(sfn $t)));ssf $(sfn $t) $p42 $t
-  if ipt $t;then rm $f;bv0;snp $s12 $1 $s56 $s57                           ;[[ $2 = VC ]] && sex "$s02 $s13"
-    if [[ $2 = RB ]];then bro $n $2;gps;ups;sex reboot;else sex "$s03 $s12";[[ $2 = VC ]] && sex "$s03 $s13";ssf 50 $p42;bro $n $2;fi
+  if ipt $t;then rm $f;bv0;snp $s12 $1 $s56 $s57                                                                                 ;[[ $2 = VC ]] && sex "$s02 $s13"
+    if [[ $2 = RB || $2 = SD ]];then bro $n $2;gps;ups;if [[ $2 = RB ]];then sex reboot;else sex poweroff;fi;else sex "$s03 $s12";[[ $2 = VC ]] && sex "$s03 $s13";ssf 50 $p42;bro $n $2;fi
   fi;done;rm -f $p50 $p42.*
 }
 function vrs {
@@ -492,6 +492,7 @@ function gp0 { if tsa $s10;then bp;gp;local i=$(pt2 $(pex "du -s $p08"));sudo -u
 [[ $1 = grb ]] && { touch $p50;grs      0  RB   ${2:-$s38}; }
 [[ $1 = urb ]] && { touch $p50;urs      0  RB   ${2:-$s38}; }
 [[ $1 = brb ]] && { touch $p50;brs      0  RB 0 ${2:-$s37}; }
+[[ $1 = bsd ]] && {            brs      0  SD 0 ${2:-$s40}; }
 [[ $1 = ivk ]] && { touch $p50;ivk              ${2:-$s38}; }
 [[ $1 = ul  ]] && { ul0;swn "$m"; }
 [[ $1 = ulf ]] && { ul0;swn "$m" >> $p11;[[ $ok != OK ]] && urs 0 $ok $s40; }
