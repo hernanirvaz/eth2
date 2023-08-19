@@ -156,7 +156,7 @@ function ul0 {                                                                  
 # cc control commands
 function bcl { curl -sX GET "http://$cicc:5052/eth/v1/node/$1" -H "accept: application/json" 2>$p03; }                                                        # exec RPC HTTP
 function bz0 { nu2 "(30.0*(0.4*$zk+0.3*$zz+0.2*$zx+0.1*$zw))"                         ; }                                                                     # get numerator paid errors
-function ei0 { nu2 "(0.80*$e1+0.03*$e3+0.17*$e2)"                                     ; }                                                                     # get imported/rejected/updated data
+function ei0 { nu2 "(0.823*$e1+0.007*$e3+0.170*$e2)"                                  ; }                                                                     # get imported/rejected/updated data
 function bdp { nu2 "($1*$s48+$2*$s49+$3*$s50+$4*$s51)/${5:-1}*$s55/1000000" 7         ; }                                                                     # get penalty
 function bdr { nu2 "($1*$s47+$2*$s46)*$s55/100000000"                       7         ; }                                                                     # get reward
 function bi0 { nu2 "(0.70*$i0+0.10*$i1+0.08*$b1+0.02*$i2+0.10*$i3)"                   ; }                                                                     # get imported/observed/reorg/http/pscore data
