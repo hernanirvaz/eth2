@@ -457,7 +457,7 @@ function sns { local n=$((($1-s36)/32));for n in $n $((n+1));do curl -sH "$s28" 
 function sng { local t=$(((($(date +%s)-s31)/12)+s36));local e=0;local i=0;local s=0;for s in $(sns $t|sort -nu);do if ((s<t));then continue;else if (((s-t)>e));then e=$((s-t));i=$t;fi;fi;t=$((s+1));done;printf '%s %i' $(date -d@$((s31+i*12)) +%T) $((e*12)); }
 function bcc { printf p;if v4t;then if bpt $s44;then if rbt $s44;then printf r;else printf c;fi;else if sdt;then printf d;else printf _;fi;fi;else if rbt;then printf r;else if sdt;then printf d;else printf _;fi;fi;fi;printf :; }
 function btr { if fft $p45;then printf RB  ;else printf PE  ;fi; }
-function btg { if fft $p45;then printf $s38;else printf $s39;fi; }
+function btg { if fft $p45;then printf $s37;else printf $s39;fi; }
 function irb { rm $p39.*.hours 2>$p03;if rbt $1;then if v2t;then brs 0 RB 0 $s37;else gps;ups;bps;sex reboot;fi;else if fft $p45;then touch $p39.$1.hours;fi;fi; }
 function gp0 { if tsa $s10;then bp;gp;local i=$(pt2 $(pex "du -s $p08"));sudo -u eth1 geth --datadir $p08 $@;local n=$(pt2 $(pex "du -s $p08"));echo "fs-diff $(((i-n)/1024/1024))M $@";dmr;ga;ba;fi; }
 
