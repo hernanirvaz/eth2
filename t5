@@ -6,5 +6,5 @@ source /home/eth/eth2/t1
 [[ $1 = usbstop    ]] && echo 0 > $p44
 [[ $1 = cpunoturbo ]] && echo 1 > $p43
 [[ $1 = cputurbo   ]] && echo 0 > $p43
-[[ $1 = poweroff   ]] && { tsa $s12 && $s02 $s12;tsa $s10 && $s02 $s10;tsa $s11 && $s02 $s11;tsa $s13 && $s02 $s13;poweroff; }
+[[ $1 = poweroff   ]] && { tsa $s12 && $s02 $s12;tsa $s10 && $s02 $s10;tsa $s11 && $s02 $s11;poweroff; }
 [[ $1              ]] || { swn "USB_BUS10_ON $(cat $p44 2>$p03)";swn "NO_TURBO_CPU $(cat $p43 2>$p03)"; }
