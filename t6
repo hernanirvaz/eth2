@@ -52,7 +52,7 @@ function v5t { [[ $cunm = $cumv ]]; }                                           
 function rbt { [[ $(sra) -ge $((60*60*${1:-9})) ]]; }
 function ipt { [[ $(date +%s) -ge $(bss $1 6) ]]; }
 function pct { [[ $b4 -ne 0 ]]; }
-function hat { [[ $b2 -gt $((b3*2)) ]]; }
+function hat { [[ $b2 -gt $((b3*4)) ]]; }
 function sdt { [[ $((nd+$(bi1))) -ge $((s60+$(bi2))) ]]; }
 function pmt { [[ $nm -ge $((nn-5)) ]]; }
 function fft { [[ -f $1 ]]; }
