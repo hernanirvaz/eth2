@@ -685,6 +685,7 @@ if [[ ! $1 ]];then
   m="$m\nurs [n] [g]\t$s11\t\t\trestart\twith n peers, mim gap time"
   m="$m\nbrs [n] [g]\t$s12\t\t\trestart\twith n peers, mim gap time"
   m="$m\ncrs [n] [g]\t$s12/$s13\trestart\twith n peers, mim gap time"
+  m="$m\nvrs     [g]\t$s13\trestart\t mim gap time"
   m="$m\ngrb [g]\t\tsystem & geth\t\t\treboot\tmim gap time"
   m="$m\nurb [g]\t\tsystem & besu\t\t\treboot\tmim gap time"
   m="$m\nbrb [g]\t\tsystem & beacon\t\t\treboot\tmim gap time"
