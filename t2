@@ -2,10 +2,10 @@
 
 source /home/eth/eth2/t1
 
-function cc1 { local f=$(basename $1);sex "cp $1 $f.sav";cmw $f.sav 644 eth;sed  -e "$2" $f.sav > $f.new;sex "cp $f.new $1"; }                                # edit             file
-function cc2 { local f=$(basename $1);cp $1 $f.sav;cp $1 $f.new            ;echo -e "$2"       >> $f.new;sex "cp $f.new $1"; }                                # add lines to end file
-function cc3 { local f=$(basename $1);cp $1 $f.sav;sed "$2" $1 > $f.new    ;echo -e "$3"       >> $f.new;sex "cp $f.new $1"; }                                # add lines to pos file
-function cc4 { local f=$(basename $1);cp $1 $f.sav 2>$p03                  ;echo -e "$2"        > $f.new;sex "cp $f.new $1"; }                                # replace lines of file
+function cc1 { local f=$(basename $1);sex "cp $1 $f.sav";cmw $f.sav 644 eth;sed -e "$2" $f.sav > $f.new;sex "cp $f.new $1"; }                                 # edit             file
+function cc2 { local f=$(basename $1);sex "cp $1 $f.sav";cp $1 $f.new            ;echo -e "$2"    >> $f.new;sex "cp $f.new $1"; }                             # add lines to end file
+function cc3 { local f=$(basename $1);sex "cp $1 $f.sav";sed "$2" $f.sav > $f.new;echo -e "$3"    >> $f.new;sex "cp $f.new $1"; }                             # add lines to pos file
+function cc4 { local f=$(basename $1);sex "cp $1 $f.sav"                         ;echo -e "$2"     > $f.new;sex "cp $f.new $1"; }                             # replace lines of file
 
 [[ -x $p02/eth2/t ]] || ln -s $p02/eth2/t6 $p02/eth2/t                                                                                                        # link base commands
 if [[ $(pex 'ufw status'|grep -i inactive) ]];then
@@ -27,6 +27,23 @@ swu 'UPDATE LINUX'       ;t4 linux
 swu 'ADDITIONAL LINUX'   ;sex 'apt install python3-pip net-tools apt-listchanges landscape-common software-properties-common smartmontools jq -y'
 swu 'UNATTENDED UPGRADES';cex 'apt install unattended-upgrades update-notifier-common -y'
 swu 'LINUX CONFIGS'
+if [[ $cunm = $inm5 || $cunm = $znm4 ]];then
+  sex 'apt install nut nut-client nut-server -y'
+fi
+if [[ $cunm = $inm5 ]];then
+  # Bus 001 Device 002: ID 051d:0002 American Power Conversion Uninterruptible Power Supply
+  # sudo nut-scanner -U
+  # [nutdev1]
+  # 	driver = "usbhid-ups"
+  # 	port = "auto"
+  # 	vendorid = "051D"
+  # 	productid = "0002"
+  # 	product = "Back-UPS RS 1600MI FW:958.g3 .I USB FW:g3"
+  # 	serial = "5B2213T43068"
+  # 	vendor = "American Power Conversion"
+  # 	bus = "001"
+  cc3 $p55 "$r75" "$r76"       ;cmw $p55 640 root nut
+fi
 if [[ $cunm = $znm2 ]];then
   cex "$s07 set-ntp no"                                                                                                                                       # use ntp (sophisticated)
   cex 'apt install apt-transport-https curl ntp -y'                                                                                                           # install dependencies & ntp

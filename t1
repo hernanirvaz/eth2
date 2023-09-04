@@ -84,6 +84,9 @@ p51='/etc/apt/apt.conf.d/20auto-upgrades'
 p52="$p02/mev.log"
 p53="export H=$H;$p02/eth2/t6"
 p54="$p02/eth2/t5"
+p55="/etc/nut/ups.conf"
+p56="/etc/nut/upsmon.conf"
+p57="/etc/nut/upsd.conf"
 
 r00='s%^ *#*NTP=.*$%NTP=192.168.8.28 ntp02.oal.ul.pt ntp04.oal.ul.pt time.google.com time.cloudflare.com time.facebook.com%i'
 r01='s%^ *ENABLED=.*$%ENABLED=0%i'
@@ -315,6 +318,14 @@ r71='elapsed: *'
 r72='s%[0-9]*:[0-9]*:[0-9]*%%;s%[0-9]* users*,%%;s% average\([^,]*\).*%\1%;s%  *% %g'
 r73='s%.*hrv-\(zotac\|intel\)[0-9] *\(.*\)%\2%;s%  *% %g'
 r74='s%.*[0-9]*:[0-9]*:[0-9]*\.[0-9][0-9][0-9]]* *\(.*\)%\1%;s%  *% %g'
+r75='s%^.*maxretry *=.*$%maxretry = 3%'
+r76="\n[acp1600]"
+r76="${r76}\n\tdriver = usbhid-ups"
+r76="${r76}\n\tport = auto"
+r76="${r76}\n\tdesc = \"Back-UPS RS 1600MI FW:958.g3 .I USB FW:g3\""
+r76="${r76}\n\tvendorid = 051D"
+r76="${r76}\n\tproductid = 0002"
+r76="${r76}\n\tserial = 5B2213T43068"
 
 w0='{if(match($0,/'
 w1='([0-9]+(\.[0-9]+)?)(µs|ms|s)/,m)){if(m[3]=="s"){m[1]*=1000000};if(m[3]=="ms"){m[1]*=1000};printf("%.0f\n",m[1])}}'
