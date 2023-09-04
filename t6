@@ -458,6 +458,7 @@ function sng { local t=$(((($(date +%s)-s31)/12)+s36));local e=0;local i=0;local
 function bcc { printf p;if v4t;then if bpt $s44;then if rbt $s44;then printf r;else printf c;fi;else if sdt;then printf d;else printf _;fi;fi;else if rbt;then printf r;else if sdt;then printf d;else printf _;fi;fi;fi;printf :; }
 function btr { if fft $p45;then printf RB  ;else printf PE  ;fi; }
 function btg { if fft $p45;then printf $s37;else printf $s39;fi; }
+function btn { if v4t     ;then printf $s39;else printf $s40;fi; }
 function irb { rm $p39.*.hours 2>$p03;if rbt $1;then if v2t;then brs 0 RB 0 $s37;else gps;ups;bps;sex reboot;fi;else if fft $p45;then touch $p39.$1.hours;fi;fi; }
 function gp0 { if tsa $s10;then bp;gp;local i=$(pt2 $(pex "du -s $p08"));sudo -u eth1 geth --datadir $p08 $@;local n=$(pt2 $(pex "du -s $p08"));echo "fs-diff $(((i-n)/1024/1024))M $@";dmr;ga;ba;fi; }
 
@@ -487,7 +488,7 @@ function gp0 { if tsa $s10;then bp;gp;local i=$(pt2 $(pex "du -s $p08"));sudo -u
 # slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168
 [[ $1 = grs ]] && { touch $p50;grs ${2:-0} SR   ${3:-$s40}; }
 [[ $1 = urs ]] && { touch $p50;urs ${2:-0} SR   ${3:-$s40}; }
-[[ $1 = brs ]] && { touch $p50;brs ${2:-0} BN 0 ${3:-$s39}; }
+[[ $1 = brs ]] && { touch $p50;brs ${2:-0} BN 0 ${3:-$(btn)}; }
 [[ $1 = crs ]] && { touch $p50;brs ${2:-0} VC 0 ${3:-$s38}; }
 [[ $1 = vrs ]] && { touch $p50;vrs              ${2:-$s38} RS; }
 [[ $1 = grb ]] && { touch $p50;grs      0  RB   ${2:-$s38}; }
