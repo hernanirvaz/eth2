@@ -57,7 +57,7 @@ function sdt { [[ $((nd+$(bi1))) -ge $((s60+$(bi2))) ]]; }
 function pmt { [[ $nm -ge $((nn-5)) ]]; }
 function fft { [[ -f $1 ]]; }
 function sft { [[ -f $p04/$1.service ]]; }
-function bpt { [[ $(era $p12 $s52) -eq 1 ]] && ( (pct && pmt && hat && ! sdt && ! fft $p45) || rbt $1); }
+function bpt { [[ $(era $p12 $s52) -eq 1 ]] && ( (pct && pmt && hat && ! sdt && ! fft $p45) || rbt $s44); }
 function llc { pt2 $(wc -l $1 2>$p03) 0; }                                                                                                                    # get log line count
 function jsh { cex "journalctl --no-hostname --no-full -f $1"; }                                                                                              # my journal   format
 function dmr { sex "$s00 daemon-reload"; }                                                                                                                    # daemon-reload
@@ -455,7 +455,7 @@ function sn0 { printf %s "[\"$(echo ${!b[@]}|sed "s% %\",\"%g")\"]"; }
 function sn1 { printf %s "$(echo ${!b[@]}|sed "s% %|%g")"; }
 function sns { local n=$((($1-s36)/32));for n in $n $((n+1));do curl -sH "$s28" -X POST -d"$(sn0)" "$s32/attester/$n"|jq -r $s34;done 2>$p03;echo $(((n+1)*32)); }
 function sng { local t=$(((($(date +%s)-s31)/12)+s36));local e=0;local i=0;local s=0;for s in $(sns $t|sort -nu);do if ((s<t));then continue;else if (((s-t)>e));then e=$((s-t));i=$t;fi;fi;t=$((s+1));done;printf '%s %i' $(date -d@$((s31+i*12)) +%T) $((e*12)); }
-function bcc { printf p;if v4t;then if bpt $s44;then if rbt $s44;then printf r;else printf c;fi;else if sdt;then printf d;else printf _;fi;fi;else if rbt;then printf r;else if sdt;then printf d;else printf _;fi;fi;fi;printf :; }
+function bcc { printf p;if v4t;then if bpt;then if rbt $s44;then printf r;else printf c;fi;else if sdt;then printf d;else printf _;fi;fi;else if rbt;then printf r;else if sdt;then printf d;else printf _;fi;fi;fi;printf :; }
 function btr { if fft $p45;then printf RB  ;else printf PE  ;fi; }
 function btg { if fft $p45;then printf $s37;else printf $s39;fi; }
 function btn { if v4t     ;then printf $s39;else printf $s40;fi; }
@@ -463,7 +463,7 @@ function irb { rm $p39.*.hours 2>$p03;if rbt $1;then if v2t;then brs 0 RB 0 $s37
 function gp0 { if tsa $s10;then bp;gp;local i=$(pt2 $(pex "du -s $p08"));sudo -u eth1 geth --datadir $p08 $@;local n=$(pt2 $(pex "du -s $p08"));echo "fs-diff $(((i-n)/1024/1024))M $@";dmr;ga;ba;fi; }
 
 [[ $1 = irb ]] && { irb $2;pas; }
-[[ $1 = bmf ]] && { bm0;[[ $2 ]] && b4=$2;bms;v0t && swn "$m" >> $p13;if v4t;then bpt $s44 && brs $b4 $(btr) $s43 $(btg);else rbt && brs 0 RB $s43 $s39;fi; }
+[[ $1 = bmf ]] && { bm0;[[ $2 ]] && b4=$2;bms;v0t && swn "$m" >> $p13;if v4t;then bpt && brs $b4 $(btr) $s43 $(btg);else rbt && brs 0 RB $s43 $s39;fi; }
 [[ $1 = snr ]] && { cex "$s42 lxd";cex "$s42 core20";cex "$s42 snapd";cex 'apt remove --autoremove snapd -y';echo -e "$s41" > nosnap.pref;cex "mv nosnap.pref $p47";cmw $p47/nosnap.pref 644 root;cex 'apt update'; }
 [[ $1 = mvr ]] && { mvr; }
 [[ $1 = jwt ]] && { [[ $cunm = $znm1 || $cunm = $vnm1 ]] && jw0;if fft jwt;then sjw eth1 $p08/geth;sjw eth1 $p09/data;sjw eth2 $p16;fi; }
