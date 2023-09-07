@@ -458,12 +458,12 @@ function sng { local t=$(((($(date +%s)-s31)/12)+s36));local e=0;local i=0;local
 function bcc { printf p;if v4t;then if bpt;then if rbt $s44;then printf r;else printf c;fi;else if sdt;then printf d;else printf _;fi;fi;else if rbt;then printf r;else if sdt;then printf d;else printf _;fi;fi;fi;printf :; }
 function btr { if fft $p45;then printf RB  ;else printf PE  ;fi; }
 function btg { if fft $p45;then printf $s37;else printf $s39;fi; }
-function btn { if v4t     ;then printf $s39;else printf $s40;fi; }
+function btn { if v4t     ;then printf $1  ;else printf $s40;fi; }
 function irb { rm $p39.*.hours 2>$p03;if rbt $1;then if v2t;then brs 0 RB 0 $s37;else gps;ups;bps;sex reboot;fi;else if fft $p45;then touch $p39.$1.hours;fi;fi; }
 function gp0 { if tsa $s10;then bp;gp;local i=$(pt2 $(pex "du -s $p08"));sudo -u eth1 geth --datadir $p08 $@;local n=$(pt2 $(pex "du -s $p08"));echo "fs-diff $(((i-n)/1024/1024))M $@";dmr;ga;ba;fi; }
 
 [[ $1 = irb ]] && { irb $2;pas; }
-[[ $1 = bmf ]] && { bm0;[[ $2 ]] && b4=$2;bms;v0t && swn "$m" >> $p13;if v4t;then bpt && brs $b4 $(btr) $s43 $(btg);else rbt && brs 0 RB $s43 $s39;fi; }
+[[ $1 = bmf ]] && { bm0;[[ $2 ]] && b4=$2;bms;v0t && swn "$m" >> $p13;if v4t;then bpt && brs $b4 $(btr) $s43 $(btg);else rbt && brs 0 RB $s43 $s40;fi; }
 [[ $1 = snr ]] && { cex "$s42 lxd";cex "$s42 core20";cex "$s42 snapd";cex 'apt remove --autoremove snapd -y';echo -e "$s41" > nosnap.pref;cex "mv nosnap.pref $p47";cmw $p47/nosnap.pref 644 root;cex 'apt update'; }
 [[ $1 = mvr ]] && { mvr; }
 [[ $1 = jwt ]] && { [[ $cunm = $znm1 || $cunm = $vnm1 ]] && jw0;if fft jwt;then sjw eth1 $p08/geth;sjw eth1 $p09/data;sjw eth2 $p16;fi; }
@@ -488,12 +488,12 @@ function gp0 { if tsa $s10;then bp;gp;local i=$(pt2 $(pex "du -s $p08"));sudo -u
 # slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168
 [[ $1 = grs ]] && { touch $p50;grs ${2:-0} SR   ${3:-$s40}; }
 [[ $1 = urs ]] && { touch $p50;urs ${2:-0} SR   ${3:-$s40}; }
-[[ $1 = brs ]] && { touch $p50;brs ${2:-0} BN 0 ${3:-$(btn)}; }
+[[ $1 = brs ]] && { touch $p50;brs ${2:-0} BN 0 ${3:-$(btn $s39)}; }
 [[ $1 = crs ]] && { touch $p50;brs ${2:-0} VC 0 ${3:-$s38}; }
 [[ $1 = vrs ]] && { touch $p50;vrs              ${2:-$s38} RS; }
 [[ $1 = grb ]] && { touch $p50;grs      0  RB   ${2:-$s38}; }
 [[ $1 = urb ]] && { touch $p50;urs      0  RB   ${2:-$s38}; }
-[[ $1 = brb ]] && { touch $p50;brs      0  RB 0 ${2:-$s37}; }
+[[ $1 = brb ]] && { touch $p50;brs      0  RB 0 ${2:-$(btn $s37)}; }
 [[ $1 = bsd ]] && {            brs      0  SD 0 ${2:-$s40}; }
 [[ $1 = ivk ]] && { touch $p50;ivk              ${2:-$s38}; }
 [[ $1 = ul  ]] && { ul0;swn "$m"; }
