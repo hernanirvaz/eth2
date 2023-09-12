@@ -60,7 +60,7 @@ else
   swu 'CONFIGURE BEACON';sex "mkdir -p $p16";cmw $p05 755 $meeu;sau eth2;if [[ -f jwt ]];then sjw eth2 $p16;else swb "needs $p16/jwt";fi
   echo ${!b[@]}|tr ' ' ',' > $p05/pubkeys;sex "mv $p05/pubkeys $p16";cmw $p16/pubkeys 600 eth2
   cmw $p16 700 eth2;touch $p05/vc_lock;cd $p02                                                                                                                # IMPORTANTE LOCK vc
-  pp2p=9004                                                                                                                                                   # default
+  pp2p=9000;[[ $cunm = $cub1 ]] && pp2p=9004
   cat <<-EOF > $s12.service
 	[Unit]
 	Description=beacon service

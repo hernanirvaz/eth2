@@ -4,8 +4,8 @@ source /home/eth/eth2/t1
 
 swu 'INSTALAR GETH';sex "mkdir -p $p08/geth";sau eth1;if [[ -f jwt ]];then sjw eth1 $p08/geth;else swb "needs $p08/geth/jwt";fi;cmw $p08 755 eth1;cmw $p08/geth 700 eth1
 gtv $1 $2
-maxp=10                                                                                                                                                     # default
-pp2p=30303                                                                                                                                                  # default
+maxp=10
+pp2p=30303;[[ $cunm = $cue2 ]] && pp2p=30304
 othe="--http.corsdomain 'chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn' --http.vhosts '*'"                                                            # for metamask
 othe="$othe --cache 16384"                                                                                                                                  # NOT recomended after v1.30.0
 othe=''
