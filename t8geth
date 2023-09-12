@@ -7,8 +7,8 @@ gtv $1 $2
 maxp=10                                                                                                                                                     # default
 pp2p=30303                                                                                                                                                  # default
 othe="--http.corsdomain 'chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn' --http.vhosts '*'"                                                            # for metamask
+othe="$othe --cache 16384"                                                                                                                                  # NOT recomended after v1.30.0
 othe=''
-othe="$othe --cache 16384"
 othe="$othe --state.scheme=path"                                                                                                                            # full pruning historical states
 cat <<-EOF > $s10.service
 [Unit]
