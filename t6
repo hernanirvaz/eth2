@@ -737,6 +737,9 @@ if [[ ! $1 ]];then
   m="$m\ntmp\t\ttemperature show"
   m="$m\nchk\t\tcheck server with chkrootkit"
   m="$m\nlup\t\tcheck apt list --upgradable"
+  m="$m\nrsh\t\trestart gap show"
+  m="$m\nrst\t\trestart gap reset"
+  m="$m\nrpt\t\trestart gap print"
   m="$m\nsnr\t\tremove snapd"
   swn "\n$m\n"
 fi
