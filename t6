@@ -539,8 +539,8 @@ function gp0 { if tsa $s10;then bp;gp;local i=$(pt2 $(pex "du -s $p08"));sudo -u
 # outros journal system/lighthouse
 [[ $1 = sl  ]] && { ll3                       |flp "$r61" $2              ; }
 [[ $1 = el  ]] && { ll2 "\($r30\|$r31\)"      |fln "$r62" $2|sed -E "$r58"; }
-[[ $1 = eli ]] && { ll2 "$r35"|tail -n${2:-$s45}            |sed -E "$r58"; }
-[[ $1 = elu ]] && { ll2 "$r52"|tail -n${2:-$s45}            |sed -E "$r58"; }
+[[ $1 = eii ]] && { ll2 "$r35"|tail -n${2:-$s45}            |sed -E "$r58"; }
+[[ $1 = eiu ]] && { ll2 "$r52"|tail -n${2:-$s45}            |sed -E "$r58"; }
 [[ $1 = al  ]] && { ll2 "$r32.*\($r47\|$r48\)"|fln "$r63" $2|sed -E "$r58"; }
 [[ $1 = cl  ]] && { ll2 "$r32"                |fln "$r62" $2|sed -E "$r58"; }
 [[ $1 = rl  ]] && { ll2 "$r33"                |fln "$r62" $2|sed -E "$r60"; }
@@ -698,7 +698,8 @@ if [[ ! $1 ]];then
   m="$m\nsl\t[hh:mm]\tsystem journal\tlog lines"
   m="$m\nll\t[hh:mm]\tel/cl\t\tlog lines (last 7 days)"
   m="$m\n[ecr]l\t[hh:mm]\tec/cc/relay\tlog lines"
-  m="$m\n[cv]i\t[hh:mm]\tcc/vc\tlog lines (internal)"
+  m="$m\n[cv]i\t[hh:mm]\tcc/vc\t\tlog lines (internal)"
+  m="$m\n[ecv]i[iuhp12c]\tec/cc/vc\tlog lines (elapsed)"
   m="$m\nbrl\t\trecalculate cc logs"
   m="$m\nbrm\t\trecalculate cc-daily logs"
   m="$m\nbsl\t\tshrink cc log using barqivo"
