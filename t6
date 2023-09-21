@@ -328,7 +328,7 @@ function cpe {                                                                  
   local d=$(ll2 "$r34"|fln "$r62"|tail -n1|sed "$r74")
   m="ERRO$(printf '%3i %3i' $l $n 2>$p03) $dt";if g0t $l;then if g0t $n;then m="$m sl: ${e:0:53}";m="$m cl: ${d:0:54}";else m="$m sl: ${e:0:112}";fi;else if g0t $n;then m="$m cl: ${d:0:112}";fi;fi;(( l+n )) && echo "$m"
   m='';fft $p45 && m="$m, reboot $(($(sra)/60/60)) hours ago $(cpf)";g0t $(bwc) && m="$m, sync/propose duties on";[[ $m ]] && swn "INFO        $dt${m#*,}" # reboot/duties info
-  g0t $(nu0 $(/usr/lib/update-notifier/apt-check 2>&1|sed 's%;% %g')) && { echo;apt list --upgradable; }
+  g0t $(nu0 $(/usr/lib/update-notifier/apt-check 2>&1|sed 's%;% %g')) && { apt list --upgradable 2>$p03|grep -v Listing;echo; }
 }
 # Plex Media Server
 function xop { pde 80 plex/nginx delete;pai 80 192.168.8.0/24 plex/nginx       ;ide 192.168.8.0/24 1900/udp plex/upnp       ; }
