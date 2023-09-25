@@ -278,8 +278,8 @@ function brs {
   fi;done;rm -f $p50 $p42.*
 }
 function vrs {
-  s3t $p46 && return;touch $p46.a$(stg);ssw $1 $p46;s4t $p46 && return;local t=$(sng);local f=$p46.i$(stg);touch $f;local n=0;paf
-  while fft $f;do ((n+=$(sfn $t)));ssf $(sfn $t) $p46 $t;if ipt $t;then rm $f;cex "$s02 $s13";dmr;if [[ $2 = RS ]];then cex "$s03 $s13";else cex "$s02 $s12";fi;vro $n $2;fi;done;rm -f $p50 $p46.*
+  s3t $p46 && return;touch $p46.a$(stg);ssw $2 $p46;s4t $p46 && return;local t=$(sng);local f=$p46.i$(stg);touch $f;local n=0;paf
+  while fft $f;do ((n+=$(sfn $t)));ssf $(sfn $t) $p46 $t;if ipt $t;then rm $f;cex "$s02 $s13";dmr;if [[ $1 = RS ]];then cex "$s03 $s13";else cex "$s02 $s12";fi;vro $n $1;fi;done;rm -f $p50 $p46.*
 }
 function brh { head -n${1:-0} $p12; }                                                                                                                         # new cc head lines
 function brl {                                                                                                                                                # recalculate cc logs
@@ -446,7 +446,7 @@ function ibk {
   local f="$p16/pubkeys";sex "cp $p02/pubkeys.new $f";sex "chown eth2:eth2 $f";cmw $f 600;dmr;cex "$s03 $s12"
 }
 function ivk {
-  v2t && ! fft $p05/vc_lock && [[ -d $p19 && $(ls $p19 2>$p03) ]] || return;vrs $1 PR;tsa $s12 || ibk
+  v2t && ! fft $p05/vc_lock && [[ -d $p19 && $(ls $p19 2>$p03) ]] || return;vrs $1 $2;tsa $s12 || ibk
   if ! tsa $s13;then
     swb 'IMPORTAR CHAVES';sex "chown -R $meeu:$meeu $p17";cmw $p17 755;imk;sex "chown -R eth3:eth3 $p17";cmw $p17 700
     fft $p05/vc_lock || cex "$s03 $s13";[[ -f $p12 ]] && { dts;swn "$(printf 'BSRV VK %3i %10s %5s' $(ls $p19 2>$p03|wc -l) $dt 2>$p03)" >> $p12; }
@@ -489,12 +489,12 @@ function gp0 { if tsa $s10;then bp;gp;local i=$(pt2 $(pex "du -s $p08"));sudo -u
 [[ $1 = urs ]] && { touch $p50;urs ${2:-0} SR   ${3:-$s40}; }
 [[ $1 = brs ]] && { touch $p50;brs ${2:-0} BN 0 ${3:-$(btn $s39)}; }
 [[ $1 = crs ]] && { touch $p50;brs ${2:-0} VC 0 ${3:-$s38}; }
-[[ $1 = vrs ]] && { touch $p50;vrs              ${2:-$s38} RS; }
+[[ $1 = vrs ]] && { touch $p50;vrs         RS   ${2:-$s38}; }
 [[ $1 = grb ]] && { touch $p50;grs      0  RB   ${2:-$s38}; }
 [[ $1 = urb ]] && { touch $p50;urs      0  RB   ${2:-$s38}; }
 [[ $1 = brb ]] && { touch $p50;brs      0  RB 0 ${2:-$(btn $s37)}; }
 [[ $1 = bsd ]] && {            brs      0  SD 0 ${2:-$s40}; }
-[[ $1 = ivk ]] && { touch $p50;ivk              ${2:-$s38}; }
+[[ $1 = ivk ]] && { touch $p50;ivk         PR   ${2:-$s38}; }
 [[ $1 = ul  ]] && { ul0;swn "$m"; }
 [[ $1 = ulf ]] && { ul0;swn "$m" >> $p11;[[ $ok != OK ]] && urs 0 $ok $s40; }
 [[ $1 = gl  ]] && { gl0;swn "$m"; }
