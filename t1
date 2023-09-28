@@ -406,7 +406,7 @@ s36=3
 s37=96
 s38=84
 s39=72
-s40=48
+s40=60
 s41='Package: snapd'
 s41="$s41\nPin: release a=*"
 s41="$s41\nPin-Priority: -10"
