@@ -160,7 +160,7 @@ function bz0 { nu2 "(30.0*(0.4*$zk+0.3*$zz+0.2*$zx+0.1*$zw))"                   
 function ei0 { nu2 "(0.823*$e1+0.007*$e3+0.170*$e2)"                                  ; }                                                                     # get imported/rejected/updated data
 function bdp { nu2 "($1*$s48+$2*$s49+$3*$s50+$4*$s51)/${5:-1}*$s55/1000000" 7         ; }                                                                     # get penalty
 function bdr { nu2 "($1*$s47+$2*$s46)*$s55/100000000"                       7         ; }                                                                     # get reward
-function bi0 { nu2 "(0.70*$i0+0.10*$i1+0.08*$b1+0.02*$i2+0.10*$i3)"                   ; }                                                                     # get imported/observed/reorg/http/pscore data
+function bi0 { nu2 "(0.70*$i0+0.13*$i1+0.10*$b1+0.02*$i2+0.05*$i3)"                   ; }                                                                     # get imported/observed/reorg/http/pscore data
 function bi1 { nu0 $((zk*9+zz*5+zx))                                                  ; }                                                                     # get delete day idx1
 function bi2 { nu0 $((nn*10))                                                         ; }                                                                     # get delete day idx2
 function bi3 { nu0 $(((z5>400?$(bz0)/z5:0)+(z2>100?$(bw0)/z2:0)+(z4>500?$(bf0)/z4:0))); }                                                                     # get restart idx
