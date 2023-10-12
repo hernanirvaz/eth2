@@ -306,11 +306,11 @@ r60="$r60;s%Post *..[^\" ]+..: *%POST %"
 r60="$r60;s%context deadline exceeded *%deadline %"
 r60="$r60;s%\(Client.Timeout exceeded while awaiting headers\) *%(Timeout headers)%"
 r61='error'
-r62='[ =]INFO '
+r62='[ =]INFO \| Announced transaction size mismatch'
 r63='success'
-r64='app-snap\|number.of.Error.Log.entries.increased'
+r64=' autostart app-snap\| number of Error Log entries increased'
 r65='reorg_distance:'
-r66="\($r62\| DEBG \)"
+r66='[ =]INFO \| DEBG '
 r67='time_taken_ms:'
 r68="s%^ *$p01%# $p01%"
 r69="$r57;s%,* *module: *[a-z_:0-9]*%%"
