@@ -75,7 +75,7 @@ function dnn { printf '%10s %5s node%02i: %2i' $dt $nn $nr 2>$p03; }            
 function tsy { if [[ $(echo $@|grep false) ]];then printf SYC;else printf NSY;fi; }                                                                           # get el SYN/NSY text
 function era { tail -n${2:-$s53} $1 2>$p03|cut -d' ' -f1|sort -u|wc -l; }                                                                                     # get el/cc restart activity
 function sh0 { fft $1 || return;tail -n${2:-$s53} $1 2>$p03; }                                                                                                # simple historic report
-function eb0 { e0=$(ll2 $r35|wc -l);ok=OK;[[ $(echo $@|grep false) && ($e0 -eq $(ln0 sgs: $1|tail -n1) || $e3 -gt $s64) && $(era $1) -eq 1 ]] && ok=BK; }
+function eb0 { e0=$(ll2 $r35|wc -l);ok=OK;[[ $(echo $@|grep false) && ($e0 -eq $(ln0 sgs: $1|tail -n1) || $(ei0) -gt $s64) && $(era $1) -eq 1 ]] && ok=BK; }
 function eb1 { nu0 $(((nn*100-nn*60)/100)); } # $nr -lt $(eb1)                                                                                                # get current peers-30%
 function ero { fft $1 || return;dts;swn "$(nu1 R%03i $2) ${3:-RS} SRV $(dnn)" >> $1; }                                                                        # log restart info
 function stg { local n=${1:-0};if ((n>3599));then printf %s $(($(date -d@$n +%H)-1))h;fi;if ((n>0));then printf %s $(date -d@$n +%Mm%Ss);fi;printf %s .$(date -d@$(($(date +%s)+$n)) +%H%M%S); }
