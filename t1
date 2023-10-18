@@ -308,9 +308,9 @@ r60="$r60;s%Get *..[^\" ]+..: *%GET %"
 r60="$r60;s%Post *..[^\" ]+..: *%POST %"
 r60="$r60;s%context deadline exceeded *%deadline %"
 r60="$r60;s%\(Client.Timeout exceeded while awaiting headers\) *%(Timeout headers)%"
-r61='Announced transaction size mismatch'
+r61='success'
 r62='Peer delivering stale transactions'
-r63="[ =]INFO \| $r61 \| $r62 "
+r63="[ =]INFO \| $r62 "
 r64=' autostart app-snap\| number of Error Log entries increased'
 r65='reorg_distance:'
 r66='[ =]INFO \| DEBG '
@@ -331,7 +331,6 @@ r76="${r76}\n\tvendorid = 051D"
 r76="${r76}\n\tproductid = 0002"
 r76="${r76}\n\tserial = 5B2213T43068"
 r77='error'
-r78='success'
 
 w0='{if(match($0,/'
 w1='([0-9]+(\.[0-9]+)?)(µs|ms|s)/,m)){if(m[3]=="s"){m[1]*=1000000};if(m[3]=="ms"){m[1]*=1000};printf("%.0f\n",m[1])}}'
