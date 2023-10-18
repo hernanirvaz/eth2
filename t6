@@ -112,8 +112,8 @@ function grs {
 }
 function gdi { if g0t $1;then l4=$(ll2 $r35|tail -n$1);else l4=$(ll2 $r35);fi;e1=$(nu5 3 $(ln2 "$w0$r42$w2")); }                                              # get delay imported
 function gdu { if g0t $1;then l4=$(ll2 $r52|tail -n$1);else l4=$(ll2 $r52);fi;e2=$(nu5 3 $(ln2 "$w0$r42$w2")); }                                              # get delay Chain head was updated
-function gdr { if g0t $1;then l6=$(ll2 $r30.*$r62|tail -n$1);else l6=$(ll2 $r30.*$r62|tail -n$s63);fi;e3=$(nu2 "((0$(printf %+.0f $(ln1 rejected=) 2>$p03))/$2)"); }
-function gda { if g0t $1;then l6=$(ll2 $r30.*$r61|tail -n$1);else l6=$(ll2 $r30.*$r61|tail -n$s63);fi;e4=$(nu2 "((0$(printf %+.0f $(ln1 ann=)      2>$p03))-(0$(printf %+.0f $(ln1 size=) 2>$p03)))/$2"); }
+function gdr { if g0t $1;then l6=$(ll2 $r30.*$r62|tail -n$1);else l6=$(ll2 $r30.*$r62|tail -n$s62);fi;e3=$(nu2 "((0$(printf %+.0f $(ln1 rejected=) 2>$p03))/$2)"); }
+function gda { if g0t $1;then l6=$(ll2 $r30.*$r61|tail -n$1);else l6=$(ll2 $r30.*$r61|tail -n$s62);fi;e4=$(nu2 "((0$(printf %+.0f $(ln1 ann=)      2>$p03))-(0$(printf %+.0f $(ln1 size=) 2>$p03)))/$2"); }
 function gcl { geth attach --exec $1 "http://$ciec:8545" 2>$p03; }                                                                                            # exec RPC HTTP
 function gi0 { nu0 $(echo $@|sed -En 's%.*highestBlock: *([0-9]+).*%\1%ip' 2>$p03); }                                                                         # get el highest block
 function gc0 { nu0 $(echo $@|sed -En 's%.*currentBlock: *([0-9]+).*%\1%ip' 2>$p03); }                                                                         # get el current block
