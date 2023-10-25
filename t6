@@ -159,7 +159,7 @@ function ei0 { nu2 "(0.823*$e1+0.171*$e2+0.006*$e3)"                            
 function bdp { nu2 "($1*$s48+$2*$s49+$3*$s50+$4*$s51)/${5:-1}*$s55/1000000" 7         ; }                                                                     # get penalty
 function bdr { nu2 "($1*$s47+$2*$s46)*$s55/100000000"                       7         ; }                                                                     # get reward
 function bi0 { nu2 "(0.70*$i0+0.10*$i1+0.14*$i4+0.03*$b1+0.01*$i2+0.02*$i3)"          ; }                                                                     # get imported/observed/skipped/reorg/http/pscore data
-function bi1 { nu0 $((zk*9+zz*5+zx))                                                  ; }                                                                     # get delete day idx1
+function bi1 { nu0 $((zk*18+zz*9+zx))                                                 ; }                                                                     # get delete day idx1
 function bi2 { nu0 $((nn*10))                                                         ; }                                                                     # get delete day idx2
 function bi3 { nu0 $(((z5>400?$(bz0)/z5:0)+(z2>100?$(bw0)/z2:0)+(z4>500?$(bf0)/z4:0))); }                                                                     # get restart idx
 function bw0 { nu0 $((2*z1))                                                          ; }                                                                     # get numerator processed blocks
