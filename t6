@@ -64,7 +64,7 @@ function dmr { sex "$s00 daemon-reload"; }                                      
 function si1 { nu2 "0.5*$b3+0.5*$nn"; }
 function si2 { local n=${1:-0};printf %i $((1000*n)) 2>$p03; }
 function si3 { local n=${1:-0};printf %i $((20*n))   2>$p03; }
-function svi { local n=${1:-0};if g0t $n;then l4=$(ll1 $r44|tail -n$n);else l4=$(ll1 $r44);fi;i0=$(nu5 3 $(ln2 "$w0$r45$w2"));i1=$(nu5 3 $(ln2 "$w0$r46$w2"));l6=$(ll2 $r32.*$r65);b1=$(nu3 $(ln1 $r65));if g0t $n;then l4=$(ll1 $r70|tail -n$(si2 $n));else l4=$(ll1 $r70);fi;i2=$(nu5 0 $(ln2 "$w0$r71$w1"));if g0t $n;then l6=$(ll1 $r38|tail -n$(si3 $n));else l6=$(ll1 $r38);fi;i3=$(nu5 2 $(ln1 $r36)); }
+function svi { local n=${1:-0};if g0t $n;then l4=$(ll1 $r44|tail -n$n);else l4=$(ll1 $r44);fi;i0=$(nu5 3 $(ln2 "$w0$r45$w2"));i1=$(nu5 3 $(ln2 "$w0$r46$w2"));l6=$(ll2 $r32.*$r65);b1=$(nu3 $(ln1 $r65));if g0t $n;then l4=$(ll1 $r70|tail -n$(si2 $n));else l4=$(ll1 $r70);fi;i2=$(nu5 0 $(ln2 "$w0$r71$w1"));if g0t $n;then l6=$(ll1 $r38|tail -n$(si3 $n));else l6=$(ll1 $r38);fi;i3=$(nu5 2 $(ln1 $r36));if g0t $n;then l4=$(ll1 $r78|tail -n$n);else l4=$(ll1 $r78);fi;i4=$(nu5 3 $(ln2 "$w0$r79$w2")); }
 function svv { if v2t;then l6=$(ll5 $r37 $1);v0=$(nu4 1 $(ln1 $r53 ".*$iip5"));v1=$(nu4 1 $(ln1 $r53 ".*$zip4"));l6=$(ll5 $r39 $(($1/2)));v2=$(nu4 1 $(ln1 $r67));else v0=0;v1=0;v2=0;fi; }
 function spc { nn=$2;cp $p04/$1.service $p02/$1.sav;sed "s%peers\([ =]*\)[0-9]*%peers\1$2%" $p02/$1.sav > $p04/$1.service;dmr; }                              # service configuration change/reload
 function snp { sft $1 || return;local n=$(($2+nn));(($2!=0&&n>=$3&&n<=$4)) && spc $1 $n;tsa $1 && sex "$s02 $1"; }                                            # service peers change/stop
@@ -93,10 +93,10 @@ function snn {
     nr=0      ;nm=0                                          ;nd=0
   fi
 }
-function sz0 { gnn 0      ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s   iur: %4i %4i %4i %4i'         $nr $nm $nd $(ss5 $1 port    ) "$(gb1 $(gcl eth.syncing))" $e1 $e2 $e3 $(ei0)         2>$p03; }
-function sz1 { unn 0      ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s     i: %4i'                     $nr $nm $nd $(ss5 $1 p2p-port) "$(ub1 $(ucl eth_syncing))" $e1                        2>$p03; }
-function sz2 { dtl;svi;bnn;printf 'cl:p%02i:m%02i:d%04i p2p:%5i %s iorhp: %4i %4i %4i %4i %4i %4i' $nr $nm $nd $(ss5 $1 port)     "$(bb1 $(bcl syncing))"     $i0 $i1 $b1 $i2 $i3 $(bi0) 2>$p03; }
-function sz3 { svv $s63   ;printf 'vl:m%02i:b%02i:c%02i cc:%13s'                                   $v0 $v1 $v2 $(ss4 $1 $r24 nodes)                                                      2>$p03; }
+function sz0 { gnn 0      ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s    iur: %4i %4i %4i %4i'             $nr $nm $nd $(ss5 $1 port    ) "$(gb1 $(gcl eth.syncing))" $e1 $e2 $e3 $(ei0)             2>$p03; }
+function sz1 { unn 0      ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s      i: %4i'                         $nr $nm $nd $(ss5 $1 p2p-port) "$(ub1 $(ucl eth_syncing))" $e1                            2>$p03; }
+function sz2 { dtl;svi;bnn;printf 'cl:p%02i:m%02i:d%04i p2p:%5i %s iosrhp: %4i %4i %4i %4i %4i %4i %4i' $nr $nm $nd $(ss5 $1 port)     "$(bb1 $(bcl syncing))"     $i0 $i1 $i4 $b1 $i2 $i3 $(bi0) 2>$p03; }
+function sz3 { svv $s63   ;printf 'vl:m%02i:b%02i:c%02i cc:%13s'                                        $v0 $v1 $v2 $(ss4 $1 $r24 nodes)                                                          2>$p03; }
 function sso {
   tse $2 || return;dts;local e="$1 $(printf '%6s %10s %5s %-40s' $(ss3 $2) $dt "$(ss2 $2)" 2>$p03)"                                                           # memory & status
   [[ $1 = GETH ]] && e="$e $(sz0 $2)";[[ $1 = BESU ]] && e="$e $(sz1 $2)";[[ $1 = BEAC ]] && e="$e $(sz2 $2)";[[ $1 = VALI ]] && e="$e $(sz3 $2)";swn "$e"    # set homologous/avg & cl http
@@ -158,7 +158,7 @@ function bz0 { nu2 "(30.0*(0.4*$zk+0.3*$zz+0.2*$zx+0.1*$zw))"                   
 function ei0 { nu2 "(0.823*$e1+0.171*$e2+0.006*$e3)"                                  ; }                                                                     # get imported/updated/rejected data
 function bdp { nu2 "($1*$s48+$2*$s49+$3*$s50+$4*$s51)/${5:-1}*$s55/1000000" 7         ; }                                                                     # get penalty
 function bdr { nu2 "($1*$s47+$2*$s46)*$s55/100000000"                       7         ; }                                                                     # get reward
-function bi0 { nu2 "(0.70*$i0+0.13*$i1+0.10*$b1+0.02*$i2+0.05*$i3)"                   ; }                                                                     # get imported/observed/reorg/http/pscore data
+function bi0 { nu2 "(0.70*$i0+0.10*$i1+0.14*$i4+0.03*$b1+0.01*$i2+0.02*$i3)"          ; }                                                                     # get imported/observed/skipped/reorg/http/pscore data
 function bi1 { nu0 $((zk*9+zz*5+zx))                                                  ; }                                                                     # get delete day idx1
 function bi2 { nu0 $((nn*10))                                                         ; }                                                                     # get delete day idx2
 function bi3 { nu0 $(((z5>400?$(bz0)/z5:0)+(z2>100?$(bw0)/z2:0)+(z4>500?$(bf0)/z4:0))); }                                                                     # get restart idx
@@ -175,15 +175,14 @@ function bfl { grep "BEAC.*$1"      2>$p03; }                                   
 function bff { grep "BEAC.*$1" $p12 2>$p03; }                                                                                                                 # filter cc log
 function bnn { snn $(ln3 peers: $r32) $(bpc $(bcl peer_count)); }                                                                                             # set cur/min/std cc peers
 function bb1 { if [[ $(echo $@|jq -r .data.is_syncing) = false ]];then printf 'synced';else printf 'syncing: %6i' $(bsi $@);fi; }                             # get cl syncing distance remaining
-function bio { svi $1;dts;m="BEIO $(nu1 %6i $1) $dt iorhp: $i0 $i1 $b1 $i2 $i3 $(bi0)"; }
-function bmp { printf '%5i %3s %3i %5i %4i iorhp: %4i %4i %2i %4i %4i %4i' ${a[0]} $b5 $b4 $nd $(bi1) $i0 $i1 $b1 $i2 $i3 $(bi0) 2>$p03; }
+function bmp { printf '%5i %3s %3i %5i %4i iosrhp: %4i %4i %4i %2i %4i %3i %4i' ${a[0]} $b5 $b4 $nd $(bi1) $i0 $i1 $i4 $b1 $i2 $i3 $(bi0) 2>$p03; }
 function bl0 { dts;ok=OK;if tsa $s12;then bl3;bv0;bnn;bb0;blo;else m="BSRV NOT ON $dt";fi; }                                                                  # cc report
 function bl1 {                                                                                                                                                # set restart idx vars
   z1=${1:-$(echo "$l0"|grep 'RPC block'|wc -l)};z2=${2:-$(echo "$l0"|grep 'New block'|wc -l)};z3=${3:-$(echo "$l0"|grep -v ' INFO '|wc -l)}                   # set processed/received blocks,error lines
   z4=${4:-$(echo "$l0"|grep ' INFO '   |wc -l)};z5=${5:-$(bl4 success)};zw=${6:-$(bl4 had)};ok=${7:-OK}                                                       # set info lines,success/had activities
 }
 function bl2 { zk=${1:-$(bl4 missing)};zz=${2:-$(bl4 target)};zx=${3:-$(bl4 head)}; }                                                                         # set missing/target/head activities
-function bl3 { b0=${1:-$(ll2 $r32.*$r47|wc -l)};if [[ $2$3$4$5$6 ]];then i0=$2;i1=$3;b1=$4;i2=$5;i3=$6;else svi $s61;fi; }                                    # set pub-blocks & imported/observed delays
+function bl3 { b0=${1:-$(ll2 $r32.*$r47|wc -l)};if [[ $2$3$4$5$6$7 ]];then i0=$2;i1=$3;i4=$4;b1=$5;i2=$6;i3=$7;else svi $s61;fi; }                            # set pub-blocks & imported/observed delays
 function bl4 { echo "$l3"|sed -En "s%.*$1.*validators: *\[(.*)\].*%\1%p"|wc -w; }                                                                             # get number of paid activities
 function ml0 { dts;if tsa $s14;then m0=$(nu4 3 $(ln3 duration= $r33));mlo;else m="MSRV NOT ON $dt";fi; }
 function vl0 { dts;if tsa $s13;then svv $s62;vlo;else m="VSRV NOT ON $dt";fi; }
@@ -193,17 +192,17 @@ function mlo { m="MEVB $(printf '%6i' $(ll2 "$r33"|fln "$r63"|wc -l) 2>$p03) $dt
 #    0  1              2     3     4   5     6   7
 # VALI OK     2023-06-03 20:49 int5: 700 ztc4: 240
 function vlo { m="VALI $(printf '%6i' $(ll4|fln "$r66"|wc -l) 2>$p03) $dt $(printf '%s: %2i %s: %2i casp: %2i' $(snc $inm5) $v0 $(snc $znm4) $v1 $v2 2>$p03)"; }
-#    0  1   2          3     4       5  6   7    8    9  10   11  12 13  14 15 16  17 18 19  20  21 22   23   24     25   26   27 28   29  30   31
-# BEAC OK   0 2023-07-19 07:43 node50: 55 rp: 1368  813 ab: 1800  216 0 er:  0  4  28  4  2 742  18  6 3594  354 iorhp:  561 5087 17 3998  67 1040
+#    0  1   2          3     4       5  6   7    8    9  10   11  12 13  14 15 16  17 18 19  20  21 22   23   24     25    26   27   28 29   30  31   32
+# BEAC OK   0 2023-10-25 17:12 node70: 77 rp: 3056 2232 ab: 4021  687 0 er:  4  7  83 26  0 201   0  0 1000    0 iosrhp:  712 3585 2994 21 3797  61 1282
 function blo {
   m="BEAC $ok $(printf '%3i' $(bi3) 2>$p03) $(dnn) $(printf 'rp: %4.0f %4.0f ab: %4i %4i %1i' $(bdr $z5 $b0) $(bdp $zk $zz $zx $zw) $z5 $(bz0) $b0 2>$p03)"
-  m="$m $(printf 'er: %2i %2i %3i %2i %2i %3i %3i %2i %4i %4i iorhp: %4i %4i %2i %4i %4i %4i' $zk $zz $zx $zw $z1 $z2 $(bw0) $z3 $z4 $(bf0) $i0 $i1 $b1 $i2 $i3 $(bi0) 2>$p03)"
+  m="$m $(printf 'er: %2i %2i %3i %2i %2i %3i %3i %2i %4i %4i iosrhp: %4i %4i %4i %2i %4i %3i %4i' $zk $zz $zx $zw $z1 $z2 $(bw0) $z3 $z4 $(bf0) $i0 $i1 $i4 $b1 $i2 $i3 $(bi0) 2>$p03)"
 }
-#  0    1   2          3     4       5  6   7     8     9    10    11    12    13    14    15  16  17    18   19     20   21   22 23   24  25   26
-# BM   16  12 2023-07-19 07:44 node50: 55 mp:  1601  1492  1550  1664  1731  2158  2015  1645 p_: -20   713   48 iorhp:  584 5316 17 3871  62 1078
+#  0    1   2          3     4       5  6   7     8     9    10    11    12    13    14    15  16  17    18   19     20    21   22   23 24   25  26   27
+# BM   19   4 2023-10-25 17:12 node70: 70 mp:  1168   911   589   670   771   922   796   814 pd: -30  3040  154 iosrhp:  569 4325 3722 21 4016  80 1341
 function bmo { m="BM $(printf '%4i %3i' $b2 $b3 2>$p03) $(dnn) $(bma 'mp:') $(bmp)"; }
-#  0    1   2          3     4       5  6   7     8     9  10  11    12   13     14   15   16 17   18  19   20
-# BM   16  12 2023-07-19 07:46 node50: 54 mp:  1664  1645 p_: -20   712   48 iorhp:  584 5316 17 3868  62 1078
+#  0    1   2          3     4       5  6   7     8     9  10  11    12   13     14    15   16   17 18   19  20   21
+# BM   19   4 2023-10-25 17:26 node70: 72 mp:   932   815 pd: -30  3034  154 iosrhp:  569 4325 3727 21 4030  80 1342
 function bms { m="BM $(printf '%4i %3i' $b2 $b3 2>$p03) $(dnn) mp: $(nu1 %5i ${a[$nn]}) $(bmp)"; }
 #    0   1          2     3    4 5 6 7 8 9 10 11   12 13 14 15 16 17 18 19   20 21 22 23 24 25 26 27   28 29 30 31 32 33 34 35   36 37 38 39 40 41 42 43
 # BEAC 682 2022-03-16 11:03 cnt: 4 7 0 0 0 10 10 mis: 20 20 20 20 20 20 20 mat: 14 45 30 30 30 30 30 mah: 94 68 40 40 40 40 40 dly: 79 09 50 50 50 50 50
@@ -284,7 +283,7 @@ function brh { head -n${1:-0} $p12; }                                           
 function brl {                                                                                                                                                # recalculate cc logs
   fft $p12 || return;rm -f $p12.r;unset v;while read -a v;do ok=${v[1]};dts ${v[3]}\ ${v[4]};nn=${v[5]:4:2};nr=${v[6]}                                        # uncalculated vars
     if [[ ${v[0]} = BEAC ]];then
-      bl1 ${v[19]} ${v[20]} ${v[22]} ${v[23]} ${v[11]} ${v[18]} ${v[1]};bl2 ${v[15]} ${v[16]} ${v[17]};bl3 ${v[13]} ${v[26]} ${v[27]} ${v[28]} ${v[29]} ${v[30]};blo
+      bl1 ${v[19]} ${v[20]} ${v[22]} ${v[23]} ${v[11]} ${v[18]} ${v[1]};bl2 ${v[15]} ${v[16]} ${v[17]};bl3 ${v[13]} ${v[26]} ${v[27]} ${v[28]} ${v[29]} ${v[30]} ${v[31]};blo
     else
       m="${v[0]} $ok $(nu1 %3i ${v[2]})";if [[ ${v[0]} = BSRV ]];then m="$m $dt";else m="$m $(dnn)";fi;swn "$m"
     fi;swn "$m" >> $p12.r                                                                                                                                     # new cc output
@@ -294,7 +293,7 @@ function brm {                                                                  
   fft $p12 && fft $p13 || return;rm -f $p13.r;bmi;local d=0000-00-00;local l=0;local n=0;local h=0;local g=0;unset v;while read -a v;do
     d=${v[3]};h=$g;g=$(grep -n "$d 23:58" $p12|cut -d: -f1);[[ ${g:=$h} -le $h ]] && continue;dts $d\ ${v[4]};nn=${v[5]:4:2}                                  # get next cc log position
     nr=${v[6]};nd=${v[12]};zx=${v[13]};l2=$(brh $g|bfl 23:58);bo2 $d;((l+=b2));((n+=1));b3=$(nu2 $l/$n)                                                       # cur/avg homologous position
-    l1=$(brh $g|tail -n$((g-h))|bfl);[[ $l1 ]] && bm1;bm2;b5=${v[10]};b4=${v[11]};i0=${v[15]};i1=${v[16]};b1=${v[17]};i2=${v[18]};i3=${v[19]}                 # sum err arrays 
+    l1=$(brh $g|tail -n$((g-h))|bfl);[[ $l1 ]] && bm1;bm2;b5=${v[10]};b4=${v[11]};i0=${v[15]};i1=${v[16]};i4=${v[17]};b1=${v[18]};i2=${v[19]};i3=${v[20]}     # sum err arrays
     bms;swn "$m" >> $p13.r                                                                                                                                    # new cc-daily output
   done <<< $(cat $p13)
 }
@@ -512,7 +511,6 @@ function gp0 { if tsa $s10;then bp;gp;local i=$(pt2 $(pex "du -s $p08"));sudo -u
 [[ $1 = bh  ]] && { bh0 $2; }
 [[ $1 = vh  ]] && { sh0 $p49 $2;[[ $2 ]] || { vl0;swn "VL $(printf '%8i' $(llc $p49) 2>$p03)\n$m"; } }
 [[ $1 = mh  ]] && { sh0 $p52 $2;[[ $2 ]] || { ml0;swn "ML $(printf '%8i' $(llc $p52) 2>$p03)\n$m"; } }
-[[ $1 = bio ]] && { bio ${2:-$s61};swn "$m"; }
 [[ $1 = hs0 ]] && { hs0 $cue1 $cub1;hs0 $cue2 $cub2;if v2t;then hsv;cpe;else echo $cuvc;ssh $(snc $cuvc) "$p53 hsv";fi;if v5t;then hsm;cpe;else echo $cumv;ssh $(snc $cumv) "$p53 hsm";fi; }
 [[ $1 = hs1 ]] && { hs0 $cue1 $cub1; }
 [[ $1 = hs2 ]] && { hs0 $cue2 $cub2; }
@@ -550,6 +548,7 @@ function gp0 { if tsa $s10;then bp;gp;local i=$(pt2 $(pex "du -s $p08"));sudo -u
 [[ $1 = cii ]] && { ll1 "$r44"|tail -n${2:-$s61}            |sed -E "$r58"; }
 [[ $1 = cih ]] && { ll1 "$r70"|tail -n${2:-$(si2 $s61)}     |sed -E "$r58"; }
 [[ $1 = cip ]] && { ll1 "$r38"|tail -n${2:-$(si3 $s61)}     |sed -E "$r58"; }
+[[ $1 = cis ]] && { ll1 "$r78"|tail -n${2:-$s61}            |sed -E "$r58"; }
 [[ $1 = vi  ]] && { ll4                       |fln "$r66" $2|sed -E "$r69"; }
 [[ $1 = vi1 ]] && { ll5 $r37 ${2:-$s62}|grep $iip5          |sed -E "$r69"; }
 [[ $1 = vi2 ]] && { ll5 $r37 ${2:-$s62}|grep $zip4          |sed -E "$r69"; }
@@ -705,7 +704,6 @@ if [[ ! $1 ]];then
   m="$m\nbrm\t\trecalculate cc-daily logs"
   m="$m\nbsl\t\tshrink cc log using barqivo"
   m="$m\nbdl yyyy-mm-dd\tdelete cc log day"
-  m="$m\nbio [lines]\timported/observed delays (using [lines] from intern log)"
   m="$m\nbo  [lines]\thomologous report [with max lines]"
   m="$m\nbon [node]\thomologous node report"
   m="$m\nboc [hour]\thomologous hour report"
