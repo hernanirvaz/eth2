@@ -250,7 +250,7 @@ r54='.nvme_smart_health_information_log.temperature_sensors|join(" ")'
 r55='s%GRUB_CMDLINE_LINUX_DEFAULT *= *"\(..*\)"%GRUB_CMDLINE_LINUX_DEFAULT="\1 pcie_aspm=off"%;s%GRUB_CMDLINE_LINUX_DEFAULT *= *""%GRUB_CMDLINE_LINUX_DEFAULT="pcie_aspm=off"%'
 r56="s%APT::Periodic::Update-Package-Lists.*$%APT::Periodic::Update-Package-Lists \"1\";%i"
 r56="${r56};s%APT::Periodic::Unattended-Upgrade.*$%APT::Periodic::Unattended-Upgrade \""
-if [[ $cunm = $cuvc ]];then r56="${r56}4";elif [[ $cunm = $cub2 ]];then r56="${r56}2";else r56="${r56}1";fi
+if [[ $cunm = $cuvc ]];then r56="${r56}4";elif [[ $cunm = $cub1 ]];then r56="${r56}3";elif [[ $cunm = $cub2 ]];then r56="${r56}2";else r56="${r56}1";fi
 r56="${r56}\";%i;/APT::Periodic::Unattended-Upgrade/a \\"
 r56="${r56}APT::Periodic::AutocleanInterval \"1\";"
 r57="s%192\.168\.8\.%%g"
