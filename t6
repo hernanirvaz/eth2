@@ -122,7 +122,7 @@ function gb2 { if [[ $(echo $@|grep false) ]];then printf ''      ;else printf '
 function gl0 {                                                                                                                                                # el report
   dts;ok=OK
   if tsa $s10;then local e=$(gcl eth.syncing);gv0;gnn $s45;eb0 $p10 $e
-    m="GETH $ok $(tsy $e) $(dnn) sgs: $(nu1 %4i $e0)$(gb2 $e) $(printf 'iur: %3i %2i %2i %3i' $e1 $e2 $e3 $(ei0) 2>$p03)"
+    m="GETH $ok $(tsy $e) $(dnn) sgs: $(nu1 %4i $e0)$(gb2 $e) $(printf 'iur: %2i %2i %2i %3i' $e1 $e2 $e3 $(ei0) 2>$p03)"
   else
     m="GSRV NOT ON $dt"
   fi
