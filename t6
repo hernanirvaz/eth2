@@ -116,7 +116,7 @@ function gi0 { nu0 $(echo $@|sed -En 's%.*highestBlock: *([0-9]+).*%\1%ip' 2>$p0
 function gc0 { nu0 $(echo $@|sed -En 's%.*currentBlock: *([0-9]+).*%\1%ip' 2>$p03); }                                                                         # get el current block
 function gv0 { nn=$(ss5 $s10 maxpeers); }                                                                                                                     # set configured peers
 function gq0 { nr=$(nu0 $(gcl net.peerCount)); }                                                                                                              # set el current peers
-function gnn { snn $(ln3 peercount= $r30) $(nu0 $(gcl net.peerCount));gdi $1;gdu $1;l6=$(ll2 $r30.*$r62);e3=$(nu2 "(0$(printf %+.0f $(ln1 rejected=) 2>$p03))/($s64+10^$(date +%k))"); }
+function gnn { snn $(ln3 peercount= $r30) $(nu0 $(gcl net.peerCount));gdi $1;gdu $1;l6=$(ll2 $r30.*$r62);e3=$(nu2 "(0$(printf %+.0f $(ln1 rejected=) 2>$p03))/($s64+19^$(date +%k))"); }
 function gb1 { if [[ $(echo $@|grep false) ]];then printf 'synced';else printf  'syncing: %6i' $(($(gi0 $@)-$(gc0 $@)));fi; }                                 # get el syncing blocks remaining
 function gb2 { if [[ $(echo $@|grep false) ]];then printf ''      ;else printf ' syncing: %6i' $(($(gi0 $@)-$(gc0 $@)));fi; }                                 # get el syncing blocks remaining
 function gl0 {                                                                                                                                                # el report
