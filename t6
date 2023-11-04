@@ -528,7 +528,7 @@ function gp0 { if tsa $s10;then bp;gp;local i=$(pt2 $(pex "du -s $p08"));sudo -u
 [[ $1 = rsh ]] && { cd $p02;ls -rtGg *.rs.*;echo $(sf1) $(sng); }
 [[ $1 = rst ]] && { cd $p02;rm -f    *.rs.*; }
 [[ $1 = rpt ]] && { touch $p50; }
-[[ $1 = lp  ]] && { pex 'netstat -tulpn'; }
+[[ $1 = lp  ]] && { pex 'ss -tunlp'|grep 'geth\|lighthouse\|Netid'; }
 # outros journal system/lighthouse
 [[ $1 = sl  ]] && { ll3                       |flp "$r77" $2              ; }
 [[ $1 = el  ]] && { ll2 "\($r30\|$r31\)"      |fln "$r63" $2|sed -E "$r58"; }
