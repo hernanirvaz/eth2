@@ -51,6 +51,7 @@ function v2t { [[ $cunm = $cuvc ]]; }                                           
 function v3t { [[ $cuvc = $nxvc ]]; }                                                                                                                         # vc  transfer test
 function v4t { [[ $cunm = $cub1 ]]; }                                                                                                                         # cc  main     test
 function v5t { [[ $cunm = $cumv ]]; }                                                                                                                         # mev current  test
+function v6t { [[ $cunm = $znm2 ]]; }                                                                                                                         # ntp main     test
 function rbt { [[ $(sra) -ge $((60*60*${1:-9})) ]]; }
 function ipt { [[ $(date +%s) -ge $(bss $1 6) ]]; }
 function pct { [[ $b4 -ne 0 ]]; }
@@ -507,13 +508,14 @@ function gp0 { if tsa $s10;then bp;gp;local i=$(pt2 $(pex "du -s $p08"));sudo -u
 [[ $1 = bh  ]] && { bh0 $2; }
 [[ $1 = vh  ]] && { sh0 $p49 $2;[[ $2 ]] || { vl0;swn "VL $(printf '%8i' $(llc $p49) 2>$p03)\n$m"; } }
 [[ $1 = mh  ]] && { sh0 $p52 $2;[[ $2 ]] || { ml0;swn "ML $(printf '%8i' $(llc $p52) 2>$p03)\n$m"; } }
-[[ $1 = hs0 ]] && { hs0 $cue1 $cub1;hs0 $cue2 $cub2;if v2t;then hsv;cpe;else echo $cuvc;ssh $(snc $cuvc) "$p53 hsv";fi;if v5t;then hsm;cpe;else echo $cumv;ssh $(snc $cumv) "$p53 hsm";fi; }
+[[ $1 = hs0 ]] && { hs0 $cue1 $cub1;hs0 $cue2 $cub2;if v2t;then hsv;cpe;else echo $cuvc;ssh $(snc $cuvc) "$p53 hsv";fi;if v5t;then hsm;cpe;else echo $cumv;ssh $(snc $cumv) "$p53 hsm";fi;if v6t;then cpe;else echo $znm2;ssh $(snc $znm2) "$p53 cpe";fi; }
 [[ $1 = hs1 ]] && { hs0 $cue1 $cub1; }
 [[ $1 = hs2 ]] && { hs0 $cue2 $cub2; }
 [[ $1 = hse ]] && { hsg;hsu; }
 [[ $1 = hsc ]] && { hsb;hsv;cpe; }
 [[ $1 = hsv ]] && { hsv;cpe; }
 [[ $1 = hsm ]] && { hsm;cpe; }
+[[ $1 = cpe ]] && { cpe $2; }
 [[ $1 = bo  && -f $p12 ]] && { boi $(pt1 $@ 00:00);if [[ $(pt3 $@ s) = n ]];then b6=$b2;else b6=$(pt2 $@ 0);fi;bo5; }
 [[ $1 = bon && -f $p12 ]] && { bv0;l2=$(bff 23:58);bo4 $(pt2 $2 $nn); }
 [[ $1 = boc && -f $p12 ]] && { unset v;read -a v <<< $(bff|tail -n1);l2=$(bff $(pt1 $2 ${v[4]}));boa; }
@@ -523,7 +525,6 @@ function gp0 { if tsa $s10;then bp;gp;local i=$(pt2 $(pex "du -s $p08"));sudo -u
 [[ $1 = brl ]] && { brl; }
 [[ $1 = brm ]] && { brm; }
 [[ $1 = bsl ]] && { bsl; }
-[[ $1 = cpe ]] && { cpe $2; }
 [[ $1 = gpn ]] && { gp0 snapshot prune-state; }
 [[ $1 = gpg ]] && { gp0 removedb; }
 [[ $1 = rsh ]] && { cd $p02;ls -rtGg *.rs.*;echo $(sf1) $(sng); }
