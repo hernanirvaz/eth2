@@ -455,6 +455,7 @@ function bcc { printf p;if v4t;then if bpt;then if rbt $s44;then printf r;else p
 function btn { if v4t;then printf $1;else printf $s40;fi; }
 function irb { rm -f $p39.*;if rbt $1;then if v2t;then brs 0 RB 0 $s38;else gps;ups;bps;sex reboot;fi;else if fft $p45;then touch $p39.$1.hours;fi;fi; }
 function gp0 { if tsa $s10;then bp;gp;local i=$(pt2 $(pex "du -s $p08"));sudo -u eth1 geth --datadir $p08 $@;local n=$(pt2 $(pex "du -s $p08"));echo "fs-diff $(((i-n)/1024/1024))M $@";dmr;ga;ba;fi; }
+function fsc { local f="$1-check";sex "touch $f";sex "chown eth:eth $f";if [[ -w $f ]];then sex "rm -f $f";else gps;ups;bps;sex reboot;fi; }
 
 [[ $1 = irb ]] && { irb $2;pas; }
 [[ $1 = bmf ]] && { bm0;[[ $2 ]] && b4=$2;bms;v0t && swn "$m" >> $p13;if v4t;then if fft $p45;then bpt && brs 0 RB $s43 $s37;else bpt && brs $b4 PE $s43 $s39;fi;else rbt && brs 0 RB $((s43*10)) $s40;fi; }
@@ -491,9 +492,9 @@ function gp0 { if tsa $s10;then bp;gp;local i=$(pt2 $(pex "du -s $p08"));sudo -u
 [[ $1 = bsd ]] && {            brs      0  SD 0 ${2:-$s40}; }
 [[ $1 = ivk ]] && { touch $p50;ivk         PR   ${2:-$s38}; }
 [[ $1 = ul  ]] && { ul0;swn "$m"; }
-[[ $1 = ulf ]] && { ul0;swn "$m" >> $p11;[[ $ok != OK ]] && urs 0 $ok $s40; }
+[[ $1 = ulf ]] && { fsc $p08/$s11;ul0;swn "$m" >> $p11;[[ $ok != OK ]] && urs 0 $ok $s40; }
 [[ $1 = gl  ]] && { gl0;swn "$m"; }
-[[ $1 = glf ]] && { gl0;swn "$m" >> $p10;[[ $ok != OK ]] && grs 0 $ok $s40; }
+[[ $1 = glf ]] && { fsc $p08/$s10;gl0;swn "$m" >> $p10;[[ $ok != OK ]] && grs 0 $ok $s40; }
 [[ $1 = bl  ]] && { bl0;swn "$m"; }
 [[ $1 = blf ]] && { bl0;swn "$m" >> $p12;if [[ $d1 = 23:58 ]];then if sdt;then bdl $d0;else if [[ $(llc $p12) -gt $s68 ]];then bod 0 1;fi;fi;fi;[[ $ok != OK ]] && v4t && brs 0 $ok 0 $s39;pas; }
 [[ $1 = vl  ]] && { vl0;swn "$m"; }
