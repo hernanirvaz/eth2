@@ -492,9 +492,9 @@ function fsc { local f="$1-check";sex "touch $f";sex "chown eth:eth $f";if [[ -w
 [[ $1 = bsd ]] && {            brs      0  SD 0 ${2:-$s40}; }
 [[ $1 = ivk ]] && { touch $p50;ivk         PR   ${2:-$s38}; }
 [[ $1 = ul  ]] && { ul0;swn "$m"; }
-[[ $1 = ulf ]] && { fsc $p08/$s11;ul0;swn "$m" >> $p11;[[ $ok != OK ]] && urs 0 $ok $s40; }
+[[ $1 = ulf ]] && { v4t && fsc $p08/$s11;ul0;swn "$m" >> $p11;[[ $ok != OK ]] && urs 0 $ok $s40; }
 [[ $1 = gl  ]] && { gl0;swn "$m"; }
-[[ $1 = glf ]] && { fsc $p08/$s10;gl0;swn "$m" >> $p10;[[ $ok != OK ]] && grs 0 $ok $s40; }
+[[ $1 = glf ]] && { v4t && fsc $p08/$s10;gl0;swn "$m" >> $p10;[[ $ok != OK ]] && grs 0 $ok $s40; }
 [[ $1 = bl  ]] && { bl0;swn "$m"; }
 [[ $1 = blf ]] && { bl0;swn "$m" >> $p12;if [[ $d1 = 23:58 ]];then if sdt;then bdl $d0;else if [[ $(llc $p12) -gt $s68 ]];then bod 0 1;fi;fi;fi;[[ $ok != OK ]] && v4t && brs 0 $ok 0 $s39;pas; }
 [[ $1 = vl  ]] && { vl0;swn "$m"; }
