@@ -311,8 +311,12 @@ function tmp {
   swn "TEMP $(printf '%5.0fC %10s %5s ssd: %.0fC %s %s' $n $dt $i $d $e 2>$p03)"                                                                              # TEMP cpu/ssd info
 }
 function cpe {                                                                                                                                                # system status
-  local e='NO';[[ $($s07|sed -n 's%.*synchronized: \([a-z]*\) *%\1%p') = yes ]] && local e='OK';dts
-  if tsa $s19;then local e="CSYS $e";m=$(ss2 $s19);else local e="CNTP $e";m=$(ss2 ntp);fi
+  local e='NO';[[ $($s07|sed -n "$r82") = yes ]] && local e='OK';dts
+  if tsa $s19;then
+    local e="CSYS $e";m="$(printf '%-40s' "$(ss2 $s19)" 2>$p03) $(echo $(timedatectl timesync-status|grep "$r80"|sed "$r76"|tr $s70 $s71))"
+  else
+    local e="CNTP $e";m="$(printf '%-40s' "$(ss2 ntp)"  2>$p03) $(ntpq -p|sed -n "$r81")"
+  fi
   swn "$e $(nu1 %3i $(ll2 $r32.*clock|wc -l)) $dt $m";[[ $1 = c ]] && return;tmp;[[ $1 = p ]] && return                                                       # clock & temperature info
   if [[ $(cat $p44 2>$p03) -eq 0 ]];then local e=off;else local e=on;fi;if [[ $(cat $p43 2>$p03) -eq 1 ]];then local d=off;else local d=on;fi                 # usb/cpu current state
   m="INFO$(printf '%3i %3i %10s %5s' $(fl2) $(fl1) $dt 2>$p03)"                                                                                               # usb/cpu erros count
@@ -458,6 +462,13 @@ function btn { if v4t;then printf $1;else printf $s40;fi; }
 function irb { rm -f $p39.*;if rbt $1;then if v2t;then brs 0 RB 0 $s38;else gps;ups;bps;sex reboot;fi;else if fft $p45;then touch $p39.$1.hours;fi;fi; }
 function gp0 { if tsa $s10;then bp;gp;local i=$(pt2 $(pex "du -s $p08"));sudo -u eth1 geth --datadir $p08 $@;local n=$(pt2 $(pex "du -s $p08"));echo "fs-diff $(((i-n)/1024/1024))M $@";dmr;ga;ba;fi; }
 function fsc { local f="$1-check";sex "touch $f";sex "chown eth:eth $f";if [[ -w $f ]];then sex "rm -f $f";else gps;ups;bps;sex reboot;fi; }
+# ntpq -p output
+# when   The time after the last poll event. When when reaches the value of poll then the next polling action occurs. (s)
+# poll   The current polling interval. (s)
+# offset The mean time offset. (ms)
+# delay  This is the mean execution time required to send a request to the time source, and receive the reply from that source. (ms)
+# jitter This indicates how much packet delays from individual pollings vary from the mean packet delay. (ms)
+function tsh { if tsa $s19;then cex "$s07 timesync-status";cex "$s07 show-timesync";else swb ntpq;ntpq -p;fi; }
 
 [[ $1 = irb ]] && { irb $2;pas; }
 [[ $1 = bmf ]] && { bm0;[[ $2 ]] && b4=$2;bms;v0t && swn "$m" >> $p13;if v4t;then if fft $p45;then bpt && brs 0 RB $s43 $s37;else bpt && brs $b4 PE $s43 $s39;fi;else rbt && brs 0 RB $((s43*10)) $s40;fi; }
@@ -478,7 +489,7 @@ function fsc { local f="$1-check";sex "touch $f";sex "chown eth:eth $f";if [[ -w
 [[ $1 = nrs ]] && { nrs; }
 [[ $1 = trs ]] && { trs; }
 [[ $1 = dmr ]] && { dmr; }
-[[ $1 = tsh ]] && { cex "$s07";if v6t;then swb ntpq;ntpq -p;else cex "$s07 timesync-status";cex "$s07 show-timesync";fi; }
+[[ $1 = tsh ]] && { cex "$s07";tsh; }
 [[ $1 = nsh ]] && { nsh; }
 [[ $1 = tvc ]] && { tvc; }
 [[ $1 = tmp ]] && { dts;tmp s; }

@@ -42,7 +42,7 @@ if [[ $cunm = $inm5 ]];then
   # 	serial = "5B2213T43068"
   # 	vendor = "American Power Conversion"
   # 	bus = "001"
-  cc3 $p55 "$r75" "$r76"       ;cmw $p55 640 root nut
+  cc3 $p55 "$r75" "$s69"       ;cmw $p55 640 root nut
 fi
 if [[ $cunm = $znm2 ]];then
   cex "$s07 set-ntp no"                                                                                                                                       # use ntp (sophisticated)

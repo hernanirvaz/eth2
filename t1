@@ -326,16 +326,13 @@ r72='s%[0-9]*:[0-9]*:[0-9]*%%;s%[0-9]* users*,%%;s% average\([^,]*\).*%\1%;s%  *
 r73='s%.*hrv-\(zotac\|intel\)[0-9] *\(.*\)%\2%;s%  *% %g'
 r74='s%.*[0-9]*:[0-9]*:[0-9]*\.[0-9][0-9][0-9]]* *\(.*\)%\1%;s%  *% %g'
 r75='s%^.*maxretry *=.*$%maxretry = 3%'
-r76="\n[acp1600]"
-r76="${r76}\n\tdriver = usbhid-ups"
-r76="${r76}\n\tport = auto"
-r76="${r76}\n\tdesc = \"Back-UPS RS 1600MI FW:958.g3 .I USB FW:g3\""
-r76="${r76}\n\tvendorid = 051D"
-r76="${r76}\n\tproductid = 0002"
-r76="${r76}\n\tserial = 5B2213T43068"
+r76='s%  *(.*)%%'
 r77='error'
 r78='DEBG.Cloned.snapshot.for.late.block.skipped.slot'
 r79='block_delay:.+Some\('
+r80='Server\|Offset\|Delay\|Jitter'
+r81='s%^\*\([^ ]*\).*  *\([0-9][0-9]*\.[0-9]*\) *\([-+][0-9][0-9]*\.[0-9]*\) *\([0-9][0-9]*\.[0-9]*\)$%server: \1 offset: \3ms delay: \2ms jitter: \4ms%p'
+r82='s%.*synchronized: *\([a-z]*\) *%\1%p'
 
 w0='{if(match($0,/'
 w1='([0-9]+(\.[0-9]+)?)(µs|ms|s)/,m)){if(m[3]=="s"){m[1]*=1000000};if(m[3]=="ms"){m[1]*=1000};printf("%.0f\n",m[1])}}'
@@ -447,6 +444,15 @@ s65=70000
 s66=200000
 s67=100000
 s68=7128
+s69="\n[acp1600]"
+s69="${s69}\n\tdriver = usbhid-ups"
+s69="${s69}\n\tport = auto"
+s69="${s69}\n\tdesc = \"Back-UPS RS 1600MI FW:958.g3 .I USB FW:g3\""
+s69="${s69}\n\tvendorid = 051D"
+s69="${s69}\n\tproductid = 0002"
+s69="${s69}\n\tserial = 5B2213T43068"
+s70='[:upper:]'
+s71='[:lower:]'
 
 unset b
 b[ 11766]='0x93bf23a587f11f9eca329a12ef51296b8a9848af8c0fe61201524b14cb85b0c6fbd3e427501cdfa3b28719bd1ed96fff'
