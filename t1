@@ -88,7 +88,10 @@ p55="/etc/nut/ups.conf"
 p56="/etc/nut/upsmon.conf"
 p57="/etc/nut/upsd.conf"
 
-r00='s%^ *#*NTP=.*$%NTP=192.168.8.28 ntp02.oal.ul.pt ntp04.oal.ul.pt time.google.com time.cloudflare.com time.facebook.com%i'
+r00='s%^ *#* *NTP *=.*$%NTP=192.168.8.28 ntp02.oal.ul.pt ntp04.oal.ul.pt time.google.com time.cloudflare.com time.facebook.com%i'
+if [[ $cunm = $cuvc || $cunm = $cub1 || $cunm = $cub2 || $cunm = $cumv ]];then
+  r00="${r00};s%^ *#* *PollIntervalMaxSec *=.*$%PollIntervalMaxSec=1200%i"
+fi
 r01='s%^ *ENABLED=.*$%ENABLED=0%i'
 r02='s%bind[^"]*"%bind -4"%'
 r03='s%^ */*\(.*codename}-updates.*$\)%\1%i;s%^ */* *Unattended-Upgrade::Mail .*$%Unattended-Upgrade::Mail "hernanilr@gmail.com";%i;s%^ */* *Unattended-Upgrade::OnlyOnACPower.*$%Unattended-Upgrade::OnlyOnACPower "false";%i'
