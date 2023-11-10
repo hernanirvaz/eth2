@@ -306,27 +306,39 @@ function sm2 { local s=$(pex "smartctl --json=c -x /dev/sda");echo $s|jq -r "$r4
 function sm3 { (sensors 2>$p03;sleep 1;sensors 2>$p03)|sed -n "$r26"; }
 function tmp {
   local d=$(fl0|grep throttled|head -n1|sed "$r27");local e=$(fl0|grep normal|tail -n1|sed "$r27");local g=''
-  if [[ $cunm = $znm4 ]];then local g=$(echo $g $(sm0));fi;if [[ $cunm = $inm5 ]];then local g=$(echo $g $(sm1));else local g=$(echo $g $(sm2));fi;local l=$(sm3)
-  local n=$(nu5 1 $l);local i=$(nu5 1 $g);[[ $1$d$e || $n -ge $s59 || $i -ge $s59 ]] || return;[[ $d ]] && local d="throttled: $d";[[ $e ]] && local e="normal: $e"
-  swn "TEMP $(printf '%5.0fC %10s %5s ssd: %.0fC %s %s' $n $dt $i $d $e 2>$p03)"                                                                              # TEMP cpu/ssd info
+  if [[ $cunm = $znm4 ]];then local g=$(echo $g $(sm0));fi;if [[ $cunm = $inm5 ]];then local g=$(echo $g $(sm1));else local g=$(echo $g $(sm2));fi
+  local l=$(sm3);local n=$(nu5 1 $l);local i=$(nu5 1 $g);[[ $1$d$e || $n -ge $s59 || $i -ge $s59 ]] || return
+  [[ $d ]] && local d="throttled: $d";[[ $e ]] && local e="normal: $e";swn "TEMP $(printf '%5.0fC %10s %5s ssd: %.0fC %s %s' $n $dt $i $d $e 2>$p03)"         # TEMP cpu/ssd info
 }
-function cpe {                                                                                                                                                # system status
-  local e='NO';[[ $($s07|sed -n "$r82") = yes ]] && local e='OK';dts
+function clk {
+  if [[ $($s07|sed -n "$r82") = yes ]];then local e='OK';else local e='NO';fi
   if tsa $s19;then
     local e="CSYS $e";m="$(printf '%-40s' "$(ss2 $s19)" 2>$p03) $(echo $($s07 $s72-status|grep "$r80"|sed "$r76"|tr $s70 $s71))"
   else
     local e="CNTP $e";m="$(printf '%-40s' "$(ss2 ntp)"  2>$p03) $(ntpq -p|sed -n "$r81")"
-  fi
-  swn "$e $(nu1 %3i $(ll2 $r32.*clock|wc -l)) $dt $m";[[ $1 = c ]] && return;tmp;[[ $1 = p ]] && return                                                       # clock & temperature info
+  fi;dts
+  if tsa $s12;then swn "$e $(nu1 %3i $(ll2 $r32.*clock|wc -l)) $dt $m";else swn "$e     $dt $m";fi                                                            # clock sync info
+}
+function sif {
   if [[ $(cat $p44 2>$p03) -eq 0 ]];then local e=off;else local e=on;fi;if [[ $(cat $p43 2>$p03) -eq 1 ]];then local d=off;else local d=on;fi                 # usb/cpu current state
   m="INFO$(printf '%3i %3i %10s %5s' $(fl2) $(fl1) $dt 2>$p03)"                                                                                               # usb/cpu erros count
   m="$m usb $e, turbo $d, ufw $(wif $(pex 'ufw status'|grep Status:))"                                                                                        # usb/cpu/ufw info
   m="$m, uptime:$(uptime|sed "$r72")";swn "$m"
-  local l=$(ll3|flp "$r77"|wc -l);local n=$(ll2 "$r34"|fln "$r63"|wc -l)
-  local e=$(ll3|flp "$r77"|tail -n1|sed "$r73")
-  local d=$(ll2 "$r34"|fln "$r63"|tail -n1|sed "$r74")
-  m="ERRO$(printf '%3i %3i' $l $n 2>$p03) $dt";if g0t $l;then if g0t $n;then m="$m sl: ${e:0:53}";m="$m cl: ${d:0:54}";else m="$m sl: ${e:0:112}";fi;else if g0t $n;then m="$m cl: ${d:0:112}";fi;fi;(( l+n )) && echo "$m"
-  m='';fft $p45 && m="$m, reboot $(($(sra)/60/60)) hours ago $(cpf)";g0t $(bwc) && m="$m, sync/propose duties on";[[ $m ]] && swn "INFO        $dt${m#*,}"    # reboot/duties info
+}
+function cpe {
+  clk;[[ $1 = c ]] && return;tmp;[[ $1 = p ]] && return;sif
+  m=$(ll3|flp "$r77"|sed "$r73");if [[ $m ]];then local i=$(echo "$m"|wc -l);else local i=0;fi;local e=$(echo "$m"|tail -n1);m=''
+  local n=$(ll2 "$r34"|fln "$r63"|wc -l);local d=;local l=ou
+  if g0t $n;then
+    if [[ $cunm = $cuvc   || $cunm = $cub1 || $cunm = $cub2 ]];then m=$(ll2 "$r32"          |fln "$r63"|sed -E "$r58;$r74");local l=cl;fi
+    if [[ $cunm = $cumv                                     ]];then m=$(ll2 "$r33"          |fln "$r63"|sed -E "$r60;$r74");local l=rl;fi
+    if [[ ! $m ]];then if [[ $cunm = $cub1 || $cunm = $cub2 ]];then m=$(ll2 "\($r30\|$r31\)"|fln "$r63"|sed -E "$r58;$r74");local l=el;fi;fi
+    local d=$(echo "$m"|tail -n1)
+  fi
+  m="ERRO$(printf '%3i %3i %10s %5s' $i $n $dt 2>$p03)"
+  if g0t $i;then if g0t $n;then m="$m sl: ${e:0:53}";m="$m $l: ${d:0:54}";else m="$m sl: ${e:0:112}";fi;else if g0t $n;then m="$m $l: ${d:0:112}";fi;fi
+  (( i+n )) && swn "$m";m=''
+  fft $p45 && m="$m, reboot $(($(sra)/60/60)) hours ago $(cpf)";g0t $(bwc) && m="$m, sync/propose duties on";[[ $m ]] && swn "INFO        $dt${m#*,}"         # reboot/duties info
   g0t $(nu0 $(/usr/lib/update-notifier/apt-check 2>&1|sed 's%;% %g')) && { apt list --upgradable 2>$p03|grep -v Listing;echo; }
 }
 # Plex Media Server
