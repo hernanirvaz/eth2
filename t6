@@ -325,14 +325,19 @@ function sif {
   m="$m usb $e, turbo $d, ufw $(wif $(pex 'ufw status'|grep Status:))"                                                                                        # usb/cpu/ufw info
   m="$m, uptime:$(uptime|sed "$r72")";swn "$m"
 }
+function sll { ll3                 |flp "$r77" $1; }
+function cll { ll2 "$r32"          |fln "$r63" $2|sed -E "$1"; }
+function rll { ll2 "$r33"          |fln "$r63" $2|sed -E "$1"; }
+function ell { ll2 "\($r30\|$r31\)"|fln "$r63" $2|sed -E "$1"; }
+function lll { ll2 "$r34"          |fln "$r63" $2|sed -E "$1"; }
 function cpe {
   clk;[[ $1 = c ]] && return;tmp;[[ $1 = p ]] && return;sif
-  m=$(ll3|flp "$r77"|sed "$r73");if [[ $m ]];then local i=$(echo "$m"|wc -l);else local i=0;fi;local e=$(echo "$m"|tail -n1);m=''
-  local n=$(ll2 "$r34"|fln "$r63"|wc -l);local d=;local l=ou
+  m=$(sll|sed "$r73");if [[ $m ]];then local i=$(echo "$m"|wc -l);else local i=0;fi;local e=$(echo "$m"|tail -n1);m=''
+  local n=$(lll "$r60"|wc -l);local d=;local l=ou
   if g0t $n;then
-    if [[ $cunm = $cuvc   || $cunm = $cub1 || $cunm = $cub2 ]];then m=$(ll2 "$r32"          |fln "$r63"|sed -E "$r58;$r74");local l=cl;fi
-    if [[ $cunm = $cumv                                     ]];then m=$(ll2 "$r33"          |fln "$r63"|sed -E "$r60;$r74");local l=rl;fi
-    if [[ ! $m ]];then if [[ $cunm = $cub1 || $cunm = $cub2 ]];then m=$(ll2 "\($r30\|$r31\)"|fln "$r63"|sed -E "$r58;$r74");local l=el;fi;fi
+    if [[ $cunm = $cuvc   || $cunm = $cub1 || $cunm = $cub2 ]];then m=$(cll "$r58;$r74");local l=cl;fi
+    if [[ $cunm = $cumv                                     ]];then m=$(rll "$r60;$r74");local l=rl;fi
+    if [[ ! $m ]];then if [[ $cunm = $cub1 || $cunm = $cub2 ]];then m=$(ell "$r58;$r74");local l=el;fi;fi
     local d=$(echo "$m"|tail -n1)
   fi
   m="ERRO$(printf '%3i %3i %10s %5s' $i $n $dt 2>$p03)"
@@ -558,15 +563,15 @@ function tsh { if tsa $s19;then cex "$s07 $s72-status";cex "$s07 show-$s72";else
 [[ $1 = rpt ]] && { touch $p50; }
 [[ $1 = lp  ]] && { pex 'ss -tunlp'|grep 'geth\|lighthouse\|Netid'; }
 # outros journal system/lighthouse
-[[ $1 = sl  ]] && { ll3                       |flp "$r77" $2              ; }
-[[ $1 = el  ]] && { ll2 "\($r30\|$r31\)"      |fln "$r63" $2|sed -E "$r58"; }
+[[ $1 = sl  ]] && { sll        $2; }
+[[ $1 = cl  ]] && { cll "$r58" $2; }
+[[ $1 = rl  ]] && { rll "$r60" $2; }
+[[ $1 = el  ]] && { ell "$r58" $2; }
+[[ $1 = ll  ]] && { lll "$r60" $2; }
 [[ $1 = eii ]] && { ll2 "$r35"      |tail -n${2:-$s45}      |sed -E "$r58"; }
 [[ $1 = eiu ]] && { ll2 "$r52"      |tail -n${2:-$s45}      |sed -E "$r58"; }
 [[ $1 = eir ]] && { ll2 "$r30.*$r62"|tail -n${2:-$s45}      |sed -E "$r58"; }
 [[ $1 = al  ]] && { ll2 "$r32.*\($r47\|$r48\)"|fln "$r61" $2|sed -E "$r58"; }
-[[ $1 = cl  ]] && { ll2 "$r32"                |fln "$r63" $2|sed -E "$r58"; }
-[[ $1 = rl  ]] && { ll2 "$r33"                |fln "$r63" $2|sed -E "$r60"; }
-[[ $1 = ll  ]] && { ll2 "$r34"                |fln "$r63" $2|sed -E "$r60"; }
 [[ $1 = ci  ]] && { ll0                       |fln "$r66" $2|sed -E "$r69"; }
 [[ $1 = cii ]] && { ll1 "$r44"|tail -n${2:-$s61}            |sed -E "$r58"; }
 [[ $1 = cih ]] && { ll1 "$r70"|tail -n${2:-$(si2 $s61)}     |sed -E "$r58"; }
