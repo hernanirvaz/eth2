@@ -558,8 +558,8 @@ function tsh { if tsa $s19;then cex "$s07 $s72-status";cex "$s07 show-$s72";else
 [[ $1 = bsl ]] && { bsl; }
 [[ $1 = gpn ]] && { gp0 snapshot prune-state; }
 [[ $1 = gpg ]] && { gp0 removedb; }
-[[ $1 = rsh ]] && { cd $p02;ls -rtGg *.rs.*;echo $(sf1) $(sng); }
-[[ $1 = rst ]] && { cd $p02;rm -f    *.rs.*; }
+[[ $1 = rsh ]] && { cd $p02;ls -rtGg   *.rs.*;echo $(sf1) $(sng); }
+[[ $1 = rrs ]] && { cd $p02;rm -f $p50 *.rs.*; }
 [[ $1 = rpt ]] && { touch $p50; }
 [[ $1 = lp  ]] && { pex 'ss -tunlp'|grep 'geth\|lighthouse\|Netid'; }
 # outros journal system/lighthouse
@@ -766,7 +766,7 @@ if [[ ! $1 ]];then
   m="$m\nchk\t\tcheck server with chkrootkit"
   m="$m\nlup\t\tcheck apt list --upgradable"
   m="$m\nrsh\t\trestart gap show"
-  m="$m\nrst\t\trestart gap reset"
+  m="$m\nrrs\t\trestart gap reset"
   m="$m\nrpt\t\trestart gap print"
   m="$m\nsnr\t\tremove snapd"
   swn "\n$m\n"
