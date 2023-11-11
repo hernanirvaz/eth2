@@ -521,7 +521,7 @@ function tsh { if tsa $s19;then cex "$s07 $s72-status";cex "$s07 show-$s72";else
 [[ $1 = gl  ]] && { gl0;swn "$m"; }
 [[ $1 = glf ]] && { v4t && fsc $p08/$s10;gl0;swn "$m" >> $p10;[[ $ok != OK ]] && grs 0 $ok $s40; }
 [[ $1 = bl  ]] && { bl0;swn "$m"; }
-[[ $1 = blf ]] && { bl0;swn "$m" >> $p12;if [[ $d1 = 23:58 ]];then if sdt;then bdl $d0;else if [[ $(llc $p12) -gt $s68 ]];then bod 0 1;fi;fi;fi;[[ $ok != OK ]] && v4t && brs 0 $ok 0 $s39;pas; }
+[[ $1 = blf ]] && { bl0;swn "$m" >> $p12;if [[ $d1 = 23:58 ]];then if sdt;then bdl $d0;else if [[ $(llc $p12) -gt $s68 ]];then bod 0 2;fi;fi;fi;[[ $ok != OK ]] && v4t && brs 0 $ok 0 $s39;pas; }
 [[ $1 = vl  ]] && { vl0;swn "$m"; }
 [[ $1 = vlf ]] && { vl0;swn "$m" >> $p49; }
 [[ $1 = ml  ]] && { ml0;swn "$m"; }
@@ -546,7 +546,7 @@ function tsh { if tsa $s19;then cex "$s07 $s72-status";cex "$s07 show-$s72";else
 [[ $1 = bon && -f $p12 ]] && { bv0;l2=$(bff 23:58);bo4 $(pt2 $2 $nn); }
 [[ $1 = boc && -f $p12 ]] && { unset v;read -a v <<< $(bff|tail -n1);l2=$(bff $(pt1 $2 ${v[4]}));boa; }
 [[ $1 = bol && -f $p12 ]] && { l2=$(bff 23:58);boa; }
-[[ $1 = bod ]] && { bod ${2:-0} ${3:-1}; }
+[[ $1 = bod ]] && { bod ${2:-0} ${3:-2}; }
 [[ $1 = bdl ]] && { bdl $2; }
 [[ $1 = brl ]] && { brl; }
 [[ $1 = brm ]] && { brm; }
