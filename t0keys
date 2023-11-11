@@ -5,12 +5,20 @@ source /home/eth/eth2/t1
 function sbn { printf %s $($p02/ethdo $s27 node info 2>$p03|cut -d: -f2); }
 function obn { ping -qnc 1 -W 1 $zipg &>$p03; }
 function srv { if [[ $cunm = $1 ]];then cd $p02;return;else swb "TEM DE ESTAR $1";return 1;fi; }
-function tve { local f='';echo;for f in $(ls $p19/key*.json 2>$p03);do echo $(basename $f);done;echo;swn 'QUER MESMO SAIR ESTES VALIDATORS (SIM/nao)?';read rsp;if [[ $rsp = SIM ]];then return;else return 1;fi; }
+function tve { local f='';echo;for f in $(ls $p19/key*.json 2>$p03);do echo $(basename $f);done;echo;swn 'QUER MESMO SAIR ESTES VALIDATORS (SIM/nao)?';read rsp;if [[ $rsp = SIM ]];then return 0;else return 1;fi; }
 function lve { [[ -d $p19 && $(ls $p19/key*.json 2>$p03) ]] && tve && { echo;swn "STORE($K) EXIT-PHRASE(Exit my validator)";echo;local f='';for f in $(ls $p19/key*.json 2>$p03);do echo $p00/lighthouse --datadir $p05 account validator exit --keystore $f --beacon-node http://$zip4:5052;done; }; }
+function ove { if obn;then swb 'TEM DE ESTAR OFFLINE';return 1;else return 0;fi; }
 function eve {
   [[ -x $p02/ethdo     ]] || { dnv                              ; }
   [[ -x $p02/ethdo     ]] || { swb 'TEM DE TER ETHDO'    ;return; }
   [[ -d $p19 && $(ls $p19/key*.json 2>$p03) ]] && tve && { local f='';for f in $(ls $p19/key*.json 2>$p03);do echo $p02/ethdo $s27 validator exit --validator=$f --passphrase="$K";done; }
+}
+function eem {
+  [[ -x $p02/ethdo     ]] || { dnv                              ; }
+  [[ -x $p02/ethdo     ]] || { swb 'TEM DE TER ETHDO'    ;return; }
+  [[ -f $p02/$s29.json ]] || { if [[ $(sbn) = false ]];then swn "prepare-offline validator exit data";$p02/ethdo $s27 validator exit --prepare-offline;else swb "TEM DE TER BN SYNCED";return;fi; }
+  [[ -f $p02/$s29.json ]] || { swb "TEM DE TER $s29.json";return; }
+  ove && { if [[ $M ]];then local v='';for v in ${1:-${!b[@]}};do $p02/ethdo validator exit --offline --mnemonic="$M" --validator="$v" --json > $p19/exit-$v-${b[$v]}.json;swn "gerou exit-$v-${b[$v]}.json";done;else swb 'TEM DE TER M';fi; }
 }
 function dsd {
   srv hrv-zen || return
@@ -24,7 +32,7 @@ function ewc {
   srv hrv-zen || return
   [[ -x $p02/ethdo     ]] || { dnv                              ; }
   [[ -x $p02/ethdo     ]] || { swb 'TEM DE TER ETHDO'    ;return; }
-  [[ -f $p02/$s29.json ]] || { if [[ $(sbn) = false ]];then $p02/ethdo $s27 validator credentials set --prepare-offline;else swb "TEM DE TER BN SYNCED";return;fi; }
+  [[ -f $p02/$s29.json ]] || { if [[ $(sbn) = false ]];then swn "prepare-offline validator credentials data";$p02/ethdo $s27 validator credentials set --prepare-offline;else swb "TEM DE TER BN SYNCED";return;fi; }
   [[ -f $p02/$s29.json ]] || { swb "TEM DE TER $s29.json";return; }
   [[ -f $p02/$s30.json ]] || { if [[ $M ]];then if obn;then swb 'TEM DE ESTAR OFFLINE';else $p02/ethdo $s27 validator credentials set --offline --mnemonic="$M" --withdrawal-address=$s25;fi;else swb 'TEM DE TER M';fi; }
   [[ -f $p02/$s30.json ]] || { swb "TEM DE TER $s30.json";return; }
@@ -42,14 +50,16 @@ function ewi {
 [[ $1 = ewc ]] && { ewc ${b[@]}; }
 [[ $1 = ewi ]] && { ewi ${b[@]}; }
 [[ $1 = eve ]] && { eve; }
+[[ $1 = eem ]] && { eem $2; }
 [[ $1 = lve ]] && { lve; }
 
 if [[ ! $1 ]];then
   m=''
-  m="$m\ndsd [v] [n]\tStaking Deposit\t\t\t(v=chaves, n=chaves anteriores)"
+  m="$m\ndsd [v] [n]\tStaking Deposit\t\t\t\t(v=chaves, n=chaves anteriores)"
   m="$m\newc\t\tBLS Withdrawal Credentials"
   m="$m\newi\t\tNext Withdrawal Information"
-  m="$m\neve\t\tvoluntary exit\t\t\t(ethdo)"
-  m="$m\nlve\t\tvoluntary exit\t\t\t(lighthouse)"
+  m="$m\neve\t\tvoluntary exit\t\t\t\t(ethdo)"
+  m="$m\neem [v]\t\tvoluntary exit - generate signed json\t(ethdo v=validator)"
+  m="$m\nlve\t\tvoluntary exit\t\t\t\t(lighthouse)"
   swn "$m\n"
 fi
