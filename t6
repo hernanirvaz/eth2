@@ -64,7 +64,7 @@ function bpt { [[ $(era $p12 $s52) -eq 1 ]] && ( (pct && pmt && hat && ! sdt && 
 function llc { pt2 $(wc -l $1 2>$p03) 0; }                                                                                                                    # get log line count
 function jsh { cex "journalctl --no-hostname --no-full -f $1"; }                                                                                              # my journal   format
 function dmr { sex "$s00 daemon-reload"; }                                                                                                                    # daemon-reload
-function si1 { nu2 "0.4*$b3+0.6*$nn"; }
+function si1 { nu2 "0.6*$b3+0.4*$nn"; }
 function si2 { local n=${1:-0};printf %i $((1000*n)) 2>$p03; }
 function si3 { local n=${1:-0};printf %i $((20*n))   2>$p03; }
 function svi { local n=${1:-0};if g0t $n;then l4=$(ll1 $r44|tail -n$n);else l4=$(ll1 $r44);fi;i0=$(nu5 3 $(ln2 "$w0$r45$w2"));i1=$(nu5 3 $(ln2 "$w0$r46$w2"));l6=$(ll2 $r32.*$r65);b1=$(nu3 $(ln1 $r65));if g0t $n;then l4=$(ll1 $r70|tail -n$(si2 $n));else l4=$(ll1 $r70);fi;i2=$(nu5 0 $(ln2 "$w0$r71$w1"));if g0t $n;then l6=$(ll1 $r38|tail -n$(si3 $n));else l6=$(ll1 $r38);fi;i3=$(nu5 2 $(ln1 $r36));if g0t $n;then l4=$(ll1 $r78|tail -n$n);else l4=$(ll1 $r78);fi;i4=$(nu5 3 $(ln2 "$w0$r79$w2")); }
