@@ -52,6 +52,8 @@ function v3t { [[ $cuvc = $nxvc ]]; }                                           
 function v4t { [[ $cunm = $cub1 ]]; }                                                                                                                         # cc  main     test
 function v5t { [[ $cunm = $cumv ]]; }                                                                                                                         # mev current  test
 function v6t { [[ $cunm = $znm2 ]]; }                                                                                                                         # ntp main     test
+function v7t { [[ $cunm = $inm5 ]]; }                                                                                                                         # nuc intel    test
+function v8t { [[ $cunm = $znm4 ]]; }                                                                                                                         # best zotac   test
 function rbt { [[ $(sra) -ge $((60*60*${1:-9})) ]]; }
 function ipt { [[ $(date +%s) -ge $(bss $1 6) ]]; }
 function pct { [[ $b4 -ne 0 ]]; }
@@ -306,7 +308,7 @@ function sm2 { local s=$(pex "smartctl --json=c -x /dev/sda");echo $s|jq -r "$r4
 function sm3 { (sensors 2>$p03;sleep 1;sensors 2>$p03)|sed -n "$r26"; }
 function tmp {
   local d=$(fl0|grep throttled|head -n1|sed "$r27");local e=$(fl0|grep normal|tail -n1|sed "$r27");local g=''
-  if [[ $cunm = $znm4 ]];then local g=$(echo $g $(sm0));fi;if [[ $cunm = $inm5 ]];then local g=$(echo $g $(sm1));else local g=$(echo $g $(sm2));fi
+  if v8t;then local g=$(echo $g $(sm0));fi;if v7t;then local g=$(echo $g $(sm1));else local g=$(echo $g $(sm2));fi
   local l=$(sm3);local n=$(nu5 1 $l);local i=$(nu5 1 $g);[[ $1$d$e || $n -ge $s59 || $i -ge $s59 ]] || return
   [[ $d ]] && local d="throttled: $d";[[ $e ]] && local e="normal: $e";swn "TEMP $(printf '%5.0fC %10s %5s ssd: %.0fC %s %s' $n $dt $i $d $e 2>$p03)"         # TEMP cpu/ssd info
 }
@@ -369,11 +371,11 @@ function sp  { tsa $s20 && cex "$s02 $s20"; }                                   
 function sd  { cex "$s05 $s20";sco;sex 'ufw reload'; }                                                                                                        # disable named
 # el/cc/vc
 function efw { if [[ $cust = hrv ]];then pai $1 192.168.8.0/24 $2 $3;else pai $1 $vip1 $2 $3;pai $1 $vip3 $2 $3;fi; }
-function eop { local e=30303;[[ $cunm = $inm5 ]] || e=30304;pae $e elp2p;pde 8545 elapi delete;pde 8551 eljwt delete;efw 8545 elapi       ;efw 8551 eljwt       ; }
-function eco { local e=30303;[[ $cunm = $inm5 ]] || e=30304;pde $e elp2p;pde 8545 elapi       ;pde 8551 eljwt       ;efw 8545 elapi delete;efw 8551 eljwt delete; }
+function eop { local e=30303;v7t || e=30304;pae $e elp2p;pde 8545 elapi delete;pde 8551 eljwt delete;efw 8545 elapi       ;efw 8551 eljwt       ; }
+function eco { local e=30303;v7t || e=30304;pde $e elp2p;pde 8545 elapi       ;pde 8551 eljwt       ;efw 8545 elapi delete;efw 8551 eljwt delete; }
 function bfw { if [[ $cust = hrv ]];then pai $1 192.168.8.0/24 $2 $3;else pai $1 $vip3 $2 $3;fi; }
-function bop { local e=9000 ;[[ $cunm = $znm4 ]] || e=9004 ;pae $e clp2p;pde 5052 clapi delete;pde 8551 cljwt delete;bfw 5052 clapi       ;bfw 8551 cljwt       ;pae $((e+1)) clquic; }
-function bco { local e=9000 ;[[ $cunm = $znm4 ]] || e=9004 ;pde $e clp2p;pde 5052 clapi       ;pde 8551 cljwt       ;bfw 5052 clapi delete;bfw 8551 cljwt delete;pde $((e+1)) clquic; }
+function bop { local e=9000 ;v8t || e=9004 ;pae $e clp2p;pde 5052 clapi delete;pde 8551 cljwt delete;bfw 5052 clapi       ;bfw 8551 cljwt       ;pae $((e+1)) clquic; }
+function bco { local e=9000 ;v8t || e=9004 ;pde $e clp2p;pde 5052 clapi       ;pde 8551 cljwt       ;bfw 5052 clapi delete;bfw 8551 cljwt delete;pde $((e+1)) clquic; }
 function vfw { if [[ $cust = hrv ]];then pai $1 192.168.8.0/24 $2 $3;else pai $1 $vip1 $2 $3;fi; }
 function vop { vfw 5064 vcapi       ;pde 5064 vcapi delete; }
 function vco { vfw 5064 vcapi delete;pde 5064 vcapi       ; }
@@ -438,7 +440,7 @@ function nrs { nex 'netplan apply';dpa; }                                       
 function lcp { local f=$1;shift;[[ -x $f ]] && until [[ $# -lt 1 ]];do if [[ $1 = $(snc $cunm) ]];then lci $f;else scp $f $1:$p02;fi;shift;done; }            # propagate lighthouse
 function lci { [[ -x $1 && ! -d $1   ]] || return;sex "mv $p00/lighthouse $p00/lighthouse.sav";sex "cp $1 $p00"; }                                            # lighthouse binary install
 function lmd { [[ -x $p00/lighthouse ]] || return;cmw $p00/lighthouse 755 eth;swb 'LIGHT INSTALADO'; }                                                        # lighthouse set permissions
-function lpi { [[ $cunm = $znm2 ]] && lcp $1 ztc2 ztc3;[[ $cunm = $znm4 ]] && lcp $1 ztc4;[[ $cunm = $inm5 ]] && lcp $1 int5;[[ $cunm = $vnm1 ]] && lcp $1 vpsl;lci $p02/lighthouse;sex "rm $p02/lighthouse";lmd; }
+function lpi { v6t && lcp $1 ztc2 ztc3;v8t && lcp $1 ztc4;v7t && lcp $1 int5;[[ $cunm = $vnm1 ]] && lcp $1 vpsl;lci $p02/lighthouse;sex "rm $p02/lighthouse";lmd; }
 function luc {                                                                                                                                                # lighthouse upgrade/compile
   if fft $p06/lighthouse/README.md;then
     cd $p06/lighthouse;make clean;cargo clean                                                                                                                 # clean compile dirs
@@ -522,9 +524,9 @@ function tsh { if tsa $s19;then cex "$s07 $s72-status";cex "$s07 show-$s72";else
 [[ $1 = bsd ]] && {            brs      0  SD 0 ${2:-$s40}; }
 [[ $1 = ivk ]] && { touch $p50;ivk         PR   ${2:-$s38}; }
 [[ $1 = ul  ]] && { ul0;swn "$m"; }
-[[ $1 = ulf ]] && { v4t && fsc $p08/$s11;ul0;swn "$m" >> $p11;[[ $ok != OK ]] && urs 0 $ok $s40; }
+[[ $1 = ulf ]] && { ul0;swn "$m" >> $p11;[[ $ok != OK ]] && urs 0 $ok $s40; }
 [[ $1 = gl  ]] && { gl0;swn "$m"; }
-[[ $1 = glf ]] && { v4t && fsc $p08/$s10;gl0;swn "$m" >> $p10;[[ $ok != OK ]] && grs 0 $ok $s40; }
+[[ $1 = glf ]] && { v7t && fsc $p08/$s10;gl0;swn "$m" >> $p10;[[ $ok != OK ]] && grs 0 $ok $s40; }
 [[ $1 = bl  ]] && { bl0;swn "$m"; }
 [[ $1 = blf ]] && { bl0;swn "$m" >> $p12;if [[ $d1 = 23:58 ]];then if sdt;then bdl $d0;else if [[ $(llc $p12) -gt $s68 ]];then bod 0 2;fi;fi;fi;[[ $ok != OK ]] && v4t && brs 0 $ok 0 $s39;pas; }
 [[ $1 = vl  ]] && { vl0;swn "$m"; }
