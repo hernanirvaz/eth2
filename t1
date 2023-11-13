@@ -100,7 +100,7 @@ r05='printf "Welcome to %s %s\\n" "$(uname -n)" "$DISTRIB_DESCRIPTION"'
 r06='s%timeout *=.*$%timeout=1%i'
 r07=''
 r08='/dnssec-validation/q'
-r09="s%^ *pool \([^a-z]\)%# pool \1%"
+r09="s%^ *pool  *\([^a-z]\)%# pool \1%;s^ *pool  *ntp.ubuntu.com%pool pool.ntp.org%"
 r09="${r09};s%^ *#.*restrict.*192.*%restrict 192.168.8.0 mask 255.255.255.0 notrap nomodify%"
 r09="${r09};/^ *#.*Specify/a \\"
 r09="${r09}pool 0.pt.pool.ntp.org iburst"
