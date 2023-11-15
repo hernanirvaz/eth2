@@ -522,7 +522,7 @@ function tsh { if tsa $s19;then cex "$s07 $s72-status";cex "$s07 show-$s72";else
 [[ $1 = urb ]] && { touch $p50;urs      0  RB   ${2:-$s38}; }
 [[ $1 = brb ]] && { touch $p50;brs      0  RB 0 ${2:-$(btn $s37)}; }
 [[ $1 = bsd ]] && {            brs      0  SD 0 ${2:-$s40}; }
-[[ $1 = ivk ]] && { touch $p50;ivk         PR   ${2:-$s39}; }
+[[ $1 = ivk ]] && { touch $p50;ivk         PR   ${2:-$s38}; }
 [[ $1 = ul  ]] && { ul0;swn "$m"; }
 [[ $1 = ulf ]] && { ul0;swn "$m" >> $p11;[[ $ok != OK ]] && urs 0 $ok $s40; }
 [[ $1 = gl  ]] && { gl0;swn "$m"; }
