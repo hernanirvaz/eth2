@@ -16,7 +16,7 @@ function eve {
 function eem {
   [[ -x $p02/ethdo     ]] || { dnv                              ; }
   [[ -x $p02/ethdo     ]] || { swb 'TEM DE TER ETHDO'    ;return; }
-  [[ -f $p02/$s29.json ]] || { if [[ $(sbn) = false ]];then swn "prepare-offline validator exit data";$p02/ethdo $s27 validator exit --prepare-offline;else swb "TEM DE TER BN SYNCED";return;fi; }
+  [[ -f $p02/$s29.json ]] || { if [[ $(sbn) = false ]];then swn "$s29 validator exit data";$p02/ethdo $s27 validator exit --prepare-offline;else swb "TEM DE ESTAR ONLINE PARA $s29";return;fi; }
   [[ -f $p02/$s29.json ]] || { swb "TEM DE TER $s29.json";return; }
   ove && { if [[ $M ]];then local v='';for v in ${1:-${!b[@]}};do $p02/ethdo validator exit --offline --mnemonic="$M" --validator="$v" --json > $p19/exit-$v-${b[$v]}.json;swn "gerou exit-$v-${b[$v]}.json";done;else swb 'TEM DE TER M';fi; }
 }
