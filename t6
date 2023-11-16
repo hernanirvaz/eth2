@@ -302,15 +302,16 @@ function bsl {                                                                  
 function bdw { fft $1 || return;cp $1 $1.o;grep -v $2 $1.o > $1;grep $2 $1.o > $1.d; }                                                                        # work to delete cc log day
 function bdl { local d=$(pt0 $1 sai);[[ $d = sai ]] && return;bdw $p12 $d;bdw $p13 $d; }                                                                      #         delete cc log day
 function wif { echo $@|sed 's%[^: ]*: *%%g;s%inactive%off%;s%active%on%' 2>$p03; }                                                                            # get ufw info
-function sm0 { local s='smartctl --json=c -x';pex "$s /dev/nvme0"|jq -r "$r54" 2>$p03; }
-function sm1 { local s='smartctl --json=c -x';pex "$s /dev/nvme0"|jq -r "$r54" 2>$p03;pex "$s /dev/nvme1"|jq -r "$r54" 2>$p03;pex "$s /dev/nvme2"|jq -r "$r54" 2>$p03; }
-function sm2 { local s=$(pex "smartctl --json=c -x /dev/sda");echo $s|jq -r "$r40" 2>$p03;echo $s|jq -r "$r41" 2>$p03; }
-function sm3 { (sensors 2>$p03;sleep 1;sensors 2>$p03)|sed -n "$r26"; }
+function sm0 { pex "smartctl --json=c -x $1"|jq -r "$r54" 2>$p03; }
+function sm1 { local s=$(pex "smartctl --json=c -x $1");echo $s|jq -r "$r40" 2>$p03;echo $s|jq -r "$r41" 2>$p03; }
+function sm2 { (sensors 2>$p03;sleep 1;sensors 2>$p03)|sed -n "$r26"; }
 function tmp {
-  local d=$(fl0|grep throttled|head -n1|sed "$r27");local e=$(fl0|grep normal|tail -n1|sed "$r27");local g=''
-  if v8t;then local g=$(echo $g $(sm0));fi;if v7t;then local g=$(echo $g $(sm1));else local g=$(echo $g $(sm2));fi
-  local l=$(sm3);local n=$(nu5 1 $l);local i=$(nu5 1 $g);[[ $1$d$e || $n -ge $s59 || $i -ge $s59 ]] || return
-  [[ $d ]] && local d="throttled: $d";[[ $e ]] && local e="normal: $e";swn "TEMP $(printf '%5.0fC %10s %5s ssd: %.0fC %s %s' $n $dt $i $d $e 2>$p03)"         # TEMP cpu/ssd info
+  local g=$(fl0);local d=$(echo "$g"|grep throttled|head -n1|sed "$r27");local e=$(echo "$g"|grep normal|tail -n1|sed "$r27")
+  local g=''    ;local f=''        ;for f in $(ls /dev/nvme[0-9] 2>$p03);do local g=$(echo $g $(sm0 $f));done;local l=$(nu5 1 $g)
+  local g=''    ;local f='/dev/sda';[[ -b $f ]] && local g=$(sm1 $f);local i=$(nu5 1 $g);local n=$(nu5 1 $(sm2))
+  [[ $1$d$e || $l -ge $s59 || $i -ge $s59 || $n -ge $s59 ]] || return;[[ $d ]] && local d="throttled: $d";[[ $e ]] && local e="normal: $e"
+  local g=$(printf '%5.0fC %10s %5s' $n $dt 2>$p03);g0t $i && local g="$g $(printf 'sata: %.0fC' $i 2>$p03)";g0t $l && local g="$g $(printf 'nvme: %.0fC' $l 2>$p03)"
+  local g="$g $(printf '%s %s' $d $e 2>$p03)";swn "TEMP $g"
 }
 function clk {
   if [[ $($s07|sed -n "$r82") = yes ]];then local e='OK';else local e='NO';fi
