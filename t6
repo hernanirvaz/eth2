@@ -323,10 +323,9 @@ function clk {
   if tsa $s12;then swn "$e $(nu1 %3i $(ll2 $r32.*clock|wc -l)) $dt $m";else swn "$e     $dt $m";fi                                                            # clock sync info
 }
 function sif {
-  if [[ $(cat $p44 2>$p03) -eq 0 ]];then local e=off;else local e=on;fi;if [[ $(cat $p43 2>$p03) -eq 1 ]];then local d=off;else local d=on;fi                 # usb/cpu current state
-  m="INFO$(printf '%3i %3i %10s %5s' $(fl2) $(fl1) $dt 2>$p03)"                                                                                               # usb/cpu erros count
-  m="$m usb $e, turbo $d, ufw $(wif $(pex 'ufw status'|grep Status:))"                                                                                        # usb/cpu/ufw info
-  m="$m, uptime:$(uptime|sed "$r72")";swn "$m"
+  if [[ $(cat $p44 2>$p03) -eq 0 ]];then local e=off;else local e=on;fi;if [[ $(cat $p43 2>$p03) -eq 1 ]];then local d=off;else local d=on;fi;local i=$(fl1);local n=$(fl2)
+  [[ $e = on && $d = on ]] && e0t $i && e0t $n && return
+  swn "INFO$(printf '%3i %3i %10s %5s' $n $i $dt 2>$p03) usb $e, turbo $d, ufw $(wif $(pex 'ufw status'|grep Status:)), uptime:$(uptime|sed "$r72")"
 }
 function sll { ll3                 |flp "$r77" $1; }
 function cll { ll2 "$r32"          |fln "$r63" $2|sed -E "$1"; }
