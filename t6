@@ -324,7 +324,7 @@ function clk {
 }
 function sif {
   if [[ $(cat $p44 2>$p03) -eq 0 ]];then local e=off;else local e=on;fi;if [[ $(cat $p43 2>$p03) -eq 1 ]];then local d=off;else local d=on;fi;local i=$(fl1);local n=$(fl2)
-  [[ $e = on && $d = on ]] && e0t $i && e0t $n && return
+  [[ $1$e = on && $d = on ]] && e0t $i && e0t $n && return
   swn "INFO$(printf '%3i %3i %10s %5s' $n $i $dt 2>$p03) usb $e, turbo $d, ufw $(wif $(pex 'ufw status'|grep Status:)), uptime:$(uptime|sed "$r72")"
 }
 function sll { ll3                 |flp "$r77" $1; }
@@ -512,6 +512,7 @@ function tsh { if tsa $s19;then cex "$s07 $s72-status";cex "$s07 show-$s72";else
 [[ $1 = nsh ]] && { nsh; }
 [[ $1 = tvc ]] && { tvc; }
 [[ $1 = tmp ]] && { dts;tmp s; }
+[[ $1 = sif ]] && { dts;sif s; }
 # slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168
 [[ $1 = grs ]] && { touch $p50;grs ${2:-0} SR   ${3:-$s40}; }
 [[ $1 = urs ]] && { touch $p50;urs ${2:-0} SR   ${3:-$s40}; }
@@ -765,6 +766,7 @@ if [[ ! $1 ]];then
   m="$m\ntrs\t\ttime sync restart"
   m="$m\ntsh\t\ttime sync show "
   m="$m\ntmp\t\ttemperature show"
+  m="$m\nsif\t\tsystem info show"
   m="$m\nchk\t\tcheck server with chkrootkit"
   m="$m\nlup\t\tcheck apt list --upgradable"
   m="$m\nrsh\t\trestart gap show"
