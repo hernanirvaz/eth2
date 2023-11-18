@@ -509,6 +509,9 @@ function tsh { if tsa $s19;then cex "$s07 $s72-status";cex "$s07 show-$s72";else
 [[ $1 = trs ]] && { trs; }
 [[ $1 = dmr ]] && { dmr; }
 [[ $1 = tsh ]] && { cex "$s07";tsh; }
+[[ $1 = fsh ]] && { cex "fwupdmgr get-devices"; }
+[[ $1 = frf ]] && { cex "fwupdmgr refresh --force"; }
+[[ $1 = fud ]] && { cex "fwupdmgr update $2"; }
 [[ $1 = nsh ]] && { nsh; }
 [[ $1 = tvc ]] && { tvc; }
 [[ $1 = tmp ]] && { dts;tmp s; }
@@ -773,5 +776,8 @@ if [[ ! $1 ]];then
   m="$m\nrrs\t\trestart gap reset"
   m="$m\nrpt\t\trestart gap print"
   m="$m\nsnr\t\tremove snapd"
+  m="$m\nfsh\t\tfirmware show"
+  m="$m\nfrf\t\tfirmware refresh"
+  m="$m\nfud [d]\t\tfirmware update [device-id]"
   swn "\n$m\n"
 fi
