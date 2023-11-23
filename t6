@@ -64,7 +64,7 @@ function fft { [[ -f $1 ]]; }
 function sft { [[ -f $p04/$1.service ]]; }
 function bpt { [[ $(era $p12 $s52) -eq 1 ]] && ( (pct && pmt && hat && ! sdt && ! fft $p45) || rbt $s44); }
 function llc { pt2 $(wc -l $1 2>$p03) 0; }                                                                                                                    # get log line count
-function jsh { cex "journalctl --no-hostname --no-full -f $1"; }                                                                                              # my journal   format
+function jrn { cex "journalctl --no-hostname --no-full -f $1"; }                                                                                              # my journal   format
 function dmr { sex "$s00 daemon-reload"; }                                                                                                                    # daemon-reload
 function si1 { nu2 "0.2*$b3+0.8*$nn"; }
 function si2 { local n=${1:-0};printf %i $((1000*n)) 2>$p03; }
@@ -567,6 +567,8 @@ function tsh { if tsa $s19;then cex "$s07 $s72-status";cex "$s07 show-$s72";else
 [[ $1 = rsh ]] && { cd $p02;ls -rtGg   *.rs.*;echo $(sf1) $(sng); }
 [[ $1 = rrs ]] && { cd $p02;rm -f $p50 *.rs.*; }
 [[ $1 = rpt ]] && { touch $p50; }
+[[ $1 = jsh ]] && { nex "journalctl --disk-usage"; }
+[[ $1 = jrs ]] && { nex "journalctl --vacuum-time=3days";nex "journalctl --verify"; }
 [[ $1 = lp  ]] && { pex 'ss -tunlp'|grep 'geth\|lighthouse\|Netid'; }
 # outros journal system/lighthouse
 [[ $1 = sl  ]] && { sll        $2; }
@@ -602,14 +604,14 @@ function tsh { if tsa $s19;then cex "$s07 $s72-status";cex "$s07 show-$s72";else
 [[ $1 = wds ]] && { cex 'ufw disable'; }
 [[ $1 = wl  ]] && { wlp ${@:2:$#}; }
 # journal
-[[ $1 = yj  ]] && { jsh; }
-[[ $1 = ej  ]] && { jsh "-u $s10 -u $s12 -u $s13"; }
-[[ $1 = gj  ]] && { jsh "-u $s10"; }
-[[ $1 = uj  ]] && { jsh "-u $s11"; }
-[[ $1 = bj  ]] && { jsh "-u $s12"; }
-[[ $1 = vj  ]] && { jsh "-u $s13"; }
-[[ $1 = sj  ]] && { jsh "-u $s20"; }
-[[ $1 = mj  ]] && { jsh "-u $s14"; }
+[[ $1 = yj  ]] && { jrn; }
+[[ $1 = ej  ]] && { jrn "-u $s10 -u $s12 -u $s13"; }
+[[ $1 = gj  ]] && { jrn "-u $s10"; }
+[[ $1 = uj  ]] && { jrn "-u $s11"; }
+[[ $1 = bj  ]] && { jrn "-u $s12"; }
+[[ $1 = vj  ]] && { jrn "-u $s13"; }
+[[ $1 = sj  ]] && { jrn "-u $s20"; }
+[[ $1 = mj  ]] && { jrn "-u $s14"; }
 # arranca
 [[ $1 = ga  ]] && { dmr;ga; }
 [[ $1 = ua  ]] && { dmr;ua; }
@@ -623,18 +625,18 @@ function tsh { if tsa $s19;then cex "$s07 $s72-status";cex "$s07 show-$s72";else
 [[ $1 = sa  ]] && { dmr;sa; }
 [[ $1 = ma  ]] && { dmr;ma; }
 # para & arranca & journal
-[[ $1 = gaj ]] && { dmr;ga;jsh "-u $s10"; }
-[[ $1 = uaj ]] && { dmr;ua;jsh "-u $s11"; }
-[[ $1 = baj ]] && { dmr;ba;jsh "-u $s12"; }
-[[ $1 = vaj ]] && { dmr;va;jsh "-u $s13"; }
-[[ $1 = saj ]] && { dmr;sa;jsh "-u $s20"; }
-[[ $1 = maj ]] && { dmr;ma;jsh "-u $s14"; }
-[[ $1 = gpa ]] && { gp;dmr;ga;jsh "-u $s10"; }
-[[ $1 = upa ]] && { up;dmr;ua;jsh "-u $s11"; }
-[[ $1 = bpa ]] && { bp;dmr;ba;jsh "-u $s12"; }
-[[ $1 = vpa ]] && { vp;dmr;va;jsh "-u $s13"; }
+[[ $1 = gaj ]] && { dmr;ga;jrn "-u $s10"; }
+[[ $1 = uaj ]] && { dmr;ua;jrn "-u $s11"; }
+[[ $1 = baj ]] && { dmr;ba;jrn "-u $s12"; }
+[[ $1 = vaj ]] && { dmr;va;jrn "-u $s13"; }
+[[ $1 = saj ]] && { dmr;sa;jrn "-u $s20"; }
+[[ $1 = maj ]] && { dmr;ma;jrn "-u $s14"; }
+[[ $1 = gpa ]] && { gp;dmr;ga;jrn "-u $s10"; }
+[[ $1 = upa ]] && { up;dmr;ua;jrn "-u $s11"; }
+[[ $1 = bpa ]] && { bp;dmr;ba;jrn "-u $s12"; }
+[[ $1 = vpa ]] && { vp;dmr;va;jrn "-u $s13"; }
 [[ $1 = spa ]] && { sp;sa; }
-[[ $1 = mpa ]] && { mp;dmr;ma;jsh "-u $s14"; }
+[[ $1 = mpa ]] && { mp;dmr;ma;jrn "-u $s14"; }
 [[ $1 = gpd ]] && { gp;gd; }
 [[ $1 = upd ]] && { up;ud; }
 [[ $1 = bpd ]] && { bp;bd; }
@@ -643,14 +645,14 @@ function tsh { if tsa $s19;then cex "$s07 $s72-status";cex "$s07 show-$s72";else
 [[ $1 = rpd ]] && { rp;rd; }
 [[ $1 = spd ]] && { sp;sd; }
 [[ $1 = mpd ]] && { mp;md; }
-[[ $1 = gea ]] && { ge;dmr;ga;jsh "-u $s10"; }
-[[ $1 = uea ]] && { ue;dmr;ua;jsh "-u $s11"; }
-[[ $1 = bea ]] && { be;dmr;ba;jsh "-u $s12"; }
-[[ $1 = vea ]] && { ve;dmr;va;jsh "-u $s13"; }
+[[ $1 = gea ]] && { ge;dmr;ga;jrn "-u $s10"; }
+[[ $1 = uea ]] && { ue;dmr;ua;jrn "-u $s11"; }
+[[ $1 = bea ]] && { be;dmr;ba;jrn "-u $s12"; }
+[[ $1 = vea ]] && { ve;dmr;va;jrn "-u $s13"; }
 [[ $1 = rea ]] && { re;dmr;ra; }
 [[ $1 = sea ]] && { se;dmr;sa; }
 [[ $1 = xea ]] && { xe;dmr;xa; }
-[[ $1 = mea ]] && { me;dmr;ma;jsh "-u $s14"; }
+[[ $1 = mea ]] && { me;dmr;ma;jrn "-u $s14"; }
 # enable
 [[ $1 = ge  ]] && { ge; }
 [[ $1 = ue  ]] && { ue; }
@@ -775,6 +777,8 @@ if [[ ! $1 ]];then
   m="$m\nrsh\t\trestart gap show"
   m="$m\nrrs\t\trestart gap reset"
   m="$m\nrpt\t\trestart gap print"
+  m="$m\njsh\t\tjournal logs show"
+  m="$m\njrs\t\tjournal logs reset"
   m="$m\nsnr\t\tremove snapd"
   m="$m\nfsh\t\tfirmware show"
   m="$m\nfrf\t\tfirmware refresh"
