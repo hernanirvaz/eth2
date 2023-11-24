@@ -273,9 +273,10 @@ function brs {
   s3t $p42 && return;touch $p42.a$(stg);if g0t $3;then ssf $3 $p42;s4t $p42 && return;touch $p42.b$(stg);fi;bv0;bro 0 $2;ssw $4 $p42;s4t $p42 && return
   local t=$(sng);local f=$p42.i$(stg);touch $f;local n=0;paf;while fft $f;do ((n+=$(sfn $t)));ssf $(sfn $t) $p42 $t;if ipt $t;then rm $f;crb $1 $2 $n;fi;done;rm -f $p50 $p42.*
 }
+function vrb { cex "$s02 $s13";dmr;if [[ $1 = RS ]];then cex "$s03 $s13";else cex "$s02 $s12";fi;vro $2 $1; }
 function vrs {
-  s3t $p46 && return;vro 0 $1;touch $p46.a$(stg);ssw $2 $p46;s4t $p46 && return;local t=$(sng);local f=$p46.i$(stg);touch $f;local n=0;paf
-  while fft $f;do ((n+=$(sfn $t)));ssf $(sfn $t) $p46 $t;if ipt $t;then rm $f;cex "$s02 $s13";dmr;if [[ $1 = RS ]];then cex "$s03 $s13";else cex "$s02 $s12";fi;vro $n $1;fi;done;rm -f $p50 $p46.*
+  s3t $p46 && return;vro 0 $1;touch $p46.a$(stg);ssw $2 $p46;s4t $p46 && return
+  local t=$(sng);local f=$p46.i$(stg);touch $f;local n=0;paf;while fft $f;do ((n+=$(sfn $t)));ssf $(sfn $t) $p46 $t;if ipt $t;then rm $f;vrb $1 $n   ;fi;done;rm -f $p50 $p46.*
 }
 function brh { head -n${1:-0} $p12; }                                                                                                                         # new cc head lines
 function brl {                                                                                                                                                # recalculate cc logs
