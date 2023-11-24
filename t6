@@ -55,7 +55,7 @@ function v6t { [[ $cunm = $znm2 ]]; }                                           
 function v7t { [[ $cunm = $inm5 ]]; }                                                                                                                         # nuc intel    test
 function v8t { [[ $cunm = $znm4 ]]; }                                                                                                                         # best zotac   test
 function rbt { [[ $(sra) -ge $((60*60*${1:-9})) ]]; }
-function ipt { [[ $(date +%s) -ge $(bss $1 4) ]]; }
+function ipt { [[ $(date +%s) -ge $(bss $1 6) ]]; }
 function pct { [[ $b4 -ne 0 ]]; }
 function hat { [[ $b2 -gt $(si1) ]]; }
 function sdt { [[ $((nd+$(bi1))) -ge $((s60+$(bi2))) ]]; }
