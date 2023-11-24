@@ -48,12 +48,9 @@ else
   othe="$othe --builder-profit-threshold 20000000000000000"                                                                                                   # external payload only if reward >= 0.02 ETH
   othe="$othe --disable-upnp"                                                                                                                                 # disable UPnP support
   othe="$othe --disable-backfill-rate-limiting"                                                                                                               # disable the backfill sync rate-limiting
-  if [[ $cust = hrv ]];then                                                                                                                                   # syncing from finalized checkpoint
-    othe="$othe --checkpoint-sync-url http://$zip4:5052"
-  else
-    # othe="$othe --checkpoint-sync-url https://1q1s6o6cB6Jysu7KKlbLUYiOdAM:8974468780164028652df958a69fbd30@eth2-beacon-mainnet.infura.io"
-    othe="$othe --checkpoint-sync-url https://mainnet.checkpoint.sigp.io"
-  fi
+  # othe="$othe --checkpoint-sync-url http://$zip4:5052"
+  # othe="$othe --checkpoint-sync-url https://mainnet.checkpoint.sigp.io"
+  # othe="$othe --purge-db --checkpoint-sync-url http://$zip4:5052"                                                                                           # use to restart clean DB
   # othe="$othe --disable-lock-timeouts"                                                                                                                      # disable timeouts on internal locks
   # othe="$othe --slasher"
   # othe="$othe --monitoring-endpoint https://beaconcha.in/api/v1/client/metrics?apikey=$B&machine=$(snc $cunm)"                                              # monitor data for beaconcha.in app
