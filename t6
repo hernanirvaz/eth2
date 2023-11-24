@@ -266,12 +266,12 @@ function ero { dts;swn "$(printf 'R%03i %2s SRV'      $2 ${3:-RS} 2>$p03) $(npn 
 function vro { dts;swn "$(printf 'R%03i %6s %10s %5s' $1 $2 $dt   2>$p03)"                >> $p49; }
 function bro { if fft $p12;then dts;bnn;bb0;swn "$(printf 'R%03i %2s %3i' $1 ${2:-$ok} $(bi3) 2>$p03) $(npn $nn $nr)" >> $p12;else vro $1 ${2:-$ok};fi; }
 # slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168; $2 = RB SD VC PE BN BK
+function cpr { snp $s12 $1 $s56 $s57;[[ $2 = VC ]] && sex "$s02 $s13"; }
+function car { sex "$s03 $s12"      ;[[ $1 = VC ]] && sex "$s03 $s13"; }
+function crb { if [[ $2 = RB || $2 = SD ]];then gps;ups;cpr $1 $2;bro $3 $2;rm -f $p50 $p42.*;if [[ $2 = RB ]];then sex reboot;else sex poweroff;fi;else cpr $1 $2;car $2;ssf 90 $p42;bro $3;fi; }
 function brs {
   s3t $p42 && return;touch $p42.a$(stg);if g0t $3;then ssf $3 $p42;s4t $p42 && return;touch $p42.b$(stg);fi;bv0;bro 0 $2;ssw $4 $p42;s4t $p42 && return
-  local t=$(sng);local f=$p42.i$(stg);touch $f;local n=0;paf;while fft $f;do ((n+=$(sfn $t)));ssf $(sfn $t) $p42 $t
-  if ipt $t;then rm $f;snp $s12 $1 $s56 $s57                                                                                                       ;[[ $2 = VC ]] && sex "$s02 $s13"
-    if [[ $2 = RB || $2 = SD ]];then bro $n $2;gps;ups;rm -f $p50 $p42.*;if [[ $2 = RB ]];then sex reboot;else sex poweroff;fi;else sex "$s03 $s12";[[ $2 = VC ]] && sex "$s03 $s13";ssf 90 $p42;bro $n;fi
-  fi;done;rm -f $p50 $p42.*
+  local t=$(sng);local f=$p42.i$(stg);touch $f;local n=0;paf;while fft $f;do ((n+=$(sfn $t)));ssf $(sfn $t) $p42 $t;if ipt $t;then rm $f;crb $1 $2 $n;fi;done;rm -f $p50 $p42.*
 }
 function vrs {
   s3t $p46 && return;vro 0 $1;touch $p46.a$(stg);ssw $2 $p46;s4t $p46 && return;local t=$(sng);local f=$p46.i$(stg);touch $f;local n=0;paf
@@ -521,8 +521,8 @@ function tsh { if tsa $s19;then cex "$s07 $s72-status";cex "$s07 show-$s72";else
 [[ $1 = brs ]] && { touch $p50;brs ${2:-0} BN 0 ${3:-$(btn $s39)}; }
 [[ $1 = crs ]] && { touch $p50;brs ${2:-0} VC 0 ${3:-$s38}; }
 [[ $1 = vrs ]] && { touch $p50;vrs         RS   ${2:-$s38}; }
-[[ $1 = grb ]] && { touch $p50;grs      0  RB   ${2:-$s38}; }
-[[ $1 = urb ]] && { touch $p50;urs      0  RB   ${2:-$s38}; }
+[[ $1 = grb ]] && { touch $p50;grs      0  RB   ${2:-$s39}; }
+[[ $1 = urb ]] && { touch $p50;urs      0  RB   ${2:-$s39}; }
 [[ $1 = brb ]] && { touch $p50;brs      0  RB 0 ${2:-$(btn $s37)}; }
 [[ $1 = bsd ]] && {            brs      0  SD 0 ${2:-$s40}; }
 [[ $1 = ivk ]] && { touch $p50;ivk         PR   ${2:-$s38}; }
