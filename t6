@@ -451,7 +451,6 @@ function luc {                                                                  
   git fetch;if [[ $(echo $2|egrep 'v[0-9]+\.[0-9]+\.[0-9]+') ]];then m=$2;else m=$(git describe --tags $(git rev-list --tags --max-count=1));fi               # fetch (vX.X.X/last) version
   git checkout $m;swb "VAI COMPILAR LIGHTHOUSE $m";FEATURES=modern PROFILE=maxperf make;[[ $? -eq 0 && -x $1 ]] || swb "ERRO COMPILAR $m"                     # checkout stable version & compile
 }
-function jw0 { fft jwt && return;openssl rand -hex 32|tr -d '\n'|tee jwt 1>$p03; }                                                                            # create jwt file
 function ruv { if [[ $1 ]];then swn "RUST OVERRIDE SET $1";rustup override set $1;else swn 'RUST UPDATE';rustup update stable;fi; }                           # set/update rust version
 function tvc {
   swn "$s24";v3t && return;if v2t && tsa $s13;then swn "TRANSFERIR VC -> $(snc $nxvc) (SIM/nao)?";else return;fi;local rsp=nao;read rsp
@@ -494,7 +493,7 @@ function tsh { if tsa $s19;then cex "$s07 $s72-status";cex "$s07 show-$s72";else
 [[ $1 = bmf ]] && { bm0;[[ $2 ]] && b4=$2;bms;v0t && swn "$m" >> $p13;if v4t;then if fft $p45;then bpt && brs 0 RB $s43 $s37;else bpt && brs $b4 PE $s43 $s39;fi;else rbt && brs 0 RB $((s43*10)) $s40;fi; }
 [[ $1 = snr ]] && { cex "$s42 lxd";cex "$s42 core20";cex "$s42 snapd";cex 'apt remove --autoremove snapd -y';echo -e "$s41" > nosnap.pref;cex "mv nosnap.pref $p47";cmw $p47/nosnap.pref 644 root;cex 'apt update'; }
 [[ $1 = mvr ]] && { mvr; }
-[[ $1 = jwt ]] && { [[ $cunm = $znm1 || $cunm = $vnm1 ]] && jw0;if fft jwt;then sjw eth1 $p08/geth;sjw eth1 $p09/data;sjw eth2 $p16;fi; }
+[[ $1 = jwt ]] && { sjw; }
 [[ $1 = lpi ]] && { lpi $p02/.cargo/bin/lighthouse; }
 [[ $1 = luc ]] && { luc $p02/.cargo/bin/lighthouse $2; }
 [[ $1 = ruv ]] && { ruv $2; }

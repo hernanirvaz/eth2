@@ -37,7 +37,7 @@ else
   [[ $cunm = $vnm1 ]] && http=" --http-address $vip1"
   epec=" --eth1-endpoints http://$zip1:8545,https://eth-mainnet.alchemyapi.io/v2/vzq1DD3EX7ipGuKck4440uRuccDdVvTm,https://mainnet.infura.io/v3/65be3572c577449f86d92b2e69cd6b06,https://mainnet.infura.io/v3/2c680650de0443cf8ab433565e47a42d"
   epec=" --eth1-endpoints http://$zip4:8545,http://$zip1:8545"
-  epec=" --execution-endpoint http://$iip5:8551 --execution-jwt $p16/jwt"                                                                                     # MERGE
+  epec=" --execution-endpoint http://$iip5:8551 --execution-jwt $p58/jwt"                                                                                     # MERGE
   epec="$epec --execution-timeout-multiplier 1"                                                                                                               # multiply default execution timeouts
   epec="$epec --suggested-fee-recipient $s26"                                                                                                                 # cc level fees
   othe=''
@@ -54,7 +54,7 @@ else
   # othe="$othe --disable-lock-timeouts"                                                                                                                      # disable timeouts on internal locks
   # othe="$othe --slasher"
   # othe="$othe --monitoring-endpoint https://beaconcha.in/api/v1/client/metrics?apikey=$B&machine=$(snc $cunm)"                                              # monitor data for beaconcha.in app
-  swu 'CONFIGURE BEACON';sex "mkdir -p $p16";cmw $p05 755 $meeu;sau eth2;if [[ -f jwt ]];then sjw eth2 $p16;else swb "needs $p16/jwt";fi
+  swu 'CONFIGURE BEACON';sex "mkdir -p $p16";cmw $p05 755 $meeu;sau eth2;sjw
   echo ${!b[@]}|tr ' ' ',' > $p05/pubkeys;sex "mv $p05/pubkeys $p16";cmw $p16/pubkeys 600 eth2
   cmw $p16 700 eth2;touch $p05/vc_lock;cd $p02                                                                                                                # IMPORTANTE LOCK vc
   pp2p=9000;[[ $cunm = $cub1 ]] && pp2p=9004

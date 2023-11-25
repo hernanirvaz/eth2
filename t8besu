@@ -5,7 +5,7 @@ source /home/eth/eth2/t1
 function jva { local f=$(basename $1);cp $1 $f.sav;cp $1 $f.new;echo -e "$2" >> $f.new;sex "cp $f.new $1"; }                                                  # add lines to end file
 
 swu 'INSTALAR BESU';sex 'apt install default-jdk libjemalloc-dev -y';jva $p36 "$s23";cmw $p36 644 root                                                        # besu execution client needs
-sex "mkdir -p $p09/data";sau eth1;if [[ -f jwt ]];then sjw eth1 $p09/data;else swb "needs $p09/data/jwt";fi;cmw $p09 755 eth1;cmw $p09/data 700 eth1          # create dir & user for ec
+sex "mkdir -p $p09/data";sau eth1;sjw;cmw $p09 755 eth1;cmw $p09/data 700 eth1                                                                                # create dir & user for ec
 unv $1                                                                                                                                                        # download/install besu binaries
 alow='192.168.8.25,192.168.8.31,192.168.8.34'                                                                                                                 # my servers
 maxp=25    # default
@@ -16,7 +16,7 @@ epec="--sync-mode=X_SNAP --data-storage-format=BONSAI"                          
 epec="$epec --p2p-port=$pp2p --rpc-http-enabled=true --rpc-http-host=$zip1"                                                                                   # enable  rpc:8545
 epec="$epec --rpc-http-cors-origins=chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn"                                                                      # for metamask
 epec="$epec --max-peers=$maxp"                                                                                                                                # set p2p connections
-epec="$epec --engine-jwt-secret=$p09/data/jwt --host-allowlist=$alow --engine-host-allowlist=$alow"                                                           # MERGE
+epec="$epec --engine-jwt-secret=$p58/jwt --host-allowlist=$alow --engine-host-allowlist=$alow"                                                           # MERGE
 epec="$epec --Xplugin-rocksdb-high-spec-enabled"                                                                                                              # boost Besu performance
 cat <<-EOF > $s11.service
 [Unit]
