@@ -459,9 +459,9 @@ function tvc {
 function svr { local t='';for t in $(printf '%s\n' $@|sort -u);do curl -sX GET "$s33=$t"|sed -n "$r23";done; }                                                # show mev validator registration
 function mvr { if [[ $(ls $p19/key*.json 2>$p03) ]];then svr $(sed -n "$r28" $p19/key*.json 2>$p03);else svr ${b[@]};fi; }                                    # choose validator keys
 function ibk {
-  local f="$p02/pubkeys.old";sex "cp $p16/pubkeys $f";sex "chown eth:eth $f"
+  local f="$p02/pubkeys.old";cp $p58/pubkeys $f
   echo "$(cat $f)$(for f in $(jq -r .pubkey $p19/key*.json 2>$p03);do printf %s ",0x$f";done)" > $p02/pubkeys.new
-  local f="$p16/pubkeys";sex "cp $p02/pubkeys.new $f";sex "chown eth2:eth2 $f";cmw $f 600;dmr;cex "$s03 $s12"
+  local f="$p58/pubkeys";sex "cp $p02/pubkeys.new $f";cmw $f 400 eth2;dmr;cex "$s03 $s12"
 }
 function ivk {
   v2t && ! fft $p05/vc_lock && [[ -d $p19 && $(ls $p19/key*.json 2>$p03) ]] || return;vrs $1 $2;if tse $s12;then ibk;else swn "\nADICIONAR KEYS pubkeys @($cub1, $cub2)";fi
