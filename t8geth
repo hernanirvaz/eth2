@@ -4,12 +4,15 @@ source /home/eth/eth2/t1
 
 swu 'INSTALAR GETH';sex "mkdir -p $p08/geth";sau eth1;sjw;cmw $p08 755 eth1;cmw $p08/geth 700 eth1
 gtv $1 $2
-maxp=10
-pp2p=30303;[[ $cunm = $cue2 ]] && pp2p=30304
+maxp=20
+pp2p=30303;[[ $cunm = $cun2 ]] && pp2p=30304
 othe="--http.corsdomain 'chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn' --http.vhosts '*'"                                                            # for metamask
 othe="$othe --cache 16384"                                                                                                                                  # NOT recomended after v1.30.0
 othe=''
 othe="$othe --state.scheme=path"                                                                                                                            # full pruning historical states
+apip='127.0.0.1'
+[[ $cunm = $cun1 ]] && apip="$iip5"
+[[ $cunm = $cun2 ]] && apip="$zip4"
 cat <<-EOF > $s10.service
 [Unit]
 Description=geth service
@@ -22,7 +25,7 @@ Group=eth1
 Restart=always
 RestartSec=10
 TimeoutStopSec=300
-ExecStart=$p00/geth --datadir $p08 --mainnet --port $pp2p --http --http.addr $iip5 --authrpc.addr $iip5 --maxpeers $maxp --authrpc.jwtsecret $p58/jwt$othe
+ExecStart=$p00/geth --datadir $p08 --mainnet --port $pp2p --http --http.addr $apip --authrpc.addr $apip --maxpeers $maxp --authrpc.jwtsecret $p58/jwt$othe
 PermissionsStartOnly=true
 ExecStopPost=$p02/eth2/t7 GETHSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 

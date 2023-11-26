@@ -24,10 +24,8 @@ if [[ $cust = hrv ]];then ciec=$zip4;else ciec=$vip1;fi;[[ $cunm = $inm5 ]] && c
 if [[ $cust = hrv ]];then cicc=$zip4;else cicc=$vip1;fi;[[ $cunm = $inm5 ]] && cicc=$iip5
 cuvc=$znm3
 nxvc=$znm3
-cub1=$inm5
-cub2=$znm4
-cue1=$inm5
-cue2=$znm4
+cun1=$inm5
+cun2=$znm4
 cumv=$znm1
 
 p00='/usr/local/bin'
@@ -90,7 +88,7 @@ p57="/etc/nut/upsd.conf"
 p58='/var/lib/jwtethereum'
 
 r00='s%^ *#* *NTP *=.*$%NTP=192.168.8.28 ntp02.oal.ul.pt ntp04.oal.ul.pt time.google.com time.cloudflare.com time.facebook.com%i'
-if [[ $cunm = $cuvc || $cunm = $cub1 || $cunm = $cub2 || $cunm = $cumv ]];then
+if [[ $cunm = $cuvc || $cunm = $cun1 || $cunm = $cun2 || $cunm = $cumv ]];then
   r00="${r00};s%^ *#* *PollIntervalMaxSec *=.*$%PollIntervalMaxSec=1200%i"
 fi
 r01='s%^ *ENABLED=.*$%ENABLED=0%i'
@@ -105,9 +103,9 @@ r09="s%^ *pool  *\([^a-z]\)%# pool \1%;s^ *pool  *ntp.ubuntu.com%pool pool.ntp.o
 r09="${r09};s%^ *#.*restrict.*192.*%restrict 192.168.8.0 mask 255.255.255.0 notrap nomodify%"
 r09="${r09};/^ *#.*Specify/a \\"
 r09="${r09}pool 0.de.pool.ntp.org iburst"
+r09="${r09}\npool 1.de.pool.ntp.org iburst"
 r09="${r09}\npool 0.pt.pool.ntp.org iburst"
 r09="${r09}\npool 0.europe.pool.ntp.org iburst"
-r09="${r09}\npool 1.europe.pool.ntp.org iburst"
 r10="s%--execution-endpoint  *\([^ ]*/\)[0-9\.]*:8551[^ ]*%--execution-endpoint \1$zip4:8551%"
 r11="s%--execution-endpoint  *\([^ ]*/\)[0-9\.]*:8551[^ ]*%--execution-endpoint \1$zip1:8551%"
 r12="s%.*--execution-endpoint  *[^ ]*/\([0-9\.]*\):8551.*%\1%p"
@@ -254,7 +252,7 @@ r54='.nvme_smart_health_information_log.temperature_sensors|join(" ")'
 r55='s%GRUB_CMDLINE_LINUX_DEFAULT *= *"\(..*\)"%GRUB_CMDLINE_LINUX_DEFAULT="\1 pcie_aspm=off"%;s%GRUB_CMDLINE_LINUX_DEFAULT *= *""%GRUB_CMDLINE_LINUX_DEFAULT="pcie_aspm=off"%'
 r56="s%APT::Periodic::Update-Package-Lists.*$%APT::Periodic::Update-Package-Lists \"1\";%i"
 r56="${r56};s%APT::Periodic::Unattended-Upgrade.*$%APT::Periodic::Unattended-Upgrade \""
-if [[ $cunm = $cuvc ]];then r56="${r56}5";elif [[ $cunm = $cub1 ]];then r56="${r56}2";elif [[ $cunm = $cub2 ]];then r56="${r56}1";else r56="${r56}1";fi
+if [[ $cunm = $cuvc ]];then r56="${r56}5";elif [[ $cunm = $cun1 ]];then r56="${r56}2";elif [[ $cunm = $cun2 ]];then r56="${r56}1";else r56="${r56}1";fi
 r56="${r56}\";%i;/APT::Periodic::Unattended-Upgrade/a \\"
 r56="${r56}APT::Periodic::AutocleanInterval \"1\";"
 r57="s%192\.168\.8\.%%g"

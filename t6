@@ -49,7 +49,7 @@ function v0t { g0t $(grep $d0 $p12 2>$p03|wc -l); }                             
 function v1t { [[ $cunm = $nxvc ]]; }                                                                                                                         # vc  next     test
 function v2t { [[ $cunm = $cuvc ]]; }                                                                                                                         # vc  current  test
 function v3t { [[ $cuvc = $nxvc ]]; }                                                                                                                         # vc  transfer test
-function v4t { [[ $cunm = $cub1 ]]; }                                                                                                                         # cc  main     test
+function v4t { [[ $cunm = $cun1 ]]; }                                                                                                                         # cc  main     test
 function v5t { [[ $cunm = $cumv ]]; }                                                                                                                         # mev current  test
 function v6t { [[ $cunm = $znm2 ]]; }                                                                                                                         # ntp main     test
 function v7t { [[ $cunm = $inm5 ]]; }                                                                                                                         # nuc intel    test
@@ -338,9 +338,9 @@ function cpe {
   m=$(sll|sed "$r73");if [[ $m ]];then local i=$(echo "$m"|wc -l);else local i=0;fi;local e=$(echo "$m"|tail -n1);m=''
   local n=$(lll "$r60"|wc -l);local d=;local l=ou
   if g0t $n;then
-    if [[ $cunm = $cuvc   || $cunm = $cub1 || $cunm = $cub2 ]];then m=$(cll "$r58;$r74");local l=cl;fi
+    if [[ $cunm = $cuvc   || $cunm = $cun1 || $cunm = $cun2 ]];then m=$(cll "$r58;$r74");local l=cl;fi
     if [[ $cunm = $cumv                                     ]];then m=$(rll "$r60;$r74");local l=rl;fi
-    if [[ ! $m ]];then if [[ $cunm = $cub1 || $cunm = $cub2 ]];then m=$(ell "$r58;$r74");local l=el;fi;fi
+    if [[ ! $m ]];then if [[ $cunm = $cun1 || $cunm = $cun2 ]];then m=$(ell "$r58;$r74");local l=el;fi;fi
     local d=$(echo "$m"|tail -n1)
   fi
   m="ERRO$(printf '%3i %3i %10s %5s' $i $n $dt 2>$p03)"
@@ -428,7 +428,7 @@ function hsu { sso BESU $s11; }
 function hsb { sso BEAC $s12; }
 function hsv { sso VALI $s13; }
 function hsm { sso MEVB $s14; }
-function hs0 { echo $1;if [[ $cunm = $1 ]];then hsg;hsu;else ssh $(snc $1) "$p53 hse";fi;[[ $1 = $2 ]] || echo $2;if [[ $cunm = $2 ]];then hsb;hsv;cpe;else ssh $(snc $2) "$p53 hsc";fi; }
+function hs0 { echo $1;if [[ $cunm = $1 ]];then hsg;hsu;hsb;hsv;cpe;else ssh $(snc $1) "$p53 hse";ssh $(snc $1) "$p53 hsc";fi; }
 function nsh { $s08 list;$s08 status;$s09 status|sed -n 's%\(Current DNS\).*:%   \1:%ip'; }                                                                   # network/dns info
 function wlp { local e="$1";shift;until [[ $# -lt 1 ]];do e="$e\|$1";shift;done;ll3|grep '\[UFW'|if [[ $e ]];then grep -v "$e";else cat;fi; }
 function c0c { local e="$r11";[[ $(sed -n "$r12" $p04/$s12.service 2>$p03) = $zip1 ]] && e="$r10";sed "$e" $s12.sav > $p04/$s12.service; }                    # cc change el server
@@ -464,7 +464,7 @@ function ibk {
   local f="$p58/pubkeys";sex "cp $p02/pubkeys.new $f";cmw $f 400 eth2;dmr;cex "$s03 $s12"
 }
 function ivk {
-  v2t && ! fft $p05/vc_lock && [[ -d $p19 && $(ls $p19/key*.json 2>$p03) ]] || return;vrs $1 $2;if tse $s12;then ibk;else swn "\nADICIONAR KEYS pubkeys @($cub1, $cub2)";fi
+  v2t && ! fft $p05/vc_lock && [[ -d $p19 && $(ls $p19/key*.json 2>$p03) ]] || return;vrs $1 $2;if tse $s12;then ibk;else swn "\nADICIONAR KEYS pubkeys @($cun1, $cun2)";fi
   if ! tsa $s13;then
     swb 'IMPORTAR CHAVES';sex "chown -R $meeu:$meeu $p17";cmw $p17 755;imk;sex "chown -R eth3:eth3 $p17";cmw $p17 700
     fft $p05/vc_lock || cex "$s03 $s13"
@@ -544,9 +544,9 @@ function tsh { if tsa $s19;then cex "$s07 $s72-status";cex "$s07 show-$s72";else
 [[ $1 = bh  ]] && { bh0 $2; }
 [[ $1 = vh  ]] && { sh0 $p49 $2;[[ $2 ]] || { vl0;swn "VL $(printf '%8i' $(llc $p49) 2>$p03)\n$m"; } }
 [[ $1 = mh  ]] && { sh0 $p52 $2;[[ $2 ]] || { ml0;swn "ML $(printf '%8i' $(llc $p52) 2>$p03)\n$m"; } }
-[[ $1 = hs0 ]] && { hs0 $cue1 $cub1;hs0 $cue2 $cub2;if v2t;then hsv;cpe;else echo $cuvc;ssh $(snc $cuvc) "$p53 hsv";fi;if v5t;then hsm;cpe;else echo $cumv;ssh $(snc $cumv) "$p53 hsm";fi;if v6t;then cpe;else echo $znm2;ssh $(snc $znm2) "$p53 cpe";fi; }
-[[ $1 = hs1 ]] && { hs0 $cue1 $cub1; }
-[[ $1 = hs2 ]] && { hs0 $cue2 $cub2; }
+[[ $1 = hs0 ]] && { hs0 $cun1;hs0 $cun2;if v2t;then hsv;cpe;else echo $cuvc;ssh $(snc $cuvc) "$p53 hsv";fi;if v5t;then hsm;cpe;else echo $cumv;ssh $(snc $cumv) "$p53 hsm";fi;if v6t;then cpe;else echo $znm2;ssh $(snc $znm2) "$p53 cpe";fi; }
+[[ $1 = hs1 ]] && { hs0 $cun1; }
+[[ $1 = hs2 ]] && { hs0 $cun2; }
 [[ $1 = hse ]] && { hsg;hsu; }
 [[ $1 = hsc ]] && { hsb;hsv;cpe; }
 [[ $1 = hsv ]] && { hsv;cpe; }
