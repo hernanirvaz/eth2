@@ -263,7 +263,7 @@ function bh0 {
 function bwd { local n=$((($(date +%s)-s31)/(12*32)-0));for n in $n $((n+1));do curl -sH "$s28" -X POST -d"$(sn0)" "$s32/sync/$n";curl -sH "$s28" -X GET "$s32/proposer/$n";done 2>$p03|jq -r $s35; }
 function bwc { bwd|grep -Ex "$(sn1)"|wc -l; }                                                                                                                 # get my # validators
 function ero { dts;swn "$(printf 'R%03i %2s SRV'      $2 ${3:-RS} 2>$p03) $(npn $en $er)" >> $1  ; }
-function vro { dts;swn "$(printf 'R%03i %6s %10s %5s' $1 $2 $dt   2>$p03)"                >> $p49; }
+function vro { dts;swn "$(printf 'VL%2s %6i %10s %5s' $2 $1 $dt   2>$p03)"                >> $p49; }
 function bro { if fft $p12;then dts;bnn;bb0;swn "$(printf 'R%03i %2s %3i' $1 ${2:-$ok} $(bi3) 2>$p03) $(npn $nn $nr)" >> $p12;else vro $1 ${2:-$ok};fi; }
 # slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168; $2 = RB SD VC PE BN BK
 function cpr { snp $s12 $1 $s56 $s57;[[ $2 = VC ]] && sex "$s02 $s13"; }
