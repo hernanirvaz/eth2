@@ -310,17 +310,17 @@ r60="$r60;s%Get *..[^\" ]+..: *%GET %"
 r60="$r60;s%Post *..[^\" ]+..: *%POST %"
 r60="$r60;s%context deadline exceeded *%deadline %"
 r60="$r60;s%\(Client.Timeout exceeded while awaiting headers\) *%(Timeout headers)%"
-r61='success'
-r62='Peer.delivering.stale.transactions'
-r63="[ =]INFO \| $r62 "
+r61="[ =]INFO "
+r62="$r61\| DEBG "
+r63='success'
 r64=' autostart.app-snap\| number.of.Error.Log.entries.increased'
 r65='reorg_distance:'
-r66='[ =]INFO \| DEBG '
+r66='elapsed: *'
 r67='time_taken_ms:'
 r68="s%^ *$p01%# $p01%"
 r69="$r57;s%,* *module: *[a-z_:0-9]*%%"
 r70='DEBG.Processed.HTTP.API.request'
-r71='elapsed: *'
+r71='s%.*synchronized: *\([a-z]*\) *%\1%p'
 r72='s%[0-9]*:[0-9]*:[0-9]*%%;s%[0-9]* users*,%%;s% average\([^,]*\).*%\1%;s%  *% %g'
 r73='s%.*hrv-\(zotac\|intel\)[0-9] *\(.*\)%\2%;s%  *% %g'
 r74='s%.*[0-9]*:[0-9]*:[0-9]*\.[0-9][0-9][0-9]?]?[Z ] *(.*)%\1%;s%\t\t*% %g;s%  *% %g'
@@ -331,7 +331,6 @@ r78='DEBG.Cloned.snapshot.for.late.block.skipped.slot'
 r79='block_delay:.+Some\('
 r80='Server\|Offset\|Delay\|Jitter'
 r81='s%^\*\([^ ]*\).*  *\([0-9][0-9]*\.[0-9]*\) *\([-+][0-9][0-9]*\.[0-9]*\) *\([0-9][0-9]*\.[0-9]*\)$%server: \1 offset: \3ms delay: \2ms jitter: \4ms%p'
-r82='s%.*synchronized: *\([a-z]*\) *%\1%p'
 
 w0='{if(match($0,/'
 w1='([0-9]+(\.[0-9]+)?)(µs|ms|s)/,m)){if(m[3]=="s"){m[1]*=1000000};if(m[3]=="ms"){m[1]*=1000};printf("%.0f\n",m[1])}}'
