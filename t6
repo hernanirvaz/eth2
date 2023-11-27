@@ -520,7 +520,7 @@ function tsh { if tsa $s19;then cex "$s07 $s72-status";cex "$s07 show-$s72";else
 [[ $1 = urs ]] && { touch $p50;urs ${2:-0} SR   ${3:-$s40}; }
 [[ $1 = brs ]] && { touch $p50;brs ${2:-0} BN 0 ${3:-$(btn $s39)}; }
 [[ $1 = crs ]] && { touch $p50;brs ${2:-0} VC 0 ${3:-$s38}; }
-[[ $1 = vrs ]] && { touch $p50;vrs         RS   ${2:-$s38}; }
+[[ $1 = vrs ]] && { touch $p50;vrs         RS   ${2:-$s40}; }
 [[ $1 = grb ]] && { touch $p50;grs      0  RB   ${2:-$s39}; }
 [[ $1 = urb ]] && { touch $p50;urs      0  RB   ${2:-$s39}; }
 [[ $1 = brb ]] && { touch $p50;brs      0  RB 0 ${2:-$(btn $s37)}; }
