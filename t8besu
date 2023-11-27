@@ -20,7 +20,7 @@ epec="$epec --engine-jwt-secret=$p58/jwt --host-allowlist=$alow --engine-host-al
 epec="$epec --Xplugin-rocksdb-high-spec-enabled"                                                                                                              # boost Besu performance
 cat <<-EOF > $s11.service
 [Unit]
-Description=besu service
+Description=Besu Execution Client
 Wants=network-online.target
 After=network-online.target
 
@@ -28,11 +28,11 @@ After=network-online.target
 User=eth1
 Group=eth1
 Restart=always
-RestartSec=10
-TimeoutStopSec=300
+RestartSec=60
+TimeoutStopSec=600
+Environment="JAVA_OPTS=-Xmx8g"
 ExecStart=$p00/besu/bin/besu --data-path=$p09/data $epec
-PermissionsStartOnly=true
-ExecStopPost=$p02/eth2/t7 BESUSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
+ExecStopPost=+$p02/eth2/t7 BESUSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 
 [Install]
 WantedBy=multi-user.target
