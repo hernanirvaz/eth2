@@ -8,7 +8,7 @@ zip2='192.168.8.28'
 zip3='192.168.8.31'
 zip4='192.168.8.34'
 iip5='192.168.8.37'
-zipg=$(ip r|grep default|cut -d' ' -f3)
+gipw=$(ip r|sed -En "s%^default.* (192.168.8.[0-9]+) .*$%\1%p")
 znm1='hrv-zotac1'
 znm2='hrv-zotac2'
 znm3='hrv-zotac3'
@@ -149,7 +149,7 @@ for m in $(ip l|sed -n 's%.* \([a-z0-9]*\): .* state UP .*%\1%p'|tail -n1);do
   r16="$r16\n      critical: true"
   r16="$r16\n      routes:"
   r16="$r16\n        - to: 0.0.0.0/0"
-  r16="$r16\n          via: $zipg"
+  r16="$r16\n          via: $gipw"
   r16="$r16\n          metric: 100"
   r16="$r16\n          on-link: true"
   r16="$r16\n      nameservers:"

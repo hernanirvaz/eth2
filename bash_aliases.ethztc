@@ -1,2 +1,2 @@
-alias nt='sudo iftop -i $(ip l|sed -n "s%.* \([a-z0-9]*\): .* state UP .*%\1%p"|tail -n1)'
+alias nt='sudo iftop -nNPBF $(ip r|sed -En "s%^192.* (192.168.8.[0-9]+) *$%\1%p")'
 alias xx='exit'
