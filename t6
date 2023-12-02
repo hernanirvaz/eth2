@@ -542,7 +542,7 @@ function tsh { if tsa $s19;then cex "$s07 $s72-status";cex "$s07 show-$s72";else
 [[ $1 = bh  ]] && { bh0 $2; }
 [[ $1 = vh  ]] && { sh0 $p49 $2;[[ $2 ]] || { vl0;swn "VL $(printf '%8i' $(llc $p49) 2>$p03)\n$m"; } }
 [[ $1 = mh  ]] && { sh0 $p52 $2;[[ $2 ]] || { ml0;swn "ML $(printf '%8i' $(llc $p52) 2>$p03)\n$m"; } }
-[[ $1 = hs0 ]] && { hs0 $cun1;hs0 $cun2;if v2t;then hsv;cpe;else echo $cuvc;ssh $(snc $cuvc) "$p53 hsv";fi;if v5t;then hsm;cpe;else echo $cumv;ssh $(snc $cumv) "$p53 hsm";fi;if v6t;then cpe;else echo $znm2;ssh $(snc $znm2) "$p53 cpe";fi; }
+[[ $1 = hs0 ]] && { if v2t;then hsv;cpe;else echo $cuvc;ssh $(snc $cuvc) "$p53 hsv";fi;hs0 $cun1;hs0 $cun2;if v5t;then hsm;cpe;else echo $cumv;ssh $(snc $cumv) "$p53 hsm";fi;if v6t;then cpe;else echo $znm2;ssh $(snc $znm2) "$p53 cpe";fi; }
 [[ $1 = hs1 ]] && { hs0 $cun1; }
 [[ $1 = hs2 ]] && { hs0 $cun2; }
 [[ $1 = hse ]] && { hsg;hsu; }
