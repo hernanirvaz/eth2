@@ -158,10 +158,10 @@ function bi0 { nu2 "0.8*$b3+0.8*$nn"                                            
 function bi1 { nu2 "(0.70*$i0+0.10*$i1+0.14*$i4+0.03*$b1+0.01*$i2+0.02*$i3)"          ; }                                                                     # get imported/observed/skipped/reorg/http/pscore data
 function bi2 { nu2 "($1*$s48+$2*$s49+$3*$s50+$4*$s51)/${5:-1}*$s55/1000000" 7         ; }                                                                     # get penalty
 function bi3 { nu2 "($1*$s47+$2*$s46)*$s55/100000000"                       7         ; }                                                                     # get reward
-function bi4 { nu2 "(30.0*(0.4*$zk+0.3*$zz+0.2*$zx+0.1*$zw))"                         ; }                                                                     # get numerator paid errors
+function bi4 { nu2 "(20.0*(0.4*$zk+0.3*$zz+0.2*$zx+0.1*$zw))"                         ; }                                                                     # get numerator paid errors
 function bi5 { nu0 $(((z5>400?$(bi4)/z5:0)+(z2>100?$(bw0)/z2:0)+(z4>500?$(bf0)/z4:0))); }                                                                     # get restart idx
 function bw0 { nu0 $((2*z1))                                                          ; }                                                                     # get numerator processed blocks
-function bf0 { nu0 $((15*z3))                                                         ; }                                                                     # get numerator general errors
+function bf0 { nu0 $((9*z3))                                                          ; }                                                                     # get numerator general errors
 function bsi { nu0 $(echo $@|jq -r .data.sync_distance 2>$p03)                        ; }                                                                     # get cl syncing distance
 function bpc { nu0 $(echo $@|jq -r .data.connected     2>$p03)                        ; }                                                                     # get cl peers connected
 function bv0 { nn=$(ss5 $s12 target-peers); }                                                                                                                 # set configured peers
