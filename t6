@@ -315,11 +315,11 @@ function tmp {
 function clk {
   if [[ $($s07|sed -n "$r71") = yes ]];then local e='OK';else local e='NO';fi
   if tsa $s19;then
-    local e="CSYS $e";m="$(printf '%-40s' "$(ss2 $s19)" 2>$p03) $(echo $($s07 $s72-status|grep "$r80"|sed "$r76"|tr $s70 $s71))"
+    local e="CSYS $e";m="$(printf '%-40s' "$(ss2 $s19)" 2>$p03) $(echo $($s07 $s72-status|sed -En "$r76"|tr $s70 $s71))"
   else
-    local e="CNTP $e";m="$(printf '%-40s' "$(ss2 ntp)"  2>$p03) $(ntpq -p|sed -n "$r81")"
+    local e="CNTP $e";m="$(printf '%-40s' "$(ss2 ntp)"  2>$p03) $(ntpq -p|sed -En "$r81")"
   fi;dts
-  if tsa $s12;then swn "$e $(nu1 %3i $(ll2 $r32.*clock|wc -l)) $dt $m";else swn "$e     $dt $m";fi                                                            # clock sync info
+  if tsa $s12;then swn "$e $(nu1 %3i $(ll2 $r32.*clock|wc -l)) $dt $m";else swn "$e     $dt $m";fi
 }
 function sif {
   if [[ $(cat $p44 2>$p03) -eq 0 ]];then local e=off;else local e=on;fi;if [[ $(cat $p43 2>$p03) -eq 1 ]];then local d=off;else local d=on;fi;local i=$(fl1);local n=$(fl2)
