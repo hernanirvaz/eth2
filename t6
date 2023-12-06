@@ -154,7 +154,7 @@ function ul0 {                                                                  
 # cc control commands
 function bcl { curl -sX GET "http://$cicc:5052/eth/v1/node/$1" -H "accept: application/json" 2>$p03; }                                                        # exec RPC HTTP
 function ei0 { nu2 "(0.823*$e1+0.177*$e2)"                                            ; }                                                                     # get imported/updated/rejected data
-function bi0 { nu2 "0.8*$b3+0.8*$nn"                                                  ; }                                                                     # get change peers limit
+function bi0 { nu2 "0.5*$b3+0.5*$nn"                                                  ; }                                                                     # get change peers limit
 function bi1 { nu2 "(0.70*$i0+0.10*$i1+0.14*$i4+0.03*$b1+0.01*$i2+0.02*$i3)"          ; }                                                                     # get imported/observed/skipped/reorg/http/pscore data
 function bi2 { nu2 "($1*$s48+$2*$s49+$3*$s50+$4*$s51)/${5:-1}*$s55/1000000" 7         ; }                                                                     # get penalty
 function bi3 { nu2 "($1*$s47+$2*$s46)*$s55/100000000"                       7         ; }                                                                     # get reward
