@@ -102,10 +102,10 @@ function sso {
 }
 # el control commands
 function grs {
-  s2t $p40 && return;gv0;gq0;ero $p10 0 $2;touch $p40.a$(stg);ssw $3 $p40;s1t $p40 && return
+  s2t $p40 && return;gv0;gq0;ero $1 0 $p10;touch $p40.a$(stg);ssw $3 $p40;s1t $p40 && return
   local t=$(sng);local f=$p40.i$(stg);touch $f;local n=0;paf;while fft $f;do ((n+=$(sfn $t)));ssf $(sfn $t) $p40 $t
-  if ipt $t;then rm $f;snp $s10 $1 10 50 $en
-    if [[ $2 = RB ]];then ero $p10 $n $2;rm -f $p50 $p40.*;sex reboot;else sex "$s03 $s10";ssf 90 $p40;gq0;ero $p10 $n $2;fi
+  if ipt $t;then rm $f;snp $s10 $2 10 50 $en
+    if [[ $1 = RB ]];then ero $1 $n $p10;rm -f $p50 $p40.*;sex reboot;else sex "$s03 $s10";ssf 90 $p40;gq0;ero $1 $n $p10;fi
   fi;done;rm -f $p50 $p40.*
 }
 function gdi { if g0t $1;then l4=$(ll2 $r35|tail -n$1);else l4=$(ll2 $r35);fi;e1=$(nu5 3 $(ln2 "$w0$r42$w2")); }                                              # get delay imported
@@ -127,10 +127,10 @@ function gl0 {                                                                  
   fi
 }
 function urs {
-  s2t $p41 && return;uv0;uq0;ero $p11 0 $2;touch $p41.a$(stg);ssw $3 $p41;s1t $p41 && return
+  s2t $p41 && return;uv0;uq0;ero $1 0 $p11;touch $p41.a$(stg);ssw $3 $p41;s1t $p41 && return
   local t=$(sng);local f=$p41.i$(stg);touch $f;local n=0;paf;while fft $f;do ((n+=$(sfn $t)));ssf $(sfn $t) $p41 $t
-  if ipt $t;then rm $f;snp $s11 $1 10 50 $en
-    if [[ $2 = RB ]];then ero $p11 $n $2;rm -f $p50 $p41.*;sex reboot;else sex "$s03 $s11";ssf 90 $p41;uq0;ero $p11 $n $2;fi
+  if ipt $t;then rm $f;snp $s11 $2 10 50 $en
+    if [[ $1 = RB ]];then ero $1 $n $p11;rm -f $p50 $p41.*;sex reboot;else sex "$s03 $s11";ssf 90 $p41;uq0;ero $1 $n $p11;fi
   fi;done;rm -f $p50 $p41.*
 }
 function udi { if g0t $1;then l4=$(ll2 $r35|tail -n$1);else l4=$(ll2 $r35);fi;e1=$(nu5 3 $(ln2 "$w0$r43$w2")); }                                              # get delay imported
@@ -260,21 +260,21 @@ function bh0 {
 # function brd { local n=$((($(date +%s)-s31)/(12*32)-2));curl -sH "$s28" -X POST -d"$(sn0)" "$s68/attestations/$n" 2>$p03|jq -r $s69; }
 function bwd { local n=$((($(date +%s)-s31)/(12*32)-0));for n in $n $((n+1));do curl -sH "$s28" -X POST -d"$(sn0)" "$s32/sync/$n";curl -sH "$s28" -X GET "$s32/proposer/$n";done 2>$p03|jq -r $s35; }
 function bwc { bwd|grep -Ex "$(sn1)"|wc -l; }                                                                                                                 # get my # validators
-function ero { dts;swn "$(printf 'R%03i %2s SRV'      $2 ${3:-RS} 2>$p03) $(npn $en $er)" >> $1  ; }
-function vro { dts;swn "$(printf 'VL%2s %6i %10s %5s' $2 $1 $dt   2>$p03)"                >> $p49; }
-function bro { if fft $p12;then dts;bnn;bb0;swn "$(printf 'R%03i %2s %3i' $1 ${2:-$ok} $(bi5) 2>$p03) $(npn $nn $nr)" >> $p12;else vro $1 ${2:-$ok};fi; }
+function ero { dts;swn "$(printf 'R%03i %2s SRV'      $2 $1     2>$p03) $(npn $en $er)" >> $3  ; }
+function vro { dts;swn "$(printf 'VL%2s %6i %10s %5s' $1 $2 $dt 2>$p03)"                >> $p49; }
+function bro { if fft $p12;then dts;bnn;bb0;swn "$(printf 'R%03i %2s %3i' $2 $1 $(bi5) 2>$p03) $(npn $nn $nr)" >> $p12;else vro $1 $2;fi; }
 # slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168; $2 = RB SD VC PE BN BK
-function cpr { snp $s12 $1 $s56 $s57 $nn;[[ $2 = VC ]] && sex "$s02 $s13"; }
+function cpr { snp $s12 $2 $s56 $s57 $nn;[[ $1 = VC ]] && sex "$s02 $s13"; }
 function car { sex "$s03 $s12"          ;[[ $1 = VC ]] && sex "$s03 $s13"; }
-function crb { if [[ $2 = RB || $2 = SD ]];then gps;ups;bro $3 $2;cpr $1 $2;rm -f $p50 $p42.*;if [[ $2 = RB ]];then sex reboot;else sex poweroff;fi;else cpr $1 $2;car $2;ssf 90 $p42;bro $3;fi; }
-function vrb { cex "$s02 $s13";dmr;if [[ $1 = RS ]];then cex "$s03 $s13";else cex "$s02 $s12";fi;vro $2 $1; }
+function crb { if [[ $1 = RB || $1 = SD ]];then gps;ups;bro $1 $3;cpr $1 $2;rm -f $p50 $p42.*;if [[ $1 = RB ]];then sex reboot;else sex poweroff;fi;else cpr $1 $2;car $1;ssf 90 $p42;bro $1 $3;fi; }
+function vrb { cex "$s02 $s13";dmr;if [[ $1 = RS ]];then cex "$s03 $s13";else cex "$s02 $s12";fi;vro $1 $2; }
 function brs {
-  s3t $p42 && return;touch $p42.a$(stg);if g0t $3;then ssf $3 $p42;s4t $p42 && return;touch $p42.b$(stg);fi;bv0;bro 0 $2;ssw $4 $p42;s4t $p42 && return
+  s3t $p42 && return;touch $p42.a$(stg);if g0t $3;then ssf $3 $p42;s4t $p42 && return;touch $p42.b$(stg);fi;bv0;bro $1 0;ssw $4 $p42;s4t $p42 && return
   local t=$(sng);local f=$p42.i$(stg);touch $f;local n=0;paf;while fft $f;do ((n+=$(sfn $t)));ssf $(sfn $t) $p42 $t;if ipt $t;then rm $f;crb $1 $2 $n;fi;done;rm -f $p50 $p42.*
 }
 function vrs {
-  s3t $p46 && return;vro 0 $1;touch $p46.a$(stg);ssw $2 $p46;s4t $p46 && return
-  local t=$(sng);local f=$p46.i$(stg);touch $f;local n=0;paf;while fft $f;do ((n+=$(sfn $t)));ssf $(sfn $t) $p46 $t;if ipt $t;then rm $f;vrb $1 $n   ;fi;done;rm -f $p50 $p46.*
+  s3t $p46 && return;vro $1 0;touch $p46.a$(stg);ssw $2 $p46;s4t $p46 && return
+  local t=$(sng);local f=$p46.i$(stg);touch $f;local n=0;paf;while fft $f;do ((n+=$(sfn $t)));ssf $(sfn $t) $p46 $t;if ipt $t;then rm $f;vrb $1    $n;fi;done;rm -f $p50 $p46.*
 }
 function brh { head -n${1:-0} $p12; }                                                                                                                         # new cc head lines
 function brl {                                                                                                                                                # recalculate cc logs
@@ -476,7 +476,7 @@ function sns { local n=$((($1-s36)/32));for n in $n $((n+1));do curl -sH "$s28" 
 function sng { local t=$(((($(date +%s)-s31)/12)+s36));local e=0;local i=0;local s=0;for s in $(sns $t|sort -nu);do if ((s<t));then continue;else if (((s-t)>e));then e=$((s-t));i=$t;fi;fi;t=$((s+1));done;printf '%s %i' $(date -d@$((s31+i*12)) +%T) $((e*12)); }
 function bcc { printf p;if v4t;then if bpt;then if rbt $s44;then printf r;else printf c;fi;else if bdt;then printf d;else printf _;fi;fi;else if rbt;then printf r;else if bdt;then printf d;else printf _;fi;fi;fi;printf :; }
 function btn { if v4t;then printf $1;else printf $s40;fi; }
-function irb { rm -f $p39.*;if rbt $1;then if v2t;then brs 0 RB 0 $s39;else gps;ups;bps;sex reboot;fi;else if fft $p45;then touch $p39.$1.hours;fi;fi; }
+function irb { rm -f $p39.*;if rbt $1;then if v2t;then brs RB 0 0 $s39;else gps;ups;bps;sex reboot;fi;else if fft $p45;then touch $p39.$1.hours;fi;fi; }
 function gp0 { if tsa $s10;then bp;gp;local i=$(pt2 $(pex "du -s $p08"));sudo -u eth1 geth --datadir $p08 $@;local n=$(pt2 $(pex "du -s $p08"));echo "fs-diff $(((i-n)/1024/1024))M $@";dmr;ga;ba;fi; }
 function fsc { local f="$1-check";sex "touch $f";sex "chown eth:eth $f";if [[ -w $f ]];then sex "rm -f $f";else gps;ups;bps;sex reboot;fi; }
 # ntpq -p output
@@ -488,7 +488,7 @@ function fsc { local f="$1-check";sex "touch $f";sex "chown eth:eth $f";if [[ -w
 function tsh { if tsa $s19;then cex "$s07 $s72-status";cex "$s07 show-$s72";else swb ntpq;ntpq -p;fi; }
 
 [[ $1 = irb ]] && { irb $2;pas; }
-[[ $1 = bmf ]] && { bm0;[[ $2 ]] && b4=$2;bms;v0t && swn "$m" >> $p13;if v4t;then if fft $p45;then bpt && brs 0 RB $s43 $s37;else bpt && brs $b4 PE $s43 $s39;fi;else rbt && brs 0 RB $((s43*10)) $s40;fi; }
+[[ $1 = bmf ]] && { bm0;[[ $2 ]] && b4=$2;bms;v0t && swn "$m" >> $p13;if v4t;then if fft $p45;then bpt && brs RB 0 $s43 $s37;else bpt && brs PE $b4 $s43 $s39;fi;else rbt && brs RB 0 $((s43*10)) $s40;fi; }
 [[ $1 = snr ]] && { cex "$s42 lxd";cex "$s42 core20";cex "$s42 snapd";cex 'apt remove --autoremove snapd -y';echo -e "$s41" > nosnap.pref;cex "mv nosnap.pref $p47";cmw $p47/nosnap.pref 644 root;cex 'apt update'; }
 [[ $1 = mvr ]] && { mvr; }
 [[ $1 = jwt ]] && { sjw; }
@@ -514,22 +514,22 @@ function tsh { if tsa $s19;then cex "$s07 $s72-status";cex "$s07 show-$s72";else
 [[ $1 = tvc ]] && { tvc; }
 [[ $1 = tmp ]] && { dts;tmp s; }
 [[ $1 = sif ]] && { dts;sif s; }
-[[ $1 = grs ]] && { touch $p50;grs ${2:-0} SR   ${3:-$s40}; }
-[[ $1 = urs ]] && { touch $p50;urs ${2:-0} SR   ${3:-$s40}; }
-[[ $1 = brs ]] && { touch $p50;brs ${2:-0} BN 0 ${3:-$(btn $s39)}; }
-[[ $1 = crs ]] && { touch $p50;brs ${2:-0} VC 0 ${3:-$s38}; }
-[[ $1 = vrs ]] && { touch $p50;vrs         RS   ${2:-$s40}; }
-[[ $1 = grb ]] && { touch $p50;grs      0  RB   ${2:-$s39}; }
-[[ $1 = urb ]] && { touch $p50;urs      0  RB   ${2:-$s39}; }
-[[ $1 = brb ]] && { touch $p50;brs      0  RB 0 ${2:-$(btn $s37)}; }
-[[ $1 = bsd ]] && {            brs      0  SD 0 ${2:-$s40}; }
-[[ $1 = ivk ]] && { touch $p50;ivk         PR   ${2:-$s38}; }
+[[ $1 = grs ]] && { touch $p50;grs SR ${2:-0}   ${3:-$s40}; }
+[[ $1 = urs ]] && { touch $p50;urs SR ${2:-0}   ${3:-$s40}; }
+[[ $1 = brs ]] && { touch $p50;brs BN ${2:-0} 0 ${3:-$(btn $s39)}; }
+[[ $1 = crs ]] && { touch $p50;brs VC ${2:-0} 0 ${3:-$s38}; }
+[[ $1 = vrs ]] && { touch $p50;vrs RS           ${2:-$s40}; }
+[[ $1 = grb ]] && { touch $p50;grs RB      0    ${2:-$s39}; }
+[[ $1 = urb ]] && { touch $p50;urs RB      0    ${2:-$s39}; }
+[[ $1 = brb ]] && { touch $p50;brs RB      0  0 ${2:-$(btn $s37)}; }
+[[ $1 = bsd ]] && {            brs SD      0  0 ${2:-$s40}; }
+[[ $1 = ivk ]] && { touch $p50;ivk PR           ${2:-$s38}; }
 [[ $1 = ul  ]] && { ul0;swn "$m"; }
-[[ $1 = ulf ]] && { ul0;swn "$m" >> $p11;[[ $ok != OK ]] && urs 0 $ok $s40; }
+[[ $1 = ulf ]] && { ul0;swn "$m" >> $p11;[[ $ok != OK ]] && urs $ok 0 $s40; }
 [[ $1 = gl  ]] && { gl0;swn "$m"; }
-[[ $1 = glf ]] && { v7t && fsc $p08/$s10;gl0;swn "$m" >> $p10;[[ $ok != OK ]] && grs 0 $ok $s40; }
+[[ $1 = glf ]] && { v7t && fsc $p08/$s10;gl0;swn "$m" >> $p10;[[ $ok != OK ]] && grs $ok 0 $s40; }
 [[ $1 = bl  ]] && { bl0;swn "$m"; }
-[[ $1 = blf ]] && { bl0;swn "$m" >> $p12;if [[ $d1 = 23:58 ]];then if bdt;then bdl $d0;else if [[ $(llc $p12) -gt $s68 ]];then bod 0 9;fi;fi;fi;[[ $ok != OK ]] && v4t && brs 0 $ok 0 $s39;pas; }
+[[ $1 = blf ]] && { bl0;swn "$m" >> $p12;if [[ $d1 = 23:58 ]];then if bdt;then bdl $d0;else if [[ $(llc $p12) -gt $s68 ]];then bod 0 9;fi;fi;fi;[[ $ok != OK ]] && v4t && brs $ok 0 0 $s39;pas; }
 [[ $1 = vl  ]] && { vl0;swn "$m"; }
 [[ $1 = vlf ]] && { vl0;swn "$m" >> $p49; }
 [[ $1 = ml  ]] && { ml0;swn "$m"; }
