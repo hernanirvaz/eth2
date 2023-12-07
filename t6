@@ -71,7 +71,7 @@ function si2 { local n=${1:-0};printf %i $((1000*n)) 2>$p03; }
 function svi { local n=${1:-0};if g0t $n;then l4=$(ll1 $r44|tail -n$n);else l4=$(ll1 $r44);fi;i0=$(nu5 3 $(ln2 "$w0$r45$w2"));i1=$(nu5 3 $(ln2 "$w0$r46$w2"));l6=$(ll2 $r32.*$r65);b1=$(nu3 $(ln1 $r65));if g0t $n;then l4=$(ll1 $r70|tail -n$(si2 $n));else l4=$(ll1 $r70);fi;i2=$(nu5 0 $(ln2 "$w0$r66$w1"));if g0t $n;then l6=$(ll1 $r38|tail -n$(si1 $n));else l6=$(ll1 $r38);fi;i3=$(nu5 2 $(ln1 $r36));if g0t $n;then l4=$(ll1 $r78|tail -n$n);else l4=$(ll1 $r78);fi;i4=$(nu5 3 $(ln2 "$w0$r79$w2")); }
 function svv { if v2t;then l6=$(ll5 $r37 $1);v0=$(nu4 1 $(ln1 $r53 ".*$iip5"));v1=$(nu4 1 $(ln1 $r53 ".*$zip4"));l6=$(ll5 $r39 $(($1/2)));v2=$(nu4 1 $(ln1 $r67));else v0=0;v1=0;v2=0;fi; }
 function spc { nn=$2;cp $p04/$1.service $p02/$1.sav;sed "s%peers\([ =]*\)[0-9]*%peers\1$2%" $p02/$1.sav > $p04/$1.service;dmr; }                              # service configuration change/reload
-function snp { sft $1 || return;local n=$(($2+nn));(($2!=0&&n>=$3&&n<=$4)) && spc $1 $n;tsa $1 && sex "$s02 $1"; }                                            # service peers change/stop
+function snp { sft $1 || return;local n=$(($2+$5));(($2!=0&&n>=$3&&n<=$4)) && spc $1 $n;tsa $1 && sex "$s02 $1"; }                                            # service peers change/stop
 function sra { if fft $p45;then nu0 $(($(date +%s)-$(date -r $p45 +%s)));else printf %i;fi }                                                                  # system reboot age (secounds)
 function dts { read       d0 d1   <<< ${1:-$(date '+%F %H:%M')};dt="$d0 $d1"; }                                                                               # set date/time vars
 function dtl { read _ _ _ d0 d1 _ <<< $(bff|tail -n1)          ;dt="$d0 $d1"; }                                                                               # set date/time vars with last beacon log
@@ -104,7 +104,7 @@ function sso {
 function grs {
   s2t $p40 && return;gv0;gq0;ero $p10 0 $2;touch $p40.a$(stg);ssw $3 $p40;s1t $p40 && return
   local t=$(sng);local f=$p40.i$(stg);touch $f;local n=0;paf;while fft $f;do ((n+=$(sfn $t)));ssf $(sfn $t) $p40 $t
-  if ipt $t;then rm $f;snp $s10 $1 10 50
+  if ipt $t;then rm $f;snp $s10 $1 10 50 $en
     if [[ $2 = RB ]];then ero $p10 $n $2;rm -f $p50 $p40.*;sex reboot;else sex "$s03 $s10";ssf 90 $p40;gq0;ero $p10 $n $2;fi
   fi;done;rm -f $p50 $p40.*
 }
@@ -129,7 +129,7 @@ function gl0 {                                                                  
 function urs {
   s2t $p41 && return;uv0;uq0;ero $p11 0 $2;touch $p41.a$(stg);ssw $3 $p41;s1t $p41 && return
   local t=$(sng);local f=$p41.i$(stg);touch $f;local n=0;paf;while fft $f;do ((n+=$(sfn $t)));ssf $(sfn $t) $p41 $t
-  if ipt $t;then rm $f;snp $s11 $1 10 50
+  if ipt $t;then rm $f;snp $s11 $1 10 50 $en
     if [[ $2 = RB ]];then ero $p11 $n $2;rm -f $p50 $p41.*;sex reboot;else sex "$s03 $s11";ssf 90 $p41;uq0;ero $p11 $n $2;fi
   fi;done;rm -f $p50 $p41.*
 }
@@ -264,8 +264,8 @@ function ero { dts;swn "$(printf 'R%03i %2s SRV'      $2 ${3:-RS} 2>$p03) $(npn 
 function vro { dts;swn "$(printf 'VL%2s %6i %10s %5s' $2 $1 $dt   2>$p03)"                >> $p49; }
 function bro { if fft $p12;then dts;bnn;bb0;swn "$(printf 'R%03i %2s %3i' $1 ${2:-$ok} $(bi5) 2>$p03) $(npn $nn $nr)" >> $p12;else vro $1 ${2:-$ok};fi; }
 # slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168; $2 = RB SD VC PE BN BK
-function cpr { snp $s12 $1 $s56 $s57;[[ $2 = VC ]] && sex "$s02 $s13"; }
-function car { sex "$s03 $s12"      ;[[ $1 = VC ]] && sex "$s03 $s13"; }
+function cpr { snp $s12 $1 $s56 $s57 $nn;[[ $2 = VC ]] && sex "$s02 $s13"; }
+function car { sex "$s03 $s12"          ;[[ $1 = VC ]] && sex "$s03 $s13"; }
 function crb { if [[ $2 = RB || $2 = SD ]];then gps;ups;bro $3 $2;cpr $1 $2;rm -f $p50 $p42.*;if [[ $2 = RB ]];then sex reboot;else sex poweroff;fi;else cpr $1 $2;car $2;ssf 90 $p42;bro $3;fi; }
 function vrb { cex "$s02 $s13";dmr;if [[ $1 = RS ]];then cex "$s03 $s13";else cex "$s02 $s12";fi;vro $2 $1; }
 function brs {
