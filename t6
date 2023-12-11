@@ -58,7 +58,7 @@ function rbt { [[ $(sra) -ge $((60*60*${1:-9})) ]]; }
 function ipt { [[ $(date +%s) -ge $(bss $1 6) ]]; }
 function pct { [[ $b4 -ne 0 ]]; }
 function hat { [[ $b2 -gt $(bi0) ]]; }
-function bdt { [[ $(bi2 $zk $zz $zx $zw) -ge $s60 ]]; }
+function bdt { [[ $(bi3 $zk $zz $zx $zw) -ge $s60 ]]; }
 function pmt { [[ $nm -ge $((nn-5)) ]]; }
 function fft { [[ -f $1 ]]; }
 function sft { [[ -f $p04/$1.service ]]; }
@@ -156,23 +156,24 @@ function bcl { curl -sX GET "http://$cicc:5052/eth/v1/node/$1" -H "accept: appli
 function ei0 { nu2 "(0.823*$e1+0.177*$e2)"                                            ; }                                                                     # get imported/updated/rejected data
 function bi0 { nu2 "0.5*$b3+0.5*$nn"                                                  ; }                                                                     # get change peers limit
 function bi1 { nu2 "(0.70*$i0+0.10*$i1+0.14*$i4+0.03*$b1+0.01*$i2+0.02*$i3)"          ; }                                                                     # get imported/observed/skipped/reorg/http/pscore data
-function bi2 { nu2 "($1*$s48+$2*$s49+$3*$s50+$4*$s51)/${5:-1}*$s55/1000000" 7         ; }                                                                     # get penalty
-function bi3 { nu2 "($1*$s47+$2*$s46)*$s55/100000000"                       7         ; }                                                                     # get reward
+function bi2 { nu2 "(($1*$s48+$2*$s49+$3*$s50+$4*$s51)/${5:-1}*$s55/1000000)      " 7 ; }                                                                     # get penalty
+function bi3 { nu2 "(($1*$s48+$2*$s49+$3*$s50+$4*$s51)/${5:-1}*$s55/1000000)+2*$nr" 7 ; }                                                                     # get penalty delete idx
 function bi4 { nu2 "(20.0*(0.4*$zk+0.3*$zz+0.2*$zx+0.1*$zw))"                         ; }                                                                     # get numerator paid errors
-function bi5 { nu0 $(((z5>400?$(bi4)/z5:0)+(z2>100?$(bw0)/z2:0)+(z4>500?$(bf0)/z4:0))); }                                                                     # get restart idx
-function bw0 { nu0 $((2*z1))                                                          ; }                                                                     # get numerator processed blocks
-function bf0 { nu0 $((9*z3))                                                          ; }                                                                     # get numerator general errors
+function bi5 { nu2 "($1*$s47+$2*$s46)*$s55/100000000"                       7         ; }                                                                     # get reward
+function bi6 { nu2 "2*$z1"                                                            ; }                                                                     # get numerator processed blocks
+function bi7 { nu2 "9*$z3"                                                            ; }                                                                     # get numerator general errors
+function bi8 { nu0 $(((z5>400?$(bi4)/z5:0)+(z2>100?$(bi6)/z2:0)+(z4>500?$(bi7)/z4:0))); }                                                                     # get restart idx
 function bsi { nu0 $(echo $@|jq -r .data.sync_distance 2>$p03)                        ; }                                                                     # get cl syncing distance
 function bpc { nu0 $(echo $@|jq -r .data.connected     2>$p03)                        ; }                                                                     # get cl peers connected
 function bv0 { nn=$(ss5 $s12 target-peers); }                                                                                                                 # set configured peers
 function bs0 { l0=$(ll2 $r32.*$s54]|tail -n1000); }                                                                                                           # set last cc log lines
 function bs3 { l3=$(ll2 $r32.*$r48); }                                                                                                                        # set attesta log lines
 function bs5 { l5=$(echo "$l1"|sed -En "s%.+node$1:.+er: +([0-9]+) +([0-9]+) +([0-9]+) +([0-9]+).+%\1\t\2\t\3\t\4%p" 2>$p03); }                               # set penalty errors log lines
-function bb0 { bs0;bs3;bl1;bl2;[[ (1 -eq $(era $p12 $s52) && $(bi5) -ge 1) || (1 -eq $(era $p12 5) && $(bi5) -ge 5) ]] && ok=BK; }                            # set ok (OK/BK)
+function bb0 { bs0;bs3;bl1;bl2;[[ (1 -eq $(era $p12 $s52) && $(bi8) -ge 1) || (1 -eq $(era $p12 5) && $(bi8) -ge 5) ]] && ok=BK; }                            # set ok (OK/BK)
 function bfl { grep "BEAC.*$1"      2>$p03; }                                                                                                                 # filter cc lines
 function bff { grep "BEAC.*$1" $p12 2>$p03; }                                                                                                                 # filter cc log
 function bb1 { if [[ $(echo $@|jq -r .data.is_syncing) = false ]];then printf 'synced';else printf 'syncing: %6i' $(bsi $@);fi; }                             # get cl syncing distance remaining
-function bmp { printf '%5i %3s %3i %5i %4i iosrhp: %4i %4i %4i %2i %4i %3i %4i' ${a[0]} $b5 $b4 $nd $(bi2 $zk $zz $zx $zw) $i0 $i1 $i4 $b1 $i2 $i3 $(bi1) 2>$p03; }
+function bmp { printf '%5i %3s %3i %5i %4i iosrhp: %4i %4i %4i %2i %4i %3i %4i' ${a[0]} $b5 $b4 $nd $(bi3 $zk $zz $zx $zw) $i0 $i1 $i4 $b1 $i2 $i3 $(bi1) 2>$p03; }
 function bl0 { dts;ok=OK;if tsa $s12;then bl3;bv0;bnn;bb0;blo;else m="BSRV NOT ON $dt";fi; }                                                                  # cc report
 function bl1 {                                                                                                                                                # set restart idx vars
   z1=${1:-$(echo "$l0"|grep 'RPC block'|wc -l)};z2=${2:-$(echo "$l0"|grep 'New block'|wc -l)};z3=${3:-$(echo "$l0"|grep -v ' INFO '|wc -l)}                   # set processed/received blocks,error lines
@@ -192,8 +193,8 @@ function vlo { m="VALI $(printf '%6i' $(ll4|fln "$r62"|wc -l) 2>$p03) $dt $(prin
 #    0  1   2          3     4       5  6   7    8    9  10   11  12 13  14 15 16  17 18 19  20  21 22   23   24     25    26   27   28 29   30  31   32
 # BEAC OK   0 2023-10-25 17:12 node70: 77 rp: 3056 2232 ab: 4021  687 0 er:  4  7  83 26  0 201   0  0 1000    0 iosrhp:  712 3585 2994 21 3797  61 1282
 function blo {
-  m="BEAC $ok $(printf '%3i' $(bi5) 2>$p03) $(npn $nn $nr) $(printf 'rp: %4.0f %4.0f ab: %4i %4i %1i' $(bi3 $z5 $b0) $(bi2 $zk $zz $zx $zw) $z5 $(bi4) $b0 2>$p03)"
-  m="$m $(printf 'er: %2i %2i %3i %2i %2i %3i %3i %2i %4i %4i iosrhp: %4i %4i %4i %2i %4i %3i %4i' $zk $zz $zx $zw $z1 $z2 $(bw0) $z3 $z4 $(bf0) $i0 $i1 $i4 $b1 $i2 $i3 $(bi1) 2>$p03)"
+  m="BEAC $ok $(printf '%3i' $(bi8) 2>$p03) $(npn $nn $nr) $(printf 'rp: %4.0f %4.0f ab: %4i %4i %1i' $(bi5 $z5 $b0) $(bi2 $zk $zz $zx $zw) $z5 $(bi4) $b0 2>$p03)"
+  m="$m $(printf 'er: %2i %2i %3i %2i %2i %3i %3i %2i %4i %4i iosrhp: %4i %4i %4i %2i %4i %3i %4i' $zk $zz $zx $zw $z1 $z2 $(bi6) $z3 $z4 $(bi7) $i0 $i1 $i4 $b1 $i2 $i3 $(bi1) 2>$p03)"
 }
 #  0    1   2          3     4       5  6   7     8     9    10    11    12    13    14    15  16  17    18   19     20    21   22   23 24   25  26   27
 # BM   19   4 2023-10-25 17:12 node70: 70 mp:  1168   911   589   670   771   922   796   814 pd: -30  3040  154 iosrhp:  569 4325 3722 21 4016  80 1341
@@ -262,7 +263,7 @@ function bwd { local n=$((($(date +%s)-s31)/(12*32)-0));for n in $n $((n+1));do 
 function bwc { bwd|grep -Ex "$(sn1)"|wc -l; }                                                                                                                 # get my # validators
 function ero { dts;swn "$(printf 'R%03i %2s SRV'      $2 $1     2>$p03) $(npn $en $er)" >> $3  ; }
 function vro { dts;swn "$(printf 'VL%2s %6i %10s %5s' $1 $2 $dt 2>$p03)"                >> $p49; }
-function bro { if fft $p12;then dts;bnn;bb0;swn "$(printf 'R%03i %2s %3i' $2 $1 $(bi5) 2>$p03) $(npn $nn $nr)" >> $p12;else vro $1 $2;fi; }
+function bro { if fft $p12;then dts;bnn;bb0;swn "$(printf 'R%03i %2s %3i' $2 $1 $(bi8) 2>$p03) $(npn $nn $nr)" >> $p12;else vro $1 $2;fi; }
 # slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168; $2 = RB SD VC PE BN BK
 function cpr { snp $s12 $2 $s56 $s57 $nn;[[ $1 = VC ]] && sex "$s02 $s13"; }
 function car { sex "$s03 $s12"          ;[[ $1 = VC ]] && sex "$s03 $s13"; }
