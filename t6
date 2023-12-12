@@ -212,7 +212,7 @@ function bm0 {                                                                  
 }
 function bm1 { local g=${1:-$s56};bs5 $g;[[ $l5 ]] && { bkm $g;bzm $g;bxm $g;bwm $g;bcm $g; };((g<s57)) && bm1 $((g+s58)); }                                  # recursively sum penalty errors arrays
 function bm2 { k[0]=$(($(bnk)));z[0]=$(($(bnz)));x[0]=$(($(bnx)));w[0]=$(($(bnw)));c[0]=$(($(bnc)));a[0]=$(bm3 0);bm7; }                                      # tot err/cnt/penalty arrays
-function bm3 { bi2 ${k[$1]} ${z[$1]} ${x[$1]} ${w[$1]} ${c[$1]} ; }                                                                                           # get penalty from paid err arrays
+function bm3 { bi2 ${k[$1]} ${z[$1]} ${x[$1]} ${w[$1]} ${c[$1]}  ; }                                                                                          # get penalty from paid err arrays
 function bm4 { read -a v <<< $(tail -n1 $p14);bmk;bmz;bmx;bmw;bmc; }                                                                                          # set err/cnt penalty arrays from barqivo
 function bm5 { local g=${2:-$s56};local n=$1;if ((a[g]<n));then b4=$((g-nn));n=${a[$g]};fi;((g<s57)) && bm5 $n $((g+s58)); }                                  # set recursively peer change <- min penalties
 function bm6 { local g=${1:-$s56};k[$g]=0;z[$g]=0;x[$g]=0;w[$g]=0;c[$g]=0;a[$g]=0         ;((g<s57)) && bm6    $((g+s58)); }                                  # ini recursively penalty arrays
