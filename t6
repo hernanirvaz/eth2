@@ -318,7 +318,8 @@ function clk {
   if tsa $s19;then
     local e="CSYS $e";m="$(printf '%-40s' "$(ss2 $s19)" 2>$p03) $(echo $($s07 $s72-status|sed -En "$r76"|tr $s70 $s71))"
   else
-    local e="CNTP $e";m="$(printf '%-40s' "$(ss2 ntp)"  2>$p03) $(ntpq -p|sed -En "$r81")"
+    local n=$(ntpq -pn|sed -En "$r81")
+    local e="CNTP $e";m="$(printf '%-40s' "$(ss2 ntp)"  2>$p03) $(echo $n|sed -E "$r83$(echo $n|sed -En "$r82"|nslookup|sed -En "$r84")%")"
   fi;dts
   if tsa $s12;then swn "$e $(nu1 %3i $(ll2 $r32.*clock|wc -l)) $dt $m";else swn "$e     $dt $m";fi
 }
