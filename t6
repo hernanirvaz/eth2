@@ -309,10 +309,10 @@ function tmp {
   local g=$(printf '%5.0fC %10s %5s' $n $dt 2>$p03);g0t $i && local g="$g $(printf 'sata: %.0fC' $i 2>$p03)";g0t $l && local g="$g $(printf 'nvme: %.0fC' $l 2>$p03)"
   local g="$g $(printf '%s %s' $d $e 2>$p03)";swn "TEMP $g"
 }
-function cl0 { printf "${4%.*}" 2>$p03; }
-function cl1 { if [[ $1 =~ ^[0-9]* ]];then cl0 $(nslookup $1 2>$p03);else cl0 1 2 3 $1;fi; }
-function cl2 { printf "server: $(cl1 ${2:0}) offset: ${4} delay: ${6} jitter: ${8}"        2>$p03; }
-function cl3 { printf "server: $(cl1 ${1:1}) offset: ${9}ms delay: ${8}ms jitter: ${10}ms" 2>$p03; }
+function cl0 { if [[ $1 =~ ^[0-9]+ ]];then cl1 $(nslookup $1 2>$p03);else cl1 1 2 3 $1;fi; }
+function cl1 { printf "${4%.*}"                                                            2>$p03; }
+function cl2 { printf "server: $(cl0 ${2:0}) offset: ${4} delay: ${6} jitter: ${8}"        2>$p03; }
+function cl3 { printf "server: $(cl0 ${1:1}) offset: ${9}ms delay: ${8}ms jitter: ${10}ms" 2>$p03; }
 function clk {
   if [[ $($s07|sed -n "$r71") = yes ]];then local e='OK';else local e='NO';fi
   if tsa $s19;then
