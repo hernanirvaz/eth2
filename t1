@@ -404,57 +404,48 @@ s27="--connection=http://$zip4:5052 --allow-insecure-connections"
 s28='Content-Type: application/json'
 s29='offline-preparation'
 s30='change-operations'
-s31=1606824023
+s31='timesync'
 s32="http://$cicc:5052/eth/v1/validator/duties"
 s33='https://boost-relay.flashbots.net/relay/v1/data/validator_registration?pubkey'
 s34='.data[].slot'
 s35='.data[].validator_index'
-s36=3
-s37=84
-s38=84
-s39=72
-s40=48
-s41='Package: snapd'
-s41="$s41\nPin: release a=*"
-s41="$s41\nPin-Priority: -10"
-s42='snap remove --purge'
-s43=120
-s44=12
-s45=99
-s46=22238623
-s47=19000
-s48=10000
-s49=18800
-s50=4500
-s51=500
-s52=24
-s53=42
-s54=$($s01 $s12 2>$p03|sed -n 's%.*PID: *\([0-9]*\).*%\1%p')
-s55=4000;[[ $s55 -eq 0 ]] && s55=$(curl -sX GET 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=ETH&convert=EUR&CMC_PRO_API_KEY=3ae5f3df-bd71-489d-a9dd-b626995fba31'|sed 's%.*price.:\([0-9]*\.[0-9]*\).*%\1%')
-s56=20
-s57=80
-s58=10
-s59=70
-s60=3000
-s61=2
-s62=200
-s63=20000
-s64=999
-s65=70000
-s66=200000
-s67=100000
-s68=7128
-s69="\n[acp1600]"
-s69="${s69}\n\tdriver = usbhid-ups"
-s69="${s69}\n\tport = auto"
-s69="${s69}\n\tdesc = \"Back-UPS RS 1600MI FW:958.g3 .I USB FW:g3\""
-s69="${s69}\n\tvendorid = 051D"
-s69="${s69}\n\tproductid = 0002"
-s69="${s69}\n\tserial = 5B2213T43068"
-s70='[:upper:]'
-s71='[:lower:]'
-s72='[:space:]'
-s73='timesync'
+s36='Package: snapd'
+s36="$s36\nPin: release a=*"
+s36="$s36\nPin-Priority: -10"
+s37='snap remove --purge'
+
+n00=84
+n01=84
+n02=72
+n03=48
+n04=3
+n05=120
+n06=12
+n07=99
+n08=22238623
+n09=1606824023
+n10=4500
+n11=500
+n12=24
+n13=42
+n14=7128
+n15=100000
+n16=20
+n17=80
+n18=10
+n19=70
+n20=3000
+n21=2
+n22=200
+n23=20000
+n24=999
+n25=70000
+n26=200000
+n27=19000
+n28=10000
+n29=18800
+n30=4000;[[ $n30 -eq 0 ]] && n30=$(curl -sX GET 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=ETH&convert=EUR&CMC_PRO_API_KEY=3ae5f3df-bd71-489d-a9dd-b626995fba31'|sed 's%.*price.:\([0-9]*\.[0-9]*\).*%\1%')
+n31=$($s01 $s12 2>$p03|sed -n 's%.*PID: *\([0-9]*\).*%\1%p')
 
 unset b
 b[ 11766]='0x93bf23a587f11f9eca329a12ef51296b8a9848af8c0fe61201524b14cb85b0c6fbd3e427501cdfa3b28719bd1ed96fff'
