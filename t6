@@ -301,7 +301,7 @@ function bsl {                                                                  
 }
 function bdw { fft $1 || return;cp $1 $1.o;grep -v $2 $1.o > $1;grep $2 $1.o > $1.d; }                                                                        # work to delete cc log day
 function bdl { local d=$(pt0 $1 sai);[[ $d = sai ]] && return;bdw $p12 $d;bdw $p13 $d; }                                                                      #         delete cc log day
-function wif { echo $@|sed 's%[^: ]*: *%%g;s%inactive%off%;s%active%on%' 2>$p03; }                                                                            # get ufw info
+function wif { echo $@|sed "$r82" 2>$p03; }                                                                                                                   # get ufw info
 function sm0 { pex "smartctl --json=c -x $1"|jq -r "$r54" 2>$p03; }
 function sm1 { local s=$(pex "smartctl --json=c -x $1");echo $s|jq -r "$r40" 2>$p03;echo $s|jq -r "$r41" 2>$p03; }
 function sm2 { (sensors 2>$p03;sleep 1;sensors 2>$p03)|sed -n "$r26"; }
@@ -313,13 +313,14 @@ function tmp {
   local g=$(printf '%5.0fC %10s %5s' $n $dt 2>$p03);g0t $i && local g="$g $(printf 'sata: %.0fC' $i 2>$p03)";g0t $l && local g="$g $(printf 'nvme: %.0fC' $l 2>$p03)"
   local g="$g $(printf '%s %s' $d $e 2>$p03)";swn "TEMP $g"
 }
+function cln { echo $(nslookup $1)|sed -En "$r81"; }
+function clf { echo "server: $(cln ${1:1}) offset: ${9}ms delay: ${8}ms jitter: ${10}ms"; }
 function clk {
   if [[ $($s07|sed -n "$r71") = yes ]];then local e='OK';else local e='NO';fi
   if tsa $s19;then
     local e="CSYS $e";m="$(printf '%-40s' "$(ss2 $s19)" 2>$p03) $(echo $($s07 $s72-status|sed -En "$r76"|tr $s70 $s71))"
   else
-    local n=$(ntpq -pn|sed -En "$r81")
-    local e="CNTP $e";m="$(printf '%-40s' "$(ss2 ntp)"  2>$p03) $(echo $n|sed -E "$r83$(echo $n|sed -En "$r82"|nslookup|head -n1|sed -En "$r84")%")"
+    local e="CNTP $e";m="$(printf '%-40s' "$(ss2 ntp)"  2>$p03) $(clf $(ntpq -pn|grep '^*[0-9]'))"
   fi;dts
   if tsa $s12;then swn "$e $(nu1 %3i $(ll2 $r32.*clock|wc -l)) $dt $m";else swn "$e     $dt $m";fi
 }
@@ -334,7 +335,7 @@ function rll { ll2 "$r33"          |fln "$r61" $2|sed -E "$1"; }
 function ell { ll2 "\($r30\|$r31\)"|fln "$r61" $2|sed -E "$1"; }
 function lll { ll2 "$r34"          |fln "$r61" $2|sed -E "$1"; }
 function cpe {
-  clk;[[ $1 = c ]] && return;tmp;[[ $1 = p ]] && return;sif
+  clk;[[ $1 = c ]] && return;tmp;[[ $1 = p ]] && return;sif $1
   m=$(sll|sed "$r73");if [[ $m ]];then local i=$(echo "$m"|wc -l);else local i=0;fi;local e=$(echo "$m"|tail -n1);m=''
   local n=$(lll "$r60"|wc -l);local d=;local l=ou
   if g0t $n;then
