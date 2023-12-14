@@ -301,7 +301,7 @@ function bsl {                                                                  
 }
 function bdw { fft $1 || return;cp $1 $1.o;grep -v $2 $1.o > $1;grep $2 $1.o > $1.d; }                                                                        # work to delete cc log day
 function bdl { local d=$(pt0 $1 sai);[[ $d = sai ]] && return;bdw $p12 $d;bdw $p13 $d; }                                                                      #         delete cc log day
-function wif { echo $@|sed "$r82" 2>$p03; }                                                                                                                   # get ufw info
+function wif { echo $@|sed "$r81" 2>$p03; }                                                                                                                   # get ufw info
 function sm0 { pex "smartctl --json=c -x $1"|jq -r "$r54" 2>$p03; }
 function sm1 { local s=$(pex "smartctl --json=c -x $1");echo $s|jq -r "$r40" 2>$p03;echo $s|jq -r "$r41" 2>$p03; }
 function sm2 { (sensors 2>$p03;sleep 1;sensors 2>$p03)|sed -n "$r26"; }
@@ -313,12 +313,12 @@ function tmp {
   local g=$(printf '%5.0fC %10s %5s' $n $dt 2>$p03);g0t $i && local g="$g $(printf 'sata: %.0fC' $i 2>$p03)";g0t $l && local g="$g $(printf 'nvme: %.0fC' $l 2>$p03)"
   local g="$g $(printf '%s %s' $d $e 2>$p03)";swn "TEMP $g"
 }
-function cln { echo $(nslookup $1)|sed -En "$r81"; }
-function clf { echo "server: $(cln ${1:1}) offset: ${9}ms delay: ${8}ms jitter: ${10}ms"; }
+function cln { nslookup $1|tr $s72 '\t'|cut -f4; }
+function clf { printf "server: $(cln ${1:1}) offset: ${9}ms delay: ${8}ms jitter: ${10}ms"; }
 function clk {
   if [[ $($s07|sed -n "$r71") = yes ]];then local e='OK';else local e='NO';fi
   if tsa $s19;then
-    local e="CSYS $e";m="$(printf '%-40s' "$(ss2 $s19)" 2>$p03) $(echo $($s07 $s72-status|sed -En "$r76"|tr $s70 $s71))"
+    local e="CSYS $e";m="$(printf '%-40s' "$(ss2 $s19)" 2>$p03) $(echo $($s07 $s73-status|sed -En "$r76"|tr $s70 $s71))"
   else
     local e="CNTP $e";m="$(printf '%-40s' "$(ss2 ntp)"  2>$p03) $(clf $(ntpq -pn|grep '^*[0-9]'))"
   fi;dts
@@ -488,7 +488,7 @@ function fsc { local f="$1-check";sex "touch $f";sex "chown eth:eth $f";if [[ -w
 # offset The mean time offset. (ms)
 # delay  This is the mean execution time required to send a request to the time source, and receive the reply from that source. (ms)
 # jitter This indicates how much packet delays from individual pollings vary from the mean packet delay. (ms)
-function tsh { if tsa $s19;then cex "$s07 $s72-status";cex "$s07 show-$s72";else swb ntpq;ntpq -p;fi; }
+function tsh { if tsa $s19;then cex "$s07 $s73-status";cex "$s07 show-$s73";else swb ntpq;ntpq -p;fi; }
 
 [[ $1 = irb ]] && { irb $2;pas; }
 [[ $1 = bmf ]] && { bm0;[[ $2 ]] && b4=$2;bms;v0t && swn "$m" >> $p13;if v4t;then if fft $p45;then bpt && brs RB 0 $((s43*10)) $s37;else bpt && brs PE $b4 $s43 $s39;fi;else rbt && brs RB 0 $s43 $s40;fi; }
