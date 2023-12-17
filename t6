@@ -19,7 +19,8 @@ function ll5 { local f=$p17/logs/validator.log;echo $H|sudo -S grep -ah  $1 $f.1
 function ln0 {                              sed -En "s%.*$1 *([0-9]+).*%\1%p"              $2 2>$p03; }                                                       # get sed list of numbers (file)
 function ln1 { if [[ $l6 ]];then echo "$l6"|sed -En "s%.*$1 *-?([0-9]*\.?[0-9]+)$2.*%\1%p"    2>$p03;fi; }                                                    # get sed list of numbers (stdin)
 function ln2 { if [[ $l4 ]];then echo "$l4"|gawk "$1"                                         2>$p03;fi; }                                                    # get awk list of numbers (µs|ms|s)
-function ln3 { l6=$(ll2 $2.*$1);ln1 $1; }                                                                                                                     # get numbers  syslog lines
+function ln3 { l6=$(ll2 $2.*$1);ln1 $1; }                                                                                                                     # get numbers all  syslog lines
+function ln4 { if g0t $3;then l6=$(ll2 $2.*$1|tail -n$3);else l6=$(ll2 $2.*$1);fi;ln1 $1; }                                                                   # get numbers tail syslog lines
 function fl0 { ll3|tail -n300|grep -ai Core.*temperature; }                                                                                                   # get tail  cpu syslog lines
 function fl1 { fl0|wc -l; }                                                                                                                                   # get error cpu count
 function fl2 { ll3|flp "$r77"|grep -a usb|wc -l; }                                                                                                            # get error usb count
@@ -70,7 +71,7 @@ function si1 { local n=${1:-0};printf %i $((20*n))   2>$p03; }
 function si2 { local n=${1:-0};printf %i $((1000*n)) 2>$p03; }
 function svi { local n=${1:-0};if g0t $n;then l4=$(ll1 $r44|tail -n$n);else l4=$(ll1 $r44);fi;i0=$(nu5 3 $(ln2 "$w0$r45$w2"));i1=$(nu5 3 $(ln2 "$w0$r46$w2"));l6=$(ll2 $r32.*$r65);b1=$(nu3 $(ln1 $r65));if g0t $n;then l4=$(ll1 $r70|tail -n$(si2 $n));else l4=$(ll1 $r70);fi;i2=$(nu5 0 $(ln2 "$w0$r66$w1"));if g0t $n;then l6=$(ll1 $r38|tail -n$(si1 $n));else l6=$(ll1 $r38);fi;i3=$(nu5 2 $(ln1 $r36));if g0t $n;then l4=$(ll1 $r78|tail -n$n);else l4=$(ll1 $r78);fi;i4=$(nu5 3 $(ln2 "$w0$r79$w2")); }
 function svv { if v2t;then l6=$(ll5 $r37 $1);v0=$(nu4 1 $(ln1 $r53 ".*$iip5"));v1=$(nu4 1 $(ln1 $r53 ".*$zip4"));l6=$(ll5 $r39 $(($1/2)));v2=$(nu4 1 $(ln1 $r67));else v0=0;v1=0;v2=0;fi; }
-function smm { if v5t;then m0=$(nu4 3 $(ln3 duration= $r33));else m0=0;fi; }
+function smm { if v5t;then m0=$(nu4 3 $(ln4 $r82 $r33 $1));else m0=0;fi; }
 function spc { nn=$2;cp $p04/$1.service $p02/$1.sav;sed "s%peers\([ =]*\)[0-9]*%peers\1$2%" $p02/$1.sav > $p04/$1.service;dmr; }                              # service configuration change/reload
 function snp { sft $1 || return;local n=$(($2+$5));(($2!=0&&n>=$3&&n<=$4)) && spc $1 $n;tsa $1 && sex "$s02 $1"; }                                            # service peers change/stop
 function sra { if fft $p45;then nu0 $(($(date +%s)-$(date -r $p45 +%s)));else printf %i;fi }                                                                  # system reboot age (secounds)
@@ -97,7 +98,7 @@ function sz0 { gnn 0      ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s     iu: %4i %
 function sz1 { unn 0      ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s      i: %4i'                         $er $em $ed $(ss5 $1 p2p-port) "$(ub1 $(ucl eth_syncing))" $e1                            2>$p03; }
 function sz2 { dtl;svi;bnn;printf 'cl:p%02i:m%02i:d%04i p2p:%5i %s iosrhp: %4i %4i %4i %4i %4i %4i %4i' $nr $nm $nd $(ss5 $1 port    ) "$(bb1 $(bcl syncing))"     $i0 $i1 $i4 $b1 $i2 $i3 $(bi1) 2>$p03; }
 function sz3 { svv $n23   ;printf 'vl:m%02i:b%02i:c%02i api:%s'                                         $v0 $v1 $v2 $(ss4 $1 $r24 nodes)                                                          2>$p03; }
-function sz4 { smm        ;printf 'ml:%04i api:%s'                                                      $m0         $(ss4 $1 $r24 addr )                                                          2>$p03; }
+function sz4 { smm 0      ;printf 'ml:%04i api:%s'                                                      $m0         $(ss4 $1 $r24 addr )                                                          2>$p03; }
 function sso { tse $2 || return;dts;local e="$1 $(printf '%6s %10s %5s %-40s' $(ss3 $2) $dt "$(ss2 $2)" 2>$p03)";case $1 in GETH) e="$e $(sz0 $2)";;BESU) e="$e $(sz1 $2)";;BEAC) e="$e $(sz2 $2)";;VALI) e="$e $(sz3 $2)";;MEVB) e="$e $(sz4 $2)";;esac;swn "$e"; }
 # el control commands
 function grs {
@@ -181,7 +182,7 @@ function bl1 {                                                                  
 function bl2 { zk=${1:-$(bl4 missing)};zz=${2:-$(bl4 target)};zx=${3:-$(bl4 head)};zw=${4:-$(bl4 had)}; }                                                     # set missing/target/head/had activities
 function bl3 { b0=${1:-$(ll2 $r32.*$r47|wc -l)};if [[ $2$3$4$5$6$7 ]];then i0=$2;i1=$3;i4=$4;b1=$5;i2=$6;i3=$7;else svi $n21;fi; }                            # set pub-blocks & imported/observed delays
 function bl4 { echo "$l3"|sed -En "s%.*$1.*validators: *\[(.*)\].*%\1%p"|wc -w; }                                                                             # get number of paid activities
-function ml0 { dts;if tsa $s14;then smm     ;mlo;else m="MSRV NOT ON $dt";fi; }
+function ml0 { dts;if tsa $s14;then smm $n32;mlo;else m="MSRV NOT ON $dt";fi; }
 function vl0 { dts;if tsa $s13;then svv $n22;vlo;else m="VSRV NOT ON $dt";fi; }
 #    0  1              2     3         4   5
 # MEVB OK  11 2023-06-13 01:10 http_avg:  84
@@ -574,20 +575,20 @@ function tsh { if tsa $s19;then cex "$s07 $s31-status";cex "$s07 show-$s31";else
 [[ $1 = rl  ]] && { rll "$r60" $2; }
 [[ $1 = el  ]] && { ell "$r58" $2; }
 [[ $1 = ll  ]] && { lll "$r60" $2; }
-[[ $1 = eii ]] && { ll2 "$r35"      |tail -n${2:-$n07}      |sed -E "$r58"; }
-[[ $1 = eiu ]] && { ll2 "$r52"      |tail -n${2:-$n07}      |sed -E "$r58"; }
-[[ $1 = al  ]] && { ll2 "$r32.*\($r47\|$r48\)"|fln "$r63" $2|sed -E "$r58"; }
-[[ $1 = ci  ]] && { ll0                       |fln "$r62" $2|sed -E "$r69"; }
-[[ $1 = cii ]] && { ll1 "$r44"|tail -n${2:-$n21}            |sed -E "$r58"; }
-[[ $1 = cih ]] && { ll1 "$r70"|tail -n${2:-$(si2 $n21)}     |sed -E "$r58"; }
-[[ $1 = cip ]] && { ll1 "$r38"|tail -n${2:-$(si1 $n21)}     |sed -E "$r58"; }
-[[ $1 = cis ]] && { ll1 "$r78"|tail -n${2:-$n21}            |sed -E "$r58"; }
-[[ $1 = vi  ]] && { ll4                       |fln "$r62" $2|sed -E "$r69"; }
-[[ $1 = vi1 ]] && { ll5 $r37 ${2:-$n22}|grep $iip5          |sed -E "$r69"; }
-[[ $1 = vi2 ]] && { ll5 $r37 ${2:-$n22}|grep $zip4          |sed -E "$r69"; }
-[[ $1 = vic ]] && { ll5 $r39 ${2:-$(($n22/2))}              |sed -E "$r69"; }
-[[ $1 = mi  ]] && { ll2 "$r33.*duration="                   |sed -E "$r60"; }
-[[ $1 = csp ]] && { ll2 "$r32.*peers:"                      |sed -E "$r59"|grep -v "peers: *$(ss5 $s12 target-peers 10)[${2:-0}-9]"; }
+[[ $1 = eii ]] && { ll2 "$r35"      |tail -n${2:-$n07}       |sed -E "$r58"; }
+[[ $1 = eiu ]] && { ll2 "$r52"      |tail -n${2:-$n07}       |sed -E "$r58"; }
+[[ $1 = al  ]] && { ll2 "$r32.*\($r47\|$r48\)"|fln "$r63" $2 |sed -E "$r58"; }
+[[ $1 = ci  ]] && { ll0                       |fln "$r62" $2 |sed -E "$r69"; }
+[[ $1 = cii ]] && { ll1 "$r44"      |tail -n${2:-$n21}       |sed -E "$r58"; }
+[[ $1 = cih ]] && { ll1 "$r70"      |tail -n${2:-$(si2 $n21)}|sed -E "$r58"; }
+[[ $1 = cip ]] && { ll1 "$r38"      |tail -n${2:-$(si1 $n21)}|sed -E "$r58"; }
+[[ $1 = cis ]] && { ll1 "$r78"      |tail -n${2:-$n21}       |sed -E "$r58"; }
+[[ $1 = vi  ]] && { ll4                       |fln "$r62" $2 |sed -E "$r69"; }
+[[ $1 = vi1 ]] && { ll5 $r37 ${2:-$n22}|grep $iip5           |sed -E "$r69"; }
+[[ $1 = vi2 ]] && { ll5 $r37 ${2:-$n22}|grep $zip4           |sed -E "$r69"; }
+[[ $1 = vic ]] && { ll5 $r39 ${2:-$(($n22/2))}               |sed -E "$r69"; }
+[[ $1 = mi  ]] && { ll2 "$r33.*$r82"|tail -n${2:-$n32}       |sed -E "$r60"; }
+[[ $1 = csp ]] && { ll2 "$r32.*peers:"                       |sed -E "$r59"|grep -v "peers: *$(ss5 $s12 target-peers 10)[${2:-0}-9]"; }
 [[ $1 = elz ]] && { ll2 "\($r30\|$r31\)"      |fln "$r61" $2; }
 [[ $1 = alz ]] && { ll2 "$r32.*\($r47\|$r48\)"|fln "$r63" $2; }
 [[ $1 = clz ]] && { ll2 "$r32"                |fln "$r61" $2; }
@@ -595,7 +596,7 @@ function tsh { if tsa $s19;then cex "$s07 $s31-status";cex "$s07 show-$s31";else
 [[ $1 = llz ]] && { ll2 "$r34"                |fln "$r61" $2; }
 [[ $1 = ciz ]] && { ll0                       |fln "$r62" $2; }
 [[ $1 = viz ]] && { ll4                       |fln "$r62" $2; }
-[[ $1 = miz ]] && { ll2 "$r33.*duration="; }
+[[ $1 = miz ]] && { ll2 "$r33.*$r82"; }
 [[ $1 = ws  ]] && { cex 'ufw status numbered'; }
 [[ $1 = wa  ]] && { wa; }
 [[ $1 = we  ]] && { yex 'ufw enable'; }
