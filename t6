@@ -311,7 +311,7 @@ function tmp {
 }
 function cl0 { nslookup $1 2>$p03|sed -En "$r83"                                           2>$p03; }
 function cl1 { printf "${1%.*}"                                                            2>$p03; }
-function cl2 { local s=$(cl0 $1);[[ $s ]] && local s=$(cl0 $1);cl1 $s; }
+function cl2 { local s=$(cl0 $1);[[ $s ]] || local s=$(cl0 $1);cl1 $s; }
 function cl3 { if [[ $1 =~ ^[0-9]+ ]];then cl2 $1;else cl1 $1;fi; }
 function cl4 { printf "server: $(cl3 ${2:0}) offset: ${4} delay: ${6} jitter: ${8}"        2>$p03; }
 function cl5 { printf "server: $(cl3 ${1:1}) offset: ${9}ms delay: ${8}ms jitter: ${10}ms" 2>$p03; }
