@@ -459,6 +459,7 @@ function tvc {
 }
 function svr { local t='';for t in $(printf '%s\n' $@|sort -u);do curl -sX GET "$s33=$t"|sed -n "$r23";done; }                                                # show mev validator registration
 function mvr { if [[ $(ls $p19/key*.json 2>$p03) ]];then svr $(sed -n "$r28" $p19/key*.json 2>$p03);else svr ${b[@]};fi; }                                    # choose validator keys
+function mre { local s=n;for s in $(rll "$r60"|sed -En "$r84"|sort -u);do echo "$(rll "$r60"|grep -o $s|wc -l):$s";done; }
 function ibk {
   local f="$p02/pubkeys.old";cp $p58/pubkeys $f
   echo "$(cat $f)$(for f in $(jq -r .pubkey $p19/key*.json 2>$p03);do printf %s ",0x$f";done)" > $p02/pubkeys.new
@@ -494,6 +495,7 @@ function tsh { if tsa $s19;then cex "$s07 $s31-status";cex "$s07 show-$s31";else
 [[ $1 = bmf ]] && { bm0;[[ $2 ]] && b4=$2;bms;v0t && swn "$m" >> $p13;if v4t;then if fft $p45;then bpt && brs RB 0 $((n05*10)) $n00;else bpt && brs PE $b4 $n05 $n02;fi;else rbt && brs RB 0 $n05 $n03;fi; }
 [[ $1 = snr ]] && { cex "$s37 lxd";cex "$s37 core20";cex "$s37 snapd";cex 'apt remove --autoremove snapd -y';echo -e "$s36" > nosnap.pref;cex "mv nosnap.pref $p47";cmw $p47/nosnap.pref 644 root;cex 'apt update'; }
 [[ $1 = mvr ]] && { mvr; }
+[[ $1 = mre ]] && { mre|sort -n; }
 [[ $1 = jwt ]] && { sjw; }
 [[ $1 = lpi ]] && { lpi $p02/.cargo/bin/lighthouse; }
 [[ $1 = luc ]] && { luc $p02/.cargo/bin/lighthouse $2; }
@@ -759,7 +761,8 @@ if [[ ! $1 ]];then
   m="$m\ncce\t\tcc change ec server ($znm1/$znm4)"
   m="$m\nvcc\t\tvc switch cc server order"
   m="$m\ntvc\t\tvc transfer ($cuvc -> $nxvc)"
-  m="$m\nmvr\t\tvc mev validator registration"
+  m="$m\nmvr\t\tmev validator registration"
+  m="$m\nmre\t\tmev relay erros"
   m="$m\nws\t\tfirewall status"
   m="$m\nwa\t\tfirewall arranca"
   m="$m\nwpr\t\tfirewall para"
