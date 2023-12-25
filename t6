@@ -573,6 +573,7 @@ function tsh { if tsa $s19;then cex "$s07 $s31-status";cex "$s07 show-$s31";else
 [[ $1 = jrs ]] && { nex "journalctl --vacuum-time=3days";nex "journalctl --verify"; }
 [[ $1 = lp  ]] && { pex 'ss -tunlp'|grep 'geth\|lighthouse\|Netid'; }
 [[ $1 = ish ]] && { curl -s https://ipinfo.io/ip;echo; }
+[[ $1 = ich ]] && { ll2 "\($r30\|$r31\|$r32\).*ip[:=] *[0-9]"|sed -E "$r58"; }
 # outros journal system/lighthouse
 [[ $1 = sl  ]] && { sll        $2; }
 [[ $1 = cl  ]] && { cll "$r58" $2; }
@@ -783,6 +784,7 @@ if [[ ! $1 ]];then
   m="$m\nrrs\t\trestart gap reset"
   m="$m\nrpt\t\trestart gap print"
   m="$m\nish\t\texternal ip show"
+  m="$m\nich\t\texternal ip change"
   m="$m\njsh\t\tjournal logs show"
   m="$m\njrs\t\tjournal logs reset"
   m="$m\nsnr\t\tremove snapd"
