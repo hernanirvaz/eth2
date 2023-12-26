@@ -593,7 +593,7 @@ function tsh { if tsa $s19;then cex "$s07 $s31-status";cex "$s07 show-$s31";else
 [[ $1 = vi2 ]] && { ll5 $g16 ${2:-$n22}|grep $zip4           |sed -E "$e29"; }
 [[ $1 = vic ]] && { ll5 $g17 ${2:-$(($n22/2))}               |sed -E "$e29"; }
 [[ $1 = mi  ]] && { ll2 "$g09.*$g33"|tail -n${2:-$n32}       |sed -E "$e31"; }
-[[ $1 = csp ]] && { ll2 "$g08.*peers:"                       |sed -E "$e30"|grep -v "peers: *$(ss5 $s12 target-peers 10)[${2:-0}-9]"; }
+[[ $1 = csp ]] && { ll2 "$g08.*peers:"                       |sed -E "$e30"|grep -v "peers: *[${2:-$(ss5 $s12 target-peers 10)}-9][0-9]"|sort -k6nr; }
 [[ $1 = elz ]] && { ll2 "$g11"                |fln "$g25" $2; }
 [[ $1 = alz ]] && { ll2 "$g08.*$g23"|fln "$g28" $2; }
 [[ $1 = clz ]] && { ll2 "$g08"      |fln "$g25" $2; }
@@ -756,7 +756,7 @@ if [[ ! $1 ]];then
   m="$m\n[gubvm]l[f]\t[geth|besu|beacon|vc|mev]\tmy progress report [file add]"
   m="$m\n[gubvm]h\t[geth|besu|beacon|vc|mev]\tmy historic report"
   m="$m\nhs[012ecgubvm]\thistoric summary report [0-both|1-main|2-backup|el|cc|geth|besu|beacon|vc|mev]"
-  m="$m\ncsp [i]\t\tshow peers excluding [$(ss5 $s12 target-peers 10)][i(0)-9]"
+  m="$m\ncsp [i]\t\tshow peers excluding [i($(ss5 $s12 target-peers 10))-9][0-9]"
   m="$m\ncla\t\tcc add    long-lived parms"
   m="$m\nclr\t\tcc remove long-lived parms"
   m="$m\ncce\t\tcc change ec server ($znm1/$znm4)"
