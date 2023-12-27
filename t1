@@ -227,11 +227,12 @@ if [[ $cunm = $znm1 || $cunm = $znm2 ]];then
   if [[ $cunm = $znm1 ]];then
     g02="$g02\n\tallow-transfer { $zip2; $zip3; $zip4; $iip5; };"
     g02="$g02\n\talso-notify { $zip2; $zip3; $zip4; $iip5; };"
+    g02="$g02\n\tmax-cache-size 70%;"
   else
     g02="$g02\n\tallow-transfer { $zip1; $zip3; $zip4; $iip5; };"
     g02="$g02\n\talso-notify { $zip1; $zip3; $zip4; $iip5; };"
+    g02="$g02\n\tmax-cache-size 50%;"
   fi
-  g02="$g02\n\tmax-cache-size 50%;"
 else
   g02="$g02\n\tallow-transfer { none; };"
   g02="$g02\n\tmax-cache-size 10%;"
