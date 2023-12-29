@@ -18,6 +18,7 @@ if [[ $(pex 'ufw status'|grep -i inactive) ]];then
   [[ $cunm = $znm3 ]] && { ple 2023/tcp nssh; }                                                                                                               # limit ssh
   [[ $cunm = $znm4 ]] && { ple 2024/tcp nssh; }                                                                                                               # limit ssh
   [[ $cunm = $inm5 ]] && { ple 2025/tcp nssh; }                                                                                                               # limit ssh
+  [[ $cunm = $inm6 ]] && { ple 2026/tcp nssh; }                                                                                                               # limit ssh
   sex 'ufw reload';yex 'ufw enable'                                                                                                                           # reload/enable
 else
   cex 'ufw status numbered'                                                                                                                                   # show
@@ -50,7 +51,7 @@ if [[ $cust = hrv ]];then
   sex "$s07 set-timezone Europe/Lisbon"
   cc1 $p20 "$e00"                                                                                                                                             # my time servers
   cc1 $p21 "$e01"              ;cmw $p21 644 root                                                                                                             # motd-news disable
-  cc4 $p22 "$g03"              ;cmw $p22 644 root                                                                                                             # new netplan
+  cc4 $p22 "$g03"              ;cmw $p22 600 root                                                                                                             # new netplan
   cc1 $p26 "$e06"              ;cmw $p26 755 root                                                                                                             # grub timeout
   cc1 $p48 "$e27"              ;cmw $p48 644 root                                                                                                             # grub no PCIe active state power management
   cc1 $p34 "$e17"              ;cmw $p34 644 root                                                                                                             # hosts config
