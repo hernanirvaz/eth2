@@ -429,7 +429,7 @@ function hsb { sso BEAC $s12; }
 function hsv { sso VALI $s13; }
 function hsm { sso MEVB $s14; }
 function hs0 { echo $1;if [[ $cunm = $1 ]];then hsg;hsu;hsb;hsv;cpe;else ssh $(snc $1) "$p53 hse";ssh $(snc $1) "$p53 hsc";fi; }
-function nsh { $s08 list;$s08 status;$s09 status|sed -En "$e49"; }                                                                                            # network/dns info
+function nsh { $s08 list;$s08 status;$s09 status|sed -En "$e26"; }                                                                                            # network/dns info
 function wlp { local e="$1";shift;until [[ $# -lt 1 ]];do e="$e\|$1";shift;done;ll3|grep '\[UFW'|if [[ $e ]];then grep -v "$e";else cat;fi; }
 function c0c { local e="$e11";[[ $(sed -n "$e12" $p04/$s12.service 2>$p03) = $zip1 ]] && e="$e10";sed "$e" $s12.sav > $p04/$s12.service; }                    # cc change el server
 function ble { sft $s12 || return;cp $p04/$s12.service $p02/$s12.sav;sed "$1" $p02/$s12.sav > $p04/$s12.service;dmr; }                                        # cc service edit

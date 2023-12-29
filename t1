@@ -135,8 +135,8 @@ e24="$e24;s%rpc-whitelist\": \"[^\"]*\"%rpc-whitelist\": \"127.0.0.1,192.168.8.*
 e24="$e24;s%rpc-username\": \"[^\"]*\"%rpc-username\": \"eu\"%"
 e24="$e24;s%rpc-password\": \"[^\"]*\"%rpc-password\": \"\"%"
 e24="$e24;s%umask\": [0-9]*%umask\": 2%"
-e25='/  *\/  *ext4  *defaults  */s%defaults%defaults,noatime%'
-e26='/  *\/sata  *ext4  *defaults  */s%defaults%defaults,noatime%'
+e25='/ext4  *defaults  */s%defaults%defaults,noatime%'
+e26='s%(Current DNS).*:%   \1:%ip'
 e27='s%GRUB_CMDLINE_LINUX_DEFAULT *= *"\(..*\)"%GRUB_CMDLINE_LINUX_DEFAULT="\1 pcie_aspm=off"%;s%GRUB_CMDLINE_LINUX_DEFAULT *= *""%GRUB_CMDLINE_LINUX_DEFAULT="pcie_aspm=off"%'
 e28="s%APT::Periodic::Update-Package-Lists.*$%APT::Periodic::Update-Package-Lists \"1\";%i"
 e28="${e28};s%APT::Periodic::Unattended-Upgrade.*$%APT::Periodic::Unattended-Upgrade \""
@@ -215,7 +215,6 @@ e45='s%.*currentBlock: *([0-9]+).*%\1%ip'
 e46='s%.*highestBlock" *: *"0x([^"]+)".*%\1%ip'
 e47='s%.*currentBlock" *: *"0x([^"]+)".*%\1%ip'
 e48='s%.*result" *: *"0x([^"]+)".*%\1%ip'
-e49='s%(Current DNS).*:%   \1:%ip'
 
 g00="\n$p01\n{\n\trotate 7\n\tdaily\n\tmissingok\n\tnotifempty\n\tnocompress\n\tsharedscripts\n\tpostrotate\n\t\t/usr/lib/rsyslog/rsyslog-rotate\n\tendscript\n}"
 g01='printf "Welcome to %s %s\\n" "$(uname -n)" "$DISTRIB_DESCRIPTION"'
