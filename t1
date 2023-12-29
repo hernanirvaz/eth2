@@ -8,12 +8,14 @@ zip2='192.168.8.28'
 zip3='192.168.8.31'
 zip4='192.168.8.34'
 iip5='192.168.8.37'
+iip6='192.168.8.40'
 gipw=$(ip r|sed -En "s%^default.* (192.168.8.[0-9]+) .*$%\1%p")
 znm1='hrv-zotac1'
 znm2='hrv-zotac2'
 znm3='hrv-zotac3'
 znm4='hrv-zotac4'
 inm5='hrv-intel5'
+inm6='hrv-intel6'
 vip1='161.97.85.32'
 vip2='161.97.85.32'
 vip3='161.97.85.32'
@@ -33,11 +35,11 @@ p01='/var/log/syslog'
 p02='/home/eth'
 p03='/dev/null'
 p04='/etc/systemd/system'
-p05='/var/lib/lighthouse'  ;[[ $cunm = $znm2 ]] && p05='/sata/lighthouse';[[ $cunm = $znm4 ]] && p05='/sata/lighthouse';[[ $cunm = $inm5 ]] && p05='/cl/lighthouse'
-p06='/sata/eth'            ;[[ $cunm = $vnm1 ]] && p06=$p02;[[ $cunm = $inm5 ]] && p06=$p02
+p05='/var/lib/lighthouse'  ;[[ $cunm = $znm2 || $cunm = $znm4 ]] && p05='/sata/lighthouse';[[ $cunm = $inm5 || $cunm = $inm6 ]] && p05='/cl/lighthouse'
+p06='/sata/eth'            ;[[ $cunm = $vnm1 || $cunm = $inm5 ]] && p06=$p02
 p07='/usr/bin'
-p08='/var/lib/goethereum'  ;[[ $cunm = $inm5 ]] && p08='/el/goethereum'
-p09='/var/lib/javaethereum';[[ $cunm = $inm5 ]] && p09='/el/javaethereum'
+p08='/var/lib/goethereum'  ;[[ $cunm = $inm5 || $cunm = $inm6 ]] && p08='/el/goethereum'
+p09='/var/lib/javaethereum';[[ $cunm = $inm5 || $cunm = $inm6 ]] && p09='/el/javaethereum'
 p10="$p02/geth.log"
 p11="$p02/besu.log"
 p12="$p02/beacon.log"
@@ -111,11 +113,12 @@ e14='s%--subscribe-all-subnets --import-all-attestations %%'
 e15='s%--validator-monitor-file%--subscribe-all-subnets --import-all-attestations --validator-monitor-file%'
 e16='s%--beacon-nodes *\([^ ]*:5052\),\([^ ]*:5052\)[^ ]*%--beacon-nodes \2,\1%'
 e17="s%hrv-zotac\([0-9]\).*%hrv-zotac\1 ztc\1%;/127.0.1.1/a \\"
-[[ $cunm = $znm1 ]] && e17="$e17\n$zip2\thrv-zotac2 ztc2\n$zip3\thrv-zotac3 ztc3\n$zip4\thrv-zotac4 ztc4\n$iip5\thrv-intel5 int5"
-[[ $cunm = $znm2 ]] && e17="$e17\n$zip1\thrv-zotac1 ztc1\n$zip3\thrv-zotac3 ztc3\n$zip4\thrv-zotac4 ztc4\n$iip5\thrv-intel5 int5"
-[[ $cunm = $znm3 ]] && e17="$e17\n$zip1\thrv-zotac1 ztc1\n$zip2\thrv-zotac2 ztc2\n$zip4\thrv-zotac4 ztc4\n$iip5\thrv-intel5 int5"
-[[ $cunm = $znm4 ]] && e17="$e17\n$zip1\thrv-zotac1 ztc1\n$zip2\thrv-zotac2 ztc2\n$zip3\thrv-zotac3 ztc3\n$iip5\thrv-intel5 int5"
-[[ $cunm = $inm5 ]] && e17="$e17\n$zip1\thrv-zotac1 ztc1\n$zip2\thrv-zotac2 ztc2\n$zip3\thrv-zotac3 ztc3\n$zip4\thrv-zotac4 ztc4"
+[[ $cunm = $znm1 ]] && e17="$e17\n$zip2\thrv-zotac2 ztc2\n$zip3\thrv-zotac3 ztc3\n$zip4\thrv-zotac4 ztc4\n$iip5\thrv-intel5 int5\n$iip6\thrv-intel6 int6"
+[[ $cunm = $znm2 ]] && e17="$e17\n$zip1\thrv-zotac1 ztc1\n$zip3\thrv-zotac3 ztc3\n$zip4\thrv-zotac4 ztc4\n$iip5\thrv-intel5 int5\n$iip6\thrv-intel6 int6"
+[[ $cunm = $znm3 ]] && e17="$e17\n$zip1\thrv-zotac1 ztc1\n$zip2\thrv-zotac2 ztc2\n$zip4\thrv-zotac4 ztc4\n$iip5\thrv-intel5 int5\n$iip6\thrv-intel6 int6"
+[[ $cunm = $znm4 ]] && e17="$e17\n$zip1\thrv-zotac1 ztc1\n$zip2\thrv-zotac2 ztc2\n$zip3\thrv-zotac3 ztc3\n$iip5\thrv-intel5 int5\n$iip6\thrv-intel6 int6"
+[[ $cunm = $inm5 ]] && e17="$e17\n$zip1\thrv-zotac1 ztc1\n$zip2\thrv-zotac2 ztc2\n$zip3\thrv-zotac3 ztc3\n$zip4\thrv-zotac4 ztc4\n$iip6\thrv-intel6 int6"
+[[ $cunm = $inm6 ]] && e17="$e17\n$zip1\thrv-zotac1 ztc1\n$zip2\thrv-zotac2 ztc2\n$zip3\thrv-zotac3 ztc3\n$zip4\thrv-zotac4 ztc4\n$iip5\thrv-intel5 int5"
 e17="$e17\n207.180.214.8\tvpsl"
 e17="$e17\n173.249.42.190\tvpsm"
 e17="$e17\n164.68.107.45\tvpss"
@@ -225,12 +228,12 @@ g02="$g02\n\tallow-recursion { localhost; 192.168.8.0/24; };"
 g02="$g02\n\tallow-query { localhost; 192.168.8.0/24; };"
 if [[ $cunm = $znm1 || $cunm = $znm2 ]];then
   if [[ $cunm = $znm1 ]];then
-    g02="$g02\n\tallow-transfer { $zip2; $zip3; $zip4; $iip5; };"
-    g02="$g02\n\talso-notify { $zip2; $zip3; $zip4; $iip5; };"
+    g02="$g02\n\tallow-transfer { $zip2; };"
+    g02="$g02\n\talso-notify { $zip2; };"
     g02="$g02\n\tmax-cache-size 70%;"
   else
-    g02="$g02\n\tallow-transfer { $zip1; $zip3; $zip4; $iip5; };"
-    g02="$g02\n\talso-notify { $zip1; $zip3; $zip4; $iip5; };"
+    g02="$g02\n\tallow-transfer { $zip1; };"
+    g02="$g02\n\talso-notify { $zip1; };"
     g02="$g02\n\tmax-cache-size 50%;"
   fi
 else
@@ -252,6 +255,7 @@ for m in $(ip l|sed -n 's%.* \([a-z0-9]*\): .* state UP .*%\1%p'|tail -n1);do
   [[ $cunm = $znm3 ]] && g03="$g03\n      addresses: [$zip3/24]"
   [[ $cunm = $znm4 ]] && g03="$g03\n      addresses: [$zip4/24]"
   [[ $cunm = $inm5 ]] && g03="$g03\n      addresses: [$iip5/24]"
+  [[ $cunm = $inm6 ]] && g03="$g03\n      addresses: [$iip6/24]"
   g03="$g03\n      critical: true"
   g03="$g03\n      routes:"
   g03="$g03\n        - to: 0.0.0.0/0"
@@ -276,7 +280,7 @@ g04="$g04\nserver {"
 g04="$g04\nlisten 80;"
 g04="$g04\nserver_name $zip2;"
 g04="$g04\nsend_timeout 100m;"
-g04="$g04\nresolver $zip2 $zip3 valid=300s;"
+g04="$g04\nresolver $zip2 $zip1 valid=300s;"
 g04="$g04\nresolver_timeout 10s;"
 g04="$g04\ngzip on;"
 g04="$g04\ngzip_vary on;"
@@ -300,11 +304,12 @@ g04="$g04\nproxy_buffering off;"
 g04="$g04\nlocation / { proxy_pass http://plex_backend; }"
 g04="$g04\n}"
 g05=""
-[[ $cunm = $znm1 ]] && g05="$g05\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int5\n  Port 2025\n  IdentityFile ~/.ssh/id_ed25519"
-[[ $cunm = $znm2 ]] && g05="$g05\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int5\n  Port 2025\n  IdentityFile ~/.ssh/id_ed25519"
-[[ $cunm = $znm3 ]] && g05="$g05\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int5\n  Port 2025\n  IdentityFile ~/.ssh/id_ed25519"
-[[ $cunm = $znm4 ]] && g05="$g05\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int5\n  Port 2025\n  IdentityFile ~/.ssh/id_ed25519"
-[[ $cunm = $inm5 ]] && g05="$g05\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/id_ed25519"
+[[ $cunm = $znm1 ]] && g05="$g05\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int5\n  Port 2025\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int6\n  Port 2026\n  IdentityFile ~/.ssh/id_ed25519"
+[[ $cunm = $znm2 ]] && g05="$g05\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int5\n  Port 2025\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int6\n  Port 2026\n  IdentityFile ~/.ssh/id_ed25519"
+[[ $cunm = $znm3 ]] && g05="$g05\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int5\n  Port 2025\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int6\n  Port 2026\n  IdentityFile ~/.ssh/id_ed25519"
+[[ $cunm = $znm4 ]] && g05="$g05\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int5\n  Port 2025\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int6\n  Port 2026\n  IdentityFile ~/.ssh/id_ed25519"
+[[ $cunm = $inm5 ]] && g05="$g05\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int6\n  Port 2026\n  IdentityFile ~/.ssh/id_ed25519"
+[[ $cunm = $inm6 ]] && g05="$g05\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int5\n  Port 2025\n  IdentityFile ~/.ssh/id_ed25519"
 g06='geth\['
 g07='besu\[.*|'
 g08='lighthouse\['
