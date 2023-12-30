@@ -71,7 +71,7 @@ if [[ $cunm = $znm1 || $cunm = $znm2 || $cunm = $znm3 || $cunm = $inm5 || $cunm 
 else
   othe=''
   if [[ $cust = hrv ]];then
-    othe="$othe --beacon-nodes http://$iip5:5052,http://$zip4:5052"
+    othe="$othe --beacon-nodes http://$iip5:5052,http://$iip6:5052"
   else
     othe="$othe --beacon-nodes http://$vip1:5052"
   fi

@@ -9,7 +9,6 @@ zip3='192.168.8.31'
 zip4='192.168.8.34'
 iip5='192.168.8.37'
 iip6='192.168.8.40'
-gipw=$(ip r|sed -En "s%^default.* (192.168.8.[0-9]+) .*$%\1%p")
 znm1='hrv-zotac1'
 znm2='hrv-zotac2'
 znm3='hrv-zotac3'
@@ -35,8 +34,8 @@ p01='/var/log/syslog'
 p02='/home/eth'
 p03='/dev/null'
 p04='/etc/systemd/system'
-p05='/var/lib/lighthouse'  ;[[ $cunm = $znm2 || $cunm = $znm4 ]] && p05='/sata/lighthouse';[[ $cunm = $inm5 || $cunm = $inm6 ]] && p05='/cl/lighthouse'
-p06='/sata/eth'            ;[[ $cunm = $vnm1 || $cunm = $inm5 ]] && p06=$p02
+p05='/var/lib/lighthouse'  ;[[ $cunm = $inm5 || $cunm = $inm6 ]] && p05='/cl/lighthouse'
+p06=$p02
 p07='/usr/bin'
 p08='/var/lib/goethereum'  ;[[ $cunm = $inm5 || $cunm = $inm6 ]] && p08='/el/goethereum'
 p09='/var/lib/javaethereum';[[ $cunm = $inm5 || $cunm = $inm6 ]] && p09='/el/javaethereum'
@@ -258,7 +257,7 @@ for m in $(ip l|sed -n 's%.* \([a-z0-9]*\): .* state UP .*%\1%p'|tail -n1);do
   g03="$g03\n      critical: true"
   g03="$g03\n      routes:"
   g03="$g03\n        - to: 0.0.0.0/0"
-  g03="$g03\n          via: $gipw"
+  g03="$g03\n          via: 192.168.8.254"
   g03="$g03\n          metric: 100"
   g03="$g03\n          on-link: true"
   g03="$g03\n      nameservers:"
@@ -268,11 +267,7 @@ done
 for m in $(ip l|sed -n 's%.* \([a-z0-9]*\): .* state DOWN .*%\1%p');do
   g03="$g03\n    $m:"
   g03="$g03\n      dhcp4: true"
-  if [[ $m =~ ^wlo[0-9] ]];then
-    g03="$g03\n      activation-mode: off"
-  else
-    g03="$g03\n      activation-mode: manual"
-  fi
+  g03="$g03\n      activation-mode: off"
 done
 g04="upstream plex_backend { server $zip2:32400; keepalive 32; }"
 g04="$g04\nserver {"

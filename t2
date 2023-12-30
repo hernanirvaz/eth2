@@ -25,7 +25,7 @@ else
 fi
 [[ -f $p04/$s10.service || -f $p04/$s11.service || -f $p04/$s12.service || -f $p04/$s13.service ]] && exit                                                    # ec/cl instalados -> exit
 swu 'UPDATE LINUX'       ;t4 linux
-swu 'ADDITIONAL LINUX'   ;sex 'apt install python3-pip net-tools apt-listchanges landscape-common software-properties-common smartmontools jq -y'
+swu 'ADDITIONAL LINUX'   ;sex 'apt install python3-pip net-tools apt-listchanges landscape-common software-properties-common smartmontools curl jq -y'
 swu 'UNATTENDED UPGRADES';cex 'apt install unattended-upgrades update-notifier-common -y'
 swu 'LINUX CONFIG'
 if [[ $cunm = $znm2 ]];then
@@ -38,7 +38,7 @@ if [[ $cunm = $znm2 ]];then
 fi
 if [[ $cunm = $znm1 || $cunm = $znm2 ]];then
   sex "$s07 set-ntp no"                                                                                                                                       # use ntp (sophisticated)
-  sex 'apt install apt-transport-https curl ntp bind9 bind9utils -y'                                                                                          # install dependencies & ntp & bind
+  sex 'apt install apt-transport-https ntp bind9 bind9utils -y'                                                                                               # install dependencies & ntp & bind
   cc1 $p31 "$e08"              ;cmw $p31 644 root;nex "$s06 ntp"                                                                                              # ntp config for time synchronization
   cc3 $p29 "$e07" "$g02"       ;cmw $p29 644 root bind                                                                                                        # named my options
   cc1 $p30 "$e02"              ;cmw $p30 644 root                                                                                                             # use only ipv4
@@ -72,4 +72,3 @@ cc1 $p27 "$e33";cc2 $p27 "$g00";cmw $p27 644 root                               
 nex "$s00 daemon-reload";sudo dpkg-reconfigure -plow unattended-upgrades;sex "$s06 unattended-upgrades"                                                       # unattended upgrades
 swn 'sudo netplan apply'
 swn 'AND reboot'
-if [[ $cunm = $znm1 || $cunm = $znm4 || $cunm = $vnm1 ]];then swb 'AND INSTALAR EL (t8geth, t8besu)';fi
