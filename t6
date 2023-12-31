@@ -589,8 +589,8 @@ function tsh { if tsa $s19;then cex "$s07 $s31-status";cex "$s07 show-$s31";else
 [[ $1 = cip ]] && { ll1 "$g15"      |tail -n${2:-$(si1 $n21)}|sed -E "$e29"; }
 [[ $1 = cis ]] && { ll1 "$g20"      |tail -n${2:-$n21}       |sed -E "$e29"; }
 [[ $1 = vi  ]] && { ll4             |fln "$g26" $2           |sed -E "$e32"; }
-[[ $1 = vi1 ]] && { ll5 $g16 ${2:-$n22}|grep $iip5           |sed -E "$e29"; }
-[[ $1 = vi2 ]] && { ll5 $g16 ${2:-$n22}|grep $zip4           |sed -E "$e29"; }
+[[ $1 = vi1 ]] && { ll5 $g16 ${2:-$n22}|grep $(sni $cun1)    |sed -E "$e29"; }
+[[ $1 = vi2 ]] && { ll5 $g16 ${2:-$n22}|grep $(sni $cun2)    |sed -E "$e29"; }
 [[ $1 = vic ]] && { ll5 $g17 ${2:-$(($n22/2))}               |sed -E "$e29"; }
 [[ $1 = mi  ]] && { ll2 "$g09.*$g33"|tail -n${2:-$n32}       |sed -E "$e31"; }
 [[ $1 = csp ]] && { ll2 "$g08.*peers:"                       |sed -E "$e30"|grep -v "peers: *[${2:-$(ss5 $s12 target-peers 10)}-9][0-9]"|sort -k6nr; }
