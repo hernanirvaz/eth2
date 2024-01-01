@@ -52,7 +52,7 @@ function v2t { [[ $cunm = $cuvc ]]; }                                           
 function v3t { [[ $cuvc = $nxvc ]]; }                                                                                                                         # vc  transfer test
 function v4t { [[ $cunm = $znm4 ]]; }                                                                                                                         # best zotac   test
 function v5t { [[ $cunm = $cumv ]]; }                                                                                                                         # mev current  test
-function v6t { [[ $cunm = $znm2 ]]; }                                                                                                                         # ntp main     test
+function v6t { [[ $cunm = $znm1 ]]; }                                                                                                                         # ntp main     test
 function v7t { [[ $cunm = $inm5 ]]; }                                                                                                                         # nuc intel    test
 function rbt { [[ $(sra) -ge $((60*60*${1:-9})) ]]; }
 function ipt { [[ $(date +%s) -ge $(bss $1 6) ]]; }
@@ -372,11 +372,11 @@ function sp  { tsa $s20 && cex "$s02 $s20"; }                                   
 function sd  { cex "$s05 $s20";sco;sex 'ufw reload'; }                                                                                                        # disable named
 # el/cc/vc
 function efw { if [[ $cust = hrv ]];then pai $1 192.168.8.0/24 $2 $3;else pai $1 $vip1 $2 $3;pai $1 $vip3 $2 $3;fi; }
-function eop { local e=30303;mnt || e=30304;pae $e elp2p;pde 8545 elapi delete;pde 8551 eljwt delete;efw 8545 elapi       ;efw 8551 eljwt       ; }
-function eco { local e=30303;mnt || e=30304;pde $e elp2p;pde 8545 elapi       ;pde 8551 eljwt       ;efw 8545 elapi delete;efw 8551 eljwt delete; }
+function eop { local e=30303;v7t || e=30304;pae $e elp2p;pde 8545 elapi delete;pde 8551 eljwt delete;efw 8545 elapi       ;efw 8551 eljwt       ; }
+function eco { local e=30303;v7t || e=30304;pde $e elp2p;pde 8545 elapi       ;pde 8551 eljwt       ;efw 8545 elapi delete;efw 8551 eljwt delete; }
 function bfw { if [[ $cust = hrv ]];then pai $1 192.168.8.0/24 $2 $3;else pai $1 $vip3 $2 $3;fi; }
-function bop { local e=9004 ;mnt || e=9000 ;pae $e clp2p;pde 5052 clapi delete;pde 8551 cljwt delete;bfw 5052 clapi       ;bfw 8551 cljwt       ;pae "$((e+1))/udp" clquic; }
-function bco { local e=9004 ;mnt || e=9000 ;pde $e clp2p;pde 5052 clapi       ;pde 8551 cljwt       ;bfw 5052 clapi delete;bfw 8551 cljwt delete;pde "$((e+1))/udp" clquic; }
+function bop { local e=9004 ;v7t || e=9000 ;pae $e clp2p;pde 5052 clapi delete;pde 8551 cljwt delete;bfw 5052 clapi       ;bfw 8551 cljwt       ;pae "$((e+1))/udp" clquic; }
+function bco { local e=9004 ;v7t || e=9000 ;pde $e clp2p;pde 5052 clapi       ;pde 8551 cljwt       ;bfw 5052 clapi delete;bfw 8551 cljwt delete;pde "$((e+1))/udp" clquic; }
 function vfw { if [[ $cust = hrv ]];then pai $1 192.168.8.0/24 $2 $3;else pai $1 $vip1 $2 $3;fi; }
 function vop { vfw 5064 vcapi       ;pde 5064 vcapi delete; }
 function vco { vfw 5064 vcapi delete;pde 5064 vcapi       ; }
@@ -480,7 +480,8 @@ function bcc { printf p;if mnt;then if bpt;then if rbt $n06;then printf r;else p
 function btn { if mnt;then printf $1;else printf $n03;fi; }
 function irb { rm -f $p39.*;if rbt $1;then if v2t;then brs RB 0 0 $n02;else gps;ups;bps;sex reboot;fi;else if fft $p45;then touch $p39.$1.hours;fi;fi; }
 function gp0 { if tsa $s10;then bp;gp;local i=$(pt2 $(pex "du -s $p08"));sudo -u eth1 geth --datadir $p08 $@;local n=$(pt2 $(pex "du -s $p08"));echo "fs-diff $(((i-n)/1024/1024))M $@";dmr;ga;ba;fi; }
-function fsc { local f="$1-check";sex "touch $f";sex "chown eth:eth $f";if [[ -w $f ]];then sex "rm -f $f";else gps;ups;bps;sex reboot;fi; }
+#function fsc { local f="$1-check";sex "touch $f";sex "chown eth:eth $f";if [[ -w $f ]];then sex "rm -f $f";else gps;ups;bps;sex reboot;fi; }
+#[[ $1 = glf ]] && { v7t && fsc $p08/$s10;gl0;swn "$m" >> $p10;[[ $ok != OK ]] && grs $ok 0 $n03; }
 # ntpq -p output
 # when   The time after the last poll event. When when reaches the value of poll then the next polling action occurs. (s)
 # poll   The current polling interval. (s)
@@ -530,7 +531,7 @@ function tsh { if tsa $s19;then cex "$s07 $s31-status";cex "$s07 show-$s31";else
 [[ $1 = ul  ]] && { ul0;swn "$m"; }
 [[ $1 = ulf ]] && { ul0;swn "$m" >> $p11;[[ $ok != OK ]] && urs $ok 0 $n03; }
 [[ $1 = gl  ]] && { gl0;swn "$m"; }
-[[ $1 = glf ]] && { v7t && fsc $p08/$s10;gl0;swn "$m" >> $p10;[[ $ok != OK ]] && grs $ok 0 $n03; }
+[[ $1 = glf ]] && { gl0;swn "$m" >> $p10;[[ $ok != OK ]] && grs $ok 0 $n03; }
 [[ $1 = bl  ]] && { bl0;swn "$m"; }
 [[ $1 = blf ]] && { bl0;swn "$m" >> $p12;if [[ $d1 = 23:58 ]];then if bdt;then bdl $d0;else if [[ $(llc $p12) -gt $n14 ]];then bod 0 9;fi;fi;fi;[[ $ok != OK ]] && mnt && brs $ok 0 0 $n02;pas; }
 [[ $1 = vl  ]] && { vl0;swn "$m"; }
@@ -545,7 +546,7 @@ function tsh { if tsa $s19;then cex "$s07 $s31-status";cex "$s07 show-$s31";else
 [[ $1 = bh  ]] && { bh0 $2; }
 [[ $1 = vh  ]] && { sh0 $p49 $2;[[ $2 ]] || { vl0;swn "VL $(printf '%8i' $(llc $p49) 2>$p03)\n$m"; } }
 [[ $1 = mh  ]] && { sh0 $p52 $2;[[ $2 ]] || { ml0;swn "ML $(printf '%8i' $(llc $p52) 2>$p03)\n$m"; } }
-[[ $1 = hs0 ]] && { if v2t;then hsv;cpe;else echo $cuvc;ssh $(snc $cuvc) "$p53 hsv";fi;hs0 $cun1;hs0 $cun2;if v5t;then hsm;cpe;else echo $cumv;ssh $(snc $cumv) "$p53 hsm";fi;if v6t;then cpe;else echo $znm2;ssh $(snc $znm2) "$p53 cpe";fi; }
+[[ $1 = hs0 ]] && { if v2t;then hsv;cpe;else echo $cuvc;ssh $(snc $cuvc) "$p53 hsv";fi;hs0 $cun1;hs0 $cun2;if v5t;then hsm;cpe;else echo $cumv;ssh $(snc $cumv) "$p53 hsm";fi;if v6t;then cpe;else echo $znm1;ssh $(snc $znm1) "$p53 cpe";fi; }
 [[ $1 = hs1 ]] && { hs0 $cun1; }
 [[ $1 = hs2 ]] && { hs0 $cun2; }
 [[ $1 = hse ]] && { hsg;hsu; }

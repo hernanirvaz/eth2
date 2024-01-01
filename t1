@@ -25,8 +25,8 @@ if [[ $cust = hrv ]];then ciec=$iip6;else ciec=$vip1;fi;[[ $cunm = $inm5 ]] && c
 if [[ $cust = hrv ]];then cicc=$iip6;else cicc=$vip1;fi;[[ $cunm = $inm5 ]] && cicc=$iip5
 cuvc=$znm4
 nxvc=$znm4
-cun1=$inm5
-cun2=$inm6
+cun1=$inm6
+cun2=$inm5
 cumv=$znm3
 
 p00='/usr/local/bin'
