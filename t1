@@ -27,7 +27,7 @@ cuvc=$znm4
 nxvc=$znm4
 cun1=$inm5
 cun2=$inm6
-cumv=$znm1
+cumv=$znm3
 
 p00='/usr/local/bin'
 p01='/var/log/syslog'
@@ -88,7 +88,7 @@ p56="/etc/nut/upsmon.conf"
 p57="/etc/nut/upsd.conf"
 p58='/var/lib/jwtethereum'
 
-e00='s%^ *#* *NTP *=.*$%NTP=192.168.8.28 ntp02.oal.ul.pt ntp04.oal.ul.pt time.google.com time.cloudflare.com time.facebook.com%i';if [[ $cunm = $cuvc || $cunm = $cun1 || $cunm = $cun2 || $cunm = $cumv ]];then e00="${e00};s%^ *#* *PollIntervalMaxSec *=.*$%PollIntervalMaxSec=1200%i";fi
+e00='s%^ *#* *NTP *=.*$%NTP=192.168.8.25 192.168.8.28 ntp02.oal.ul.pt ntp04.oal.ul.pt time.google.com time.cloudflare.com time.facebook.com%i';if [[ $cunm = $cuvc || $cunm = $cun1 || $cunm = $cun2 || $cunm = $cumv ]];then e00="${e00};s%^ *#* *PollIntervalMaxSec *=.*$%PollIntervalMaxSec=1200%i";fi
 e01='s%^ *ENABLED=.*$%ENABLED=0%i'
 e02='s%bind[^"]*"%bind -4"%'
 e03='s%^ */*\(.*codename}-updates.*$\)%\1%i;s%^ */* *Unattended-Upgrade::Mail .*$%Unattended-Upgrade::Mail "hernanilr@gmail.com";%i;s%^ */* *Unattended-Upgrade::OnlyOnACPower.*$%Unattended-Upgrade::OnlyOnACPower "false";%i'
@@ -464,6 +464,7 @@ b[1027307]='0x83c7c2d579df3b6f00513730e1bd2acb8c1515ecd0d158535d9e6c37dadbfbff20
 function mnt { [[ $cunm = $cun1 ]]; }
 function tsa { $s00 is-active  --quiet $1 2>$p03; }
 function tse { $s00 is-enabled --quiet $1 2>$p03; }
+function trs { if tsa $s19;then nex "$s06 $s19";else nex "$s06 ntp";fi; }
 function swb { echo -e "\n\e[5m${1^^}\e[25m\n"; }
 function swu { echo -e "${1^^}"; }
 function swn { echo -e "$1"; }
@@ -487,7 +488,7 @@ function sni { case $1 in $inm5) printf $iip5;;$inm6) printf $iip6;;$znm1) print
 function snc { if [[ ${1:0:3} = hrv ]];then printf ${1/[a-z]*-/}|tr -d '[aoel]';else case $1 in $vnm1) printf vpsl;;$vnm2) printf vpsm;;$vnm3) printf vpss;;esac;fi; }
 function sjw { [[ $cunm = $inm5 || $cunm = $inm6 ]] || return;if [[ -d $p58 ]];then swn "JA EXISTE $p58/";else sex "mkdir -p $p58";cmw $p58 755 eth;fi;if [[ -f $p58/jwt ]];then swn "JA EXISTE $p58/jwt";else openssl rand -hex 32|tr -d '\n'|tee $p58/jwt 1>$p03;cmw $p58/jwt 444;fi;if [[ -f $p58/pubkeys ]];then swn "JA EXISTE $p58/pubkeys";else echo ${b[@]}|tr ' ' ',' > $p58/pubkeys;cmw $p58/pubkeys 400 eth2;fi; }
 function unv { local f=${1:-23.1.0};curl -LO https://hyperledger.jfrog.io/artifactory/besu-binaries/besu/$f/besu-$f.tar.gz;sha256sum besu-$f.tar.gz;swn "INSTALAR BESU $f (SIM/nao)?";local rsp=nao;read rsp;if [[ $rsp = SIM ]];then tar xvf besu-$f.tar.gz;sex "cp -a besu-$f $p00/besu";sex "chown eth1:eth1 -R $p00/besu";cmw $p00/besu 755 eth1;fi; }
-function gnv { local f="go${1:-1.20.5}.linux-amd64.tar.gz";swu "INSTALAR GO-LANG $f";cd $p02;sex "rm -f $f";wget -q https://go.dev/dl/$f;sex "rm -rf /usr/local/go";sex "tar -C /usr/local -xzf $f";echo 'if [ -d "/usr/local/go/bin" ];then PATH="/usr/local/go/bin:$PATH";fi' >> $p02/.profile; }
+function gnv { local f="go${1:-1.20.5}.linux-amd64.tar.gz";swu "INSTALAR GO-LANG $f";cd $p02;sex "rm -f $f";wget -q https://go.dev/dl/$f;sex "rm -rf /usr/local/go";sex "tar -C /usr/local -xzf $f";echo 'if [ -d "/usr/local/go/bin" ];then PATH="$PATH:/usr/local/go/bin";fi' >> $p02/.profile; }
 function mnv { local f="go/bin/mev-boost";swu 'INSTALAR MEV-BOOST';cd $p02;sex "rm -rf go";CGO_CFLAGS="-O -D__BLST_PORTABLE__" /usr/local/go/bin/go install github.com/flashbots/mev-boost@latest;sex "cp $f $p00";cmw $p00/mev-boost 755 eth4; }
 function snv { local v=${1:-v2.7.0};local f="staking_deposit-cli-${2:-fdab65d}-linux-amd64.tar.gz";rm -f $f;curl -LO https://github.com/ethereum/staking-deposit-cli/releases/download/$v/$f;local s=$(sha256sum $f|cut -d' ' -f1);swn "INSTALAR $f ($s)?";local rsp=nao;read rsp;if [[ $rsp = $s ]];then tar xf $f --strip-components 2;fi; }
 function dnv { local v=${1:-1.33.2};local f="ethdo-$v-linux-amd64.tar.gz";local e="https://github.com/wealdtech/ethdo/releases/download/v$v";rm -f $f $f.sha256;curl -LO $e/$f -LO $e/$f.sha256;local s=$(sha256sum $f|cut -d' ' -f1);local r=$(cat $f.sha256);if [[ $r = $s ]];then tar xf $f;swb "INSTALADO $f";fi; }

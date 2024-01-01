@@ -62,7 +62,7 @@ else
   sex "$s07 set-timezone Europe/Berlin"
   cc1 $p20 "$e13"                                                                                                                                             # general time servers
   nex "mv -f /etc/motd $p02/motd.sav"                                                                                                                         # no contabo info
-fi                             ;cmw $p20 644 root;nex "$s06 $s19"                                                                                             # timesyncd cmod & restart
+fi                             ;cmw $p20 644 root;trs                                                                                                         # timesyncd cmod & restart
 cc1 $p23 "$e03"                ;cmw $p23 644 root                                                                                                             # unattended-upgrades
 cc1 $p51 "$e28"                ;cmw $p51 644 root                                                                                                             # unattended-upgrades
 cc1 $p24 "$e04";cc2 $p24 "$g01";cmw $p24 755 root                                                                                                             # header add my motd
