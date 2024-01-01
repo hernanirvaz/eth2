@@ -2,7 +2,7 @@
 
 meeu=$(whoami)
 cunm=$(uname -n)
-cust=$(uname -n|cut -c1-3)
+cust=${cunm:0:3}
 zip1='192.168.8.25'
 zip2='192.168.8.28'
 zip3='192.168.8.31'
