@@ -207,7 +207,7 @@ function bno { m="BEAC $(nu1 %6i $(llc $p12)) $dt $(bnc 'cnt:' ' ') $(bnk 'mis:'
 function bmi { zk=0;zz=0;zx=0;unset v;v[1]=0;unset k;k[0]=0;unset z;z[0]=0;unset x;x[0]=0;unset w;w[0]=0;unset c;c[0]=0;unset a;a[0]=0;bm6; }                 # ini err/cnt/avg penalty arrays
 function bm0 {                                                                                                                                                # cc-daily report
   fft $p12 || return;bmi;b4=0;dts;bv0;bnn;bs3;bl2;[[ -f $p14 ]] && bm4;svi                                                                                    # set vars/arrays
-  l1=$(tail -n$(($(nu0 $(llc $p12))-v[1])) $p12 2>$p03|bfl);[[ $l1 ]] && bm1;bm2;e0t $b2 && boi;bo3;bm5 ${a[$nn]};b5=$(bcc)                                   # add cc lines & homologous/avg position
+  l1=$(tail -n$(($(nu0 $(llc $p12))-v[1])) $p12 2>$p03|bfl);[[ $l1 ]] && bm1;bm2;e0t $b2 && boi;bo3;bm5 $(nu2 "${a[$nn]}*(1-$n33/100)");b5=$(bcc)             # add cc lines & homologous/avg position
 }
 function bm1 { local g=${1:-$n16};bs5 $g;[[ $l5 ]] && { bkm $g;bzm $g;bxm $g;bwm $g;bcm $g; };((g<n17)) && bm1 $((g+n18)); }                                  # recursively sum penalty errors arrays
 function bm2 { k[0]=$(($(bnk)));z[0]=$(($(bnz)));x[0]=$(($(bnx)));w[0]=$(($(bnw)));c[0]=$(($(bnc)));a[0]=$(bm3 0);bm7; }                                      # tot err/cnt/penalty arrays
