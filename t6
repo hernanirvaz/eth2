@@ -160,7 +160,7 @@ function bi3 { nu2 "(($1*$n28+$2*$n29+$3*$n10+$4*$n11)/${5:-1}*$n30/1000000)+2*$
 function bi4 { nu2 "(20.0*(0.4*$zk+0.3*$zz+0.2*$zx+0.1*$zw))"                         ; }                                                                     # get numerator paid errors
 function bi5 { nu2 "($1*$n27+$2*$n08)*$n30/100000000"                       7         ; }                                                                     # get reward
 function bi6 { nu2 "2*$z1"                                                            ; }                                                                     # get numerator processed blocks
-function bi7 { nu2 "9*$z3"                                                            ; }                                                                     # get numerator general errors
+function bi7 { nu2 "4*$z3"                                                            ; }                                                                     # get numerator general errors
 function bi8 { nu0 $(((z5>400?$(bi4)/z5:0)+(z2>100?$(bi6)/z2:0)+(z4>500?$(bi7)/z4:0))); }                                                                     # get restart idx
 function bi9 { nu2 "${a[$nn]}*(1-$n33/100)"                                           ; }                                                                     # get init penalty to recursively get b4
 function bsi { nu0 $(echo $@|jq -r .data.sync_distance 2>$p03)                        ; }                                                                     # get cl syncing distance
@@ -534,7 +534,7 @@ function tsh { if tsa $s19;then cex "$s07 $s31-status";cex "$s07 show-$s31";else
 [[ $1 = gl  ]] && { gl0;swn "$m"; }
 [[ $1 = glf ]] && { gl0;swn "$m" >> $p10;[[ $ok != OK ]] && grs $ok 0 $n03; }
 [[ $1 = bl  ]] && { bl0;swn "$m"; }
-[[ $1 = blf ]] && { bl0;swn "$m" >> $p12;if [[ $d1 = 23:58 ]];then if bdt;then bdl $d0;else if [[ $(llc $p12) -gt $n14 ]];then bod 0 9;fi;fi;fi;[[ $ok != OK ]] && mnt && brs $ok 0 0 $n02;pas; }
+[[ $1 = blf ]] && { bl0;swn "$m" >> $p12;if [[ $d1 = 23:58 ]];then if bdt;then bdl $d0;else if [[ $(llc $p12) -gt $n14 ]];then bod 0 9;fi;fi;fi;[[ $ok != OK ]] && brs $ok 0 0 $(btn $n02);pas; }
 [[ $1 = vl  ]] && { vl0;swn "$m"; }
 [[ $1 = vlf ]] && { vl0;swn "$m" >> $p49; }
 [[ $1 = ml  ]] && { ml0;swn "$m"; }
