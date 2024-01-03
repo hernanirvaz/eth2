@@ -214,6 +214,8 @@ e45='s%.*currentBlock: *([0-9]+).*%\1%ip'
 e46='s%.*highestBlock" *: *"0x([^"]+)".*%\1%ip'
 e47='s%.*currentBlock" *: *"0x([^"]+)".*%\1%ip'
 e48='s%.*result" *: *"0x([^"]+)".*%\1%ip'
+e49="s%^.*UFW BLOCK]%UFW%"
+e49="$e49;s% MAC=[^ ]*%%"
 
 g00="\n$p01\n{\n\trotate 7\n\tdaily\n\tmissingok\n\tnotifempty\n\tnocompress\n\tsharedscripts\n\tpostrotate\n\t\t/usr/lib/rsyslog/rsyslog-rotate\n\tendscript\n}"
 g01='printf "Welcome to %s %s\\n" "$(uname -n)" "$DISTRIB_DESCRIPTION"'

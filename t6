@@ -602,12 +602,13 @@ function tsh { if tsa $s19;then cex "$s07 $s31-status";cex "$s07 show-$s31";else
 [[ $1 = ciz ]] && { ll0             |fln "$g26" $2; }
 [[ $1 = viz ]] && { ll4             |fln "$g26" $2; }
 [[ $1 = miz ]] && { ll2 "$g09.*$g33"; }
-[[ $1 = ws  ]] && { cex 'ufw status numbered'; }
 [[ $1 = wa  ]] && { wa; }
 [[ $1 = we  ]] && { yex 'ufw enable'; }
 [[ $1 = wpr ]] && { cex 'ufw disable'; }
 [[ $1 = wds ]] && { cex 'ufw disable'; }
-[[ $1 = wl  ]] && { wlp ${@:2:$#}; }
+[[ $1 = ws  ]] && { cex 'ufw status numbered'; }
+[[ $1 = wl  ]] && { wlp ${@:2:$#}|sed -E "$e49"; }
+[[ $1 = wlz ]] && { wlp ${@:2:$#}; }
 # journal
 [[ $1 = yj  ]] && { jrn; }
 [[ $1 = ej  ]] && { jrn "-u $s10 -u $s12 -u $s13"; }
@@ -764,7 +765,7 @@ if [[ ! $1 ]];then
   m="$m\ntvc\t\tvc transfer ($cuvc -> $nxvc)"
   m="$m\nmvr\t\tmev validator registration"
   m="$m\nmre\t\tmev relay erros"
-  m="$m\nws\t\tfirewall status"
+  m="$m\nw[s|l [ips]] \tshow firewall status/logs [exclude ip]"
   m="$m\nwa\t\tfirewall arranca"
   m="$m\nwpr\t\tfirewall para"
   m="$m\ncpe [cp]\tclock & cpu & errors status"
