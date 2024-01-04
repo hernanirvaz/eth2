@@ -87,6 +87,8 @@ p55="/etc/nut/ups.conf"
 p56="/etc/nut/upsmon.conf"
 p57="/etc/nut/upsd.conf"
 p58='/var/lib/jwtethereum'
+p59='/var/lib/transmission-daemon/downloads'
+p60='/var/lib/mp4'
 
 e00="s%^ *#* *NTP *=.*$%NTP=$zip1 $zip2 time.google.com time.cloudflare.com time.facebook.com%i";if [[ $cunm = $cuvc || $cunm = $cun1 || $cunm = $cun2 || $cunm = $cumv ]];then e00="${e00};s%^ *#* *PollIntervalMaxSec *=.*$%PollIntervalMaxSec=1200%i";fi
 e01='s%^ *ENABLED=.*$%ENABLED=0%i'
@@ -127,8 +129,8 @@ e20='s%.*\(Temperature\|Sensor\|Package\|Core\|Composite\|temp[0-9]\).*: *\([-+]
 e21='s%.* \([0-9]*:[0-9]*\):[0-9]*.*%\1%'
 e22='s%.*pubkey": "\([^"]*\)".*%0x\1%p'
 e23='/^ *\/swap/s%^%#%'
-e24="s%download-dir\": \"[^\"]*\"%download-dir\": \"/sata/downloads\"%"
-e24="$e24;s%incomplete-dir\": \"[^\"]*\"%incomplete-dir\": \"/sata/downloads\"%"
+e24="s%download-dir\": \"[^\"]*\"%download-dir\": \"$p59\"%"
+e24="$e24;s%incomplete-dir\": \"[^\"]*\"%incomplete-dir\": \"$p59\"%"
 e24="$e24;s%lpd-enabled\": .*%lpd-enabled\": true,%"
 e24="$e24;s%rpc-whitelist\": \"[^\"]*\"%rpc-whitelist\": \"127.0.0.1,192.168.8.*\"%"
 e24="$e24;s%rpc-username\": \"[^\"]*\"%rpc-username\": \"eu\"%"

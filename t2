@@ -32,7 +32,9 @@ if [[ $cunm = $znm2 ]];then
   echo deb https://downloads.plex.tv/repo/deb public main | sudo tee /etc/apt/sources.list.d/plexmediaserver.list                                             # add apt source for plex
   curl https://downloads.plex.tv/plex-keys/PlexSign.key | sudo apt-key add -;sex 'apt update'                                                                 # add apt key    for plex
   sex 'apt install nginx plexmediaserver transmission-cli transmission-common transmission-daemon -y'                                                         # install nginx/plex/transmission
-  sex "usermod -a -G debian-transmission eu";sex "mkdir -p /sata/downloads";cmw /sata/downloads 775 debian-transmission                                       # prepare downloads
+  sex "usermod -a -G debian-transmission eu"
+  if [[ ! -d $p59 ]];then sex "mkdir -p $p59";cmw $p59 775 debian-transmission;fi
+  sex "mkdir -p $p60";cmw $p60 775 plex
   cc4 $p32 "$g04"              ;cmw $p32 644 root               ;sex "$s00 reload $s22"                                                                       # nginx config for plex
   cc1 $p33 "$e24"              ;cmw $p33 600 debian-transmission;sex "$s00 reload $s15"                                                                       # transmission config
 fi
