@@ -25,16 +25,17 @@ else
 fi
 [[ -f $p04/$s10.service || -f $p04/$s11.service || -f $p04/$s12.service || -f $p04/$s13.service ]] && exit                                                    # ec/cl instalados -> exit
 swu 'UPDATE LINUX'       ;t4 linux
-swu 'ADDITIONAL LINUX'   ;sex 'apt install python3-pip net-tools apt-listchanges landscape-common software-properties-common smartmontools apt-transport-https curl jq -y'
+swu 'ADDITIONAL LINUX'   ;sex 'apt install python3-pip net-tools apt-listchanges landscape-common software-properties-common smartmontools curl jq -y'
 swu 'UNATTENDED UPGRADES';cex 'apt install unattended-upgrades update-notifier-common -y'
 swu 'LINUX CONFIG'
 if [[ $cunm = $znm2 ]];then
+  swu 'PLEX SERVER'      ;cex 'apt install apt-transport-https -y'
   echo deb https://downloads.plex.tv/repo/deb public main | sudo tee /etc/apt/sources.list.d/plexmediaserver.list                                             # add apt source for plex
   curl https://downloads.plex.tv/plex-keys/PlexSign.key | sudo apt-key add -;sex 'apt update'                                                                 # add apt key    for plex
   sex 'apt install nginx plexmediaserver transmission-cli transmission-common transmission-daemon -y'                                                         # install nginx/plex/transmission
   sex "usermod -a -G debian-transmission eu"
-  if [[ ! -d $p59 ]];then sex "mkdir -p $p59";cmw $p59 775 debian-transmission;fi
-  sex "mkdir -p $p60";cmw $p60 775 plex
+  if [[ ! -d $p59 ]];then cex "mkdir -p $p59";cmw $p59 775 debian-transmission;fi
+  if [[ ! -d $p60 ]];then cex "mkdir -p $p60";cmw $p60 775 plex               ;fi
   cc4 $p32 "$g04"              ;cmw $p32 644 root               ;sex "$s00 reload $s22"                                                                       # nginx config for plex
   cc1 $p33 "$e24"              ;cmw $p33 600 debian-transmission;sex "$s00 reload $s15"                                                                       # transmission config
 fi
