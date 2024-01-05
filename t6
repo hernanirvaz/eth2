@@ -351,8 +351,8 @@ function cpe {
   g0t $(nu0 $(/usr/lib/update-notifier/apt-check 2>&1|sed 's%;% %g')) && { apt list --upgradable 2>$p03|grep -v Listing;echo; }
 }
 # Plex Media Server
-function xop { pde 80 plex/nginx delete;pai 80 192.168.8.0/24 plex/nginx       ;ide 192.168.8.0/24 1900/udp plex/upnp       ; }
-function xco { pde 80 plex/nginx       ;pai 80 192.168.8.0/24 plex/nginx delete;ide 192.168.8.0/24 1900/udp plex/upnp delete; }
+function xop { pde 32400 plex delete;pai 32400 192.168.8.0/24 plex       ;pde 80 nginx delete;pai 80 192.168.8.0/24 nginx       ;ide 192.168.8.0/24 1900/udp plex/upnp       ; }
+function xco { pde 32400 plex       ;pai 32400 192.168.8.0/24 plex delete;pde 80 nginx       ;pai 80 192.168.8.0/24 nginx delete;ide 192.168.8.0/24 1900/udp plex/upnp delete; }
 function xe  { xop;sex 'ufw reload';cex "$s04 $s22";cex "$s04 $s21"; }                                                                                        # enable  plexmediaserver
 function xa  { tsa $s22 || cex "$s03 $s22";tsa $s21 || cex "$s03 $s21"; }                                                                                     # start   plexmediaserver
 function xp  { tsa $s22 && cex "$s02 $s22";tsa $s21 && cex "$s02 $s21"; }                                                                                     # stop    plexmediaserver

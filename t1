@@ -273,7 +273,7 @@ for m in $(ip l|sed -n 's%.* \([a-z0-9]*\): .* state DOWN .*%\1%p');do
   g03="$g03\n      dhcp4: true"
   g03="$g03\n      activation-mode: off"
 done
-g04="upstream plex_backend { server ztc2:32400; keepalive 32; }"
+g04="upstream plex_backend { server 192.168.8.28:32400; keepalive 32; }"
 g04="$g04\nserver {"
 g04="$g04\nlisten 80;"
 g04="$g04\nserver_name ztc2;"
