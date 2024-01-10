@@ -1,3 +1,8 @@
+d1s () { rsync -rvz /var/lib/plexmediaserver/mp4/movie ztc1:~/movie; }
+d2s () { rsync -rvz /var/lib/plexmediaserver/mp4/lust  ztc1:~/lust ; }
+d3s () { rsync -rvz /var/lib/plexmediaserver/mp4/tv    ztc3:~/tv   ; }
+dsp () { local s=hrv-zotac2;if [[ $(uname -n) = $s ]];then d1s;d2s;d3s;else echo only on $s;fi; }
+
 alias nt='sudo iftop -nNPBF $(ip r|sed -En "s%^192.* (192.168.8.[0-9]+) *$%\1%p")'
 alias rt='echo meo:$V;telnet 192.168.8.254'
 alias xx='exit'

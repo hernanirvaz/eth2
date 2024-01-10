@@ -1,6 +1,6 @@
-mp4ls () { echo -e "\ntls ${1:-txt}  ${2:-/var/lib/plexmediaserver/mp4/}";find ${2:-/var/lib/plexmediaserver/mp4/} -name "*.${1:-txt}" -print; }
-mp4rm () { echo -e "\ntrm ${1:-txt}  ${2:-/var/lib/plexmediaserver/mp4/}";find ${2:-/var/lib/plexmediaserver/mp4/} -name "*.${1:-txt}" -exec sudo rm {} \;; }
-fntac () { echo -e "\ntac ${1:-plex} ${2:-/var/lib/plexmediaserver/mp4/}";sudo chown ${1:-plex}:${1:-plex} -R ${2:-/var/lib/plexmediaserver/mp4/}; }
+mp4ls () { local s=${1:-txt} ;local d=${2:-/var/lib/plexmediaserver/mp4};echo -e "\ntls $s $d";find $d -name "*.$s" -print; }
+mp4rm () { local s=${1:-txt} ;local d=${2:-/var/lib/plexmediaserver/mp4};echo -e "\ntrm $s $d";find $d -name "*.$s" -exec sudo rm {} \;; }
+fntac () { local s=${1:-plex};local d=${2:-/var/lib/plexmediaserver/mp4};echo -e "\ntac $s $d";sudo chown $s:$s -R $d; }
 
 alias tll='transmission-remote -n 'eu:' -l'
 alias tbs='transmission-remote -n 'eu:' -st'
