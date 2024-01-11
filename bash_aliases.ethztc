@@ -1,6 +1,6 @@
-d1s () { local s=hrv-zotac2;if [[ $(uname -n) = $s ]];then rsync --ignore-existing --delete -rz /var/lib/plexmediaserver/mp4/movie ztc1:;else echo only on $s;fi; }
-d2s () { local s=hrv-zotac2;if [[ $(uname -n) = $s ]];then rsync --ignore-existing --delete -rz /var/lib/plexmediaserver/mp4/lust  ztc1:;else echo only on $s;fi; }
-d3s () { local s=hrv-zotac2;if [[ $(uname -n) = $s ]];then rsync --ignore-existing --delete -rz /var/lib/plexmediaserver/mp4/tv    ztc3:;else echo only on $s;fi; }
+r11 () { local s=hrv-zotac2;if [[ $(uname -n) = $s ]];then rsync --ignore-existing --delete -rz /var/lib/plexmediaserver/mp4/movie ztc1:;else echo only on $s;fi; }
+r12 () { local s=hrv-zotac2;if [[ $(uname -n) = $s ]];then rsync --ignore-existing --delete -rz /var/lib/plexmediaserver/mp4/lust  ztc1:;else echo only on $s;fi; }
+r31 () { local s=hrv-zotac2;if [[ $(uname -n) = $s ]];then rsync --ignore-existing --delete -rz /var/lib/plexmediaserver/mp4/tv    ztc3:;else echo only on $s;fi; }
 
 alias nt='sudo iftop -nNPBF $(ip r|sed -En "s%^192.* (192.168.8.[0-9]+) *$%\1%p")'
 alias rt='echo meo:$V;telnet 192.168.8.254'
