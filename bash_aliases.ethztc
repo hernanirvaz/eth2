@@ -1,6 +1,6 @@
-d1s () { rsync --size-only -rz /var/lib/plexmediaserver/mp4/movie ztc1:; }
-d2s () { rsync --size-only -rz /var/lib/plexmediaserver/mp4/lust  ztc1:; }
-d3s () { rsync --size-only -rz /var/lib/plexmediaserver/mp4/tv    ztc3:; }
+d1s () { rsync --ignore-existing --delete -rz /var/lib/plexmediaserver/mp4/movie ztc1:; }
+d2s () { rsync --ignore-existing --delete -rz /var/lib/plexmediaserver/mp4/lust  ztc1:; }
+d3s () { rsync --ignore-existing --delete -rz /var/lib/plexmediaserver/mp4/tv    ztc3:; }
 dsp () { local s=hrv-zotac2;if [[ $(uname -n) = $s ]];then d1s;d2s;d3s;else echo only on $s;fi; }
 
 alias nt='sudo iftop -nNPBF $(ip r|sed -En "s%^192.* (192.168.8.[0-9]+) *$%\1%p")'
