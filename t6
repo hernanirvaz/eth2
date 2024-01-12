@@ -341,7 +341,7 @@ function cpe {
   if [[ $cunm = $cuvc   || $cunm = $cun1 || $cunm = $cun2 ]];then m=$(cll "$e29;$e37");local l=cl;fi
   if [[ $cunm = $cumv                                     ]];then m=$(rll "$e31;$e37");local l=rl;fi
   if [[ ! $m ]];then if [[ $cunm = $cun1 || $cunm = $cun2 ]];then m=$(ell "$e29;$e37");local l=el;fi;fi
-  local n=$(echo "$m"|wc -l);local d=$(echo "$m"|tail -n1)
+  if [[ ! $m ]];then local n=0;local d=;else local n=$(echo "$m"|wc -l);local d=$(echo "$m"|tail -n1);fi
   m="ERRO$(printf '%3i %3i %10s %5s' $i $n $dt 2>$p03)"
   if g0t $i;then if g0t $n;then m="$m sl: ${e:0:53}";m="$m $l: ${d:0:54}";else m="$m sl: ${e:0:112}";fi;else if g0t $n;then m="$m $l: ${d:0:112}";fi;fi
   (( i+n )) && swn "$m";m=
