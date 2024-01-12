@@ -21,9 +21,8 @@ function ln1 { if [[ $l6 ]];then echo "$l6"|sed -En "s%.*$1 *-?([0-9]*\.?[0-9]+)
 function ln2 { if [[ $l4 ]];then echo "$l4"|gawk "$1"                                         2>$p03;fi; }                                                    # get awk list of numbers (µs|ms|s)
 function ln3 { l6=$(ll2 $2.*$1);ln1 $1; }                                                                                                                     # get numbers all  syslog lines
 function ln4 { if g0t $3;then l6=$(ll2 $2.*$1|tail -n$3);else l6=$(ll2 $2.*$1);fi;ln1 $1; }                                                                   # get numbers tail syslog lines
-function fl0 { ll3|tail -n300|grep -ai Core.*temperature; }                                                                                                   # get tail  cpu syslog lines
-function fl1 { fl0|wc -l; }                                                                                                                                   # get error cpu count
-function fl2 { ll3|flp "$g29"|grep -a usb|wc -l; }                                                                                                            # get error usb count
+function fl0 { ll3|tail -n300|flp "Core.*temperature" $1; }                                                                                                   # get temp  cpu lines
+function fl1 { ll3           |flp "$g29" $1|grep -ai usb; }                                                                                                   # get error usb lines
 function fln { if [[ $2 ]];then grep -ai "$g34$2";else grep -aiv "$1";fi; }                                                                                   # get negate re syslog lines
 function flp { if [[ $2 ]];then grep -ai "$g34$2";else grep -ai  "$1"|grep -aiv "$g27";fi; }                                                                  # get posite re syslog lines
 function pt0 { until [[ $# -le 1 || $1 =~ $g35 ]];do shift;done;printf %s $1; }                                                                               # yyyy-mm-dd test
@@ -42,9 +41,9 @@ function s2t { g0t $(ls $1.* 2>$p03|wc -l); }
 function s3t { s2t $1 || g0t $(bwc); }
 function s4t { s1t $1 || g0t $(bwc); }
 function llt { [[ $(grep '\-all-' $p04/$s12.service 2>$p03) ]]; }                                                                                             # cc long-lived test
-function t0t { [[ $(cat $p43 2>$p03) -eq 0 && $(fl1) -gt 20 ]]; }                                                                                             # cpu no turbo recomended test
-function t1t { [[ $(cat $p43 2>$p03) -eq 1 && $(fl1) -le 10 ]]; }                                                                                             # cpu    turbo recomended test
-function t2t { [[ $(cat $p44 2>$p03) -eq 1 && $(fl2) -gt 10 ]]; }                                                                                             # usb messages            test
+function t0t { [[ $(cat $p43 2>$p03) -eq 0 && $(fl0|wc -l) -gt 20 ]]; }                                                                                       # cpu no turbo recomended test
+function t1t { [[ $(cat $p43 2>$p03) -eq 1 && $(fl0|wc -l) -le 10 ]]; }                                                                                       # cpu    turbo recomended test
+function t2t { [[ $(cat $p44 2>$p03) -eq 1 && $(fl1|wc -l) -gt 10 ]]; }                                                                                       # usb messages            test
 function t3t { [[ $(cat $p43 2>$p03) -eq 1 ]]; }                                                                                                              # cpu no turbo            test
 function v0t { g0t $(grep $d0 $p12 2>$p03|wc -l); }                                                                                                           # cc  log day  test
 function v1t { [[ $cunm = $nxvc ]]; }                                                                                                                         # vc  next     test
@@ -325,11 +324,11 @@ function clk {
   if tsa $s12;then swn "$e $(nu1 %3i $(ll2 $g08.*clock|wc -l)) $dt $m";else swn "$e     $dt $m";fi
 }
 function sif {
-  if [[ $(cat $p44 2>$p03) -eq 0 ]];then local e=off;else local e=on;fi;if [[ $(cat $p43 2>$p03) -eq 1 ]];then local d=off;else local d=on;fi;local i=$(fl1);local n=$(fl2)
+  if [[ $(cat $p44 2>$p03) -eq 0 ]];then local e=off;else local e=on;fi;if [[ $(cat $p43 2>$p03) -eq 1 ]];then local d=off;else local d=on;fi;local i=$(fl0|wc -l);local n=$(fl1|wc -l)
   [[ $1$e = on && $d = on ]] && e0t $i && e0t $n && return
   swn "INFO$(printf '%3i %3i %10s %5s' $n $i $dt 2>$p03) usb $e, turbo $d, ufw $(wif $(pex 'ufw status'|grep Status:)), uptime:$(uptime|sed "$e35")"
 }
-function sll { ll3       |flp "$g29" $1; }
+function sll { ll3       |fln usb    $1|flp "$g29" $1; }
 function cll { ll2 "$g08"|fln "$g39" $2|if [[ $1 ]];then sed -E "$1";else cat;fi; }
 function rll { ll2 "$g09"|fln "$g25" $2|if [[ $1 ]];then sed -E "$1";else cat;fi; }
 function ell { ll2 "$g11"|fln "$g25" $2|if [[ $1 ]];then sed -E "$1";else cat;fi; }
@@ -578,6 +577,8 @@ function tsh { if tsa $s19;then cex "$s07 $s31-status";cex "$s07 show-$s31";else
 [[ $1 = rl  ]] && { rll "$e31" $2; }
 [[ $1 = el  ]] && { ell "$e29" $2; }
 [[ $1 = ll  ]] && { lll "$e31" $2; }
+[[ $1 = cpu ]] && { fl0        $2; }
+[[ $1 = usb ]] && { fl1        $2; }
 [[ $1 = clz ]] && { cll ""     $2; }
 [[ $1 = rlz ]] && { rll ""     $2; }
 [[ $1 = elz ]] && { ell ""     $2; }
