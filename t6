@@ -68,7 +68,7 @@ function jrn { cex "journalctl --no-hostname --no-full -f $1"; }                
 function dmr { sex "$s00 daemon-reload"; }                                                                                                                    # daemon-reload
 function si1 { local n=${1:-0};printf %i $((20*n))   2>$p03; }
 function si2 { local n=${1:-0};printf %i $((1000*n)) 2>$p03; }
-function svi { local n=${1:-0};if g0t $n;then l4=$(ll1 $g18|tail -n$n);else l4=$(ll1 $g18);fi;i0=$(nu5 3 $(ln2 "$w0$w6$w2"));i1=$(nu5 3 $(ln2 "$w0$w7$w2"));l6=$(ll2 $g08.*$g30);b1=$(nu3 $(ln1 $g30));if g0t $n;then l4=$(ll1 $g19|tail -n$(si2 $n));else l4=$(ll1 $g19);fi;i2=$(nu5 0 $(ln2 "$w0$w4$w1"));if g0t $n;then l6=$(ll1 $g15|tail -n$(si1 $n));else l6=$(ll1 $g15);fi;i3=$(nu5 2 $(ln1 $g14));if g0t $n;then l4=$(ll1 $g20|tail -n$n);else l4=$(ll1 $g20);fi;i4=$(nu5 3 $(ln2 "$w0$w8$w2")); }
+function svi { local n=${1:-0};if g0t $n;then l4=$(ll1 $g18|tail -n$n);else l4=$(ll1 $g18);fi;i0=$(nu5 3 $(ln2 "$w0$w6$w2"));i1=$(nu5 3 $(ln2 "$w0$w7$w2"));b1=$(nu3 $(ln3 $g30 $g08));if g0t $n;then l4=$(ll1 $g19|tail -n$(si2 $n));else l4=$(ll1 $g19);fi;i2=$(nu5 0 $(ln2 "$w0$w4$w1"));if g0t $n;then l6=$(ll1 $g15|tail -n$(si1 $n));else l6=$(ll1 $g15);fi;i3=$(nu5 2 $(ln1 $g14));if g0t $n;then l4=$(ll1 $g20|tail -n$n);else l4=$(ll1 $g20);fi;i4=$(nu5 3 $(ln2 "$w0$w8$w2")); }
 function svv { if v2t;then l6=$(ll5 $g16 $1);v0=$(nu4 1 $(ln1 $g31 ".*$(sni $cun1)"));v1=$(nu4 1 $(ln1 $g31 ".*$(sni $cun2)"));l6=$(ll5 $g17 $(($1/2)));v2=$(nu4 1 $(ln1 $g32));else v0=0;v1=0;v2=0;fi; }
 function smm { if v5t;then m0=$(nu4 3 $(ln4 $g33 $g09 $1));else m0=0;fi; }
 function spc { nn=$2;cp $p04/$1.service $p02/$1.sav;sed "$e43$2%" $p02/$1.sav > $p04/$1.service; }                                                            # service configuration change/reload
@@ -330,10 +330,10 @@ function sif {
   swn "INFO$(printf '%3i %3i %10s %5s' $n $i $dt 2>$p03) usb $e, turbo $d, ufw $(wif $(pex 'ufw status'|grep Status:)), uptime:$(uptime|sed "$e35")"
 }
 function sll { ll3       |flp "$g29" $1; }
-function cll { ll2 "$g08"|fln "$g25" $2|sed -E "$1"; }
-function rll { ll2 "$g09"|fln "$g25" $2|sed -E "$1"; }
-function ell { ll2 "$g11"|fln "$g25" $2|sed -E "$1"; }
-function lll { ll2 "$g10"|fln "$g25" $2|sed -E "$1"; }
+function cll { ll2 "$g08"|fln "$g39" $2|if [[ $1 ]];then sed -E "$1";else cat;fi; }
+function rll { ll2 "$g09"|fln "$g25" $2|if [[ $1 ]];then sed -E "$1";else cat;fi; }
+function ell { ll2 "$g11"|fln "$g25" $2|if [[ $1 ]];then sed -E "$1";else cat;fi; }
+function lll { ll2 "$g10"|fln "$g25" $2|if [[ $1 ]];then sed -E "$1";else cat;fi; }
 function cpe {
   clk;[[ $1 = c ]] && return;tmp;[[ $1 = p ]] && return;sif $1
   m=$(sll|sed "$e36");if [[ $m ]];then local i=$(echo "$m"|wc -l);else local i=0;fi;local e=$(echo "$m"|tail -n1);m=''
@@ -580,28 +580,29 @@ function tsh { if tsa $s19;then cex "$s07 $s31-status";cex "$s07 show-$s31";else
 [[ $1 = rl  ]] && { rll "$e31" $2; }
 [[ $1 = el  ]] && { ell "$e29" $2; }
 [[ $1 = ll  ]] && { lll "$e31" $2; }
+[[ $1 = clz ]] && { cll ""     $2; }
+[[ $1 = rlz ]] && { rll ""     $2; }
+[[ $1 = elz ]] && { ell ""     $2; }
+[[ $1 = llz ]] && { lll ""     $2; }
 [[ $1 = eii ]] && { ll2 "$g13"      |tail -n${2:-$n07}       |sed -E "$e29"; }
 [[ $1 = eiu ]] && { ll2 "$g24"      |tail -n${2:-$n07}       |sed -E "$e29"; }
 [[ $1 = al  ]] && { ll2 "$g08.*$g23"|fln "$g28" $2           |sed -E "$e29"; }
+[[ $1 = alz ]] && { ll2 "$g08.*$g23"|fln "$g28" $2; }
 [[ $1 = ci  ]] && { ll0             |fln "$g26" $2           |sed -E "$e32"; }
+[[ $1 = ciz ]] && { ll0             |fln "$g26" $2; }
 [[ $1 = cii ]] && { ll1 "$g18"      |tail -n${2:-$n21}       |sed -E "$e29"; }
+[[ $1 = cis ]] && { ll1 "$g20"      |tail -n${2:-$n21}       |sed -E "$e29"; }
+[[ $1 = cir ]] && { ll2 "$g08.*$g30"|if g0t ${2:-0};then tail -n${2:-0};else cat;fi|sed -E "$e29"; }
 [[ $1 = cih ]] && { ll1 "$g19"      |tail -n${2:-$(si2 $n21)}|sed -E "$e29"; }
 [[ $1 = cip ]] && { ll1 "$g15"      |tail -n${2:-$(si1 $n21)}|sed -E "$e29"; }
-[[ $1 = cis ]] && { ll1 "$g20"      |tail -n${2:-$n21}       |sed -E "$e29"; }
 [[ $1 = vi  ]] && { ll4             |fln "$g26" $2           |sed -E "$e32"; }
+[[ $1 = viz ]] && { ll4             |fln "$g26" $2; }
 [[ $1 = vi1 ]] && { ll5 $g16 ${2:-$n22}|grep $(sni $cun1)    |sed -E "$e29"; }
 [[ $1 = vi2 ]] && { ll5 $g16 ${2:-$n22}|grep $(sni $cun2)    |sed -E "$e29"; }
 [[ $1 = vic ]] && { ll5 $g17 ${2:-$(($n22/2))}               |sed -E "$e29"; }
 [[ $1 = mi  ]] && { ll2 "$g09.*$g33"|tail -n${2:-$n32}       |sed -E "$e31"; }
-[[ $1 = csp ]] && { ll2 "$g08.*peers:"                       |sed -E "$e30"|grep -v "peers: *[${2:-$(ss5 $s12 target-peers 10)}-9][0-9]"|sort -k6nr; }
-[[ $1 = elz ]] && { ll2 "$g11"                |fln "$g25" $2; }
-[[ $1 = alz ]] && { ll2 "$g08.*$g23"|fln "$g28" $2; }
-[[ $1 = clz ]] && { ll2 "$g08"      |fln "$g25" $2; }
-[[ $1 = rlz ]] && { ll2 "$g09"      |fln "$g25" $2; }
-[[ $1 = llz ]] && { ll2 "$g10"      |fln "$g25" $2; }
-[[ $1 = ciz ]] && { ll0             |fln "$g26" $2; }
-[[ $1 = viz ]] && { ll4             |fln "$g26" $2; }
 [[ $1 = miz ]] && { ll2 "$g09.*$g33"; }
+[[ $1 = csp ]] && { ll2 "$g08.*peers:"                       |sed -E "$e30"|grep -v "peers: *[${2:-$(ss5 $s12 target-peers 10)}-9][0-9]"|sort -k6nr; }
 [[ $1 = wa  ]] && { wa; }
 [[ $1 = we  ]] && { yex 'ufw enable'; }
 [[ $1 = wpr ]] && { cex 'ufw disable'; }
