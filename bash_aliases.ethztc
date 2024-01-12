@@ -1,6 +1,15 @@
-r11 () { local s=hrv-zotac2;local n=movie;local d=ztc1;if [[ $(uname -n) = $s ]];then echo $n $d;rsync --ignore-existing --delete -rz /var/lib/plexmediaserver/mp4/$n $d:;else echo only on $s;fi; }
-r12 () { local s=hrv-zotac2;local n=lust ;local d=ztc1;if [[ $(uname -n) = $s ]];then echo $n $d;rsync --ignore-existing --delete -rz /var/lib/plexmediaserver/mp4/$n $d:;else echo only on $s;fi; }
-r31 () { local s=hrv-zotac2;local n=tv   ;local d=ztc3;if [[ $(uname -n) = $s ]];then echo $n $d;rsync --ignore-existing --delete -rz /var/lib/plexmediaserver/mp4/$n $d:;else echo only on $s;fi; }
+if [[ $(uname -n) = hrv-zotac2 ]];then
+  rmv () { local s=${1:-ztc1};local d=/var/lib/plexmediaserver/mp4/movie;echo rsync  $s $d;rsync --ignore-existing --delete -rz $d $s:; }
+  rlt () { local s=${1:-ztc1};local d=/var/lib/plexmediaserver/mp4/lust ;echo rsync  $s $d;rsync --ignore-existing --delete -rz $d $s:; }
+  rtv () { local s=${1:-ztc3};local d=/var/lib/plexmediaserver/mp4/tv   ;echo rsync  $s $d;rsync --ignore-existing --delete -rz $d $s:; }
+  fls () { local s=${1:-txt} ;local d=/var/lib/plexmediaserver/mp4      ;echo findls $s $d;find $d -name "*.$s" -print; }
+  frm () { local s=${1:-txt} ;local d=/var/lib/plexmediaserver/mp4      ;echo findrm $s $d;find $d -name "*.$s" -exec sudo rm {} \;; }
+  cug () { local s=${1:-plex};local d=/var/lib/plexmediaserver/mp4      ;echo chmdug $s $d;sudo chown $s:$s -R $d; }
+  alias tll='transmission-remote -n 'eu:' -l'
+  alias tbs='transmission-remote -n 'eu:' -st'
+  alias tfs='transmission-remote -n 'eu:' -si'
+  alias tcd='cd /var/lib/transmission-daemon/downloads'
+fi
 
 alias nt='sudo iftop -nNPBF $(ip r|sed -En "s%^192.* (192.168.8.[0-9]+) *$%\1%p")'
 alias rt='echo meo:$V;telnet 192.168.8.254'
