@@ -490,7 +490,7 @@ function gp0 { if tsa $s10;then bp;gp;local i=$(pt2 $(pex "du -s $p08"));sudo -u
 function tsh { if tsa $s19;then cex "$s07 $s31-status";cex "$s07 show-$s31";else swb ntpq;ntpq -p;fi; }
 
 [[ $1 = irb ]] && { irb $2;pas; }
-[[ $1 = eip ]] && { curl -s4 "https://${3:-meo.fruga.pt}:$2@dyn.dns.he.net/nic/update?hostname=${3:-meo.fruga.pt}" &>$p03; }
+[[ $1 = eip ]] && { curl -s4 "https://${3:-meo.fruga.pt}:$2@dyn.dns.he.net/nic/update?hostname=${3:-meo.fruga.pt}" &>$p03;pas; }
 [[ $1 = bmf ]] && { bm0;[[ $2 ]] && b4=$2;bms;v0t && swn "$m" >> $p13;if mnt;then if fft $p45;then bpt && brs RB 0 $((n05*10)) $n00;else bpt && brs PE $b4 $n05 $n02;fi;else rbt && brs RB 0 $n05 $n03;fi; }
 [[ $1 = snr ]] && { cex "$s37 lxd";cex "$s37 core20";cex "$s37 snapd";cex 'apt remove --autoremove snapd -y';echo -e "$s36" > nosnap.pref;cex "mv nosnap.pref $p47";cmw $p47/nosnap.pref 644 root;cex 'apt update'; }
 [[ $1 = mvr ]] && { mvr; }
@@ -534,7 +534,7 @@ function tsh { if tsa $s19;then cex "$s07 $s31-status";cex "$s07 show-$s31";else
 [[ $1 = bl  ]] && { bl0;swn "$m"; }
 [[ $1 = blf ]] && { bl0;swn "$m" >> $p12;if [[ $d1 = 23:58 ]];then if bdt;then bdl $d0;else if [[ $(llc $p12) -gt $n14 ]];then bod 0 9;fi;fi;fi;[[ $ok != OK ]] && brs $ok 0 0 $(btn $n02);pas; }
 [[ $1 = vl  ]] && { vl0;swn "$m"; }
-[[ $1 = vlf ]] && { vl0;swn "$m" >> $p49; }
+[[ $1 = vlf ]] && { vl0;swn "$m" >> $p49;pas; }
 [[ $1 = ml  ]] && { ml0;swn "$m"; }
 [[ $1 = mlf ]] && { ml0;swn "$m" >> $p52; }
 [[ $1 = bn  ]] && { bm0;bno;swn "$m"; }
