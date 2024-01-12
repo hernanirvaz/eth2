@@ -333,20 +333,18 @@ function sll { ll3       |flp "$g29" $1; }
 function cll { ll2 "$g08"|fln "$g39" $2|if [[ $1 ]];then sed -E "$1";else cat;fi; }
 function rll { ll2 "$g09"|fln "$g25" $2|if [[ $1 ]];then sed -E "$1";else cat;fi; }
 function ell { ll2 "$g11"|fln "$g25" $2|if [[ $1 ]];then sed -E "$1";else cat;fi; }
-function lll { ll2 "$g10"|fln "$g25" $2|if [[ $1 ]];then sed -E "$1";else cat;fi; }
+function lll { ll2 "$g10"|fln "$g39" $2|if [[ $1 ]];then sed -E "$1";else cat;fi; }
 function cpe {
   clk;[[ $1 = c ]] && return;tmp;[[ $1 = p ]] && return;sif $1
-  m=$(sll|sed "$e36");if [[ $m ]];then local i=$(echo "$m"|wc -l);else local i=0;fi;local e=$(echo "$m"|tail -n1);m=''
-  local n=$(lll "$e31"|wc -l);local d=;local l=ou
-  if g0t $n;then
-    if [[ $cunm = $cuvc   || $cunm = $cun1 || $cunm = $cun2 ]];then m=$(cll "$e29;$e37");local l=cl;fi
-    if [[ $cunm = $cumv                                     ]];then m=$(rll "$e31;$e37");local l=rl;fi
-    if [[ ! $m ]];then if [[ $cunm = $cun1 || $cunm = $cun2 ]];then m=$(ell "$e29;$e37");local l=el;fi;fi
-    local d=$(echo "$m"|tail -n1)
-  fi
+  m=$(sll|sed "$e36");if [[ $m ]];then local i=$(echo "$m"|wc -l);local e=$(echo "$m"|tail -n1);else local i=0;local e=;fi
+  m=;local n=0;local d=;local l=ou
+  if [[ $cunm = $cuvc   || $cunm = $cun1 || $cunm = $cun2 ]];then m=$(cll "$e29;$e37");local l=cl;fi
+  if [[ $cunm = $cumv                                     ]];then m=$(rll "$e31;$e37");local l=rl;fi
+  if [[ ! $m ]];then if [[ $cunm = $cun1 || $cunm = $cun2 ]];then m=$(ell "$e29;$e37");local l=el;fi;fi
+  local n=$(echo "$m"|wc -l);local d=$(echo "$m"|tail -n1)
   m="ERRO$(printf '%3i %3i %10s %5s' $i $n $dt 2>$p03)"
   if g0t $i;then if g0t $n;then m="$m sl: ${e:0:53}";m="$m $l: ${d:0:54}";else m="$m sl: ${e:0:112}";fi;else if g0t $n;then m="$m $l: ${d:0:112}";fi;fi
-  (( i+n )) && swn "$m";m=''
+  (( i+n )) && swn "$m";m=
   fft $p45 && m="$m, reboot $(($(sra)/60/60)) hours ago $(cpf)";g0t $(bwc) && m="$m, sync/propose duties on";[[ $m ]] && swn "INFO        $dt${m#*,}"         # reboot/duties info
   g0t $(nu0 $(/usr/lib/update-notifier/apt-check 2>&1|sed 's%;% %g')) && { apt list --upgradable 2>$p03|grep -v Listing;echo; }
 }
