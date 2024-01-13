@@ -105,6 +105,7 @@ e08="${e08}pool 0.de.pool.ntp.org iburst"
 e08="${e08}\npool 1.de.pool.ntp.org iburst"
 e08="${e08}\npool 0.pt.pool.ntp.org iburst"
 e08="${e08}\npool 0.europe.pool.ntp.org iburst"
+e08="${e08}\npool 1.europe.pool.ntp.org iburst"
 e09='s%.*url="(.*)"%\1%p'
 e10="s%--execution-endpoint  *\([^ ]*/\)[0-9\.]*:8551[^ ]*%--execution-endpoint \1$zip4:8551%"
 e11="s%--execution-endpoint  *\([^ ]*/\)[0-9\.]*:8551[^ ]*%--execution-endpoint \1$zip1:8551%"
