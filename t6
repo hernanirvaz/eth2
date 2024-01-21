@@ -106,8 +106,8 @@ function grs {
     if [[ $1 = RB ]];then ero $1 $n $p10;rm -f $p50 $p40.*;sex reboot;else sex "$s03 $s10";ssf 90 $p40;gq0;ero $1 $n $p10;fi
   fi;done;rm -f $p50 $p40.*
 }
-function gdi { if g0t $1;then l4=$(ll2 "$g12"|tail -n$1);else l4=$(ll2 "$g12");fi;e1=$(nu5 3 $(ln2 "$w0$w3$w2")); }                                               # get delay imported
-function gdu { if g0t $1;then l4=$(ll2 "$g21"|tail -n$1);else l4=$(ll2 "$g21");fi;e2=$(nu5 3 $(ln2 "$w0$w3$w2")); }                                               # get delay Chain head was updated
+function gdi { if g0t $1;then l4=$(ll2 "$g12"|tail -n$1);else l4=$(ll2 "$g12");fi;e1=$(nu5 3 $(ln2 "$w0$w3$w2")); }                                           # get delay imported
+function gdu { if g0t $1;then l4=$(ll2 "$g21"|tail -n$1);else l4=$(ll2 "$g21");fi;e2=$(nu5 3 $(ln2 "$w0$w3$w2")); }                                           # get delay Chain head was updated
 function gcl { geth attach --exec $1 "http://$ciec:8545" 2>$p03; }                                                                                            # exec RPC HTTP
 function gi0 { nu0 $(echo $@|sed -En "$e44" 2>$p03); }                                                                                                        # get el highest block
 function gc0 { nu0 $(echo $@|sed -En "$e45" 2>$p03); }                                                                                                        # get el current block
@@ -131,7 +131,7 @@ function urs {
     if [[ $1 = RB ]];then ero $1 $n $p11;rm -f $p50 $p41.*;sex reboot;else sex "$s03 $s11";ssf 90 $p41;uq0;ero $1 $n $p11;fi
   fi;done;rm -f $p50 $p41.*
 }
-function udi { if g0t $1;then l4=$(ll2 "$g12"|tail -n$1);else l4=$(ll2 "$g12");fi;e1=$(nu5 3 $(ln2 "$w0$w5$w2")); }                                               # get delay imported
+function udi { if g0t $1;then l4=$(ll2 "$g12"|tail -n$1);else l4=$(ll2 "$g12");fi;e1=$(nu5 3 $(ln2 "$w0$w5$w2")); }                                           # get delay imported
 function ucl { curl -sX POST --data "{\"jsonrpc\":\"2.0\",\"method\":\"$1\",\"params\":[],\"id\":51}" "http://$ciec:8545" 2>$p03; }                           # exec RPC HTTP
 function ui0 { nu0 $((16#$(nu0 $(echo $@|sed -En "$e46" 2>$p03)))); }                                                                                         # get el highest block
 function uc0 { nu0 $((16#$(nu0 $(echo $@|sed -En "$e47" 2>$p03)))); }                                                                                         # get el current block
@@ -159,14 +159,14 @@ function bi3 { nu2 "(($1*$n28+$2*$n29+$3*$n10+$4*$n11)/${5:-1}*$n30/1000000)+2*$
 function bi4 { nu2 "(20.0*(0.4*$zk+0.3*$zz+0.2*$zx+0.1*$zw))"                         ; }                                                                     # get numerator paid errors
 function bi5 { nu2 "($1*$n27+$2*$n08)*$n30/100000000"                       7         ; }                                                                     # get reward
 function bi6 { nu2 "2*$z1"                                                            ; }                                                                     # get numerator processed blocks
-function bi7 { nu2 "4*$z3"                                                            ; }                                                                     # get numerator general errors
+function bi7 { nu2 "3*$z3"                                                            ; }                                                                     # get numerator general errors
 function bi8 { nu0 $(((z5>400?$(bi4)/z5:0)+(z2>100?$(bi6)/z2:0)+(z4>500?$(bi7)/z4:0))); }                                                                     # get restart idx
 function bi9 { nu2 "${a[$nn]}*(1-$n33/100)"                                           ; }                                                                     # get init penalty to recursively get b4
 function bsi { nu0 $(echo $@|jq -r .data.sync_distance 2>$p03)                        ; }                                                                     # get cl syncing distance
 function bpc { nu0 $(echo $@|jq -r .data.connected     2>$p03)                        ; }                                                                     # get cl peers connected
 function bv0 { nn=$(ss5 $s12 target-peers); }                                                                                                                 # set configured peers
-function bs0 { l0=$(ll2 "$g08.*$n31]"|tail -n1000); }                                                                                                           # set last cc log lines
-function bs3 { l3=$(ll2 "$g22"); }                                                                                                                              # set attesta log lines
+function bs0 { l0=$(ll2 "$g08.*$n31]"|tail -n1000); }                                                                                                         # set last cc log lines
+function bs3 { l3=$(ll2 "$g22"); }                                                                                                                            # set attesta log lines
 function bs5 { l5=$(echo "$l1"|sed -En "s%.+node$1:.+er: +([0-9]+) +([0-9]+) +([0-9]+) +([0-9]+).+%\1\t\2\t\3\t\4%p" 2>$p03); }                               # set penalty errors log lines
 function bb0 { bs0;bs3;bl1;bl2;[[ (1 -eq $(era $p12 $n12) && $(bi8) -ge 1) || (1 -eq $(era $p12 5) && $(bi8) -ge 5) ]] && ok=BK; }                            # set ok (OK/BK)
 function bfl { grep "BEAC.*$1"      2>$p03; }                                                                                                                 # filter cc lines
@@ -179,7 +179,7 @@ function bl1 {                                                                  
   z4=${4:-$(echo "$l0"|grep ' INFO '   |wc -l)};z5=${5:-$(bl4 success)};ok=${6:-OK}                                                                           # set info lines,success activities
 }
 function bl2 { zk=${1:-$(bl4 missing)};zz=${2:-$(bl4 target)};zx=${3:-$(bl4 head)};zw=${4:-$(bl4 had)}; }                                                     # set missing/target/head/had activities
-function bl3 { b0=${1:-$(ll2 "$g08.*$g05"|wc -l)};if [[ $2$3$4$5$6$7 ]];then i0=$2;i1=$3;i4=$4;b1=$5;i2=$6;i3=$7;else svi $n21;fi; }                            # set pub-blocks & imported/observed delays
+function bl3 { b0=${1:-$(ll2 "$g08.*$g05"|wc -l)};if [[ $2$3$4$5$6$7 ]];then i0=$2;i1=$3;i4=$4;b1=$5;i2=$6;i3=$7;else svi $n21;fi; }                          # set pub-blocks & imported/observed delays
 function bl4 { echo "$l3"|sed -En "s%.*$1.*validators: *\[(.*)\].*%\1%p"|wc -w; }                                                                             # get number of paid activities
 function ml0 { dts;if tsa $s14;then smm $n32;mlo;else m="MSRV NOT ON $dt";fi; }
 function vl0 { dts;if tsa $s13;then svv $n22;vlo;else m="VSRV NOT ON $dt";fi; }
