@@ -90,6 +90,21 @@ p58='/var/lib/jwtethereum'
 p59='/var/lib/transmission-daemon/downloads'
 p60='/var/lib/plexmediaserver/mp4'
 
+d00="s%^.+(hrv-zotac1|hrv-zotac2|hrv-zotac3|hrv-zotac4|hrv-intel5|hrv-intel6) +%%;s%lighthouse%lh%;s%geth%eg%;s%besu%eu%;s%mev-boost%mv%"
+d07='s%(pubkey|method|blockHash)=[^ ]+ *%%'
+d08='s%Get *..[^ ]+..: *%GET %;s%Post *..[^ ]+..: *%POST %'
+d09='s%https?://@?([a-z\.\-]+)(//*[a-z0-9]*)*%\1%g'
+d10='s%ua=[^ ]+ *%%;s%slotUID=[^ ]+ *%%;s%parentHash=[^ ]+ *%%'
+
+d92='s% *0x[a-z0-9]{96}%%g'                    # 0xaf5e6791b3cbd587268b8da1822f9b0398cbd796eb4e9af856f561217981d9f9469d7f06accd9ae9ebe1b87d338330b4
+d93='s% *0x[a-z0-9]{64}%%g'                    # 0x0383d08d331137c855430189831b7f0d58cbfd08152c43ec3a28e599691c1771
+d94='s% *[a-z0-9]{64}%%g'                      # daecf1068be9a5c179f28d24283fb17757ff5b49fcbca661d91358242a173519
+d95='s% *[a-z0-9]{53}%%ig'                     # 16Uiu2HAmVGPoShPq9FUCntTH5A36Z4FJtw1k3fAVNAGLTJZ7hRxH
+d96='s% *0x[a-z0-9]{40}%%g'                    # 0x3f1962dd3666f186504d6e4c99f76e8e76ffc231
+d97='s% *[a-zA-Z0-9]*\.\.[a-zA-Z0-9]*%%g'      # a31484..f4715f
+d98='s% *0x[a-z0-9]*…[a-z0-9]*%%g;s% *… *% %g'
+d99="$d92;$d93;$d94;$d95;$d96;$d97;$d98;s%\{[^}{]*\}%%g"
+
 e00="s%^ *#* *NTP *=.*$%NTP=$zip1 $zip2 time.google.com time.cloudflare.com time.facebook.com%i";if [[ $cunm = $cuvc || $cunm = $cun1 || $cunm = $cun2 || $cunm = $cumv ]];then e00="${e00};s%^ *#* *PollIntervalMaxSec *=.*$%PollIntervalMaxSec=1200%i";fi
 e01='s%^ *ENABLED=.*$%ENABLED=0%i'
 e02='s%bind[^"]*"%bind -4"%'
@@ -145,13 +160,8 @@ e28="${e28};s%APT::Periodic::Unattended-Upgrade.*$%APT::Periodic::Unattended-Upg
 if [[ $cunm = $cuvc ]];then e28="${e28}5";elif [[ $cunm = $cun1 ]];then e28="${e28}2";elif [[ $cunm = $cun2 ]];then e28="${e28}1";else e28="${e28}1";fi
 e28="${e28}\";%i;/APT::Periodic::Unattended-Upgrade/a \\"
 e28="${e28}APT::Periodic::AutocleanInterval \"1\";"
-e29="s%192\.168\.8\.%%g"
-e29="$e29;s% *0x[a-z0-9]*…[a-z0-9]*%%g;s% *… *% %g"
-e29="$e29;s% *[a-zA-Z0-9]*\.\.[a-zA-Z0-9]*%%g"
-e29="$e29;s% *0x[a-z0-9]{64}%%g"  # 0x0383d08d331137c855430189831b7f0d58cbfd08152c43ec3a28e599691c1771
-e29="$e29;s% *0x[a-z0-9]{40}%%g"  # 0x3f1962dd3666f186504d6e4c99f76e8e76ffc231
-e29="$e29;s% *[a-z0-9]{64}%%g"    # daecf1068be9a5c179f28d24283fb17757ff5b49fcbca661d91358242a173519
-e29="$e29;s% *[a-zA-Z0-9]{53}%%g" # 16Uiu2HAmVGPoShPq9FUCntTH5A36Z4FJtw1k3fAVNAGLTJZ7hRxH
+e29="$d00"
+e29="$e29;s%192\.168\.8\.%%g"
 e29="$e29;s%epoch:%ep:%gi"
 e29="$e29;s%slot:%sl:%gi"
 e29="$e29;s%block:%bl:%gi"
@@ -170,37 +180,28 @@ e29="$e29;s%proposer_index:%pi:%gi"
 e29="$e29;s%snapdiffs=%sdf=%gi"
 e29="$e29;s%triediffs=%tdf=%gi"
 e29="$e29;s%triedirty=%tdt=%gi"
-e29="$e29;s%^.*$cunm *%%"
-e29="$e29;s%lighthouse%lh%"
-e29="$e29;s%geth%eg%"
-e29="$e29;s%besu%eu%"
 e29="$e29;s% *finalized_root.*verified.,%%"
-e29="$e29;s%\{[^}{]*\}%%g;s%\{[^}{]*\}%%g;s%\{[^}{]*\}%%g;s%ServerMessage\(ErrorMessage *\),? *%%gi;s%Reqwest\(reqwest::Error *\),? *%%gi;s% *=> *RequestFailed\(\)%%gi"
-e30="$e29;s%(\.[0-9][0-9][0-9]) *.*peers:%\1 peers:%i"
-e31="$e29;s%mev-boost%mv%"
+e29="$e29;s%ServerMessage\(ErrorMessage *\),? *%%gi;s%Reqwest\(reqwest::Error *\),? *%%gi;s% *=> *RequestFailed\(\)%%gi"
+e29="$e29;$d99"
+e30="$d00;s%(\.[0-9][0-9][0-9]) *.*peers:%\1 peers:%i"
+e31="$d00;$d07;$d08;$d09;$d10"
+e31="$e31;s%time=\"[0-9]{4}-[0-9]{2}-[0-9]{2}T(.+)Z\"%\1%"
 e31="$e31;s%<html>.*</html>%%"
-e31="$e31;s% +/ +(\\\[rn])*%%"
-e31="$e31;s%ua *= *[^ ]* *%%"
-e31="$e31;s%https?://([a-z\.-]+)(/[a-z0-9]+)*%\1%g"
-e31="$e31;s%//[a-z0-9]+%%g"
-e31="$e31;s%registerValidator%rV%g"
-e31="$e31;s%numRegistrations%nR%g"
-e31="$e31;s%slot *= *%sl=%"
-e31="$e31;s%blockHash *= *%%"
-e31="$e31;s%parentHash *= *%%"
-e31="$e31;s%txRoot *= *%%"
-e31="$e31;s%level *= *%%"
-e31="$e31;s%method *= *%%"
-e31="$e31;s%slotUID *= *[a-z0-9-]+ *%%"
-e31="$e31;s%pubkey *= *[a-z0-9]+ *%%"
-e31="$e31;s%path *= *[^ ]+ +%%"
-e31="$e31;s%msg *= *%\tmsg=%"
-e31="$e31;s%time *= *\"([^\"]+)\"%\1%"
-e31="$e31;s%Get *..[^\" ]+..: *%GET %"
-e31="$e31;s%Post *..[^\" ]+..: *%POST %"
+
+#e31="$e31;s%numRegistrations%nR%g"
+#e31="$e31;s%slot *= *%sl=%"
+#e31="$e31;s%blockHash *= *%%"
+#e31="$e31;s%txRoot *= *%%"
+#e31="$e31;s%level *= *%%"
+#e31="$e31;s%path *= *[^ ]+ +%%"
+#e31="$e31;s%msg *= *%\tmsg=%"
+e31="$e31;s%error calling registerValidator on relay%rvl relay%"
+e31="$e31;s%error making request to relay%req relay%"
 e31="$e31;s%context deadline exceeded *%deadline %"
 e31="$e31;s%\(Client.Timeout exceeded while awaiting headers\) *%(Timeout headers)%"
+e31="$e31;$d99"
 e32="$e29;s%,* *module: *[a-z_:0-9]*%%"
+
 e33="s%^ *$p01%# $p01%"
 e34='s%.*synchronized: *\([a-z]*\) *%\1%p'
 e35='s%[0-9]*:[0-9]*:[0-9]*%%;s%[0-9]* users*,%%;s% average\([^,]*\).*%\1%;s%  *% %g'
@@ -219,130 +220,45 @@ e47='s%.*currentBlock" *: *"0x([^"]+)".*%\1%ip'
 e48='s%.*result" *: *"0x([^"]+)".*%\1%ip'
 e49="s%^.*UFW BLOCK]%UFW%"
 e49="$e49;s% MAC=[^ ]*%%"
+e50="$d00;$d07;$d08;$d09;$d10"
+e50="$e50;s%time=\".+Z\" *%%"
+#e50="$e50;s%(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) +[0-9]{2} +[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3} +%%"
+#e50="$e50;s%\[[0-9]{2}-[0-9]{2}\|[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}\] +%%"
+e50="$e50;$d99"
 
-g00="\n$p01\n{\n\trotate 7\n\tdaily\n\tmissingok\n\tnotifempty\n\tnocompress\n\tsharedscripts\n\tpostrotate\n\t\t/usr/lib/rsyslog/rsyslog-rotate\n\tendscript\n}"
-g01='printf "Welcome to %s %s\\n" "$(uname -n)" "$DISTRIB_DESCRIPTION"'
-g02=""
-g02="$g02\n\tlisten-on { any; };"
-g02="$g02\n\tlisten-on-v6 { none; };"
-g02="$g02\n\tversion \"not currently available\";"
-g02="$g02\n\trecursion yes;"
-g02="$g02\n\tallow-recursion { localhost; 192.168.8.0/24; };"
-g02="$g02\n\tallow-query { localhost; 192.168.8.0/24; };"
-if [[ $cunm = $znm1 || $cunm = $znm2 ]];then
-  if [[ $cunm = $znm1 ]];then
-    g02="$g02\n\tallow-transfer { $zip2; };"
-    g02="$g02\n\talso-notify { $zip2; };"
-    g02="$g02\n\tmax-cache-size 70%;"
-  else
-    g02="$g02\n\tallow-transfer { $zip1; };"
-    g02="$g02\n\talso-notify { $zip1; };"
-    g02="$g02\n\tmax-cache-size 50%;"
-  fi
-else
-  g02="$g02\n\tallow-transfer { none; };"
-  g02="$g02\n\tmax-cache-size 10%;"
-fi
-g02="$g02\n\tquerylog yes;"
-g02="$g02\n};"
-g03=""
-g03="$g03\nnetwork:"
-g03="$g03\n  version: 2"
-g03="$g03\n  renderer: networkd"
-g03="$g03\n  ethernets:"
-for m in $(ip l|sed -n 's%.* \([a-z0-9]*\): .* state UP .*%\1%p'|tail -n1);do
-  g03="$g03\n    $m:"
-  g03="$g03\n      dhcp4: false"
-  [[ $cunm = $znm1 ]] && g03="$g03\n      addresses: [$zip1/24]"
-  [[ $cunm = $znm2 ]] && g03="$g03\n      addresses: [$zip2/24]"
-  [[ $cunm = $znm3 ]] && g03="$g03\n      addresses: [$zip3/24]"
-  [[ $cunm = $znm4 ]] && g03="$g03\n      addresses: [$zip4/24]"
-  [[ $cunm = $inm5 ]] && g03="$g03\n      addresses: [$iip5/24]"
-  [[ $cunm = $inm6 ]] && g03="$g03\n      addresses: [$iip6/24]"
-  g03="$g03\n      critical: true"
-  g03="$g03\n      routes:"
-  g03="$g03\n        - to: 0.0.0.0/0"
-  g03="$g03\n          via: 192.168.8.254"
-  g03="$g03\n          metric: 100"
-  g03="$g03\n          on-link: true"
-  g03="$g03\n      nameservers:"
-  g03="$g03\n        addresses: [$zip1, $zip2]"
-  g03="$g03\n      link-local: [ ]"
-done
-for m in $(ip l|sed -n 's%.* \([a-z0-9]*\): .* state DOWN .*%\1%p');do
-  g03="$g03\n    $m:"
-  g03="$g03\n      dhcp4: true"
-  g03="$g03\n      activation-mode: off"
-done
-g04="upstream plex_backend { server 192.168.8.28:32400; keepalive 32; }"
-g04="$g04\nserver {"
-g04="$g04\nlisten 80;"
-g04="$g04\nserver_name ztc2;"
-g04="$g04\nsend_timeout 100m;"
-g04="$g04\nresolver $zip2 $zip1 valid=300s;"
-g04="$g04\nresolver_timeout 10s;"
-g04="$g04\ngzip on;"
-g04="$g04\ngzip_vary on;"
-g04="$g04\ngzip_min_length 1000;"
-g04="$g04\ngzip_proxied any;"
-g04="$g04\ngzip_types text/plain text/css text/xml application/xml text/javascript application/x-javascript image/svg+xml;"
-g04="$g04\ngzip_disable \"MSIE [1-6]\.\";"
-g04="$g04\nclient_max_body_size 100M;"
-g04="$g04\nproxy_set_header Host \$host;"
-g04="$g04\nproxy_set_header X-Real-IP \$remote_addr;"
-g04="$g04\nproxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;"
-g04="$g04\nproxy_set_header X-Forwarded-Proto \$scheme;"
-g04="$g04\nproxy_set_header Sec-WebSocket-Extensions \$http_sec_websocket_extensions;"
-g04="$g04\nproxy_set_header Sec-WebSocket-Key \$http_sec_websocket_key;"
-g04="$g04\nproxy_set_header Sec-WebSocket-Version \$http_sec_websocket_version;"
-g04="$g04\nproxy_http_version 1.1;"
-g04="$g04\nproxy_set_header Upgrade \$http_upgrade;"
-g04="$g04\nproxy_set_header Connection \"Upgrade\";"
-g04="$g04\nproxy_redirect off;"
-g04="$g04\nproxy_buffering off;"
-g04="$g04\nlocation / { proxy_pass http://plex_backend; }"
-g04="$g04\n}"
-g05=""
-[[ $cunm = $znm1 ]] && g05="$g05\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int5\n  Port 2025\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int6\n  Port 2026\n  IdentityFile ~/.ssh/id_ed25519"
-[[ $cunm = $znm2 ]] && g05="$g05\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int5\n  Port 2025\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int6\n  Port 2026\n  IdentityFile ~/.ssh/id_ed25519"
-[[ $cunm = $znm3 ]] && g05="$g05\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int5\n  Port 2025\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int6\n  Port 2026\n  IdentityFile ~/.ssh/id_ed25519"
-[[ $cunm = $znm4 ]] && g05="$g05\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int5\n  Port 2025\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int6\n  Port 2026\n  IdentityFile ~/.ssh/id_ed25519"
-[[ $cunm = $inm5 ]] && g05="$g05\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int6\n  Port 2026\n  IdentityFile ~/.ssh/id_ed25519"
-[[ $cunm = $inm6 ]] && g05="$g05\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int5\n  Port 2025\n  IdentityFile ~/.ssh/id_ed25519"
+g00='^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) +[0-9]{2} +'
+g01='^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
+g02='^[0-9]{2}:[0-9]{2}$'
+g03='^[0-9]+$'
+g04='^[a-z]+$'
+g05='Block from API'
 g06='geth\['
-g07='besu\[.*|'
+g07='besu\[.*\|'
 g08='lighthouse\['
 g09='mev-boost\['
-g10="\($g06\|$g07\|$g08\|$g09\)"
-g11="\($g06\|$g07\)"
-g12="\($g06\|$g07\|$g08\)"
-g13="$g11.*Imported"
+g10="($g06|$g07|$g08|$g09)"
+g11="($g06|$g07)"
+g12="($g06|$g07).*Imported"
+g13='duration='
 g14='score:'
-g15="DEBG.Peer.*$g14.\-\([0-9]\|[0-9][0-9]\|100\)\."
-g16='DEBG.Measured.BN.latency'
-g17='DEBG.Computed.attestation.selection.proofs'
-g18='DEBG.Delayed.head.block'
-g19='DEBG.Processed.HTTP.API.request'
-g20='DEBG.Cloned.snapshot.for.late.block.skipped.slot'
-g21='Block.from.API'
-g22='Previous.epoch.attestation.s'
-g23="\($g21\|$g22\)"
-g24="$g06.*Chain.head.was.updated"
-g25="[ =]INFO "
-g26="$g25\| DEBG "
-g27=' autostart.app-snap\| number.of.Error.Log.entries.increased'
+g15="DEBG Peer.*$g14 -([0-9]|[0-9][0-9]|100)\."
+g16='DEBG Measured BN latency'
+g17='DEBG Computed attestation selection proofs'
+g18='DEBG Delayed head block'
+g19='DEBG Processed HTTP API request'
+g20='DEBG Cloned snapshot for late block'
+g21="$g06.*Chain head was updated"
+g22="$g08.*Previous epoch attestation.s"
+g23="$g10.*(Prepared|payload|blinded|profitable|Block|published ?a? ?block|signed block|getHeader|builder/header)"
+g24=' autostart app-snap| number of Error Log entries increased'
+g25='[ =]INFO '
+g26="$g25| DEBG "
+g27='reorg_distance:'
 g28='success'
 g29='error'
-g30='reorg_distance:'
+g30="$g25| $g27 "
 g31='latency:'
 g32='time_taken_ms:'
-g33='duration='
-g34='^[a-z][a-z][a-z]  *[0-9][0-9]*  *'
-g35='^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
-g36='^[0-9]{2}:[0-9]{2}$'
-g37='^[0-9]+$'
-g38='^[a-z]+$'
-g39="$g25\| $g30 "
 
 s00='systemctl'
 s01="$s00 status"
@@ -390,6 +306,95 @@ s36='Package: snapd'
 s36="$s36\nPin: release a=*"
 s36="$s36\nPin-Priority: -10"
 s37='snap remove --purge'
+s38="\n$p01\n{\n\trotate 7\n\tdaily\n\tmissingok\n\tnotifempty\n\tnocompress\n\tsharedscripts\n\tpostrotate\n\t\t/usr/lib/rsyslog/rsyslog-rotate\n\tendscript\n}"
+s39='printf "Welcome to %s %s\\n" "$(uname -n)" "$DISTRIB_DESCRIPTION"'
+s40=''
+s40="$s40\n\tlisten-on { any; };"
+s40="$s40\n\tlisten-on-v6 { none; };"
+s40="$s40\n\tversion \"not currently available\";"
+s40="$s40\n\trecursion yes;"
+s40="$s40\n\tallow-recursion { localhost; 192.168.8.0/24; };"
+s40="$s40\n\tallow-query { localhost; 192.168.8.0/24; };"
+if [[ $cunm = $znm1 || $cunm = $znm2 ]];then
+  if [[ $cunm = $znm1 ]];then
+    s40="$s40\n\tallow-transfer { $zip2; };"
+    s40="$s40\n\talso-notify { $zip2; };"
+    s40="$s40\n\tmax-cache-size 70%;"
+  else
+    s40="$s40\n\tallow-transfer { $zip1; };"
+    s40="$s40\n\talso-notify { $zip1; };"
+    s40="$s40\n\tmax-cache-size 50%;"
+  fi
+else
+  s40="$s40\n\tallow-transfer { none; };"
+  s40="$s40\n\tmax-cache-size 10%;"
+fi
+s40="$s40\n\tquerylog yes;"
+s40="$s40\n};"
+s41=''
+s41="$s41\nnetwork:"
+s41="$s41\n  version: 2"
+s41="$s41\n  renderer: networkd"
+s41="$s41\n  ethernets:"
+for m in $(ip l|sed -n 's%.* \([a-z0-9]*\): .* state UP .*%\1%p'|tail -n1);do
+  s41="$s41\n    $m:"
+  s41="$s41\n      dhcp4: false"
+  [[ $cunm = $znm1 ]] && s41="$s41\n      addresses: [$zip1/24]"
+  [[ $cunm = $znm2 ]] && s41="$s41\n      addresses: [$zip2/24]"
+  [[ $cunm = $znm3 ]] && s41="$s41\n      addresses: [$zip3/24]"
+  [[ $cunm = $znm4 ]] && s41="$s41\n      addresses: [$zip4/24]"
+  [[ $cunm = $inm5 ]] && s41="$s41\n      addresses: [$iip5/24]"
+  [[ $cunm = $inm6 ]] && s41="$s41\n      addresses: [$iip6/24]"
+  s41="$s41\n      critical: true"
+  s41="$s41\n      routes:"
+  s41="$s41\n        - to: 0.0.0.0/0"
+  s41="$s41\n          via: 192.168.8.254"
+  s41="$s41\n          metric: 100"
+  s41="$s41\n          on-link: true"
+  s41="$s41\n      nameservers:"
+  s41="$s41\n        addresses: [$zip1, $zip2]"
+  s41="$s41\n      link-local: [ ]"
+done
+for m in $(ip l|sed -n 's%.* \([a-z0-9]*\): .* state DOWN .*%\1%p');do
+  s41="$s41\n    $m:"
+  s41="$s41\n      dhcp4: true"
+  s41="$s41\n      activation-mode: off"
+done
+s42="upstream plex_backend { server 192.168.8.28:32400; keepalive 32; }"
+s42="$s42\nserver {"
+s42="$s42\nlisten 80;"
+s42="$s42\nserver_name ztc2;"
+s42="$s42\nsend_timeout 100m;"
+s42="$s42\nresolver $zip2 $zip1 valid=300s;"
+s42="$s42\nresolver_timeout 10s;"
+s42="$s42\ngzip on;"
+s42="$s42\ngzip_vary on;"
+s42="$s42\ngzip_min_length 1000;"
+s42="$s42\ngzip_proxied any;"
+s42="$s42\ngzip_types text/plain text/css text/xml application/xml text/javascript application/x-javascript image/svg+xml;"
+s42="$s42\ngzip_disable \"MSIE [1-6]\.\";"
+s42="$s42\nclient_max_body_size 100M;"
+s42="$s42\nproxy_set_header Host \$host;"
+s42="$s42\nproxy_set_header X-Real-IP \$remote_addr;"
+s42="$s42\nproxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;"
+s42="$s42\nproxy_set_header X-Forwarded-Proto \$scheme;"
+s42="$s42\nproxy_set_header Sec-WebSocket-Extensions \$http_sec_websocket_extensions;"
+s42="$s42\nproxy_set_header Sec-WebSocket-Key \$http_sec_websocket_key;"
+s42="$s42\nproxy_set_header Sec-WebSocket-Version \$http_sec_websocket_version;"
+s42="$s42\nproxy_http_version 1.1;"
+s42="$s42\nproxy_set_header Upgrade \$http_upgrade;"
+s42="$s42\nproxy_set_header Connection \"Upgrade\";"
+s42="$s42\nproxy_redirect off;"
+s42="$s42\nproxy_buffering off;"
+s42="$s42\nlocation / { proxy_pass http://plex_backend; }"
+s42="$s42\n}"
+s43=''
+[[ $cunm = $znm1 ]] && s43="$s43\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int5\n  Port 2025\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int6\n  Port 2026\n  IdentityFile ~/.ssh/id_ed25519"
+[[ $cunm = $znm2 ]] && s43="$s43\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int5\n  Port 2025\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int6\n  Port 2026\n  IdentityFile ~/.ssh/id_ed25519"
+[[ $cunm = $znm3 ]] && s43="$s43\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int5\n  Port 2025\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int6\n  Port 2026\n  IdentityFile ~/.ssh/id_ed25519"
+[[ $cunm = $znm4 ]] && s43="$s43\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int5\n  Port 2025\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int6\n  Port 2026\n  IdentityFile ~/.ssh/id_ed25519"
+[[ $cunm = $inm5 ]] && s43="$s43\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int6\n  Port 2026\n  IdentityFile ~/.ssh/id_ed25519"
+[[ $cunm = $inm6 ]] && s43="$s43\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int5\n  Port 2025\n  IdentityFile ~/.ssh/id_ed25519"
 
 n00=84
 n01=84

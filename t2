@@ -36,14 +36,14 @@ if [[ $cunm = $znm2 ]];then
   sex "usermod -a -G debian-transmission eu"
   if [[ ! -d $p59 ]];then cex "mkdir -p $p59";cmw $p59 775 debian-transmission;fi
   if [[ ! -d $p60 ]];then cex "mkdir -p $p60";cmw $p60 775 plex               ;fi
-  cc4 $p32 "$g04"              ;cmw $p32 644 root               ;sex "$s00 reload $s22"                                                                       # nginx config for plex
+  cc4 $p32 "$s42"              ;cmw $p32 644 root               ;sex "$s00 reload $s22"                                                                       # nginx config for plex
   cc1 $p33 "$e24"              ;cmw $p33 600 debian-transmission;sex "$s00 reload $s15"                                                                       # transmission config
 fi
 if [[ $cunm = $znm1 || $cunm = $znm2 ]];then
   sex "$s07 set-ntp no"                                                                                                                                       # use ntp (sophisticated)
   sex 'apt install ntp bind9 bind9utils -y'                                                                                                                   # install dependencies & ntp & bind
   cc1 $p31 "$e08"              ;cmw $p31 644 root;nex "$s06 ntp"                                                                                              # ntp config for time synchronization
-  cc3 $p29 "$e07" "$g02"       ;cmw $p29 644 root bind                                                                                                        # named my options
+  cc3 $p29 "$e07" "$s40"       ;cmw $p29 644 root bind                                                                                                        # named my options
   cc1 $p30 "$e02"              ;cmw $p30 644 root                                                                                                             # use only ipv4
   t6 spd;t6 sea;nex "$s02 systemd-resolved";nex "$s03 systemd-resolved"                                                                                       # DNS stop & start
 else
@@ -54,11 +54,11 @@ if [[ $cust = hrv ]];then
   sex "$s07 set-timezone Europe/Lisbon"
   cc1 $p20 "$e00"                                                                                                                                             # my time servers
   cc1 $p21 "$e01"              ;cmw $p21 644 root                                                                                                             # motd-news disable
-  cc4 $p22 "$g03"              ;cmw $p22 600 root                                                                                                             # new netplan
+  cc4 $p22 "$s41"              ;cmw $p22 600 root                                                                                                             # new netplan
   cc1 $p26 "$e06"              ;cmw $p26 755 root                                                                                                             # grub timeout
   cc1 $p48 "$e27"              ;cmw $p48 644 root                                                                                                             # grub no PCIe active state power management
   cc1 $p34 "$e17"              ;cmw $p34 644 root                                                                                                             # hosts config
-  cc4 $p35 "$g05"              ;cmw $p35 644 root                                                                                                             # ssh config
+  cc4 $p35 "$s43"              ;cmw $p35 644 root                                                                                                             # ssh config
   cc1 $p37 "$e23;$e25"         ;cmw $p37 644 root                                                                                                             # no swap - bad for IOPS
   nex 'update-grub'
 else
@@ -68,9 +68,9 @@ else
 fi                             ;cmw $p20 644 root;trs                                                                                                         # timesyncd cmod & restart
 cc1 $p23 "$e03"                ;cmw $p23 644 root                                                                                                             # unattended-upgrades
 cc1 $p51 "$e28"                ;cmw $p51 644 root                                                                                                             # unattended-upgrades
-cc1 $p24 "$e04";cc2 $p24 "$g01";cmw $p24 755 root                                                                                                             # header add my motd
+cc1 $p24 "$e04";cc2 $p24 "$s39";cmw $p24 755 root                                                                                                             # header add my motd
 cc1 $p25 "$e04"                ;cmw $p25 755 root                                                                                                             # help-text delete
-cc1 $p27 "$e33";cc2 $p27 "$g00";cmw $p27 644 root                                                                                                             # new logrotate add
+cc1 $p27 "$e33";cc2 $p27 "$s38";cmw $p27 644 root                                                                                                             # new logrotate add
 [[ -x $p28 ]] && sex "chmod -x $p28"                                                                                                                          # motd overlayroot unexecute
 nex "$s00 daemon-reload";sudo dpkg-reconfigure -plow unattended-upgrades;sex "$s06 unattended-upgrades"                                                       # unattended upgrades
 swn 'sudo netplan apply'
