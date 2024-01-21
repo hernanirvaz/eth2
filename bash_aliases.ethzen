@@ -32,6 +32,11 @@ alias rp='eth2cp "int6.fruga.pt";eth2cp "int5.fruga.pt";eth2cp "ztc4.fruga.pt";e
 alias zo='outhcp "int6"         ;outhcp "int5"         ;outhcp "ztc4"         ;outhcp "ztc3"         ;outhcp "ztc1"         ;outhcp "ztc2"         '
 alias ro='outhcp "int6.fruga.pt";outhcp "int5.fruga.pt";outhcp "ztc4.fruga.pt";outhcp "ztc3.fruga.pt";outhcp "ztc1.fruga.pt";outhcp "ztc2.fruga.pt"'
 
+alias hk='cat /dev/null>~/.ssh/known_hosts'
+alias gp='cd ~/eth2;git pull;cd'
+alias gc='cd ~/eth2;git commit -am "cleanup";git push;cd'
+alias gv='cd;vi eth2/t[1-8]*'
+
 alias rq='eth2rq;eth2rq changelogs.ubuntu.com;eth2rq ppa.launchpad.net;eth2rq github.com;eth2rq meo.fruga.pt'
 alias rs='sudo netplan apply;sudo systemctl restart systemd-resolved;rq'
 alias sr='eth2sr;eth2sf;cat ${1:-/etc/netplan/01-network-manager-all.yaml}'
