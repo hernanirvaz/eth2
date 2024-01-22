@@ -12,7 +12,7 @@ function nu6 { printf '%i\n' $@ 2>$p03|sort -n|head -n1; }                      
 function nu7 { nu2 "sqrt(((0$(printf +%i^2 $@ 2>$p03))-(0$(printf +%i $@ 2>$p03))^2/$#)/$#)*1000" 4; }                                                        # get std from list numbers
 function ll0 { local f=$p16/logs/beacon.log   ;echo $H|sudo -S cat             $f.1 $f 2>$p03|tail -n$n26; }                                                  # get cc intern lines
 function ll1 { local f=$p16/logs/beacon.log   ;echo $H|sudo -S egrep -ah  "$1" $f.1 $f 2>$p03|tail -n$n15; }                                                  # get cc intern lines (specific)
-function ll2 { local f=$p01                   ;echo $H|sudo -S egrep -ah  "$1"     $f.7 $f.6 $f.5 $f.4 $f.3 $f.2 $f.1 $f           ; }                                                  # get all eth syslog lines
+function ll2 { local f=$p01                   ;echo $H|sudo -S egrep -ah  "$1"      $f 2>$p03            ; }                                                  # get all eth syslog lines
 function ll3 { local f=$p01                   ;echo $H|sudo -S egrep -ahv "$g10"    $f 2>$p03            ; }                                                  # get not eth syslog lines
 function ll4 { local f=$p17/logs/validator.log;echo $H|sudo -S cat             $f.1 $f 2>$p03|tail -n$n25; }                                                  # get vc intern lines
 function ll5 { local f=$p17/logs/validator.log;echo $H|sudo -S egrep -ah  "$1" $f.1 $f 2>$p03|tail -n$2  ; }                                                  # get vc intern lines (specific)
