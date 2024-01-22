@@ -12,7 +12,7 @@ function nu6 { printf '%i\n' $@ 2>$p03|sort -n|head -n1; }                      
 function nu7 { nu2 "sqrt(((0$(printf +%i^2 $@ 2>$p03))-(0$(printf +%i $@ 2>$p03))^2/$#)/$#)*1000" 4; }                                                        # get std from list numbers
 function ll0 { local f=$p16/logs/beacon.log   ;echo $H|sudo -S cat             $f.1 $f 2>$p03|tail -n$n26; }                                                  # get cc intern lines
 function ll1 { local f=$p16/logs/beacon.log   ;echo $H|sudo -S egrep -ah  "$1" $f.1 $f 2>$p03|tail -n$n15; }                                                  # get cc intern lines (specific)
-function ll2 { local f=$p01                   ;echo $H|sudo -S egrep -ah  "$1"      $f 2>$p03            ; }                                                  # get all eth syslog lines
+function ll2 { local f=$p01                   ;echo $H|sudo -S egrep -ah  "$1"     $f.7 $f.6 $f.5 $f.4 $f.3 $f.2 $f.1 $f           ; }                                                  # get all eth syslog lines
 function ll3 { local f=$p01                   ;echo $H|sudo -S egrep -ahv "$g10"    $f 2>$p03            ; }                                                  # get not eth syslog lines
 function ll4 { local f=$p17/logs/validator.log;echo $H|sudo -S cat             $f.1 $f 2>$p03|tail -n$n25; }                                                  # get vc intern lines
 function ll5 { local f=$p17/logs/validator.log;echo $H|sudo -S egrep -ah  "$1" $f.1 $f 2>$p03|tail -n$2  ; }                                                  # get vc intern lines (specific)
@@ -70,7 +70,7 @@ function si2 { local n=${1:-0};printf %i $((1000*n)) 2>$p03; }
 function svi { local n=${1:-0};if g0t $n;then l4=$(ll1 "$g18"|tail -n$n);else l4=$(ll1 "$g18");fi;i0=$(nu5 3 $(ln2 "$w0$w6$w2"));i1=$(nu5 3 $(ln2 "$w0$w7$w2"));b1=$(nu3 $(ln3 $g27 $g08));if g0t $n;then l4=$(ll1 "$g19"|tail -n$(si2 $n));else l4=$(ll1 "$g19");fi;i2=$(nu5 0 $(ln2 "$w0$w4$w1"));if g0t $n;then l6=$(ll1 "$g15"|tail -n$(si1 $n));else l6=$(ll1 "$g15");fi;i3=$(nu5 2 $(ln1 $g14));if g0t $n;then l4=$(ll1 "$g20"|tail -n$n);else l4=$(ll1 "$g20");fi;i4=$(nu5 3 $(ln2 "$w0$w8$w2")); }
 function svv { if v2t;then l6=$(ll5 "$g16" $1);v0=$(nu4 1 $(ln1 $g31 ".*$(sni $cun1)"));v1=$(nu4 1 $(ln1 $g31 ".*$(sni $cun2)"));l6=$(ll5 "$g17" $(($1/2)));v2=$(nu4 1 $(ln1 $g32));else v0=0;v1=0;v2=0;fi; }
 function smm { if v5t;then m0=$(nu4 3 $(ln4 $g13 $g09 $1));else m0=0;fi; }
-function spc { nn=$2;cp $p04/$1.service $p02/$1.sav;sed "$e43$2%" $p02/$1.sav > $p04/$1.service; }                                                            # service configuration change/reload
+function spc { nn=$2;cp $p04/$1.service $p02/$1.sav;sed -E "$e43$2%" $p02/$1.sav > $p04/$1.service; }                                                         # service configuration change/reload
 function snp { sft $1 || return;local n=$(($2+$5));(($2!=0&&n>=$3&&n<=$4)) && spc $1 $n;tsa $1 && sex "$s02 $1";dmr; }                                        # service peers change/stop
 function sra { if fft $p45;then nu0 $(($(date +%s)-$(date -r $p45 +%s)));else printf %i;fi }                                                                  # system reboot age (secounds)
 function dts { read       d0 d1   <<< ${1:-$(date '+%F %H:%M')};dt="$d0 $d1"; }                                                                               # set date/time vars
@@ -95,8 +95,8 @@ function bnn { csn $(ln3 peers: $g08) $(bpc $(bcl peer_count)); }               
 function sz0 { gnn 0      ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s     iu: %4i %4i %4i'                 $er $em $ed $(ss5 $1 port    ) "$(gb1 $(gcl eth.syncing))" $e1 $e2 $(ei0)                 2>$p03; }
 function sz1 { unn 0      ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s      i: %4i'                         $er $em $ed $(ss5 $1 p2p-port) "$(ub1 $(ucl eth_syncing))" $e1                            2>$p03; }
 function sz2 { dtl;svi;bnn;printf 'cl:p%02i:m%02i:d%04i p2p:%5i %s iosrhp: %4i %4i %4i %4i %4i %4i %4i' $nr $nm $nd $(ss5 $1 port    ) "$(bb1 $(bcl syncing))"     $i0 $i1 $i4 $b1 $i2 $i3 $(bi1) 2>$p03; }
-function sz3 { svv $n23   ;printf 'vl:m%02i:b%02i:c%02i api:%s'                                         $v0 $v1 $v2 $(ss4 $1 $e19 nodes)                                                          2>$p03; }
-function sz4 { smm 0      ;printf 'ml:%04i api:%s'                                                      $m0         $(ss4 $1 $e19 addr )                                                          2>$p03; }
+function sz3 { svv $n23   ;printf 'vl:m%02i:b%02i:c%02i api:%s'                                         $v0 $v1 $v2 $(ss4 $1 $d05 nodes)                                                          2>$p03; }
+function sz4 { smm 0      ;printf 'ml:%04i api:%s'                                                      $m0         $(ss4 $1 $d05 addr )                                                          2>$p03; }
 function sso { tse $2 || return;dts;local e="$1 $(printf '%6s %10s %5s %-40s' $(ss3 $2) $dt "$(ss2 $2)" 2>$p03)";case $1 in GETH) e="$e $(sz0 $2)";;BESU) e="$e $(sz1 $2)";;BEAC) e="$e $(sz2 $2)";;VALI) e="$e $(sz3 $2)";;MEVB) e="$e $(sz4 $2)";;esac;swn "$e"; }
 # el control commands
 function grs {
@@ -315,7 +315,7 @@ function cl3 { if [[ $1 =~ ^[0-9]+ ]];then cl2 $1;else cl1 $1;fi; }
 function cl4 { printf "server: $(cl3 ${2:0}) offset: ${4} delay: ${6} jitter: ${8}"        2>$p03; }
 function cl5 { printf "server: $(cl3 ${1:1}) offset: ${9}ms delay: ${8}ms jitter: ${10}ms" 2>$p03; }
 function clk {
-  if [[ $($s07|sed -n "$e34") = yes ]];then local e='OK';else local e='NO';fi
+  if [[ $($s07|sed -En "$e34") = yes ]];then local e='OK';else local e='NO';fi
   if tsa $s19;then
     local e="CSYS $e";m="$(printf '%-40s' "$(ss2 $s19)" 2>$p03) $(cl4 $($s07 $s31-status|sed -En "$e38"))"
   else
@@ -326,7 +326,7 @@ function clk {
 function sif {
   if [[ $(cat $p44 2>$p03) -eq 0 ]];then local e=off;else local e=on;fi;if [[ $(cat $p43 2>$p03) -eq 1 ]];then local d=off;else local d=on;fi;local i=$(fl0|wc -l);local n=$(fl1|wc -l)
   [[ $1$e = on && $d = on ]] && e0t $i && e0t $n && return
-  swn "INFO$(printf '%3i %3i %10s %5s' $n $i $dt 2>$p03) usb $e, turbo $d, ufw $(wif $(pex 'ufw status'|grep Status:)), uptime:$(uptime|sed "$e35")"
+  swn "INFO$(printf '%3i %3i %10s %5s' $n $i $dt 2>$p03) usb $e, turbo $d, ufw $(wif $(pex 'ufw status'|grep Status:)), uptime:$(uptime|sed -E "$e35")"
 }
 function sll { ll3       |fln usb    $1|flp "$g29" $1; }
 function cll { ll2 "$g08"|fln "$g30" $2|if [[ $1 ]];then sed -E "$1";else cat;fi; }
@@ -335,7 +335,7 @@ function ell { ll2 "$g11"|fln "$g25" $2|if [[ $1 ]];then sed -E "$1";else cat;fi
 function lll { ll2 "$g10"|fln "$g30" $2|if [[ $1 ]];then sed -E "$1";else cat;fi; }
 function cpe {
   clk;[[ $1 = c ]] && return;tmp;[[ $1 = p ]] && return;sif $1
-  m=$(sll|sed "$e36");if [[ $m ]];then local i=$(echo "$m"|wc -l);local e=$(echo "$m"|tail -n1);else local i=0;local e=;fi
+  m=$(sll|sed -E "$e36");if [[ $m ]];then local i=$(echo "$m"|wc -l);local e=$(echo "$m"|tail -n1);else local i=0;local e=;fi
   m=;local n=0;local d=;local l=ou
   if [[ $cunm = $cuvc   || $cunm = $cun1 || $cunm = $cun2 ]];then m=$(cll "$e29;$e37");local l=cl;fi
   if [[ $cunm = $cumv                                     ]];then m=$(rll "$e31;$e37");local l=rl;fi
@@ -587,7 +587,7 @@ function tsh { if tsa $s19;then cex "$s07 $s31-status";cex "$s07 show-$s31";else
 [[ $1 = eii ]] && { ll2 "$g12"      |tail -n${2:-$n07}                             |sed -E "$e29"; }
 [[ $1 = eiu ]] && { ll2 "$g21"      |tail -n${2:-$n07}                             |sed -E "$e29"; }
 
-[[ $1 = bp  ]] && { ll2 "$g23"                                                     |sed -E "$e50"; }
+[[ $1 = bp  ]] && { ll2 "$g23"                                                     |sed -E "$e49"; }
 [[ $1 = bpz ]] && { ll2 "$g23"                                                                   ; }
 
 [[ $1 = al  ]] && { ll2 "$g22"      |fln "$g28" $2                                 |sed -E "$e29"; }
@@ -612,7 +612,7 @@ function tsh { if tsa $s19;then cex "$s07 $s31-status";cex "$s07 show-$s31";else
 [[ $1 = wpr ]] && { cex 'ufw disable'; }
 [[ $1 = wds ]] && { cex 'ufw disable'; }
 [[ $1 = ws  ]] && { cex 'ufw status numbered'; }
-[[ $1 = wl  ]] && { wlp ${@:2:$#}|sed -E "$e49"; }
+[[ $1 = wl  ]] && { wlp ${@:2:$#}|sed -E "$e19"; }
 [[ $1 = wlz ]] && { wlp ${@:2:$#}; }
 # journal
 [[ $1 = yj  ]] && { jrn; }
