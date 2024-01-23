@@ -575,7 +575,7 @@ function tsh { if tsa $s19;then cex "$s07 $s31-status";cex "$s07 show-$s31";else
 [[ $1 = sl  ]] && { sll        $2; }
 [[ $1 = el  ]] && { ell "$e50" $2; }
 [[ $1 = cl  ]] && { cll "$e50" $2; }
-[[ $1 = ll  ]] && { lll "$e50" $2; }
+[[ $1 = ll  ]] && { lll "$e51" $2; }
 [[ $1 = rl  ]] && { rll "$e51" $2; }
 [[ $1 = elz ]] && { ell ""     $2; }
 [[ $1 = clz ]] && { cll ""     $2; }
