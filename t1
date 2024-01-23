@@ -149,7 +149,7 @@ e28="${e28}APT::Periodic::AutocleanInterval \"1\";"
 e29='s%^.+hrv-(zotac|intel)[0-9] +%%;s%lighthouse%lh%;s%geth%eg%;s%besu%eu%;s%mev-boost%mv%'
 e30='s%.*hrv-(zotac|intel)[0-9] *(.*)%\2%;s%  *% %g'
 e31='s%(https?://)?192.168.8.([0-9]+:[0-9]+)/?%\2%g'
-e32='s%.*[0-9]*:[0-9]*:[0-9]*\.[0-9][0-9][0-9]?]?[Z ] *(.*)%\1%;s%\t\t*% %g;s%  *% %g'
+e32='s%.*[0-9]*:[0-9]*:[0-9]*\.[0-9][0-9][0-9]?]?[Z ] *(.*)%\1%;s%\t\t*% %g;s%  *% %g;s%[\"\/]%%g'
 e33='s%<html>.{10,}*</html>%%g'
 e34='s% *\([^\(\)]{10,}\) *%%g'
 e35='s% *\{[^\{\}]{10,}\} *%%g'
@@ -161,7 +161,7 @@ e40='s% *0x[a-z0-9]{5,}…[a-z0-9]{5,}%%g;s% *… *% %g'                        
 e41='s%snapdiffs=%sdf=%gi;s%triediffs=%tdf=%gi;s%triedirty=%tdt=%gi'                                       # EL
 e42='s%(service|num_failed) *: *([^ ]*) *%\2 %gi;s%(module) *: *([^ ]*) *% %gi;s%(Some) *\(([^ ]*)\)%\2%g' # CL
 e43='s%time=\"[0-9]{4}-[0-9]{2}-[0-9]{2}T(.+)Z\"%\1%'                                                      # RL
-e44='s%(level|numRegistrations) *= *%%g;s%msg *= *%\tmsg=%'                                                                 # RL
+e44='s%(level|numRegistrations) *= *%%g;s%msg *= *%\tmsg=%'                                                # RL
 e45='s%(blockHash|parentHash|pubkey|txRoot|slotUID|ua|method) *= *[^ ]* *%%g'                              # RL
 e46='s%https?://([a-z0-9\.\-]+)(//*[a-z0-9\.\-]*)*%\1%g'                                                   # RL
 e47='s%Get *..[^ ]+..: *%GET %;s%Post *..[^ ]+..: *%POST %'                                                # RL
@@ -205,7 +205,7 @@ g06='geth\['
 g07='besu\[.*\|'
 g08='lighthouse\['
 g09='mev-boost\['
-g10="($g06|$g07|$g08)"
+g10="($g06|$g07|$g08|$g09)"
 g11="($g06|$g07)"
 g12="($g06|$g07).*Imported"
 g13='duration='
