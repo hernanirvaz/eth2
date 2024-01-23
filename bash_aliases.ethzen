@@ -35,6 +35,7 @@ alias ro='outhcp "int6.fruga.pt";outhcp "int5.fruga.pt";outhcp "ztc4.fruga.pt";o
 alias hk='cat /dev/null>~/.ssh/known_hosts'
 alias gp='cd ~/eth2;git pull;cd'
 alias gc='cd ~/eth2;git commit -am "cleanup";git push;cd'
+alias gd='cd ~/eth2;git diff;cd'
 alias gv='cd;vi eth2/t[1-8]*'
 
 alias rq='eth2rq;eth2rq changelogs.ubuntu.com;eth2rq ppa.launchpad.net;eth2rq github.com;eth2rq meo.fruga.pt'

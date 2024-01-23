@@ -156,8 +156,8 @@ e35='s% *\{[^\{\}]{10,}\} *%%g'
 e36='s% *0x[a-z0-9]{38,}%%g'                                                                               # 0x3f1962dd3666f186504d6e4c99f76e8e76ffc231....
 e37='s% *[a-z0-9]{64}%%g'                                                                                  # daecf1068be9a5c179f28d24283fb17757ff5b49fcbca661d91358242a173519
 e38='s% *[a-z0-9]{53}%%ig'                                                                                 # 16Uiu2HAmVGPoShPq9FUCntTH5A36Z4FJtw1k3fAVNAGLTJZ7hRxH
-e39='s% *[a-zA-Z0-9]{5,}\.\.[a-zA-Z0-9]{5,}%%g'                                                            # a31484..f4715f
-e40='s% *0x[a-z0-9]{5,}…[a-z0-9]{5,}%%g;s% *… *% %g'                                                       # a31484…f4715f
+e39='s% *[a-zA-Z0-9]{4,}\.\.[a-zA-Z0-9]{4,}%%g'                                                            # a31484..f4715f
+e40='s% *0x[a-z0-9]{4,}…[a-z0-9]{4,}%%g'                                                                   # a31484…f4715f
 e41='s%snapdiffs=%sdf=%gi;s%triediffs=%tdf=%gi;s%triedirty=%tdt=%gi'                                       # EL
 e42='s%(service|num_failed) *: *([^ ]*) *%\2 %gi;s%(module) *: *([^ ]*) *% %gi;s%(Some) *\(([^ ]*)\)%\2%g' # CL
 e43='s%time=\"[0-9]{4}-[0-9]{2}-[0-9]{2}T(.+)Z\"%\1%'                                                      # RL

@@ -605,7 +605,7 @@ function tsh { if tsa $s19;then cex "$s07 $s31-status";cex "$s07 show-$s31";else
 [[ $1 = vic ]] && { ll5 "$g17" ${2:-$(($n22/2))}                                   |sed -E "$e50"; }
 [[ $1 = mi  ]] && { ll2 "$g09.*$g13"|tail -n${2:-$n32}                             |sed -E "$e51"; }
 [[ $1 = miz ]] && { ll2 "$g09.*$g13"|tail -n${2:-$n32}                                           ; }
-[[ $1 = csp ]] && { ll2 "$g08.*peers:"                                             |sed -E "$e49"|grep -v "peers: *[${2:-$(ss5 $s12 target-peers 10)}-9][0-9]"|sort -k6nr; }
+[[ $1 = csp ]] && { ll2 "$g08.*peers:"                                             |sed -E "$e49"|grep -v "peers: *[${2:-$(ss5 $s12 target-peers 10)}-9][0-9]"|sort -k4n; }
 [[ $1 = wa  ]] && { wa; }
 [[ $1 = we  ]] && { yex 'ufw enable'; }
 [[ $1 = wpr ]] && { cex 'ufw disable'; }
