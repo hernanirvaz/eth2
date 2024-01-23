@@ -30,9 +30,9 @@ function pt1 { until [[ $# -le 1 || $1 =~ $g02 ]];do shift;done;printf %s $1; } 
 function pt2 { until [[ $# -le 1 || $1 =~ $g03 ]];do shift;done;printf %i $1; }                                                                               # integer    test
 function pt3 { until [[ $# -le 1 || $1 =~ $g04 ]];do shift;done;printf %s $1; }                                                                               # string     test
 function ss1 { $s01 $1 2>$p03|sed -En "s%.*$2[ =](${3:-.}+).*%\1%p" 2>$p03; }                                                                                 # systemctl status 1 extraction
-function ss2 { $s01 $1 2>$p03|sed -En "$e57"      2>$p03|sed "$e58" 2>$p03|cut -c1-40; }                                                                      # systemctl status 2 extraction
+function ss2 { $s01 $1 2>$p03|sed -En "$e57"   2>$p03|sed -E "$e58" 2>$p03|cut -c1-40; }                                                                      # systemctl status 2 extraction
 function ss3 { if tsa $1;then ss1 $1 Memory:                     ;else printf 0.0K   ;fi; }                                                                   # systemctl status Memory extraction
-function ss4 { if tsa $1;then ss1 $1 $3 '[^ ]'|sed -En $2        ;else printf 00:0000;fi; }                                                                   # systemctl status ip/port extraction
+function ss4 { if tsa $1;then ss1 $1 $3 '[^ ]'|sed -E "$2"       ;else printf 00:0000;fi; }                                                                   # systemctl status ip/port extraction
 function ss5 { if tsa $1;then nu0 $(($(ss1 $1 $2 [0-9])/${3:-1}));else printf %i     ;fi; }                                                                   # systemctl status number extraction
 function e0t { [[ $1 -eq 0 ]]; }
 function g0t { [[ $1 -gt 0 ]]; }
@@ -95,8 +95,8 @@ function bnn { csn $(ln3 peers: $g08) $(bpc $(bcl peer_count)); }               
 function sz0 { gnn 0      ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s     iu: %4i %4i %4i'                 $er $em $ed $(ss5 $1 port    ) "$(gb1 $(gcl eth.syncing))" $e1 $e2 $(ei0)                 2>$p03; }
 function sz1 { unn 0      ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s      i: %4i'                         $er $em $ed $(ss5 $1 p2p-port) "$(ub1 $(ucl eth_syncing))" $e1                            2>$p03; }
 function sz2 { dtl;svi;bnn;printf 'cl:p%02i:m%02i:d%04i p2p:%5i %s iosrhp: %4i %4i %4i %4i %4i %4i %4i' $nr $nm $nd $(ss5 $1 port    ) "$(bb1 $(bcl syncing))"     $i0 $i1 $i4 $b1 $i2 $i3 $(bi1) 2>$p03; }
-function sz3 { svv $n23   ;printf 'vl:m%02i:b%02i:c%02i api:%s'                                         $v0 $v1 $v2 $(ss4 $1 "${e31}p" nodes)                                                          2>$p03; }
-function sz4 { smm 0      ;printf 'ml:%04i api:%s'                                                      $m0         $(ss4 $1 "${e31}p" addr )                                                          2>$p03; }
+function sz3 { svv $n23   ;printf 'vl:m%02i:b%02i:c%02i api:%s'                                         $v0 $v1 $v2 $(ss4 $1 "$e31" nodes)                                                        2>$p03; }
+function sz4 { smm 0      ;printf 'ml:%04i api:%s'                                                      $m0         $(ss4 $1 "$e31" addr )                                                        2>$p03; }
 function sso { tse $2 || return;dts;local e="$1 $(printf '%6s %10s %5s %-40s' $(ss3 $2) $dt "$(ss2 $2)" 2>$p03)";case $1 in GETH) e="$e $(sz0 $2)";;BESU) e="$e $(sz1 $2)";;BEAC) e="$e $(sz2 $2)";;VALI) e="$e $(sz3 $2)";;MEVB) e="$e $(sz4 $2)";;esac;swn "$e"; }
 # el control commands
 function grs {
