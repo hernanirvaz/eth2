@@ -146,7 +146,8 @@ e28="${e28};s%APT::Periodic::Unattended-Upgrade.*$%APT::Periodic::Unattended-Upg
 if [[ $cunm = $cuvc ]];then e28="${e28}5";elif [[ $cunm = $cun1 ]];then e28="${e28}2";elif [[ $cunm = $cun2 ]];then e28="${e28}1";else e28="${e28}1";fi
 e28="${e28}\";%i;/APT::Periodic::Unattended-Upgrade/a \\"
 e28="${e28}APT::Periodic::AutocleanInterval \"1\";"
-e29='s%^.+hrv-(zotac|intel)[0-9] +%%;s%lighthouse(\[[0-9]+\] *:) +(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) +[0-9]{2} +%lh\1\t%;s%geth(\[[0-9]+\] *:) +([A-Z]{4,}) +\[[0-9]{2}-[0-9]{2}\|([0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{3})\] +%eg\1\t\3 \2 %;s%besu%eu%;s%mev-boost(\[[0-9]+\] *:) +time=\"[0-9]{4}-[0-9]{2}-[0-9]{2}T([0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{1,})Z\"%mv\1\t\2%'
+if [[ $cunm = $cuvc ]];then e29='vc';else e29='bn';fi
+e29="s%^.+hrv-(zotac|intel)[0-9] +%%;s%lighthouse(\[[0-9]+\] *:) +(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) +[0-9]{2} +([0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{3}) +([A-Z]{4,}) +%$e29\1\t\3 \4\t%;s%geth(\[[0-9]+\] *:) +([A-Z]{4,}) +\[[0-9]{2}-[0-9]{2}\|([0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{3})\] +%eg\1\t\3 \2\t%;s%besu%eu%;s%mev-boost(\[[0-9]+\] *:) +time=\"[0-9]{4}-[0-9]{2}-[0-9]{2}T([0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{1,})Z\"%mv\1\t\2%"
 e30='s%.*hrv-(zotac|intel)[0-9] *(.*)%\2%;s% +% %g'
 e31='s%.*[0-9]*:[0-9]*:[0-9]*\.[0-9][0-9][0-9]?]?[Z ] *(.*)%\1%;s%\t\t*% %g;s% +% %g;s%[\"\/]%%g'
 e32='s%(https?://)?192.168.8.([0-9]+:[0-9]+)/?%\2%g'

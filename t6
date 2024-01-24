@@ -487,12 +487,14 @@ function gp0 { if tsa $s10;then bp;gp;local i=$(pt2 $(pex "du -s $p08"));sudo -u
 # delay  This is the mean execution time required to send a request to the time source, and receive the reply from that source. (ms)
 # jitter This indicates how much packet delays from individual pollings vary from the mean packet delay. (ms)
 function tsh { if tsa $s19;then cex "$s07 $s31-status";cex "$s07 show-$s31";else swb ntpq;ntpq -p;fi; }
-function wpz { ll2 "$g23"|fln "$g33"; }
-function apz { if mnt;then wpz;else ssh $(snc $cun1) "$p53 bpz";fi;if v2t;then wpz;else ssh $(snc $cuvc) "$p53 bpz";fi;if v5t;then wpz;else ssh $(snc $cumv) "$p53 bpz";fi; }
 
-[[ $1 = ap  ]] && { apz|sed -E "$e52"|sort -k2n; }
-[[ $1 = bp  ]] && { wpz|sed -E "$e52"; }
-[[ $1 = bpz ]] && { wpz; }
+function wpf { ll2 "$g23"|fln "$g33"; }
+function wpe { wpf|sed -E "$e52"; }
+function apf { if mnt;then wpe;else ssh $(snc $cun1) "$p53 bp";fi;if v2t;then wpe;else ssh $(snc $cuvc) "$p53 bp";fi;if v5t;then wpe;else ssh $(snc $cumv) "$p53 bp";fi; }
+
+[[ $1 = ap  ]] && { apf|sort -t: -k2n -k3n -k4n; }
+[[ $1 = bp  ]] && { wpe; }
+[[ $1 = bpz ]] && { wpf; }
 
 [[ $1 = irb ]] && { irb $2;pas; }
 [[ $1 = eip ]] && { curl -s4 "https://${3:-meo.fruga.pt}:$2@dyn.dns.he.net/nic/update?hostname=${3:-meo.fruga.pt}" &>$p03;pas; }
