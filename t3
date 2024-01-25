@@ -26,21 +26,16 @@ else
   othe=''
   othe="$othe --execution-endpoint http://$apip:8551 --execution-jwt $p58/jwt"
   othe="$othe --execution-timeout-multiplier 1"                                                                                                               # multiply default execution timeouts
-  othe="$othe --suggested-fee-recipient $s26"                                                                                                                 # cc level fees
-  othe="$othe --subscribe-all-subnets --import-all-attestations"                                                                                              # 5% more profitable
   othe="$othe --validator-monitor-file $p58/pubkeys"                                                                                                          # monitor validators
   othe="$othe --prune-payloads false"                                                                                                                         # fetch/keep execution payloads default true
   othe="$othe --builder http://$zip3:18550"                                                                                                                   # external payload mev-boost
-  othe="$othe --builder-profit-threshold 20000000000000000"                                                                                                   # external payload only if reward >= 0.02 ETH
+  othe="$othe --disable-duplicate-warn-logs"                                                                                                                  # no logs on duplicate gossip messages
   othe="$othe --disable-upnp"                                                                                                                                 # disable UPnP support
   if [[ $cunm = $cun1 ]];then othe="$othe --slasher";fi
   if [[ $cunm = $inm5 ]];then othe="$othe --checkpoint-sync-url http://$iip6:5052";else othe="$othe --checkpoint-sync-url http://$iip5:5052";fi
   # othe="$othe --disable-backfill-rate-limiting"                                                                                                             # disable the backfill sync rate-limiting
-  # othe="$othe --checkpoint-sync-url http://$zip4:5052"
   # othe="$othe --checkpoint-sync-url https://mainnet.checkpoint.sigp.io"
-  # othe="$othe --purge-db --checkpoint-sync-url http://$zip4:5052"                                                                                           # clean & checkpoint DB
-  # othe="$othe --checkpoint-sync-url http://$iip5:5052"                                                                                                      # checkpoint DB
-  # othe="$othe --checkpoint-sync-url http://$zip4:5052"                                                                                                      # checkpoint DB
+  # othe="$othe --purge-db"                                                                                                                                   # clean & checkpoint DB
   # othe="$othe --disable-lock-timeouts"                                                                                                                      # disable timeouts on internal locks
   # othe="$othe --monitoring-endpoint https://beaconcha.in/api/v1/client/metrics?apikey=$B&machine=$(snc $cunm)"                                              # monitor data for beaconcha.in app
   swu 'CONFIGURE BEACON';sex "mkdir -p $p16";cmw $p05 755 $meeu;sau eth2;sjw
@@ -75,8 +70,11 @@ else
     othe="$othe --beacon-nodes http://$vip1:5052"
   fi
   othe="$othe --suggested-fee-recipient $s26"                                                                                                                 # vc level fees
+  othe="$othe --broadcast subscriptions,attestations,blocks,sync-committee"                                                                                   # broadcast to all beacon nodes
   othe="$othe --builder-proposals"                                                                                                                            # mev-boost
+  othe="$othe --produce-block-v3 --builder_boost_factor 99"                                                                                                   # new block chooser 0.99*mev>local ? mev : local
   # othe="$othe --monitoring-endpoint https://beaconcha.in/api/v1/client/metrics?apikey=$B&machine=$(snc $cunm)"                                              # monitor data for beaconcha.in app
+
   sau eth3;cd $p02
   if [[ ! -f $p05/vc_keys  && -d $p19 && $(ls $p19 2>$p03)          ]];then swu 'IMPORT KEYS';sex "mkdir -p $p05";cmw $p05 755 $meeu;imk;[[ -f $p17/validator_definitions.yml ]] && touch $p05/vc_keys;fi
   if [[ ! -f $p05/vc_lock  && -f $p05/vc_keys                       ]];then swn "\nDISABLE VC";touch $p05/vc_lock;fi
