@@ -426,7 +426,7 @@ function hsu { sso BESU $s11; }
 function hsb { sso BEAC $s12; }
 function hsv { sso VALI $s13; }
 function hsm { sso MEVB $s14; }
-function hs0 { echo $1;if [[ $cunm = $1 ]];then hsg;hsu;hsb;hsv;cpe;else ssh $(snc $1) "$p53 hse";ssh $(snc $1) "$p53 hsc";fi; }
+function hs0 { echo $1;if [[ $cunm = $1 ]];then hsg;hsu;hsb;hsv;hsm;cpe;else ssh $(snc $1) "$p53 hse";ssh $(snc $1) "$p53 hsc";fi; }
 function nsh { $s08 list;$s08 status;$s09 status|sed -En "$e26"; }                                                                                            # network/dns info
 function wlp { local e="$1";shift;until [[ $# -lt 1 ]];do e="$e\|$1";shift;done;ll3|grep '\[UFW'|if [[ $e ]];then grep -v "$e";else cat;fi; }
 function c0c { local e="$e11";[[ $(sed -n "$e12" $p04/$s12.service 2>$p03) = $zip1 ]] && e="$e10";sed "$e" $s12.sav > $p04/$s12.service; }                    # cc change el server
@@ -553,11 +553,11 @@ function apf { if mnt;then wpe;else ssh $(snc $cun1) "$p53 bp";fi;if v2t;then wp
 [[ $1 = bh  ]] && { bh0 $2; }
 [[ $1 = vh  ]] && { sh0 $p49 $2;[[ $2 ]] || { vl0;swn "VL $(printf '%8i' $(llc $p49) 2>$p03)\n$m"; } }
 [[ $1 = mh  ]] && { sh0 $p52 $2;[[ $2 ]] || { ml0;swn "ML $(printf '%8i' $(llc $p52) 2>$p03)\n$m"; } }
-[[ $1 = hs0 ]] && { if v2t;then hsv;cpe;else echo $cuvc;ssh $(snc $cuvc) "$p53 hsv";fi;hs0 $cun1;hs0 $cun2;if v5t;then hsm;cpe;else echo $cumv;ssh $(snc $cumv) "$p53 hsm";fi;if v6t;then cpe;else echo $znm1;ssh $(snc $znm1) "$p53 cpe";fi; }
+[[ $1 = hs0 ]] && { if mnt;then if v2t;then hsv;cpe;else echo $cuvc;ssh $(snc $cuvc) "$p53 hsv";fi;hs0 $cun1;hs0 $cun2;if v5t;then hsm;cpe;else echo $cumv;ssh $(snc $cumv) "$p53 hsm";fi;if v6t;then cpe;else echo $znm1;ssh $(snc $znm1) "$p53 cpe";fi;else hs0 $cunm;fi; }
 [[ $1 = hs1 ]] && { hs0 $cun1; }
 [[ $1 = hs2 ]] && { hs0 $cun2; }
 [[ $1 = hse ]] && { hsg;hsu; }
-[[ $1 = hsc ]] && { hsb;hsv;cpe; }
+[[ $1 = hsc ]] && { hsb;hsv;hsm;cpe; }
 [[ $1 = hsv ]] && { hsv;cpe; }
 [[ $1 = hsm ]] && { hsm;cpe; }
 [[ $1 = cpe ]] && { cpe $2; }
