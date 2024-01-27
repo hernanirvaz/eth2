@@ -25,8 +25,8 @@ if [[ $cust = hrv ]];then ciec=$iip6;else ciec=$vip1;fi;[[ $cunm = $inm5 ]] && c
 if [[ $cust = hrv ]];then cicc=$iip6;else cicc=$vip1;fi;[[ $cunm = $inm5 ]] && cicc=$iip5
 cuvc=$znm4
 nxvc=$znm4
-cun1=$inm6
-cun2=$inm5
+cun1=$inm5
+cun2=$inm6
 cumv=$znm3
 
 p00='/usr/local/bin'
@@ -155,8 +155,8 @@ e30='s%.*hrv-(zotac|intel)[0-9] *(.*)%\2%;s% +% %g'
 e31='s%.*[0-9]+:[0-9]+:[0-9]+\.[0-9]+ *(.*)%\1%;s%\t\t*% %g;s% +% %g;s%[\"\/]%%g'
 e32='s%(https?://)?192.168.8.([0-9]+:[0-9]+)/?%\2%g'
 e33='s%<html>.{10,}</html>%%g'
-e34='s% *\([^)(]{20,}\) *%%g'
-e35='s% *\{[^}{]{20,}\} *%%g'
+e34='s% *\([^)(]{10,}\) *%%g'
+e35='s% *\{[^}{]{10,}\} *%%g'
 e36='s% *0x[a-z0-9]{16,}%%g'
 e37="$e34;$e35;$e34;$e35;$e34;$e35;$e36"                                                           # FINAL
 e38='s%(hash|root) *= *([^ ,]*),? *%%g'                                                            # EL

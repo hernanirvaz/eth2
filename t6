@@ -432,7 +432,7 @@ function wlp { local e="$1";shift;until [[ $# -lt 1 ]];do e="$e\|$1";shift;done;
 function c0c { local e="$e11";[[ $(sed -n "$e12" $p04/$s12.service 2>$p03) = $zip1 ]] && e="$e10";sed "$e" $s12.sav > $p04/$s12.service; }                    # cc change el server
 function ble { sft $s12 || return;cp $p04/$s12.service $p02/$s12.sav;sed "$1" $p02/$s12.sav > $p04/$s12.service;dmr; }                                        # cc service edit
 function cce { sft $s12 || return;cp $p04/$s12.service $p02/$s12.sav;c0c;cmw $p04/$s12.service 644 eth; }                                                     # cc change el server (merge)
-function vcc { sft $s13 || return;cp $p04/$s13.service $p02/$s13.sav;sed "$e16" $s13.sav > $p04/$s13.service;cmw $p04/$s13.service 644 eth; }                 # vc switch cc server order
+function vcc { sft $s13 || return;cp $p04/$s13.service $p02/$s13.sav;sed "$e16" $s13.sav > $p04/$s13.service;cmw $p04/$s13.service 644 eth; }                 # vc switch cc order
 function dpa { nex "$s02 $s20";nex "$s02 systemd-resolved";nex "$s03 $s20";nex "$s03 systemd-resolved"; }                                                     # DNS stop/start
 function nrs { nex 'netplan apply';dpa; }                                                                                                                     # netplan/DNS restart
 function lcp { local f=$1;shift;[[ -x $f ]] && until [[ $# -lt 1 ]];do if [[ $1 = $(snc $cunm) ]];then lci $f;else scp $f $1:$p02;fi;shift;done; }            # propagate lighthouse
@@ -768,8 +768,8 @@ if [[ ! $1 ]];then
   m="$m\ncsp [i]\t\tshow peers excluding [i($(ss5 $s12 target-peers 10))-9][0-9]"
   m="$m\ncla\t\tcc add    long-lived parms"
   m="$m\nclr\t\tcc remove long-lived parms"
-  m="$m\ncce\t\tcc change ec server ($znm1/$znm4)"
-  m="$m\nvcc\t\tvc switch cc server order"
+  m="$m\ncce\t\tcc change ec ($znm1/$znm4)"
+  m="$m\nvcc\t\tvc switch cc order"
   m="$m\ntvc\t\tvc transfer ($cuvc -> $nxvc)"
   m="$m\nmvr\t\tmev validator registration"
   m="$m\nmre\t\tmev relay erros"
