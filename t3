@@ -65,14 +65,13 @@ if [[ $cunm = $znm1 || $cunm = $znm2 || $cunm = $znm3 || $cunm = $inm5 || $cunm 
   if [[ -f $p04/$s13.service ]];then swu "vc ja instalado";else swu 'vc NAO PODE SER INSTALADO AQUI';fi
 else
   othe=''
+  othe="$othe --builder-proposals --produce-block-v3 --builder-boost-factor 100"                                                                              # block v3 1*mev>local ? mev : local
   if [[ $cust = hrv ]];then
     othe="$othe --beacon-nodes http://$iip5:5052,http://$iip6:5052"
   else
     othe="$othe --beacon-nodes http://$vip1:5052"
   fi
   othe="$othe --suggested-fee-recipient $s26"                                                                                                                 # vc level fees
-  othe="$othe --builder-proposals"                                                                                                                            # mev-boost
-  othe="$othe --produce-block-v3 --builder_boost_factor 99"                                                                                                   # block v3 0.99*mev>local ? mev : local
   othe="$othe --broadcast subscriptions,attestations,blocks,sync-committee"                                                                                   # broadcast to all beacon nodes
   # othe="$othe --monitoring-endpoint https://beaconcha.in/api/v1/client/metrics?apikey=$B&machine=$(snc $cunm)"                                              # monitor data for beaconcha.in app
 
