@@ -45,14 +45,13 @@ function t0t { [[ $(cat $p43 2>$p03) -eq 0 && $(fl0|wc -l) -gt 20 ]]; }         
 function t1t { [[ $(cat $p43 2>$p03) -eq 1 && $(fl0|wc -l) -le 10 ]]; }                                                                                       # cpu    turbo recomended test
 function t2t { [[ $(cat $p44 2>$p03) -eq 1 && $(fl1|wc -l) -gt 10 ]]; }                                                                                       # usb messages            test
 function t3t { [[ $(cat $p43 2>$p03) -eq 1 ]]; }                                                                                                              # cpu no turbo            test
-function v0t { g0t $(grep $d0 $p12 2>$p03|wc -l); }                                                                                                           # cc  log day  test
-function v1t { [[ $cunm = $nxvc ]]; }                                                                                                                         # vc  next     test
-function v2t { [[ $cunm = $cuvc ]]; }                                                                                                                         # vc  current  test
-function v3t { [[ $cuvc = $nxvc ]]; }                                                                                                                         # vc  transfer test
-function v4t { [[ $cunm = $znm4 ]]; }                                                                                                                         # best zotac   test
-function v5t { [[ $cunm = $cumv ]]; }                                                                                                                         # mev current  test
-function v6t { [[ $cunm = $znm1 ]]; }                                                                                                                         # ntp main     test
-function mnt { [[ $cunm = $cun1 ]]; }
+function v0t { g0t $(grep $d0 $p12 2>$p03|wc -l); }                                                                                                           # cc  log day             test
+function z1t { [[ $cunm = $cunt ]]; }                                                                                                                         # main ntp                test
+function z4t { [[ $cunm = $znm4 ]]; }                                                                                                                         # best zotac              test
+function n1t { [[ $cunm = $cun1 ]]; }
+function n2t { [[ $cunm = $cun2 ]]; }
+function vct { [[ $cunm = $cuvc ]]; }                                                                                                                         # vc  current  test
+function mct { [[ $cunm = $cumv ]]; }                                                                                                                         # mev current  test
 function rbt { [[ $(sra) -ge $((60*60*${1:-9})) ]]; }
 function ipt { [[ $(date +%s) -ge $(bss $1 6) ]]; }
 function pct { [[ $b4 -ne 0 ]]; }
@@ -68,8 +67,8 @@ function dmr { sex "$s00 daemon-reload"; }                                      
 function si1 { local n=${1:-0};printf %i $((20*n))   2>$p03; }
 function si2 { local n=${1:-0};printf %i $((1000*n)) 2>$p03; }
 function svi { local n=${1:-0};if g0t $n;then l4=$(ll1 "$g18"|tail -n$n);else l4=$(ll1 "$g18");fi;i0=$(nu5 3 $(ln2 "$w0$w6$w2"));i1=$(nu5 3 $(ln2 "$w0$w7$w2"));b1=$(nu3 $(ln3 $g27 $g08));if g0t $n;then l4=$(ll1 "$g19"|tail -n$(si2 $n));else l4=$(ll1 "$g19");fi;i2=$(nu5 0 $(ln2 "$w0$w4$w1"));if g0t $n;then l6=$(ll1 "$g15"|tail -n$(si1 $n));else l6=$(ll1 "$g15");fi;i3=$(nu5 2 $(ln1 $g14));if g0t $n;then l4=$(ll1 "$g20"|tail -n$n);else l4=$(ll1 "$g20");fi;i4=$(nu5 3 $(ln2 "$w0$w8$w2")); }
-function svv { if v2t;then l6=$(ll5 "$g16" $1);v0=$(nu4 1 $(ln1 $g31 ".*$(sni $cun1)"));v1=$(nu4 1 $(ln1 $g31 ".*$(sni $cun2)"));l6=$(ll5 "$g17" $(($1/2)));v2=$(nu4 1 $(ln1 $g32));else v0=0;v1=0;v2=0;fi; }
-function smm { if v5t;then m0=$(nu4 3 $(ln4 $g13 $g09 $1));else m0=0;fi; }
+function svv { if vct;then l6=$(ll5 "$g16" $1);v0=$(nu4 1 $(ln1 $g31 ".*$(sni $cun1)"));v1=$(nu4 1 $(ln1 $g31 ".*$(sni $cun2)"));l6=$(ll5 "$g17" $(($1/2)));v2=$(nu4 1 $(ln1 $g32));else v0=0;v1=0;v2=0;fi; }
+function smm { if mct;then m0=$(nu4 3 $(ln4 $g13 $g09 $1));else m0=0;fi; }
 function spc { nn=$2;cp $p04/$1.service $p02/$1.sav;sed -E "$e65$2%" $p02/$1.sav > $p04/$1.service; }                                                         # service configuration change/reload
 function snp { sft $1 || return;local n=$(($2+$5));(($2!=0&&n>=$3&&n<=$4)) && spc $1 $n;tsa $1 && sex "$s02 $1";dmr; }                                        # service peers change/stop
 function sra { if fft $p45;then nu0 $(($(date +%s)-$(date -r $p45 +%s)));else printf %i;fi }                                                                  # system reboot age (secounds)
@@ -341,7 +340,7 @@ function cpe {
   if [[ $cunm = $cumv                                     ]];then m=$(rll "$e51;$e31");local l=rl;fi
   if [[ ! $m ]];then if [[ $cunm = $cun1 || $cunm = $cun2 ]];then m=$(ell "$e50;$e31");local l=el;fi;fi
   if [[ ! $m ]];then local n=0;local d=;else local n=$(echo "$m"|wc -l);local d=$(echo "$m"|tail -n1);fi
-  m="ERRO$(printf '%3i %3i %10s %5s' $i $n $dt 2>$p03)"
+  m="ERRO$(printf '%3i%4i %10s %5s' $i $n $dt 2>$p03)"
   if g0t $i;then if g0t $n;then m="$m sl: ${e:0:53}";m="$m $l: ${d:0:54}";else m="$m sl: ${e:0:112}";fi;else if g0t $n;then m="$m $l: ${d:0:112}";fi;fi
   (( i+n )) && swn "$m";m=
   fft $p45 && m="$m, reboot $(($(sra)/60/60)) hours ago $(rsf|tail -n1)";g0t $(bwc) && m="$m, sync/propose duties on";[[ $m ]] && swn "INFO        $dt${m#*,}"         # reboot/duties info
@@ -391,7 +390,7 @@ function ga  { tsa $s10 || cex "$s03 $s10"; }                                   
 function ua  { tsa $s11 || cex "$s03 $s11"; }                                                                                                                 # start eth-besu
 function ba  { tsa $s12 || cex "$s03 $s12"; }                                                                                                                 # start eth-beacon
 function va  {
-  v2t && fft $p05/vc_keys && ! tsa $s13 || return                                                                                                             # cannot start eth-validator
+  vct && fft $p05/vc_keys && ! tsa $s13 || return                                                                                                             # cannot start eth-validator
   if fft $p05/vc_lock;then sis $p02/$(basename $p18);else cex "$s03 $s13";rm -f $p05/vc_slash;fi                                                              # start eth-validator
 }
 function pa  { tsa $s16 || cex "$s03 $s16"; }                                                                                                                 # start prometheus
@@ -438,7 +437,7 @@ function nrs { nex 'netplan apply';dpa; }                                       
 function lcp { local f=$1;shift;[[ -x $f ]] && until [[ $# -lt 1 ]];do if [[ $1 = $(snc $cunm) ]];then lci $f;else scp $f $1:$p02;fi;shift;done; }            # propagate lighthouse
 function lci { [[ -x $1 && ! -d $1   ]] || return;sex "mv $p00/lighthouse $p00/lighthouse.sav";sex "cp $1 $p00"; }                                            # lighthouse binary install
 function lmd { [[ -x $p00/lighthouse ]] || return;cmw $p00/lighthouse 755 eth;swb 'LIGHT INSTALADO'; }                                                        # lighthouse set permissions
-function lpi { v4t && lcp $1 ztc4;i1t && lcp $1 int5 int6;[[ $cunm = $vnm1 ]] && lcp $1 vpsl;lci $p02/lighthouse;sex "rm $p02/lighthouse";lmd; }
+function lpi { z4t && lcp $1 ztc4;i1t && lcp $1 int5 int6;[[ $cunm = $vnm1 ]] && lcp $1 vpsl;lci $p02/lighthouse;sex "rm $p02/lighthouse";lmd; }
 function luc {                                                                                                                                                # lighthouse upgrade/compile
   if fft $p06/lighthouse/README.md;then
     cd $p06/lighthouse;make clean;cargo clean                                                                                                                 # clean compile dirs
@@ -450,7 +449,7 @@ function luc {                                                                  
 }
 function ruv { if [[ $1 ]];then swn "RUST OVERRIDE SET $1";rustup override set $1;else swn 'RUST UPDATE';rustup update stable;fi; }                           # set/update rust version
 function tvc {
-  swn "$s24";v3t && return;if v2t && tsa $s13;then swn "TRANSFERIR VC -> $(snc $nxvc) (SIM/nao)?";else return;fi;local rsp=nao;read rsp
+  swn "$s24";[[ $cuvc = $nxvc ]] && return;if vct && tsa $s13;then swn "TRANSFERIR VC -> $(snc $nxvc) (SIM/nao)?";else return;fi;local rsp=nao;read rsp
   if [[ $rsp = SIM && ! -f $p05/vc_slash && ! -f $p05/vc_lock && -f $p05/vc_keys ]];then vp;vd;swu "COPY SLASH -> $nxvc";local f=$p02/$(basename $p18);sex "cp $p18 $p02";cmw $f 666 eth;scp $f $(snc $nxvc):~;sex "rm $f";fi
 }
 function svr { local t='';for t in $(printf '%s\n' $@|sort -u);do curl -sX GET "$s33=$t"|sed -n "$e18";done; }                                                # show mev validator registration
@@ -462,7 +461,7 @@ function ibk {
   local f="$p58/pubkeys";sex "cp $p02/pubkeys.new $f";cmw $f 400 eth2;dmr;cex "$s03 $s12"
 }
 function ivk {
-  v2t && ! fft $p05/vc_lock && [[ -d $p19 && $(ls $p19/key*.json 2>$p03) ]] || return;vrs $1 $2;if tse $s12;then ibk;else swn "\nADICIONAR KEYS pubkeys @($cun1, $cun2)";fi
+  vct && ! fft $p05/vc_lock && [[ -d $p19 && $(ls $p19/key*.json 2>$p03) ]] || return;vrs $1 $2;if tse $s12;then ibk;else swn "\nADICIONAR KEYS pubkeys @($cun1, $cun2)";fi
   if ! tsa $s13;then
     swb 'IMPORTAR CHAVES';sex "chown -R $meeu:$meeu $p17";cmw $p17 755;imk;sex "chown -R eth3:eth3 $p17";cmw $p17 700
     fft $p05/vc_lock || cex "$s03 $s13"
@@ -474,9 +473,9 @@ function sn0 { printf %s "[\"$(echo ${!b[@]}|sed "s% %\",\"%g")\"]"; }
 function sn1 { printf %s "$(echo ${!b[@]}|sed "s% %|%g")"; }
 function sns { local n=$((($1-n04)/32));for n in $n $((n+1));do curl -sH "$s28" -X POST -d"$(sn0)" "$s32/attester/$n"|jq -r $s34;done 2>$p03;echo $(((n+1)*32)); }
 function sng { local t=$(((($(date +%s)-n09)/12)+n04));local e=0;local i=0;local s=0;for s in $(sns $t|sort -nu);do if ((s<t));then continue;else if (((s-t)>e));then e=$((s-t));i=$t;fi;fi;t=$((s+1));done;printf '%s %i' $(date -d@$((n09+i*12)) +%T) $((e*12)); }
-function bcc { printf p;if mnt;then if bpt;then if rbt $n06;then printf r;else printf c;fi;else if bdt;then printf d;else printf _;fi;fi;else if rbt;then printf r;else if bdt;then printf d;else printf _;fi;fi;fi;printf :; }
-function btn { if mnt;then printf $1;else printf $n03;fi; }
-function irb { rm -f $p39.*;if rbt $1;then if v2t;then brs RB 0 0 $n02;else gps;ups;bps;sex reboot;fi;else if fft $p45;then touch $p39.$1.hours;fi;fi; }
+function bcc { printf p;if n1t;then if bpt;then if rbt $n06;then printf r;else printf c;fi;else if bdt;then printf d;else printf _;fi;fi;else if rbt;then printf r;else if bdt;then printf d;else printf _;fi;fi;fi;printf :; }
+function btn { if n1t;then printf $1;else printf $n03;fi; }
+function irb { rm -f $p39.*;if rbt $1;then if vct;then brs RB 0 0 $n02;else gps;ups;bps;sex reboot;fi;else if fft $p45;then touch $p39.$1.hours;fi;fi; }
 function gp0 { if tsa $s10;then bp;gp;local i=$(pt2 $(pex "du -s $p08"));sudo -u eth1 geth --datadir $p08 $@;local n=$(pt2 $(pex "du -s $p08"));echo "fs-diff $(((i-n)/1024/1024))M $@";dmr;ga;ba;fi; }
 #function fsc { local f="$1-check";sex "touch $f";sex "chown eth:eth $f";if [[ -w $f ]];then sex "rm -f $f";else gps;ups;bps;sex reboot;fi; }
 #[[ $1 = glf ]] && { i1t && fsc $p08/$s10;gl0;swn "$m" >> $p10;[[ $ok != OK ]] && grs $ok 0 $n03; }
@@ -490,7 +489,7 @@ function tsh { if tsa $s19;then cex "$s07 $s31-status";cex "$s07 show-$s31";else
 
 function wpf { ll2 "$g23"|fln "$g33"; }
 function wpe { wpf|sed -E "$e52"; }
-function apf { if mnt;then wpe;else ssh $(snc $cun1) "$p53 bp";fi;if v2t;then wpe;else ssh $(snc $cuvc) "$p53 bp";fi;if v5t;then wpe;else ssh $(snc $cumv) "$p53 bp";fi; }
+function apf { if n1t;then wpe;else ssh $(snc $cun1) "$p53 bp";fi;if n2t;then wpe;else ssh $(snc $cun2) "$p53 bp";fi;if vct;then wpe;else ssh $(snc $cuvc) "$p53 bp";fi;if mct;then wpe;else ssh $(snc $cumv) "$p53 bp";fi; }
 
 [[ $1 = ap  ]] && { apf|sort -t: -k2n -k3n -k4n; }
 [[ $1 = bp  ]] && { wpe; }
@@ -498,7 +497,7 @@ function apf { if mnt;then wpe;else ssh $(snc $cun1) "$p53 bp";fi;if v2t;then wp
 
 [[ $1 = irb ]] && { irb $2;pas; }
 [[ $1 = eip ]] && { curl -s4 "https://${3:-meo.fruga.pt}:$2@dyn.dns.he.net/nic/update?hostname=${3:-meo.fruga.pt}" &>$p03;pas; }
-[[ $1 = bmf ]] && { bm0;[[ $2 ]] && b4=$2;bms;v0t && swn "$m" >> $p13;if mnt;then if fft $p45;then bpt && brs RB 0 $((n05*10)) $n00;else bpt && brs PE $b4 $n05 $n02;fi;else rbt && brs RB 0 $n05 $n03;fi; }
+[[ $1 = bmf ]] && { bm0;[[ $2 ]] && b4=$2;bms;v0t && swn "$m" >> $p13;if n1t;then if fft $p45;then bpt && brs RB 0 $((n05*10)) $n00;else bpt && brs PE $b4 $n05 $n02;fi;else rbt && brs RB 0 $n05 $n03;fi; }
 [[ $1 = snr ]] && { cex "$s37 lxd";cex "$s37 core20";cex "$s37 snapd";cex 'apt remove --autoremove snapd -y';echo -e "$s36" > nosnap.pref;cex "mv nosnap.pref $p47";cmw $p47/nosnap.pref 644 root;cex 'apt update'; }
 [[ $1 = mvr ]] && { mvr; }
 [[ $1 = mre ]] && { mre|sort -n; }
@@ -553,7 +552,7 @@ function apf { if mnt;then wpe;else ssh $(snc $cun1) "$p53 bp";fi;if v2t;then wp
 [[ $1 = bh  ]] && { bh0 $2; }
 [[ $1 = vh  ]] && { sh0 $p49 $2;[[ $2 ]] || { vl0;swn "VL $(printf '%8i' $(llc $p49) 2>$p03)\n$m"; } }
 [[ $1 = mh  ]] && { sh0 $p52 $2;[[ $2 ]] || { ml0;swn "ML $(printf '%8i' $(llc $p52) 2>$p03)\n$m"; } }
-[[ $1 = hs0 ]] && { if mnt;then if v2t;then hsv;cpe;else echo $cuvc;ssh $(snc $cuvc) "$p53 hsv";fi;hs0 $cun1;hs0 $cun2;if v5t;then hsm;cpe;else echo $cumv;ssh $(snc $cumv) "$p53 hsm";fi;if v6t;then cpe;else echo $znm1;ssh $(snc $znm1) "$p53 cpe";fi;else hs0 $cunm;fi; }
+[[ $1 = hs0 ]] && { if n1t;then if vct;then hsv;cpe;else echo $cuvc;ssh $(snc $cuvc) "$p53 hsv";fi;hs0 $cun1;hs0 $cun2;if mct;then hsm;cpe;else echo $cumv;ssh $(snc $cumv) "$p53 hsm";fi;if z1t;then cpe;else echo $cunt;ssh $(snc $cunt) "$p53 cpe";fi;else hs0 $cunm;fi; }
 [[ $1 = hs1 ]] && { hs0 $cun1; }
 [[ $1 = hs2 ]] && { hs0 $cun2; }
 [[ $1 = hse ]] && { hsg;hsu; }

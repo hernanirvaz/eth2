@@ -28,6 +28,7 @@ nxvc=$znm4
 cun1=$inm6
 cun2=$inm5
 cumv=$znm3
+cunt=$znm2
 
 p00='/usr/local/bin'
 p01='/var/log/syslog'
@@ -162,6 +163,8 @@ e37="$e34;$e35;$e34;$e35;$e34;$e35;$e36"                                        
 e38='s%(hash|root) *= *([^ ,]*),? *%%g'                                                            # EL
 e39='s%(finalized_root|root|block|head|parent_hash|pubkey|block_hash|peer_id) *: *([^ ,]*),? *%%g' # CL
 e40='s%(Some) *\(([^ ]*)\)%\2%g;s%,? *(module) *: *([^ ,]*),? *%%g'                                # CL
+e40="$e40;s%relay_value:%rv:%g"                                                                    # CL
+e40="$e40;s%block_value:%bv:%g"                                                                    # CL
 e41="s%snapdiffs *= *%sdf=%g;s%triediffs *= *%tdf=%g;s%triedirty *= *%tdt=%g;$e38"                 # ALL EL
 e42="$e41;s%(service|num_failed) *: *([^ ,]*),? *%\2 %g;$e39;$e40"                                 # ALL EL/CL
 e43='s%(level) *= *%%;s%msg *= *\"([^"]+)\",?%\t\1%'                                               # RL
@@ -222,7 +225,7 @@ g19='DEBG Processed HTTP API request'
 g20='DEBG Cloned snapshot for late block'
 g21="$g06.*Chain head was updated"
 g22="$g08.*Previous epoch attestation.s"
-g23="($g06|$g07|$g08|$g09).*(Prepared|payload|blinded|profitable|Block from|published ?a? ?block|signed block|getHeader|builder/header)"
+g23="($g06|$g07|$g08|$g09).*(Prepared|payload|blinded|profitable|Block from|published ?a? ?block|signed block|Block is already known|getHeader|submitBlindedBlock)"
 g24=' autostart app-snap| number of Error Log entries increased'
 g25='[ =]INFO '
 g26="$g25| DEBG "
@@ -232,7 +235,7 @@ g29='error'
 g30="$g25| $g27 "
 g31='latency:'
 g32='time_taken_ms:'
-g33='(execution|whilst|arrived)'
+g33='(request was cancelled|error making request to relay)'
 
 s00='systemctl'
 s01="$s00 status"
