@@ -577,7 +577,7 @@ function apf { if mnt;then wpe;else ssh $(snc $cun1) "$p53 bp";fi;if v2t;then wp
 [[ $1 = rpt ]] && { touch $p50; }
 [[ $1 = jsh ]] && { nex "journalctl --disk-usage"; }
 [[ $1 = jrs ]] && { nex "journalctl --vacuum-time=3days";nex "journalctl --verify"; }
-[[ $1 = lp  ]] && { pex 'ss -tunlp'|grep 'geth\|lighthouse\|Netid'; }
+[[ $1 = lp  ]] && { pex 'ss -tunlp'; }
 [[ $1 = ish ]] && { curl -s https://ipinfo.io/ip;echo; }
 [[ $1 = ich ]] && { ll2 "($g06|$g08).*ip[:=] +[0-9]"|sed -E "$e50"; }
 # outros journal system/lighthouse
