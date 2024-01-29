@@ -28,7 +28,7 @@ nxvc=$znm4
 cun1=$inm6
 cun2=$inm5
 cumv=$znm3
-cunt=$znm2
+cunt=$znm1
 
 p00='/usr/local/bin'
 p01='/var/log/syslog'
