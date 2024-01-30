@@ -489,11 +489,17 @@ function tsh { if tsa $s19;then cex "$s07 $s31-status";cex "$s07 show-$s31";else
 
 function wpf { ll2 "$g23"|fln "$g33"; }
 function wpe { wpf|sed -E "$e52"; }
-function apf { if n1t;then wpe;else ssh $(snc $cun1) "$p53 bp";fi;if n2t;then wpe;else ssh $(snc $cun2) "$p53 bp";fi;if vct;then wpe;else ssh $(snc $cuvc) "$p53 bp";fi;if mct;then wpe;else ssh $(snc $cumv) "$p53 bp";fi; }
+function apf { if n1t;then wpe          ;else ssh $(snc $cun1) "$p53 bp"   ;fi;if n2t;then wpe          ;else ssh $(snc $cun2) "$p53 bp"   ;fi;if vct;then wpe          ;else ssh $(snc $cuvc) "$p53 bp"   ;fi;if mct;then wpe;else ssh $(snc $cumv) "$p53 bp";fi; }
+function caa { if n1t;then cll "$e50" $1;else ssh $(snc $cun1) "$p53 cl $1";fi;if n2t;then cll "$e50" $1;else ssh $(snc $cun2) "$p53 cl $1";fi;if vct;then cll "$e50" $1;else ssh $(snc $cuvc) "$p53 cl $1";fi; }
+function eaa { if n1t;then ell "$e50" $1;else ssh $(snc $cun1) "$p53 el $1";fi;if n2t;then ell "$e50" $1;else ssh $(snc $cun2) "$p53 el $1";fi; }
+function laa { caa $1;eaa $1; }
 
 [[ $1 = ap  ]] && { apf|sort -t: -k2n -k3n -k4n; }
 [[ $1 = bp  ]] && { wpe; }
 [[ $1 = bpz ]] && { wpf; }
+[[ $1 = ca  ]] && { caa $2|sort -t: -k2n -k3n -k4n; }
+[[ $1 = ea  ]] && { eaa $2|sort -t: -k2n -k3n -k4n; }
+[[ $1 = la  ]] && { laa $2|sort -t: -k2n -k3n -k4n; }
 
 [[ $1 = irb ]] && { irb $2;pas; }
 [[ $1 = eip ]] && { curl -s4 "https://${3:-meo.fruga.pt}:$2@dyn.dns.he.net/nic/update?hostname=${3:-meo.fruga.pt}" &>$p03;pas; }
