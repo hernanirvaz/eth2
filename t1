@@ -467,7 +467,6 @@ function pex {          echo $H|sudo -S $1       2>$p03; }
 function sex {          echo $H|sudo -S $1       &>$p03; }
 function dex { swl "$1";$1; }
 function idi { local e="deny from $1 to $2"                       ;if [[ $4 ]];then nex "ufw $4 $e";else nex "ufw $e comment $3";fi; }
-function ide { local e="deny from $1 port ${2/\// proto }"        ;if [[ $4 ]];then nex "ufw $4 $e";else nex "ufw $e comment $3";fi; }
 function pde { local e="deny $1"                                  ;if [[ $3 ]];then nex "ufw $3 $e";else nex "ufw $e comment $2";fi; }
 function pai { local e="allow from $2 to any port ${1/\// proto }";if [[ $4 ]];then nex "ufw $4 $e";else nex "ufw $e comment $3";fi; }
 function pae { local e="allow $1"                                 ;if [[ $3 ]];then nex "ufw $3 $e";else nex "ufw $e comment $2";fi; }
