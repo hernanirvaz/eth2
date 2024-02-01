@@ -163,9 +163,10 @@ e36='s% *0x[a-z0-9]{16,}%%g'
 e37="$e34;$e35;$e34;$e35;$e34;$e35;$e36"                                                           # FINAL
 e38='s%(hash|root) *= *([^ ,]*),? *%%g'                                                            # EL
 e39='s%(finalized_root|root|block|head|parent_hash|pubkey|block_hash|peer_id) *: *([^ ,]*),? *%%g' # CL
-e40='s%(Some) *\(([^ ]*)\)%\2%g;s%,? *(module) *: *([^ ,]*),? *%%g'                                # CL
+e40='s%(Some|Slot) *\(([^ ]*)\)%\2%g;s%,? *(module) *: *([^ ,]*),? *%%g'                           # CL
 e40="$e40;s%relay_value:%rv:%g"                                                                    # CL
 e40="$e40;s%block_value:%bv:%g"                                                                    # CL
+e40="$e40;s%block_slot:%bl:%g"                                                                     # CL
 e41="s%snapdiffs *= *%sdf=%g;s%triediffs *= *%tdf=%g;s%triedirty *= *%tdt=%g;$e38"                 # ALL EL
 e42="$e41;s%(service|num_failed) *: *([^ ,]*),? *%\2 %g;$e39;$e40"                                 # ALL EL/CL
 e43='s%(level) *= *%%;s%msg *= *\"([^"]+)\",?%\t\1%'                                               # RL
@@ -203,7 +204,7 @@ e63='s%.*highestBlock" *: *"0x([^"]+)".*%\1%ip'
 e64='s%.*currentBlock" *: *"0x([^"]+)".*%\1%ip'
 e65='s%peers([ =]*)[0-9]+%peers\1'
 
-g00='^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) +[0-9]{2} +'
+g00='^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) +[0-9]{1,2} +'
 g01='^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
 g02='^[0-9]{2}:[0-9]{2}$'
 g03='^[0-9]+$'
@@ -226,7 +227,7 @@ g19='DEBG Processed HTTP API request'
 g20='DEBG Cloned snapshot for late block'
 g21="$g06.*Chain head was updated"
 g22="$g08.*Previous epoch attestation.s"
-g23="($g06|$g07|$g08|$g09).*(Prepared|payload|blinded|profitable|Block from|published ?a? ?block|signed block|Block is already known|getHeader|submitBlindedBlock)"
+g23="($g06|$g07|$g08|$g09).*(Prepared|payload|blinded|profitable|Block from|Block is|Block was|producing block|published ?a? ?block|signed block|getHeader|submitBlindedBlock)"
 g24=' autostart app-snap| number of Error Log entries increased'
 g25='[ =]INFO '
 g26="$g25| DEBG "
