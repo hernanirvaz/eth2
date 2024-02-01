@@ -34,6 +34,7 @@ else
   othe="$othe --disable-upnp"                                                                                                                                 # disable UPnP support
   if [[ $cunm = $cun1 ]];then othe="$othe --slasher";fi
   if [[ $cunm = $inm5 ]];then othe="$othe --checkpoint-sync-url http://$iip6:5052";else othe="$othe --checkpoint-sync-url http://$iip5:5052";fi
+  # othe="$othe --subscribe-all-subnets --import-all-attestations"                                                                                              # better income
   # othe="$othe --disable-backfill-rate-limiting"                                                                                                             # disable the backfill sync rate-limiting
   # othe="$othe --checkpoint-sync-url https://mainnet.checkpoint.sigp.io"
   # othe="$othe --purge-db"                                                                                                                                   # clean & checkpoint DB
