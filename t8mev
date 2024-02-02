@@ -23,6 +23,7 @@ epmv="$epmv -request-timeout-getpayload $trgp"
 epmv="$epmv -request-timeout-regval $trrv"
 epmv="$epmv -relay-check -relays $rlys"
 epmv="$epmv -min-bid $mbid"
+cd
 cat <<-EOF > $s14.service
 [Unit]
 Description=mev-boost service

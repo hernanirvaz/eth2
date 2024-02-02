@@ -18,8 +18,9 @@ epec="--sync-mode=X_SNAP --data-storage-format=BONSAI"                          
 epec="$epec --p2p-port=$pp2p --rpc-http-enabled=true --rpc-http-host=$apip"                                                                                   # enable  rpc:8545
 epec="$epec --rpc-http-cors-origins=chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn"                                                                      # for metamask
 epec="$epec --max-peers=$maxp"                                                                                                                                # set p2p connections
-epec="$epec --engine-jwt-secret=$p58/jwt --host-allowlist=$alow --engine-host-allowlist=$alow"                                                           # MERGE
+epec="$epec --engine-jwt-secret=$p58/jwt --host-allowlist=$alow --engine-host-allowlist=$alow"                                                                # MERGE
 epec="$epec --Xplugin-rocksdb-high-spec-enabled"                                                                                                              # boost Besu performance
+cd
 cat <<-EOF > $s11.service
 [Unit]
 Description=Besu Execution Client

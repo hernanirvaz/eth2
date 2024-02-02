@@ -12,6 +12,7 @@ othe=''
 othe="$othe --state.scheme=path"                                                                                                                            # full pruning historical states
 apip='127.0.0.1'
 if [[ $cunm = $inm5 ]];then apip="$iip5";else apip="$iip6";fi
+cd
 cat <<-EOF > $s10.service
 [Unit]
 Description=Geth Execution Client
