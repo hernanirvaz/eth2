@@ -7,14 +7,13 @@ nnv $1 $2
 maxp=20
 pp2p=30303;i1t || pp2p=30304
 abrb=11052984
+apip='127.0.0.1';if [[ $cunm = $inm5 ]];then apip="$iip5";else apip="$iip6";fi
 othe=''
 othe="$othe --Network.MaxActivePeers $maxp"
 othe="$othe --Network.DiscoveryPort $pp2p --Network.P2PPort $pp2p"
 othe="$othe --JsonRpc.Enabled true --JsonRpc.Host $apip"
 othe="$othe --JsonRpc.EngineHost $apip --JsonRpc.EnginePort 8551 --JsonRpc.JwtSecretFile $p58/jwt"
 othe="$othe --Sync.SnapSync true --Sync.AncientBodiesBarrier $abrb --Sync.AncientReceiptsBarrier $abrb"
-apip='127.0.0.1'
-if [[ $cunm = $inm5 ]];then apip="$iip5";else apip="$iip6";fi
 cat <<-EOF > $s44.service
 [Unit]
 Description=Nethermind Execution Client

@@ -261,7 +261,7 @@ function bro { if fft $p12;then dts;bnn;bb0;swn "$(printf 'R%03i %2s %3i' $2 $1 
 # slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168; $2 = RB SD VC PE BN BK
 function cpr { snp $s12 $2 $n16 $n17 $nn;[[ $1 = VC ]] && sex "$s02 $s13"; }
 function car { sex "$s03 $s12"          ;[[ $1 = VC ]] && sex "$s03 $s13"; }
-function cfb { if [[ $1 = RB || $1 = SD ]];then gps;ups;bro $1 $3;cpr $1 $2;rm -f $p50 $p42.*;if [[ $1 = RB ]];then sex reboot;else sex poweroff;fi;else cpr $1 $2;car $1;ssf 90 $p42;bro $1 $3;fi; }
+function cfb { if [[ $1 = RB || $1 = SD ]];then gps;ups;tps;bro $1 $3;cpr $1 $2;rm -f $p50 $p42.*;if [[ $1 = RB ]];then sex reboot;else sex poweroff;fi;else cpr $1 $2;car $1;ssf 90 $p42;bro $1 $3;fi; }
 function vfb { cex "$s02 $s13";dmr;if [[ $1 = RS ]];then cex "$s03 $s13";else cex "$s02 $s12";fi;vro $1 $2;if [[ $1 = RB ]];then rm -f $p50 $p46.*;sex reboot;fi; }
 function brs {
   s3t $p42 && return;touch $p42.a$(stg);if g0t $3;then ssf $3 $p42;s4t $p42 && return;touch $p42.b$(stg);fi;bv0;bro $1 0;ssw $4 $p42;s4t $p42 && return
@@ -380,6 +380,7 @@ function vco { vfw 5064 vcapi delete;pde 5064 vcapi       ; }
 # enable/start eth-geth eth-beacon eth-validator prometheus prometheus-node-exporter grafana-server mev-boost
 function ge  { eop;sex 'ufw reload';cex "$s04 $s10"; }                                                                                                        # enable eth-geth
 function ue  { eop;sex 'ufw reload';cex "$s04 $s11"; }                                                                                                        # enable eth-besu
+function te  { eop;sex 'ufw reload';cex "$s04 $s44"; }                                                                                                        # enable eth-nethermind
 function be  { bop;sex 'ufw reload';cex "$s04 $s12"; }                                                                                                        # enable eth-beacon
 function ve  { vop;sex 'ufw reload';cex "$s04 $s13"; }                                                                                                        # enable eth-validator
 function pe  { pai 9090/tcp 192.168.8.0/24 $s16 ;sex 'ufw reload';cex "$s04 $s16"; }                                                                          # enable prometheus
@@ -388,6 +389,7 @@ function fe  { pai 3000/tcp 192.168.8.0/24 grafana  ;sex 'ufw reload';cex "$s04 
 function me  { pai 18550    192.168.8.0/24 mev-boost;sex 'ufw reload';cex "$s04 $s14"; }                                                                      # enable mev-boost
 function ga  { tsa $s10 || cex "$s03 $s10"; }                                                                                                                 # start eth-geth
 function ua  { tsa $s11 || cex "$s03 $s11"; }                                                                                                                 # start eth-besu
+function ta  { tsa $s44 || cex "$s03 $s44"; }                                                                                                                 # start eth-nethermind
 function ba  { tsa $s12 || cex "$s03 $s12"; }                                                                                                                 # start eth-beacon
 function va  {
   vct && fft $p05/vc_keys && ! tsa $s13 || return                                                                                                             # cannot start eth-validator
@@ -401,9 +403,11 @@ function wa  { if [[ $(pex 'ufw status'|grep -i inactive) ]];then yex 'ufw enabl
 # stop/disable eth-geth eth-beacon eth-validator prometheus prometheus-node-exporter grafana-server mev-boost
 function gps { tsa $s10 && sex "$s02 $s10"; }                                                                                                                 # silent stop eth-geth
 function ups { tsa $s11 && sex "$s02 $s11"; }                                                                                                                 # silent stop eth-besu
+function tps { tsa $s44 && sex "$s02 $s44"; }                                                                                                                 # silent stop eth-nethermind
 function bps { tsa $s12 && sex "$s02 $s12"; }                                                                                                                 # silent stop eth-beacon
 function gp  { tsa $s10 && cex "$s02 $s10"; }                                                                                                                 # stop eth-geth
 function up  { tsa $s11 && cex "$s02 $s11"; }                                                                                                                 # stop eth-besu
+function tp  { tsa $s44 && cex "$s02 $s44"; }                                                                                                                 # stop eth-nethermind
 function bp  { tsa $s12 && cex "$s02 $s12"; }                                                                                                                 # stop eth-beacon
 function vp  { tsa $s13 && cex "$s02 $s13";touch $p05/vc_slash; }                                                                                             # stop eth-validator
 function pp  { tsa $s16 && cex "$s02 $s16"; }                                                                                                                 # stop prometheus
@@ -412,6 +416,7 @@ function fp  { tsa $s18 && cex "$s02 $s18"; }                                   
 function mp  { tsa $s14 && cex "$s02 $s14"; }                                                                                                                 # stop mev-boost
 function gd  { cex "$s05 $s10";eco;sex 'ufw reload'; }                                                                                                        # disable eth-geth
 function ud  { cex "$s05 $s11";eco;sex 'ufw reload'; }                                                                                                        # disable eth-besu
+function td  { cex "$s05 $s44";eco;sex 'ufw reload'; }                                                                                                        # disable eth-nethermind
 function bd  { cex "$s05 $s12";bco;sex 'ufw reload'; }                                                                                                        # disable eth-beacon
 function vd  { cex "$s05 $s13";vco;sex 'ufw reload';touch $p05/vc_lock; }                                                                                     # disable eth-validator
 function pd  { cex "$s05 $s16";pai 9090/tcp 192.168.8.0/24 $s16  delete;sex 'ufw reload'; }                                                                   # disable prometheus
@@ -475,9 +480,9 @@ function sns { local n=$((($1-n04)/32));for n in $n $((n+1));do curl -sH "$s28" 
 function sng { local t=$(((($(date +%s)-n09)/12)+n04));local e=0;local i=0;local s=0;for s in $(sns $t|sort -nu);do if ((s<t));then continue;else if (((s-t)>e));then e=$((s-t));i=$t;fi;fi;t=$((s+1));done;printf '%s %i' $(date -d@$((n09+i*12)) +%T) $((e*12)); }
 function bcc { printf p;if n1t;then if bpt;then if rbt $n06;then printf r;else printf c;fi;else if bdt;then printf d;else printf _;fi;fi;else if rbt;then printf r;else if bdt;then printf d;else printf _;fi;fi;fi;printf :; }
 function btn { if n1t;then printf $1;else printf $n03;fi; }
-function irb { rm -f $p39.*;if rbt $1;then if vct;then brs RB 0 0 $n02;else gps;ups;bps;sex reboot;fi;else if fft $p45;then touch $p39.$1.hours;fi;fi; }
+function irb { rm -f $p39.*;if rbt $1;then if vct;then brs RB 0 0 $n02;else gps;ups;tps;bps;sex reboot;fi;else if fft $p45;then touch $p39.$1.hours;fi;fi; }
 function gp0 { if tsa $s10;then bp;gp;local i=$(pt2 $(pex "du -s $p08"));sudo -u eth1 geth --datadir $p08 $@;local n=$(pt2 $(pex "du -s $p08"));echo "fs-diff $(((i-n)/1024/1024))M $@";dmr;ga;ba;fi; }
-#function fsc { local f="$1-check";sex "touch $f";sex "chown eth:eth $f";if [[ -w $f ]];then sex "rm -f $f";else gps;ups;bps;sex reboot;fi; }
+#function fsc { local f="$1-check";sex "touch $f";sex "chown eth:eth $f";if [[ -w $f ]];then sex "rm -f $f";else gps;ups;tps;bps;sex reboot;fi; }
 #[[ $1 = glf ]] && { i1t && fsc $p08/$s10;gl0;swn "$m" >> $p10;[[ $ok != OK ]] && grs $ok 0 $n03; }
 # ntpq -p output
 # when   The time after the last poll event. When when reaches the value of poll then the next polling action occurs. (s)
@@ -628,6 +633,7 @@ function laa { caa $1;eaa $1; }
 [[ $1 = ej  ]] && { jrn "-u $s10 -u $s12 -u $s13"; }
 [[ $1 = gj  ]] && { jrn "-u $s10"; }
 [[ $1 = uj  ]] && { jrn "-u $s11"; }
+[[ $1 = tj  ]] && { jrn "-u $s44"; }
 [[ $1 = bj  ]] && { jrn "-u $s12"; }
 [[ $1 = vj  ]] && { jrn "-u $s13"; }
 [[ $1 = sj  ]] && { jrn "-u $s20"; }
@@ -635,6 +641,7 @@ function laa { caa $1;eaa $1; }
 # arranca
 [[ $1 = ga  ]] && { dmr;ga; }
 [[ $1 = ua  ]] && { dmr;ua; }
+[[ $1 = ta  ]] && { dmr;ta; }
 [[ $1 = ba  ]] && { dmr;ba; }
 [[ $1 = va  ]] && { dmr;va; }
 [[ $1 = pa  ]] && { dmr;pa; }
@@ -647,18 +654,21 @@ function laa { caa $1;eaa $1; }
 # para & arranca & journal
 [[ $1 = gaj ]] && { dmr;ga;jrn "-u $s10"; }
 [[ $1 = uaj ]] && { dmr;ua;jrn "-u $s11"; }
+[[ $1 = taj ]] && { dmr;ta;jrn "-u $s44"; }
 [[ $1 = baj ]] && { dmr;ba;jrn "-u $s12"; }
 [[ $1 = vaj ]] && { dmr;va;jrn "-u $s13"; }
 [[ $1 = saj ]] && { dmr;sa;jrn "-u $s20"; }
 [[ $1 = maj ]] && { dmr;ma;jrn "-u $s14"; }
 [[ $1 = gpa ]] && { gp;dmr;ga;jrn "-u $s10"; }
 [[ $1 = upa ]] && { up;dmr;ua;jrn "-u $s11"; }
+[[ $1 = tpa ]] && { tp;dmr;ta;jrn "-u $s44"; }
 [[ $1 = bpa ]] && { bp;dmr;ba;jrn "-u $s12"; }
 [[ $1 = vpa ]] && { vp;dmr;va;jrn "-u $s13"; }
 [[ $1 = spa ]] && { sp;sa; }
 [[ $1 = mpa ]] && { mp;dmr;ma;jrn "-u $s14"; }
 [[ $1 = gpd ]] && { gp;gd; }
 [[ $1 = upd ]] && { up;ud; }
+[[ $1 = tpd ]] && { tp;td; }
 [[ $1 = bpd ]] && { bp;bd; }
 [[ $1 = vpd ]] && { vp;vd; }
 [[ $1 = xpd ]] && { xp;xd; }
@@ -667,6 +677,7 @@ function laa { caa $1;eaa $1; }
 [[ $1 = mpd ]] && { mp;md; }
 [[ $1 = gea ]] && { ge;dmr;ga;jrn "-u $s10"; }
 [[ $1 = uea ]] && { ue;dmr;ua;jrn "-u $s11"; }
+[[ $1 = tea ]] && { te;dmr;ta;jrn "-u $s44"; }
 [[ $1 = bea ]] && { be;dmr;ba;jrn "-u $s12"; }
 [[ $1 = vea ]] && { ve;dmr;va;jrn "-u $s13"; }
 [[ $1 = rea ]] && { re;dmr;ra; }
@@ -676,6 +687,7 @@ function laa { caa $1;eaa $1; }
 # enable
 [[ $1 = ge  ]] && { ge; }
 [[ $1 = ue  ]] && { ue; }
+[[ $1 = te  ]] && { te; }
 [[ $1 = be  ]] && { be; }
 [[ $1 = ve  ]] && { ve; }
 [[ $1 = pe  ]] && { pe; }
@@ -693,6 +705,7 @@ function laa { caa $1;eaa $1; }
 [[ $1 = bpr ]] && { bp; }
 [[ $1 = gpr ]] && { gp; }
 [[ $1 = upr ]] && { up; }
+[[ $1 = tpr ]] && { tp; }
 [[ $1 = xpr ]] && { xp; }
 [[ $1 = rpr ]] && { rp; }
 [[ $1 = spr ]] && { sp; }
@@ -705,6 +718,7 @@ function laa { caa $1;eaa $1; }
 [[ $1 = bds ]] && { bd; }
 [[ $1 = gds ]] && { gd; }
 [[ $1 = uds ]] && { ud; }
+[[ $1 = tds ]] && { td; }
 [[ $1 = xds ]] && { xd; }
 [[ $1 = rds ]] && { rd; }
 [[ $1 = sds ]] && { sd; }
@@ -716,6 +730,7 @@ if [[ ! $1 ]];then
   m="$m\ne\t\t$s10 $s12 $s13"
   m="$m\ng\t\t$s10"
   m="$m\nu\t\t$s11"
+  m="$m\nt\t\t$s44"
   m="$m\nb\t\t$s12"
   m="$m\nv\t\t$s13"
   m="$m\np\t\t$s16"
