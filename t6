@@ -13,7 +13,7 @@ function nu7 { nu2 "sqrt(((0$(printf +%i^2 $@ 2>$p03))-(0$(printf +%i $@ 2>$p03)
 function ll0 { local f=$p16/logs/beacon.log   ;echo $H|sudo -S cat             $f.1 $f 2>$p03|tail -n$n26; }                                                  # get cc intern lines
 function ll1 { local f=$p16/logs/beacon.log   ;echo $H|sudo -S egrep -ah  "$1" $f.1 $f 2>$p03|tail -n$n15; }                                                  # get cc intern lines (specific)
 function ll2 { local f=$p01                   ;echo $H|sudo -S egrep -ah  "$1"      $f 2>$p03            ; }                                                  # get all eth syslog lines
-function ll3 { local f=$p01                   ;echo $H|sudo -S egrep -ahv "$g10"    $f 2>$p03            ; }                                                  # get not eth syslog lines
+function ll3 { local f=$p01                   ;echo $H|sudo -S egrep -ahv "$g13"    $f 2>$p03            ; }                                                  # get not eth syslog lines
 function ll4 { local f=$p17/logs/validator.log;echo $H|sudo -S cat             $f.1 $f 2>$p03|tail -n$n25; }                                                  # get vc intern lines
 function ll5 { local f=$p17/logs/validator.log;echo $H|sudo -S egrep -ah  "$1" $f.1 $f 2>$p03|tail -n$2  ; }                                                  # get vc intern lines (specific)
 function ln0 {                              sed -En "s%.*$1 *([0-9]+).*%\1%p"              $2 2>$p03; }                                                       # get sed list of numbers (file)
@@ -68,7 +68,7 @@ function si1 { local n=${1:-0};printf %i $((20*n))   2>$p03; }
 function si2 { local n=${1:-0};printf %i $((1000*n)) 2>$p03; }
 function svi { local n=${1:-0};if g0t $n;then l4=$(ll1 "$g18"|tail -n$n);else l4=$(ll1 "$g18");fi;i0=$(nu5 3 $(ln2 "$w0$w6$w2"));i1=$(nu5 3 $(ln2 "$w0$w7$w2"));b1=$(nu3 $(ln3 $g27 $g08));if g0t $n;then l4=$(ll1 "$g19"|tail -n$(si2 $n));else l4=$(ll1 "$g19");fi;i2=$(nu5 0 $(ln2 "$w0$w4$w1"));if g0t $n;then l6=$(ll1 "$g15"|tail -n$(si1 $n));else l6=$(ll1 "$g15");fi;i3=$(nu5 2 $(ln1 $g14));if g0t $n;then l4=$(ll1 "$g20"|tail -n$n);else l4=$(ll1 "$g20");fi;i4=$(nu5 3 $(ln2 "$w0$w8$w2")); }
 function svv { if vct;then l6=$(ll5 "$g16" $1);v0=$(nu4 1 $(ln1 $g31 ".*$(sni $cun1)"));v1=$(nu4 1 $(ln1 $g31 ".*$(sni $cun2)"));l6=$(ll5 "$g17" $(($1/2)));v2=$(nu4 1 $(ln1 $g32));else v0=0;v1=0;v2=0;fi; }
-function smm { if mct;then m0=$(nu4 3 $(ln4 $g13 $g09 $1));else m0=0;fi; }
+function smm { if mct;then m0=$(nu4 3 $(ln4 $g34 $g09 $1));else m0=0;fi; }
 function spc { nn=$2;cp $p04/$1.service $p02/$1.sav;sed -E "$e65$2%" $p02/$1.sav > $p04/$1.service; }                                                         # service configuration change/reload
 function snp { sft $1 || return;local n=$(($2+$5));(($2!=0&&n>=$3&&n<=$4)) && spc $1 $n;tsa $1 && sex "$s02 $1";dmr; }                                        # service peers change/stop
 function sra { if fft $p45;then nu0 $(($(date +%s)-$(date -r $p45 +%s)));else printf %i;fi }                                                                  # system reboot age (secounds)
@@ -96,7 +96,8 @@ function sz1 { unn 0      ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s      i: %4i' 
 function sz2 { dtl;svi;bnn;printf 'cl:p%02i:m%02i:d%04i p2p:%5i %s iosrhp: %4i %4i %4i %4i %4i %4i %4i' $nr $nm $nd $(ss5 $1 port    ) "$(bb1 $(bcl syncing))"     $i0 $i1 $i4 $b1 $i2 $i3 $(bi1) 2>$p03; }
 function sz3 { svv $n23   ;printf 'vl:m%02i:b%02i:c%02i api:%s'                                         $v0 $v1 $v2 $(ss4 $1 "$e32" nodes)                                                        2>$p03; }
 function sz4 { smm 0      ;printf 'ml:%04i api:%s'                                                      $m0         $(ss4 $1 "$e32" addr )                                                        2>$p03; }
-function sso { tse $2 || return;dts;local e="$1 $(printf '%6s %10s %5s %-40s' $(ss3 $2) $dt "$(ss2 $2)" 2>$p03)";case $1 in GETH) e="$e $(sz0 $2)";;BESU) e="$e $(sz1 $2)";;BEAC) e="$e $(sz2 $2)";;VALI) e="$e $(sz3 $2)";;MEVB) e="$e $(sz4 $2)";;esac;swn "$e"; }
+function sz5 { tnn 0      ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s                    '                 $er $em $ed $(ss5 $1 P2PPort ) "$(tb1 $(tcl eth_syncing))"                                2>$p03; }
+function sso { tse $2 || return;dts;local e="$1 $(printf '%6s %10s %5s %-40s' $(ss3 $2) $dt "$(ss2 $2)" 2>$p03)";case $1 in GETH) e="$e $(sz0 $2)";;BESU) e="$e $(sz1 $2)";;NETH) e="$e $(sz5 $2)";;BEAC) e="$e $(sz2 $2)";;VALI) e="$e $(sz3 $2)";;MEVB) e="$e $(sz4 $2)";;esac;swn "$e"; }
 # el control commands
 function grs {
   s2t $p40 && return;gv0;gq0;ero $1 0 $p10;touch $p40.a$(stg);ssw $3 $p40;s1t $p40 && return
@@ -121,6 +122,23 @@ function gl0 {                                                                  
     m="GETH $ok $(tsy $e) $(npn $en $er) sgs: $(nu1 %4i $e0)$(gb2 $e) $(printf 'iu: %3i %2i %3i' $e1 $e2 $(ei0) 2>$p03)"
   else
     m="GSRV NOT ON $dt"
+  fi
+}
+function tcl { curl "http://$ciec:8545" -sX POST -H "Content-Type: application/json" --data "{\"jsonrpc\":\"2.0\",\"method\":\"$1\",\"params\":[],\"id\":0}" 2>$p03|jq -r .result; }
+function ti0 { nu0 $(echo $@|jq -r .highestBlock 2>$p03); }                                                                                                        # get el highest block
+function tc0 { nu0 $(echo $@|jq -r .currentBlock 2>$p03); }                                                                                                        # get el current block
+function tv0 { en=$(ss5 $s44 MaxActivePeers); }
+function tq0 { er=$(nu0 $(tcl net_peerCount)); }
+function tnn { esn $(ln3 'Peers.*all:' $g10) $(nu0 $(tcl net_peerCount)); }
+function tb0 { e0=$(ll2 "$g12"|wc -l);ok=OK;[[ $(echo $@|grep false) ]] && ok=BK; }
+function tb1 { if [[ $(echo $@|grep false) ]];then printf 'synced';else printf  'syncing: %6i' $(($(ti0 $@)-$(tc0 $@)));fi; }                                 # get el syncing blocks remaining
+function tb2 { if [[ $(echo $@|grep false) ]];then printf ''      ;else printf ' syncing: %6i' $(($(ti0 $@)-$(tc0 $@)));fi; }                                 # get el syncing blocks remaining
+function tl0 {
+  dts;ok=OK
+  if tsa $s44;then local e=$(tcl eth_syncing);tv0;tnn $n07;tb0 $p62 $e
+    m="NETH $ok $(tsy $e) $(npn $en $er) sgs: $(nu1 %4i $e0)$(tb2 $e)"
+  else
+    m="NSRV NOT ON $dt"
   fi
 }
 function urs {
@@ -330,7 +348,7 @@ function sif {
 function sll { ll3       |fln usb    $1|flp "$g29" $1; }
 function cll { ll2 "$g08"|fln "$g30" $2|if [[ $1 ]];then sed -E "$1";else cat;fi; }
 function ell { ll2 "$g11"|fln "$g25" $2|if [[ $1 ]];then sed -E "$1";else cat;fi; }
-function lll { ll2 "$g10"|fln "$g30" $2|if [[ $1 ]];then sed -E "$1";else cat;fi; }
+function lll { ll2 "$g13"|fln "$g30" $2|if [[ $1 ]];then sed -E "$1";else cat;fi; }
 function rll { ll2 "$g09"|fln "$g25" $2|if [[ $1 ]];then sed -E "$1";else cat;fi; }
 function cpe {
   clk;[[ $1 = c ]] && return;tmp;[[ $1 = p ]] && return;sif $1
@@ -427,10 +445,11 @@ function pas { t2t && sex "$p54 usbstop";t1t && sex "$p54 cputurbo";t0t && sex "
 function paf { t3t && sex "$p54 cputurbo"; }                                                                                                                  # set turbo   parameter
 function hsg { sso GETH $s10; }
 function hsu { sso BESU $s11; }
+function hst { sso NETH $s44; }
 function hsb { sso BEAC $s12; }
 function hsv { sso VALI $s13; }
 function hsm { sso MEVB $s14; }
-function hs0 { echo $1;if [[ $cunm = $1 ]];then hsg;hsu;hsb;hsv;hsm;cpe;else ssh $(snc $1) "$p53 hse";ssh $(snc $1) "$p53 hsc";fi; }
+function hs0 { echo $1;if [[ $cunm = $1 ]];then hsg;hsu;hst;hsb;hsv;hsm;cpe;else ssh $(snc $1) "$p53 hse";ssh $(snc $1) "$p53 hsc";fi; }
 function nsh { $s08 list;$s08 status;$s09 status|sed -En "$e26"; }                                                                                            # network/dns info
 function wlp { local e="$1";shift;until [[ $# -lt 1 ]];do e="$e\|$1";shift;done;ll3|grep '\[UFW'|if [[ $e ]];then grep -v "$e";else cat;fi; }
 function c0c { local e="$e11";[[ $(sed -n "$e12" $p04/$s12.service 2>$p03) = $zip1 ]] && e="$e10";sed "$e" $s12.sav > $p04/$s12.service; }                    # cc change el server
@@ -548,6 +567,7 @@ function laa { caa $1;eaa $1; }
 [[ $1 = ul  ]] && { ul0;swn "$m"; }
 [[ $1 = ulf ]] && { ul0;swn "$m" >> $p11;[[ $ok != OK ]] && urs $ok 0 $n03; }
 [[ $1 = gl  ]] && { gl0;swn "$m"; }
+[[ $1 = tl  ]] && { tl0;swn "$m"; }
 [[ $1 = glf ]] && { gl0;swn "$m" >> $p10;[[ $ok != OK ]] && grs $ok 0 $n03; }
 [[ $1 = bl  ]] && { bl0;swn "$m"; }
 [[ $1 = blf ]] && { bl0;swn "$m" >> $p12;if [[ $d1 = 23:58 ]];then if bdt;then bdl $d0;else if [[ $(llc $p12) -gt $n14 ]];then bod 0 9;fi;fi;fi;[[ $ok != OK ]] && brs $ok 0 0 $(btn $n02);pas; }
@@ -566,7 +586,7 @@ function laa { caa $1;eaa $1; }
 [[ $1 = hs0 ]] && { if n1t;then if vct;then hsv;cpe;else echo $cuvc;ssh $(snc $cuvc) "$p53 hsv";fi;hs0 $cun1;hs0 $cun2;if mct;then hsm;cpe;else echo $cumv;ssh $(snc $cumv) "$p53 hsm";fi;if z1t;then cpe;else echo $cunt;ssh $(snc $cunt) "$p53 cpe";fi;else hs0 $cunm;fi; }
 [[ $1 = hs1 ]] && { hs0 $cun1; }
 [[ $1 = hs2 ]] && { hs0 $cun2; }
-[[ $1 = hse ]] && { hsg;hsu; }
+[[ $1 = hse ]] && { hsg;hsu;hst; }
 [[ $1 = hsc ]] && { hsb;hsv;hsm;cpe; }
 [[ $1 = hsv ]] && { hsv;cpe; }
 [[ $1 = hsm ]] && { hsm;cpe; }
@@ -618,8 +638,8 @@ function laa { caa $1;eaa $1; }
 [[ $1 = vi1 ]] && { ll5 "$g16" ${2:-$n22}|grep $(sni $cun1)                        |sed -E "$e50"; }
 [[ $1 = vi2 ]] && { ll5 "$g16" ${2:-$n22}|grep $(sni $cun2)                        |sed -E "$e50"; }
 [[ $1 = vic ]] && { ll5 "$g17" ${2:-$(($n22/2))}                                   |sed -E "$e50"; }
-[[ $1 = mi  ]] && { ll2 "$g09.*$g13"|tail -n${2:-$n32}                             |sed -E "$e51"; }
-[[ $1 = miz ]] && { ll2 "$g09.*$g13"|tail -n${2:-$n32}                                           ; }
+[[ $1 = mi  ]] && { ll2 "$g09.*$g34"|tail -n${2:-$n32}                             |sed -E "$e51"; }
+[[ $1 = miz ]] && { ll2 "$g09.*$g34"|tail -n${2:-$n32}                                           ; }
 [[ $1 = csp ]] && { ll2 "$g08.*peers:"                                             |sed -E "$e49"|grep -v "peers: *[${2:-$(ss5 $s12 target-peers 10)}-9][0-9]"|sort -k2n; }
 [[ $1 = wa  ]] && { wa; }
 [[ $1 = we  ]] && { yex 'ufw enable'; }
