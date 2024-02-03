@@ -232,7 +232,7 @@ g21="$g06.*Chain head was updated"
 g22="$g08.*Previous epoch attestation.s"
 g23="($g06|$g07|$g08|$g09).*(Prepared|payload|blinded|profitable|Block from|Block is|Block was|producing block|published ?a? ?block|signed block|getHeader|submitBlindedBlock)"
 g24=' autostart app-snap| number of Error Log entries increased'
-g25='[ =]INFO '
+g25='[ =\|]INFO[ \|]'
 g26="$g25| DEBG "
 g27='reorg_distance:'
 g28='success'
@@ -242,6 +242,8 @@ g31='latency:'
 g32='time_taken_ms:'
 g33='(request was cancelled|error making request to relay)'
 g34='duration='
+g35="^$(date +%F) +"
+g36="$g35[0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{1,} *\|[A-Z]{4,}\|"
 
 s00='systemctl'
 s01="$s00 status"
