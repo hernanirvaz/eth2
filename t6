@@ -66,7 +66,7 @@ function jrn { cex "journalctl --no-hostname --no-full -f $1"; }                
 function dmr { sex "$s00 daemon-reload"; }                                                                                                                    # daemon-reload
 function si1 { local n=${1:-0};printf %i $((20*n))   2>$p03; }
 function si2 { local n=${1:-0};printf %i $((1000*n)) 2>$p03; }
-function svi { local n=${1:-0};if g0t $n;then l4=$(ll1 "$g18"|tail -n$n);else l4=$(ll1 "$g18");fi;i0=$(nu5 3 $(ln2 "$w0$w6$w2"));i1=$(nu5 3 $(ln2 "$w0$w7$w2"));b1=$(nu3 $(ln3 $g27 $g08));if g0t $n;then l4=$(ll1 "$g19"|tail -n$(si2 $n));else l4=$(ll1 "$g19");fi;i2=$(nu5 0 $(ln2 "$w0$w4$w1"));if g0t $n;then l6=$(ll1 "$g15"|tail -n$(si1 $n));else l6=$(ll1 "$g15");fi;i3=$(nu5 2 $(ln1 $g14));if g0t $n;then l4=$(ll1 "$g20"|tail -n$n);else l4=$(ll1 "$g20");fi;i4=$(nu5 3 $(ln2 "$w0$w8$w2")); }
+function svi { local n=${1:-0};if g0t $n;then l4=$(ll1 "$g18"|tail -n$n);else l4=$(ll1 "$g18");fi;i0=$(nu5 3 $(ln2 "${w0}imported_delay: +Some\($w2"));i1=$(nu5 3 $(ln2 "${w0}observed_delay: +Some\($w2"));b1=$(nu3 $(ln3 $g27 $g08));if g0t $n;then l4=$(ll1 "$g19"|tail -n$(si2 $n));else l4=$(ll1 "$g19");fi;i2=$(nu5 0 $(ln2 "${w0}elapsed: *$w1"));if g0t $n;then l6=$(ll1 "$g15"|tail -n$(si1 $n));else l6=$(ll1 "$g15");fi;i3=$(nu5 2 $(ln1 $g14));if g0t $n;then l4=$(ll1 "$g20"|tail -n$n);else l4=$(ll1 "$g20");fi;i4=$(nu5 3 $(ln2 "${w0}block_delay:.+Some\($w2")); }
 function svv { if vct;then l6=$(ll5 "$g16" $1);v0=$(nu4 1 $(ln1 $g31 ".*$(sni $cun1)"));v1=$(nu4 1 $(ln1 $g31 ".*$(sni $cun2)"));l6=$(ll5 "$g17" $(($1/2)));v2=$(nu4 1 $(ln1 $g32));else v0=0;v1=0;v2=0;fi; }
 function smm { if mct;then m0=$(nu4 3 $(ln4 $g34 $g09 $1));else m0=0;fi; }
 function spc { nn=$2;cp $p04/$1.service $p02/$1.sav;sed -E "$e65$2%" $p02/$1.sav > $p04/$1.service; }                                                         # service configuration change/reload
@@ -77,7 +77,7 @@ function dtl { read _ _ _ d0 d1 _ <<< $(bff|tail -n1)          ;dt="$d0 $d1"; } 
 function tsy { if [[ $(echo $@|grep false) ]];then printf SYC;else printf NSY;fi; }                                                                           # get el SYN/NSY text
 function era { tail -n${2:-$n13} $1 2>$p03|cut -d' ' -f1|sort -u|wc -l; }                                                                                     # get el/cc restart activity
 function sh0 { fft $1 || return;tail -n${2:-$n13} $1 2>$p03; }                                                                                                # simple historic report
-function eb0 { e0=$(ll2 "$g12"|wc -l);ok=OK;[[ $(echo $@|grep false) && ($e0 -eq $(ln0 sgs: $1|tail -n1) || $(ei0) -gt $n24) && $(era $1) -eq 1 ]] && ok=BK; }
+function eb0 { e0=$(ll2 "$g12"|wc -l);ok=OK;fft $1 || return;[[ $(echo $@|grep false) && ($e0 -eq $(ln0 sgs: $1|tail -n1) || $(ei0) -gt $n24) && $(era $1) -eq 1 ]] && ok=BK; }
 function stg { local n=${1:-0};if ((n>3599));then printf %s $(($(date -d@$n +%H)-1))h;fi;if ((n>0));then printf %s $(date -d@$n +%Mm%Ss);fi;printf %s .$(date -d@$(($(date +%s)+$n)) +%H%M%S); }
 function sf1 { printf %s ${1:-$(date +%H:%M:%S)}; }                                                                                                           # get filterd t7 parm 1
 function sf2 { printf %i ${2:-24}; }                                                                                                                          # get filterd t7 parm 2
@@ -96,7 +96,7 @@ function sz1 { unn 0      ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s      i: %4i' 
 function sz2 { dtl;svi;bnn;printf 'cl:p%02i:m%02i:d%04i p2p:%5i %s iosrhp: %4i %4i %4i %4i %4i %4i %4i' $nr $nm $nd $(ss5 $1 port    ) "$(bb1 $(bcl syncing))"     $i0 $i1 $i4 $b1 $i2 $i3 $(bi1) 2>$p03; }
 function sz3 { svv $n23   ;printf 'vl:m%02i:b%02i:c%02i api:%s'                                         $v0 $v1 $v2 $(ss4 $1 "$e32" nodes)                                                        2>$p03; }
 function sz4 { smm 0      ;printf 'ml:%04i api:%s'                                                      $m0         $(ss4 $1 "$e32" addr )                                                        2>$p03; }
-function sz5 { tnn 0      ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s                    '                 $er $em $ed $(ss5 $1 P2PPort ) "$(tb1 $(tcl eth_syncing))"                                2>$p03; }
+function sz5 { tnn 0      ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s     is: %4i %4i %4i'                 $er $em $ed $(ss5 $1 P2PPort ) "$(tb1 $(tcl eth_syncing))" $e1 $e2 $(ei0)                 2>$p03; }
 function sso { tse $2 || return;dts;local e="$1 $(printf '%6s %10s %5s %-40s' $(ss3 $2) $dt "$(ss2 $2)" 2>$p03)";case $1 in GETH) e="$e $(sz0 $2)";;BESU) e="$e $(sz1 $2)";;NETH) e="$e $(sz5 $2)";;BEAC) e="$e $(sz2 $2)";;VALI) e="$e $(sz3 $2)";;MEVB) e="$e $(sz4 $2)";;esac;swn "$e"; }
 # el control commands
 function grs {
@@ -106,8 +106,8 @@ function grs {
     if [[ $1 = RB ]];then ero $1 $n $p10;rm -f $p50 $p40.*;sex reboot;else sex "$s03 $s10";ssf 90 $p40;gq0;ero $1 $n $p10;fi
   fi;done;rm -f $p50 $p40.*
 }
-function gdi { if g0t $1;then l4=$(ll2 "$g12"|tail -n$1);else l4=$(ll2 "$g12");fi;e1=$(nu5 3 $(ln2 "$w0$w3$w2")); }                                           # get delay imported
-function gdu { if g0t $1;then l4=$(ll2 "$g21"|tail -n$1);else l4=$(ll2 "$g21");fi;e2=$(nu5 3 $(ln2 "$w0$w3$w2")); }                                           # get delay Chain head was updated
+function gdi { if g0t $1;then l4=$(ll2 "$g12"|tail -n$1);else l4=$(ll2 "$g12");fi;e1=$(nu5 3 $(ln2 "${w0}elapsed= *$w2")); }                                  # get delay imported
+function gdu { if g0t $1;then l4=$(ll2 "$g21"|tail -n$1);else l4=$(ll2 "$g21");fi;e2=$(nu5 3 $(ln2 "${w0}elapsed= *$w2")); }                                  # get delay Chain head was updated
 function gcl { geth attach --exec $1 "http://$ciec:8545" 2>$p03; }                                                                                            # exec RPC HTTP
 function gi0 { nu0 $(echo $@|sed -En "$e61" 2>$p03); }                                                                                                        # get el highest block
 function gc0 { nu0 $(echo $@|sed -En "$e62" 2>$p03); }                                                                                                        # get el current block
@@ -124,19 +124,17 @@ function gl0 {                                                                  
     m="GSRV NOT ON $dt"
   fi
 }
+function tdi { if g0t $1;then l4=$(ll2 "$g12"|tail -n$1);else l4=$(ll2 "$g12");fi;e1=$(nu5 2 $(ln2 "$w0$w3$w4$w3$w5"));e2=$(nu2 "$(nu5 2 $(ln2 "${w0}slot *$w4$w5"))/1000"); }
 function tcl { curl "http://$ciec:8545" -sX POST -H "Content-Type: application/json" --data "{\"jsonrpc\":\"2.0\",\"method\":\"$1\",\"params\":[],\"id\":0}" 2>$p03|jq -r .result; }
-function ti0 { nu0 $(echo $@|jq -r .highestBlock 2>$p03); }                                                                                                        # get el highest block
-function tc0 { nu0 $(echo $@|jq -r .currentBlock 2>$p03); }                                                                                                        # get el current block
 function tv0 { en=$(ss5 $s44 MaxActivePeers); }
 function tq0 { er=$(nu0 $(tcl net_peerCount)); }
-function tnn { esn $(ln3 'Peers.*all:' $g10) $(nu0 $(tcl net_peerCount)); }
-function tb0 { e0=$(ll2 "$g12"|wc -l);ok=OK;[[ $(echo $@|grep false) ]] && ok=BK; }
-function tb1 { if [[ $(echo $@|grep false) ]];then printf 'synced';else printf  'syncing: %6i' $(($(ti0 $@)-$(tc0 $@)));fi; }                                 # get el syncing blocks remaining
-function tb2 { if [[ $(echo $@|grep false) ]];then printf ''      ;else printf ' syncing: %6i' $(($(ti0 $@)-$(tc0 $@)));fi; }                                 # get el syncing blocks remaining
+function tnn { esn $(ln3 'Peers.*all:' $g10) $(nu0 $(tcl net_peerCount));tdi $1; }
+function tb1 { if [[ $(echo $@|grep false) ]];then printf 'synced';else printf  'syncing';fi; }
+function tb2 { if [[ $(echo $@|grep false) ]];then printf ''      ;else printf ' syncing';fi; }
 function tl0 {
   dts;ok=OK
-  if tsa $s44;then local e=$(tcl eth_syncing);tv0;tnn $n07;tb0 $p62 $e
-    m="NETH $ok $(tsy $e) $(npn $en $er) sgs: $(nu1 %4i $e0)$(tb2 $e)"
+  if tsa $s44;then local e=$(tcl eth_syncing);tv0;tnn 20;eb0 $p62 $e
+    m="NETH $ok $(tsy $e) $(npn $en $er) sgs: $(nu1 %4i $e0)$(tb2 $e) $(printf 'is: %3i %2i %3i' $e1 $e2 $(ei0) 2>$p03)"
   else
     m="NSRV NOT ON $dt"
   fi
@@ -148,7 +146,7 @@ function urs {
     if [[ $1 = RB ]];then ero $1 $n $p11;rm -f $p50 $p41.*;sex reboot;else sex "$s03 $s11";ssf 90 $p41;uq0;ero $1 $n $p11;fi
   fi;done;rm -f $p50 $p41.*
 }
-function udi { if g0t $1;then l4=$(ll2 "$g12"|tail -n$1);else l4=$(ll2 "$g12");fi;e1=$(nu5 3 $(ln2 "$w0$w5$w2")); }                                           # get delay imported
+function udi { if g0t $1;then l4=$(ll2 "$g12"|tail -n$1);else l4=$(ll2 "$g12");fi;e1=$(nu5 3 $(ln2 "${w0} in $w2")); }                                        # get delay imported
 function ucl { curl -sX POST --data "{\"jsonrpc\":\"2.0\",\"method\":\"$1\",\"params\":[],\"id\":51}" "http://$ciec:8545" 2>$p03; }                           # exec RPC HTTP
 function ui0 { nu0 $((16#$(nu0 $(echo $@|sed -En "$e63" 2>$p03)))); }                                                                                         # get el highest block
 function uc0 { nu0 $((16#$(nu0 $(echo $@|sed -En "$e64" 2>$p03)))); }                                                                                         # get el current block
@@ -567,8 +565,9 @@ function laa { caa $1;eaa $1; }
 [[ $1 = ul  ]] && { ul0;swn "$m"; }
 [[ $1 = ulf ]] && { ul0;swn "$m" >> $p11;[[ $ok != OK ]] && urs $ok 0 $n03; }
 [[ $1 = gl  ]] && { gl0;swn "$m"; }
-[[ $1 = tl  ]] && { tl0;swn "$m"; }
 [[ $1 = glf ]] && { gl0;swn "$m" >> $p10;[[ $ok != OK ]] && grs $ok 0 $n03; }
+[[ $1 = tl  ]] && { tl0;swn "$m"; }
+[[ $1 = tlf ]] && { tl0;swn "$m" >> $p62; }
 [[ $1 = bl  ]] && { bl0;swn "$m"; }
 [[ $1 = blf ]] && { bl0;swn "$m" >> $p12;if [[ $d1 = 23:58 ]];then if bdt;then bdl $d0;else if [[ $(llc $p12) -gt $n14 ]];then bod 0 9;fi;fi;fi;[[ $ok != OK ]] && brs $ok 0 0 $(btn $n02);pas; }
 [[ $1 = vl  ]] && { vl0;swn "$m"; }
