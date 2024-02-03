@@ -96,7 +96,7 @@ function sz1 { unn 0      ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s      i: %4i' 
 function sz2 { dtl;svi;bnn;printf 'cl:p%02i:m%02i:d%04i p2p:%5i %s iosrhp: %4i %4i %4i %4i %4i %4i %4i' $nr $nm $nd $(ss5 $1 port    ) "$(bb1 $(bcl syncing))"     $i0 $i1 $i4 $b1 $i2 $i3 $(bi1) 2>$p03; }
 function sz3 { svv $n23   ;printf 'vl:m%02i:b%02i:c%02i api:%s'                                         $v0 $v1 $v2 $(ss4 $1 "$e32" nodes)                                                        2>$p03; }
 function sz4 { smm 0      ;printf 'ml:%04i api:%s'                                                      $m0         $(ss4 $1 "$e32" addr )                                                        2>$p03; }
-function sz5 { tnn 0      ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s     is: %4i %4i %4i'                 $er $em $ed $(ss5 $1 P2PPort ) "$(tb1 $(tcl eth_syncing))" $e1 $e2 $(ei0)                 2>$p03; }
+function sz5 { tnn 0      ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s     ps: %4i %4i %4i'                 $er $em $ed $(ss5 $1 P2PPort ) "$(tb1 $(tcl eth_syncing))" $e1 $e2 $(ei0)                 2>$p03; }
 function sso { tse $2 || return;dts;local e="$1 $(printf '%6s %10s %5s %-40s' $(ss3 $2) $dt "$(ss2 $2)" 2>$p03)";case $1 in GETH) e="$e $(sz0 $2)";;BESU) e="$e $(sz1 $2)";;NETH) e="$e $(sz5 $2)";;BEAC) e="$e $(sz2 $2)";;VALI) e="$e $(sz3 $2)";;MEVB) e="$e $(sz4 $2)";;esac;swn "$e"; }
 # el control commands
 function grs {
@@ -124,6 +124,13 @@ function gl0 {                                                                  
     m="GSRV NOT ON $dt"
   fi
 }
+function trs {
+  s2t $p63 && return;tv0;tq0;ero $1 0 $p62;touch $p63.a$(stg);ssw $3 $p63;s1t $p63 && return
+  local t=$(sng);local f=$p63.i$(stg);touch $f;local n=0;paf;while fft $f;do ((n+=$(sfn $t)));ssf $(sfn $t) $p63 $t
+  if ipt $t;then rm $f;snp $s44 $2 10 50 $en
+    if [[ $1 = RB ]];then ero $1 $n $p62;rm -f $p50 $p63.*;sex reboot;else sex "$s03 $s44";ssf 90 $p63;gq0;ero $1 $n $p62;fi
+  fi;done;rm -f $p50 $p63.*
+}
 function tdi { if g0t $1;then l4=$(ll2 "$g12"|tail -n$1);else l4=$(ll2 "$g12");fi;e1=$(nu5 2 $(ln2 "$w0$w3$w4$w3$w5"));e2=$(nu2 "$(nu5 2 $(ln2 "${w0}slot *$w4$w5"))/1000"); }
 function tcl { curl "http://$ciec:8545" -sX POST -H "Content-Type: application/json" --data "{\"jsonrpc\":\"2.0\",\"method\":\"$1\",\"params\":[],\"id\":0}" 2>$p03|jq -r .result; }
 function tv0 { en=$(ss5 $s44 MaxActivePeers); }
@@ -133,8 +140,8 @@ function tb1 { if [[ $(echo $@|grep false) ]];then printf 'synced';else printf  
 function tb2 { if [[ $(echo $@|grep false) ]];then printf ''      ;else printf ' syncing';fi; }
 function tl0 {
   dts;ok=OK
-  if tsa $s44;then local e=$(tcl eth_syncing);tv0;tnn 20;eb0 $p62 $e
-    m="NETH $ok $(tsy $e) $(npn $en $er) sgs: $(nu1 %4i $e0)$(tb2 $e) $(printf 'is: %3i %2i %3i' $e1 $e2 $(ei0) 2>$p03)"
+  if tsa $s44;then local e=$(tcl eth_syncing);tv0;tnn $n07;eb0 $p62 $e
+    m="NETH $ok $(tsy $e) $(npn $en $er) sgs: $(nu1 %4i $e0)$(tb2 $e) $(printf 'ps: %3i %2i %3i' $e1 $e2 $(ei0) 2>$p03)"
   else
     m="NSRV NOT ON $dt"
   fi
@@ -385,11 +392,11 @@ function sp  { tsa $s20 && cex "$s02 $s20"; }                                   
 function sd  { cex "$s05 $s20";sco;sex 'ufw reload'; }                                                                                                        # disable named
 # el/cc/vc
 function efw { if [[ $cust = hrv ]];then pai $1 192.168.8.0/24 $2 $3;else pai $1 $vip1 $2 $3;pai $1 $vip3 $2 $3;fi; }
-function eop { local e=30303;i1t || e=30304;pae $e elp2p;pde 8545 elapi delete;pde 8551 eljwt delete;efw 8545 elapi       ;efw 8551 eljwt       ; }
-function eco { local e=30303;i1t || e=30304;pde $e elp2p;pde 8545 elapi       ;pde 8551 eljwt       ;efw 8545 elapi delete;efw 8551 eljwt delete; }
+function eop { local e=30303;i5t || e=30304;pae $e elp2p;pde 8545 elapi delete;pde 8551 eljwt delete;efw 8545 elapi       ;efw 8551 eljwt       ; }
+function eco { local e=30303;i5t || e=30304;pde $e elp2p;pde 8545 elapi       ;pde 8551 eljwt       ;efw 8545 elapi delete;efw 8551 eljwt delete; }
 function bfw { if [[ $cust = hrv ]];then pai $1 192.168.8.0/24 $2 $3;else pai $1 $vip3 $2 $3;fi; }
-function bop { local e=9004 ;i1t || e=9000 ;pae $e clp2p;pde 5052 clapi delete;pde 8551 cljwt delete;bfw 5052 clapi       ;bfw 8551 cljwt       ;pae "$((e+1))/udp" clquic; }
-function bco { local e=9004 ;i1t || e=9000 ;pde $e clp2p;pde 5052 clapi       ;pde 8551 cljwt       ;bfw 5052 clapi delete;bfw 8551 cljwt delete;pde "$((e+1))/udp" clquic; }
+function bop { local e=9004 ;i5t || e=9000 ;pae $e clp2p;pde 5052 clapi delete;pde 8551 cljwt delete;bfw 5052 clapi       ;bfw 8551 cljwt       ;pae "$((e+1))/udp" clquic; }
+function bco { local e=9004 ;i5t || e=9000 ;pde $e clp2p;pde 5052 clapi       ;pde 8551 cljwt       ;bfw 5052 clapi delete;bfw 8551 cljwt delete;pde "$((e+1))/udp" clquic; }
 function vfw { if [[ $cust = hrv ]];then pai $1 192.168.8.0/24 $2 $3;else pai $1 $vip1 $2 $3;fi; }
 function vop { vfw 5064 vcapi       ;pde 5064 vcapi delete; }
 function vco { vfw 5064 vcapi delete;pde 5064 vcapi       ; }
@@ -459,7 +466,7 @@ function nrs { nex 'netplan apply';dpa; }                                       
 function lcp { local f=$1;shift;[[ -x $f ]] && until [[ $# -lt 1 ]];do if [[ $1 = $(snc $cunm) ]];then lci $f;else scp $f $1:$p02;fi;shift;done; }            # propagate lighthouse
 function lci { [[ -x $1 && ! -d $1   ]] || return;sex "mv $p00/lighthouse $p00/lighthouse.sav";sex "cp $1 $p00"; }                                            # lighthouse binary install
 function lmd { [[ -x $p00/lighthouse ]] || return;cmw $p00/lighthouse 755 eth;swb 'LIGHT INSTALADO'; }                                                        # lighthouse set permissions
-function lpi { z4t && lcp $1 ztc4;i1t && lcp $1 int5 int6;[[ $cunm = $vnm1 ]] && lcp $1 vpsl;lci $p02/lighthouse;sex "rm $p02/lighthouse";lmd; }
+function lpi { z4t && lcp $1 ztc4;i5t && lcp $1 int5 int6;[[ $cunm = $vnm1 ]] && lcp $1 vpsl;lci $p02/lighthouse;sex "rm $p02/lighthouse";lmd; }
 function luc {                                                                                                                                                # lighthouse upgrade/compile
   if fft $p06/lighthouse/README.md;then
     cd $p06/lighthouse;make clean;cargo clean                                                                                                                 # clean compile dirs
@@ -499,15 +506,13 @@ function bcc { printf p;if n1t;then if bpt;then if rbt $n06;then printf r;else p
 function btn { if n1t;then printf $1;else printf $n03;fi; }
 function irb { rm -f $p39.*;if rbt $1;then if vct;then brs RB 0 0 $n02;else gps;ups;tps;bps;sex reboot;fi;else if fft $p45;then touch $p39.$1.hours;fi;fi; }
 function gp0 { if tsa $s10;then bp;gp;local i=$(pt2 $(pex "du -s $p08"));sudo -u eth1 geth --datadir $p08 $@;local n=$(pt2 $(pex "du -s $p08"));echo "fs-diff $(((i-n)/1024/1024))M $@";dmr;ga;ba;fi; }
-#function fsc { local f="$1-check";sex "touch $f";sex "chown eth:eth $f";if [[ -w $f ]];then sex "rm -f $f";else gps;ups;tps;bps;sex reboot;fi; }
-#[[ $1 = glf ]] && { i1t && fsc $p08/$s10;gl0;swn "$m" >> $p10;[[ $ok != OK ]] && grs $ok 0 $n03; }
 # ntpq -p output
 # when   The time after the last poll event. When when reaches the value of poll then the next polling action occurs. (s)
 # poll   The current polling interval. (s)
 # offset The mean time offset. (ms)
 # delay  This is the mean execution time required to send a request to the time source, and receive the reply from that source. (ms)
 # jitter This indicates how much packet delays from individual pollings vary from the mean packet delay. (ms)
-function tsh { if tsa $s19;then cex "$s07 $s31-status";cex "$s07 show-$s31";else swb ntpq;ntpq -p;fi; }
+function msh { if tsa $s19;then cex "$s07 $s31-status";cex "$s07 show-$s31";else swb ntpq;ntpq -p;fi; }
 
 function wpf { ll2 "$g23"|fln "$g33"; }
 function wpe { wpf|sed -E "$e52"; }
@@ -540,18 +545,19 @@ function laa { caa $1;eaa $1; }
 [[ $1 = chk ]] && { cex 'chkrootkit'; }
 [[ $1 = dsh ]] && { $s09 query ${2:-smtp.gmail.com}; }
 [[ $1 = drs ]] && { dpa; }
+[[ $1 = nsh ]] && { nsh; }
 [[ $1 = nrs ]] && { nrs; }
-[[ $1 = trs ]] && { trs; }
+[[ $1 = msh ]] && { cex "$s07";msh; }
+[[ $1 = mrs ]] && { mrs; }
 [[ $1 = dmr ]] && { dmr; }
-[[ $1 = tsh ]] && { cex "$s07";tsh; }
 [[ $1 = fsh ]] && { dex 'fwupdmgr get-devices'; }
 [[ $1 = frf ]] && { dex 'fwupdmgr refresh --force';dex 'fwupdmgr get-updates'; }
 [[ $1 = fud ]] && { dex "fwupdmgr update $2"; }
-[[ $1 = nsh ]] && { nsh; }
 [[ $1 = tvc ]] && { tvc; }
 [[ $1 = tmp ]] && { dts;tmp s; }
 [[ $1 = sif ]] && { dts;sif s; }
 [[ $1 = grs ]] && { touch $p50;grs SR ${2:-0}   ${3:-$n03}; }
+[[ $1 = trs ]] && { touch $p50;trs SR ${2:-0}   ${3:-$n03}; }
 [[ $1 = urs ]] && { touch $p50;urs SR ${2:-0}   ${3:-$n03}; }
 [[ $1 = brs ]] && { touch $p50;brs BN ${2:-0} 0 ${3:-$(btn $n02)}; }
 [[ $1 = crs ]] && { touch $p50;brs VC ${2:-0} 0 ${3:-$n01}; }
@@ -567,7 +573,7 @@ function laa { caa $1;eaa $1; }
 [[ $1 = gl  ]] && { gl0;swn "$m"; }
 [[ $1 = glf ]] && { gl0;swn "$m" >> $p10;[[ $ok != OK ]] && grs $ok 0 $n03; }
 [[ $1 = tl  ]] && { tl0;swn "$m"; }
-[[ $1 = tlf ]] && { tl0;swn "$m" >> $p62; }
+[[ $1 = tlf ]] && { tl0;swn "$m" >> $p62;[[ $ok != OK ]] && trs $ok 0 $n03; }
 [[ $1 = bl  ]] && { bl0;swn "$m"; }
 [[ $1 = blf ]] && { bl0;swn "$m" >> $p12;if [[ $d1 = 23:58 ]];then if bdt;then bdl $d0;else if [[ $(llc $p12) -gt $n14 ]];then bod 0 9;fi;fi;fi;[[ $ok != OK ]] && brs $ok 0 0 $(btn $n02);pas; }
 [[ $1 = vl  ]] && { vl0;swn "$m"; }
@@ -824,8 +830,8 @@ if [[ ! $1 ]];then
   m="$m\ndsh [url]\tdns show"
   m="$m\nnrs\t\tdns/netplan reset"
   m="$m\ndrs\t\tdns reset"
-  m="$m\ntrs\t\ttime sync restart"
-  m="$m\ntsh\t\ttime sync show "
+  m="$m\nmrs\t\ttime sync restart"
+  m="$m\nmsh\t\ttime sync show "
   m="$m\ntmp\t\ttemperature show"
   m="$m\nsif\t\tsystem info show"
   m="$m\nchk\t\tcheck server with chkrootkit"

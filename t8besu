@@ -9,7 +9,7 @@ sex "mkdir -p $p09/data";sau eth1;sjw;cmw $p09 755 eth1;cmw $p09/data 700 eth1  
 unv $1                                                                                                                                                        # download/install besu binaries
 alow='192.168.8.25,192.168.8.31,192.168.8.34'                                                                                                                 # my servers
 maxp=25    # default
-pp2p=30303;i1t || pp2p=30304
+pp2p=30303;i5t || pp2p=30304
 apip='127.0.0.1'
 if [[ $cunm = $inm5 ]];then apip="$iip5";else apip="$iip6";fi
 epec="--miner-enabled=true --miner-coinbase=\"$s26\""                                                                                                         # coincashew guide had these NOT USING

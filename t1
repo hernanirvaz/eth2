@@ -92,6 +92,7 @@ p59='/var/lib/transmission-daemon/downloads'
 p60='/var/lib/plexmediaserver/mp4'
 p61='/var/lib/nethermind';[[ $cunm = $inm5 || $cunm = $inm6 ]] && p61='/el/nethermind'
 p62="$p02/nethermind.log"
+p63="$p02/neth.rs"
 
 e00="s%^ *#* *NTP *=.*$%NTP=$zip1 $zip2 time.google.com time.cloudflare.com time.facebook.com%i";if [[ $cunm = $cuvc || $cunm = $cun1 || $cunm = $cun2 || $cunm = $cumv ]];then e00="${e00};s%^ *#* *PollIntervalMaxSec *=.*$%PollIntervalMaxSec=1200%i";fi
 e01='s%^ *ENABLED=.*$%ENABLED=0%i'
@@ -204,7 +205,7 @@ e61='s%.*highestBlock: *([0-9]+).*%\1%ip'
 e62='s%.*currentBlock: *([0-9]+).*%\1%ip'
 e63='s%.*highestBlock" *: *"0x([^"]+)".*%\1%ip'
 e64='s%.*currentBlock" *: *"0x([^"]+)".*%\1%ip'
-e65='s%peers([ =]*)[0-9]+%peers\1'
+e65='s%([Pp]eers[ =]*)[0-9]+%\1'
 
 g00='^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) +[0-9]{1,2} +'
 g01='^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
@@ -453,10 +454,10 @@ b[590906]='0xa15449ffda354fc6f9de4bd6f020b419bf23e4256d6396213e81c302f7814a25993
 b[590907]='0x82b93acde57a8c5ef6da79e79a8aca4438e035ec890f1bd7db7c356de4926841ab649e3d25c67e7714c976bc49e5a034'
 b[1027307]='0x83c7c2d579df3b6f00513730e1bd2acb8c1515ecd0d158535d9e6c37dadbfbff20d9abd442527fdce970c3dd2818e710'
 
-function i1t { [[ $cunm = $inm5 ]]; }                                                                                                                         # 1 nuc intel  test
+function i5t { [[ $cunm = $inm5 ]]; }
 function tsa { $s00 is-active  --quiet $1 2>$p03; }
 function tse { $s00 is-enabled --quiet $1 2>$p03; }
-function trs { if tsa $s19;then nex "$s06 $s19";else nex "$s06 ntp";fi; }
+function mrs { if tsa $s19;then nex "$s06 $s19";else nex "$s06 ntp";fi; }
 function swb { echo -e "\n\e[5m${1^^}\e[25m\n"; }
 function swu { echo -e "${1^^}"; }
 function swn { echo -e "$1"; }
