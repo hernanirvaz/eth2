@@ -579,6 +579,7 @@ function laa { caa $1;eaa $1; }
 [[ $1 = bm  ]] && { bm0;bmo;swn "$m"; }
 [[ $1 = gh  ]] && { sh0 $p10 $2;[[ $2 ]] || { gl0;swn "GL $(printf '%8i' $(llc $p10) 2>$p03)\n$m"; } }
 [[ $1 = uh  ]] && { sh0 $p11 $2;[[ $2 ]] || { ul0;swn "UL $(printf '%8i' $(llc $p11) 2>$p03)\n$m"; } }
+[[ $1 = th  ]] && { sh0 $p62 $2;[[ $2 ]] || { tl0;swn "NL $(printf '%8i' $(llc $p62) 2>$p03)\n$m"; } }
 [[ $1 = bh  ]] && { bh0 $2; }
 [[ $1 = vh  ]] && { sh0 $p49 $2;[[ $2 ]] || { vl0;swn "VL $(printf '%8i' $(llc $p49) 2>$p03)\n$m"; } }
 [[ $1 = mh  ]] && { sh0 $p52 $2;[[ $2 ]] || { ml0;swn "ML $(printf '%8i' $(llc $p52) 2>$p03)\n$m"; } }
