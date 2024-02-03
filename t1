@@ -101,7 +101,7 @@ e03='s%^ */*\(.*codename}-updates.*$\)%\1%i;s%^ */* *Unattended-Upgrade::Mail .*
 e04='s%^ *printf%# printf%i'
 e05='s%.*name *= *(.*)$%\1%p;q'
 e06='s%timeout *=.*$%timeout=1%i'
-e07='s%dnssec-validation.*;%dnssec-validation no;%;/dnssec-validation/q'
+e07='/dnssec-validation/q'
 e08="s%^ *pool  *\([^a-z]\)%# pool \1%;s%^ *pool  *ntp.ubuntu.com%pool pool.ntp.org%"
 e08="${e08};s%^ *#.*restrict.*192.*%restrict 192.168.8.0 mask 255.255.255.0 notrap nomodify%"
 e08="${e08};/^ *#.*Specify/a \\"
@@ -295,6 +295,7 @@ s37='snap remove --purge'
 s38="\n$p01\n{\n\trotate 7\n\tdaily\n\tmissingok\n\tnotifempty\n\tnocompress\n\tsharedscripts\n\tpostrotate\n\t\t/usr/lib/rsyslog/rsyslog-rotate\n\tendscript\n}"
 s39='printf "Welcome to %s %s\\n" "$(uname -n)" "$DISTRIB_DESCRIPTION"'
 s40=''
+s40="$s40\n\tauth-nxdomain no;"
 if [[ $cunm = $znm1 || $cunm = $znm2 ]];then
   if [[ $cunm = $znm1 ]];then
     s40="$s40\n\tlisten-on { localhost; $zip1; };"
@@ -312,7 +313,7 @@ if [[ $cunm = $znm1 || $cunm = $znm2 ]];then
   if [[ $cunm = $znm1 ]];then
     s40="$s40\n\tallow-transfer { $zip2; };"
     s40="$s40\n\talso-notify { $zip2; };"
-    s40="$s40\n\tmax-cache-size 50%;"
+    s40="$s40\n\tmax-cache-size 70%;"
   else
     s40="$s40\n\tallow-transfer { $zip1; };"
     s40="$s40\n\talso-notify { $zip1; };"
