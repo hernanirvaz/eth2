@@ -352,11 +352,11 @@ function sif {
   [[ $1$e = on && $d = on ]] && e0t $i && e0t $n && return
   swn "INFO$(printf '%3i %3i %10s %5s' $n $i $dt 2>$p03) usb $e, turbo $d, ufw $(wif $(pex 'ufw status'|grep Status:)), uptime:$(uptime|sed -E "$e55")"
 }
+function eii { if tsa $s44;then ll6 "$g37";else ll2 "$g12";fi|tail -n${1:-$n07}|sed -E "$e50"; }
 function sll { ll3       |fln usb    $1|flp "$g29" $1; }
 function cll { ll2 "$g08"|fln "$g30" $2|if [[ $1 ]];then sed -E "$1";else cat;fi; }
 function ell { if tsa $s44;then ll6 "$g36"|tln "$g25" $2;else ll2 "$g11"|fln "$g25" $2;fi|if [[ $1 ]];then sed -E "$1";else cat;fi; }
-function eii { if tsa $s44;then ll6 "$g37";else ll2 "$g12";fi|tail -n${1:-$n07}|sed -E "$e50"; }
-function lll { ll2 "$g13"|fln "$g30" $2|if [[ $1 ]];then sed -E "$1";else cat;fi; }
+function lll { (if tsa $s44;then ll6 "$g36"|tln "$g25" $2;fi && ll2 "$g13"|fln "$g30" $2)|if [[ $1 ]];then sed -E "$1"|sort -t: -k2n -k3n -k4n;else cat;fi; }
 function rll { ll2 "$g09"|fln "$g25" $2|if [[ $1 ]];then sed -E "$1";else cat;fi; }
 function cpe {
   clk;[[ $1 = c ]] && return;tmp;[[ $1 = p ]] && return;sif $1
