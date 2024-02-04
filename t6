@@ -27,7 +27,7 @@ function ln4 { if g0t $3;then l6=$(ll2 "$2.*$1"|tail -n$3);else l6=$(ll2 "$2.*$1
 function fl0 { ll3|tail -n300|flp "Core.*temperature" $1; }                                                                                                   # get temp  cpu lines
 function fl1 { ll3           |flp "$g29" $1|grep -ai usb; }                                                                                                   # get error usb lines
 function fln { if [[ $2 ]];then egrep -ai "$g00$2";else egrep -aiv "$1";fi; }                                                                                 # get negate re syslog lines
-function flp { if [[ $2 ]];then egrep -ai "$g00$2";else egrep -ai  "$1"|grep -aiv "$g24";fi; }                                                                # get posite re syslog lines
+function flp { if [[ $2 ]];then egrep -ai "$g00$2";else egrep -ai  "$1"|grep -aiv "$g38";fi; }                                                                # get posite re syslog lines
 function tln { if [[ $2 ]];then egrep -ai "$g35$2";else egrep -aiv "$1";fi; }                                                                                 # get negate re syslog lines
 function pt0 { until [[ $# -le 1 || $1 =~ $g01 ]];do shift;done;printf %s $1; }                                                                               # yyyy-mm-dd test
 function pt1 { until [[ $# -le 1 || $1 =~ $g02 ]];do shift;done;printf %s $1; }                                                                               # hh:mm      test
@@ -70,7 +70,7 @@ function jrn { cex "journalctl --no-hostname --no-full -f $1"; }                
 function dmr { sex "$s00 daemon-reload"; }                                                                                                                    # daemon-reload
 function si1 { local n=${1:-0};printf %i $((20*n))   2>$p03; }
 function si2 { local n=${1:-0};printf %i $((1000*n)) 2>$p03; }
-function svi { local n=${1:-0};if g0t $n;then l4=$(ll1 "$g18"|tail -n$n);else l4=$(ll1 "$g18");fi;i0=$(nu5 3 $(ln2 "${w0}imported_delay: +Some\($w2"));i1=$(nu5 3 $(ln2 "${w0}observed_delay: +Some\($w2"));b1=$(nu3 $(ln3 $g27 $g08));if g0t $n;then l4=$(ll1 "$g19"|tail -n$(si2 $n));else l4=$(ll1 "$g19");fi;i2=$(nu5 0 $(ln2 "${w0}elapsed: *$w1"));if g0t $n;then l6=$(ll1 "$g15"|tail -n$(si1 $n));else l6=$(ll1 "$g15");fi;i3=$(nu5 2 $(ln1 $g14));if g0t $n;then l4=$(ll1 "$g20"|tail -n$n);else l4=$(ll1 "$g20");fi;i4=$(nu5 3 $(ln2 "${w0}block_delay:.+Some\($w2")); }
+function svi { local n=${1:-0};if g0t $n;then l4=$(ll1 "$g18"|tail -n$n);else l4=$(ll1 "$g18");fi;i0=$(nu5 3 $(ln2 "${w0}imported_delay: +Some\($w2"));i1=$(nu5 3 $(ln2 "${w0}observed_delay: +Some\($w2"));b1=$(nu3 $(ln3 $g27 $g08));if g0t $n;then l4=$(ll1 "$g19"|tail -n$(si2 $n));else l4=$(ll1 "$g19");fi;i2=$(nu5 0 $(ln2 "${w0}elapsed: *$w1"));if g0t $n;then l6=$(ll1 "$g25"|tail -n$(si1 $n));else l6=$(ll1 "$g25");fi;i3=$(nu5 2 $(ln1 $g23));if g0t $n;then l4=$(ll1 "$g20"|tail -n$n);else l4=$(ll1 "$g20");fi;i4=$(nu5 3 $(ln2 "${w0}block_delay:.+Some\($w2")); }
 function svv { if vct;then l6=$(ll5 "$g16" $1);v0=$(nu4 1 $(ln1 $g31 ".*$(sni $cun1)"));v1=$(nu4 1 $(ln1 $g31 ".*$(sni $cun2)"));l6=$(ll5 "$g17" $(($1/2)));v2=$(nu4 1 $(ln1 $g32));else v0=0;v1=0;v2=0;fi; }
 function smm { if mct;then m0=$(nu4 3 $(ln4 $g34 $g09 $1));else m0=0;fi; }
 function spc { nn=$2;cp $p04/$1.service $p02/$1.sav;sed -E "$e65$2%" $p02/$1.sav > $p04/$1.service; }                                                         # service configuration change/reload
@@ -358,7 +358,7 @@ function eii { if tsa $s44;then ll6 "$g37";else ll2 "$g12";fi|tail -n${1:-$n07}|
 function sll { ll3       |fln usb    $1|flp "$g29" $1; }
 function cll { ll2 "$g08"|fln "$g30" $2|if [[ $1 ]];then sed -E "$1";else cat;fi; }
 function ell { if tsa $s44;then ll6 "$g36"|tln "$g25" $2;else ll2 "$g11"|fln "$g25" $2;fi|if [[ $1 ]];then sed -E "$1";else cat;fi; }
-function lll { (if tsa $s44;then ll6 "$g36"|tln "$g25" $2;fi && ll2 "$g13"|fln "$g30" $2)|if [[ $1 ]];then sed -E "$1"|sort -t: -k2n -k3n -k4n;else cat;fi; }
+function lll { (if tsa $s44;then ll6 "$g36"|tln "$g25" $2;fi && ll2 "$g14"|fln "$g30" $2)|if [[ $1 ]];then sed -E "$1"|sort -t: -k2n -k3n -k4n;else cat;fi; }
 function rll { ll2 "$g09"|fln "$g25" $2|if [[ $1 ]];then sed -E "$1";else cat;fi; }
 function cpe {
   clk;[[ $1 = c ]] && return;tmp;[[ $1 = p ]] && return;sif $1
@@ -519,7 +519,7 @@ function gp0 { if tsa $s10;then bp;gp;local i=$(pt2 $(pex "du -s $p08"));sudo -u
 # jitter This indicates how much packet delays from individual pollings vary from the mean packet delay. (ms)
 function hsh { if tsa $s19;then cex "$s07 $s31-status";cex "$s07 show-$s31";else swb ntpq;ntpq -p;fi; }
 
-function wpf { ll2 "$g23"|fln "$g33"; }
+function wpf { ll2 "$g15"|fln "$g33"; }
 function wpe { wpf|sed -E "$e52"; }
 function apf { if n1t;then wpe          ;else ssh $(snc $cun1) "$p53 bp"   ;fi;if n2t;then wpe          ;else ssh $(snc $cun2) "$p53 bp"   ;fi;if vct;then wpe          ;else ssh $(snc $cuvc) "$p53 bp"   ;fi;if mct;then wpe;else ssh $(snc $cumv) "$p53 bp";fi; }
 function caa { if n1t;then cll "$e50" $1;else ssh $(snc $cun1) "$p53 cl $1";fi;if n2t;then cll "$e50" $1;else ssh $(snc $cun2) "$p53 cl $1";fi;if vct;then cll "$e50" $1;else ssh $(snc $cuvc) "$p53 cl $1";fi; }
@@ -647,7 +647,7 @@ function mru { $s01 $s14 2>$p03|sed -En "$e66" 2>$p03; }
 [[ $1 = cis ]] && { ll1 "$g20"      |tail -n${2:-$n21}                             |sed -E "$e50"; }
 [[ $1 = cir ]] && { ll2 "$g08.*$g27"|if g0t ${2:-0};then tail -n${2:-0};else cat;fi|sed -E "$e50"; }
 [[ $1 = cih ]] && { ll1 "$g19"      |tail -n${2:-$(si2 $n21)}                      |sed -E "$e50"; }
-[[ $1 = cip ]] && { ll1 "$g15"      |tail -n${2:-$(si1 $n21)}                      |sed -E "$e50"; }
+[[ $1 = cip ]] && { ll1 "$g24"      |tail -n${2:-$(si1 $n21)}                      |sed -E "$e50"; }
 [[ $1 = vi  ]] && { ll4             |fln "$g26" $2                                 |sed -E "$e50"; }
 [[ $1 = viz ]] && { ll4             |fln "$g26" $2                                               ; }
 [[ $1 = vi1 ]] && { ll5 "$g16" ${2:-$n22}|grep $(sni $cun1)                        |sed -E "$e50"; }
