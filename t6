@@ -11,6 +11,7 @@ function nu5 { local n=$1;shift;if [[ $# -gt 0 ]];then printf %.0f $(echo "scale
 function nu6 { printf '%i\n' $@ 2>$p03|sort -n|head -n1; }                                                                                                    # get min from list numbers
 function nu7 { nu2 "sqrt(((0$(printf +%i^2 $@ 2>$p03))-(0$(printf +%i $@ 2>$p03))^2/$#)/$#)*1000" 4; }                                                        # get std from list numbers
 function nu8 { printf '%i\n' $@ 2>$p03|grep -c '^0$'; }                                                                                                       # get # zeros from list numbers
+function nu9 { if [[ $1 -ge $((10**6)) ]];then printf '%9i %s' $(nu2 "$1/$((10**6))") $2;else if [[ $1 -ge $((10**3)) ]];then printf '%9i %s' $(nu2 "$1/$((10**3))") m$2;else printf '%9i %s' $1 u$2;fi;fi 2>$p03; }
 function ll0 { local f=$p16/logs/beacon.log      ;echo $H|sudo -S cat             $f.1 $f 2>$p03|tail -n$n26; }                                               # get cc intern lines
 function ll1 { local f=$p16/logs/beacon.log      ;echo $H|sudo -S egrep -ah  "$1" $f.1 $f 2>$p03|tail -n$n15; }                                               # get cc intern lines (specific)
 function ll2 { local f=$p01                      ;echo $H|sudo -S egrep -ah  "$1"      $f 2>$p03            ; }                                               # get all eth syslog lines
@@ -524,7 +525,8 @@ function apf { if n1t;then wpe          ;else ssh $(snc $cun1) "$p53 bp"   ;fi;i
 function caa { if n1t;then cll "$e50" $1;else ssh $(snc $cun1) "$p53 cl $1";fi;if n2t;then cll "$e50" $1;else ssh $(snc $cun2) "$p53 cl $1";fi;if vct;then cll "$e50" $1;else ssh $(snc $cuvc) "$p53 cl $1";fi; }
 function eaa { if n1t;then ell "$e50" $1;else ssh $(snc $cun1) "$p53 el $1";fi;if n2t;then ell "$e50" $1;else ssh $(snc $cun2) "$p53 el $1";fi; }
 function laa { caa $1;eaa $1; }
-function mrd { dts;l4=$($s09 -4 query $@ 2>$p03);m="MDNS relays $dt $(printf '%9i' $(nu5 2 $(ln2 "${w0}DNS in *$w1")) 2>$p03) us"; }
+function mrd { dts;l4=$($s09 -4 query $@ 2>$p03);m="MDNS relays $dt $(nu9 $(nu5 2 $(ln2 "${w0}DNS in *$w1")) s)"; }
+function mru { $s01 $s14 2>$p03|sed -En "$e66" 2>$p03; }
 
 [[ $1 = ap  ]] && { apf|sort -t: -k2n -k3n -k4n; }
 [[ $1 = bp  ]] && { wpe; }
@@ -585,6 +587,8 @@ function mrd { dts;l4=$($s09 -4 query $@ 2>$p03);m="MDNS relays $dt $(printf '%9
 [[ $1 = vlf ]] && { vl0;swn "$m" >> $p49;pas; }
 [[ $1 = ml  ]] && { ml0;swn "$m"; }
 [[ $1 = mlf ]] && { ml0;swn "$m" >> $p52; }
+[[ $1 = mr  ]] && { if tsa $s14;then mrd $(mru);swn "$m"        ;fi; }
+[[ $1 = mrf ]] && { if tsa $s14;then mrd $(mru);swn "$m" >> $p52;fi; }
 [[ $1 = bn  ]] && { bm0;bno;swn "$m"; }
 [[ $1 = bnf ]] && { bm0;bno;swn "$m" >> $p14; }
 [[ $1 = bm  ]] && { bm0;bmo;swn "$m"; }
@@ -652,7 +656,6 @@ function mrd { dts;l4=$($s09 -4 query $@ 2>$p03);m="MDNS relays $dt $(printf '%9
 [[ $1 = csp ]] && { ll2 "$g08.*peers:"                                             |sed -E "$e49"|grep -v "peers: *[${2:-$(ss5 $s12 target-peers 10)}-9][0-9]"|sort -k2n; }
 [[ $1 = mi  ]] && { ll2 "$g09.*$g34"|tail -n${2:-$n32}                             |sed -E "$e51"; }
 [[ $1 = miz ]] && { ll2 "$g09.*$g34"|tail -n${2:-$n32}                                           ; }
-[[ $1 = mrd ]] && { if tsa $s14;then mrd $($s01 $s14 2>$p03|sed -En "$e66" 2>$p03);swn "$m" >> $p52;fi; }
 [[ $1 = wa  ]] && { wa; }
 [[ $1 = we  ]] && { yex 'ufw enable'; }
 [[ $1 = wpr ]] && { cex 'ufw disable'; }
