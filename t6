@@ -488,7 +488,7 @@ function tvc {
 }
 function svr { local t='';for t in $(printf '%s\n' $@|sort -u);do curl -sX GET "$s33=$t"|sed -n "$e18";done; }                                                # show mev validator registration
 function mvr { if [[ $(ls $p19/key*.json 2>$p03) ]];then svr $(sed -n "$e22" $p19/key*.json 2>$p03);else svr ${b[@]};fi; }                                    # choose validator keys
-function mre { local s=n;for s in $(rll "$e51"|sed -En "$e09"|sort -u);do echo "$(rll "$e51"|grep -o $s|wc -l):$s";done; }
+function mre { local s=n;for s in $(rll "$e51"|sed -En "$e09"|sort -u);do echo "$(rll "$e51"|grep -o $s|wc -l) $s";done; }
 function ibk {
   local f="$p02/pubkeys.old";cp $p58/pubkeys $f
   echo "$(cat $f)$(for f in $(jq -r .pubkey $p19/key*.json 2>$p03);do printf %s ",0x$f";done)" > $p02/pubkeys.new
