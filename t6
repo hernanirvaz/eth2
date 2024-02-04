@@ -588,7 +588,7 @@ function mru { $s01 $s14 2>$p03|sed -En "$e66" 2>$p03; }
 [[ $1 = ml  ]] && { ml0;swn "$m"; }
 [[ $1 = mlf ]] && { ml0;swn "$m" >> $p52; }
 [[ $1 = mr  ]] && { if tsa $s14;then mrd $(mru);swn "$m"        ;fi; }
-[[ $1 = mrf ]] && { if tsa $s14;then mrd $(mru);swn "$m" >> $p52;fi; }
+[[ $1 = mrf ]] && { if tsa $s14;then mrd $(mru);swn "$m" >> $p64;fi; }
 [[ $1 = bn  ]] && { bm0;bno;swn "$m"; }
 [[ $1 = bnf ]] && { bm0;bno;swn "$m" >> $p14; }
 [[ $1 = bm  ]] && { bm0;bmo;swn "$m"; }

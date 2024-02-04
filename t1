@@ -95,6 +95,7 @@ p60='/var/lib/plexmediaserver/mp4'
 p61='/var/lib/nethermind';[[ $cunm = $inm5 || $cunm = $inm6 ]] && p61='/el/nethermind'
 p62="$p02/nethermind.log"
 p63="$p02/neth.rs"
+p64="$p02/dns.log"
 
 e00="s%^ *#* *NTP *=.*$%NTP=$zip1 $zip2 time.google.com time.cloudflare.com time.facebook.com%i";if [[ $cunm = $cuvc || $cunm = $cun1 || $cunm = $cun2 || $cunm = $cumv ]];then e00="${e00};s%^ *#* *PollIntervalMaxSec *=.*$%PollIntervalMaxSec=1200%i";fi
 e01='s%^ *ENABLED=.*$%ENABLED=0%i'
