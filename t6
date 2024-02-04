@@ -10,6 +10,7 @@ function nu4 { local n=$1;shift;if [[ $# -gt 0 ]];then printf %.0f $(echo "scale
 function nu5 { local n=$1;shift;if [[ $# -gt 0 ]];then printf %.0f $(echo "scale=$((n+1));(0$(printf %+.${n}f $@ 2>$p03))/$#"      |bc 2>$p03) 2>$p03;else printf %i;fi; }
 function nu6 { printf '%i\n' $@ 2>$p03|sort -n|head -n1; }                                                                                                    # get min from list numbers
 function nu7 { nu2 "sqrt(((0$(printf +%i^2 $@ 2>$p03))-(0$(printf +%i $@ 2>$p03))^2/$#)/$#)*1000" 4; }                                                        # get std from list numbers
+function nu8 { printf '%i\n' $@ 2>$p03|grep -c '^0$'; }                                                                                                       # get # zeros from list numbers
 function ll0 { local f=$p16/logs/beacon.log      ;echo $H|sudo -S cat             $f.1 $f 2>$p03|tail -n$n26; }                                               # get cc intern lines
 function ll1 { local f=$p16/logs/beacon.log      ;echo $H|sudo -S egrep -ah  "$1" $f.1 $f 2>$p03|tail -n$n15; }                                               # get cc intern lines (specific)
 function ll2 { local f=$p01                      ;echo $H|sudo -S egrep -ah  "$1"      $f 2>$p03            ; }                                               # get all eth syslog lines
@@ -89,16 +90,16 @@ function smn { local g=${1:-24}                  ;nu0 $((g>360?360:g<24?24:g)); 
 function sfn { local g=$(($(bss $1)-$(date +%s)));nu0 $((g>3?g:3))            ; }                                                                             # get min seconds to future
 function ssf { g0t $1 || return;local f=$2.s${4:-00}n${5:-00}s$(stg $1);touch $f;[[ -f $p50 ]] && echo $(sf1) $(basename $f 2>$p03);sleep $1s; }
 function ssw { while :;do local t=$(sng);if [[ $(sf2 $t) -lt $1 || 24 -ge $(sfn $t) ]];then ssf $(smn $(sfn $t)) $2 $t $1;else break;fi;s1t $2 && break;done; }
-function csn { if g0t $#;then nr=${@:$#};nm=$(nu6 $@);nd=$(nu7 $@);else nr=0;nm=0;nd=0;fi; }
-function esn { if g0t $#;then er=${@:$#};em=$(nu6 $@);ed=$(nu7 $@);else er=0;em=0;ed=0;fi; }
+function csn { if g0t $#;then nr=${@:$#};nm=$(nu6 $@);nd=$(nu7 $@);nz=$(nu8 $@);else nr=0;nm=0;nd=0;nz=0;fi; }
+function esn { if g0t $#;then er=${@:$#};em=$(nu6 $@);ed=$(nu7 $@);ez=$(nu8 $@);else er=0;em=0;ed=0;ez=0;fi; }
 function npn { printf '%10s %5s node%02i: %2i' $dt $1 $2 2>$p03; }                                                                                            # get date/nodes info
 function bnn { csn $(ln3 peers: $g08) $(bpc $(bcl peer_count)); }                                                                                             # set cur/min/std cc peers
-function sz0 { gnn 0      ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s     iu: %4i %4i %4i'                 $er $em $ed $(ss5 $1 port    ) "$(gb1 $(gcl eth.syncing))" $e1 $e2 $(ei0)                 2>$p03; }
-function sz1 { unn 0      ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s      i: %4i'                         $er $em $ed $(ss5 $1 p2p-port) "$(ub1 $(ucl eth_syncing))" $e1                            2>$p03; }
-function sz2 { dtl;svi;bnn;printf 'cl:p%02i:m%02i:d%04i p2p:%5i %s iosrhp: %4i %4i %4i %4i %4i %4i %4i' $nr $nm $nd $(ss5 $1 port    ) "$(bb1 $(bcl syncing))"     $i0 $i1 $i4 $b1 $i2 $i3 $(bi1) 2>$p03; }
-function sz3 { svv $n23   ;printf 'vl:m%02i:b%02i:c%02i api:%s'                                         $v0 $v1 $v2 $(ss4 $1 "$e32" nodes)                                                        2>$p03; }
-function sz4 { smm 0      ;printf 'ml:%04i api:%s'                                                      $m0         $(ss4 $1 "$e32" addr )                                                        2>$p03; }
-function sz5 { tnn 0      ;printf 'el:p%02i:m%02i:d%04i p2p:%5i %s     ps: %4i %4i %4i'                 $er $em $ed $(ss5 $1 P2PPort ) "$(tb1 $(tcl eth_syncing))" $e1 $e2 $(ei0)                 2>$p03; }
+function sz0 { gnn 0      ;printf 'el:p%02i:m%02i:z%02i:d%04i p2p:%5i %s     iu: %4i %4i %4i'                 $er $em $ez $ed $(ss5 $1 port    ) "$(gb1 $(gcl eth.syncing))" $e1 $e2 $(ei0)                 2>$p03; }
+function sz1 { unn 0      ;printf 'el:p%02i:m%02i:z%02i:d%04i p2p:%5i %s      i: %4i'                         $er $em $ez $ed $(ss5 $1 p2p-port) "$(ub1 $(ucl eth_syncing))" $e1                            2>$p03; }
+function sz2 { dtl;svi;bnn;printf 'cl:p%02i:m%02i:z%02i:d%04i p2p:%5i %s iosrhp: %4i %4i %4i %4i %4i %4i %4i' $nr $nm $nz $nd $(ss5 $1 port    ) "$(bb1 $(bcl syncing))"     $i0 $i1 $i4 $b1 $i2 $i3 $(bi1) 2>$p03; }
+function sz3 { svv $n23   ;printf 'vl:m%02i:b%02i:c%02i api:%s'                                               $v0 $v1 $v2 $(ss4 $1 "$e32" nodes)                                                            2>$p03; }
+function sz4 { smm 0      ;printf 'ml:%04i api:%s'                                                            $m0         $(ss4 $1 "$e32" addr )                                                            2>$p03; }
+function sz5 { tnn 0      ;printf 'el:p%02i:m%02i:z%02i:d%04i p2p:%5i %s     ps: %4i %4i %4i'                 $er $em $ez $ed $(ss5 $1 P2PPort ) "$(tb1 $(tcl eth_syncing))" $e1 $e2 $(ei0)                 2>$p03; }
 function sso { tse $2 || return;dts;local e="$1 $(printf '%6s %10s %5s %-40s' $(ss3 $2) $dt "$(ss2 $2)" 2>$p03)";case $1 in GETH) e="$e $(sz0 $2)";;BESU) e="$e $(sz1 $2)";;NETH) e="$e $(sz5 $2)";;BEAC) e="$e $(sz2 $2)";;VALI) e="$e $(sz3 $2)";;MEVB) e="$e $(sz4 $2)";;esac;swn "$e"; }
 # el control commands
 function grs {
@@ -332,7 +333,7 @@ function tmp {
   local g=$(printf '%5.0fC %10s %5s' $n $dt 2>$p03);g0t $i && local g="$g $(printf 'sata: %.0fC' $i 2>$p03)";g0t $l && local g="$g $(printf 'nvme: %.0fC' $l 2>$p03)"
   local g="$g $(printf '%s %s' $d $e 2>$p03)";swn "TEMP $g"
 }
-function cl0 { nslookup $1 2>$p03|sed -En "$e05"                                           2>$p03; }
+function cl0 { $s09 -4 query $1 2>$p03|sed -En "$e05"                                      2>$p03; }
 function cl1 { printf "${1%.*}"                                                            2>$p03; }
 function cl2 { local n=0;while :;do local s=$(cl0 $1);if [[ $s ]];then break;else if [[ $n -lt 4 ]];then ((n++));else break;fi;fi;done;cl1 $s; }
 function cl3 { if [[ $1 =~ ^[0-9]+ ]];then cl2 $1;else cl1 $1;fi; }
@@ -515,7 +516,7 @@ function gp0 { if tsa $s10;then bp;gp;local i=$(pt2 $(pex "du -s $p08"));sudo -u
 # offset The mean time offset. (ms)
 # delay  This is the mean execution time required to send a request to the time source, and receive the reply from that source. (ms)
 # jitter This indicates how much packet delays from individual pollings vary from the mean packet delay. (ms)
-function msh { if tsa $s19;then cex "$s07 $s31-status";cex "$s07 show-$s31";else swb ntpq;ntpq -p;fi; }
+function hsh { if tsa $s19;then cex "$s07 $s31-status";cex "$s07 show-$s31";else swb ntpq;ntpq -p;fi; }
 
 function wpf { ll2 "$g23"|fln "$g33"; }
 function wpe { wpf|sed -E "$e52"; }
@@ -523,6 +524,7 @@ function apf { if n1t;then wpe          ;else ssh $(snc $cun1) "$p53 bp"   ;fi;i
 function caa { if n1t;then cll "$e50" $1;else ssh $(snc $cun1) "$p53 cl $1";fi;if n2t;then cll "$e50" $1;else ssh $(snc $cun2) "$p53 cl $1";fi;if vct;then cll "$e50" $1;else ssh $(snc $cuvc) "$p53 cl $1";fi; }
 function eaa { if n1t;then ell "$e50" $1;else ssh $(snc $cun1) "$p53 el $1";fi;if n2t;then ell "$e50" $1;else ssh $(snc $cun2) "$p53 el $1";fi; }
 function laa { caa $1;eaa $1; }
+function mrd { dts;l4=$($s09 -4 query $@ 2>$p03);m="MDNS relays $dt $(printf '%9i' $(nu5 2 $(ln2 "${w0}DNS in *$w1")) 2>$p03) us"; }
 
 [[ $1 = ap  ]] && { apf|sort -t: -k2n -k3n -k4n; }
 [[ $1 = bp  ]] && { wpe; }
@@ -550,8 +552,8 @@ function laa { caa $1;eaa $1; }
 [[ $1 = drs ]] && { dpa; }
 [[ $1 = nsh ]] && { nsh; }
 [[ $1 = nrs ]] && { nrs; }
-[[ $1 = msh ]] && { cex "$s07";msh; }
-[[ $1 = mrs ]] && { mrs; }
+[[ $1 = hsh ]] && { cex "$s07";hsh; }
+[[ $1 = hrs ]] && { hrs; }
 [[ $1 = dmr ]] && { dmr; }
 [[ $1 = fsh ]] && { dex 'fwupdmgr get-devices'; }
 [[ $1 = frf ]] && { dex 'fwupdmgr refresh --force';dex 'fwupdmgr get-updates'; }
@@ -647,9 +649,10 @@ function laa { caa $1;eaa $1; }
 [[ $1 = vi1 ]] && { ll5 "$g16" ${2:-$n22}|grep $(sni $cun1)                        |sed -E "$e50"; }
 [[ $1 = vi2 ]] && { ll5 "$g16" ${2:-$n22}|grep $(sni $cun2)                        |sed -E "$e50"; }
 [[ $1 = vic ]] && { ll5 "$g17" ${2:-$(($n22/2))}                                   |sed -E "$e50"; }
+[[ $1 = csp ]] && { ll2 "$g08.*peers:"                                             |sed -E "$e49"|grep -v "peers: *[${2:-$(ss5 $s12 target-peers 10)}-9][0-9]"|sort -k2n; }
 [[ $1 = mi  ]] && { ll2 "$g09.*$g34"|tail -n${2:-$n32}                             |sed -E "$e51"; }
 [[ $1 = miz ]] && { ll2 "$g09.*$g34"|tail -n${2:-$n32}                                           ; }
-[[ $1 = csp ]] && { ll2 "$g08.*peers:"                                             |sed -E "$e49"|grep -v "peers: *[${2:-$(ss5 $s12 target-peers 10)}-9][0-9]"|sort -k2n; }
+[[ $1 = mrd ]] && { if tsa $s14;then mrd $($s01 $s14 2>$p03|sed -En "$e66" 2>$p03);swn "$m" >> $p52;fi; }
 [[ $1 = wa  ]] && { wa; }
 [[ $1 = we  ]] && { yex 'ufw enable'; }
 [[ $1 = wpr ]] && { cex 'ufw disable'; }
@@ -833,8 +836,8 @@ if [[ ! $1 ]];then
   m="$m\ndsh [url]\tdns show"
   m="$m\nnrs\t\tdns/netplan reset"
   m="$m\ndrs\t\tdns reset"
-  m="$m\nmrs\t\ttime sync restart"
-  m="$m\nmsh\t\ttime sync show "
+  m="$m\nhrs\t\ttime sync restart"
+  m="$m\nhsh\t\ttime sync show "
   m="$m\ntmp\t\ttemperature show"
   m="$m\nsif\t\tsystem info show"
   m="$m\nchk\t\tcheck server with chkrootkit"
