@@ -531,7 +531,7 @@ function laa { caa $1;eaa $1; }
 function mrd { dts;l4=$($s09 -4 query $@ 2>$p03);m="MDNS relays $dt $(nu9 $(nu5 2 $(ln2 "${w0}DNS in *$w1")) s)"; }
 function mru { $s01 $s14 2>$p03|sed -En "$e66" 2>$p03; }
 function fsp { grep -v "$1 *[$2-9][0-9]"|grep "$1 *[0-$3]"|sort -k2n; }
-function esp { if tsa $s44;then ll2 "$g11.*$g39"|sed -E "$e67"|fsp "$g40" ${1:-0} ${2:-1};else ll2 "$g11.*$g42"|sed -E "$e68"|fsp "$g40" ${1:-0} ${2:-1};fi; }
+function esp { if tsa $s44;then ll2 "$g11.*$g39"|sed -E "$e67";else ll2 "$g11.*$g42"|sed -E "$e68";fi|fsp "$g40" ${1:-0} ${2:-0}; }
 
 [[ $1 = ap  ]] && { apf|sort -t: -k2n -k3n -k4n; }
 [[ $1 = bp  ]] && { wpe; }
