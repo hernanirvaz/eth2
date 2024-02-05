@@ -167,20 +167,20 @@ e33='s%<html>.{10,}</html>%%g'
 e34='s% *\([^)(]{10,}\)%%g'
 e35='s% *\{[^}{]{10,}\}%%g'
 e36='s% *0x[a-z0-9]{16,}%%g'
-e37="$e34;$e35;$e34;$e35;$e34;$e35;$e36"                                                                   # FINAL
-e38='s%(hash|root) *= *([^ ,]*),? *%%g'                                                                    # EL
-e39='s%(finalized_root|root|block|head|parent_hash|pubkey|block_hash|peer_id|graffiti) *: *([^,]*),? *%%g' # CL
-e40='s%(Some|Slot) *\(([^ ]*)\)%\2%g;s%,? *(module) *: *([^ ,]*),? *%%g'                                   # CL
-e40="$e40;s%relay_value:%rv:%g"                                                                            # CL
-e40="$e40;s%block_value:%bv:%g"                                                                            # CL
-e40="$e40;s%block_slot:%bl:%g"                                                                             # CL
-e41="s%snapdiffs *= *%sdf=%g;s%triediffs *= *%tdf=%g;s%triedirty *= *%tdt=%g;$e38"                         # ALL EL
-e42="$e41;s%(service|num_failed) *: *([^ ,]*),? *%\2 %g;$e39;$e40"                                         # ALL EL/CL
-e43='s%(level) *= *%%;s%msg *= *\"([^"]+)\",?%\t\1%'                                                       # RL
-e44='s%(blockHash|parentHash|pubkey|txRoot|slotUID|method|ua) *= *[^ ]* *%%g'                              # RL
-e45='s%https?://([a-z0-9\.\-]+)(//*[a-z0-9_]+)* *%\1%g;s%url *= *\"([^\"]+)\"%\1%'                         # RL
-e46='s%Get +..[^:]+..: +%GET %;s%Post +..[^:]+..: +%POST %;s%path *= *(//*[a-z0-9_]+)+ *%%'                # RL
-e47="$e29;$e32;$e33;$e42;$e43;$e44;$e45;$e46"                                                              # ALL EL/CL/RL
+e37="$e34;$e35;$e34;$e35;$e34;$e35;$e36"                                                              # FINAL
+e38='s%(hash|root) *= *([^ ,]*),? *%%g'                                                               # EL
+e39='s%(finalized_root|block|head|parent_hash|pubkey|block_hash|peer_id|graffiti) *: *([^,]*),? *%%g' # CL
+e40='s%(Some|Slot) *\(([^ ]*)\)%\2%g;s%,? *(module) *: *([^ ,]*),? *%%g'                              # CL
+e40="$e40;s%relay_value:%rv:%g"                                                                       # CL
+e40="$e40;s%block_value:%bv:%g"                                                                       # CL
+e40="$e40;s%block_slot:%bl:%g"                                                                        # CL
+e41="s%snapdiffs *= *%sdf=%g;s%triediffs *= *%tdf=%g;s%triedirty *= *%tdt=%g;$e38"                    # ALL EL
+e42="$e41;s%(service|num_failed) *: *([^ ,]*),? *%\2 %g;$e39;$e40"                                    # ALL EL/CL
+e43='s%(level) *= *%%;s%msg *= *\"([^"]+)\",?%\t\1%'                                                  # RL
+e44='s%(blockHash|parentHash|pubkey|txRoot|slotUID|method|ua) *= *[^ ]* *%%g'                         # RL
+e45='s%https?://([a-z0-9\.\-]+)(//*[a-z0-9_]+)* *%\1%g;s%url *= *\"([^\"]+)\"%\1%'                    # RL
+e46='s%Get +..[^:]+..: +%GET %;s%Post +..[^:]+..: +%POST %;s%path *= *(//*[a-z0-9_]+)+ *%%'           # RL
+e47="$e29;$e32;$e33;$e42;$e43;$e44;$e45;$e46"                                                         # ALL EL/CL/RL
 e48='s% *((Server|Offset|Delay|Jitter)[^)(]*)\(?.*\)?%\1%ip'
 e49="$e29;s%(\.[0-9][0-9][0-9]) *.*peers:%\1 peers:%i"
 e50="$e29;$e32;$e42"
