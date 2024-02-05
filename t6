@@ -70,7 +70,7 @@ function jrn { cex "journalctl --no-hostname --no-full -f $1"; }                
 function dmr { sex "$s00 daemon-reload"; }                                                                                                                    # daemon-reload
 function si1 { local n=${1:-0};printf %i $((20*n))   2>$p03; }
 function si2 { local n=${1:-0};printf %i $((1000*n)) 2>$p03; }
-function svi { local n=${1:-0};if g0t $n;then l4=$(ll1 "$g18"|tail -n$n);else l4=$(ll1 "$g18");fi;i0=$(nu5 3 $(ln2 "${w0}imported_delay: +Some\($w2"));i1=$(nu5 3 $(ln2 "${w0}observed_delay: +Some\($w2"));b1=$(nu3 $(ln3 $g27 $g08));if g0t $n;then l4=$(ll1 "$g19"|tail -n$(si2 $n));else l4=$(ll1 "$g19");fi;i2=$(nu5 0 $(ln2 "${w0}elapsed: *$w1"));if g0t $n;then l6=$(ll1 "$g25"|tail -n$(si1 $n));else l6=$(ll1 "$g25");fi;i3=$(nu5 2 $(ln1 $g23));if g0t $n;then l4=$(ll1 "$g20"|tail -n$n);else l4=$(ll1 "$g20");fi;i4=$(nu5 3 $(ln2 "${w0}block_delay:.+Some\($w2")); }
+function svi { local n=${1:-0};if g0t $n;then l4=$(ll1 "$g18"|tail -n$n);else l4=$(ll1 "$g18");fi;i0=$(nu5 3 $(ln2 "${w0}imported_delay: +Some\($w2"));i1=$(nu5 3 $(ln2 "${w0}observed_delay: +Some\($w2"));b1=$(nu3 $(ln3 "$g27" $g08));if g0t $n;then l4=$(ll1 "$g19"|tail -n$(si2 $n));else l4=$(ll1 "$g19");fi;i2=$(nu5 0 $(ln2 "${w0}elapsed: *$w1"));if g0t $n;then l6=$(ll1 "$g25"|tail -n$(si1 $n));else l6=$(ll1 "$g25");fi;i3=$(nu5 2 $(ln1 $g23));if g0t $n;then l4=$(ll1 "$g20"|tail -n$n);else l4=$(ll1 "$g20");fi;i4=$(nu5 3 $(ln2 "${w0}block_delay:.+Some\($w2")); }
 function svv { if vct;then l6=$(ll5 "$g16" $1);v0=$(nu4 1 $(ln1 $g31 ".*$(sni $cun1)"));v1=$(nu4 1 $(ln1 $g31 ".*$(sni $cun2)"));l6=$(ll5 "$g17" $(($1/2)));v2=$(nu4 1 $(ln1 $g32));else v0=0;v1=0;v2=0;fi; }
 function smm { if mct;then m0=$(nu4 3 $(ln4 $g34 $g09 $1));else m0=0;fi; }
 function spc { nn=$2;cp $p04/$1.service $p02/$1.sav;sed -E "$e65$2%" $p02/$1.sav > $p04/$1.service; }                                                         # service configuration change/reload
@@ -94,7 +94,7 @@ function ssw { while :;do local t=$(sng);if [[ $(sf2 $t) -lt $1 || 24 -ge $(sfn 
 function csn { if g0t $#;then nr=${@:$#};nm=$(nu6 $@);nd=$(nu7 $@);nz=$(nu8 $@);else nr=0;nm=0;nd=0;nz=0;fi; }
 function esn { if g0t $#;then er=${@:$#};em=$(nu6 $@);ed=$(nu7 $@);ez=$(nu8 $@);else er=0;em=0;ed=0;ez=0;fi; }
 function npn { printf '%10s %5s node%02i: %2i' $dt $1 $2 2>$p03; }                                                                                            # get date/nodes info
-function bnn { csn $(ln3 peers: $g08) $(bpc $(bcl peer_count)); }                                                                                             # set cur/min/std cc peers
+function bnn { csn $(ln3 "$g40" $g08) $(bpc $(bcl peer_count)); }                                                                                             # set cur/min/std cc peers
 function sz0 { gnn 0      ;printf 'el:p%02i:m%02i:z%02i:d%04i p2p:%5i %s     iu: %4i %4i %4i'                 $er $em $ez $ed $(ss5 $1 port    ) "$(gb1 $(gcl eth.syncing))" $e1 $e2 $(ei0)                 2>$p03; }
 function sz1 { unn 0      ;printf 'el:p%02i:m%02i:z%02i:d%04i p2p:%5i %s      i: %4i'                         $er $em $ez $ed $(ss5 $1 p2p-port) "$(ub1 $(ucl eth_syncing))" $e1                            2>$p03; }
 function sz2 { dtl;svi;bnn;printf 'cl:p%02i:m%02i:z%02i:d%04i p2p:%5i %s iosrhp: %4i %4i %4i %4i %4i %4i %4i' $nr $nm $nz $nd $(ss5 $1 port    ) "$(bb1 $(bcl syncing))"     $i0 $i1 $i4 $b1 $i2 $i3 $(bi1) 2>$p03; }
@@ -117,7 +117,7 @@ function gi0 { nu0 $(echo $@|sed -En "$e61" 2>$p03); }                          
 function gc0 { nu0 $(echo $@|sed -En "$e62" 2>$p03); }                                                                                                        # get el current block
 function gv0 { en=$(ss5 $s10 maxpeers); }                                                                                                                     # set configured peers
 function gq0 { er=$(nu0 $(gcl net.peerCount)); }                                                                                                              # set el current peers
-function gnn { esn $(ln3 peercount= $g06) $(nu0 $(gcl net.peerCount));gdi $1;gdu $1; }
+function gnn { esn $(ln3 "$g42" $g06) $(nu0 $(gcl net.peerCount));gdi $1;gdu $1; }
 function gb1 { if [[ $(echo $@|grep false) ]];then printf 'synced';else printf  'syncing: %6i' $(($(gi0 $@)-$(gc0 $@)));fi; }                                 # get el syncing blocks remaining
 function gb2 { if [[ $(echo $@|grep false) ]];then printf ''      ;else printf ' syncing: %6i' $(($(gi0 $@)-$(gc0 $@)));fi; }                                 # get el syncing blocks remaining
 function gl0 {                                                                                                                                                # el report
@@ -139,7 +139,7 @@ function tdi { if g0t $1;then l4=$(ll6 "$g37"|tail -n$1);else l4=$(ll6 "$g37");f
 function tcl { curl "http://$ciec:8545" -sX POST -H "Content-Type: application/json" --data "{\"jsonrpc\":\"2.0\",\"method\":\"$1\",\"params\":[],\"id\":0}" 2>$p03|jq -r .result; }
 function tv0 { en=$(ss5 $s44 MaxActivePeers); }
 function tq0 { er=$(nu0 $(tcl net_peerCount)); }
-function tnn { esn $(ln3 'Peers.*all:' $g10) $(nu0 $(tcl net_peerCount));tdi $1; }
+function tnn { esn $(ln3 "$g39" $g10) $(nu0 $(tcl net_peerCount));tdi $1; }
 function tb1 { if [[ $(echo $@|grep false) ]];then printf 'synced';else printf  'syncing';fi; }
 function tb2 { if [[ $(echo $@|grep false) ]];then printf ''      ;else printf ' syncing';fi; }
 function tl0 {
@@ -164,7 +164,7 @@ function uc0 { nu0 $((16#$(nu0 $(echo $@|sed -En "$e64" 2>$p03)))); }           
 function up0 { nu0 $((16#$(nu0 $(echo $@|sed -En "$e56" 2>$p03)))); }                                                                                         # get el result
 function uv0 { en=$(ss5 $s11 max-peers); }                                                                                                                    # set configured peers
 function uq0 { er=$(up0 $(ucl net_peerCount)); }                                                                                                              # set el current peers
-function unn { esn $(ln3 Peers: $g07) $(up0 $(ucl net_peerCount));udi $1;e2=0; }                                                                              # set cur/min/std el peers
+function unn { esn $(ln3 "$g41" $g07) $(up0 $(ucl net_peerCount));udi $1;e2=0; }                                                                              # set cur/min/std el peers
 function ub1 { if [[ $(echo $@|grep false) ]];then printf 'synced';else printf  'syncing: %6i' $(($(ui0 $@)-$(uc0 $@)));fi; }                                 # get el syncing blocks remaining
 function ub2 { if [[ $(echo $@|grep false) ]];then printf ''      ;else printf ' syncing: %6i' $(($(ui0 $@)-$(uc0 $@)));fi; }                                 # get el syncing blocks remaining
 function ul0 {                                                                                                                                                # el report
@@ -530,6 +530,8 @@ function eaa { if n1t;then ell "$e50" $1;else ssh $(snc $cun1) "$p53 el $1";fi;i
 function laa { caa $1;eaa $1; }
 function mrd { dts;l4=$($s09 -4 query $@ 2>$p03);m="MDNS relays $dt $(nu9 $(nu5 2 $(ln2 "${w0}DNS in *$w1")) s)"; }
 function mru { $s01 $s14 2>$p03|sed -En "$e66" 2>$p03; }
+function fsp { grep -v "$1 *[$2-9][0-9]"|grep "$1 *[0-$3]"|sort -k2n; }
+function esp { if tsa $s44;then ll2 "$g11.*$g39"|sed -E "$e67"|fsp "$g40" ${1:-0} ${2:-1};else ll2 "$g11.*$g42"|sed -E "$e68"|fsp "$g40" ${1:-0} ${2:-1};fi; }
 
 [[ $1 = ap  ]] && { apf|sort -t: -k2n -k3n -k4n; }
 [[ $1 = bp  ]] && { wpe; }
@@ -656,7 +658,8 @@ function mru { $s01 $s14 2>$p03|sed -En "$e66" 2>$p03; }
 [[ $1 = vi1 ]] && { ll5 "$g16" ${2:-$n22}|grep $(sni $cun1)                        |sed -E "$e50"; }
 [[ $1 = vi2 ]] && { ll5 "$g16" ${2:-$n22}|grep $(sni $cun2)                        |sed -E "$e50"; }
 [[ $1 = vic ]] && { ll5 "$g17" ${2:-$(($n22/2))}                                   |sed -E "$e50"; }
-[[ $1 = csp ]] && { ll2 "$g08.*peers:"                                             |sed -E "$e49"|grep -v "peers: *[${2:-$(ss5 $s12 target-peers 10)}-9][0-9]"|sort -k2n; }
+[[ $1 = csp ]] && { ll2 "$g08.*$g40"                                               |sed -E "$e49"|fsp "$g40" ${2:-0} ${3:-9}; }
+[[ $1 = esp ]] && { esp $2 $3; }
 [[ $1 = mi  ]] && { ll2 "$g09.*$g34"|tail -n${2:-$n32}                             |sed -E "$e51"; }
 [[ $1 = miz ]] && { ll2 "$g09.*$g34"|tail -n${2:-$n32}                                           ; }
 [[ $1 = wa  ]] && { wa; }
