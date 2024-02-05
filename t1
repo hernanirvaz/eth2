@@ -358,7 +358,7 @@ for m in $(ip l|sed -n 's%.* \([a-z0-9]*\): .* state UP .*%\1%p'|tail -n1);do
   s41="$s41\n          metric: 100"
   s41="$s41\n          on-link: true"
   s41="$s41\n      nameservers:"
-  s41="$s41\n        addresses: [$zip1, $zip2]"
+  s41="$s41\n        addresses: [192.168.8.254]"
   s41="$s41\n      link-local: [ ]"
 done
 for m in $(ip l|sed -n 's%.* \([a-z0-9]*\): .* state DOWN .*%\1%p');do
