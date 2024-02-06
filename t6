@@ -12,16 +12,16 @@ function nu6 { printf '%i\n' $@ 2>$p03|sort -n|head -n1; }                      
 function nu7 { nu2 "sqrt(((0$(printf +%i^2 $@ 2>$p03))-(0$(printf +%i $@ 2>$p03))^2/$#)/$#)*1000" 4; }                                                        # get std from list numbers
 function nu8 { printf '%i\n' $@ 2>$p03|grep -c '^0$'; }                                                                                                       # get # zeros from list numbers
 function nu9 { if [[ $1 -ge $((10**6)) ]];then printf '%9i %s' $(nu2 "$1/$((10**6))") $2;else if [[ $1 -ge $((10**3)) ]];then printf '%9i %s' $(nu2 "$1/$((10**3))") m$2;else printf '%9i %s' $1 u$2;fi;fi 2>$p03; }
-function ll0 { local f=$p16/logs/beacon.log      ;echo $H|sudo -S cat             $f.1 $f 2>$p03|tail -n$n26; }                                               # get cc intern lines
-function ll1 { local f=$p16/logs/beacon.log      ;echo $H|sudo -S egrep -ah  "$1" $f.1 $f 2>$p03|tail -n$n15; }                                               # get cc intern lines (specific)
-function ll2 { local f=$p01                      ;echo $H|sudo -S egrep -ah  "$1"      $f 2>$p03            ; }                                               # get all eth syslog lines
-function ll3 { local f=$p01                      ;echo $H|sudo -S egrep -ahv "$g13"    $f 2>$p03            ; }                                               # get not eth syslog lines
-function ll4 { local f=$p17/logs/validator.log   ;echo $H|sudo -S cat             $f.1 $f 2>$p03|tail -n$n25; }                                               # get vc intern lines
-function ll5 { local f=$p17/logs/validator.log   ;echo $H|sudo -S egrep -ah  "$1" $f.1 $f 2>$p03|tail -n$2  ; }                                               # get vc intern lines (specific)
-function ll6 { local f=$p61/logs/mainnet.logs.txt;echo $H|sudo -S egrep -ah  "$1"      $f 2>$p03            ; }                                               # get neth intern lines
-function ln0 {                              sed -En "s%.*$1 *([0-9]+).*%\1%p"              $2 2>$p03; }                                                       # get sed list of numbers (file)
-function ln1 { if [[ $l6 ]];then echo "$l6"|sed -En "s%.*$1 *-?([0-9]*\.?[0-9]+)$2.*%\1%p"    2>$p03;fi; }                                                    # get sed list of numbers (stdin)
-function ln2 { if [[ $l4 ]];then echo "$l4"|gawk "$1"                                         2>$p03;fi; }                                                    # get awk list of numbers (µs|ms|s)
+function ll0 { local f=$p16/logs/beacon.log   ;echo $H|sudo -S cat             $f.1     $f     2>$p03|tail -n$n26; }                                          # get cc intern lines
+function ll1 { local f=$p16/logs/beacon.log   ;echo $H|sudo -S egrep -ah  "$1" $f.1     $f     2>$p03|tail -n$n15; }                                          # get cc intern lines (specific)
+function ll2 { local f=$p01                   ;echo $H|sudo -S egrep -ah  "$1"          $f     2>$p03            ; }                                          # get all eth syslog lines
+function ll3 { local f=$p01                   ;echo $H|sudo -S egrep -ahv "$g13"        $f     2>$p03            ; }                                          # get not eth syslog lines
+function ll4 { local f=$p17/logs/validator.log;echo $H|sudo -S cat             $f.1     $f     2>$p03|tail -n$n25; }                                          # get vc intern lines
+function ll5 { local f=$p17/logs/validator.log;echo $H|sudo -S egrep -ah  "$1" $f.1     $f     2>$p03|tail -n$2  ; }                                          # get vc intern lines (specific)
+function ll6 { local f=$p61/logs/mainnet.logs ;echo $H|sudo -S egrep -ah  "$1" $f.0.txt $f.txt 2>$p03            ; }                                          # get neth intern lines
+function ln0 {                              sed -En "s%.*$1 *([0-9]+).*%\1%p"              $2  2>$p03; }                                                      # get sed list of numbers (file)
+function ln1 { if [[ $l6 ]];then echo "$l6"|sed -En "s%.*$1 *-?([0-9]*\.?[0-9]+)$2.*%\1%p"     2>$p03;fi; }                                                   # get sed list of numbers (stdin)
+function ln2 { if [[ $l4 ]];then echo "$l4"|gawk "$1"                                          2>$p03;fi; }                                                   # get awk list of numbers (µs|ms|s)
 function ln3 { l6=$(ll2 "$2.*$1");ln1 $1; }                                                                                                                   # get numbers all  syslog lines
 function ln4 { if g0t $3;then l6=$(ll2 "$2.*$1"|tail -n$3);else l6=$(ll2 "$2.*$1");fi;ln1 $1; }                                                               # get numbers tail syslog lines
 function fl0 { ll3|tail -n300|flp "Core.*temperature" $1; }                                                                                                   # get temp  cpu lines

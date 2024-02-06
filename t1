@@ -130,7 +130,7 @@ g29='error'
 g30="$g25| $g27 "
 g31='latency:'
 g32='time_taken_ms:'
-g33='(request was cancelled|error making request to relay)'
+g33='(request was cancelled|error making request to relay|Invalid execution payload)'
 g34='duration='
 g35="^$cudt +"
 g36="$g35[0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{1,} *\|[A-Z]{4,}\|"
