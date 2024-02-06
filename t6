@@ -522,8 +522,8 @@ function gp0 { if tsa $s10;then bp;gp;local i=$(pt2 $(pex "du -s $p08"));sudo -u
 # jitter This indicates how much packet delays from individual pollings vary from the mean packet delay. (ms)
 function hsh { if tsa $s19;then cex "$s07 $s31-status";cex "$s07 show-$s31";else swb ntpq;ntpq -p;fi; }
 
-function wpf { ll2 "$g15"|fln "$g33"; }
-function wpe { wpf|sed -E "$e52"; }
+function wpf { if tsa $s44;then ll6 "$g43";fi;ll2 "$g15"|fln "$g33"; }
+function wpe { wpf|sed -E "$e52"|sort -t: -k2n -k3n -k4n; }
 function apf { if n1t;then wpe          ;else ssh $(snc $cun1) "$p53 bp"   ;fi;if n2t;then wpe          ;else ssh $(snc $cun2) "$p53 bp"   ;fi;if vct;then wpe          ;else ssh $(snc $cuvc) "$p53 bp"   ;fi;if mct;then wpe;else ssh $(snc $cumv) "$p53 bp";fi; }
 function caa { if n1t;then cll "$e50" $1;else ssh $(snc $cun1) "$p53 cl $1";fi;if n2t;then cll "$e50" $1;else ssh $(snc $cun2) "$p53 cl $1";fi;if vct;then cll "$e50" $1;else ssh $(snc $cuvc) "$p53 cl $1";fi; }
 function eaa { if n1t;then ell "$e50" $1;else ssh $(snc $cun1) "$p53 el $1";fi;if n2t;then ell "$e50" $1;else ssh $(snc $cun2) "$p53 el $1";fi; }
