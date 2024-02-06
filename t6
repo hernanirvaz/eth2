@@ -594,6 +594,7 @@ function esp { if tsa $s44;then ll2 "$g11.*$g39"|sed -E "$e67";else ll2 "$g11.*$
 [[ $1 = mlf ]] && { ml0;swn "$m" >> $p52; }
 [[ $1 = mr  ]] && { if tsa $s14;then mrd $(mru);swn "$m"        ;fi; }
 [[ $1 = mrf ]] && { if tsa $s14;then mrd $(mru);swn "$m" >> $p64;fi; }
+[[ $1 = mru ]] && { if tsa $s14;then mru|tr ' ' '\n';fi; }
 [[ $1 = bn  ]] && { bm0;bno;swn "$m"; }
 [[ $1 = bnf ]] && { bm0;bno;swn "$m" >> $p14; }
 [[ $1 = bm  ]] && { bm0;bmo;swn "$m"; }
