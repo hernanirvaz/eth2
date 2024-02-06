@@ -96,6 +96,7 @@ p61='/var/lib/nethermind';[[ $cunm = $inm5 || $cunm = $inm6 ]] && p61='/el/nethe
 p62="$p02/nethermind.log"
 p63="$p02/neth.rs"
 p64="$p02/dns.log"
+p65='/etc/ssh/sshd_config.d/50-cloud-init.conf'
 
 g00='^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) +[0-9]{1,2} +'
 g01='^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
@@ -258,6 +259,7 @@ e65='s%([Pp]eers[ =]*)[0-9]+%\1'
 e66='s%^[^,]+(https?)%\1%;s%@([^@ ]+) +.*$%@\1%;s%https?[^@]+@%%g;s%,% %gp'
 e67="$e29;s%(:[0-9]{2}) *$g39%\1 $g40%i"
 e68="$e29;s%(\.[0-9]{2,}) *.*$g42 *%\1 $g40 %i"
+e69="s%^ *#* *PasswordAuthentication  *.*$%PasswordAuthentication no%i"
 
 s00='systemctl'
 s01="$s00 status"
