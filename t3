@@ -32,9 +32,9 @@ else
   othe="$othe --builder http://$zip3:18550"                                                                                                                   # external payload mev-boost
   othe="$othe --disable-duplicate-warn-logs"                                                                                                                  # no logs on duplicate gossip messages
   othe="$othe --disable-upnp"                                                                                                                                 # disable UPnP support
-  if [[ $cunm = $cun1 ]];then othe="$othe --slasher";fi
   if [[ $cunm = $inm5 ]];then othe="$othe --checkpoint-sync-url http://$iip6:5052";else othe="$othe --checkpoint-sync-url http://$iip5:5052";fi
-  # othe="$othe --subscribe-all-subnets --import-all-attestations"                                                                                              # better income
+  # othe="$othe --subscribe-all-subnets --import-all-attestations"                                                                                            # better income
+  # othe="$othe --slasher --slasher-broadcast false"                                                                                                          # only the proposer who includes proof of offenses in blocks earn rewards, not the identifier of offenses
   # othe="$othe --disable-backfill-rate-limiting"                                                                                                             # disable the backfill sync rate-limiting
   # othe="$othe --checkpoint-sync-url https://mainnet.checkpoint.sigp.io"
   # othe="$othe --purge-db"                                                                                                                                   # clean & checkpoint DB
