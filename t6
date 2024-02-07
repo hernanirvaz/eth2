@@ -112,7 +112,7 @@ function grs {
 }
 function gdi { if g0t $1;then l4=$(ll2 "$g12"|tail -n$1);else l4=$(ll2 "$g12");fi;e1=$(nu5 3 $(ln2 "${w0}elapsed= *$w2")); }                                  # get delay imported
 function gdu { if g0t $1;then l4=$(ll2 "$g21"|tail -n$1);else l4=$(ll2 "$g21");fi;e2=$(nu5 3 $(ln2 "${w0}elapsed= *$w2")); }                                  # get delay Chain head was updated
-function gcl { geth attach --exec $1 "http://$ciec:8545" 2>$p03; }                                                                                            # exec RPC HTTP
+function gcl { $p00/geth attach --exec $1 "http://$ciec:8545" 2>$p03; }                                                                                       # exec RPC HTTP
 function gi0 { nu0 $(echo $@|sed -En "$e61" 2>$p03); }                                                                                                        # get el highest block
 function gc0 { nu0 $(echo $@|sed -En "$e62" 2>$p03); }                                                                                                        # get el current block
 function gv0 { en=$(ss5 $s10 maxpeers); }                                                                                                                     # set configured peers
