@@ -3,7 +3,6 @@
 meeu=$(whoami)
 cunm=$(uname -n)
 cudt=$(date +%F)
-#cudt='2024-02-03'
 cust=${cunm:0:3}
 zip1='192.168.8.25'
 zip2='192.168.8.28'
@@ -141,7 +140,7 @@ g39='[Pp]eers.*all:'
 g40='peers:'
 g41='Peers:'
 g42='peercount='
-g43="(Produced block|Improved post-merge block|GetPayloadV2|PayloadId)"
+g43="$g36.*(Produced block|Improved post-merge block|GetPayloadV2|PayloadId)"
 
 e00="s%^ *#* *NTP *=.*$%NTP=$zip1 $zip2 time.google.com time.cloudflare.com time.facebook.com%i";if [[ $cunm = $cuvc || $cunm = $cun1 || $cunm = $cun2 || $cunm = $cumv ]];then e00="${e00};s%^ *#* *PollIntervalMaxSec *=.*$%PollIntervalMaxSec=1200%i";fi
 e01='s%^ *ENABLED=.*$%ENABLED=0%i'
