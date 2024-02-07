@@ -25,15 +25,15 @@ else
   if [[ $cunm = $inm5 ]];then apip="$iip5";else apip="$iip6";fi
   othe=''
   othe="$othe --execution-endpoint http://$apip:8551 --execution-jwt $p58/jwt"
-  othe="$othe --execution-timeout-multiplier 1"                                                                                                               # multiply default execution timeouts
   othe="$othe --suggested-fee-recipient $s26"                                                                                                                 # bn level fees
   othe="$othe --validator-monitor-file $p58/pubkeys"                                                                                                          # monitor validators
   othe="$othe --prune-payloads false"                                                                                                                         # fetch/keep execution payloads default true
   othe="$othe --builder http://$zip3:18550"                                                                                                                   # external payload mev-boost
   othe="$othe --disable-duplicate-warn-logs"                                                                                                                  # no logs on duplicate gossip messages
+  othe="$othe --subscribe-all-subnets --import-all-attestations"                                                                                              # better income
   othe="$othe --disable-upnp"                                                                                                                                 # disable UPnP support
   if [[ $cunm = $inm5 ]];then othe="$othe --checkpoint-sync-url http://$iip6:5052";else othe="$othe --checkpoint-sync-url http://$iip5:5052";fi
-  # othe="$othe --subscribe-all-subnets --import-all-attestations"                                                                                            # better income
+  # othe="$othe --execution-timeout-multiplier 1"                                                                                                             # multiply default execution timeouts
   # othe="$othe --slasher --slasher-broadcast false"                                                                                                          # only the proposer who includes proof of offenses in blocks earn rewards, not the identifier of offenses
   # othe="$othe --disable-backfill-rate-limiting"                                                                                                             # disable the backfill sync rate-limiting
   # othe="$othe --checkpoint-sync-url https://mainnet.checkpoint.sigp.io"
