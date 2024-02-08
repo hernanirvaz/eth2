@@ -469,7 +469,7 @@ function c0c { local e="$e11";[[ $(sed -n "$e12" $p04/$s12.service 2>$p03) = $zi
 function ble { sft $s12 || return;cp $p04/$s12.service $p02/$s12.sav;sed "$1" $p02/$s12.sav > $p04/$s12.service;dmr; }                                        # cc service edit
 function cce { sft $s12 || return;cp $p04/$s12.service $p02/$s12.sav;c0c;cmw $p04/$s12.service 644 eth; }                                                     # cc change el server (merge)
 function vcc { sft $s13 || return;cp $p04/$s13.service $p02/$s13.sav;sed "$e16" $s13.sav > $p04/$s13.service;cmw $p04/$s13.service 644 eth; }                 # vc switch cc order
-function dpa { nex "$s02 $s20";nex "$s02 systemd-resolved";nex "$s03 $s20";nex "$s03 systemd-resolved"; }                                                     # DNS stop/start
+function dpa { tsa $s20 && nex "$s02 $s20";nex "$s02 systemd-resolved";tse $s20 && nex "$s03 $s20";nex "$s03 systemd-resolved"; }                             # DNS stop/start
 function nrs { nex 'netplan apply';dpa; }                                                                                                                     # netplan/DNS restart
 function lcp { local f=$1;shift;[[ -x $f ]] && until [[ $# -lt 1 ]];do if [[ $1 = $(snc $cunm) ]];then lci $f;else scp $f $1:$p02;fi;shift;done; }            # propagate lighthouse
 function lci { [[ -x $1 && ! -d $1   ]] || return;sex "mv $p00/lighthouse $p00/lighthouse.sav";sex "cp $1 $p00"; }                                            # lighthouse binary install

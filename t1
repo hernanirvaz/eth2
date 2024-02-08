@@ -344,7 +344,7 @@ s41="$s41\nnetwork:"
 s41="$s41\n  version: 2"
 s41="$s41\n  renderer: networkd"
 s41="$s41\n  ethernets:"
-for m in $(ip l|sed -n 's%.* \([a-z0-9]*\): .* state UP .*%\1%p'|tail -n1);do
+for m in $(ip -j link|jq -r '.[]|select(.operstate=="UP").ifname');do
   s41="$s41\n    $m:"
   s41="$s41\n      dhcp4: false"
   [[ $cunm = $znm1 ]] && s41="$s41\n      addresses: [$zip1/24]"
@@ -360,10 +360,10 @@ for m in $(ip l|sed -n 's%.* \([a-z0-9]*\): .* state UP .*%\1%p'|tail -n1);do
   s41="$s41\n          metric: 100"
   s41="$s41\n          on-link: true"
   s41="$s41\n      nameservers:"
-  s41="$s41\n        addresses: [192.168.8.254]"
-  s41="$s41\n      link-local: [ ]"
+  s41="$s41\n        addresses: [192.168.8.254]" # ;s42=$(ip -j link|jq -r ".[]|select(.ifname==\"$m\").address")
+  s41="$s41\n      link-local: [ ]"              # ;s41="$s41\n      link-local: [\"fe80::$(printf '%02x' $((0x${s42:0:2}|0x02)))${s42:3:2}:${s42:6:2}ff:fe${s42:9:2}:${s42:12:2}${s42:15:2}/64\"]"
 done
-for m in $(ip l|sed -n 's%.* \([a-z0-9]*\): .* state DOWN .*%\1%p');do
+for m in $(ip -j link|jq -r '.[]|select(.operstate=="DOWN").ifname');do
   s41="$s41\n    $m:"
   s41="$s41\n      dhcp4: true"
   s41="$s41\n      activation-mode: off"
