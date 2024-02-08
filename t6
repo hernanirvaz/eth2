@@ -66,7 +66,7 @@ function fft { [[ -f $1 ]]; }
 function sft { [[ -f $p04/$1.service ]]; }
 function bpt { [[ $(era $p12 $n12) -eq 1 ]] && ( (pct && pmt && hat && ! bdt && ! fft $p45) || rbt $n06); }
 function llc { pt2 $(wc -l $1 2>$p03) 0; }                                                                                                                    # get log line count
-function jrn { cex "journalctl --no-hostname --no-full -f $1"; }                                                                                              # my journal   format
+function jrn { if [[ $2 ]];then local s="-g $2";else local s=;fi;cex "journalctl --no-hostname --no-full -f $1 $s"; }                                         # my journal   format
 function dmr { sex "$s00 daemon-reload"; }                                                                                                                    # daemon-reload
 function si1 { local n=${1:-0};printf %i $((20*n))   2>$p03; }
 function si2 { local n=${1:-0};printf %i $((1000*n)) 2>$p03; }
@@ -671,15 +671,15 @@ function esp { if tsa $s44;then ll2 "$g11.*$g39"|sed -E "$e67";else ll2 "$g11.*$
 [[ $1 = wl  ]] && { wlp ${@:2:$#}|sed -E "$e19"; }
 [[ $1 = wlz ]] && { wlp ${@:2:$#}; }
 # journal
-[[ $1 = yj  ]] && { jrn; }
-[[ $1 = ej  ]] && { jrn "-u $s10 -u $s12 -u $s13"; }
-[[ $1 = gj  ]] && { jrn "-u $s10"; }
-[[ $1 = uj  ]] && { jrn "-u $s11"; }
-[[ $1 = tj  ]] && { jrn "-u $s44"; }
-[[ $1 = bj  ]] && { jrn "-u $s12"; }
-[[ $1 = vj  ]] && { jrn "-u $s13"; }
-[[ $1 = sj  ]] && { jrn "-u $s20"; }
-[[ $1 = mj  ]] && { jrn "-u $s14"; }
+[[ $1 = yj  ]] && { jrn "" "$2"; }
+[[ $1 = ej  ]] && { jrn "-u $s10 -u $s12 -u $s13" "$2"; }
+[[ $1 = gj  ]] && { jrn "-u $s10" "$2"; }
+[[ $1 = uj  ]] && { jrn "-u $s11" "$2"; }
+[[ $1 = tj  ]] && { jrn "-u $s44" "$2"; }
+[[ $1 = bj  ]] && { jrn "-u $s12" "$2"; }
+[[ $1 = vj  ]] && { jrn "-u $s13" "$2"; }
+[[ $1 = sj  ]] && { jrn "-u $s20" "$2"; }
+[[ $1 = mj  ]] && { jrn "-u $s14" "$2"; }
 # arranca
 [[ $1 = ga  ]] && { dmr;ga; }
 [[ $1 = ua  ]] && { dmr;ua; }
@@ -694,20 +694,20 @@ function esp { if tsa $s44;then ll2 "$g11.*$g39"|sed -E "$e67";else ll2 "$g11.*$
 [[ $1 = sa  ]] && { dmr;sa; }
 [[ $1 = ma  ]] && { dmr;ma; }
 # para & arranca & journal
-[[ $1 = gaj ]] && { dmr;ga;jrn "-u $s10"; }
-[[ $1 = uaj ]] && { dmr;ua;jrn "-u $s11"; }
-[[ $1 = taj ]] && { dmr;ta;jrn "-u $s44"; }
-[[ $1 = baj ]] && { dmr;ba;jrn "-u $s12"; }
-[[ $1 = vaj ]] && { dmr;va;jrn "-u $s13"; }
-[[ $1 = saj ]] && { dmr;sa;jrn "-u $s20"; }
-[[ $1 = maj ]] && { dmr;ma;jrn "-u $s14"; }
-[[ $1 = gpa ]] && { gp;dmr;ga;jrn "-u $s10"; }
-[[ $1 = upa ]] && { up;dmr;ua;jrn "-u $s11"; }
-[[ $1 = tpa ]] && { tp;dmr;ta;jrn "-u $s44"; }
-[[ $1 = bpa ]] && { bp;dmr;ba;jrn "-u $s12"; }
-[[ $1 = vpa ]] && { vp;dmr;va;jrn "-u $s13"; }
+[[ $1 = gaj ]] && { dmr;ga;jrn "-u $s10" "$2"; }
+[[ $1 = uaj ]] && { dmr;ua;jrn "-u $s11" "$2"; }
+[[ $1 = taj ]] && { dmr;ta;jrn "-u $s44" "$2"; }
+[[ $1 = baj ]] && { dmr;ba;jrn "-u $s12" "$2"; }
+[[ $1 = vaj ]] && { dmr;va;jrn "-u $s13" "$2"; }
+[[ $1 = saj ]] && { dmr;sa;jrn "-u $s20" "$2"; }
+[[ $1 = maj ]] && { dmr;ma;jrn "-u $s14" "$2"; }
+[[ $1 = gpa ]] && { gp;dmr;ga;jrn "-u $s10" "$2"; }
+[[ $1 = upa ]] && { up;dmr;ua;jrn "-u $s11" "$2"; }
+[[ $1 = tpa ]] && { tp;dmr;ta;jrn "-u $s44" "$2"; }
+[[ $1 = bpa ]] && { bp;dmr;ba;jrn "-u $s12" "$2"; }
+[[ $1 = vpa ]] && { vp;dmr;va;jrn "-u $s13" "$2"; }
 [[ $1 = spa ]] && { sp;sa; }
-[[ $1 = mpa ]] && { mp;dmr;ma;jrn "-u $s14"; }
+[[ $1 = mpa ]] && { mp;dmr;ma;jrn "-u $s14" "$2"; }
 [[ $1 = gpd ]] && { gp;gd; }
 [[ $1 = upd ]] && { up;ud; }
 [[ $1 = tpd ]] && { tp;td; }
@@ -717,15 +717,15 @@ function esp { if tsa $s44;then ll2 "$g11.*$g39"|sed -E "$e67";else ll2 "$g11.*$
 [[ $1 = rpd ]] && { rp;rd; }
 [[ $1 = spd ]] && { sp;sd; }
 [[ $1 = mpd ]] && { mp;md; }
-[[ $1 = gea ]] && { ge;dmr;ga;jrn "-u $s10"; }
-[[ $1 = uea ]] && { ue;dmr;ua;jrn "-u $s11"; }
-[[ $1 = tea ]] && { te;dmr;ta;jrn "-u $s44"; }
-[[ $1 = bea ]] && { be;dmr;ba;jrn "-u $s12"; }
-[[ $1 = vea ]] && { ve;dmr;va;jrn "-u $s13"; }
+[[ $1 = gea ]] && { ge;dmr;ga;jrn "-u $s10" "$2"; }
+[[ $1 = uea ]] && { ue;dmr;ua;jrn "-u $s11" "$2"; }
+[[ $1 = tea ]] && { te;dmr;ta;jrn "-u $s44" "$2"; }
+[[ $1 = bea ]] && { be;dmr;ba;jrn "-u $s12" "$2"; }
+[[ $1 = vea ]] && { ve;dmr;va;jrn "-u $s13" "$2"; }
 [[ $1 = rea ]] && { re;dmr;ra; }
 [[ $1 = sea ]] && { se;dmr;sa; }
 [[ $1 = xea ]] && { xe;dmr;xa; }
-[[ $1 = mea ]] && { me;dmr;ma;jrn "-u $s14"; }
+[[ $1 = mea ]] && { me;dmr;ma;jrn "-u $s14" "$2"; }
 # enable
 [[ $1 = ge  ]] && { ge; }
 [[ $1 = ue  ]] && { ue; }
