@@ -289,7 +289,7 @@ function bro { if fft $p12;then dts;bnn;bb0;swn "$(printf 'R%03i %2s %3i' $2 $1 
 function cpr { snp $s12 $2 $n16 $n17 $nn;[[ $1 = VC ]] && sex "$s02 $s13"; }
 function car { sex "$s03 $s12"          ;[[ $1 = VC ]] && sex "$s03 $s13"; }
 function cfb { if [[ $1 = RB || $1 = SD ]];then gps;ups;tps;bro $1 $3;cpr $1 $2;rm -f $p50 $p42.*;if [[ $1 = RB ]];then sex reboot;else sex poweroff;fi;else cpr $1 $2;car $1;ssf 90 $p42;bro $1 $3;fi; }
-function vfb { cex "$s02 $s13";dmr;if [[ $1 = RS ]];then cex "$s03 $s13";else cex "$s02 $s12";fi;vro $1 $2;if [[ $1 = RB ]];then rm -f $p50 $p46.*;sex reboot;fi; }
+function vfb { sex "$s02 $s13";dmr;if [[ $1 = RS ]];then sex "$s03 $s13";else sex "$s02 $s12";fi;vro $1 $2;if [[ $1 = RB ]];then rm -f $p50 $p46.*;sex reboot;fi; }
 function brs {
   s3t $p42 && return;touch $p42.a$(stg);if g0t $3;then ssf $3 $p42;s4t $p42 && return;touch $p42.b$(stg);fi;bv0;bro $1 0;ssw $4 $p42;s4t $p42 && return
   local t=$(sng);local f=$p42.i$(stg);touch $f;local n=0;paf;while fft $f;do ((n+=$(sfn $t)));ssf $(sfn $t) $p42 $t;if ipt $t;then rm $f;cfb $1 $2 $n;fi;done;rm -f $p50 $p42.*
