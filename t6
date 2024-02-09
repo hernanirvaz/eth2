@@ -12,13 +12,13 @@ function nu6 { printf '%i\n' $@ 2>$p03|sort -n|head -n1; }                      
 function nu7 { nu2 "sqrt(((0$(printf +%i^2 $@ 2>$p03))-(0$(printf +%i $@ 2>$p03))^2/$#)/$#)*1000" 4; }                                                        # get std from list numbers
 function nu8 { printf '%i\n' $@ 2>$p03|grep -c '^0$'; }                                                                                                       # get # zeros from list numbers
 function nu9 { if [[ $1 -ge $((10**6)) ]];then printf '%9i %s' $(nu2 "$1/$((10**6))") $2;else if [[ $1 -ge $((10**3)) ]];then printf '%9i %s' $(nu2 "$1/$((10**3))") m$2;else printf '%9i %s' $1 u$2;fi;fi 2>$p03; }
-function ll0 { local f=$p16/logs/beacon.log   ;echo $H|sudo -S cat             $f.1     $f     2>$p03|tail -n$n26; }                                          # get cc intern lines
-function ll1 { local f=$p16/logs/beacon.log   ;echo $H|sudo -S egrep -ah  "$1" $f.1     $f     2>$p03|tail -n$n15; }                                          # get cc intern lines (specific)
-function ll2 { local f=$p01                   ;echo $H|sudo -S egrep -ah  "$1"          $f     2>$p03            ; }                                          # get all eth syslog lines
-function ll3 { local f=$p01                   ;echo $H|sudo -S egrep -ahv "$g13"        $f     2>$p03            ; }                                          # get not eth syslog lines
-function ll4 { local f=$p17/logs/validator.log;echo $H|sudo -S cat             $f.1     $f     2>$p03|tail -n$n25; }                                          # get vc intern lines
-function ll5 { local f=$p17/logs/validator.log;echo $H|sudo -S egrep -ah  "$1" $f.1     $f     2>$p03|tail -n$2  ; }                                          # get vc intern lines (specific)
-function ll6 { local f=$p61/logs/mainnet.logs ;echo $H|sudo -S egrep -ah  "$1" $f.0.txt $f.txt 2>$p03            ; }                                          # get neth intern lines
+function ll0 { local f=$p16/logs/beacon.log   ;echo $H|sudo -S cat                       $f.1     $f     2>$p03|tail -n$n26; }                                # get cc intern lines
+function ll1 { local f=$p16/logs/beacon.log   ;echo $H|sudo -S egrep -ah  "$1"           $f.1     $f     2>$p03|tail -n$n15; }                                # get cc intern lines (specific)
+function ll2 { local f=$p01                   ;echo $H|sudo -S egrep -ah  "$1"                    $f     2>$p03            ; }                                # get all eth syslog lines
+function ll3 { local f=$p01                   ;echo $H|sudo -S egrep -ahv "$g13"                  $f     2>$p03            ; }                                # get not eth syslog lines
+function ll4 { local f=$p17/logs/validator.log;echo $H|sudo -S cat                       $f.1     $f     2>$p03|tail -n$n25; }                                # get vc intern lines
+function ll5 { local f=$p17/logs/validator.log;echo $H|sudo -S egrep -ah  "$1" $f.3 $f.2 $f.1     $f     2>$p03|tail -n$2  ; }                                # get vc intern lines (specific)
+function ll6 { local f=$p61/logs/mainnet.logs ;echo $H|sudo -S egrep -ah  "$1"           $f.0.txt $f.txt 2>$p03            ; }                                # get neth intern lines
 function ln0 {                              sed -En "s%.*$1 *([0-9]+).*%\1%p"              $2  2>$p03; }                                                      # get sed list of numbers (file)
 function ln1 { if [[ $l6 ]];then echo "$l6"|sed -En "s%.*$1 *-?([0-9]*\.?[0-9]+)$2.*%\1%p"     2>$p03;fi; }                                                   # get sed list of numbers (stdin)
 function ln2 { if [[ $l4 ]];then echo "$l4"|gawk "$1"                                          2>$p03;fi; }                                                   # get awk list of numbers (µs|ms|s)
@@ -71,7 +71,7 @@ function dmr { sex "$s00 daemon-reload"; }                                      
 function si1 { local n=${1:-0};printf %i $((20*n))   2>$p03; }
 function si2 { local n=${1:-0};printf %i $((1000*n)) 2>$p03; }
 function svi { local n=${1:-0};if g0t $n;then l4=$(ll1 "$g18"|tail -n$n);else l4=$(ll1 "$g18");fi;i0=$(nu5 3 $(ln2 "${w0}imported_delay: +Some\($w2"));i1=$(nu5 3 $(ln2 "${w0}observed_delay: +Some\($w2"));if g0t $n;then l4=$(ll1 "$g20"|tail -n$n);else l4=$(ll1 "$g20");fi;i4=$(nu5 3 $(ln2 "${w0}block_delay:.+Some\($w2"));b1=$(nu3 $(ln3 "$g27" $g08));if g0t $n;then l4=$(ll1 "$g19"|tail -n$(si2 $n));else l4=$(ll1 "$g19");fi;i2=$(nu5 0 $(ln2 "${w0}elapsed: *$w1"));if g0t $n;then l6=$(ll1 "$g24"|tail -n$(si1 $n));else l6=$(ll1 "$g24");fi;i3=$(nu5 2 $(ln1 $g23)); }
-function svv { if vct;then l6=$(ll5 "$g16" $1);v0=$(nu4 1 $(ln1 $g31 ".*$(sni $cun1)"));v1=$(nu4 1 $(ln1 $g31 ".*$(sni $cun2)"));l6=$(ll5 "$g17" $(($1/2)));v2=$(nu4 1 $(ln1 $g32));else v0=0;v1=0;v2=0;fi; }
+function svv { if vct;then l6=$(ll5 "$g16" $1);v0=$(nu4 1 $(ln1 $g31 ".*$(sni $cun1)"));v1=$(nu4 1 $(ln1 $g31 ".*$(sni $cun2)"));l6=$(ll5 "$g17" $(($1/2)));v2=$(nu4 1 $(ln1 $g32));l6=$(ll5 "$g44" $(($1/100)));v3=$(nu5 1 $(ln1 $g45));else v0=0;v1=0;v2=0;v3=0;fi; }
 function smm { if mct;then m0=$(nu4 3 $(ln4 $g34 $g09 $1));else m0=0;fi; }
 function spc { nn=$2;cp $p04/$1.service $p02/$1.sav;sed -E "$e65$2%" $p02/$1.sav > $p04/$1.service; }                                                         # service configuration change/reload
 function snp { sft $1 || return;local n=$(($2+$5));(($2!=0&&n>=$3&&n<=$4)) && spc $1 $n;tsa $1 && sex "$s02 $1";dmr; }                                        # service peers change/stop
@@ -98,8 +98,8 @@ function bnn { csn $(ln3 "$g40" $g08) $(bpc $(bcl peer_count)); }               
 function sz0 { gnn 0      ;printf 'el:p%02i:m%02i:Z%02i:d%04i p2p:%5i %s     iu: %4i %4i %4i'                 $er $em $ez $ed $(ss5 $1 port    ) "$(gb1 $(gcl eth.syncing))" $e1 $e2 $(ei0)                 2>$p03; }
 function sz1 { unn 0      ;printf 'el:p%02i:m%02i:Z%02i:d%04i p2p:%5i %s      i: %4i'                         $er $em $ez $ed $(ss5 $1 p2p-port) "$(ub1 $(ucl eth_syncing))" $e1                            2>$p03; }
 function sz2 { dtl;svi;bnn;printf 'cl:p%02i:m%02i:Z%02i:d%04i p2p:%5i %s iosrhp: %4i %4i %4i %4i %4i %4i %4i' $nr $nm $nz $nd $(ss5 $1 port    ) "$(bb1 $(bcl syncing))"     $i0 $i1 $i4 $b1 $i2 $i3 $(bi1) 2>$p03; }
-function sz3 { svv $n23   ;printf 'vl:m%02i:b%02i:c%02i api:%s'                                               $v0 $v1 $v2 $(ss4 $1 "$e32" nodes)                                                            2>$p03; }
-function sz4 { smm 0      ;printf 'ml:%04i api:%s'                                                            $m0         $(ss4 $1 "$e32" addr )                                                            2>$p03; }
+function sz3 { svv $n23   ;printf 'vl:m%02i:b%02i:c%02i:a%03i api:%s'                                         $v0 $v1 $v2 $v3 $(ss4 $1 "$e32" nodes)                                                        2>$p03; }
+function sz4 { smm 0      ;printf 'ml:%04i api:%s'                                                            $m0             $(ss4 $1 "$e32" addr )                                                        2>$p03; }
 function sz5 { tnn 0      ;printf 'el:p%02i:m%02i:Z%02i:d%04i p2p:%5i %s     ps: %4i %4i %4i'                 $er $em $ez $ed $(ss5 $1 P2PPort ) "$(tb1 $(tcl eth_syncing))" $e1 $e2 $(ei0)                 2>$p03; }
 function sso { tse $2 || return;dts;local e="$1 $(printf '%6s %10s %5s %-40s' $(ss3 $2) $dt "$(ss2 $2)" 2>$p03)";case $1 in GETH) e="$e $(sz0 $2)";;BESU) e="$e $(sz1 $2)";;NETH) e="$e $(sz5 $2)";;BEAC) e="$e $(sz2 $2)";;VALI) e="$e $(sz3 $2)";;MEVB) e="$e $(sz4 $2)";;esac;swn "$e"; }
 # el control commands
@@ -214,7 +214,7 @@ function vl0 { dts;if tsa $s13;then svv $n22;vlo;else m="VSRV NOT ON $dt";fi; }
 function mlo { m="MEVB $(printf '%6i' $(ll2 "$g09"|fln "$g25"|wc -l) 2>$p03) $dt $(printf 'http_avg: %3i' $m0 2>$p03)"; }
 #    0  1              2     3     4   5     6   7
 # VALI OK     2023-06-03 20:49 int5: 700 ztc4: 240
-function vlo { m="VALI $(printf '%6i' $(ll4|fln "$g26"|wc -l) 2>$p03) $dt $(printf '%s: %2i %s: %2i casp: %2i' $(snc $cun1) $v0 $(snc $cun2) $v1 $v2 2>$p03)"; }
+function vlo { m="VALI $(printf '%6i' $(ll4|fln "$g26"|wc -l) 2>$p03) $dt $(printf '%s: %2i %s: %2i casp: %2i atts: %3i' $(snc $cun1) $v0 $(snc $cun2) $v1 $v2 $v3 2>$p03)"; }
 #    0  1   2          3     4       5  6   7    8    9  10   11  12 13  14 15 16  17 18 19  20  21 22   23   24     25    26   27   28 29   30  31   32
 # BEAC OK   0 2023-10-25 17:12 node70: 77 rp: 3056 2232 ab: 4021  687 0 er:  4  7  83 26  0 201   0  0 1000    0 iosrhp:  712 3585 2994 21 3797  61 1282
 function blo {
@@ -659,6 +659,7 @@ function esp { if tsa $s44;then ll2 "$g11.*$g39"|sed -E "$e67";else ll2 "$g11.*$
 [[ $1 = vi1 ]] && { ll5 "$g16" ${2:-$n22}|grep $(sni $cun1)                        |sed -E "$e50"; }
 [[ $1 = vi2 ]] && { ll5 "$g16" ${2:-$n22}|grep $(sni $cun2)                        |sed -E "$e50"; }
 [[ $1 = vic ]] && { ll5 "$g17" ${2:-$(($n22/2))}                                   |sed -E "$e50"; }
+[[ $1 = via ]] && { ll5 "$g44" ${2:-$(($n22/100))}                                 |sed -E "$e50"; }
 [[ $1 = csp ]] && { ll2 "$g08.*$g40"                                               |sed -E "$e49"|fsp "$g40" $2 $3; }
 [[ $1 = esp ]] && { esp                                                                          |fsp "$g40" $2 $3; }
 [[ $1 = mi  ]] && { ll2 "$g09.*$g34"|tail -n${2:-$n32}                             |sed -E "$e51"; }
