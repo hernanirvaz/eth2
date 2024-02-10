@@ -542,7 +542,7 @@ function esp { if tsa $s44;then ll2 "$g11.*$g39"|sed -E "$e67";else ll2 "$g11.*$
 
 [[ $1 = irb ]] && { irb $2;pas; }
 [[ $1 = eip ]] && { curl -s4 "https://${3:-meo.fruga.pt}:$2@dyn.dns.he.net/nic/update?hostname=${3:-meo.fruga.pt}" &>$p03;pas; }
-[[ $1 = bmf ]] && { bm0;[[ $2 ]] && b4=$2;bms;v0t && swn "$m" >> $p13;if n1t;then if fft $p45;then bpt && brs RB 0 $((n05*10)) $n00;else bpt && brs PE $b4 $n05 $n02;fi;else rbt && brs RB 0 $n05 $n03;fi; }
+[[ $1 = bmf ]] && { bm0;[[ $2 ]] && b4=$2;bms;v0t && swn "$m" >> $p13;if n1t;then if fft $p45;then bpt && brs RB 0 $((n05*20)) $n00;else bpt && brs PE $b4 $n05 $n02;fi;else rbt && brs RB 0 $n05 $n03;fi; }
 [[ $1 = snr ]] && { cex "$s37 lxd";cex "$s37 core20";cex "$s37 snapd";cex 'apt remove --autoremove snapd -y';echo -e "$s36" > nosnap.pref;cex "mv nosnap.pref $p47";cmw $p47/nosnap.pref 644 root;cex 'apt update'; }
 [[ $1 = mvr ]] && { mvr; }
 [[ $1 = mre ]] && { mre|sort -n; }
