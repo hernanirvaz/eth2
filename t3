@@ -42,7 +42,7 @@ else
   # othe="$othe --monitoring-endpoint https://beaconcha.in/api/v1/client/metrics?apikey=$B&machine=$(snc $cunm)"                                              # monitor data for beaconcha.in app
   swu 'CONFIGURE BEACON';sex "mkdir -p $p16";cmw $p05 755 $meeu;sau eth2;sjw
   cmw $p16 700 eth2;touch $p05/vc_lock;cd $p02                                                                                                                # IMPORTANTE LOCK vc
-  pp2p=9004;i5t || pp2p=9000
+  pp2p=9004;ndp || pp2p=9000
   cat <<-EOF > $s12.service
 	[Unit]
 	Description=Lighthouse Consensus Client BN

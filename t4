@@ -22,5 +22,5 @@ if [[ $1 = geth ]];then sex "rm -f  $p00/geth.sav"      ;sex "mv $p00/geth      
 if [[ $1 = neth ]];then sex "rm -fr $p00/nethermind.sav";sex "mv $p00/nethermind $p00/nethermind.sav";t6 tpr;nnv $2 $3 ;t6 ta;fi
 if [[ $1 = mev  ]];then sex "rm -f  $p00/mev-boost.sav" ;sex "mv $p00/mev-boost $p00/mev-boost.sav"  ;gnv $2;mnv;fi
 [[ $1 = cc || $1 = cp ]] || { [[ $1 ]] || hlp;exit; }
-if [[ $1 = cc && ($cunm = $znm2 || $cunm = $znm4 || $cunm = $inm5 || $cunm = $vnm1) ]];then [[ -x $p02/.cargo/bin/rustup ]] && t6 ruv $3;t6 luc $2;fi         # rust update & cc upgrade/compile
-t6 lpi                                                                                                                                                        # cc propagate/install
+if [[ $1 = cc && ($cunm = $znm2 || $cunm = $znm4 || $cunm = $inm5 || $cunm = $vnm1) ]];then [[ -x $p02/.cargo/bin/rustup ]] && t6 ruv $3;t6 luc $2;fi
+t6 lpi

@@ -56,6 +56,7 @@ function n1t { [[ $cunm = $cun1 ]]; }
 function n2t { [[ $cunm = $cun2 ]]; }
 function vct { [[ $cunm = $cuvc ]]; }                                                                                                                         # vc  current  test
 function mct { [[ $cunm = $cumv ]]; }                                                                                                                         # mev current  test
+function i5t { [[ $cunm = $inm5 ]]; }
 function rbt { [[ $(sra) -ge $((60*60*${1:-9})) ]]; }
 function ipt { [[ $(date +%s) -ge $(bss $1 6) ]]; }
 function pct { [[ $b4 -ne 0 ]]; }
@@ -399,25 +400,23 @@ function sa  { tsa $s20 || cex "$s03 $s20"; }                                   
 function sp  { tsa $s20 && cex "$s02 $s20"; }                                                                                                                 # stop    named
 function sd  { cex "$s05 $s20";sco;sex 'ufw reload'; }                                                                                                        # disable named
 # el/cc/vc
-function efw { if [[ $cust = hrv ]];then pai $1 192.168.8.0/24 $2 $3;else pai $1 $vip1 $2 $3;pai $1 $vip3 $2 $3;fi; }
-function eop { local e=30303;i5t || e=30304;pae $e elp2p;pde 8545 elapi delete;pde 8551 eljwt delete;efw 8545 elapi       ;efw 8551 eljwt       ; }
-function eco { local e=30303;i5t || e=30304;pde $e elp2p;pde 8545 elapi       ;pde 8551 eljwt       ;efw 8545 elapi delete;efw 8551 eljwt delete; }
-function bfw { if [[ $cust = hrv ]];then pai $1 192.168.8.0/24 $2 $3;else pai $1 $vip3 $2 $3;fi; }
-function bop { local e=9004 ;i5t || e=9000 ;pae $e clp2p;pde 5052 clapi delete;pde 8551 cljwt delete;bfw 5052 clapi       ;bfw 8551 cljwt       ;pae "$((e+1))/udp" clquic; }
-function bco { local e=9004 ;i5t || e=9000 ;pde $e clp2p;pde 5052 clapi       ;pde 8551 cljwt       ;bfw 5052 clapi delete;bfw 8551 cljwt delete;pde "$((e+1))/udp" clquic; }
-function vfw { if [[ $cust = hrv ]];then pai $1 192.168.8.0/24 $2 $3;else pai $1 $vip1 $2 $3;fi; }
-function vop { vfw 5064 vcapi       ;pde 5064 vcapi delete; }
-function vco { vfw 5064 vcapi delete;pde 5064 vcapi       ; }
+function nfw { if [[ $cust = hrv ]];then pai $1 192.168.8.0/24 $2 $3;else pai $1 $vip1 $2 $3;fi; }
+function eop { local e=30303;ndp || e=30304;pae $e elp2p;pde 8545 elapi delete;pde 8551 eljwt delete;nfw 8545 elapi       ;nfw 8551 eljwt       ; }
+function eco { local e=30303;ndp || e=30304;pde $e elp2p;pde 8545 elapi       ;pde 8551 eljwt       ;nfw 8545 elapi delete;nfw 8551 eljwt delete; }
+function bop { local e=9004 ;ndp || e=9000 ;pae $e clp2p;pde 5052 clapi delete;pde 8551 cljwt delete;nfw 5052 clapi       ;nfw 8551 cljwt       ;pae "$((e+1))/udp" clquic; }
+function bco { local e=9004 ;ndp || e=9000 ;pde $e clp2p;pde 5052 clapi       ;pde 8551 cljwt       ;nfw 5052 clapi delete;nfw 8551 cljwt delete;pde "$((e+1))/udp" clquic; }
+function vop { nfw 5064 vcapi       ;pde 5064 vcapi delete; }
+function vco { nfw 5064 vcapi delete;pde 5064 vcapi       ; }
 # enable/start eth-geth eth-beacon eth-validator prometheus prometheus-node-exporter grafana-server mev-boost
 function ge  { eop;sex 'ufw reload';cex "$s04 $s10"; }                                                                                                        # enable eth-geth
 function ue  { eop;sex 'ufw reload';cex "$s04 $s11"; }                                                                                                        # enable eth-besu
 function te  { eop;sex 'ufw reload';cex "$s04 $s44"; }                                                                                                        # enable eth-nethermind
 function be  { bop;sex 'ufw reload';cex "$s04 $s12"; }                                                                                                        # enable eth-beacon
 function ve  { vop;sex 'ufw reload';cex "$s04 $s13"; }                                                                                                        # enable eth-validator
-function pe  { pai 9090/tcp 192.168.8.0/24 $s16 ;sex 'ufw reload';cex "$s04 $s16"; }                                                                          # enable prometheus
+function pe  { pai 9090/tcp 192.168.8.0/24 $s16;sex 'ufw reload';cex "$s04 $s16"; }                                                                           # enable prometheus
 function ne  { sex 'ufw reload';cex "$s04 $s17"; }                                                                                                            # enable prometheus-node-exporter
-function fe  { pai 3000/tcp 192.168.8.0/24 grafana  ;sex 'ufw reload';cex "$s04 $s18"; }                                                                      # enable grafana-server
-function me  { pai 18550    192.168.8.0/24 mev-boost;sex 'ufw reload';cex "$s04 $s14"; }                                                                      # enable mev-boost
+function fe  { pai 3000/tcp 192.168.8.0/24 grafana;sex 'ufw reload';cex "$s04 $s18"; }                                                                        # enable grafana-server
+function me  { nfw 18550 mev;sex 'ufw reload';cex "$s04 $s14"; }                                                                                              # enable mev-boost
 function ga  { tsa $s10 || cex "$s03 $s10"; }                                                                                                                 # start eth-geth
 function ua  { tsa $s11 || cex "$s03 $s11"; }                                                                                                                 # start eth-besu
 function ta  { tsa $s44 || cex "$s03 $s44"; }                                                                                                                 # start eth-nethermind
@@ -450,10 +449,10 @@ function ud  { cex "$s05 $s11";eco;sex 'ufw reload'; }                          
 function td  { cex "$s05 $s44";eco;sex 'ufw reload'; }                                                                                                        # disable eth-nethermind
 function bd  { cex "$s05 $s12";bco;sex 'ufw reload'; }                                                                                                        # disable eth-beacon
 function vd  { cex "$s05 $s13";vco;sex 'ufw reload';touch $p05/vc_lock; }                                                                                     # disable eth-validator
-function pd  { cex "$s05 $s16";pai 9090/tcp 192.168.8.0/24 $s16  delete;sex 'ufw reload'; }                                                                   # disable prometheus
+function pd  { cex "$s05 $s16";pai 9090/tcp 192.168.8.0/24 $s16 delete;sex 'ufw reload'; }                                                                    # disable prometheus
 function nd  { cex "$s05 $s17"; }                                                                                                                             # disable prometheus-node-exporter
-function fd  { cex "$s05 $s18";pai 3000/tcp 192.168.8.0/24 grafana   delete;sex 'ufw reload'; }                                                               # disable grafana-server
-function md  { cex "$s05 $s14";pai 18550    192.168.8.0/24 mev-boost delete;sex 'ufw reload'; }                                                               # disable mev-boost
+function fd  { cex "$s05 $s18";pai 3000/tcp 192.168.8.0/24 grafana delete;sex 'ufw reload'; }                                                                 # disable grafana-server
+function md  { cex "$s05 $s14";nfw 18550 mev delete;sex 'ufw reload'; }                                                                                       # disable mev-boost
 function pas { t2t && sex "$p54 usbstop";t1t && sex "$p54 cputurbo";t0t && sex "$p54 cpunoturbo"; }                                                           # set usb/cpu parameters
 function paf { t3t && sex "$p54 cputurbo"; }                                                                                                                  # set turbo   parameter
 function hsg { sso GETH $s10; }
@@ -548,7 +547,7 @@ function esp { if tsa $s44;then ll2 "$g11.*$g39"|sed -E "$e67";else ll2 "$g11.*$
 [[ $1 = mre ]] && { mre|sort -n; }
 [[ $1 = jwt ]] && { sjw; }
 [[ $1 = lpi ]] && { lpi $p02/.cargo/bin/lighthouse; }
-[[ $1 = luc ]] && { luc $p02/.cargo/bin/lighthouse $2; }
+[[ $1 = luc ]] && { luc $p02/.cargo/bin/lighthouse ${2:-v4.6.0}; }
 [[ $1 = ruv ]] && { ruv $2; }
 [[ $1 = clr ]] && { llt && ble "$e14"; }
 [[ $1 = cla ]] && { llt || ble "$e15"; }
