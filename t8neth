@@ -4,7 +4,7 @@ source /home/eth/eth2/t1
 
 swu 'INSTALAR NETHERMIND';sex 'apt install libsnappy-dev libc6-dev libc6 unzip -y';sex "mkdir -p $p61";sau eth1;sjw;cmw $p61 755 eth1
 nnv $1 $2
-maxp=20
+maxp=10
 pp2p=30303;ndp || pp2p=30304
 abrb=11052984
 nimh=8 # Gb
