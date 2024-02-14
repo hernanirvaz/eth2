@@ -222,7 +222,7 @@ e40="$e40;s%block_value:%bv:%g"                                                 
 e40="$e40;s%block_slot:%bl:%g"                                                                        # CL
 e41="s%snapdiffs *= *%sdf=%g;s%triediffs *= *%tdf=%g;s%triedirty *= *%tdt=%g;$e38"                    # ALL EL
 e42="$e41;s%(service|num_failed) *: *([^ ,]*),? *%\2 %g;$e39;$e40"                                    # ALL EL/CL
-e43='s%(level) *= *%%;s%msg *= *\"([^"]+)\",?%\t\1%'                                                  # RL
+e43='s%(level) *= *([a-z]{4})[a-z]* +%\U\2\t%;s%msg *= *\"([^"]+)\",?%\1%'                            # RL
 e44='s%(blockHash|parentHash|pubkey|txRoot|slotUID|ua) *= *[^ ,]+ *%%g'                               # RL
 e44="$e44;s%(method|numRegistrations) *= *([^ ,]+),? *%\2 %g"                                         # RL
 e45='s%https?://([a-z0-9\.\-]+)(//*[a-z0-9_]+)* *%\1%g;s%url *= *\"([^\"]+)\"%\1%'                    # RL
