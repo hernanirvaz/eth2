@@ -54,8 +54,8 @@ function z1t { [[ $cunm = $cunt ]]; }                                           
 function z4t { [[ $cunm = $znm4 ]]; }                                                                                                                         # best zotac              test
 function n1t { [[ $cunm = $cun1 ]]; }
 function n2t { [[ $cunm = $cun2 ]]; }
-function vct { [[ $cunm = $cuvc ]]; }                                                                                                                         # vc  current  test
-function mct { [[ $cunm = $cumv ]]; }                                                                                                                         # mev current  test
+function vct { [[ $cunm = $cuvc ]]; }
+function mct { [[ $cunm = $cumv ]]; }
 function i5t { [[ $cunm = $inm5 ]]; }
 function rbt { [[ $(sra) -ge $((60*60*${1:-9})) ]]; }
 function ipt { [[ $(date +%s) -ge $(bss $1 6) ]]; }
@@ -72,8 +72,8 @@ function dmr { sex "$s00 daemon-reload"; }                                      
 function si1 { local n=${1:-0};printf %i $((20*n))   2>$p03; }
 function si2 { local n=${1:-0};printf %i $((1000*n)) 2>$p03; }
 function svi { local n=${1:-0};if g0t $n;then l4=$(ll1 "$g18"|tail -n$n);else l4=$(ll1 "$g18");fi;i0=$(nu5 3 $(ln2 "${w0}imported_delay: +Some\($w2"));i1=$(nu5 3 $(ln2 "${w0}observed_delay: +Some\($w2"));if g0t $n;then l4=$(ll1 "$g20"|tail -n$n);else l4=$(ll1 "$g20");fi;i4=$(nu5 3 $(ln2 "${w0}block_delay:.+Some\($w2"));b1=$(nu3 $(ln3 "$g27" $g08));if g0t $n;then l4=$(ll1 "$g19"|tail -n$(si2 $n));else l4=$(ll1 "$g19");fi;i2=$(nu5 0 $(ln2 "${w0}elapsed: *$w1"));if g0t $n;then l6=$(ll1 "$g24"|tail -n$(si1 $n));else l6=$(ll1 "$g24");fi;i3=$(nu5 2 $(ln1 $g23)); }
-function svv { if vct;then l6=$(ll5 "$g16" $1);v0=$(nu4 1 $(ln1 $g31 ".*$(sni $cun1)"));v1=$(nu4 1 $(ln1 $g31 ".*$(sni $cun2)"));l6=$(ll5 "$g17" $(($1/2)));v2=$(nu4 1 $(ln1 $g32));l6=$(ll5 "$g44" $(($1/100)));v3=$(nu5 1 $(ln1 $g45));else v0=0;v1=0;v2=0;v3=0;fi; }
-function smm { if mct;then m0=$(nu4 3 $(ln4 $g34 $g09 $1));else m0=0;fi; }
+function svv { l6=$(ll5 "$g16" $1);v0=$(nu4 1 $(ln1 $g31 ".*$(sni $cun1)"));v1=$(nu4 1 $(ln1 $g31 ".*$(sni $cun2)"));l6=$(ll5 "$g17" $(($1/2)));v2=$(nu4 1 $(ln1 $g32));l6=$(ll5 "$g44" $(($1/100)));v3=$(nu5 1 $(ln1 $g45)); }
+function smm { m0=$(nu4 3 $(ln4 $g34 $g09 $1)); }
 function spc { nn=$2;cp $p04/$1.service $p02/$1.sav;sed -E "$e65$2%" $p02/$1.sav > $p04/$1.service; }                                                         # service configuration change/reload
 function snp { sft $1 || return;local n=$(($2+$5));(($2!=0&&n>=$3&&n<=$4)) && spc $1 $n;tsa $1 && sex "$s02 $1";dmr; }                                        # service peers change/stop
 function sra { if fft $p45;then nu0 $(($(date +%s)-$(date -r $p45 +%s)));else printf %i;fi }                                                                  # system reboot age (secounds)
