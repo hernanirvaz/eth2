@@ -11,7 +11,7 @@ eth2sf () {
   echo -e "$m\t\t$(resolvectl dns|grep $m|cut -d' ' -f4-6)"
 }
 
-alias v1='eth2sl "vpsl"'
+alias v1='eth2sl "ns3204840.ip-141-95-64.eu"'
 alias v2='eth2sl "vpsm"'
 alias v3='eth2sl "vpss"'
 alias z1='eth2sl "ztc1"'
@@ -26,8 +26,8 @@ alias r3='eth2sl "ztc3.fruga.pt"'
 alias r4='eth2sl "ztc4.fruga.pt"'
 alias r5='eth2sl "int5.fruga.pt"'
 alias r6='eth2sl "int6.fruga.pt"'
-alias vp='eth2cp "vpsl"'
-alias vo='outhcp "vpsl"'
+alias vp='eth2cp "ns3204840.ip-141-95-64.eu"'
+alias vo='outhcp "ns3204840.ip-141-95-64.eu"'
 alias zp='eth2cp "int6"         ;eth2cp "int5"         ;eth2cp "ztc4"         ;eth2cp "ztc3"         ;eth2cp "ztc1"         ;eth2cp "ztc2"         '
 alias rp='eth2cp "int6.fruga.pt";eth2cp "int5.fruga.pt";eth2cp "ztc4.fruga.pt";eth2cp "ztc3.fruga.pt";eth2cp "ztc1.fruga.pt";eth2cp "ztc2.fruga.pt"'
 alias zo='outhcp "int6"         ;outhcp "int5"         ;outhcp "ztc4"         ;outhcp "ztc3"         ;outhcp "ztc1"         ;outhcp "ztc2"         '
