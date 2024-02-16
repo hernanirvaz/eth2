@@ -366,11 +366,10 @@ function lll { tl3 $2|if [[ $1 ]];then sed -E "$1"|sort -t: -k2n -k3n -k4n;else 
 function rll { ll2 "$g09"|fln "$g25" $2|if [[ $1 ]];then sed -E "$1";else cat;fi; }
 function cpe {
   clk;[[ $1 = c ]] && return;tmp;[[ $1 = p ]] && return;sif $1
-  m=$(sll|sed -E "$e30");if [[ $m ]];then local i=$(echo "$m"|wc -l);local e=$(echo "$m"|tail -n1);else local i=0;local e=;fi
-  m=;local n=0;local d=;local l=ou
-  if [[ $cunm = $cuvc   || $cunm = $cun1 || $cunm = $cun2 || $cunm = $vnm1 ]];then m=$(cll "$e50;$e31");local l=cl;fi
-  if [[ ! $m ]];then if [[ $cunm = $cumv                  || $cunm = $vnm1 ]];then m=$(rll "$e51;$e31");local l=rl;fi;fi
-  if [[ ! $m ]];then if [[ $cunm = $cun1 || $cunm = $cun2 || $cunm = $vnm1 ]];then m=$(ell "$e50;$e31");local l=el;fi;fi
+  m=$(sll|sed -E "$e30");if [[ $m ]];then local i=$(echo "$m"|wc -l);local e=$(echo "$m"|tail -n1);else local i=0;local e=;fi;m=;local n=0;local d=;local l=ou
+  if [[ ! $m ]];then if [[ $cunm = $cuvc || $cunm = $cun1 || $cunm = $cun2 || $cunm = $vnm1 || $cunm = $vnm2 ]];then m=$(cll "$e50;$e31");local l=cl;fi;fi
+  if [[ ! $m ]];then if [[ $cunm = $cun1 || $cunm = $cun2                  || $cunm = $vnm1 || $cunm = $vnm2 ]];then m=$(ell "$e50;$e31");local l=el;fi;fi
+  if [[ ! $m ]];then if [[ $cunm = $cumv                                   || $cunm = $vnm1 || $cunm = $vnm2 ]];then m=$(rll "$e51;$e31");local l=rl;fi;fi
   if [[ ! $m ]];then local n=0;local d=;else local n=$(echo "$m"|wc -l);local d=$(echo "$m"|tail -n1);fi
   m="ERRO$(printf '%3i%4i %10s %5s' $i $n $dt 2>$p03)"
   if g0t $i;then if g0t $n;then m="$m sl: ${e:0:53}";m="$m $l: ${d:0:54}";else m="$m sl: ${e:0:112}";fi;else if g0t $n;then m="$m $l: ${d:0:112}";fi;fi
@@ -400,7 +399,7 @@ function sa  { tsa $s20 || cex "$s03 $s20"; }                                   
 function sp  { tsa $s20 && cex "$s02 $s20"; }                                                                                                                 # stop    named
 function sd  { cex "$s05 $s20";sco;sex 'ufw reload'; }                                                                                                        # disable named
 # el/cc/vc
-function nfw { if [[ $cust = hrv ]];then pai $1 192.168.8.0/24 $2 $3;else pai $1 $vip1 $2 $3;fi; }
+function nfw { if [[ $cust = hrv ]];then pai $1 192.168.8.0/24 $2 $3;else pai $1 $(sni $cunm) $2 $3;fi; }
 function eop { local e=30303;ndp || e=30304;pae $e elp2p;pde 8545 elapi delete;pde 8551 eljwt delete;nfw 8545 elapi       ;nfw 8551 eljwt       ; }
 function eco { local e=30303;ndp || e=30304;pde $e elp2p;pde 8545 elapi       ;pde 8551 eljwt       ;nfw 8545 elapi delete;nfw 8551 eljwt delete; }
 function bop { local e=9004 ;ndp || e=9000 ;pae $e clp2p;pde 5052 clapi delete;pde 8551 cljwt delete;nfw 5052 clapi       ;nfw 8551 cljwt       ;pae "$((e+1))/udp" clquic; }
@@ -470,10 +469,11 @@ function cce { sft $s12 || return;cp $p04/$s12.service $p02/$s12.sav;c0c;cmw $p0
 function vcc { sft $s13 || return;cp $p04/$s13.service $p02/$s13.sav;sed "$e16" $s13.sav > $p04/$s13.service;cmw $p04/$s13.service 644 eth; }                 # vc switch cc order
 function dpa { tsa $s20 && nex "$s02 $s20";nex "$s02 systemd-resolved";tse $s20 && nex "$s03 $s20";nex "$s03 systemd-resolved"; }                             # DNS stop/start
 function nrs { nex 'netplan apply';dpa; }                                                                                                                     # netplan/DNS restart
-function lcp { local f=$1;shift;[[ -x $f ]] && until [[ $# -lt 1 ]];do if [[ $1 = $(snc $cunm) ]];then lci $f;else scp $f $1:$p02;fi;shift;done; }            # propagate lighthouse
+function snd { if [[ ${1:0:3} = hrv ]];then printf ${1/[a-z]*-/}|tr -d '[aoel]';else case $1 in $vnm1) printf $vnd1;;$vnm2) printf $vnd2;;$vnm3) printf $vnd3;;esac;fi; }
+function lcp { local f=$1;shift;[[ -x $f ]] && until [[ $# -lt 1 ]];do if [[ $1 = $(snc $cunm) ]];then lci $f;else scp $f $(snd $1):$p02;fi;shift;done; }     # propagate lighthouse
 function lci { [[ -x $1 && ! -d $1   ]] || return;sex "mv $p00/lighthouse $p00/lighthouse.sav";sex "cp $1 $p00"; }                                            # lighthouse binary install
 function lmd { [[ -x $p00/lighthouse ]] || return;cmw $p00/lighthouse 755 eth;swb 'LIGHT INSTALADO'; }                                                        # lighthouse set permissions
-function lpi { z4t && lcp $1 ztc4;i5t && lcp $1 int5 int6;[[ $cunm = $vnm1 ]] && lcp $1 vpsl;lci $p02/lighthouse;sex "rm $p02/lighthouse";lmd; }
+function lpi { [[ $cunm = $znm4 || $cunm = $vnm1 || $cunm = $vnm2 ]] && lcp $1 $cunm;i5t && lcp $1 int5 int6;lci $p02/lighthouse;sex "rm $p02/lighthouse";lmd; }
 function luc {                                                                                                                                                # lighthouse upgrade/compile
   if fft $p06/lighthouse/README.md;then
     cd $p06/lighthouse;make clean;cargo clean                                                                                                                 # clean compile dirs
