@@ -133,7 +133,7 @@ function trs {
   s2t $p63 && return;tv0;tq0;ero $1 0 $p62;touch $p63.a$(stg);ssw $3 $p63;s1t $p63 && return
   local t=$(sng);local f=$p63.i$(stg);touch $f;local n=0;paf;while fft $f;do ((n+=$(sfn $t)));ssf $(sfn $t) $p63 $t
   if ipt $t;then rm $f;snp $s44 $2 10 50 $en
-    if [[ $1 = RB ]];then ero $1 $n $p62;rm -f $p50 $p63.*;sex reboot;else sex "$s03 $s44";ssf 90 $p63;gq0;ero $1 $n $p62;fi
+    case $1 in RB) ero $1 $n $p62;rm -f $p50 $p63.*;sex reboot;;SR) sex "$s03 $s44";ssf 90 $p63;gq0;ero $1 $n $p62;;esac
   fi;done;rm -f $p50 $p63.*
 }
 function tdi { if g0t $1;then l4=$(ll6 "$g37"|tail -n$1);else l4=$(ll6 "$g37");fi;e1=$(nu5 2 $(ln2 "${w0}\| *$w4$w5"));e2=$(nu2 "$(nu5 2 $(ln2 "${w0}slot *$w4$w5"))/1000"); }
@@ -568,11 +568,13 @@ function esp { if tsa $s44;then ll2 "$g11.*$g39"|sed -E "$e67";else ll2 "$g11.*$
 [[ $1 = sif ]] && { dts;sif s; }
 [[ $1 = grs ]] && { touch $p50;grs SR ${2:-0}   ${3:-$n03}; }
 [[ $1 = trs ]] && { touch $p50;trs SR ${2:-0}   ${3:-$n03}; }
+[[ $1 = tgp ]] && { touch $p50;trs PR ${2:-0}   ${3:-$n03}; }
 [[ $1 = urs ]] && { touch $p50;urs SR ${2:-0}   ${3:-$n03}; }
 [[ $1 = brs ]] && { touch $p50;brs BN ${2:-0} 0 ${3:-$(btn $n02)}; }
 [[ $1 = crs ]] && { touch $p50;brs VC ${2:-0} 0 ${3:-$n01}; }
 [[ $1 = vrs ]] && { touch $p50;vrs RS           ${2:-$n03}; }
 [[ $1 = grb ]] && { touch $p50;grs RB      0    ${2:-$n02}; }
+[[ $1 = trb ]] && { touch $p50;trs RB      0    ${2:-$n02}; }
 [[ $1 = urb ]] && { touch $p50;urs RB      0    ${2:-$n02}; }
 [[ $1 = brb ]] && { touch $p50;brs RB      0  0 ${2:-$(btn $n00)}; }
 [[ $1 = vrb ]] && { touch $p50;vrs RB           ${2:-$n02}; }
