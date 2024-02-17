@@ -26,13 +26,13 @@ function ln3 { l6=$(ll2 "$2.*$1");ln1 $1; }                                     
 function ln4 { if g0t $3;then l6=$(ll2 "$2.*$1"|tail -n$3);else l6=$(ll2 "$2.*$1");fi;ln1 $1; }                                                               # get numbers tail syslog lines
 function fl0 { ll3|tail -n300|flp "Core.*temperature" $1; }                                                                                                   # get temp  cpu lines
 function fl1 { ll3           |flp "$g29" $1|grep -ai usb; }                                                                                                   # get error usb lines
-function fln { if [[ $2 ]];then egrep -ai "$g00$2";else egrep -aiv "$1";fi; }                                                                                 # get negate re syslog lines
-function flp { if [[ $2 ]];then egrep -ai "$g00$2";else egrep -ai  "$1"|grep -aiv "$g38";fi; }                                                                # get posite re syslog lines
-function tln { if [[ $2 ]];then egrep -ai "$g35$2";else egrep -aiv "$1";fi; }                                                                                 # get negate re syslog lines
-function pt0 { until [[ $# -le 1 || $1 =~ $g01 ]];do shift;done;printf %s $1; }                                                                               # yyyy-mm-dd test
-function pt1 { until [[ $# -le 1 || $1 =~ $g02 ]];do shift;done;printf %s $1; }                                                                               # hh:mm      test
-function pt2 { until [[ $# -le 1 || $1 =~ $g03 ]];do shift;done;printf %i $1; }                                                                               # integer    test
-function pt3 { until [[ $# -le 1 || $1 =~ $g04 ]];do shift;done;printf %s $1; }                                                                               # string     test
+function fln { if [[ $2 ]];then egrep -ai "^$g35 +$2";else egrep -aiv "$1";fi; }                                                                              # get negate re syslog lines
+function flp { if [[ $2 ]];then egrep -ai "^$g35 +$2";else egrep -ai  "$1"|grep -aiv "$g38";fi; }                                                             # get posite re syslog lines
+function tln { if [[ $2 ]];then egrep -ai "^$g02 +$2";else egrep -aiv "$1";fi; }                                                                              # get negate re syslog lines
+function pt0 { until [[ $# -le 1 || $1 =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]];do shift;done;printf %s $1; }                                                       # yyyy-mm-dd test
+function pt1 { until [[ $# -le 1 || $1 =~ ^[0-9]{2}:[0-9]{2}$          ]];do shift;done;printf %s $1; }                                                       # hh:mm      test
+function pt2 { until [[ $# -le 1 || $1 =~ ^[0-9]+$                     ]];do shift;done;printf %i $1; }                                                       # integer    test
+function pt3 { until [[ $# -le 1 || $1 =~ ^[a-z]+$                     ]];do shift;done;printf %s $1; }                                                       # string     test
 function ss1 { $s01 $1 2>$p03|sed -En "s%.*$2[ =](${3:-.}+).*%\1%p" 2>$p03; }                                                                                 # systemctl status 1 extraction
 function ss2 { $s01 $1 2>$p03|sed -En "$e57"   2>$p03|sed -E "$e58" 2>$p03|cut -c1-40; }                                                                      # systemctl status 2 extraction
 function ss3 { if tsa $1;then ss1 $1 Memory:                     ;else printf 0.0K   ;fi; }                                                                   # systemctl status Memory extraction
@@ -206,7 +206,7 @@ function bl1 {                                                                  
   z4=${4:-$(echo "$l0"|grep ' INFO '   |wc -l)};z5=${5:-$(bl4 success)};ok=${6:-OK}                                                                           # set info lines,success activities
 }
 function bl2 { zk=${1:-$(bl4 missing)};zz=${2:-$(bl4 target)};zx=${3:-$(bl4 head)};zw=${4:-$(bl4 had)}; }                                                     # set missing/target/head/had activities
-function bl3 { b0=${1:-$(ll2 "$g08.*$g05"|wc -l)};if [[ $2$3$4$5$6$7 ]];then i0=$2;i1=$3;i4=$4;b1=$5;i2=$6;i3=$7;else svi $n21;fi; }                          # set pub-blocks & imported/observed delays
+function bl3 { b0=${1:-$(ll2 "$g08.*$g46"|wc -l)};if [[ $2$3$4$5$6$7 ]];then i0=$2;i1=$3;i4=$4;b1=$5;i2=$6;i3=$7;else svi $n21;fi; }                          # set pub-blocks & imported/observed delays
 function bl4 { echo "$l3"|sed -En "s%.*$1.*validators: *\[(.*)\].*%\1%p"|wc -w; }                                                                             # get number of paid activities
 function ml0 { dts;if tsa $s14;then smm $n32;mlo;else m="MSRV NOT ON $dt";fi; }
 function vl0 { dts;if tsa $s13;then svv $n22;vlo;else m="VSRV NOT ON $dt";fi; }
@@ -462,7 +462,7 @@ function hsv { sso VALI $s13; }
 function hsm { sso MEVB $s14; }
 function hs0 { echo $1;if [[ $cunm = $1 ]];then hsg;hsu;hst;hsb;hsv;hsm;cpe;else ssh $(snc $1) "$p53 hse";ssh $(snc $1) "$p53 hsc";fi; }
 function nsh { $s08 list;$s08 status;$s09 status|sed -En "$e26"; }                                                                                            # network/dns info
-function wlp { local e="$1";shift;until [[ $# -lt 1 ]];do e="$e\|$1";shift;done;ll3|grep '\[UFW'|if [[ $e ]];then grep -v "$e";else cat;fi; }
+function wlp { local e="$1";shift;until [[ $# -lt 1 ]];do e="$e|$1";shift;done;ll3|grep 'UFW BLOCK'|if [[ $e ]];then egrep -v "$e";else cat;fi; }
 function c0c { local e="$e11";[[ $(sed -n "$e12" $p04/$s12.service 2>$p03) = $zip1 ]] && e="$e10";sed "$e" $s12.sav > $p04/$s12.service; }                    # cc change el server
 function ble { sft $s12 || return;cp $p04/$s12.service $p02/$s12.sav;sed "$1" $p02/$s12.sav > $p04/$s12.service;dmr; }                                        # cc service edit
 function cce { sft $s12 || return;cp $p04/$s12.service $p02/$s12.sav;c0c;cmw $p04/$s12.service 644 eth; }                                                     # cc change el server (merge)
