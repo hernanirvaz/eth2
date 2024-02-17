@@ -26,9 +26,9 @@ function ln3 { l6=$(ll2 "$2.*$1");ln1 $1; }                                     
 function ln4 { if g0t $3;then l6=$(ll2 "$2.*$1"|tail -n$3);else l6=$(ll2 "$2.*$1");fi;ln1 $1; }                                                               # get numbers tail syslog lines
 function fl0 { ll3|tail -n300|flp "Core.*temperature" $1; }                                                                                                   # get temp  cpu lines
 function fl1 { ll3           |flp "$g29" $1|grep -ai usb; }                                                                                                   # get error usb lines
-function fln { if [[ $2 ]];then egrep -ai "^$g35 +$2";else egrep -aiv "$1";fi; }                                                                              # get negate re syslog lines
-function flp { if [[ $2 ]];then egrep -ai "^$g35 +$2";else egrep -ai  "$1"|grep -aiv "$g38";fi; }                                                             # get posite re syslog lines
-function tln { if [[ $2 ]];then egrep -ai "^$g02 +$2";else egrep -aiv "$1";fi; }                                                                              # get negate re syslog lines
+function fln { if [[ $2 ]];then egrep -ai "^$g35$2";else egrep -aiv "$1";fi; }                                                                                # get negate re syslog lines
+function flp { if [[ $2 ]];then egrep -ai "^$g35$2";else egrep -ai  "$1"|grep -aiv "$g38";fi; }                                                               # get posite re syslog lines
+function tln { if [[ $2 ]];then egrep -ai "^$g02$2";else egrep -aiv "$1";fi; }                                                                                # get negate re syslog lines
 function pt0 { until [[ $# -le 1 || $1 =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]];do shift;done;printf %s $1; }                                                       # yyyy-mm-dd test
 function pt1 { until [[ $# -le 1 || $1 =~ ^[0-9]{2}:[0-9]{2}$          ]];do shift;done;printf %s $1; }                                                       # hh:mm      test
 function pt2 { until [[ $# -le 1 || $1 =~ ^[0-9]+$                     ]];do shift;done;printf %i $1; }                                                       # integer    test
