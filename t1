@@ -12,10 +12,6 @@ iip6='192.168.8.40' ;inm6='hrv-intel6'
 vip1='141.95.64.32' ;vnd1='ns3204840.ip-141-95-64.eu'   ;vnm1=${vnd1%%.*};vis1='192.168.8.1'
 vip2='57.129.28.225';vnd2='ns3053175.ip-57-129-28.eu'   ;vnm2=${vnd2%%.*};vis2='192.168.8.2'
 vip3='161.97.85.32' ;vnd3='vmi1007895.contaboserver.net';vnm3=${vnd3%%.*};vis3='192.168.8.3'
-ciec=$iip6;cicc=$iip6
-if [[ $cunm = $inm5 ]];then ciec=$iip5;cicc=$iip5;fi
-if [[ $cunm = $vnm1 ]];then ciec=$vis1;cicc=$vis1;fi
-if [[ $cunm = $vnm2 ]];then ciec=$vis2;cicc=$vis2;fi
 cuvc=$znm4
 nxvc=$znm4
 cun1=$inm5
@@ -298,9 +294,10 @@ s26='0x534029B6371dc4453DD750Bc1198181F55C859fe'
 s27="--connection=http://$zip4:5052 --allow-insecure-connections"
 s28='Content-Type: application/json'
 s29='offline-preparation'
-s30='change-operations'
-s31='timesync'
-s32="http://$cicc:5052/eth/v1/validator/duties"
+case $cunm in $inm5) s33=$iip5;;$vnm1) s33=$vis1;;$vnm2) s33=$vis2;;*) s33=$iip6;;esac
+s30="http://$s33:8545"
+s31="http://$s33:5052/eth/v1/node"
+s32="http://$s33:5052/eth/v1/validator/duties"
 s33='https://boost-relay.flashbots.net/relay/v1/data/validator_registration?pubkey'
 s34='.data[].slot'
 s35='.data[].validator_index'
@@ -407,6 +404,8 @@ s43=''
 [[ $cunm = $inm6 ]] && s43="$s43\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int5\n  Port 2025\n  IdentityFile ~/.ssh/id_ed25519"
 s43="$s43\nHost ns3204840.ip-141-95-64.eu\n  Port 2020\n  IdentityFile ~/.ssh/id_ed25519\n\n"
 s44='eth-nethermind'
+s45='timesync'
+s46='change-operations'
 
 n00=84
 n01=84

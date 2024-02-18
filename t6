@@ -113,7 +113,7 @@ function grs {
 }
 function gdi { if g0t $1;then l4=$(ll2 "$g12"|tail -n$1);else l4=$(ll2 "$g12");fi;e1=$(nu5 3 $(ln2 "${w0}elapsed= *$w2")); }                                  # get delay imported
 function gdu { if g0t $1;then l4=$(ll2 "$g21"|tail -n$1);else l4=$(ll2 "$g21");fi;e2=$(nu5 3 $(ln2 "${w0}elapsed= *$w2")); }                                  # get delay Chain head was updated
-function gcl { $p00/geth attach --exec $1 "http://$ciec:8545" 2>$p03; }                                                                                       # exec RPC HTTP
+function gcl { $p00/geth attach --exec $1 $s30 2>$p03; }                                                                                                      # exec RPC HTTP
 function gi0 { nu0 $(echo $@|sed -En "$e61" 2>$p03); }                                                                                                        # get el highest block
 function gc0 { nu0 $(echo $@|sed -En "$e62" 2>$p03); }                                                                                                        # get el current block
 function gv0 { en=$(ss5 $s10 maxpeers); }                                                                                                                     # set configured peers
@@ -137,7 +137,7 @@ function trs {
   fi;done;rm -f $p50 $p63.*
 }
 function tdi { if g0t $1;then l4=$(ll6 "$g37"|tail -n$1);else l4=$(ll6 "$g37");fi;e1=$(nu5 2 $(ln2 "${w0}\| *$w4$w5"));e2=$(nu2 "$(nu5 2 $(ln2 "${w0}slot *$w4$w5"))/1000"); }
-function tcl { curl "http://$ciec:8545" -sX POST -H "Content-Type: application/json" --data "{\"jsonrpc\":\"2.0\",\"method\":\"$1\",\"params\":[],\"id\":0}" 2>$p03|jq -r .result; }
+function tcl { curl $s30 -sX POST -H "Content-Type: application/json" --data "{\"jsonrpc\":\"2.0\",\"method\":\"$1\",\"params\":[],\"id\":0}" 2>$p03|jq -r .result; }
 function tv0 { en=$(ss5 $s44 MaxActivePeers); }
 function tq0 { er=$(nu0 $(tcl net_peerCount)); }
 function tnn { esn $(ln3 "$g39" $g10) $(nu0 $(tcl net_peerCount));tdi $1; }
@@ -159,7 +159,7 @@ function urs {
   fi;done;rm -f $p50 $p41.*
 }
 function udi { if g0t $1;then l4=$(ll2 "$g12"|tail -n$1);else l4=$(ll2 "$g12");fi;e1=$(nu5 3 $(ln2 "${w0} in $w2")); }                                        # get delay imported
-function ucl { curl -sX POST --data "{\"jsonrpc\":\"2.0\",\"method\":\"$1\",\"params\":[],\"id\":51}" "http://$ciec:8545" 2>$p03; }                           # exec RPC HTTP
+function ucl { curl -sX POST --data "{\"jsonrpc\":\"2.0\",\"method\":\"$1\",\"params\":[],\"id\":51}" $s30 2>$p03; }                                          # exec RPC HTTP
 function ui0 { nu0 $((16#$(nu0 $(echo $@|sed -En "$e63" 2>$p03)))); }                                                                                         # get el highest block
 function uc0 { nu0 $((16#$(nu0 $(echo $@|sed -En "$e64" 2>$p03)))); }                                                                                         # get el current block
 function up0 { nu0 $((16#$(nu0 $(echo $@|sed -En "$e56" 2>$p03)))); }                                                                                         # get el result
@@ -177,7 +177,7 @@ function ul0 {                                                                  
   fi
 }
 # cc control commands
-function bcl { curl -sX GET "http://$cicc:5052/eth/v1/node/$1" -H "accept: application/json" 2>$p03; }                                                        # exec RPC HTTP
+function bcl { curl -sX GET "$s31/$1" -H "accept: application/json" 2>$p03; }                                                                                 # exec RPC HTTP
 function ei0 { nu2 "(0.823*$e1+0.177*$e2)"                                            ; }                                                                     # get imported/updated/rejected data
 function bi0 { nu2 "0.4*$b3+0.6*$nn"                                                  ; }                                                                     # get change peers limit
 function bi1 { nu2 "(0.798*$i0+0.050*$i1+0.100*$i4+0.001*$b1+0.001*$i2+0.050*$i3)"    ; }                                                                     # get imported/observed/skipped/reorg/http/pscore data
@@ -344,7 +344,7 @@ function cl5 { printf "server: $(cl3 ${1:1}) offset: ${9}ms delay: ${8}ms jitter
 function clk {
   if [[ $($s07|sed -En "$e54") = yes ]];then local e='OK';else local e='NO';fi
   if tsa $s19;then
-    local e="CSYS $e";m="$(printf '%-40s' "$(ss2 $s19)" 2>$p03) $(cl4 $($s07 $s31-status|sed -En "$e48"))"
+    local e="CSYS $e";m="$(printf '%-40s' "$(ss2 $s19)" 2>$p03) $(cl4 $($s07 $s45-status|sed -En "$e48"))"
   else
     local e="CNTP $e";m="$(printf '%-40s' "$(ss2 ntp)"  2>$p03) $(cl5 $(ntpq -pn|grep '^*[0-9]'))"
   fi;dts
@@ -369,7 +369,8 @@ function cpe {
   m=$(sll|sed -E "$e30");if [[ $m ]];then local i=$(echo "$m"|wc -l);local e=$(echo "$m"|tail -n1);else local i=0;local e=;fi;m=;local n=0;local d=;local l=ou
   if [[ ! $m ]];then if [[ $cunm = $cuvc || $cunm = $cun1 || $cunm = $cun2 || $cunm = $vnm1 || $cunm = $vnm2 ]];then m=$(cll "$e50;$e31");local l=cl;fi;fi
   if [[ ! $m ]];then if [[ $cunm = $cun1 || $cunm = $cun2                  || $cunm = $vnm1 || $cunm = $vnm2 ]];then m=$(ell "$e50;$e31");local l=el;fi;fi
-  if [[ ! $m ]];then if [[ $cunm = $cumv                                   || $cunm = $vnm1 || $cunm = $vnm2 ]];then m=$(rll "$e51;$e31");local l=rl;fi;fi
+# if [[ ! $m ]];then if [[ $cunm = $cumv                                   || $cunm = $vnm1 || $cunm = $vnm2 ]];then m=$(rll "$e51;$e31");local l=rl;fi;fi
+  if [[ ! $m ]];then if [[                  $cunm = $cun1 || $cunm = $cun2 || $cunm = $vnm1 || $cunm = $vnm2 ]];then m=$(rll "$e51;$e31");local l=rl;fi;fi
   if [[ ! $m ]];then local n=0;local d=;else local n=$(echo "$m"|wc -l);local d=$(echo "$m"|tail -n1);fi
   m="ERRO$(printf '%3i%4i %10s %5s' $i $n $dt 2>$p03)"
   if g0t $i;then if g0t $n;then m="$m sl: ${e:0:53}";m="$m $l: ${d:0:54}";else m="$m sl: ${e:0:112}";fi;else if g0t $n;then m="$m $l: ${d:0:112}";fi;fi
@@ -518,11 +519,12 @@ function gp0 { if tsa $s10;then bp;gp;local i=$(pt2 $(pex "du -s $p08"));sudo -u
 # offset The mean time offset. (ms)
 # delay  This is the mean execution time required to send a request to the time source, and receive the reply from that source. (ms)
 # jitter This indicates how much packet delays from individual pollings vary from the mean packet delay. (ms)
-function hsh { if tsa $s19;then cex "$s07 $s31-status";cex "$s07 show-$s31";else swb ntpq;ntpq -p;fi; }
+function hsh { if tsa $s19;then cex "$s07 $s45-status";cex "$s07 show-$s45";else swb ntpq;ntpq -p;fi; }
 
 function wpf { if tsa $s44;then ll6 "$g43";fi;ll2 "$g15"|fln "$g33"; }
 function wpe { wpf|sed -E "$e52"|sort -t: -k2n -k3n -k4n; }
-function apf { if n1t;then wpe          ;else ssh $(snc $cun1) "$p53 bp"   ;fi;if n2t;then wpe          ;else ssh $(snc $cun2) "$p53 bp"   ;fi;if vct;then wpe          ;else ssh $(snc $cuvc) "$p53 bp"   ;fi;if mct;then wpe;else ssh $(snc $cumv) "$p53 bp";fi; }
+#function apf { if n1t;then wpe          ;else ssh $(snc $cun1) "$p53 bp"   ;fi;if n2t;then wpe          ;else ssh $(snc $cun2) "$p53 bp"   ;fi;if vct;then wpe          ;else ssh $(snc $cuvc) "$p53 bp"   ;fi;if mct;then wpe;else ssh $(snc $cumv) "$p53 bp";fi; }
+function apf { if n1t;then wpe          ;else ssh $(snc $cun1) "$p53 bp"   ;fi;if n2t;then wpe          ;else ssh $(snc $cun2) "$p53 bp"   ;fi;if vct;then wpe          ;else ssh $(snc $cuvc) "$p53 bp"   ;fi; }
 function caa { if n1t;then cll "$e50" $1;else ssh $(snc $cun1) "$p53 cl $1";fi;if n2t;then cll "$e50" $1;else ssh $(snc $cun2) "$p53 cl $1";fi;if vct;then cll "$e50" $1;else ssh $(snc $cuvc) "$p53 cl $1";fi; }
 function eaa { if n1t;then ell "$e50" $1;else ssh $(snc $cun1) "$p53 el $1";fi;if n2t;then ell "$e50" $1;else ssh $(snc $cun2) "$p53 el $1";fi; }
 function laa { caa $1;eaa $1; }
@@ -604,7 +606,8 @@ function esp { if tsa $s44;then ll2 "$g11.*$g39"|sed -E "$e67";else ll2 "$g11.*$
 [[ $1 = bh  ]] && { bh0 $2; }
 [[ $1 = vh  ]] && { sh0 $p49 $2;[[ $2 ]] || { vl0;swn "VL $(printf '%8i' $(llc $p49) 2>$p03)\n$m"; } }
 [[ $1 = mh  ]] && { sh0 $p52 $2;[[ $2 ]] || { ml0;swn "ML $(printf '%8i' $(llc $p52) 2>$p03)\n$m"; } }
-[[ $1 = hs0 ]] && { if n1t;then if vct;then hsv;cpe;else echo $cuvc;ssh $(snc $cuvc) "$p53 hsv";fi;hs0 $cun1;hs0 $cun2;if mct;then hsm;cpe;else echo $cumv;ssh $(snc $cumv) "$p53 hsm";fi;if z1t;then cpe;else echo $cunt;ssh $(snc $cunt) "$p53 cpe";fi;else hs0 $cunm;fi; }
+#[[ $1 = hs0 ]] && { if n1t;then if vct;then hsv;cpe;else echo $cuvc;ssh $(snc $cuvc) "$p53 hsv";fi;hs0 $cun1;hs0 $cun2;if mct;then hsm;cpe;else echo $cumv;ssh $(snc $cumv) "$p53 hsm";fi;if z1t;then cpe;else echo $cunt;ssh $(snc $cunt) "$p53 cpe";fi;else hs0 $cunm;fi; }
+[[ $1 = hs0 ]] && { if n1t;then if vct;then hsv;cpe;else echo $cuvc;ssh $(snc $cuvc) "$p53 hsv";fi;hs0 $cun1;hs0 $cun2;if z1t;then cpe;else echo $cunt;ssh $(snc $cunt) "$p53 cpe";fi;else hs0 $cunm;fi; }
 [[ $1 = hs1 ]] && { hs0 $cun1; }
 [[ $1 = hs2 ]] && { hs0 $cun2; }
 [[ $1 = hse ]] && { hsg;hsu;hst; }
