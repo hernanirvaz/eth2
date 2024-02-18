@@ -375,7 +375,7 @@ function cpe {
   if [[ ! $m ]];then if ict;then m=$(cll "$e50;$e31");local l=cl;fi;fi
   if [[ ! $m ]];then if iet;then m=$(ell "$e50;$e31");local l=el;fi;fi
   if [[ ! $m ]];then if irt;then m=$(rll "$e51;$e31");local l=rl;fi;fi
-  if [[ ! $m ]];then local n=0;local d=;else local n=$(echo "$m"|wc -l);local d=$(echo "$m"|tail -n1);fi
+  if [[ ! $m ]];then local n=0;local d=;else local n=$(lll|wc -l);local d=$(echo "$m"|tail -n1);fi
   m="ERRO$(printf '%3i%4i %10s %5s' $i $n $dt 2>$p03)"
   if g0t $i;then if g0t $n;then m="$m sl: ${e:0:53}";m="$m $l: ${d:0:54}";else m="$m sl: ${e:0:112}";fi;else if g0t $n;then m="$m $l: ${d:0:112}";fi;fi
   (( i+n )) && swn "$m";m=
