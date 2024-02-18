@@ -402,7 +402,8 @@ s43=''
 [[ $cunm = $znm4 ]] && s43="$s43\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int5\n  Port 2025\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int6\n  Port 2026\n  IdentityFile ~/.ssh/id_ed25519"
 [[ $cunm = $inm5 ]] && s43="$s43\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int6\n  Port 2026\n  IdentityFile ~/.ssh/id_ed25519"
 [[ $cunm = $inm6 ]] && s43="$s43\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int5\n  Port 2025\n  IdentityFile ~/.ssh/id_ed25519"
-s43="$s43\nHost ns3204840.ip-141-95-64.eu\n  Port 2020\n  IdentityFile ~/.ssh/id_ed25519\n\n"
+s43="$s43\n\nHost ns3204840.ip-141-95-64.eu\n  Port 2020\n  IdentityFile ~/.ssh/id_ed25519"
+s43="$s43\n\nHost ns3053175.ip-57-129-28.eu\n  Port 2020\n  IdentityFile ~/.ssh/id_ed25519"
 s44='eth-nethermind'
 s45='timesync'
 s46='change-operations'

@@ -57,6 +57,11 @@ function n2t { [[ $cunm = $cun2 ]]; }
 function vct { [[ $cunm = $cuvc ]]; }
 function mct { [[ $cunm = $cumv ]]; }
 function i5t { [[ $cunm = $inm5 ]]; }
+function ict { [[ $cunm = $cuvc || $cunm = $cun1 || $cunm = $cun2 || $cunm = $vnm1 || $cunm = $vnm2 ]]; }
+function iet { [[ $cunm = $cun1 || $cunm = $cun2                  || $cunm = $vnm1 || $cunm = $vnm2 ]]; }
+#function irt { [[ $cunm = $cumv                                   || $cunm = $vnm1 || $cunm = $vnm2 ]]; }
+function irt { [[                  $cunm = $cun1 || $cunm = $cun2 || $cunm = $vnm1 || $cunm = $vnm2 ]]; }
+function ilt { [[ $cunm = $znm4 || $cunm = $vnm1 || $cunm = $vnm2 ]]; }
 function rbt { [[ $(sra) -ge $((60*60*${1:-9})) ]]; }
 function ipt { [[ $(date +%s) -ge $(bss $1 6) ]]; }
 function pct { [[ $b4 -ne 0 ]]; }
@@ -367,10 +372,9 @@ function rll { ll2 "$g09"|fln "$g25" $2|if [[ $1 ]];then sed -E "$1";else cat;fi
 function cpe {
   clk;[[ $1 = c ]] && return;tmp;[[ $1 = p ]] && return;sif $1
   m=$(sll|sed -E "$e30");if [[ $m ]];then local i=$(echo "$m"|wc -l);local e=$(echo "$m"|tail -n1);else local i=0;local e=;fi;m=;local n=0;local d=;local l=ou
-  if [[ ! $m ]];then if [[ $cunm = $cuvc || $cunm = $cun1 || $cunm = $cun2 || $cunm = $vnm1 || $cunm = $vnm2 ]];then m=$(cll "$e50;$e31");local l=cl;fi;fi
-  if [[ ! $m ]];then if [[ $cunm = $cun1 || $cunm = $cun2                  || $cunm = $vnm1 || $cunm = $vnm2 ]];then m=$(ell "$e50;$e31");local l=el;fi;fi
-# if [[ ! $m ]];then if [[ $cunm = $cumv                                   || $cunm = $vnm1 || $cunm = $vnm2 ]];then m=$(rll "$e51;$e31");local l=rl;fi;fi
-  if [[ ! $m ]];then if [[                  $cunm = $cun1 || $cunm = $cun2 || $cunm = $vnm1 || $cunm = $vnm2 ]];then m=$(rll "$e51;$e31");local l=rl;fi;fi
+  if [[ ! $m ]];then if ict;then m=$(cll "$e50;$e31");local l=cl;fi;fi
+  if [[ ! $m ]];then if iet;then m=$(ell "$e50;$e31");local l=el;fi;fi
+  if [[ ! $m ]];then if irt;then m=$(rll "$e51;$e31");local l=rl;fi;fi
   if [[ ! $m ]];then local n=0;local d=;else local n=$(echo "$m"|wc -l);local d=$(echo "$m"|tail -n1);fi
   m="ERRO$(printf '%3i%4i %10s %5s' $i $n $dt 2>$p03)"
   if g0t $i;then if g0t $n;then m="$m sl: ${e:0:53}";m="$m $l: ${d:0:54}";else m="$m sl: ${e:0:112}";fi;else if g0t $n;then m="$m $l: ${d:0:112}";fi;fi
@@ -473,7 +477,7 @@ function nrs { nex 'netplan apply';dpa; }                                       
 function lcp { local f=$1;shift;[[ -x $f ]] && until [[ $# -lt 1 ]];do if [[ $1 = $(snc $cunm) ]];then lci $f;else scp $f $1:$p02;fi;shift;done; }            # propagate lighthouse
 function lci { [[ -x $1 && ! -d $1   ]] || return;sex "mv $p00/lighthouse $p00/lighthouse.sav";sex "cp $1 $p00"; }                                            # lighthouse binary install
 function lmd { [[ -x $p00/lighthouse ]] || return;cmw $p00/lighthouse 755 eth;swb 'LIGHT INSTALADO'; }                                                        # lighthouse set permissions
-function lpi { [[ $cunm = $znm4 || $cunm = $vnm1 || $cunm = $vnm2 ]] && lcp $1 $cunm;i5t && lcp $1 int5 int6;lci $p02/lighthouse;sex "rm $p02/lighthouse";lmd; }
+function lpi { ilt && lcp $1 $cunm;i5t && lcp $1 int5 int6;lci $p02/lighthouse;sex "rm $p02/lighthouse";lmd; }
 function luc {                                                                                                                                                # lighthouse upgrade/compile
   if fft $p06/lighthouse/README.md;then
     cd $p06/lighthouse;make clean;cargo clean                                                                                                                 # clean compile dirs
