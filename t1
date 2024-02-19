@@ -115,7 +115,7 @@ g26="$g25| DEBG "
 g27='reorg_distance:'
 g28='success'
 g29='error'
-g30="$g25| $g27 "
+g30='WARN Beacon chain re-org'
 g31='latency:'
 g32='time_taken_ms:'
 g33='(request was cancelled|error making request to relay|Invalid execution payload)'
@@ -132,6 +132,13 @@ g43="$g36.*(Produced block|Improved post-merge block|GetPayloadV2|PayloadId|Payl
 g44='INFO Successfully published block'
 g45='attestations:'
 g46='Block from API'
+g47="error calling registerValidator on relay"
+g48="$g25|$g30"
+g49="$g48|$g47"
+g50="$g08.*$g40"
+g51="$g09.*$g34"
+g52="$g09.*$g47"
+g53="$g08.*$g30"
 
 e00="s%^ *#* *NTP *=.*$%NTP=$zip1 $zip2 time.google.com time.cloudflare.com time.facebook.com%i";if [[ $cunm = $cuvc || $cunm = $cun1 || $cunm = $cun2 || $cunm = $cumv ]];then e00="${e00};s%^ *#* *PollIntervalMaxSec *=.*$%PollIntervalMaxSec=1200%i";fi
 e01='s%^ *ENABLED=.*$%ENABLED=0%i'
