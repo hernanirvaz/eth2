@@ -59,8 +59,7 @@ function mct { [[ $cunm = $cumv ]]; }
 function i5t { [[ $cunm = $inm5 ]]; }
 function ict { [[ $cunm = $cuvc || $cunm = $cun1 || $cunm = $cun2 || $cunm = $vnm1 || $cunm = $vnm2 ]]; }
 function iet { [[ $cunm = $cun1 || $cunm = $cun2                  || $cunm = $vnm1 || $cunm = $vnm2 ]]; }
-#function irt { [[ $cunm = $cumv                                   || $cunm = $vnm1 || $cunm = $vnm2 ]]; }
-function irt { [[                  $cunm = $cun1 || $cunm = $cun2 || $cunm = $vnm1 || $cunm = $vnm2 ]]; }
+function irt { [[ $cunm = $cumv                                   || $cunm = $vnm1 || $cunm = $vnm2 ]]; }
 function ilt { [[ $cunm = $znm4 || $cunm = $vnm1 || $cunm = $vnm2 ]]; }
 function rbt { [[ $(sra) -ge $((60*60*${1:-9})) ]]; }
 function ipt { [[ $(date +%s) -ge $(bss $1 6) ]]; }
@@ -527,8 +526,7 @@ function hsh { if tsa $s19;then cex "$s07 $s45-status";cex "$s07 show-$s45";else
 
 function wpf { if tsa $s44;then ll6 "$g43";fi;ll2 "$g15"|fln "$g33"; }
 function wpe { wpf|sed -E "$e52"|sort -t: -k2n -k3n -k4n; }
-#function apf { if n1t;then wpe          ;else ssh $(snc $cun1) "$p53 bp"   ;fi;if n2t;then wpe          ;else ssh $(snc $cun2) "$p53 bp"   ;fi;if vct;then wpe          ;else ssh $(snc $cuvc) "$p53 bp"   ;fi;if mct;then wpe;else ssh $(snc $cumv) "$p53 bp";fi; }
-function apf { if n1t;then wpe          ;else ssh $(snc $cun1) "$p53 bp"   ;fi;if n2t;then wpe          ;else ssh $(snc $cun2) "$p53 bp"   ;fi;if vct;then wpe          ;else ssh $(snc $cuvc) "$p53 bp"   ;fi; }
+function apf { if n1t;then wpe          ;else ssh $(snc $cun1) "$p53 bp"   ;fi;if n2t;then wpe          ;else ssh $(snc $cun2) "$p53 bp"   ;fi;if vct;then wpe          ;else ssh $(snc $cuvc) "$p53 bp"   ;fi;if mct;then wpe;else ssh $(snc $cumv) "$p53 bp";fi; }
 function caa { if n1t;then cll "$e50" $1;else ssh $(snc $cun1) "$p53 cl $1";fi;if n2t;then cll "$e50" $1;else ssh $(snc $cun2) "$p53 cl $1";fi;if vct;then cll "$e50" $1;else ssh $(snc $cuvc) "$p53 cl $1";fi; }
 function eaa { if n1t;then ell "$e50" $1;else ssh $(snc $cun1) "$p53 el $1";fi;if n2t;then ell "$e50" $1;else ssh $(snc $cun2) "$p53 el $1";fi; }
 function laa { caa $1;eaa $1; }
@@ -610,8 +608,7 @@ function esp { if tsa $s44;then ll2 "$g11.*$g39"|sed -E "$e67";else ll2 "$g11.*$
 [[ $1 = bh  ]] && { bh0 $2; }
 [[ $1 = vh  ]] && { sh0 $p49 $2;[[ $2 ]] || { vl0;swn "VL $(printf '%8i' $(llc $p49) 2>$p03)\n$m"; } }
 [[ $1 = mh  ]] && { sh0 $p52 $2;[[ $2 ]] || { ml0;swn "ML $(printf '%8i' $(llc $p52) 2>$p03)\n$m"; } }
-#[[ $1 = hs0 ]] && { if n1t;then if vct;then hsv;cpe;else echo $cuvc;ssh $(snc $cuvc) "$p53 hsv";fi;hs0 $cun1;hs0 $cun2;if mct;then hsm;cpe;else echo $cumv;ssh $(snc $cumv) "$p53 hsm";fi;if z1t;then cpe;else echo $cunt;ssh $(snc $cunt) "$p53 cpe";fi;else hs0 $cunm;fi; }
-[[ $1 = hs0 ]] && { if n1t;then if vct;then hsv;cpe;else echo $cuvc;ssh $(snc $cuvc) "$p53 hsv";fi;hs0 $cun1;hs0 $cun2;if z1t;then cpe;else echo $cunt;ssh $(snc $cunt) "$p53 cpe";fi;else hs0 $cunm;fi; }
+[[ $1 = hs0 ]] && { if n1t;then if vct;then hsv;cpe;else echo $cuvc;ssh $(snc $cuvc) "$p53 hsv";fi;hs0 $cun1;hs0 $cun2;if mct;then hsm;cpe;else echo $cumv;ssh $(snc $cumv) "$p53 hsm";fi;if z1t;then cpe;else echo $cunt;ssh $(snc $cunt) "$p53 cpe";fi;else hs0 $cunm;fi; }
 [[ $1 = hs1 ]] && { hs0 $cun1; }
 [[ $1 = hs2 ]] && { hs0 $cun2; }
 [[ $1 = hse ]] && { hsg;hsu;hst; }
