@@ -12,11 +12,11 @@ iip6='192.168.8.40' ;inm6='hrv-intel6'
 vip1='141.95.64.32' ;vnd1='ns3204840.ip-141-95-64.eu'   ;vnm1=${vnd1%%.*};vis1='192.168.8.1'
 vip2='57.129.28.225';vnd2='ns3053175.ip-57-129-28.eu'   ;vnm2=${vnd2%%.*};vis2='192.168.8.2'
 vip3='161.97.85.32' ;vnd3='vmi1007895.contaboserver.net';vnm3=${vnd3%%.*};vis3='192.168.8.3'
-cuvc=$znm4
-nxvc=$znm4
-cun1=$inm5
-cun2=$inm6
-cumv=$znm3
+cuvc=$vnm2
+nxvc=$vnm2
+cun1=$vnm2
+cun2=$vnm1
+cumv=$vnm1
 cunt=$znm1
 
 p00='/usr/local/bin'
@@ -510,9 +510,9 @@ function pde { local e="deny $1"                                  ;if [[ $3 ]];t
 function pai { local e="allow from $2 to any port ${1/\// proto }";if [[ $4 ]];then nex "ufw $4 $e";else nex "ufw $e comment $3";fi; }
 function pae { local e="allow $1"                                 ;if [[ $3 ]];then nex "ufw $3 $e";else nex "ufw $e comment $2";fi; }
 function ple { local e="limit $1"                                 ;if [[ $3 ]];then nex "ufw $3 $e";else nex "ufw $e comment $2";fi; }
-function sis { if [[ -f $1 ]];then sex "mv $1 $p17";swb "NEW $p18";touch $p05/vc_slash;cmw $p18 600 eth3;else swb "NO NEW $1";fi; }
 function sni { case $1 in $inm5) printf $iip5;;$inm6) printf $iip6;;$znm1) printf $zip1;;$znm2) printf $zip2;;$znm3) printf $zip3;;$znm4) printf $zip4;;$vnm1) printf $vis1;;$vnm2) printf $vis2;;$vnm3) printf $vis3;;esac; }
-function snc { if [[ ${1:0:3} = hrv ]];then printf ${1/[a-z]*-/}|tr -d '[aoel]';else printf $1;fi; }
+function snc { if [[ ${1:0:3} = hrv ]];then printf ${1/[a-z]*-/}|tr -d '[aoel]';else case $1 in $vnm1) printf $vnd1;;$vnm2) printf $vnd2;;$vnm3) printf $vnd3;;esac;fi; }
+function sis { if [[ -f $1 ]];then sex "mv $1 $p17";swb "NEW $p18";touch $p05/vc_slash;cmw $p18 600 eth3;else swb "NO NEW $1";fi; }
 function sjw { [[ $cunm = $inm5 || $cunm = $inm6 || $cunm = $vnm1 || $cunm = $vnm2 ]] || return;if [[ -d $p58 ]];then swn "JA EXISTE $p58/";else sex "mkdir -p $p58";cmw $p58 755 eth;fi;if [[ -f $p58/jwt ]];then swn "JA EXISTE $p58/jwt";else openssl rand -hex 32|tr -d '\n'|tee $p58/jwt 1>$p03;cmw $p58/jwt 444;fi;if [[ -f $p58/pubkeys ]];then swn "JA EXISTE $p58/pubkeys";else echo ${b[@]}|tr ' ' ',' > $p58/pubkeys;cmw $p58/pubkeys 400 eth2;fi; }
 function unv { local f=${1:-23.1.0};curl -LO https://hyperledger.jfrog.io/artifactory/besu-binaries/besu/$f/besu-$f.tar.gz;sha256sum besu-$f.tar.gz;swn "INSTALAR BESU $f (SIM/nao)?";local rsp=nao;read rsp;if [[ $rsp = SIM ]];then tar xvf besu-$f.tar.gz;sex "cp -a besu-$f $p00/besu";sex "chown eth1:eth1 -R $p00/besu";cmw $p00/besu 755 eth1;fi; }
 function gnv { local f="go${1:-1.20.5}.linux-amd64.tar.gz";swu "INSTALAR GO-LANG $f";cd $p02;sex "rm -f $f";wget -q https://go.dev/dl/$f;sex "rm -rf /usr/local/go";sex "tar -C /usr/local -xzf $f";echo 'if [ -d "/usr/local/go/bin" ];then PATH="$PATH:/usr/local/go/bin";fi' >> $p02/.profile; }

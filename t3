@@ -62,7 +62,7 @@ else
 	EOF
   sex "mv $s12.service $p04";cmw $p04/$s12.service 644
 fi
-if [[ $cunm = $znm1 || $cunm = $znm2 || $cunm = $znm3 || $cunm = $inm5 || $cunm = $inm6 || -f $p04/$s13.service ]];then
+if [[ $cunm = $znm1 || $cunm = $znm2 || $cunm = $znm3 || $cunm = $inm5 || $cunm = $inm6 || $cunm = $vnm1 || -f $p04/$s13.service ]];then
   if [[ -f $p04/$s13.service ]];then swu "vc ja instalado";else swu 'vc NAO PODE SER INSTALADO AQUI';fi
 else
   othe=''
@@ -70,7 +70,7 @@ else
   if [[ $cust = hrv ]];then
     othe="$othe --beacon-nodes http://$iip5:5052,http://$iip6:5052"
   else
-    othe="$othe --beacon-nodes http://$vip1:5052"
+    othe="$othe --beacon-nodes http://$vis2:5052,http://$vis1:5052"
   fi
   othe="$othe --suggested-fee-recipient $s26"                                                                                                                 # vc level fees
   othe="$othe --broadcast subscriptions,attestations,blocks,sync-committee"                                                                                   # broadcast to all beacon nodes

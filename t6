@@ -61,6 +61,8 @@ function ict { [[ $cunm = $cuvc || $cunm = $cun1 || $cunm = $cun2 || $cunm = $vn
 function iet { [[ $cunm = $cun1 || $cunm = $cun2                  || $cunm = $vnm1 || $cunm = $vnm2 ]]; }
 function irt { [[ $cunm = $cumv                                   || $cunm = $vnm1 || $cunm = $vnm2 ]]; }
 function ilt { [[ $cunm = $znm4 || $cunm = $vnm1 || $cunm = $vnm2 ]]; }
+function vst { [[ $cun1 != $cuvc && $cun2 != $cuvc ]]; }
+function mst { [[ $cun1 != $cumv && $cun2 != $cumv ]]; }
 function rbt { [[ $(sra) -ge $((60*60*${1:-9})) ]]; }
 function ipt { [[ $(date +%s) -ge $(bss $1 6) ]]; }
 function pct { [[ $b4 -ne 0 ]]; }
@@ -219,7 +221,7 @@ function vl0 { dts;if tsa $s13;then svv $n22;vlo;else m="VSRV NOT ON $dt";fi; }
 function mlo { m="MEVB $(printf '%6i' $(ll2 "$g09"|fln "$g25"|wc -l) 2>$p03) $dt $(printf 'http_avg: %3i erro_rv: %3i' $m0 $m1 2>$p03)"; }
 #    0  1              2     3     4   5     6   7
 # VALI OK     2023-06-03 20:49 int5: 700 ztc4: 240
-function vlo { m="VALI $(printf '%6i' $(ll4|fln "$g26"|wc -l) 2>$p03) $dt $(printf '%s: %2i %s: %2i casp: %2i atts: %3i' $(snc $cun1) $v0 $(snc $cun2) $v1 $v2 $v3 2>$p03)"; }
+function vlo { m="VALI $(printf '%6i' $(ll4|fln "$g26"|wc -l) 2>$p03) $dt $(printf '%s: %2i %s: %2i casp: %2i atts: %3i' $cun1 $v0 $cun2 $v1 $v2 $v3 2>$p03)"; }
 #    0  1   2          3     4       5  6   7    8    9  10   11  12 13  14 15 16  17 18 19  20  21 22   23   24     25    26   27   28 29   30  31   32
 # BEAC OK   0 2023-10-25 17:12 node70: 77 rp: 3056 2232 ab: 4021  687 0 er:  4  7  83 26  0 201   0  0 1000    0 iosrhp:  712 3585 2994 21 3797  61 1282
 function blo {
@@ -608,7 +610,7 @@ function esp { if tsa $s44;then ll2 "$g11.*$g39"|sed -E "$e67";else ll2 "$g11.*$
 [[ $1 = bh  ]] && { bh0 $2; }
 [[ $1 = vh  ]] && { sh0 $p49 $2;[[ $2 ]] || { vl0;swn "VL $(printf '%8i' $(llc $p49) 2>$p03)\n$m"; } }
 [[ $1 = mh  ]] && { sh0 $p52 $2;[[ $2 ]] || { ml0;swn "ML $(printf '%8i' $(llc $p52) 2>$p03)\n$m"; } }
-[[ $1 = hs0 ]] && { if n1t;then if vct;then hsv;cpe;else echo $cuvc;ssh $(snc $cuvc) "$p53 hsv";fi;hs0 $cun1;hs0 $cun2;if mct;then hsm;cpe;else echo $cumv;ssh $(snc $cumv) "$p53 hsm";fi;if z1t;then cpe;else echo $cunt;ssh $(snc $cunt) "$p53 cpe";fi;else hs0 $cunm;fi; }
+[[ $1 = hs0 ]] && { if n1t;then if vst;then if vct;then hsv;cpe;else echo $cuvc;ssh $(snc $cuvc) "$p53 hsv";fi;fi;hs0 $cun1;hs0 $cun2;if mst;then if mct;then hsm;cpe;else echo $cumv;ssh $(snc $cumv) "$p53 hsm";fi;fi;if [[ $cust = hrv ]];then if z1t;then cpe;else echo $cunt;ssh $(snc $cunt) "$p53 cpe";fi;fi;else hs0 $cunm;fi; }
 [[ $1 = hs1 ]] && { hs0 $cun1; }
 [[ $1 = hs2 ]] && { hs0 $cun2; }
 [[ $1 = hse ]] && { hsg;hsu;hst; }
