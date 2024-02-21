@@ -7,7 +7,7 @@ nnv N $1 $2
 maxp=10
 pp2p=30303;ndp || pp2p=30304
 abrb=11052984
-nimh=8 # Gb
+nimh=4 # Gb
 apip='127.0.0.1';if [[ $cunm = $inm5 ]];then apip="$iip5";else apip="$iip6";fi
 othe=''
 othe="$othe --Network.MaxActivePeers $maxp"
