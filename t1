@@ -430,8 +430,8 @@ n12=24
 n13=42
 n14=7128
 n15=100000
-n16=20
-n17=80
+n16=40
+n17=100
 n18=10
 n19=70
 n20=4000
@@ -448,6 +448,8 @@ n30=4000;[[ $n30 -eq 0 ]] && n30=$(curl -sX GET 'https://pro-api.coinmarketcap.c
 n31=$($s01 $s12 2>$p03|sed -n 's%.*PID: *\([0-9]*\).*%\1%p')
 n32=4
 n33=30
+n34=10
+n35=50
 
 j0='.ata_sct_temperature_history.table|join(" ")'
 j1='.temperature.current'

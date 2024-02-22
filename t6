@@ -113,7 +113,7 @@ function sso { tse $2 || return;dts;local e="$1 $(printf '%6s %10s %5s %-40s' $(
 function grs {
   s2t $p40 && return;gv0;gq0;ero $1 0 $p10;touch $p40.a$(stg);ssw $3 $p40;s1t $p40 && return
   local t=$(sng);local f=$p40.i$(stg);touch $f;local n=0;paf;while fft $f;do ((n+=$(sfn $t)));ssf $(sfn $t) $p40 $t
-  if ipt $t;then rm $f;snp $s10 $2 10 50 $en
+  if ipt $t;then rm $f;snp $s10 $2 $n34 $n35 $en
     if [[ $1 = RB ]];then ero $1 $n $p10;rm -f $p50 $p40.*;sex reboot;else sex "$s03 $s10";ssf 90 $p40;gq0;ero $1 $n $p10;fi
   fi;done;rm -f $p50 $p40.*
 }
@@ -138,7 +138,7 @@ function gl0 {                                                                  
 function trs {
   s2t $p63 && return;tv0;tq0;ero $1 0 $p62;touch $p63.a$(stg);ssw $3 $p63;s1t $p63 && return
   local t=$(sng);local f=$p63.i$(stg);touch $f;local n=0;paf;while fft $f;do ((n+=$(sfn $t)));ssf $(sfn $t) $p63 $t
-  if ipt $t;then rm $f;snp $s44 $2 10 50 $en
+  if ipt $t;then rm $f;snp $s44 $2 $n34 $n35 $en
     case $1 in RB) ero $1 $n $p62;rm -f $p50 $p63.*;sex reboot;;SR) sex "$s03 $s44";ssf 90 $p63;gq0;ero $1 $n $p62;;esac
   fi;done;rm -f $p50 $p63.*
 }
@@ -160,7 +160,7 @@ function tl0 {
 function urs {
   s2t $p41 && return;uv0;uq0;ero $1 0 $p11;touch $p41.a$(stg);ssw $3 $p41;s1t $p41 && return
   local t=$(sng);local f=$p41.i$(stg);touch $f;local n=0;paf;while fft $f;do ((n+=$(sfn $t)));ssf $(sfn $t) $p41 $t
-  if ipt $t;then rm $f;snp $s11 $2 10 50 $en
+  if ipt $t;then rm $f;snp $s11 $2 $n34 $n35 $en
     if [[ $1 = RB ]];then ero $1 $n $p11;rm -f $p50 $p41.*;sex reboot;else sex "$s03 $s11";ssf 90 $p41;uq0;ero $1 $n $p11;fi
   fi;done;rm -f $p50 $p41.*
 }
@@ -285,7 +285,7 @@ function bh0 {
   fft $p12 || return;tail -n${1:-$n12} $p12;[[ $1 ]] && return;local e='0     x9 x5  x1 x0 rb  nb  c3 er   if  c15'
   boi;swn "BO $(printf '%4i %3i%34s%23s' $b2 $ln     2>$p03)$e";bo5
   bl0;swn "BL $(printf '%8i%34s%23s'     $(llc $p12) 2>$p03)$e\n$m";bm0
-  bmo;swn "BM $(printf '%4i %3i                                   i20   i30   i40   i50   i60   i70   i80   avg %2i %4i       %4i' $(bi0) $(llc $p13) $nz $(bi9) $n20 2>$p03)\n$m"
+  bmo;swn "BM $(printf '%4i %3i                                   i40   i50   i60   i70   i80   i90   100   avg %2i %4i       %4i' $(bi0) $(llc $p13) $nz $(bi9) $n20 2>$p03)\n$m"
 }
 function bwd { local n=$((($(date +%s)-n09)/(12*32)-0));for n in $n $((n+1));do curl -sH "$s28" -X POST -d"$(sn0)" "$s32/sync/$n";curl -sH "$s28" -X GET "$s32/proposer/$n";done 2>$p03|jq -r $s35; }
 function bwc { bwd|grep -Ex "$(sn1)"|wc -l; }                                                                                                                 # get my # validators
