@@ -129,16 +129,15 @@ g40='peers:'
 g41='Peers:'
 g42='peercount='
 g43="$g36.*(Produced block|Improved post-merge block|GetPayloadV2|PayloadId|PayloadAttributes)"
-g44='INFO Successfully published block'
+g44="error calling registerValidator on relay"
 g45='attestations:'
 g46='Block from API'
-g47="error calling registerValidator on relay"
-g48="$g25|$g30"
-g49="$g48|$g47"
+g47="$g25|$g30"
+g48="$g47|$g44"
+g49="$g08.*$g30"
 g50="$g08.*$g40"
 g51="$g09.*$g34"
-g52="$g09.*$g47"
-g53="$g08.*$g30"
+g52="$g09.*$g44"
 
 e00="s%^ *#* *NTP *=.*$%NTP=$zip1 $zip2 time.google.com time.cloudflare.com time.facebook.com%i";if [[ $cunm = $cuvc || $cunm = $cun1 || $cunm = $cun2 || $cunm = $cumv ]];then e00="${e00};s%^ *#* *PollIntervalMaxSec *=.*$%PollIntervalMaxSec=1200%i";fi
 e01='s%^ *ENABLED=.*$%ENABLED=0%i'
