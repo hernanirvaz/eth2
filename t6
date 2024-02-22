@@ -79,7 +79,7 @@ function si1 { local n=${1:-0};printf %i $((20*n))   2>$p03; }
 function si2 { local n=${1:-0};printf %i $((1000*n)) 2>$p03; }
 function svi { local n=${1:-0};if g0t $n;then l4=$(ll1 "$g18"|tail -n$n);else l4=$(ll1 "$g18");fi;i0=$(nu5 3 $(ln2 "${w0}imported_delay: +Some\($w2"));i1=$(nu5 3 $(ln2 "${w0}observed_delay: +Some\($w2"));if g0t $n;then l4=$(ll1 "$g20"|tail -n$n);else l4=$(ll1 "$g20");fi;i4=$(nu5 3 $(ln2 "${w0}block_delay:.+Some\($w2"));b1=$(nu3 $(ln3 "$g27" "$g53"));if g0t $n;then l4=$(ll1 "$g19"|tail -n$(si2 $n));else l4=$(ll1 "$g19");fi;i2=$(nu5 0 $(ln2 "${w0}elapsed: *$w1"));if g0t $n;then l6=$(ll1 "$g24"|tail -n$(si1 $n));else l6=$(ll1 "$g24");fi;i3=$(nu5 2 $(ln1 $g23)); }
 function svv { l6=$(ll5 "$g16" $1);v0=$(nu4 1 $(ln1 $g31 ".*$(sni $cun1)"));v1=$(nu4 1 $(ln1 $g31 ".*$(sni $cun2)"));l6=$(ll5 "$g17" $(($1/2)));v2=$(nu4 1 $(ln1 $g32));l6=$(ll5 "$g44" $(($1/100)));v3=$(nu5 1 $(ln1 $g45)); }
-function smm { m0=$(nu4 3 $(ln4 "$g34" "$g09" $1));m1=$(ll2 "$g52"|wc -l); }
+function smm { m0=$(nu4 3 $(ln4 "$g34" "$g09" $1));m1=$(rlr|wc -l); }
 function spc { nn=$2;cp $p04/$1.service $p02/$1.sav;sed -E "$e65$2%" $p02/$1.sav > $p04/$1.service; }                                                         # service configuration change/reload
 function snp { sft $1 || return;local n=$(($2+$5));(($2!=0&&n>=$3&&n<=$4)) && spc $1 $n;tsa $1 && sex "$s02 $1";dmr; }                                        # service peers change/stop
 function sra { if fft $p45;then nu0 $(($(date +%s)-$(date -r $p45 +%s)));else printf %i;fi }                                                                  # system reboot age (secounds)
@@ -218,7 +218,7 @@ function ml0 { dts;if tsa $s14;then smm $n32;mlo;else m="MSRV NOT ON $dt";fi; }
 function vl0 { dts;if tsa $s13;then svv $n22;vlo;else m="VSRV NOT ON $dt";fi; }
 #    0  1              2     3         4   5
 # MEVB OK  11 2023-06-13 01:10 http_avg:  84
-function mlo { m="MEVB $(printf '%6i' $(ll2 "$g09"|fln "$g25"|wc -l) 2>$p03) $dt $(printf 'http_avg: %3i erro_rv: %3i' $m0 $m1 2>$p03)"; }
+function mlo { m="MEVB $(printf '%6i' $(rll|wc -l) 2>$p03) $dt $(printf 'http_avg: %3i erro_rv: %3i' $m0 $m1 2>$p03)"; }
 #    0  1              2     3     4   5     6   7
 # VALI OK     2023-06-03 20:49 int5: 700 ztc4: 240
 function vlo { m="VALI $(printf '%6i' $(ll4|fln "$g26"|wc -l) 2>$p03) $dt $(printf '%s: %2i %s: %2i casp: %2i atts: %3i' $cun1 $v0 $cun2 $v1 $v2 $v3 2>$p03)"; }
@@ -370,6 +370,7 @@ function cll { ll2 "$g08"|fln "$g48" $2|if [[ $1 ]];then sed -E "$1";else cat;fi
 function ell { tl2 $2|if [[ $1 ]];then sed -E "$1";else cat;fi; }
 function lll { tl3 $2|if [[ $1 ]];then sed -E "$1"|sort -t: -k2n -k3n -k4n;else cat;fi; }
 function rll { ll2 "$g09"|fln "$g49" $2|if [[ $1 ]];then sed -E "$1";else cat;fi; }
+function rlr { ll2 "$g52"|sed -E "$e51"; }
 function cpe {
   clk;[[ $1 = c ]] && return;tmp;[[ $1 = p ]] && return;sif $1
   m=$(sll|sed -E "$e30");if [[ $m ]];then local i=$(echo "$m"|wc -l);local e=$(echo "$m"|tail -n1);else local i=0;local e=;fi;m=;local n=0;local d=;local l=ou
@@ -495,7 +496,7 @@ function tvc {
 }
 function svr { local t='';for t in $(printf '%s\n' $@|sort -u);do curl -sX GET "$s33=$t"|sed -n "$e18";done; }                                                # show mev validator registration
 function mvr { if [[ $(ls $p19/key*.json 2>$p03) ]];then svr $(sed -n "$e22" $p19/key*.json 2>$p03);else svr ${b[@]};fi; }                                    # choose validator keys
-function mre { local s=n;for s in $(rll "$e51"|sed -En "$e09"|sort -u);do echo "$(rll "$e51"|grep -o $s|wc -l) $s";done; }
+function mre { local s=n;for s in $(rlr|sed -En "$e09"|sort -u);do printf '%3i %s\n' "$(rlr|grep -o $s|wc -l)" $s;done; }
 function ibk {
   local f="$p02/pubkeys.old";cp $p58/pubkeys $f
   echo "$(cat $f)$(for f in $(jq -r .pubkey $p19/key*.json 2>$p03);do printf %s ",0x$f";done)" > $p02/pubkeys.new
@@ -644,7 +645,7 @@ function esp { if tsa $s44;then ll2 "$g11.*$g39"|sed -E "$e67";else ll2 "$g11.*$
 [[ $1 = ll  ]] && { lll "$e51" $2; }
 [[ $1 = rl  ]] && { rll "$e51" $2; }
 [[ $1 = rlh ]] && { ll2 "$g51"|tail -n${2:-$n32}                             |sed -E "$e51"; }
-[[ $1 = rlr ]] && { ll2 "$g52"                                               |sed -E "$e51"; }
+[[ $1 = rlr ]] && { rlr; }
 [[ $1 = elz ]] && { ell ""     $2; }
 [[ $1 = clz ]] && { cll ""     $2; }
 [[ $1 = llz ]] && { lll ""     $2; }
