@@ -15,7 +15,7 @@ othe="$othe --Network.DiscoveryPort $pp2p --Network.P2PPort $pp2p"
 othe="$othe --JsonRpc.Enabled true --JsonRpc.Host $apip"
 othe="$othe --JsonRpc.EngineHost $apip --JsonRpc.EnginePort 8551 --JsonRpc.JwtSecretFile $p58/jwt"
 othe="$othe --Sync.SnapSync true --Sync.AncientBodiesBarrier $abrb --Sync.AncientReceiptsBarrier $abrb"
-othe="$othe --Init.MemoryHint $(($nimh*10**9))"
+# othe="$othe --Init.MemoryHint $(($nimh*10**9))"
 # othe="$othe --Db.StateDbDisableCompression true"
 cd
 cat <<-EOF > $s44.service
