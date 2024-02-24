@@ -40,10 +40,6 @@ function ss4 { if tsa $1;then ss1 $1 $3 '[^ ]'|sed -E "$2"       ;else printf 00
 function ss5 { if tsa $1;then nu0 $(($(ss1 $1 $2 [0-9])/${3:-1}));else printf %i     ;fi; }                                                                   # systemctl status number extraction
 function e0t { [[ $1 -eq 0 ]]; }
 function g0t { [[ $1 -gt 0 ]]; }
-function s1t { e0t $(ls $1.* 2>$p03|wc -l); }
-function s2t { g0t $(ls $1.* 2>$p03|wc -l); }
-function s3t { s2t $1 || g0t $(bwc); }
-function s4t { s1t $1 || g0t $(bwc); }
 function llt { [[ $(grep '\-all-' $p04/$s12.service 2>$p03) ]]; }                                                                                             # cc long-lived test
 function t0t { [[ $(cat $p43 2>$p03) -eq 0 && $(fl0|wc -l) -gt 20 ]]; }                                                                                       # cpu no turbo recomended test
 function t1t { [[ $(cat $p43 2>$p03) -eq 1 && $(fl0|wc -l) -le 10 ]]; }                                                                                       # cpu    turbo recomended test
@@ -63,6 +59,11 @@ function irt { [[ $cunm = $cumv                                   || $cunm = $vn
 function v1t { [[ $cunm = $vnm1 ]]; }
 function vst { [[ $cun1 != $cuvc && $cun2 != $cuvc ]]; }
 function mst { [[ $cun1 != $cumv && $cun2 != $cumv ]]; }
+function s1t { e0t $(ls $1.* 2>$p03|wc -l); }
+function s2t { g0t $(ls $1.* 2>$p03|wc -l); }
+function s3t { s2t $1 || g0t $(bwc); }
+function s4t { s1t $1 || g0t $(bwc); }
+function s5t { ict    && g0t $(bwc); }
 function rbt { [[ $(sra) -ge $((60*60*${1:-9})) ]]; }
 function ipt { [[ $(date +%s) -ge $(bss $1 6) ]]; }
 function pct { [[ $b4 -ne 0 ]]; }
@@ -382,7 +383,7 @@ function cpe {
   m="ERRO$(printf '%3i%4i %10s %5s' $i $n $dt 2>$p03)"
   if g0t $i;then if g0t $n;then m="$m sl: ${e:0:53}";m="$m $l: ${d:0:54}";else m="$m sl: ${e:0:112}";fi;else if g0t $n;then m="$m $l: ${d:0:112}";fi;fi
   (( i+n )) && swn "$m";m=
-  fft $p45 && m="$m, reboot $(($(sra)/60/60)) hours ago $(rsf|tail -n1)";g0t $(bwc) && m="$m, sync/propose duties on";[[ $m ]] && swn "INFO        $dt${m#*,}"         # reboot/duties info
+  fft $p45 && m="$m, reboot $(($(sra)/60/60)) hours ago $(rsf|tail -n1)";s5t && m="$m, sync/propose duties on";[[ $m ]] && swn "INFO        $dt${m#*,}"       # reboot/duties info
   g0t $(nu0 $(/usr/lib/update-notifier/apt-check 2>&1|sed 's%;% %g')) && { apt list --upgradable 2>$p03|grep -v Listing;echo; }
 }
 # Plex Media Server
