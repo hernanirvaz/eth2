@@ -300,11 +300,11 @@ s26='0x534029B6371dc4453DD750Bc1198181F55C859fe'
 s27="--connection=http://$zip4:5052 --allow-insecure-connections"
 s28='Content-Type: application/json'
 s29='offline-preparation'
-case $cunm in $inm5) s33=$iip5;;$vnm1) s33=$vis1;;$vnm2) s33=$vis2;;*) s33=$iip6;;esac
-s30="http://$s33:8545"
-s31="http://$s33:5052/eth/v1/node"
-s32="http://$s33:5052/eth/v1/validator/duties"
-s33='https://boost-relay.flashbots.net/relay/v1/data/validator_registration?pubkey'
+case $cunm in $inm5) s34=$iip5;;$vnm1) s34=$vis1;;$vnm2) s34=$vis2;;*) s34=$iip6;;esac
+s30="http://$s34:8545"
+s31="http://$s34:5052/eth/v1/node"
+s32="http://$s34:5052/eth/v1/validator/duties"
+s33="http://$s34:5052/lighthouse/peers"
 s34='.data[].slot'
 s35='.data[].validator_index'
 s36='Package: snapd'
@@ -413,6 +413,9 @@ s43="$s43\n\nHost ns3053175.ip-57-129-28.eu\n  Port 2020\n  IdentityFile ~/.ssh/
 s44='eth-nethermind'
 s45='timesync'
 s46='change-operations'
+s47='https://boost-relay.flashbots.net/relay/v1/data/validator_registration?pubkey'
+s48='.[].peer_info|select(.connection_direction=='
+s49=').client.agent_string'
 
 n00=84
 n01=84
