@@ -539,7 +539,6 @@ function mrd { dts;l4=$($s09 -4 query $@ 2>$p03);m="MDNS relays $dt $(nu9 $(nu5 
 function mru { $s01 $s14 2>$p03|sed -En "$e66" 2>$p03; }
 function fsp { local n=${2:-0};if [[ $n -gt 0 ]];then local i=${3:-9};else local i=${3:-0};fi;grep -v "$1 *[$n-9][0-9]"|grep "$1 *[0-$i]"|sort -k2n; }
 function esp { if tsa $s44;then ll2 "$g11.*$g39"|sed -E "$e67";else ll2 "$g11.*$g42"|sed -E "$e68";fi; }
-function eip { curl -s4 "https://$2:$1@dyn.dns.he.net/nic/update?hostname=$2" &>$p03; }
 
 [[ $1 = ap  ]] && { apf|sort -t: -k2n -k3n -k4n; }
 [[ $1 = bp  ]] && { wpe; }
@@ -549,7 +548,7 @@ function eip { curl -s4 "https://$2:$1@dyn.dns.he.net/nic/update?hostname=$2" &>
 [[ $1 = la  ]] && { laa $2|sort -t: -k2n -k3n -k4n; }
 
 [[ $1 = irb ]] && { irb $2;pas; }
-[[ $1 = eip ]] && { eip $2 ${3:-meo.fruga.pt};pas; }
+[[ $1 = eip ]] && { if [[ $DDNS_URL && $DDNS_KEY ]];then curl -s4 "https://$DDNS_URL:$DDNS_KEY@dyn.dns.he.net/nic/update?hostname=$DDNS_URL" &>$p03;fi;pas; }
 [[ $1 = bmf ]] && { bm0;[[ $2 ]] && b4=$2;bms;v0t && swn "$m" >> $p13;if n1t;then if fft $p45;then bpt && brs RB 0 $((n05*20)) $n00;else bpt && brs PE $b4 $n05 $n02;fi;else rbt && brs RB 0 $n05 $n03;fi; }
 [[ $1 = snr ]] && { cex "$s37 lxd";cex "$s37 core20";cex "$s37 snapd";cex 'apt remove --autoremove snapd -y';echo -e "$s36" > nosnap.pref;cex "mv nosnap.pref $p47";cmw $p47/nosnap.pref 644 root;cex 'apt update'; }
 [[ $1 = mvr ]] && { mvr; }
