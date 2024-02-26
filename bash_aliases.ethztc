@@ -2,9 +2,11 @@ if [[ $(uname -n) = hrv-zotac2 ]];then
   rmv () { local s=${1:-ztc1};local d=/var/lib/plexmediaserver/mp4/movie;echo rsync  $s $d;rsync --ignore-existing --delete -rvz $d $s:; }
   rlt () { local s=${1:-ztc1};local d=/var/lib/plexmediaserver/mp4/lust ;echo rsync  $s $d;rsync --ignore-existing --delete -rvz $d $s:; }
   rtv () { local s=${1:-ztc3};local d=/var/lib/plexmediaserver/mp4/tv   ;echo rsync  $s $d;rsync --ignore-existing --delete -rvz $d $s:; }
-  fls () { local s=${1:-txt} ;local d=/var/lib/plexmediaserver/mp4      ;echo findls $s $d;find $d -name "*.$s" -print; }
-  frm () { local s=${1:-txt} ;local d=/var/lib/plexmediaserver/mp4      ;echo findrm $s $d;find $d -name "*.$s" -exec sudo rm {} \;; }
-  cug () { local s=${1:-plex};local d=/var/lib/plexmediaserver/mp4      ;echo chmdug $s $d;sudo chown $s:$s -R $d; }
+  ffl () { echo findls $2 $1;find $1 -name "*.$2" -print; }
+  ffr () { echo findrm $2 $1;find $1 -name "*.$2" -exec sudo rm {} \;; }
+  fls () { local d=/var/lib/plexmediaserver/mp4;if [[ $1 ]];then ffl $d $1;else ffl $d txt;ffl $d jpg;fi; }
+  frm () { local d=/var/lib/plexmediaserver/mp4;if [[ $1 ]];then ffr $d $1;else ffr $d txt;ffr $d jpg;fi; }
+  cug () { local d=/var/lib/plexmediaserver/mp4;local s=${1:-plex};echo chmdug $s $d;sudo chown $s:$s -R $d; }
   alias tll='transmission-remote -n 'eu:' -l'
   alias tbs='transmission-remote -n 'eu:' -st'
   alias tfs='transmission-remote -n 'eu:' -si'
