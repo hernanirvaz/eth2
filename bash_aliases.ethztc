@@ -12,5 +12,5 @@ if [[ $(uname -n) = hrv-zotac2 ]];then
 fi
 
 alias nt='sudo iftop -nNPBF $(ip r|sed -En "s%^192.* (192.168.8.[0-9]+) *$%\1%p")'
-alias rt='echo meo:$V;telnet 192.168.8.254'
+alias rt='echo meo:$V;telnet 192.168.8.1'
 alias xx='exit'
