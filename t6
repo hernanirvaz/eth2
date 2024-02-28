@@ -729,15 +729,15 @@ function esp { if tsa $s44;then ll2 "$g11.*$g39"|sed -E "$e67";else ll2 "$g11.*$
 [[ $1 = rpd ]] && { rp;rd; }
 [[ $1 = spd ]] && { sp;sd; }
 [[ $1 = mpd ]] && { mp;md; }
-[[ $1 = gea ]] && { ge;dmr;ga;jrn "-u $s10" "$2"; }
-[[ $1 = uea ]] && { ue;dmr;ua;jrn "-u $s11" "$2"; }
-[[ $1 = tea ]] && { te;dmr;ta;jrn "-u $s44" "$2"; }
-[[ $1 = bea ]] && { be;dmr;ba;jrn "-u $s12" "$2"; }
-[[ $1 = vea ]] && { ve;dmr;va;jrn "-u $s13" "$2"; }
+[[ $1 = gea ]] && { ge;dmr;ga;; }
+[[ $1 = uea ]] && { ue;dmr;ua;; }
+[[ $1 = tea ]] && { te;dmr;ta;; }
+[[ $1 = bea ]] && { be;dmr;ba;; }
+[[ $1 = vea ]] && { ve;dmr;va;; }
 [[ $1 = rea ]] && { re;dmr;ra; }
 [[ $1 = sea ]] && { se;dmr;sa; }
 [[ $1 = xea ]] && { xe;dmr;xa; }
-[[ $1 = mea ]] && { me;dmr;ma;jrn "-u $s14" "$2"; }
+[[ $1 = mea ]] && { me;dmr;ma;; }
 # enable
 [[ $1 = ge  ]] && { ge; }
 [[ $1 = ue  ]] && { ue; }
