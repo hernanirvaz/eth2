@@ -600,6 +600,7 @@ function esp { if tsa $s44;then ll2 "$g11.*$g39"|sed -E "$e67";else ll2 "$g11.*$
 [[ $1 = tlf ]] && { tl0;swn "$m" >> $p62;[[ $ok != OK ]] && trs $ok 0 $n03; }
 [[ $1 = bl  ]] && { bl0;swn "$m"; }
 [[ $1 = blf ]] && { bl0;swn "$m" >> $p12;if [[ $d1 = 23:58 ]];then if bdt;then bdl $d0;else if [[ $(llc $p12) -gt $n14 ]];then bod 0 9;fi;fi;fi;[[ $ok != OK ]] && brs $ok 0 0 $(btn $n02);pas; }
+[[ $1 = pl  ]] && { if fft $p10;then gl0;swn "$m";fi;if fft $p11;then ul0;swn "$m";fi;if fft $p62;then tl0;swn "$m";fi;if fft $p12;then bl0;swn "$m";fi; }
 [[ $1 = vl  ]] && { vl0;swn "$m"; }
 [[ $1 = vlf ]] && { vl0;swn "$m" >> $p49;pas; }
 [[ $1 = ml  ]] && { ml0;swn "$m"; }
