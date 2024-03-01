@@ -1,11 +1,7 @@
 eth2rq () { echo -e "\nresolvectl query ${1:-pt.archive.ubuntu.com}";resolvectl query "${1:-pt.archive.ubuntu.com}"; }
-is_num () { expr $1 : '^[0-9]*$' > /dev/null; }
-prturl () { if [[ $1 -eq 2021 || $1 -eq 2023 || $1 -eq 2025 ]];then printf meo.fruga.pt;else printf me2.fruga.pt;fi; }
-cmopcp () { scp -P $1 ~/eth2/bash_aliases.ethztc $2:~/.bash_aliases;scp -P $1 ~/eth2/ethkeys $2:~/.ssh/authorized_keys; }
-cmodcp () { scp       ~/eth2/bash_aliases.ethztc $1:~/.bash_aliases;scp       ~/eth2/ethkeys $1:~/.ssh/authorized_keys; }
-outhcp () { echo -e "\nscp $1 outh";if is_num $1;then cmopcp $1 $(prturl $1)                                 ;else cmodcp $1                   ;fi; }
-eth2cp () { echo -e "\nscp $1 eth2";if is_num $1;then local s=$(prturl $1);scp -P $1 ~/eth2/t[1-8]* $s:~/eth2;else scp ~/eth2/t[1-8]* $1:~/eth2;fi; }
-eth2sl () { echo -e "\nssh $1     ";if is_num $1;then local s=$(prturl $1);ssh -p $1                $s       ;else ssh                $1       ;fi; }
+outhcp () { echo -e "\nscp $1 outh";scp ~/eth2/bash_aliases.ethztc $1:~/.bash_aliases;scp ~/eth2/ethkeys $1:~/.ssh/authorized_keys; }
+eth2cp () { echo -e "\nscp $1 eth2";scp ~/eth2/t[1-8]* $1:~/eth2; }
+eth2sl () { echo -e "\nssh $1     ";ssh                $1       ; }
 eth2sr () { echo -e "ROUTE\t\t$(ip r|grep default|cut -d' ' -f3)"; }
 eth2sf () {
   m="$(netstat -i|grep -v '^lo\|Iface\|Kernel'|cut -d' ' -f1)"
@@ -22,18 +18,18 @@ alias z3='eth2sl ztc3'
 alias z4='eth2sl ztc4'
 alias z5='eth2sl int5'
 alias z6='eth2sl int6'
-alias r1='eth2sl 2021'
-alias r2='eth2sl 2022'
-alias r3='eth2sl 2023'
-alias r4='eth2sl 2024'
-alias r5='eth2sl 2025'
-alias r6='eth2sl 2026'
+alias r1='eth2sl ztc1.fruga.pt'
+alias r2='eth2sl ztc2.fruga.pt'
+alias r3='eth2sl ztc3.fruga.pt'
+alias r4='eth2sl ztc4.fruga.pt'
+alias r5='eth2sl int5.fruga.pt'
+alias r6='eth2sl int6.fruga.pt'
 alias vp='eth2cp ns3053175.ip-57-129-28.eu;eth2cp ns3204840.ip-141-95-64.eu'
 alias vo='outhcp ns3053175.ip-57-129-28.eu;outhcp ns3204840.ip-141-95-64.eu'
-alias zp='eth2cp int5;eth2cp int6;eth2cp ztc4;eth2cp ztc3;eth2cp ztc1;eth2cp ztc2'
-alias zo='outhcp int5;outhcp int6;outhcp ztc4;outhcp ztc3;outhcp ztc1;outhcp ztc2'
-alias rp='eth2cp 2025;eth2cp 2026;eth2cp 2024;eth2cp 2023;eth2cp 2021;eth2cp 2022'
-alias ro='outhcp 2025;outhcp 2026;outhcp 2024;outhcp 2023;outhcp 2021;outhcp 2022'
+alias zp='eth2cp int5         ;eth2cp int6         ;eth2cp ztc4         ;eth2cp ztc3         ;eth2cp ztc1         ;eth2cp ztc2'
+alias zo='outhcp int5         ;outhcp int6         ;outhcp ztc4         ;outhcp ztc3         ;outhcp ztc1         ;outhcp ztc2'
+alias rp='eth2cp int5.fruga.pt;eth2cp int6.fruga.pt;eth2cp ztc4.fruga.pt;eth2cp ztc3.fruga.pt;eth2cp ztc1.fruga.pt;eth2cp ztc2.fruga.pt'
+alias ro='outhcp int5.fruga.pt;outhcp int6.fruga.pt;outhcp ztc4.fruga.pt;outhcp ztc3.fruga.pt;outhcp ztc1.fruga.pt;outhcp ztc2.fruga.pt'
 
 alias hk='cat /dev/null>~/.ssh/known_hosts'
 alias gp='cd ~/eth2;git pull;cd'
