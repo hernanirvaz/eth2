@@ -220,7 +220,7 @@ function ml0 { dts;if tsa $s14;then smm $n32;mlo;else m="MSRV NOT ON $dt";fi; }
 function vl0 { dts;if tsa $s13;then svv $n22;vlo;else m="VSRV NOT ON $dt";fi; }
 #    0  1              2     3         4   5
 # MEVB OK  11 2023-06-13 01:10 http_avg:  84
-function mlo { m="MEVB $(printf '%6i' $(rll|wc -l) 2>$p03) $dt $(printf 'http_avg: %3i erro_rv: %3i' $m0 $m1 2>$p03)"; }
+function mlo { m="MEVB $(printf '%6i' $(rll|wc -l) 2>$p03) $dt $(printf 'http_avg: %4i erro_rv: %3i' $m0 $m1 2>$p03)"; }
 #    0  1              2     3     4   5     6   7
 # VALI OK     2023-06-03 20:49 int5: 700 ztc4: 240
 function vlo { m="VALI $(printf '%6i' $(vii|wc -l) 2>$p03) $dt $(printf '%s: %2i %s: %2i casp: %2i' $cun1 $v0 $cun2 $v1 $v2 2>$p03)"; }
