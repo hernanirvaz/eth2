@@ -838,6 +838,7 @@ if [[ ! $1 ]];then
   m="$m\nbo[cl]\t\tall homologous nodes report at [current|last] time"
   m="$m\nbm[f]\t\tcc-daily report [file add & $s12 nodes change/restart]"
   m="$m\nbn[f]\t\tarqivo report [file add]"
+  m="$m\nbp[io]\t\tcc peers [incoming|outgoing]"
   m="$m\n[gubvm]l[f]\t[geth|besu|beacon|vc|mev]\tmy progress report [file add]"
   m="$m\n[gubvm]h\t[geth|besu|beacon|vc|mev]\tmy historic report"
   m="$m\nhs[012ecgubvm]\thistoric summary report [0-both|1-main|2-backup|el|cc|geth|besu|beacon|vc|mev]"
