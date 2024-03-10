@@ -69,7 +69,7 @@ function ipt { [[ $(date +%s) -ge $(bss $1 6) ]]; }
 function pct { [[ $b4 -ne 0 ]]; }
 function hat { [[ $b2 -gt $(bi0) ]]; }
 function bdt { [[ $(bi3 $zk $zz $zx $zw) -ge $n20 || $nz -gt 0 ]]; }
-function pmt { [[ $nm -ge $((nn-5)) ]]; }
+function pmt { [[ $nm -ge $((nn-9)) ]]; }
 function fft { [[ -f $1 ]]; }
 function sft { [[ -f $p04/$1.service ]]; }
 function bpt { [[ $(era $p12 $n12) -eq 1 ]] && ( (pct && pmt && hat && ! bdt && ! fft $p45) || rbt $n06); }
