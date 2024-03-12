@@ -793,7 +793,7 @@ if [[ ! $1 ]];then
   m="$m\nbsd               [g]\tcc & sys\t\t\t\tpoweroff\tmim gap"
   m="$m\nivk               [g]\timport validator keys\t\t\t\t\tmim gap"
   m="$m\nirb               [h]\tsys (if needed)\t\t\t\treboot\t\tafter h hours"
-  m="$m\nr[sh|pt|st]\t\tshow|print|stop restart info (time & next gap without validator tasks)"
+  m="$m\nr[sh|pt|rs]\t\tshow|print|reset restart proces info "
   m="$m\nyj\t\t\tsystem journal"
   m="$m\n[slecr]l\t[hh:mm]\tsys/el+cc/el/cc/relay\tlog lines"
   m="$m\n[cv]i\t\t[hh:mm]\tcc/vc\t\tlog lines (internal)"
