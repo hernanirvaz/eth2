@@ -345,7 +345,7 @@ function tmp {
 }
 function cl0 { $s09 -4 query $1 2>$p03|sed -En "$e05"                                      2>$p03; }
 function cl1 { printf "${1%.}"                                                             2>$p03; }
-function cl2 { local n=0;while :;do local s=$(cl0 $1);if [[ $s ]];then break;else if [[ $n -lt 3 ]];then ((n++));else local s=$1;break;fi;fi;done;cl1 $s; }
+function cl2 { local n=0;while :;do local s=$(cl0 $1);if [[ $s ]];then break;else if [[ $n -lt 2 ]];then ((n++));else local s=$1;break;fi;fi;done;cl1 $s; }
 function cl3 { if [[ $1 =~ ^[0-9]+ ]];then cl2 $1;else cl1 $1;fi; }
 function cl4 { printf "server: $(cl3 ${2:0}) offset: ${4} delay: ${6} jitter: ${8}"        2>$p03; }
 function cl5 { printf "server: $(cl3 ${1:1}) offset: ${9}ms delay: ${8}ms jitter: ${10}ms" 2>$p03; }
