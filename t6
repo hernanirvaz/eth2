@@ -629,7 +629,6 @@ function esp { if tsa $s44;then ll2 "$g11.*$g30"|sed -E "$e67";else ll2 "$g11.*$
 [[ $1 = hsm ]] && { hsm;cpe; }
 [[ $1 = cpe ]] && { cpe $2; }
 [[ $1 = bo  && -f $p12 ]] && { boi $(pt1 $@ 00:00);if [[ $(pt3 $@ s) = n ]];then b6=$b2;else b6=$(pt2 $@ 0);fi;bo5; }
-[[ $1 = bon && -f $p12 ]] && { bv0;l2=$(bff 23:58);bo4 $(pt2 $2 $nn); }
 [[ $1 = boc && -f $p12 ]] && { unset v;read -a v <<< $(bff|tail -n1);l2=$(bff $(pt1 $2 ${v[4]}));boa; }
 [[ $1 = bol && -f $p12 ]] && { l2=$(bff 23:58);boa; }
 [[ $1 = bod ]] && { bod ${2:-0} ${3:-5}; }
@@ -799,11 +798,8 @@ if [[ ! $1 ]];then
   m="$m\nbsl\t\t\tshrink cc minute log using barqivo"
   m="$m\nbdl yyyy-mm-dd\t\tdelete cc log day"
   m="$m\nbo  [lines]\t\thomologous report [with max lines]"
-  m="$m\nbon [node]\t\thomologous node report"
-  m="$m\nboc [hour]\t\thomologous hour report"
-  m="$m\nbol\t\t\thomologous 23:58 report"
   m="$m\nbod [p] [n]\t\tdelete logs for last penalty >= p(0) && node days > n(1)"
-  m="$m\nbo[cl]\t\t\tall homologous nodes report at [current|last] time"
+  m="$m\nbo[cl]\t\t\tall homologous nodes report at [current|last(23:58)] time"
   m="$m\nbm[f]\t\t\tcc-daily report [file add & $s12 nodes change/restart]"
   m="$m\nbn[f]\t\t\tarqivo report [file add]"
   m="$m\nbp[io]\t\t\tcc peers [incoming|outgoing]"
