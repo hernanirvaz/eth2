@@ -683,11 +683,12 @@ function esp { if tsa $s44;then ll2 "$g11.*$g30"|sed -E "$e67";else ll2 "$g11.*$
 [[ $1 = wlz ]] && { wlp ${@:2:$#}; }
 # journal
 [[ $1 = yj  ]] && { jrn "" "$2"; }
-[[ $1 = ej  ]] && { jrn "-u $s10 -u $s12 -u $s13" "$2"; }
+[[ $1 = ej  ]] && { jrn "-u $s10 -u $s11 -u $s44" "$2"; }
 [[ $1 = gj  ]] && { jrn "-u $s10" "$2"; }
 [[ $1 = uj  ]] && { jrn "-u $s11" "$2"; }
 [[ $1 = tj  ]] && { jrn "-u $s44" "$2"; }
 [[ $1 = bj  ]] && { jrn "-u $s12" "$2"; }
+[[ $1 = cj  ]] && { jrn "-u $s12 -u $s13" "$2"; }
 [[ $1 = vj  ]] && { jrn "-u $s13" "$2"; }
 [[ $1 = sj  ]] && { jrn "-u $s20" "$2"; }
 [[ $1 = mj  ]] && { jrn "-u $s14" "$2"; }
@@ -780,7 +781,7 @@ function esp { if tsa $s44;then ll2 "$g11.*$g30"|sed -E "$e67";else ll2 "$g11.*$
 
 if [[ ! $1 ]];then
   m="letra 1"
-  m="$m\n[g|t|u|b|v|m]\t\tgeth|nethermind|besu|cc|vc|mev"
+  m="$m\n[g|t|u|b|c|v|m]\t\tgeth|nethermind|besu|beacon|cc|vc|mev"
   m="$m\n[x|r|s]\t\t\t$s21|$s15|$s20"
   m="$m\nletra 2"
   m="$m\n[e|j|a[j]]\t\tenable|journal|arranca[journal]"
