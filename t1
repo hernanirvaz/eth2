@@ -137,6 +137,7 @@ g48="$g09.*$g40"
 g49="$g08.*$g23"
 g50="$g08.*$g31"
 g51="$g09.*$g34"
+g52='.+er: +([0-9]+) +([0-9]+) +([0-9]+) +([0-9]+).+'
 
 e00="s%^ *#* *NTP *=.*$%NTP=$zip1 $zip2 time.google.com time.cloudflare.com time.facebook.com%i";if [[ $cunm = $cuvc || $cunm = $cun1 || $cunm = $cun2 || $cunm = $cumv ]];then e00="${e00};s%^ *#* *PollIntervalMaxSec *=.*$%PollIntervalMaxSec=1200%i";fi
 e01='s%^ *ENABLED=.*$%ENABLED=0%i'
