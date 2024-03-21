@@ -213,7 +213,7 @@ e33='s%<html>.{10,}</html>%%g'
 e34='s% *\([^)(]{10,}\)%%g'
 e35='s% *\{[^}{]{10,}\}%%g'
 e36='s% *0x[A-Za-z0-9]{10,}%%g'
-e37="$e34;$e35;$e34;$e35;$e34;$e35;$e36"                                                               # FINAL
+e37="$e34;$e35;$e36"                                                                                   # FINAL
 e38='s%(hash|root) *= *([^ ,]*),? *%%g'                                                                # EL
 e38="$e38;s%[0-9]+ +[0-9]+ +[0-9]+ +%%g;s%[0-9]+ +[0-9]+ +%%g"                                         # EL
 e39='s%(finalized_root|block|head|parent_hash|pubkey|block_hash|peer_id|graffiti) *: *([^, ]*),? *%%g' # CL
