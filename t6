@@ -565,7 +565,7 @@ function esp { if tsa $s44;then ll2 "$g11.*$g30"|sed -E "$e67";else ll2 "$g11.*$
 [[ $1 = mre ]] && { mre|sort -n; }
 [[ $1 = jwt ]] && { sjw; }
 [[ $1 = lpi ]] && { lpi $p02/.cargo/bin/lighthouse; }
-[[ $1 = luc ]] && { luc $p02/.cargo/bin/lighthouse ${2:-v5.1.0}; }
+[[ $1 = luc ]] && { luc $p02/.cargo/bin/lighthouse ${2:-v5.1.2}; }
 [[ $1 = ruv ]] && { ruv $2; }
 [[ $1 = ccr ]] && { llt && ble "$e14"; }
 [[ $1 = cca ]] && { llt || ble "$e15"; }
