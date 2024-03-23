@@ -543,16 +543,16 @@ function hsh { if tsa $s19;then cex "$s07 $s45-status";cex "$s07 show-$s45";else
 
 function wpf { if tsa $s44;then ll6 "$g43";fi;ll2 "$g42"|fln "$g39"; }
 function wpe { wpf|sed -E "$e52"|sort -t: -k2n -k3n -k4n; }
-function apf { if n1t;then wpe          ;else ssh $(snc $cun1) "$p53 bp"   ;fi;if n2t;then wpe          ;else ssh $(snc $cun2) "$p53 bp"   ;fi;if vst;then if vct;then wpe          ;else ssh $(snc $cuvc) "$p53 bp"   ;fi;fi;if mst;then if mct;then wpe;else ssh $(snc $cumv) "$p53 bp";fi;fi; }
+function pba { if n1t;then wpe          ;else ssh $(snc $cun1) "$p53 pb"   ;fi;if n2t;then wpe          ;else ssh $(snc $cun2) "$p53 pb"   ;fi;if vst;then if vct;then wpe          ;else ssh $(snc $cuvc) "$p53 pb"   ;fi;fi;if mst;then if mct;then wpe;else ssh $(snc $cumv) "$p53 pb";fi;fi; }
 function caa { if n1t;then cll "$e50" $1;else ssh $(snc $cun1) "$p53 cl $1";fi;if n2t;then cll "$e50" $1;else ssh $(snc $cun2) "$p53 cl $1";fi;if vst;then if vct;then cll "$e50" $1;else ssh $(snc $cuvc) "$p53 cl $1";fi;fi; }
 function eaa { if n1t;then ell "$e50" $1;else ssh $(snc $cun1) "$p53 el $1";fi;if n2t;then ell "$e50" $1;else ssh $(snc $cun2) "$p53 el $1";fi; }
 function laa { caa $1;eaa $1; }
 function fsp { local n=${2:-0};if [[ $n -gt 0 ]];then local i=${3:-9};else local i=${3:-0};fi;grep -v "$1 *[$n-9][0-9]"|grep "$1 *[0-$i]"|sort -k2n; }
 function esp { if tsa $s44;then ll2 "$g11.*$g30"|sed -E "$e67";else ll2 "$g11.*$g35"|sed -E "$e68";fi; }
 
-[[ $1 = ap  ]] && { apf|sort -t: -k2n -k3n -k4n; }
-[[ $1 = bp  ]] && { wpe; }
-[[ $1 = bpz ]] && { wpf; }
+[[ $1 = pb  ]] && { wpe; }
+[[ $1 = pba ]] && { pba|sort -t: -k2n -k3n -k4n; }
+[[ $1 = pbz ]] && { wpf; }
 [[ $1 = ca  ]] && { caa $2|sort -t: -k2n -k3n -k4n; }
 [[ $1 = ea  ]] && { eaa $2|sort -t: -k2n -k3n -k4n; }
 [[ $1 = la  ]] && { laa $2|sort -t: -k2n -k3n -k4n; }
@@ -792,7 +792,9 @@ if [[ ! $1 ]];then
   m="$m\nirb               [h]\tsys (if needed)\t\t\t\treboot\t\tafter h hours"
   m="$m\nr[sh|pt|rs]\t\tshow|print|reset restart proces info "
   m="$m\nyj\t\t\tsystem journal"
-  m="$m\n[slecr]l\t[hh:mm]\tsys/el+cc/el/cc/relay\tlog lines"
+  m="$m\npd[a]\t\t\tproduce block\tlog lines [all]"
+  m="$m\n[lec][la]\t[hh:mm]\tel+cc/el/cc\tlog lines"
+  m="$m\n[sr]l\t\t[hh:mm]\tsys/relay\tlog lines"
   m="$m\n[cv]i\t\t[hh:mm]\tcc/vc\t\tlog lines (internal)"
   m="$m\n[ecv]i[iuhp12c]\t\tec/cc/vc\tlog lines (elapsed)"
   m="$m\nbr[l|m]\t\t\trecalculate cc minute|daily logs"
