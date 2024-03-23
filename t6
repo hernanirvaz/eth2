@@ -204,7 +204,7 @@ function b03 { nu2 "(($1*$n28+$2*$n29+$3*$n10+$4*$n11)/${5:-1}*$n30/1000000)+2*$
 function b04 { nu2 "(9.0*(0.4*$zk+0.3*$zz+0.2*$zx+0.1*$zw))"                          ; }                                                                     # get numerator paid errors
 function b05 { nu2 "($1*$n27+$2*$n08)*$n30/100000000"                       7         ; }                                                                     # get reward
 function b06 { nu2 "2*$z1"                                                            ; }                                                                     # get numerator processed blocks
-function b07 { nu2 "3*$z3"                                                            ; }                                                                     # get numerator general errors
+function b07 { nu2 "2*$z3"                                                            ; }                                                                     # get numerator general errors
 function b08 { nu0 $(((z5>400?$(b04)/z5:0)+(z2>100?$(b06)/z2:0)+(z4>500?$(b07)/z4:0))); }                                                                     # get restart idx
 function b09 { nu2 "${a[$nn]}*(1-$n33/100)"                                           ; }                                                                     # get init penalty to recursively get b4
 function b10 { nu2 "1.00*$nn"                                                         ; }                                                                     # get min target peers limit
