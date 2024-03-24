@@ -22,8 +22,10 @@ After=network-online.target
 [Service]
 User=eth1
 Group=eth1
-Restart=always
+Restart=on-failure
 RestartSec=60
+StartLimitIntervalSec=600
+StartLimitBurst=9
 TimeoutStopSec=600
 ExecStart=$p00/geth --datadir $p08 --mainnet --port $pp2p --http --http.addr $apip --authrpc.addr $apip --maxpeers $maxp --authrpc.jwtsecret $p58/jwt$othe
 ExecStopPost=+$p02/eth2/t7 GETHSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
