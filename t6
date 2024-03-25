@@ -113,12 +113,12 @@ function csn { if g0t $#;then nr=${@:$#};nm=$(nu6 $@);nd=$(nu7 $@);nz=$(nu8 $@);
 function esn { if g0t $#;then er=${@:$#};em=$(nu6 $@);ed=$(nu7 $@);ez=$(nu8 $@);else er=0;em=0;ed=0;ez=0;fi; }
 function npn { printf '%10s %5s nod%03i: %3i' $dt $1 $2 2>$p03; }                                                                                             # get date/nodes info
 function bnn { csn $(ln3 "$g31" $g08) $(bpc $(bcl peer_count)); }                                                                                             # set cur/min/std cc peers
-function sz0 { gnn 0      ;printf 'el:p%03i:m%03i:z%02i:d%04i p2p:%5i %s     iu: %4i %4i %4i'                 $er $em $ez $ed $(ss5 $1 port    ) "$(gb1 $(gcl eth.syncing))" $e1 $e2 $(ei0)                 2>$p03; }
+function sz0 { gnn 0      ;printf 'el:p%03i:m%03i:z%02i:d%04i p2p:%5i %s     iu: %4i %5i %4i'                 $er $em $ez $ed $(ss5 $1 port    ) "$(gb1 $(gcl eth.syncing))" $e1 $e2 $(ei0)                 2>$p03; }
 function sz1 { unn 0      ;printf 'el:p%03i:m%03i:z%02i:d%04i p2p:%5i %s      i: %4i'                         $er $em $ez $ed $(ss5 $1 p2p-port) "$(ub1 $(ucl eth_syncing))" $e1                            2>$p03; }
-function sz2 { dtl;svi;bnn;printf 'cl:p%03i:m%03i:z%02i:d%04i p2p:%5i %s iosrhp: %4i %4i %4i %4i %4i %4i %4i' $nr $nm $nz $nd $(ss5 $1 port    ) "$(bb1 $(bcl syncing))"     $i0 $i1 $i4 $b1 $i2 $i3 $(b01) 2>$p03; }
+function sz2 { dtl;svi;bnn;printf 'cl:p%03i:m%03i:z%02i:d%04i p2p:%5i %s iosrhp: %4i %5i %4i %4i %4i %4i %4i' $nr $nm $nz $nd $(ss5 $1 port    ) "$(bb1 $(bcl syncing))"     $i0 $i1 $i4 $b1 $i2 $i3 $(b01) 2>$p03; }
 function sz3 { svv $n23   ;printf 'vl:m%03i:b%03i:c%02i api:%s'                                               $v0 $v1 $v2     $(ss4 $1 "$e32" nodes)                                                        2>$p03; }
 function sz4 { smm 0      ;printf 'ml:h%03i:r%03i api:%s'                                                     $m0 $m1         $(ss4 $1 "$e32" addr )                                                        2>$p03; }
-function sz5 { tnn 0      ;printf 'el:p%03i:m%03i:z%02i:d%04i p2p:%5i %s     ps: %4i %4i %4i'                 $er $em $ez $ed $(ss5 $1 P2PPort ) "$(tb1 $(tcl eth_syncing))" $e1 $e2 $(ei0)                 2>$p03; }
+function sz5 { tnn 0      ;printf 'el:p%03i:m%03i:z%02i:d%04i p2p:%5i %s     ps: %4i %5i %4i'                 $er $em $ez $ed $(ss5 $1 P2PPort ) "$(tb1 $(tcl eth_syncing))" $e1 $e2 $(ei0)                 2>$p03; }
 function sso { tse $2 || return;dts;local e="$1 $(printf '%6s %10s %5s %-40s' $(ss3 $2) $dt "$(ss2 $2)" 2>$p03)";case $1 in GETH) e="$e $(sz0 $2)";;BESU) e="$e $(sz1 $2)";;NETH) e="$e $(sz5 $2)";;BEAC) e="$e $(sz2 $2)";;VALI) e="$e $(sz3 $2)";;MEVB) e="$e $(sz4 $2)";;esac;swn "$e"; }
 # el control commands
 function grs {
@@ -150,10 +150,10 @@ function trs {
   s2t $p63 && return;tv0;tq0;ero $1 0 $p62;touch $p63.a$(stg);ssw $3 $p63;s1t $p63 && return
   local t=$(sng);local f=$p63.i$(stg);touch $f;local n=0;paf;while fft $f;do ((n+=$(sfn $t)));ssf $(sfn $t) $p63 $t
   if ipt $t;then rm $f;snp $s44 $2 $n34 $n35 $en
-    case $1 in RB) ero $1 $n $p62;rm -f $p50 $p63.*;sex reboot;;SR) sex "$s03 $s44";ssf 90 $p63;gq0;ero $1 $n $p62;;esac
+    case $1 in RB) ero $1 $n $p62;rm -f $p50 $p63.*;sex reboot;;PR) ero $1 $n $p62;;*) sex "$s03 $s44";ssf 90 $p63;tq0;ero $1 $n $p62;;esac
   fi;done;rm -f $p50 $p63.*
 }
-function tdi { if g0t $1;then l4=$(ll6 "$g37"|tail -n$1);else l4=$(ll6 "$g37");fi;e1=$(nu5 2 $(ln2 "${w0}\| *$w4$w5"));e2=$(nu2 "$(nu5 2 $(ln2 "${w0}slot *$w4$w5"))/1000"); }
+function tdi { if g0t $1;then l4=$(ll6 "$g37"|tail -n$1);else l4=$(ll6 "$g37");fi;e1=$(nu5 2 $(ln2 "${w0}\| *$w4$w5"));e2=$(nu5 2 $(ln2 "${w0}slot *$w4$w5")); }
 function tcl { curl $s30 -sX POST -H "Content-Type: application/json" --data "{\"jsonrpc\":\"2.0\",\"method\":\"$1\",\"params\":[],\"id\":0}" 2>$p03|jq -r .result; }
 function tv0 { en=$(ss5 $s44 MaxActivePeers); }
 function tq0 { er=$(nu0 $(tcl net_peerCount)); }
@@ -163,7 +163,7 @@ function tb2 { if [[ $(echo $@|grep false) ]];then printf ''      ;else printf '
 function tl0 {
   dts;ok=OK
   if tsa $s44;then local e=$(tcl eth_syncing);tv0;tnn $n07;eb0 $p62 $e
-    m="NETH $ok $(tsy $e) $(npn $en $er) sgs: $(nu1 %4i $e0)$(tb2 $e) $(printf 'is: %3i %2i %3i' $e1 $e2 $(ei0) 2>$p03)"
+    m="NETH $ok $(tsy $e) $(npn $en $er) sgs: $(nu1 %4i $e0)$(tb2 $e) $(printf 'is: %3i %5i %4i' $e1 $e2 $(ei0) 2>$p03)"
   else
     m="NSRV NOT ON $dt"
   fi
@@ -218,7 +218,7 @@ function bb0 { bs0;bs3;bl1;bl2;[[ (1 -eq $(era $p12 $n12) && $(b08) -ge 1) || (1
 function bfl { grep "BEAC.*$1"      2>$p03; }                                                                                                                 # filter cc lines
 function bff { grep "BEAC.*$1" $p12 2>$p03; }                                                                                                                 # filter cc log
 function bb1 { if [[ $(echo $@|jq -r .data.is_syncing) = false ]];then printf 'synced';else printf 'syncing: %6i' $(bsi $@);fi; }                             # get cl syncing distance remaining
-function bmp { printf '%5i %3s %3i %4i %4i iosrhp: %4i %4i %4i %2i %4i %3i %4i' ${a[0]} $b5 $b4 $(b03 $zk $zz $zx $zw) $nd $i0 $i1 $i4 $b1 $i2 $i3 $(b01) 2>$p03; }
+function bmp { printf '%5i %3s %3i %4i %4i iosrhp: %4i %4i %4i %2i %5i %3i %4i' ${a[0]} $b5 $b4 $(b03 $zk $zz $zx $zw) $nd $i0 $i1 $i4 $b1 $i2 $i3 $(b01) 2>$p03; }
 function bl0 { dts;ok=OK;if tsa $s12;then bl3;bv0;bnn;bb0;blo;else m="BSRV NOT ON $dt";fi; }                                                                  # cc report
 function bl1 {                                                                                                                                                # set restart idx vars
   z1=${1:-$(echo "$l0"|grep 'RPC block'|wc -l)};z2=${2:-$(echo "$l0"|grep 'New block'|wc -l)};z3=${3:-$(echo "$l0"|grep -v ' INFO '|wc -l)}                   # set processed/received blocks,error lines
@@ -235,17 +235,17 @@ function mlo { m="MEVB $(printf '%6i' $(rll|wc -l) 2>$p03) $dt $(printf 'http_av
 #    0  1              2     3     4   5     6   7
 # VALI OK     2023-06-03 20:49 int5: 700 ztc4: 240
 function vlo { m="VALI $(printf '%6i' $(vii|wc -l) 2>$p03) $dt $(printf '%s: %2i %s: %2i casp: %2i' $cun1 $v0 $cun2 $v1 $v2 2>$p03)"; }
-#    0  1   2          3     4       5   6   7    8    9  10   11  12 13  14 15 16  17 18 19  20  21 22   23   24     25   26   27   28 29   30  31   32
-# BEAC OK   0 2024-03-19 03:49 nod090:  99 rp:  731  730 ab:  962   65 0 er:  0  3  27  9  0 193   0  1  999   3 iosrhp:  768 4834 4166  3 7542  15 1279
+#    0  1   2          3     4       5   6   7    8    9  10   11  12 13  14 15 16  17 18 19  20  21 22   23   24     25   26   27   28 29    30  31   32
+# BEAC OK   0 2024-03-19 03:49 nod090:  99 rp:  731  730 ab:  962   65 0 er:  0  3  27  9  0 193   0  1  999   3 iosrhp:  768 4834 4166  3  7542  15 1279
 function blo {
   m="BEAC $ok $(printf '%3i' $(b08) 2>$p03) $(npn $nn $nr) $(printf 'rp: %4.0f %4.0f ab: %4i %4i %1i' $(b05 $z5 $b0) $(b02 $zk $zz $zx $zw) $z5 $(b04) $b0 2>$p03)"
-  m="$m $(printf 'er: %2i %2i %3i %2i %2i %3i %3i %2i %4i %3i iosrhp: %4i %4i %4i %2i %4i %3i %4i' $zk $zz $zx $zw $z1 $z2 $(b06) $z3 $z4 $(b07) $i0 $i1 $i4 $b1 $i2 $i3 $(b01) 2>$p03)"
+  m="$m $(printf 'er: %2i %2i %3i %2i %2i %3i %3i %2i %4i %3i iosrhp: %4i %4i %4i %2i %5i %3i %4i' $zk $zz $zx $zw $z1 $z2 $(b06) $z3 $z4 $(b07) $i0 $i1 $i4 $b1 $i2 $i3 $(b01) 2>$p03)"
 }
-#  0    1   2          3     4       5  6   7     8     9    10    11    12    13    14    15  16  17    18   19     20    21   22   23 24   25  26   27
-# BM   19   4 2023-10-25 17:12 node70: 70 mp:  1168   911   589   670   771   922   796   814 pd: -30  3040  154 iosrhp:  569 4325 3722 21 4016  80 1341
+#  0    1   2          3     4       5  6   7     8     9    10    11    12    13    14    15  16  17    18   19     20    21   22   23 24    25  26   27
+# BM   19   4 2023-10-25 17:12 node70: 70 mp:  1168   911   589   670   771   922   796   814 pd: -30  3040  154 iosrhp:  569 4325 3722 21  4016  80 1341
 function bmo { m="BM $(printf '%4i %3i' $b2 $b3 2>$p03) $(npn $nn $nr) $(bma 'mp:') $(bmp)"; }
-#  0    1   2          3     4       5   6   7     8     9  10  11   12   13      14   15   16   17 18   19  20   21
-# BM   41  17 2024-03-19 03:28 nod090:  97 mp:  1249   904 p_:  10  723 2192 iosrhp:  829 3805 2850  3 6716  13 1144
+#  0    1   2          3     4       5   6   7     8     9  10  11   12   13      14   15   16   17 18    19  20   21
+# BM   41  17 2024-03-19 03:28 nod090:  97 mp:  1249   904 p_:  10  723 2192 iosrhp:  829 3805 2850  3  6716  13 1144
 function bms { m="BM $(printf '%4i %3i' $b2 $b3 2>$p03) $(npn $nn $nr) mp: $(nu1 %5i ${a[$nn]}) $(bmp)"; }
 #    0   1          2     3    4 5 6 7 8 9 10 11   12 13 14 15 16 17 18 19   20 21 22 23 24 25 26 27   28 29 30 31 32 33 34 35   36 37 38 39 40 41 42 43
 # BEAC 682 2022-03-16 11:03 cnt: 4 7 0 0 0 10 10 mis: 20 20 20 20 20 20 20 mat: 14 45 30 30 30 30 30 mah: 94 68 40 40 40 40 40 dly: 79 09 50 50 50 50 50
