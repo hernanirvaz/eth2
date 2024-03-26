@@ -808,7 +808,7 @@ if [[ ! $1 ]];then
   m="$m\nbp[io]\t\t\tcc peers [incoming|outgoing]"
   m="$m\nhs[012ecgubvm]\t\thistoric summary report [0-both|1-main|2-backup|el|cc|geth|besu|beacon|vc|mev]"
   m="$m\n[ec]sp [i]\t\tel|cc show peers excluding [i($(ss5 $s12 target-peers 10))-9][0-9]"
-  m="$m\ncc[a|r|e]\t\tcc add/remove long-lived parms|change ec ($znm1/$znm4)"
+  m="$m\ncc[a|r|e]\t\tcc add/remove long-lived parms|change cc-el"
   m="$m\nvcc\t\t\tvc switch cc order"
   m="$m\ntvc\t\t\tvc transfer ($cuvc -> $nxvc)"
   m="$m\ncpe [cp]\t\tclock & cpu & errors status"
