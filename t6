@@ -308,7 +308,7 @@ function bro { if fft $p12;then dts;bnn;bb0;swn "$(printf 'R%03i %2s %3i' $2 $1 
 # slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168; $2 = RB SD VC PE BN BK
 function cpr { snp $s12 $2 $n16 $n17 $nn;[[ $1 = VC ]] && sex "$s02 $s13"; }
 function car { sex "$s03 $s12"          ;[[ $1 = VC ]] && sex "$s03 $s13"; }
-function cfb { if [[ $1 = RB || $1 = SD ]];then gps;ups;tps;bro $1 $3;cpr $1 $2;rm -f $p50 $p42.*;if [[ $1 = RB ]];then sex reboot;else sex poweroff;fi;else cpr $1 $2;car $1;ssf 90 $p42;bro $1 $3;fi; }
+function cfb { if [[ $1 = RB ]];then gps;ups;tps;bro $1 $3;cpr $1 $2;rm -f $p50 $p42.*;sex reboot;else cpr $1 $2;car $1;ssf 90 $p42;bro $1 $3;fi; }
 function vfb { sex "$s02 $s13";dmr;if [[ $1 = RS ]];then sex "$s03 $s13";else sex "$s02 $s12";fi;vro $1 $2;if [[ $1 = RB ]];then rm -f $p50 $p46.*;sex reboot;fi; }
 function brs {
   s3t $p42 && return;touch $p42.a$(stg);if g0t $3;then ssf $3 $p42;s4t $p42 && return;touch $p42.b$(stg);fi;bv0;bro $1 0;ssw $4 $p42;s4t $p42 && return
@@ -598,7 +598,6 @@ function esp { if tsa $s44;then ll2 "$g11.*$g30"|sed -E "$e67";else ll2 "$g11.*$
 [[ $1 = urb ]] && { touch $p50;urs RB      0    ${2:-$n02}; }
 [[ $1 = brb ]] && { touch $p50;brs RB      0  0 ${2:-$(btn $n00)}; }
 [[ $1 = vrb ]] && { touch $p50;vrs RB           ${2:-$n02}; }
-[[ $1 = bsd ]] && {            brs SD      0  0 ${2:-$n03}; }
 [[ $1 = ivk ]] && { touch $p50;ivk PR           ${2:-$n01}; }
 [[ $1 = ep  ]] && { if tsa $s10;then gl0;swn "$m";fi;if tsa $s11;then ul0;swn "$m";fi;if tsa $s44;then tl0;swn "$m";fi; }
 [[ $1 = cp  ]] && { if tsa $s12;then bl0;swn "$m";fi;if tsa $s13;then vl0;swn "$m";fi;if tsa $s14;then ml0;swn "$m";fi; }
@@ -787,16 +786,14 @@ if [[ ! $1 ]];then
   m="$m\n[g|t|u|b|c]rs [n] [g]\tgeth|nethermind|besu|cc|cc & vc\t\trestart\t\tn peers, mim gap"
   m="$m\nvrs               [g]\tvc\t\t\t\t\trestart\t\tmim gap"
   m="$m\n[g|t|u|b|v]rb     [g]\tgeth|nethermind|besu|cc|vc & sys\treboot\t\tmim gap"
-  m="$m\nbsd               [g]\tcc & sys\t\t\t\tpoweroff\tmim gap"
   m="$m\nivk               [g]\timport validator keys\t\t\t\t\tmim gap"
   m="$m\nirb               [h]\tsys (if needed)\t\t\t\treboot\t\tafter h hours"
   m="$m\nr[sh|pt|rs]\t\tshow|print|reset restart proces info "
   m="$m\nyj\t\t\tsystem journal"
-  m="$m\npd[a]\t\t\tproduce block\tlog lines [all]"
-  m="$m\n[lec][la]\t[hh:mm]\tel+cc/el/cc\tlog lines"
-  m="$m\n[sr]l\t\t[hh:mm]\tsys/relay\tlog lines"
-  m="$m\n[cv]i\t\t[hh:mm]\tcc/vc\t\tlog lines (internal)"
-  m="$m\n[ecv]i[iuhp12c]\t\tec/cc/vc\tlog lines (elapsed)"
+  m="$m\npd[a]\t\t\tproduce block\tlog/all\t\tlines"
+  m="$m\n[lec][la]\t[hh:mm]\tel+cc/el/cc\tlog/all\t\tlines"
+  m="$m\n[srcv][li]\t[hh:mm]\tsys/relay/cc/vc\tlog/internal\tlines"
+  m="$m\n[ecv]i[iuhp12c]\t\tec/cc/vc\tlog/elapsed\tlines"
   m="$m\nbr[l|m]\t\t\trecalculate cc minute|daily logs"
   m="$m\nbsl\t\t\tshrink cc minute log using barqivo"
   m="$m\nbdl yyyy-mm-dd\t\tdelete cc log day"
