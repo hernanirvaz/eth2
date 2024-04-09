@@ -588,10 +588,10 @@ function esp { if tsa $s44;then ll2 "$g11.*$g30"|sed -E "$e67";else ll2 "$g11.*$
 [[ $1 = brs ]] && { touch $p50;brs BN ${2:-0} 0 ${3:-$(btn $n02)}; }
 [[ $1 = crs ]] && { touch $p50;brs VC ${2:-0} 0 ${3:-$n02}; }
 [[ $1 = vrs ]] && { touch $p50;vrs RS           ${2:-$n03}; }
-[[ $1 = grb ]] && { touch $p50;grs RB      0    ${2:-$n02}; }
-[[ $1 = trb ]] && { touch $p50;trs RB      0    ${2:-$n02}; }
-[[ $1 = urb ]] && { touch $p50;urs RB      0    ${2:-$n02}; }
-[[ $1 = brb ]] && { touch $p50;brs RB      0  0 ${2:-$(btn $n00)}; }
+[[ $1 = grb ]] && { touch $p50;grs RB ${2:-0}   ${2:-$n02}; }
+[[ $1 = trb ]] && { touch $p50;trs RB ${2:-0}   ${2:-$n02}; }
+[[ $1 = urb ]] && { touch $p50;urs RB ${2:-0}   ${2:-$n02}; }
+[[ $1 = brb ]] && { touch $p50;brs RB ${2:-0} 0 ${2:-$(btn $n00)}; }
 [[ $1 = vrb ]] && { touch $p50;vrs RB           ${2:-$n02}; }
 [[ $1 = ivk ]] && { touch $p50;ivk PR           ${2:-$n01}; }
 [[ $1 = ep  ]] && { if tsa $s10;then gl0;swn "$m";fi;if tsa $s11;then ul0;swn "$m";fi;if tsa $s44;then tl0;swn "$m";fi; }
