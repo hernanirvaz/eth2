@@ -784,7 +784,7 @@ if [[ ! $1 ]];then
   m="$m\nirb               [h]\tsys (if needed)\t\t\t\treboot\t\tafter h hours"
   m="$m\nr[sh|pt|rs]\t\tshow|print|reset restart proces info "
   m="$m\nyj\t\t\tsystem journal"
-  m="$m\npd[a]\t\t\tproduce block\tlog/all\t\tlines"
+  m="$m\npb[a]\t\t\tproduce block\tlog/all\t\tlines"
   m="$m\n[lec][la]\t[hh:mm]\tel+cc/el/cc\tlog/all\t\tlines"
   m="$m\n[srcv][li]\t[hh:mm]\tsys/relay/cc/vc\tlog/internal\tlines"
   m="$m\n[ecv]i[iuhp12c]\t\tec/cc/vc\tlog/elapsed\tlines"
