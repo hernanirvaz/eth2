@@ -545,6 +545,18 @@ function laa { caa $1;eaa $1; }
 function fsp { local n=${2:-0};if [[ $n -gt 0 ]];then local i=${3:-9};else local i=${3:-0};fi;grep -v "$1 *[$n-9][0-9]"|grep "$1 *[0-$i]"|sort -k2n; }
 function esp { if tsa $s44;then ll2 "$g11.*$g30"|sed -E "$e67";else ll2 "$g11.*$g35"|sed -E "$e68";fi; }
 
+# new fs for performance
+# sudo apt update
+# sudo apt install btrfs-progs
+# lsblk
+# sudo mkfs.btrfs -f /dev/nvme0n1 /dev/nvme1n1
+# sudo btrfs device add /dev/nvme1n1 /mnt/btrfs
+# sudo mount -o rw,relatime,space_cache=v2,ssd,noquota /dev/nvme0n1 /mnt/btrfs
+# sudo nano /etc/fstab
+# /dev/nvme0n1 /mnt/btrfs btrfs defaults 0 0
+# sudo btrfs filesystem show
+# sudo btrfs device usage /mnt/btrfs
+
 [[ $1 = pb  ]] && { wpe; }
 [[ $1 = pba ]] && { pba|sort -t: -k2n -k3n -k4n; }
 [[ $1 = pbz ]] && { wpf; }
