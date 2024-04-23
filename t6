@@ -800,7 +800,7 @@ if [[ ! $1 ]];then
   m="$m\npb[a]\t\t\tproduce block\tlog/all\t\tlines"
   m="$m\n[lec][la]\t[hh:mm]\tel+cc/el/cc\tlog/all\t\tlines"
   m="$m\n[srcv][li]\t[hh:mm]\tsys/relay/cc/vc\tlog/internal\tlines"
-  m="$m\n[ecv]i[iuhp12c]\t\tec/cc/vc\tlog/elapsed\tlines"
+  m="$m\n[ecv]i[iurhp12c]\tec/cc/vc\tlog/elapsed\tlines"
   m="$m\nbr[l|m]\t\t\trecalculate cc minute|daily logs"
   m="$m\nbsl\t\t\tshrink cc minute log using barqivo"
   m="$m\nbdl yyyy-mm-dd\t\tdelete cc log day"
