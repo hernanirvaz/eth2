@@ -539,7 +539,7 @@ function hsh { if tsa $s19;then cex "$s07 $s45-status";cex "$s07 show-$s45";else
 function wpf { if tsa $s44;then ll6 "$g43";fi;ll2 "$g42"|fln "$g39"; }
 function wpe { wpf|sed -E "$e52"|sort -t: -k2n -k3n -k4n; }
 function pba { if n1t;then wpe          ;else ssh $(snc $cun1) "$p53 pb"   ;fi;if n2t;then wpe          ;else ssh $(snc $cun2) "$p53 pb"   ;fi;if vst;then if vct;then wpe          ;else ssh $(snc $cuvc) "$p53 pb"   ;fi;fi;if mst;then if mct;then wpe;else ssh $(snc $cumv) "$p53 pb";fi;fi; }
-function caa { if n1t;then cll "$e50" $1;else ssh $(snc $cun1) "$p53 cl $1";fi;if n2t;then cll "$e50" $1;else ssh $(snc $cun2) "$p53 cl $1";fi;if vst;then if vct;then cll "$e50" $1;else ssh $(snc $cuvc) "$p53 cl $1";fi;fi; }
+function caa { if n1t;then cll "$e50" $1;else ssh $(snc $cun1) "$p53 cl $1";fi;if n2t;then cll "$e50" $1;else ssh $(snc $cun2) "$p53 cl $1";fi;if vst;then if vct;then cll "$e50" $1;else ssh $(snc $cuvc) "$p53 cl $1";fi;fi;if mst;then if mct;then rll "$e51" $1;else ssh $(snc $cumv) "$p53 rl $1";fi;fi; }
 function eaa { if n1t;then ell "$e50" $1;else ssh $(snc $cun1) "$p53 el $1";fi;if n2t;then ell "$e50" $1;else ssh $(snc $cun2) "$p53 el $1";fi; }
 function laa { caa $1;eaa $1; }
 function fsp { local n=${2:-0};if [[ $n -gt 0 ]];then local i=${3:-9};else local i=${3:-0};fi;grep -v "$1 *[$n-9][0-9]"|grep "$1 *[0-$i]"|sort -k2n; }
