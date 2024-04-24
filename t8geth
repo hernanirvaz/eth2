@@ -7,9 +7,9 @@ gtv $1 $2
 maxp=10
 pp2p=30303;ndp || pp2p=30304
 othe="--http.corsdomain 'chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn' --http.vhosts '*'"                                                            # for metamask
-othe="$othe --cache 16384"                                                                                                                                  # NOT recomended after v1.30.0
+othe="$othe --cache 16384"                                                                                                                                  # after v1.30.0 NOT recomended
+othe="$othe --state.scheme=path"                                                                                                                            # after v1.14+ default
 othe=''
-othe="$othe --state.scheme=path"                                                                                                                            # full pruning historical states
 apip='127.0.0.1'
 if [[ $cunm = $inm5 ]];then apip="$iip5";else apip="$iip6";fi
 cd
