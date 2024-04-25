@@ -570,7 +570,7 @@ function esp { if tsa $s44;then ll2 "$g11.*$g30"|sed -E "$e67";else ll2 "$g11.*$
 [[ $1 = bpi ]] && { bcp ${2:-connected}|jq -r "$s48\"Incoming\"$s49"; }
 [[ $1 = bpo ]] && { bcp ${2:-connected}|jq -r "$s48\"Outgoing\"$s49"; }
 [[ $1 = mvr ]] && { mvr; }
-[[ $1 = mre ]] && { mre|sort -n; }
+[[ $1 = mre ]] && { if mct;then mre;else ssh $(snc $cumv) "$p53 mre";fi|sort -n; }
 [[ $1 = jwt ]] && { sjw; }
 [[ $1 = lpi ]] && { lpi $p02/.cargo/bin/lighthouse; }
 [[ $1 = luc ]] && { luc $p02/.cargo/bin/lighthouse ${2:-v5.1.3}; }
