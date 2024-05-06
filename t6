@@ -557,6 +557,14 @@ function esp { if tsa $s44;then ll2 "$g11.*$g30"|sed -E "$e67";else ll2 "$g11.*$
 # sudo btrfs filesystem show
 # sudo btrfs device usage /mnt/btrfs
 
+# force fs check
+# sudo umount /dev/sda1
+# sudo fsck -fy /dev/sda1
+# sudo mount /dev/sda1
+# fsck option
+#  -f, --force: Forces checking of filesystems even when they seem clean. Normally, fsck will not check filesystems that appear to be clean to avoid potential data corruption. This option overrides that behavior and forces a check regardless of the filesystem's state.
+#  -y: Automatically answers 'yes' to all questions asked by fsck. This option is useful when running fsck in non-interactive mode, such as in scripts or when you want to avoid manual intervention.
+
 [[ $1 = pb  ]] && { wpe; }
 [[ $1 = pba ]] && { pba|sort -t: -k2n -k3n -k4n; }
 [[ $1 = pbz ]] && { wpf; }
