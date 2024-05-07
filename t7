@@ -3,6 +3,7 @@
 p0='/home/eth/service.log'
 
 [[ $1 = GETHSTP ]] && { echo -e "GETH STOPED $(date '+%F %H:%M') SERVICE_RESULT=$2\tEXIT_CODE=$3\tEXIT_STATUS=$4" >> $p0; }
+[[ $1 = NETHSTP ]] && { echo -e "NETH STOPED $(date '+%F %H:%M') SERVICE_RESULT=$2\tEXIT_CODE=$3\tEXIT_STATUS=$4" >> $p0; }
 [[ $1 = BESUSTP ]] && { echo -e "BESU STOPED $(date '+%F %H:%M') SERVICE_RESULT=$2\tEXIT_CODE=$3\tEXIT_STATUS=$4" >> $p0; }
 [[ $1 = BEACSTP ]] && { echo -e "BEAC STOPED $(date '+%F %H:%M') SERVICE_RESULT=$2\tEXIT_CODE=$3\tEXIT_STATUS=$4" >> $p0; }
 [[ $1 = VALISTP ]] && { echo -e "VALI STOPED $(date '+%F %H:%M') SERVICE_RESULT=$2\tEXIT_CODE=$3\tEXIT_STATUS=$4" >> $p0; }

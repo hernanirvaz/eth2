@@ -63,6 +63,8 @@ function s2t { g0t $(ls $1.* 2>$p03|wc -l); }
 function s3t { s2t $1 || g0t $(bwc); }
 function s4t { s1t $1 || g0t $(bwc); }
 function s5t { ict    && g0t $(bwc); }
+function s6t { [[ -e $1 && -b $1 ]]; }
+function s7t { local s=$(basename $p62);sex "rm -f $p61/$s";sex "cp $p62 $p61/$s";[[ -f $p61/$s && -s $p61/$s ]]; }
 function rbt { [[ $(sra) -ge $((60*60*${1:-9})) ]]; }
 function ipt { [[ $(date +%s) -ge $(bss $1 6) ]]; }
 function pct { [[ $b4 -ne 0 ]]; }
@@ -146,11 +148,12 @@ function gl0 {                                                                  
     m="GSRV NOT ON $dt"
   fi
 }
+function tfa { sex "$s03 $s44";ssf 90 $p63;tq0;ero $1 $2 $p62; }
 function trs {
   s2t $p63 && return;tv0;tq0;ero $1 0 $p62;touch $p63.a$(stg);ssw $3 $p63;s1t $p63 && return
   local t=$(sng);local f=$p63.i$(stg);touch $f;local n=0;paf;while fft $f;do ((n+=$(sfn $t)));ssf $(sfn $t) $p63 $t
   if ipt $t;then rm $f;snp $s44 $2 $n34 $n35 $en
-    case $1 in RB) ero $1 $n $p62;rm -f $p50 $p63.*;sex reboot;;PR) ero $1 $n $p62;;*) sex "$s03 $s44";ssf 90 $p63;tq0;ero $1 $n $p62;;esac
+    case $1 in RB) ero $1 $n $p62;rm -f $p50 $p63.*;sex reboot;;PR) ero $1 $n $p62;;*) tfa $1 $n;;esac
   fi;done;rm -f $p50 $p63.*
 }
 function tdi { if g0t $1;then l4=$(ll6 "$g37"|tail -n$1);else l4=$(ll6 "$g37");fi;e1=$(nu5 2 $(ln2 "${w0}\| *$w4$w5"));e2=$(nu5 2 $(ln2 "${w0}slot *$w4$w5")); }
@@ -168,6 +171,7 @@ function tl0 {
     m="NSRV NOT ON $dt"
   fi
 }
+function tl1 { s6t $p66 || return;local n=$(date +%s);rm -f $p50 $p63.*;sex "$s02 $s44";sex "umount $p66";sex "fsck -fy $p66";sex "mount $p66";dmr;tfa FS $(($(date +%s)-n));rm -f $p50 $p63.*; }
 function urs {
   s2t $p41 && return;uv0;uq0;ero $1 0 $p11;touch $p41.a$(stg);ssw $3 $p41;s1t $p41 && return
   local t=$(sng);local f=$p41.i$(stg);touch $f;local n=0;paf;while fft $f;do ((n+=$(sfn $t)));ssf $(sfn $t) $p41 $t
@@ -369,15 +373,15 @@ function sif {
   [[ $1$e = on && $d = on ]] && e0t $i && e0t $n && return
   swn "INFO$(printf '%3i %3i %10s %5s' $n $i $dt 2>$p03) usb $e, turbo $d, ufw $(wif $(pex 'ufw status'|grep Status:)), uptime:$(uptime|sed -E "$e55")"
 }
-function tl1 { ll6 "$g36"|tln "$g25" $1; }
-function tl2 { if tsa $s44;then tl1 $1;else ll2 "$g11"|fln "$g25" $1;fi; }
-function tl3 { if tsa $s44;then tl1 $1;fi;  ll2 "$g14"|fln "$g47" $1; }
+function tg1 { ll6 "$g36"|tln "$g25" $1; }
+function tg2 { if tsa $s44;then tg1 $1;else ll2 "$g11"|fln "$g25" $1;fi; }
+function tg3 { if tsa $s44;then tg1 $1;fi;  ll2 "$g14"|fln "$g47" $1; }
 function eii { if tsa $s44;then ll6 "$g37";else ll2 "$g12";fi|tail -n${1:-$n07}|sed -E "$e50"; }
 function vii { ll4       |fln "$g26" $1; }
 function sll { ll3       |fln usb    $1|flp "$g29" $1; }
 function cll { ll2 "$g08"|fln "$g46" $2|if [[ $1 ]];then sed -E "$1";else cat;fi; }
-function ell { tl2 $2|if [[ $1 ]];then sed -E "$1";else cat;fi; }
-function lll { tl3 $2|if [[ $1 ]];then sed -E "$1"|sort -t: -k2n -k3n -k4n;else cat;fi; }
+function ell { tg2 $2|if [[ $1 ]];then sed -E "$1";else cat;fi; }
+function lll { tg3 $2|if [[ $1 ]];then sed -E "$1"|sort -t: -k2n -k3n -k4n;else cat;fi; }
 function rll { ll2 "$g09"|fln "$g47" $2|if [[ $1 ]];then sed -E "$1";else cat;fi; }
 function rlr { ll2 "$g48"|sed -E "$e51"; }
 function cpe {
@@ -557,14 +561,6 @@ function esp { if tsa $s44;then ll2 "$g11.*$g30"|sed -E "$e67";else ll2 "$g11.*$
 # sudo btrfs filesystem show
 # sudo btrfs device usage /mnt/btrfs
 
-# force fs check
-# sudo umount /dev/sda1
-# sudo fsck -fy /dev/sda1
-# sudo mount /dev/sda1
-# fsck option
-#  -f, --force: Forces checking of filesystems even when they seem clean. Normally, fsck will not check filesystems that appear to be clean to avoid potential data corruption. This option overrides that behavior and forces a check regardless of the filesystem's state.
-#  -y: Automatically answers 'yes' to all questions asked by fsck. This option is useful when running fsck in non-interactive mode, such as in scripts or when you want to avoid manual intervention.
-
 [[ $1 = pb  ]] && { wpe; }
 [[ $1 = pba ]] && { pba|sort -t: -k2n -k3n -k4n; }
 [[ $1 = pbz ]] && { wpf; }
@@ -621,7 +617,7 @@ function esp { if tsa $s44;then ll2 "$g11.*$g30"|sed -E "$e67";else ll2 "$g11.*$
 [[ $1 = up  ]] && { ul0;swn "$m"; }
 [[ $1 = upf ]] && { ul0;swn "$m" >> $p11;[[ $ok != OK ]] && urs $ok 0 $n03; }
 [[ $1 = tp  ]] && { tl0;swn "$m"; }
-[[ $1 = tpf ]] && { tl0;swn "$m" >> $p62;[[ $ok != OK ]] && trs $ok 0 $n03; }
+[[ $1 = tpf ]] && { tl0;swn "$m" >> $p62;[[ $ok != OK ]] && trs $ok 0 $n03;s7t || tl1; }
 [[ $1 = bp  ]] && { bl0;swn "$m"; }
 [[ $1 = bpf ]] && { bl0;swn "$m" >> $p12;if [[ $d1 = 23:58 ]];then if bdt;then bdl $d0;else if [[ $(llc $p12) -gt $n14 ]];then bod 0 9;fi;fi;fi;[[ $ok != OK ]] && brs $ok 0 0 $(btn $n02);pas; }
 [[ $1 = vp  ]] && { vl0;swn "$m"; }

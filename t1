@@ -84,6 +84,7 @@ p62="$p02/nethermind.log"
 p63="$p02/neth.rs"
 p64="$p02/dns.log"
 p65='/etc/ssh/sshd_config.d/50-cloud-init.conf'
+p66='/dev/null';[[ $cunm = $inm5 || $cunm = $inm6 ]] && p66='/dev/nvme0n1'
 
 g00='(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) +'
 g01='[0-9]{1,2} +'
