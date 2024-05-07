@@ -453,6 +453,7 @@ n32=4
 n33=30
 n34=10
 n35=50
+n36=90
 
 j0='.ata_sct_temperature_history.table|join(" ")'
 j1='.temperature.current'
