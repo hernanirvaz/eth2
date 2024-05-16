@@ -231,8 +231,8 @@ function vl0 { dts;if tsa $s13;then svv $n22;vlo;else m="VSRV NOT ON $dt";fi; }
 #    0  1              2     3         4   5
 # MEVB OK  11 2023-06-13 01:10 http_avg:  84
 function mlo { m="MEVB $(printf '%6i' $(rll|wc -l) 2>$p03) $dt $(printf 'http_avg: %4i erro_rv: %3i' $m0 $m1 2>$p03)"; }
-#    0  1              2     3     4   5     6   7
-# VALI OK     2023-06-03 20:49 int5: 700 ztc4: 240
+#    0      1          2     3           4  5           6  7     8  9
+# VALI     69 2024-05-16 14:49 hrv-intel6: 10 hrv-intel5:  9 casp: 14
 function vlo { m="VALI $(printf '%6i' $(vii|wc -l) 2>$p03) $dt $(printf '%s: %2i %s: %2i casp: %2i' $cun1 $v0 $cun2 $v1 $v2 2>$p03)"; }
 #    0  1   2          3     4       5   6     7    8    9  10 11  12 13  14  15  16   17   18   19      20   21   22   23 24    25  26   27
 # BEAC OK   0 2024-04-02 16:07 nod100: 107 rpab: 3023 2696 3978 0 er:  0  15  84  28    6  994   12 iosrhp: 1083 4354 3218 17 66290  62 1473
