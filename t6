@@ -548,6 +548,8 @@ function eaa { if n1t;then ell "$e50" $1;else ssh $(snc $cun1) "$p53 el $1";fi;i
 function laa { caa $1;eaa $1; }
 function fsp { local n=${2:-0};if [[ $n -gt 0 ]];then local i=${3:-9};else local i=${3:-0};fi;grep -v "$1 *[$n-9][0-9]"|grep "$1 *[0-$i]"|sort -k2n; }
 function esp { if tsa $s44;then ll2 "$g11.*$g30"|sed -E "$e67";else ll2 "$g11.*$g35"|sed -E "$e68";fi; }
+function epf { if tsa $s10;then gl0;swn "$m";fi;if tsa $s11;then ul0;swn "$m";fi;if tsa $s44;then tl0;swn "$m";fi; }
+function cpf { if tsa $s12;then bl0;swn "$m";fi;if tsa $s13;then vl0;swn "$m";fi;if tsa $s14;then ml0;swn "$m";fi; }
 
 # new fs for performance
 # sudo apt update
@@ -610,8 +612,9 @@ function esp { if tsa $s44;then ll2 "$g11.*$g30"|sed -E "$e67";else ll2 "$g11.*$
 [[ $1 = brb ]] && { touch $p50;brs RB ${2:-0} 0 ${2:-$(btn $n00)}; }
 [[ $1 = vrb ]] && { touch $p50;vrs RB           ${2:-$n02}; }
 [[ $1 = ivk ]] && { touch $p50;ivk PR           ${2:-$n01}; }
-[[ $1 = ep  ]] && { if tsa $s10;then gl0;swn "$m";fi;if tsa $s11;then ul0;swn "$m";fi;if tsa $s44;then tl0;swn "$m";fi; }
-[[ $1 = cp  ]] && { if tsa $s12;then bl0;swn "$m";fi;if tsa $s13;then vl0;swn "$m";fi;if tsa $s14;then ml0;swn "$m";fi; }
+[[ $1 = ep  ]] && { epf; }
+[[ $1 = cp  ]] && { cpf; }
+[[ $1 = ap  ]] && { epf;cpf; }
 [[ $1 = gp  ]] && { gl0;swn "$m"; }
 [[ $1 = gpf ]] && { gl0;swn "$m" >> $p10;[[ $ok != OK ]] && grs $ok 0 $n03; }
 [[ $1 = up  ]] && { ul0;swn "$m"; }
