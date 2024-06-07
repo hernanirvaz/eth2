@@ -124,7 +124,7 @@ function sz5 { tnn 0          ;printf 'el:p%03i:m%03i:l%03i:z%02i:d%04i p2p:%5i 
 function sso { tse $2 || return;dts;local e="$1 $(printf '%6s %10s %5s %-40s' $(ss3 $2) $dt "$(ss2 $2)" 2>$p03)";case $1 in GETH) e="$e $(sz0 $2)";;BESU) e="$e $(sz1 $2)";;NETH) e="$e $(sz5 $2)";;BEAC) e="$e $(sz2 $2)";;VALI) e="$e $(sz3 $2)";;MEVB) e="$e $(sz4 $2)";;esac;swn "$e"; }
 # el control commands
 function grs {
-  s2t $p40 && return;gv0;gq0;ero $1 0 $p10;touch $p40.a$(stg);ssw $3 $p40;s1t $p40 && return
+  s2t $p40 && return;gv0;gq0;touch $p40.a$(stg);ssw $3 $p40;s1t $p40 && return
   local t=$(sng);local f=$p40.i$(stg);touch $f;local n=0;paf;while fft $f;do ((n+=$(sfn $t)));ssf $(sfn $t) $p40 $t
   if ipt $t;then rm $f;snp $s10 $2 $n34 $n35 $en
     if [[ $1 = RB ]];then ero $1 $n $p10;rm -f $p50 $p40.*;sex reboot;else sex "$s03 $s10";ssf $n36 $p40;gq0;ero $1 $n $p10;fi
@@ -150,7 +150,7 @@ function gl0 {                                                                  
 }
 function tfa { sex "$s03 $s44";ssf $n36 $p63;tq0;ero $1 $2 $p62; }
 function trs {
-  s2t $p63 && return;tv0;tq0;ero $1 0 $p62;touch $p63.a$(stg);ssw $3 $p63;s1t $p63 && return
+  s2t $p63 && return;tv0;tq0;touch $p63.a$(stg);ssw $3 $p63;s1t $p63 && return
   local t=$(sng);local f=$p63.i$(stg);touch $f;local n=0;paf;while fft $f;do ((n+=$(sfn $t)));ssf $(sfn $t) $p63 $t
   if ipt $t;then rm $f;snp $s44 $2 $n34 $n35 $en
     case $1 in RB) ero $1 $n $p62;rm -f $p50 $p63.*;sex reboot;;PR) ero $1 $n $p62;;*) tfa $1 $n;;esac
@@ -173,7 +173,7 @@ function tl0 {
 }
 function tl1 { s6t $p66 || return;rm -f $p50 $p63.*;local n=$(date +%s);sex "$s02 $s44";sex "umount $p66";sex "fsck -fy $p66";sex "mount $p66";dmr;tfa FS $(($(date +%s)-n));rm -f $p50 $p63.*; }
 function urs {
-  s2t $p41 && return;uv0;uq0;ero $1 0 $p11;touch $p41.a$(stg);ssw $3 $p41;s1t $p41 && return
+  s2t $p41 && return;uv0;uq0;touch $p41.a$(stg);ssw $3 $p41;s1t $p41 && return
   local t=$(sng);local f=$p41.i$(stg);touch $f;local n=0;paf;while fft $f;do ((n+=$(sfn $t)));ssf $(sfn $t) $p41 $t
   if ipt $t;then rm $f;snp $s11 $2 $n34 $n35 $en
     if [[ $1 = RB ]];then ero $1 $n $p11;rm -f $p50 $p41.*;sex reboot;else sex "$s03 $s11";ssf $n36 $p41;uq0;ero $1 $n $p11;fi
@@ -310,7 +310,7 @@ function car { sex "$s03 $s12"          ;[[ $1 = VC ]] && sex "$s03 $s13"; }
 function cfb { if [[ $1 = RB ]];then gps;ups;tps;bro $1 $3;cpr $1 $2;rm -f $p50 $p42.*;sex reboot;else cpr $1 $2;car $1;ssf $n36 $p42;bro $1 $3;fi; }
 function vfb { sex "$s02 $s13";dmr;if [[ $1 = RS ]];then sex "$s03 $s13";else sex "$s02 $s12";fi;vro $1 $2;if [[ $1 = RB ]];then rm -f $p50 $p46.*;sex reboot;fi; }
 function brs {
-  s3t $p42 && return;touch $p42.a$(stg);if g0t $3;then ssf $3 $p42;s4t $p42 && return;touch $p42.b$(stg);fi;bv0;bro $1 0;ssw $4 $p42;s4t $p42 && return
+  s3t $p42 && return;touch $p42.a$(stg);if g0t $3;then ssf $3 $p42;s4t $p42 && return;touch $p42.b$(stg);fi;bv0;ssw $4 $p42;s4t $p42 && return
   local t=$(sng);local f=$p42.i$(stg);touch $f;local n=0;paf;while fft $f;do ((n+=$(sfn $t)));ssf $(sfn $t) $p42 $t;if ipt $t;then rm $f;cfb $1 $2 $n;fi;done;rm -f $p50 $p42.*
 }
 function vrs {
