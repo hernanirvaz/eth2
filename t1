@@ -49,7 +49,7 @@ p27='/etc/logrotate.d/rsyslog'
 p28='/etc/update-motd.d/97-overlayroot'
 p29='/etc/bind/named.conf.options'
 p30='/etc/default/named'
-p31='/etc/ntp.conf'
+p31='/etc/ntpsec/ntp.conf'
 p32='/etc/nginx/conf.d/plexmediaserver.conf'
 p33='/etc/transmission-daemon/settings.json'
 p34='/etc/hosts'
@@ -148,8 +148,7 @@ e04='s%^ *printf%# printf%i'
 e05='s%^[^: ]+: *([^ ]+).*$%\1%p'
 e06='s%timeout *=.*$%timeout=1%i'
 e07='/dnssec-validation/q'
-e08="s%^ *pool  *\([^a-z]\)%# pool \1%;s%^ *pool  *ntp.ubuntu.com%pool pool.ntp.org%"
-e08="${e08};s%^ *#.*restrict.*192.*%restrict 192.168.8.0 mask 255.255.255.0 notrap nomodify%"
+e08="s%^ *pool  *\([^a-z]\)%# pool \1%"
 e08="${e08};/^ *#.*Specify/a \\"
 e08="${e08}pool 0.de.pool.ntp.org iburst"
 e08="${e08}\npool 1.de.pool.ntp.org iburst"
@@ -317,6 +316,7 @@ if [[ $cunm = $znm1 || $cunm = $znm2 ]];then
   else
     s40="$s40\n\tlisten-on { localhost; $zip2; };"
   fi
+else
   s40="$s40\n\tlisten-on { any; };"
 fi
 s40="$s40\n\tlisten-on-v6 { none; };"
