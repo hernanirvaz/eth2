@@ -1,5 +1,6 @@
 if [[ $(uname -n) = hrv-zotac2 ]];then
   rmv () { local s=${1:-ztc1};local d=/var/lib/plexmediaserver/mp4/movie;echo rsync $s $d;rsync --ignore-existing --delete -rvz $d $s:; }
+  rst () { local s=${1:-ztc1};local d=/var/lib/plexmediaserver/Library  ;echo rsync $s $d;sudo chown -R eth:eth $d;rsync --ignore-existing --delete -rvz $d $s:;sudo chown -R plex:plex $d; }
   rlt () { local s=${1:-ztc1};local d=/var/lib/plexmediaserver/mp4/lust ;echo rsync $s $d;rsync --ignore-existing --delete -rvz $d $s:; }
   rtv () { local s=${1:-ztc3};local d=/var/lib/plexmediaserver/mp4/tv   ;echo rsync $s $d;rsync --ignore-existing --delete -rvz $d $s:;local s=${1:-ztc1};local d=/var/lib/plexmediaserver/mp4/tv2;echo rsync $s $d;rsync --ignore-existing --delete -rvz $d $s:; }
   ffl () { echo findls $2 $1;find $1 -name "*.$2" -print; }
