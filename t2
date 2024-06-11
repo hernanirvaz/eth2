@@ -37,6 +37,7 @@ if [[ $cunm = $znm2 ]];then
   if [[ ! -d $p60 ]];then cex "mkdir -p $p60";cmw $p60 775 plex               ;fi
   cc4 $p32 "$s42"              ;cmw $p32 644 root               ;sex "$s00 reload $s22"                                                                       # nginx config for plex
   cc1 $p33 "$e24"              ;cmw $p33 600 debian-transmission;sex "$s00 reload $s15"                                                                       # transmission config
+  t6 xpd;t6 xea                                                                                                                                               # nginx/plex stop & start
 fi
 if [[ $cunm = $znm1 || $cunm = $znm2 ]];then
   sex "$s07 set-ntp no"                                                                                                                                       # use ntp (sophisticated)
