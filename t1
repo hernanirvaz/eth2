@@ -357,11 +357,19 @@ for m in $(ip -j link|jq -r '.[]|select(.operstate=="UP").ifname');do
   s41="$s41\n      critical: true"
   s41="$s41\n      routes:"
   s41="$s41\n        - to: 0.0.0.0/0"
+  if [[ $cunm = $znm1 || $cunm = $znm3 || $cunm = $inm6 ]];then
   s41="$s41\n          via: 192.168.8.4"
+  else
+  s41="$s41\n          via: 192.168.8.1"
+  fi
   s41="$s41\n          metric: 100"
   s41="$s41\n          on-link: true"
   s41="$s41\n      nameservers:"
-  s41="$s41\n        addresses: [192.168.8.4]"   # ;s42=$(ip -j link|jq -r ".[]|select(.ifname==\"$m\").address")
+  if [[ $cunm = $znm1 || $cunm = $znm3 || $cunm = $inm6 ]];then
+  s41="$s41\n        addresses: [192.168.8.4]"
+  else
+  s41="$s41\n        addresses: [192.168.8.1]"
+  fi
   s41="$s41\n      link-local: [ ]"              # ;s41="$s41\n      link-local: [\"fe80::$(printf '%02x' $((0x${s42:0:2}|0x02)))${s42:3:2}:${s42:6:2}ff:fe${s42:9:2}:${s42:12:2}${s42:15:2}/64\"]"
 done
 for m in $(ip -j link|jq -r '.[]|select(.operstate=="DOWN").ifname');do
