@@ -342,8 +342,6 @@ s40="$s40\n\tquerylog yes;"
 s40="$s40\n};"
 s41=''
 s41="$s41\nnetwork:"
-s41="$s41\n  version: 2"
-s41="$s41\n  renderer: networkd"
 s41="$s41\n  ethernets:"
 for m in $(ip -j link|jq -r '.[]|select(.operstate=="UP").ifname');do
   s41="$s41\n    $m:"
