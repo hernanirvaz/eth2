@@ -375,12 +375,16 @@ for m in $(ip -j link|jq -r '.[]|select(.operstate=="DOWN").ifname');do
   s41="$s41\n      dhcp4: true"
   s41="$s41\n      activation-mode: off"
 done
-s42="upstream plex_backend { server 192.168.8.28:32400; keepalive 32; }"
+s42="upstream plex_backend { server $zip2:32400; keepalive 32; }"
 s42="$s42\nserver {"
 s42="$s42\nlisten 80;"
 s42="$s42\nserver_name ztc2;"
 s42="$s42\nsend_timeout 100m;"
-s42="$s42\nresolver $zip2 $zip1 valid=300s;"
+if [[ $cunm = $znm1 || $cunm = $znm3 || $cunm = $inm6 ]];then
+  s42="$s42\nresolver 192.168.8.4 valid=300s;"
+else
+  s42="$s42\nresolver 192.168.8.1 valid=300s;"
+fi
 s42="$s42\nresolver_timeout 10s;"
 s42="$s42\ngzip on;"
 s42="$s42\ngzip_vary on;"
