@@ -8,5 +8,4 @@ mv /home/eu/${un}keys > $uh/.ssh/authorized_keys
 chown -R $un:$un $uh/.ssh $uh/${un}2
 chmod 700 $uh/.ssh
 chmod 600 $uh/.ssh/authorized_keys
-sh /home/eu/i1;rm /home/eu/i1
 echo $R;passwd
