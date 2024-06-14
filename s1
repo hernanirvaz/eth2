@@ -5,12 +5,12 @@ source /home/eu/s0
 cp $sc $sc.sav;sed -e "$s1" $sc.sav > $sc
 chown root:root $sc;chmod 644 $sc
 sshd -t;systemctl reload $sh;systemctl restart $sh
-apt update -y           >> apt.out
-apt full-upgrade -y     >> apt.out
-apt dist-upgrade -y     >> apt.out
-apt autoremove          >> apt.out
-apt autoclean           >> apt.out
-apt install ssmtp jq -y >> apt.out
+apt update -y           &>> apt.out
+apt full-upgrade -y     &>> apt.out
+apt dist-upgrade -y     &>> apt.out
+apt autoremove          &>> apt.out
+apt autoclean           &>> apt.out
+apt install ssmtp jq -y &>> apt.out
 cp $sm $sm.sav;sed -e "$s2" $sm.sav > $sm
 chown root:mail $sm;chmod 640 $sm
 passwd -l root

@@ -4,7 +4,7 @@ source /home/eu/s0
 
 usermod -aG sudo $un
 mkdir -p $uh/.ssh $uh/${un}2
-mv /home/eu/${un}keys > $uh/.ssh/authorized_keys
+mv /home/eu/${un}keys $uh/.ssh/authorized_keys
 chown -R $un:$un $uh/.ssh $uh/${un}2
 chmod 700 $uh/.ssh
 chmod 600 $uh/.ssh/authorized_keys
