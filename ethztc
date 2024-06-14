@@ -1,4 +1,4 @@
-if [[ $(uname -n) = hrv-zotac2 ]];then
+if [[ $(hostname) = hrv-zotac2 ]];then
   d=/var/lib/plexmediaserver/mp4
   rsy () { echo RSYNC $1 $2;rsync --ignore-existing --delete -rvz $1 $2; }
   rmv () { rsy $d/movie ztc1:; }
@@ -16,6 +16,7 @@ if [[ $(uname -n) = hrv-zotac2 ]];then
   alias tcd='cd /var/lib/transmission-daemon/downloads'
 fi
 
+alias ky='ssh-keygen -t ed25519 -C "$(whoami)@$(hostname)"'
 alias nt='sudo iftop -nNPBF $(hostname -I)'
 alias rt='echo meo:$V;telnet 192.168.8.1'
 alias xx='exit'
