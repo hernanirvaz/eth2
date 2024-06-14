@@ -8,14 +8,12 @@ un=eth
 uh="/home/$un"
 pr=${1:-22}
 sh=${2:-ssh}
-
 s1="s%^ *#* *Port *22 *$%Port $pr%i"
 s1="$s1;s%^ *#* *PermitRootLogin  *.*$%PermitRootLogin no%i"
 s1="$s1;s%^ *#* *PasswordAuthentication  *.*$%PasswordAuthentication no%i"
 s1="$s1;s%^ *#* *PermitEmptyPasswords  *.*$%PermitEmptyPasswords no%i"
 s1="$s1;s%^ *#* *KbdInteractiveAuthentication  *.*$%KbdInteractiveAuthentication no%i"
 s1="$s1;s%^ *#* *UsePAM  *.*$%UsePAM no%i"
-
 s2="s%^ *#* *root *=.*$%root=hernanilr@gmail.com%i"
 s2="$s2;s%^ *#* *mailhub *=.*$%mailhub=mail.smtp2go.com:587\\\nAuthUser=fruga.pt\\\nAuthPass=$E\\\nUseSTARTTLS=YES%i"
 s2="$s2;s%^ *#* *rewriteDomain *=.*$%rewriteDomain=fruga.pt%i"

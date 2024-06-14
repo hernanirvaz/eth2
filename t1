@@ -1,7 +1,7 @@
 #!/bin/bash
 
 meeu=$(whoami)
-cunm=$(uname -n)
+cunm=$(hostname)
 cust=${cunm:0:3}
 zip1='192.168.8.25' ;znm1='hrv-zotac1'
 zip2='192.168.8.28' ;znm2='hrv-zotac2'
@@ -307,7 +307,7 @@ s36="$s36\nPin: release a=*"
 s36="$s36\nPin-Priority: -10"
 s37='snap remove --purge'
 s38="\n$p01\n{\n\trotate 7\n\tdaily\n\tmissingok\n\tnotifempty\n\tnocompress\n\tsharedscripts\n\tpostrotate\n\t\t/usr/lib/rsyslog/rsyslog-rotate\n\tendscript\n}"
-s39='printf "Welcome to %s %s\\n" "$(uname -n)" "$DISTRIB_DESCRIPTION"'
+s39='printf "Welcome to %s %s\\n" "$(hostname)" "$DISTRIB_DESCRIPTION"'
 s40=''
 s40="$s40\n\tauth-nxdomain no;"
 if [[ $cunm = $znm1 || $cunm = $znm2 ]];then
