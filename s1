@@ -16,3 +16,4 @@ cp $sm $sm.sav;sed -e "$s2" $sm.sav > $sm
 chown root:mail $sm;chmod 640 $sm
 passwd -l root
 echo -e "\n$H";adduser --gecos "" $un
+echo -e "\n\nbash /home/eu/s2\n\n"
