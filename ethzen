@@ -1,5 +1,5 @@
 eth2rq () { echo -e "\nresolvectl query ${1:-pt.archive.ubuntu.com}";resolvectl query "${1:-pt.archive.ubuntu.com}"; }
-outhcp () { echo -e "\nscp $1 outh";scp ~/eth2/bash_aliases.ethztc $1:~/.bash_aliases;scp ~/eth2/ethkeys $1:~/.ssh/authorized_keys; }
+outhcp () { echo -e "\nscp $1 outh";scp ~/eth2/ethztc $1:~/.bash_aliases;scp ~/eth2/ethkeys $1:~/.ssh/authorized_keys; }
 eth2cp () { echo -e "\nscp $1 eth2";scp ~/eth2/t[1-8]* $1:~/eth2; }
 eth2sl () { echo -e "\nssh $1     ";ssh                $1       ; }
 
