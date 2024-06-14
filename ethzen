@@ -33,5 +33,6 @@ alias gc='cd ~/eth2;git commit -am "cleanup";git push;cd'
 alias gd='cd ~/eth2;git diff'
 alias gv='cd;vi eth2/t[1-8]*'
 
+alias fw='echo "export R=\"$(</dev/urandom tr -dc "A-Za-z0-9?%&_+=@~#\,.?/"|head -c50)\"";echo "export H=\"$(</dev/urandom tr -dc "A-Za-z0-9?%&_+=@~#\,.?/"|head -c30)\"";echo "export V=\"$(</dev/urandom tr -dc "A-Za-z0-9"|head -c8)\"";echo "export K=\"$(</dev/urandom tr -dc "A-Za-z0-9?%&_+=@~#\,.?/"|head -c60)\"";echo "export W=\"$(</dev/urandom tr -dc "A-Za-z0-9?%&_+=@~#\,.?/"|head -c60)\"";'
 alias rq='erq;erq changelogs.ubuntu.com;erq ppa.launchpad.net;erq github.com;erq meo.fruga.pt;erq me2.fruga.pt'
 alias xx='exit'
