@@ -4,8 +4,8 @@ source /home/eu/i0
 
 sc='/etc/ssh/sshd_config'
 sm='/etc/ssmtp/ssmtp.conf'
-un=eth
 pr=2021
+un=eth
 sh=ssh
 uh="/home/$un"
 s1="s%^ *#* *Port *22 *$%Port $pr%i"
