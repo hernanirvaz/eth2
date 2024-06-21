@@ -641,7 +641,7 @@ function cpf { if tsa $s12;then bl0;swn "$m";fi;if tsa $s13;then vl0;swn "$m";fi
 [[ $1 = eh  ]] && { eh0 $2; }
 [[ $1 = ch  ]] && { ch0 $2; }
 [[ $1 = bh  ]] && { bh0 $2; }
-[[ $1 = hs0 ]] && { if n1t;then if vst;then if vct;then hsv;cpe;else echo $cuvc;ssh $(snc $cuvc) "$p53 hsv";fi;fi;hs0 $cun1;hs0 $cun2;if mst;then if mct;then hsm;cpe;else echo $cumv;ssh $(snc $cumv) "$p53 hsm";fi;fi;if [[ $cust = hrv ]];then if z1t;then cpe;else echo $cunt;ssh $(snc $cunt) "$p53 cpe";fi;fi;else hs0 $cunm;fi; }
+[[ $1 = hs0 ]] && { if n1t;then if vst;then if vct;then hsv;cpe;else echo $cuvc;ssh $(snc $cuvc) "$p53 hsv";fi;fi;hs0 $cun1;hs0 $cun2;if mst;then if mct;then hsm;cpe;else echo $cumv;ssh $(snc $cumv) "$p53 hsm";fi;fi;if [[ $cust = hrv && $cumv != $cunt ]];then if z1t;then cpe;else echo $cunt;ssh $(snc $cunt) "$p53 cpe";fi;fi;else hs0 $cunm;fi; }
 [[ $1 = hs1 ]] && { hs0 $cun1; }
 [[ $1 = hs2 ]] && { hs0 $cun2; }
 [[ $1 = hse ]] && { hsg;hsu;hst; }
