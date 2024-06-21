@@ -360,16 +360,17 @@ function cl3 { if [[ $1 =~ ^[0-9]+ ]];then cl2 $1;else cl1 $1;fi; }
 function cl4 { printf "server: $(cl3 ${2:0}) offset: ${4} delay: ${6} jitter: ${8}"        2>$p03; }
 function cl5 { printf "server: $(cl3 ${1:1}) offset: ${9}ms delay: ${8}ms jitter: ${10}ms" 2>$p03; }
 function cl6 { printf $(cl3 ${2:0})                                                        2>$p03; }
+function cl7 { $s07 $s45-status|sed -En "$e48"                                             2>$p03; }
 function clk {
   if [[ $($s07|sed -En "$e54") = yes ]];then local e='OK';else local e='NO';fi
   if tsa $s19;then
-    local e="CSYS $e";m="$(printf '%-40s' "$(ss2 $s19)" 2>$p03) $(cl4 $($s07 $s45-status|sed -En "$e48"))"
+    local e="CSYS $e";m="$(printf '%-40s' "$(ss2 $s19)" 2>$p03) $(cl4 $(cl7))"
   else
     local e="CNTP $e";m="$(printf '%-40s' "$(ss2 ntp)"  2>$p03) $(cl5 $(ntpq -pn|grep '^*[0-9]'))"
   fi;dts
   if tsa $s12;then swn "$e $(nu1 %3i $(ll2 "$g22"|wc -l)) $dt $m";else swn "$e     $dt $m";fi
 }
-function hch { if tsa $s19;then local s=$(cl6 $($s07 $s45-status|sed -En "$e48"));[[ $s && $cunt != $s ]] && sex "$s06 $s19";fi; }
+function hch { if tsa $s19;then local s=$(cl6 $(cl7));echo "check $cunm -> $s";[[ $s && $cunt != $s ]] && nex "$s06 $s19";fi; }
 function sif {
   if [[ $(cat $p44 2>$p03) -eq 0 ]];then local e=off;else local e=on;fi;if [[ $(cat $p43 2>$p03) -eq 1 ]];then local d=off;else local d=on;fi;local i=$(fl0|wc -l);local n=$(fl1|wc -l)
   [[ $1$e = on && $d = on ]] && e0t $i && e0t $n && return
@@ -596,7 +597,7 @@ function cpf { if tsa $s12;then bl0;swn "$m";fi;if tsa $s13;then vl0;swn "$m";fi
 [[ $1 = nrs ]] && { nrs; }
 [[ $1 = hsh ]] && { cex "$s07";hsh; }
 [[ $1 = hch ]] && { hch; }
-[[ $1 = hcc ]] && { if vct;then hch;else ssh $(snc $cuvc) "$p53 hch";fi;if n1t;then hch;else ssh $(snc $cun1) "$p53 hch";fi;if mct;then hch;else ssh $(snc $cumv) "$p53 hch";fi;if n2t;then hch;else ssh $(snc $cun2) "$p53 hch";fi; }
+[[ $1 = hca ]] && { if vct;then hch;else ssh $(snc $cuvc) "$p53 hch";fi;if n1t;then hch;else ssh $(snc $cun1) "$p53 hch";fi;if mct;then hch;else ssh $(snc $cumv) "$p53 hch";fi;if n2t;then hch;else ssh $(snc $cun2) "$p53 hch";fi; }
 [[ $1 = hrs ]] && { hrs; }
 [[ $1 = dmr ]] && { dmr; }
 [[ $1 = fsh ]] && { dex 'fwupdmgr get-devices'; }
@@ -833,7 +834,7 @@ if [[ ! $1 ]];then
   m="$m\nw[s|a|pr|l [e]]\t\tfirewall status|arranca|para|logs [exclude]"
   m="$m\nn[sh|rs]\t\tnetwork show|reset"
   m="$m\nd[sh [url]|rs]\t\tdns show [url]|reset"
-  m="$m\nh[sh|rs]\t\ttime sync show|restart"
+  m="$m\nh[sh|rs|ch|ca]\t\ttime sync show|restart|chenk|check ($cuvc, $cun1, $cumv, $cun2)"
   m="$m\nr[sh|rs|pt]\t\trestart gap show|reset|print"
   m="$m\ni[sh|ch]\t\texternal ip show|change"
   m="$m\nj[sh|rs]\t\tjournal logs show|reset"
