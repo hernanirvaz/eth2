@@ -140,6 +140,10 @@ g50="$g08.*$g31"
 g51="$g09.*$g34"
 g52='.+er: +([0-9]+) +([0-9]+) +([0-9]+) +([0-9]+).+'
 g53='Block from API'
+g54='imported_time_ms'
+g55='observed_delay_ms'
+g56='total_delay_ms'
+g57='block_delay: +Some\('
 
 e00="s%^ *#* *NTP *=.*$%NTP=$zip1 $zip2 time.google.com time.cloudflare.com time.facebook.com%i";if [[ $cunm = $cuvc || $cunm = $cun1 || $cunm = $cun2 || $cunm = $cumv ]];then e00="${e00};s%^ *#* *PollIntervalMaxSec *=.*$%PollIntervalMaxSec=1200%i";fi
 e01='s%^ *ENABLED=.*$%ENABLED=0%i'
@@ -231,10 +235,14 @@ e50="$e50;s%execution_block_hash: *,?%%g"
 e50="$e50;s%epoch:%ep:%g"
 e50="$e50;s%slot:%sl:%g"
 e50="$e50;s%proposer_index:%pi:%g"
-e50="$e50;s%set_as_head_delay:%shd:%g"
-e50="$e50;s%imported_delay:%ID:%g"
-e50="$e50;s%observed_delay:%OD:%g"
-e50="$e50;s%block_delay:%BD:%g"
+e50="$e50;s%set_as_head_time_ms:%sht:%g"
+e50="$e50;s%attestable_delay_ms:%attestable:%g"
+e50="$e50;s%available_delay_ms:%available:%g"
+e50="$e50;s%blob_delay_ms:%blob:%g"
+e50="$e50;s%execution_time_ms:%execution:%g"
+e50="$e50;s%$g54:%ID:%g"
+e50="$e50;s%$g55:%OD:%g"
+e50="$e50;s%$g56:%TD:%g"
 e50="$e50;$e37"
 e51="$e47;$e37"
 e52="$e47;$e37"
@@ -472,6 +480,7 @@ w2='([0-9,]+(\.[0-9]+)?) *(us|µs|ms|s)/,m)){if(m[3]=="s"){m[1]*=1000};if(m[3]==
 w3='#033\[[0-9;]+m *'
 w4='([0-9,]+(\.[0-9]+)?) *'
 w5='(us|µs|ms|s)/,m)){if(m[3]=="s"){m[1]*=1000};if(m[3]=="us"){m[1]/=1000};if(m[3]=="µs"){m[1]/=1000};gsub(/,/,"",m[1]);printf("%.3f\n",m[1])}}'
+w6='/,m)){gsub(/,/,"",m[1]);printf("%.3f\n",m[1])}}'
 
 unset b
 b[ 11766]='0x93bf23a587f11f9eca329a12ef51296b8a9848af8c0fe61201524b14cb85b0c6fbd3e427501cdfa3b28719bd1ed96fff'
