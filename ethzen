@@ -2,7 +2,7 @@ erq () { echo -e "\nresolvectl query ${1:-pt.archive.ubuntu.com}";resolvectl que
 ocp () { echo -e "\nscp $1 ocp" ;scp ~/eth2/ethztc $1:~/.bash_aliases;scp ~/eth2/ethkeys $1:~/.ssh/authorized_keys; }
 ecp () { echo -e "\nscp $1 eth2";scp ~/eth2/t[1-8]* $1:~/eth2; }
 esl () { echo -e "\nssh $1     ";ssh                $1       ; }
-ei0 () { echo -e "export H=\"$1\"\nexport E=\"$2\"\nexport R=\"$3\""; }
+ei0 () { echo -e "export H=\"$1\"\nexport E=\"$2\"\nexport R=\"$3\"\npr=$4"; }
 ei1 () { echo -e "echo>>~/.bashrc\necho \"export PATH=\\\"~/eth2:\\\$PATH\\\"\">>~/.bashrc\necho \"export H=\\\"$1\\\"\">>~/.bashrc\necho \"export V=\\\"$2\\\"\">>~/.bashrc\necho \"export K=\\\"$3\\\"\">>~/.bashrc\necho \"export E=\\\"$4\\\"\">>~/.bashrc\necho \"export B=\\\"$5\\\"\">>~/.bashrc\necho \"PS1=\\\"\\\$H:\\\h: \\\"\">>~/.bashrc\nchmod 755 ~/eth2/t[1-9]*"; }
 cc0 () { if [[ ${1%%.*} -eq 192 ]];then local s="eu@$1";else local s="ubuntu@$1";fi;scp ~/eth2/s? ~/eth2/ethkeys ~/i0 $s:~;echo -e "\n\nsudo -i\nbash /home/eu/s1\n\n";ssh -p 22 $s;scp -P $2 -i ~/.ssh/id_ed25519 ~/eth2/t[1-9]* $1:~/eth2;scp -P $2 -i ~/.ssh/id_ed25519 ~/eth2/ethztc $1:~/.bash_aliases;scp -P $2 -i ~/.ssh/id_ed25519 ~/i1 $1:~;ssh -p $2 -i ~/.ssh/id_ed25519 $1 'sh i1';echo -e "\n\nky # gerar key & copiar para ethkeys\nt2 # setup\n\n";ssh -p $2 -i ~/.ssh/id_ed25519 $1; }
 

@@ -4,7 +4,6 @@ source /home/eu/i0
 
 sc='/etc/ssh/sshd_config'
 sm='/etc/ssmtp/ssmtp.conf'
-pr=2021
 un=eth
 sh=ssh
 uh="/home/$un"

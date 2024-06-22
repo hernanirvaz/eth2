@@ -16,7 +16,7 @@ if [[ $(hostname) = hrv-zotac2 ]];then
   alias tcd='cd /var/lib/transmission-daemon/downloads'
 fi
 
-alias ky='ssh-keygen -t ed25519 -C "$(whoami)@$(hostname)"'
+alias ky='ssh-keygen -t ed25519 -C "$(whoami)@$(hostname)";cat ~/.ssh/id_ed25519.pub'
 alias nt='sudo iftop -nNPBF $(hostname -I)'
 alias rt='echo meo:$V;telnet 192.168.8.1'
 alias xx='exit'
