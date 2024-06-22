@@ -16,7 +16,7 @@ cuvc=$znm4
 nxvc=$znm4
 cun1=$inm6
 cun2=$inm5
-cumv=$znm1
+cumv=$znm3
 cunt=$znm1
 
 p00='/usr/local/bin'
