@@ -554,18 +554,6 @@ function esp { if tsa $s44;then ll2 "$g11.*$g30"|sed -E "$e67";else ll2 "$g11.*$
 function epf { if tsa $s10;then gl0;swn "$m";fi;if tsa $s11;then ul0;swn "$m";fi;if tsa $s44;then tl0;swn "$m";fi; }
 function cpf { if tsa $s12;then bl0;swn "$m";fi;if tsa $s13;then vl0;swn "$m";fi;if tsa $s14;then ml0;swn "$m";fi; }
 
-# new fs for performance
-# sudo apt update
-# sudo apt install btrfs-progs
-# lsblk
-# sudo mkfs.btrfs -f /dev/nvme0n1 /dev/nvme1n1
-# sudo btrfs device add /dev/nvme1n1 /mnt/btrfs
-# sudo mount -o rw,relatime,space_cache=v2,ssd,noquota /dev/nvme0n1 /mnt/btrfs
-# sudo nano /etc/fstab
-# /dev/nvme0n1 /mnt/btrfs btrfs defaults 0 0
-# sudo btrfs filesystem show
-# sudo btrfs device usage /mnt/btrfs
-
 [[ $1 = pb  ]] && { wpe; }
 [[ $1 = pba ]] && { pba|sort -t: -k2n -k3n -k4n; }
 [[ $1 = pbz ]] && { wpf; }

@@ -24,11 +24,11 @@ p01='/var/log/syslog'
 p02='/home/eth'
 p03='/dev/null'
 p04='/etc/systemd/system'
-p05='/var/lib/lighthouse'  ;[[ $cunm = $inm5 || $cunm = $inm6 ]] && p05='/cl/lighthouse'
+p05='/var/lib/lighthouse'  ;[[ $cunm = $inm5 ]] && p05='/nl/lighthouse';[[ $cunm = $inm6 ]] && p05='/cl/lighthouse'
 p06=$p02
 p07='/usr/bin'
-p08='/var/lib/goethereum'  ;[[ $cunm = $inm5 || $cunm = $inm6 || $cunm = $vnm1 || $cunm = $vnm2 ]] && p08='/el/goethereum'
-p09='/var/lib/javaethereum';[[ $cunm = $inm5 || $cunm = $inm6 || $cunm = $vnm1 || $cunm = $vnm2 ]] && p09='/el/javaethereum'
+p08='/var/lib/goethereum'  ;[[ $cunm = $inm6 || $cunm = $vnm1 || $cunm = $vnm2 ]] && p08='/el/goethereum'  ;[[ $cunm = $inm5 ]] && p08='/nl/goethereum'
+p09='/var/lib/javaethereum';[[ $cunm = $inm6 || $cunm = $vnm1 || $cunm = $vnm2 ]] && p09='/el/javaethereum';[[ $cunm = $inm5 ]] && p09='/nl/javaethereum'
 p10="$p02/geth.log"
 p11="$p02/besu.log"
 p12="$p02/beacon.log"
@@ -79,7 +79,7 @@ p57="/etc/nut/upsd.conf"
 p58='/var/lib/jwtethereum'
 p59='/var/lib/transmission-daemon/downloads'
 p60='/var/lib/plexmediaserver/mp4'
-p61='/var/lib/nethermind';[[ $cunm = $inm5 || $cunm = $inm6 || $cunm = $vnm1 || $cunm = $vnm2 ]] && p61='/el/nethermind'
+p61='/var/lib/nethermind';[[ $cunm = $inm6 || $cunm = $vnm1 || $cunm = $vnm2 ]] && p61='/el/nethermind';[[ $cunm = $inm5 ]] && p61='/nl/nethermind'
 p62="$p02/nethermind.log"
 p63="$p02/neth.rs"
 p64="$p02/dns.log"
