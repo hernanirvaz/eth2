@@ -19,10 +19,8 @@ t6 lpi                                                                          
 if [[ $cunm = $znm1 || $cunm = $znm2 || $cunm = $znm3 || $cunm = $znm4 || -f $p04/$s12.service ]];then
   if [[ -f $p04/$s12.service ]];then swu "cc ja instalado";else swu 'cc NAO DEVE SER INSTALADO AQUI';fi
 else
-  tarp=20 # less bandwidth/load for gossip - too low (<20) and block proposals start getting orphaned or even missed
-  tarp=80 # default
-  apip='127.0.0.1' # equivalent empty
-  if [[ $cunm = $inm5 ]];then apip="$iip5";else apip="$iip6";fi
+  apip='127.0.0.1'
+  if [[ $cunm = $inm5 ]];then apip="$iip5";tarp=40;else apip="$iip6";tarp=100;fi
   othe=''
   othe="$othe --execution-endpoint http://$apip:8551 --execution-jwt $p58/jwt"
   othe="$othe --suggested-fee-recipient $s26"                                                                                                                 # bn level fees
