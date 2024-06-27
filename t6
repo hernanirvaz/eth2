@@ -614,7 +614,7 @@ function cpf { if tsa $s12;then bl0;swn "$m";fi;if tsa $s13;then vl0;swn "$m";fi
 [[ $1 = up  ]] && { ul0;swn "$m"; }
 [[ $1 = upf ]] && { ul0;swn "$m" >> $p11;[[ $ok != OK ]] && urs $ok 0 $n03; }
 [[ $1 = tp  ]] && { tl0;swn "$m"; }
-[[ $1 = tpf ]] && { tl0;swn "$m" >> $p62;[[ $ok != OK ]] && trs $ok 0 $n03;s7t $2 || tl1; }
+[[ $1 = tpf ]] && { tl0;swn "$m" >> $p62;[[ $ok != OK ]] && trs $ok 0 $n03; } # s7t $2 || tl1; # filesystem is NOK fsck
 [[ $1 = bp  ]] && { bl0;swn "$m"; }
 [[ $1 = bpf ]] && { bl0;swn "$m" >> $p12;if [[ $d1 = 23:58 ]];then if bdt;then bdl $d0;else if [[ $(llc $p12) -gt $n14 ]];then bod 0 9;fi;fi;fi;[[ $ok != OK ]] && brs $ok 0 0 $(btn $n02);pas; }
 [[ $1 = vp  ]] && { vl0;swn "$m"; }
