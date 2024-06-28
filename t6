@@ -571,7 +571,7 @@ function cpf { if tsa $s12;then bl0;swn "$m";fi;if tsa $s13;then vl0;swn "$m";fi
 [[ $1 = mre ]] && { if mct;then mre;else ssh $(snc $cumv) "$p53 mre";fi|sort -n; }
 [[ $1 = jwt ]] && { sjw; }
 [[ $1 = lpi ]] && { lpi $p02/.cargo/bin/lighthouse; }
-[[ $1 = luc ]] && { luc $p02/.cargo/bin/lighthouse ${2:-v5.2.0}; }
+[[ $1 = luc ]] && { luc $p02/.cargo/bin/lighthouse ${2:-v5.2.1}; }
 [[ $1 = ruv ]] && { ruv $2; }
 [[ $1 = ccr ]] && { llt && ble "$e14"; }
 [[ $1 = cca ]] && { llt || ble "$e15"; }
