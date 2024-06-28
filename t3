@@ -13,7 +13,7 @@ if [[ $cunm = $znm4 || $cunm = $inm5 || $cunm = $vnm1 || $cunm = $vnm2 ]];then
     swu 'RUST NEEDS';cex 'apt install git gcc g++ make cmake pkg-config llvm-dev libclang-dev clang protobuf-compiler -y'                                     # rust dependencies
     swu 'RUST INSTALL';cd $p02;curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh;source "$HOME/.cargo/env"                                       # rust install
   fi
-  [[ -f $p02/.cargo/bin/lighthouse ]] || t6 luc $1                                                                                                            # cc compile
+  [[ -f $p00/lighthouse || -f $p02/.cargo/bin/lighthouse ]] || t6 luc $1                                                                                      # cc compile
 fi
 t6 lpi                                                                                                                                                        # cc propagate/install
 if [[ $cunm = $znm1 || $cunm = $znm2 || $cunm = $znm3 || $cunm = $znm4 || -f $p04/$s12.service ]];then

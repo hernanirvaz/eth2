@@ -696,6 +696,7 @@ function cpf { if tsa $s12;then bl0;swn "$m";fi;if tsa $s13;then vl0;swn "$m";fi
 [[ $1 = yj  ]] && { jrn "" "$2"; }
 [[ $1 = ej  ]] && { jrn "-u $s10 -u $s11 -u $s44" "$2"; }
 [[ $1 = cj  ]] && { jrn "-u $s12 -u $s13 -u $s14" "$2"; }
+[[ $1 = vj  ]] && { jrn         "-u $s13"         "$2"; }
 [[ $1 = sj  ]] && { jrn "-u $s20" "$2"; }
 # arranca
 [[ $1 = ga  ]] && { dmr;ga; }
