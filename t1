@@ -195,7 +195,7 @@ e26='s%(Current DNS)[^:]+:%   \1:%ip'
 e27='s%GRUB_CMDLINE_LINUX_DEFAULT *= *"\(..*\)"%GRUB_CMDLINE_LINUX_DEFAULT="\1 pcie_aspm=off"%;s%GRUB_CMDLINE_LINUX_DEFAULT *= *""%GRUB_CMDLINE_LINUX_DEFAULT="pcie_aspm=off"%'
 e28="s%APT::Periodic::Update-Package-Lists.*$%APT::Periodic::Update-Package-Lists \"1\";%i"
 e28="${e28};s%APT::Periodic::Unattended-Upgrade.*$%APT::Periodic::Unattended-Upgrade \""
-case $cunm in $cuvc) e28="${e28}5";;$cun1) e28="${e28}2";;*) e28="${e28}1";;esac
+case $cunm in $znm4) e28="${e28}5";;$inm6) e28="${e28}2";;*) e28="${e28}1";;esac
 e28="${e28}\";%i;/APT::Periodic::Unattended-Upgrade/a \\"
 e28="${e28}APT::Periodic::AutocleanInterval \"1\";"
 case $cunm in $cun1) e30='e1';e31='b1';;$cun2) e30='e2';e31='b2';;$cuvc) e30='el';e31='vc';;*) e30='el';e31='cl';;esac;if [[ $cust = hrv ]];then e32='hrv-(zotac|intel)[0-9]';else e32='ns([0-9]{7})';fi;e33='\+[0-9]{2}:[0-9]{2}';e34="s%^$g00$g01($g03) +$e32 +mev-boost$g05 +time=\"$g02($g03";e35="$e32 +lighthouse$g05 +$g00$g01$g03($g04)[0-9]* +([A-Z]{4,}) +"

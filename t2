@@ -67,12 +67,11 @@ else
   cc1 $p20 "$e13"                                                                                                                                             # general time servers
   nex "mv -f /etc/motd $p02/motd.sav"                                                                                                                         # no contabo info
 fi                             ;cmw $p20 644 root;hrs                                                                                                         # timesyncd cmod & restart
-cc1 $p23 "$e03"                ;cmw $p23 644 root                                                                                                             # unattended-upgrades
-cc1 $p51 "$e28"                ;cmw $p51 644 root                                                                                                             # unattended-upgrades
+cc1 $p23 "$e03"                ;cmw $p23 644 root                                                                                                             # unattended-upgrades base
 cc1 $p24 "$e04";cc2 $p24 "$s39";cmw $p24 755 root                                                                                                             # header add my motd
 cc1 $p25 "$e04"                ;cmw $p25 755 root                                                                                                             # help-text delete
 cc1 $p27 "$e53";cc2 $p27 "$s38";cmw $p27 644 root                                                                                                             # new logrotate add
 [[ -x $p28 ]] && sex "chmod -x $p28"                                                                                                                          # motd overlayroot unexecute
-nex "$s00 daemon-reload";sudo dpkg-reconfigure -plow unattended-upgrades;sex "$s06 unattended-upgrades"                                                       # unattended upgrades
+nex "$s00 daemon-reload";sudo dpkg-reconfigure -plow unattended-upgrades;cc1 $p51 "$e28";cmw $p51 644 root;nex "$s06 unattended-upgrades"                     # unattended upgrades auto
 swn 'sudo netplan apply'
 swn 'AND reboot'
