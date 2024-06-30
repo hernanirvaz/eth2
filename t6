@@ -166,7 +166,7 @@ function tb2 { if [[ $(echo $@|grep false) ]];then printf ''      ;else printf '
 function tl0 {
   dts;ok=OK
   if tsa $s44;then local e=$(tcl eth_syncing);tv0;tnn $n07;eb0 $p62 $e
-    m="NETH $ok $(tsy $e) $(npn $en $er) sgs: $(nu1 %4i $e0)$(tb2 $e) $(printf 'is: %3i %5i %4i' $e1 $e2 $(ei0) 2>$p03)"
+    m="NETH $ok $(tsy $e) $(npn $en $er) sgs: $(nu1 %4i $e0)$(tb2 $e) $(printf 'ps: %3i %5i %4i' $e1 $e2 $(ei0) 2>$p03)"
   else
     m="NSRV NOT ON $dt"
   fi
