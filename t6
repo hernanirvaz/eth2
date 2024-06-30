@@ -553,6 +553,7 @@ function fsp { local n=${2:-0};if [[ $n -gt 0 ]];then local i=${3:-9};else local
 function esp { if tsa $s44;then ll2 "$g11.*$g30"|sed -E "$e67";else ll2 "$g11.*$g35"|sed -E "$e68";fi; }
 function epf { if tsa $s10;then gl0;swn "$m";fi;if tsa $s11;then ul0;swn "$m";fi;if tsa $s44;then tl0;swn "$m";fi; }
 function cpf { if tsa $s12;then bl0;swn "$m";fi;if tsa $s13;then vl0;swn "$m";fi;if tsa $s14;then ml0;swn "$m";fi; }
+function uur { nex "$s00 daemon-reload";sudo dpkg-reconfigure -plow unattended-upgrades;nex "$s06 unattended-upgrades";cex "unattended-upgrade -d"; }
 
 [[ $1 = pb  ]] && { wpe; }
 [[ $1 = pba ]] && { pba|sort -t: -k2n -k3n -k4n; }
@@ -650,6 +651,7 @@ function cpf { if tsa $s12;then bl0;swn "$m";fi;if tsa $s13;then vl0;swn "$m";fi
 [[ $1 = rpt ]] && { touch $p50; }
 [[ $1 = jsh ]] && { nex "journalctl --disk-usage"; }
 [[ $1 = jrs ]] && { nex "journalctl --vacuum-time=3days";nex "journalctl --verify"; }
+[[ $1 = uur ]] && { uur; }
 [[ $1 = lp  ]] && { pex 'ss -tunlp'; }
 [[ $1 = ish ]] && { curl -s https://ipinfo.io/ip;echo; }
 [[ $1 = ich ]] && { ll2 "($g06|$g08).*ip[:=] +[0-9]"|sed -E "$e50"; }
