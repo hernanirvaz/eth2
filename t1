@@ -141,7 +141,7 @@ g51="$g09.*$g34"
 g52='.+er: +([0-9]+) +([0-9]+) +([0-9]+) +([0-9]+).+'
 g53='Block from API'
 g54='imported_time_ms:'
-g55='blob_delay_ms:'
+g55='execution_time_ms:'
 g56='total_delay_ms:'
 
 e00="s%^ *#* *NTP *=.*$%NTP=$zip1 $zip2 time.google.com time.cloudflare.com time.facebook.com%i";if [[ $cunm = $cuvc || $cunm = $cun1 || $cunm = $cun2 || $cunm = $cumv ]];then e00="${e00};s%^ *#* *PollIntervalMaxSec *=.*$%PollIntervalMaxSec=1200%i";fi
@@ -235,12 +235,12 @@ e50="$e50;s%epoch:%ep:%g"
 e50="$e50;s%slot:%sl:%g"
 e50="$e50;s%proposer_index:%pi:%g"
 e50="$e50;s%set_as_head_time_ms:%sht:%g"
-e50="$e50;s%attestable_delay_ms:%att:%g"
+e50="$e50;s%blob_delay_ms:%blb:%g"
 e50="$e50;s%available_delay_ms:%avl:%g"
-e50="$e50;s%execution_time_ms:%exe:%g"
+e50="$e50;s%attestable_delay_ms:%att:%g"
 e50="$e50;s%observed_delay_ms:%obs:%g"
 e50="$e50;s%$g54%ID:%g"
-e50="$e50;s%$g55%BD:%g"
+e50="$e50;s%$g55%ED:%g"
 e50="$e50;s%$g56%TD:%g"
 e50="$e50;$e37"
 e51="$e47;$e37"
