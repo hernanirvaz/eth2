@@ -77,8 +77,8 @@ function bpt { [[ $(era $p12 $n12) -eq 1 ]] && ( (pct && pmt && hat && ! bdt && 
 function llc { pt2 $(wc -l $1 2>$p03) 0; }                                                                                                                    # get log line count
 function jrn { if [[ $2 ]];then local s="-g $2";else local s=;fi;cex "journalctl --no-hostname --no-full -f $1 $s"; }                                         # my journal   format
 function dmr { sex "$s00 daemon-reload"; }                                                                                                                    # daemon-reload
-function si1 { local n=${1:-0};printf %i $((15*n))  2>$p03; }
-function si2 { local n=${1:-0};printf %i $((600*n)) 2>$p03; }
+function si1 { local n=${1:-0};printf %i $((20*n))   2>$p03; }
+function si2 { local n=${1:-0};printf %i $((1000*n)) 2>$p03; }
 function svi { local n=${1:-0};if g0t $n;then l6=$(ll1 "$g18"|tail -n$n);else l6=$(ll1 "$g18");fi;i0=$(nu5 0 $(ln1 $g54));i1=$(nu5 0 $(ln1 $g55));i4=$(nu5 0 $(ln1 $g56));b1=$(nu3 $(ln3 "$g27" "$g49"));if g0t $n;then l4=$(ll1 "$g19"|tail -n$(si2 $n));else l4=$(ll1 "$g19");fi;i2=$(nu2 "$(nu5 0 $(ln2 "${w0}elapsed: *$w3"))/1000");if g0t $n;then l6=$(ll1 "$g21"|tail -n$(si1 $n));else l6=$(ll1 "$g21");fi;i3=$(nu5 2 $(ln1 $g15)); }
 function svv { l6=$(ll5 "$g16" $1);v0=$(nu4 1 $(ln1 $g33 ".*$(sni $cun1)"));v1=$(nu4 1 $(ln1 $g33 ".*$(sni $cun2)"));l6=$(ll5 "$g17" $(($1/2)));v2=$(nu4 1 $(ln1 $g32)); }
 function smm { m0=$(nu4 3 $(ln4 "$g34" "$g09" $1));m1=$(rlr|wc -l); }
