@@ -156,7 +156,7 @@ function trs {
     case $1 in RB) ero $1 $n $p62;rm -f $p50 $p63.*;sex reboot;;PR) ero $1 $n $p62;;*) tfa $1 $n;;esac
   fi;done;rm -f $p50 $p63.*
 }
-function tdi { if g0t $1;then l4=$(ll6 "$g37"|tail -n$1);else l4=$(ll6 "$g37");fi;e1=$(nu5 2 $(ln2 "${w0}\| *$w1$w5"));e2=$(nu5 2 $(ln2 "${w0}slot *$w1$w5")); }
+function tdi { if g0t $1;then l4=$(ll6 "$g37"|tail -n$1);else l4=$(ll6 "$g37");fi;e1=$(nu5 2 $(ln2 "${w0}\| *$w1$w4"));e2=$(nu5 2 $(ln2 "${w0}slot *$w1$w4")); }
 function tcl { curl $s30 -sX POST -H "Content-Type: application/json" --data "{\"jsonrpc\":\"2.0\",\"method\":\"$1\",\"params\":[],\"id\":0}" 2>$p03|jq -r .result; }
 function tv0 { en=$(ss5 $s44 MaxActivePeers); }
 function tq0 { er=$(nu0 $(tcl net_peerCount)); }
