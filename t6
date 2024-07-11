@@ -785,6 +785,7 @@ function uur { nex "$s00 daemon-reload";sudo dpkg-reconfigure -plow unattended-u
 [[ $1 = sds ]] && { sd; }
 [[ $1 = mds ]] && { md; }
 [[ $1 = lup ]] && { apt list --upgradable; }
+[[ $1 = vex ]] && { [[ -x $(dirname $p00)/go/bin/go ]] || gnv;[[ -x $p00/ethdo ]] || dlv;swu "expectations for ${2:-${#b[@]}} validators";ethdo $s27 validator expectation --validators=${2:-${#b[@]}}; }
 
 if [[ ! $1 ]];then
   m="letra 1"
@@ -829,6 +830,7 @@ if [[ ! $1 ]];then
   m="$m\ni[sh|ch]\t\texternal ip show|change"
   m="$m\nj[sh|rs]\t\tjournal logs show|reset"
   m="$m\nf[sh|rf|ud [d]]\t\tfirmware show|refres|hupdate [device-id]"
+  m="$m\nvex [n]\t\t\texpectations n=validators(${#b[@]})"
   m="$m\ntmp\t\t\ttemperature show"
   m="$m\nsif\t\t\tsystem info show"
   m="$m\nchk\t\t\tcheck server with chkrootkit"
