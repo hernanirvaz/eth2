@@ -2,7 +2,7 @@
 
 source /home/eth/eth2/t1
 
-function cc1 { local f=$(basename $1);sex "cp $1 $f.sav";cmw $f.sav 644 eth      ;sed  -e "$2" $f.sav > $f.new;sex "cp $f.new $1"; }                          # edit             file
+function cc1 { local f=$(basename $1);sex "cp $1 $f.sav";cmw $f.sav 644 eth      ;sed  -E "$2" $f.sav > $f.new;sex "cp $f.new $1"; }                          # edit             file
 function cc2 { local f=$(basename $1);sex "cp $1 $f.sav";cp $1 $f.new            ;echo -e "$2"       >> $f.new;sex "cp $f.new $1"; }                          # add lines to end file
 function cc3 { local f=$(basename $1);sex "cp $1 $f.sav";sed "$2" $f.sav > $f.new;echo -e "$3"       >> $f.new;sex "cp $f.new $1"; }                          # add lines to pos file
 function cc4 { local f=$(basename $1);sex "cp $1 $f.sav"                         ;echo -e "$2"        > $f.new;sex "cp $f.new $1"; }                          # replace lines of file
@@ -28,16 +28,15 @@ swu 'ADDITIONAL LINUX'   ;sex 'apt install python3-pip net-tools apt-listchanges
 swu 'UNATTENDED UPGRADES';cex 'apt install unattended-upgrades update-notifier-common -y'
 swu 'LINUX CONFIG'
 if [[ $cunm = $znm2 ]];then
-  swu 'PLEX SERVER'      ;cex 'apt install dirmngr ca-certificates apt-transport-https -y'
+  swu 'PLEX SERVER'        ;sex 'apt install dirmngr ca-certificates apt-transport-https -y'
   echo deb https://downloads.plex.tv/repo/deb public main | sudo tee /etc/apt/sources.list.d/plexmediaserver.list                                             # add apt source for plex
   curl https://downloads.plex.tv/plex-keys/PlexSign.key | sudo apt-key add -;sex 'apt update'                                                                 # add apt key    for plex
-  sex 'apt install nginx plexmediaserver transmission-cli transmission-common transmission-daemon -y'                                                         # install nginx/plex/transmission
-  sex "usermod -a -G debian-transmission eu"
-  if [[ ! -d $p59 ]];then cex "mkdir -p $p59";cmw $p59 775 debian-transmission;fi
-  if [[ ! -d $p60 ]];then cex "mkdir -p $p60";cmw $p60 775 plex               ;fi
-  cc4 $p32 "$s42"              ;cmw $p32 644 root               ;sex "$s00 reload $s22"                                                                       # nginx config for plex
-  cc1 $p33 "$e24"              ;cmw $p33 600 debian-transmission;sex "$s00 reload $s15"                                                                       # transmission config
-  t6 xpd;t6 xea;t6 rpd;t6 rea                                                                                                                                 # nginx/plex/transmission stop & start
+  cex 'apt install nginx plexmediaserver -y'                                                                                                                  # instal nginx/plex
+  if [[ ! -d $p60 ]];then sex "mkdir -p $p60";cmw $p60 775 plex;fi;cc4 $p32 "$s42"                ;cmw $p32 644 root;sex "$s00 reload $s22"                   # config nginx/plex
+  t6 xpd;t6 xea                                                                                                                                               # enable nginx/plex
+  swu 'TRANSMISSION SERVER';cex 'apt install transmission-cli transmission-common transmission-daemon -y';sex "usermod -a -G $s51 eu"                         # instal transmission
+  if [[ ! -d $p59 ]];then sex "mkdir -p $p59";cmw $p59 775 $s51;fi;cc1 $p33 "$e24";cc1 $p34 "$e25";cmw $p33 600 $s51;sex "$s00 reload $s15"                   # config transmission
+  t6 rpd;t6 rea                                                                                                                                               # enable transmission
 fi
 if [[ $cunm = $znm1 || $cunm = $znm2 ]];then
   sex "$s07 set-ntp no"                                                                                                                                       # use ntp (sophisticated)
@@ -57,10 +56,10 @@ if [[ $cust = hrv ]];then
   sex "rm -f $(dirname $p22)/*.yaml";cc4 $p22 "$s41";cmw $p22 600 root                                                                                        # new netplan
   cc1 $p26 "$e06"              ;cmw $p26 755 root                                                                                                             # grub timeout
   cc1 $p48 "$e27"              ;cmw $p48 644 root                                                                                                             # grub no PCIe active state power management
-  cc1 $p34 "$e17"              ;cmw $p34 644 root                                                                                                             # hosts config
+  cc1 $p67 "$e17"              ;cmw $p67 644 root                                                                                                             # hosts config
   cc4 $p35 "$s43"              ;cmw $p35 644 root                                                                                                             # ssh config
   cc1 $p65 "$e69"              ;cmw $p65 600 root                                                                                                             # ssh config
-  cc1 $p37 "$e23;$e25"         ;cmw $p37 644 root                                                                                                             # no swap - bad for IOPS
+  cc1 $p37 "$e23"              ;cmw $p37 644 root                                                                                                             # no swap - bad for IOPS
   nex 'update-grub'
 else
   sex "$s07 set-timezone Europe/Berlin"
