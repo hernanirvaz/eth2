@@ -192,7 +192,6 @@ e24="$e24;s%rpc-enabled\":[^,]+,%rpc-enabled\": true,%"
 e24="$e24;s%rpc-whitelist\":[^,]+,%rpc-whitelist\": \"127.0.0.1,192.168.8.*\",%"
 e24="$e24;s%rpc-username\":[^,]+,%rpc-username\": \"eu\",%"
 e24="$e24;s%rpc-password\":[^,]+,%rpc-password\": \"\",%"
-e24="$e24;s%umask\":[^,]+,%umask\": \"18\",%"
 e25='s%Type=.*$%Type=simple%'
 e26='s%(Current DNS)[^:]+:%   \1:%ip'
 e27='s%GRUB_CMDLINE_LINUX_DEFAULT *= *"\(..*\)"%GRUB_CMDLINE_LINUX_DEFAULT="\1 pcie_aspm=off"%;s%GRUB_CMDLINE_LINUX_DEFAULT *= *""%GRUB_CMDLINE_LINUX_DEFAULT="pcie_aspm=off"%'
