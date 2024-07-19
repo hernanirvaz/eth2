@@ -49,7 +49,7 @@ p27='/etc/logrotate.d/rsyslog'
 p28='/etc/update-motd.d/97-overlayroot'
 p29='/etc/bind/named.conf.options'
 p30='/etc/default/named'
-p31='/etc/ntp.conf';[[ -x $p31 ]] || p31='/etc/ntpsec/ntp.conf'
+p31='/etc/ntpsec/ntp.conf'
 p32='/etc/nginx/conf.d/plexmediaserver.conf'
 p33='/etc/transmission-daemon/settings.json'
 p34='/usr/lib/systemd/system/transmission-daemon.service'
@@ -86,6 +86,7 @@ p64="$p02/dns.log"
 p65='/etc/ssh/sshd_config.d/50-cloud-init.conf'
 p66='/dev/null';[[ $cunm = $inm5 || $cunm = $inm6 ]] && p66='/dev/nvme0n1'
 p67='/etc/hosts'
+p68='/etc/chrony/chrony.conf'
 
 g00='(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) +'
 g01='[0-9]{1,2} +'
@@ -146,127 +147,6 @@ g53='Block from API'
 g54='imported_time_ms:'
 g55='execution_time_ms:'
 g56='attestable_delay_ms:'
-
-e00="s%^ *#* *NTP *=.*$%NTP=$zip1 $zip2 time.google.com time.cloudflare.com time.facebook.com%i";if [[ $cunm = $cuvc || $cunm = $cun1 || $cunm = $cun2 || $cunm = $cumv ]];then e00="${e00};s%^ *#* *PollIntervalMaxSec *=.*$%PollIntervalMaxSec=1200%i";fi
-e01='s%^ *ENABLED=.*$%ENABLED=0%i'
-e02='s%bind[^"]*"%bind -4"%'
-e03='s%^ */*\(.*codename}-updates.*$\)%\1%i;s%^ */* *Unattended-Upgrade::Mail .*$%Unattended-Upgrade::Mail "hernanilr@gmail.com";%i;s%^ */* *Unattended-Upgrade::OnlyOnACPower.*$%Unattended-Upgrade::OnlyOnACPower "false";%i'
-e04='s%^ *printf%# printf%i'
-e05='s%^[^: ]+: *([^ ]+).*$%\1%p'
-e06='s%timeout *=.*$%timeout=1%i'
-e07='/dnssec-validation/q'
-e08="s%^ *pool  *\([^a-z]\)%# pool \1%"
-e08="${e08};/^ *#.*Specify/a \\"
-e08="${e08}pool 0.de.pool.ntp.org iburst"
-e08="${e08}\npool 1.de.pool.ntp.org iburst"
-e08="${e08}\npool 0.pt.pool.ntp.org iburst"
-e08="${e08}\npool 0.europe.pool.ntp.org iburst"
-e08="${e08}\npool 1.europe.pool.ntp.org iburst"
-e09='s%.*registerValidator +[0-9]+ +([^ ]+) *$%\1%p'
-e10="s%--execution-endpoint  *\([^ ]*/\)[0-9\.]*:8551[^ ]*%--execution-endpoint \1$iip5:8551%"
-e11="s%--execution-endpoint  *\([^ ]*/\)[0-9\.]*:8551[^ ]*%--execution-endpoint \1$iip6:8551%"
-e12="s%.*--execution-endpoint  *[^ ]*/\([0-9\.]*\):8551.*%\1%p"
-e13='s%^ *#*NTP=.*$%NTP=time.google.com time.cloudflare.com time.facebook.com%i'
-e14='s%--subscribe-all-subnets --import-all-attestations %%'
-e15='s%--validator-monitor-file%--subscribe-all-subnets --import-all-attestations --validator-monitor-file%'
-e16='s%--beacon-nodes *\([^ ]*:5052\),\([^ ]*:5052\)[^ ]*%--beacon-nodes \2,\1%'
-e17="s%hrv-zotac\([0-9]\).*%hrv-zotac\1 ztc\1%;/127.0.1.1/a \\"
-[[ $cunm = $znm1 ]] && e17="$e17\n$zip2\thrv-zotac2 ztc2\n$zip3\thrv-zotac3 ztc3\n$zip4\thrv-zotac4 ztc4\n$iip5\thrv-intel5 int5\n$iip6\thrv-intel6 int6"
-[[ $cunm = $znm2 ]] && e17="$e17\n$zip1\thrv-zotac1 ztc1\n$zip3\thrv-zotac3 ztc3\n$zip4\thrv-zotac4 ztc4\n$iip5\thrv-intel5 int5\n$iip6\thrv-intel6 int6"
-[[ $cunm = $znm3 ]] && e17="$e17\n$zip1\thrv-zotac1 ztc1\n$zip2\thrv-zotac2 ztc2\n$zip4\thrv-zotac4 ztc4\n$iip5\thrv-intel5 int5\n$iip6\thrv-intel6 int6"
-[[ $cunm = $znm4 ]] && e17="$e17\n$zip1\thrv-zotac1 ztc1\n$zip2\thrv-zotac2 ztc2\n$zip3\thrv-zotac3 ztc3\n$iip5\thrv-intel5 int5\n$iip6\thrv-intel6 int6"
-[[ $cunm = $inm5 ]] && e17="$e17\n$zip1\thrv-zotac1 ztc1\n$zip2\thrv-zotac2 ztc2\n$zip3\thrv-zotac3 ztc3\n$zip4\thrv-zotac4 ztc4\n$iip6\thrv-intel6 int6"
-[[ $cunm = $inm6 ]] && e17="$e17\n$zip1\thrv-zotac1 ztc1\n$zip2\thrv-zotac2 ztc2\n$zip3\thrv-zotac3 ztc3\n$zip4\thrv-zotac4 ztc4\n$iip5\thrv-intel5 int5"
-e18='s%.*fee_recipient"."\([^"]*\)".*pubkey":"\([^"]*\)".*%pubkey: \2, fee: \1%p'
-e19="s%^$g00$g01($g03) +.*UFW BLOCK]%ufwk: \2.000 BLCK%"
-e19="$e19;s% MAC=[^ ]*%%"
-e19="$e19;s% IN=[^ ]*%%"
-e19="$e19;s% OUT=[^ ]*%%"
-e20='s%.*\(Temperature\|Sensor\|Package\|Core\|Composite\|temp[0-9]\).*: *\([-+][0-9][0-9]*\.[0-9]*\).*%\2%p'
-e21='s%.* \([0-9]*:[0-9]*\):[0-9]*.*%\1%'
-e22='s%.*pubkey": "\([^"]*\)".*%0x\1%p'
-e23='/^ *\/swap/s%^%#%;/ext4 +defaults +/s%defaults%defaults,noatime%'
-e24="s%download-dir\":[^,]+,%download-dir\": \"$p59\",%"
-e24="$e24;s%incomplete-dir\":[^,]+,%incomplete-dir\": \"$p59\",%"
-e24="$e24;s%rpc-enabled\":[^,]+,%rpc-enabled\": true,%"
-e24="$e24;s%rpc-whitelist\":[^,]+,%rpc-whitelist\": \"127.0.0.1,192.168.8.*\",%"
-e24="$e24;s%rpc-username\":[^,]+,%rpc-username\": \"eu\",%"
-e24="$e24;s%rpc-password\":[^,]+,%rpc-password\": \"\",%"
-e25='s%Type=.*$%Type=simple%'
-e26='s%(Current DNS)[^:]+:%   \1:%ip'
-e27='s%GRUB_CMDLINE_LINUX_DEFAULT *= *"\(..*\)"%GRUB_CMDLINE_LINUX_DEFAULT="\1 pcie_aspm=off"%;s%GRUB_CMDLINE_LINUX_DEFAULT *= *""%GRUB_CMDLINE_LINUX_DEFAULT="pcie_aspm=off"%'
-e28="s%APT::Periodic::Update-Package-Lists.*$%APT::Periodic::Update-Package-Lists \"1\";%i"
-e28="${e28};s%APT::Periodic::Unattended-Upgrade.*$%APT::Periodic::Unattended-Upgrade \""
-case $cunm in $znm4) e28="${e28}5";;$inm6) e28="${e28}2";;*) e28="${e28}1";;esac
-e28="${e28}\";%i;/APT::Periodic::Unattended-Upgrade/a \\"
-e28="${e28}APT::Periodic::AutocleanInterval \"1\";"
-case $cunm in $cun1) e30='e1';e31='b1';;$cun2) e30='e2';e31='b2';;$cuvc) e30='el';e31='vc';;*) e30='el';e31='cl';;esac;if [[ $cust = hrv ]];then e32='hrv-(zotac|intel)[0-9]';else e32='ns([0-9]{7})';fi;e33='\+[0-9]{2}:[0-9]{2}';e34="s%^$g00$g01($g03) +$e32 +mev-boost$g05 +time=\"$g02($g03";e35="$e32 +lighthouse$g05 +$g00$g01$g03($g04)[0-9]* +([A-Z]{4,}) +"
-e29="s%^$g02($g03)(\.[0-9]{3})[0-9]*$e33 +$e35%$e31\4: \1\2 \7\t%"
-e29="$e29;s%^$g24($g03$g04)[0-9]* *\|([A-Z]{1,4})[A-Z]*\|.+\|[0-9]+\|%${e30}00: \1 \2 %"               # internal nethermind logs
-e29="$e29;s%^($g02)($g03)(\.[0-9]{3})[0-9]*$e33 +$e32 +mev-boost$g05 +time=\"$g02($g03)[^+]*$e33\"%mv\5: \6\3%"
-e29="$e29;$e34\.[0-9]{3})[0-9]*$e33\"%mv\4: \5%;$e34\.[0-9]{2})$e33\"%mv\4: \50%;$e34\.[0-9])$e33\"%mv\4: \500%;$e34)$e33\"%mv\4: \5.000%"
-e30="s%.+$e32 +(.*)%\2%;s% +% %g"
-e31="s%.*$g03$g04[0-9]* *(.*)%\1%;s%\t\t*% %g;s% +% %g;s%[\"\/]%%g"
-e32='s%(https?://)?192.168.8.([0-9]+:[0-9]+)/?%\2%g'
-e33='s%<html>.{10,}</html>%%g'
-e34='s% *\([^)(]{10,}\)%%g'
-e35='s% *\{[^}{]{10,}\}%%g'
-e36='s% *0x[A-Za-z0-9]{10,}%%g'
-e37="$e34;$e35;$e36"                                                                                   # FINAL
-e38='s%(hash|root) *= *([^ ,]*),? *%%g'                                                                # EL
-e38="$e38;s%[0-9]+ +[0-9]+ +[0-9]+ +%%g;s%[0-9]+ +[0-9]+ +%%g"                                         # EL
-e39='s%(finalized_root|block|head|parent_hash|pubkey|block_hash|peer_id|graffiti) *: *([^, ]*),? *%%g' # CL
-e40='s%(Some|Slot) *\(([^ ]*)\)%\2%g;s%,? *(module) *: *([^ ,]*),? *%%g'                               # CL
-e40="$e40;s%relay_value:%rv:%g"                                                                        # CL
-e40="$e40;s%block_value:%bv:%g"                                                                        # CL
-e40="$e40;s%block_slot:%bl:%g"                                                                         # CL
-e41="s%snapdiffs *= *%sdf=%g;s%triediffs *= *%tdf=%g;s%triedirty *= *%tdt=%g;$e38"                     # ALL EL
-e42="$e41;s%(service|num_failed) *: *([^ ,]*),? *%\2 %g;$e39;$e40"                                     # ALL EL/CL
-e43='s%(level) *= *([a-z]{4})[a-z]* +%\U\2\t%;s%msg *= *\"([^"]+)\",?%\1%'                             # RL
-e44='s%(blockHash|parentHash|pubkey|txRoot|slotUID|ua) *= *[^ ,]+ *%%g'                                # RL
-e44="$e44;s%(method|numRegistrations) *= *([^ ,]+),? *%\2 %g"                                          # RL
-e45='s%https?://([a-z0-9\.\-]+)(//*[a-z0-9_]+)* *%\1%g;s%url *= *\"([^\"]+)\"%\1%'                     # RL
-e46='s%Get +..[^:]+..: +%GET %;s%Post +..[^:]+..: +%POST %;s%path *= *(//*[a-z0-9_]+)+ *%%'            # RL
-e47="$e29;$e32;$e33;$e42;$e43;$e44;$e45;$e46"                                                          # ALL EL/CL/RL
-e48='s% *((Server|Offset|Delay|Jitter)[^)(]*)\(?.*\)?%\1%ip'
-e49="$e29;s%(\.[0-9]{1,}) *.*$g31%\1 peers:%i"
-e50="$e29;$e32;$e42"
-e50="$e50;s%validation_error: *,?%%g"
-e50="$e50;s%latest_valid_hash: *,?%%g"
-e50="$e50;s%execution_block_hash: *,?%%g"
-e50="$e50;s%epoch:%ep:%g"
-e50="$e50;s%slot:%sl:%g"
-e50="$e50;s%proposer_index:%pi:%g"
-e50="$e50;s%set_as_head_time_ms:%sht:%g"
-e50="$e50;s%blob_delay_ms:%blb:%g"
-e50="$e50;s%available_delay_ms:%avl:%g"
-e50="$e50;s%total_delay_ms:%tot:%g"
-e50="$e50;s%observed_delay_ms:%obs:%g"
-e50="$e50;s%$g54%ID:%g"
-e50="$e50;s%$g55%ED:%g"
-e50="$e50;s%$g56%AD:%g"
-e50="$e50;$e37"
-e51="$e47;$e37"
-e52="$e47;$e37"
-e53="s%^ *$p01%# $p01%"
-e54='s%.*synchronized: *([a-z]*) *%\1%p'
-e55="s%$g03%%;s%[0-9]* users*,%%;s% average([^,]*).*%\1%;s%  *% %g"
-e56='s%.*result" *: *"0x([^"]+)".*%\1%ip'
-e57='s%^ +Active: +(.*) *$%\1%p'
-e58='s% +since +[^;]+;%%'
-e59='s%[^: ]*: *%%g;s%inactive%off%;s%active%on%'
-e60='s%BEAC [0-9]*%BEAC 0%'
-e61='s%.*highestBlock: *([0-9]+).*%\1%ip'
-e62='s%.*currentBlock: *([0-9]+).*%\1%ip'
-e63='s%.*highestBlock" *: *"0x([^"]+)".*%\1%ip'
-e64='s%.*currentBlock" *: *"0x([^"]+)".*%\1%ip'
-e65='s%([Pp]eers[ =]*)[0-9]+%\1'
-e66='s%^[^,]+(https?)%\1%;s%@([^@ ]+) +.*$%@\1%;s%https?[^@]+@%%g;s%,% %gp'
-e67="$e29;s%(:[0-9]{2}) *$g30%\1 peers:%i"
-e68="$e29;s%(\.[0-9]{2,}) *.*$g35 *%\1 peers: %i"
-e69="s%^ *#* *PasswordAuthentication  *.*$%PasswordAuthentication no%i"
-e70='s%.*price": *([0-9]*\.?[0-9]+).*%\1%p'
-e71='s%.*PID: *([0-9]+).*%\1%p'
 
 function sni { case $1 in $inm5) printf $iip5;;$inm6) printf $iip6;;$znm1) printf $zip1;;$znm2) printf $zip2;;$znm3) printf $zip3;;$znm4) printf $zip4;;$vnm1) printf $vis1;;$vnm2) printf $vis2;;$vnm3) printf $vis3;;esac; }
 function snc { if [[ ${1:0:3} = hrv ]];then printf ${1/[a-z]*-/}|tr -d '[aoel]';else case $1 in $vnm1) printf $vnd1;;$vnm2) printf $vnd2;;$vnm3) printf $vnd3;;*) printf $1;;esac;fi; }
@@ -440,6 +320,127 @@ s48='.[].peer_info|select(.connection_direction=='
 s49=').client.agent_string'
 s50='https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=ETH&convert=EUR&CMC_PRO_API_KEY=3ae5f3df-bd71-489d-a9dd-b626995fba31'
 s51='debian-transmission'
+s52='pool 0.de.pool.ntp.org iburst'
+s52="${s52}\npool 1.de.pool.ntp.org iburst"
+s52="${s52}\npool 0.pt.pool.ntp.org iburst"
+s52="${s52}\npool 0.europe.pool.ntp.org iburst"
+s52="${s52}\npool 1.europe.pool.ntp.org iburst"
+
+e00="s%^ *#* *NTP *=.*$%NTP=$zip1 $zip2 time.google.com time.cloudflare.com time.facebook.com%i";if [[ $cunm = $cuvc || $cunm = $cun1 || $cunm = $cun2 || $cunm = $cumv ]];then e00="${e00};s%^ *#* *PollIntervalMaxSec *=.*$%PollIntervalMaxSec=1200%i";fi
+e01='s%^ *ENABLED=.*$%ENABLED=0%i'
+e02='s%bind[^"]*"%bind -4"%'
+e03='s%^ */*\(.*codename}-updates.*$\)%\1%i;s%^ */* *Unattended-Upgrade::Mail .*$%Unattended-Upgrade::Mail "hernanilr@gmail.com";%i;s%^ */* *Unattended-Upgrade::OnlyOnACPower.*$%Unattended-Upgrade::OnlyOnACPower "false";%i'
+e04='s%^ *printf%# printf%i'
+e05='s%^[^: ]+: *([^ ]+).*$%\1%p'
+e06='s%timeout *=.*$%timeout=1%i'
+e07='/dnssec-validation/q'
+e08="s%^ *pool  *([^a-z])%# pool \1%;/^ *#.*Specify/a \\$s52"
+e09='s%.*registerValidator +[0-9]+ +([^ ]+) *$%\1%p'
+e10="s%--execution-endpoint  *\([^ ]*/\)[0-9\.]*:8551[^ ]*%--execution-endpoint \1$iip5:8551%"
+e11="s%--execution-endpoint  *\([^ ]*/\)[0-9\.]*:8551[^ ]*%--execution-endpoint \1$iip6:8551%"
+e12="s%.*--execution-endpoint  *[^ ]*/\([0-9\.]*\):8551.*%\1%p"
+e13='s%^ *#*NTP=.*$%NTP=time.google.com time.cloudflare.com time.facebook.com%i'
+e14='s%--subscribe-all-subnets --import-all-attestations %%'
+e15='s%--validator-monitor-file%--subscribe-all-subnets --import-all-attestations --validator-monitor-file%'
+e16='s%--beacon-nodes *\([^ ]*:5052\),\([^ ]*:5052\)[^ ]*%--beacon-nodes \2,\1%'
+e17="s%hrv-zotac\([0-9]\).*%hrv-zotac\1 ztc\1%;/127.0.1.1/a \\"
+[[ $cunm = $znm1 ]] && e17="$e17\n$zip2\thrv-zotac2 ztc2\n$zip3\thrv-zotac3 ztc3\n$zip4\thrv-zotac4 ztc4\n$iip5\thrv-intel5 int5\n$iip6\thrv-intel6 int6"
+[[ $cunm = $znm2 ]] && e17="$e17\n$zip1\thrv-zotac1 ztc1\n$zip3\thrv-zotac3 ztc3\n$zip4\thrv-zotac4 ztc4\n$iip5\thrv-intel5 int5\n$iip6\thrv-intel6 int6"
+[[ $cunm = $znm3 ]] && e17="$e17\n$zip1\thrv-zotac1 ztc1\n$zip2\thrv-zotac2 ztc2\n$zip4\thrv-zotac4 ztc4\n$iip5\thrv-intel5 int5\n$iip6\thrv-intel6 int6"
+[[ $cunm = $znm4 ]] && e17="$e17\n$zip1\thrv-zotac1 ztc1\n$zip2\thrv-zotac2 ztc2\n$zip3\thrv-zotac3 ztc3\n$iip5\thrv-intel5 int5\n$iip6\thrv-intel6 int6"
+[[ $cunm = $inm5 ]] && e17="$e17\n$zip1\thrv-zotac1 ztc1\n$zip2\thrv-zotac2 ztc2\n$zip3\thrv-zotac3 ztc3\n$zip4\thrv-zotac4 ztc4\n$iip6\thrv-intel6 int6"
+[[ $cunm = $inm6 ]] && e17="$e17\n$zip1\thrv-zotac1 ztc1\n$zip2\thrv-zotac2 ztc2\n$zip3\thrv-zotac3 ztc3\n$zip4\thrv-zotac4 ztc4\n$iip5\thrv-intel5 int5"
+e18='s%.*fee_recipient"."\([^"]*\)".*pubkey":"\([^"]*\)".*%pubkey: \2, fee: \1%p'
+e19="s%^$g00$g01($g03) +.*UFW BLOCK]%ufwk: \2.000 BLCK%"
+e19="$e19;s% MAC=[^ ]*%%"
+e19="$e19;s% IN=[^ ]*%%"
+e19="$e19;s% OUT=[^ ]*%%"
+e20='s%.*\(Temperature\|Sensor\|Package\|Core\|Composite\|temp[0-9]\).*: *\([-+][0-9][0-9]*\.[0-9]*\).*%\2%p'
+e21='s%.* \([0-9]*:[0-9]*\):[0-9]*.*%\1%'
+e22='s%.*pubkey": "\([^"]*\)".*%0x\1%p'
+e23='/^ *\/swap/s%^%#%;/ext4 +defaults +/s%defaults%defaults,noatime%'
+e24="s%download-dir\":[^,]+,%download-dir\": \"$p59\",%"
+e24="$e24;s%incomplete-dir\":[^,]+,%incomplete-dir\": \"$p59\",%"
+e24="$e24;s%rpc-enabled\":[^,]+,%rpc-enabled\": true,%"
+e24="$e24;s%rpc-whitelist\":[^,]+,%rpc-whitelist\": \"127.0.0.1,192.168.8.*\",%"
+e24="$e24;s%rpc-username\":[^,]+,%rpc-username\": \"eu\",%"
+e24="$e24;s%rpc-password\":[^,]+,%rpc-password\": \"\",%"
+e25='s%Type=.*$%Type=simple%'
+e26='s%(Current DNS)[^:]+:%   \1:%ip'
+e27='s%GRUB_CMDLINE_LINUX_DEFAULT *= *"\(..*\)"%GRUB_CMDLINE_LINUX_DEFAULT="\1 pcie_aspm=off"%;s%GRUB_CMDLINE_LINUX_DEFAULT *= *""%GRUB_CMDLINE_LINUX_DEFAULT="pcie_aspm=off"%'
+e28="s%APT::Periodic::Update-Package-Lists.*$%APT::Periodic::Update-Package-Lists \"1\";%i"
+e28="${e28};s%APT::Periodic::Unattended-Upgrade.*$%APT::Periodic::Unattended-Upgrade \""
+case $cunm in $znm4) e28="${e28}5";;$inm6) e28="${e28}2";;*) e28="${e28}1";;esac
+e28="${e28}\";%i;/APT::Periodic::Unattended-Upgrade/a \\"
+e28="${e28}APT::Periodic::AutocleanInterval \"1\";"
+case $cunm in $cun1) e30='e1';e31='b1';;$cun2) e30='e2';e31='b2';;$cuvc) e30='el';e31='vc';;*) e30='el';e31='cl';;esac;if [[ $cust = hrv ]];then e32='hrv-(zotac|intel)[0-9]';else e32='ns([0-9]{7})';fi;e33='\+[0-9]{2}:[0-9]{2}';e34="s%^$g00$g01($g03) +$e32 +mev-boost$g05 +time=\"$g02($g03";e35="$e32 +lighthouse$g05 +$g00$g01$g03($g04)[0-9]* +([A-Z]{4,}) +"
+e29="s%^$g02($g03)(\.[0-9]{3})[0-9]*$e33 +$e35%$e31\4: \1\2 \7\t%"
+e29="$e29;s%^$g24($g03$g04)[0-9]* *\|([A-Z]{1,4})[A-Z]*\|.+\|[0-9]+\|%${e30}00: \1 \2 %"               # internal nethermind logs
+e29="$e29;s%^($g02)($g03)(\.[0-9]{3})[0-9]*$e33 +$e32 +mev-boost$g05 +time=\"$g02($g03)[^+]*$e33\"%mv\5: \6\3%"
+e29="$e29;$e34\.[0-9]{3})[0-9]*$e33\"%mv\4: \5%;$e34\.[0-9]{2})$e33\"%mv\4: \50%;$e34\.[0-9])$e33\"%mv\4: \500%;$e34)$e33\"%mv\4: \5.000%"
+e30="s%.+$e32 +(.*)%\2%;s% +% %g"
+e31="s%.*$g03$g04[0-9]* *(.*)%\1%;s%\t\t*% %g;s% +% %g;s%[\"\/]%%g"
+e32='s%(https?://)?192.168.8.([0-9]+:[0-9]+)/?%\2%g'
+e33='s%<html>.{10,}</html>%%g'
+e34='s% *\([^)(]{10,}\)%%g'
+e35='s% *\{[^}{]{10,}\}%%g'
+e36='s% *0x[A-Za-z0-9]{10,}%%g'
+e37="$e34;$e35;$e36"                                                                                   # FINAL
+e38='s%(hash|root) *= *([^ ,]*),? *%%g'                                                                # EL
+e38="$e38;s%[0-9]+ +[0-9]+ +[0-9]+ +%%g;s%[0-9]+ +[0-9]+ +%%g"                                         # EL
+e39='s%(finalized_root|block|head|parent_hash|pubkey|block_hash|peer_id|graffiti) *: *([^, ]*),? *%%g' # CL
+e40='s%(Some|Slot) *\(([^ ]*)\)%\2%g;s%,? *(module) *: *([^ ,]*),? *%%g'                               # CL
+e40="$e40;s%relay_value:%rv:%g"                                                                        # CL
+e40="$e40;s%block_value:%bv:%g"                                                                        # CL
+e40="$e40;s%block_slot:%bl:%g"                                                                         # CL
+e41="s%snapdiffs *= *%sdf=%g;s%triediffs *= *%tdf=%g;s%triedirty *= *%tdt=%g;$e38"                     # ALL EL
+e42="$e41;s%(service|num_failed) *: *([^ ,]*),? *%\2 %g;$e39;$e40"                                     # ALL EL/CL
+e43='s%(level) *= *([a-z]{4})[a-z]* +%\U\2\t%;s%msg *= *\"([^"]+)\",?%\1%'                             # RL
+e44='s%(blockHash|parentHash|pubkey|txRoot|slotUID|ua) *= *[^ ,]+ *%%g'                                # RL
+e44="$e44;s%(method|numRegistrations) *= *([^ ,]+),? *%\2 %g"                                          # RL
+e45='s%https?://([a-z0-9\.\-]+)(//*[a-z0-9_]+)* *%\1%g;s%url *= *\"([^\"]+)\"%\1%'                     # RL
+e46='s%Get +..[^:]+..: +%GET %;s%Post +..[^:]+..: +%POST %;s%path *= *(//*[a-z0-9_]+)+ *%%'            # RL
+e47="$e29;$e32;$e33;$e42;$e43;$e44;$e45;$e46"                                                          # ALL EL/CL/RL
+e48='s% *((Server|Offset|Delay|Jitter)[^)(]*)\(?.*\)?%\1%ip'
+e49="$e29;s%(\.[0-9]{1,}) *.*$g31%\1 peers:%i"
+e50="$e29;$e32;$e42"
+e50="$e50;s%validation_error: *,?%%g"
+e50="$e50;s%latest_valid_hash: *,?%%g"
+e50="$e50;s%execution_block_hash: *,?%%g"
+e50="$e50;s%epoch:%ep:%g"
+e50="$e50;s%slot:%sl:%g"
+e50="$e50;s%proposer_index:%pi:%g"
+e50="$e50;s%set_as_head_time_ms:%sht:%g"
+e50="$e50;s%blob_delay_ms:%blb:%g"
+e50="$e50;s%available_delay_ms:%avl:%g"
+e50="$e50;s%total_delay_ms:%tot:%g"
+e50="$e50;s%observed_delay_ms:%obs:%g"
+e50="$e50;s%$g54%ID:%g"
+e50="$e50;s%$g55%ED:%g"
+e50="$e50;s%$g56%AD:%g"
+e50="$e50;$e37"
+e51="$e47;$e37"
+e52="$e47;$e37"
+e53="s%^ *$p01%# $p01%"
+e54='s%.*synchronized: *([a-z]*) *%\1%p'
+e55="s%$g03%%;s%[0-9]* users*,%%;s% average([^,]*).*%\1%;s%  *% %g"
+e56='s%.*result" *: *"0x([^"]+)".*%\1%ip'
+e57='s%^ +Active: +(.*) *$%\1%p'
+e58='s% +since +[^;]+;%%'
+e59='s%[^: ]*: *%%g;s%inactive%off%;s%active%on%'
+e60='s%BEAC [0-9]*%BEAC 0%'
+e61='s%.*highestBlock: *([0-9]+).*%\1%ip'
+e62='s%.*currentBlock: *([0-9]+).*%\1%ip'
+e63='s%.*highestBlock" *: *"0x([^"]+)".*%\1%ip'
+e64='s%.*currentBlock" *: *"0x([^"]+)".*%\1%ip'
+e65='s%([Pp]eers[ =]*)[0-9]+%\1'
+e66='s%^[^,]+(https?)%\1%;s%@([^@ ]+) +.*$%@\1%;s%https?[^@]+@%%g;s%,% %gp'
+e67="$e29;s%(:[0-9]{2}) *$g30%\1 peers:%i"
+e68="$e29;s%(\.[0-9]{2,}) *.*$g35 *%\1 peers: %i"
+e69="s%^ *#* *PasswordAuthentication  *.*$%PasswordAuthentication no%i"
+e70='s%.*price": *([0-9]*\.?[0-9]+).*%\1%p'
+e71='s%.*PID: *([0-9]+).*%\1%p'
+e72='s%^ *pool  *%# pool %'
 
 n00=84
 n01=84
@@ -518,7 +519,7 @@ b[1027307]='0x83c7c2d579df3b6f00513730e1bd2acb8c1515ecd0d158535d9e6c37dadbfbff20
 function ndp { [[ $cunm = $inm5 || $cunm = $vnm1 || $cunm = $vnm2 ]]; }
 function tsa { $s00 is-active  --quiet $1 2>$p03; }
 function tse { $s00 is-enabled --quiet $1 2>$p03; }
-function hrs { if tsa $s19;then nex "$s06 $s19";else nex "$s06 ntp";fi; }
+function hrs { if tsa $s19;then nex "$s06 $s19";elif tsa ntp;then nex "$s06 ntp";else nex "$s06 chrony";fi; }
 function swb { echo -e "\n\e[5m${1^^}\e[25m\n"; }
 function swu { echo -e "${1^^}"; }
 function swn { echo -e "$1"; }

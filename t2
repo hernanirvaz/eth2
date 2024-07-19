@@ -2,10 +2,10 @@
 
 source /home/eth/eth2/t1
 
-function cc1 { local f=$(basename $1);sex "cp $1 $f.sav";cmw $f.sav 644 eth      ;sed  -E "$2" $f.sav > $f.new;sex "cp $f.new $1"; }                          # edit             file
-function cc2 { local f=$(basename $1);sex "cp $1 $f.sav";cp $1 $f.new            ;echo -e "$2"       >> $f.new;sex "cp $f.new $1"; }                          # add lines to end file
-function cc3 { local f=$(basename $1);sex "cp $1 $f.sav";sed "$2" $f.sav > $f.new;echo -e "$3"       >> $f.new;sex "cp $f.new $1"; }                          # add lines to pos file
-function cc4 { local f=$(basename $1);sex "cp $1 $f.sav"                         ;echo -e "$2"        > $f.new;sex "cp $f.new $1"; }                          # replace lines of file
+function cc1 { local f=$(basename $1);sex "cp $1 $f.sav";cmw $f.sav 644 eth         ;sed  -E "$2" $f.sav > $f.new;sex "cp $f.new $1"; }                       # edit             file
+function cc2 { local f=$(basename $1);sex "cp $1 $f.sav";cp $1 $f.new               ;echo -e "$2"       >> $f.new;sex "cp $f.new $1"; }                       # add lines to end file
+function cc3 { local f=$(basename $1);sex "cp $1 $f.sav";sed -E "$2" $f.sav > $f.new;echo -e "$3"       >> $f.new;sex "cp $f.new $1"; }                       # add lines to pos file
+function cc4 { local f=$(basename $1);sex "cp $1 $f.sav"                            ;echo -e "$2"        > $f.new;sex "cp $f.new $1"; }                       # replace lines of file
 
 [[ -x $p02/eth2/t ]] || ln -s $p02/eth2/t6 $p02/eth2/t                                                                                                        # link base commands
 if [[ $(pex 'ufw status'|grep -i inactive) ]];then
@@ -40,14 +40,20 @@ if [[ $cunm = $znm2 ]];then
   t6 rpd;t6 rea                                                                                                                                               # enable transmission
 fi
 if [[ $cunm = $znm1 || $cunm = $znm2 ]];then
-  sex "$s07 set-ntp no"                                                                                                                                       # use ntp (sophisticated)
-  sex 'apt install ntp bind9 bind9utils -y'                                                                                                                   # install dependencies & ntp & bind
-  cc1 $p31 "$e08"              ;cmw $p31 644 root;nex "$s06 ntp"                                                                                              # ntp config for time synchronization
+  sex "$s07 set-ntp false"                                                                                                                                    # use ntp (sophisticated)
+  if [[ $cunm = $znm1 ]];then
+    sex 'apt install chrony -y'
+    cc3 $p68 "$e72" "\nallow 192.168.8.0/24\n$s52";cmw $p68 644 root;nex "$s06 chrony"                                                                        # hrony config synchronization
+  else
+    sex 'apt install ntp -y'
+    cc1 $p31 "$e08"                               ;cmw $p31 644 root;nex "$s06 ntp"                                                                           # ntp config synchronization
+  fi
+  sex 'apt install bind9 bind9utils -y'                                                                                                                       # install dependencies & ntp & bind
   cc3 $p29 "$e07" "$s40"       ;cmw $p29 644 root bind                                                                                                        # named my options
   cc1 $p30 "$e02"              ;cmw $p30 644 root                                                                                                             # use only ipv4
   t6 spd;t6 sea;nex "$s02 systemd-resolved";nex "$s03 systemd-resolved"                                                                                       # DNS stop & start
 else
-  sex "$s07 set-ntp yes"                                                                                                                                      # use timesyncd (lightweight)
+  sex "$s07 set-ntp true"                                                                                                                                     # use timesyncd (lightweight)
 fi
 if [[ $cust = hrv ]];then
   swu 'ROOTKIT SCANNER';sex 'apt install lm-sensors chkrootkit -y';cex 'chkrootkit'
