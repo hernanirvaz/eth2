@@ -376,7 +376,7 @@ function clk {
 }
 function hch { if tsa $s19;then local s=$(cl3 $(cls));m="-> $s";[[ $s && $cunt != $s ]] && m="$m $(nex "$s06 $s19")";elif tsa ntp;then m="-> ntp";else m="-> chrony";fi;swn "$s45 $cunm check $(clo) $m"; }
 function hd0 { local s='10^3';nu2 "($s*$1)-($s*$2)"; }
-function hdi { local s='+%S.%N';if z1t;then local n=$(date $s);local i=$n;else local i=$(ssh $(snc $cunt) "date $s");local n=$(date $s);fi;swn "$s45 diff ($(snc $cunm)-$(snc $cunt)): $(hd0 $n $i)ms"; }
+function hdi { local s='+%S.%N';local n=$(date $s);if z1t;then local i=$n;else local i=$(ssh $(snc $cunt) "date $s");fi;swn "$s45 diff ($(snc $cunt)-$(snc $cunm)): $(hd0 $i $n)ms"; }
 function sif {
   if [[ $(cat $p44 2>$p03) -eq 0 ]];then local e=off;else local e=on;fi;if [[ $(cat $p43 2>$p03) -eq 1 ]];then local d=off;else local d=on;fi;local i=$(fl0|wc -l);local n=$(fl1|wc -l)
   [[ $1$e = on && $d = on ]] && e0t $i && e0t $n && return
