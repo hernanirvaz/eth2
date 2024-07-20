@@ -375,6 +375,8 @@ function clk {
   if tsa $s12;then swn "$e $(nu1 %3i $(ll2 "$g22"|wc -l)) $dt $m";else swn "$e     $dt $m";fi
 }
 function hch { if tsa $s19;then local s=$(cl3 $(cls));m="-> $s";[[ $s && $cunt != $s ]] && m="$m $(nex "$s06 $s19")";elif tsa ntp;then m="-> ntp";else m="-> chrony";fi;swn "$s45 $cunm check $(clo) $m"; }
+function hd0 { local s='10^3';nu2 "($s*$1)-($s*$2)"; }
+function hdi { local s='+%S.%N';if z1t;then local n=$(date $s);local i=$n;else local i=$(ssh $(snc $cunt) "date $s");local n=$(date $s);fi;swn "$s45 diff ($(snc $cunm)-$(snc $cunt)): $(hd0 $n $i)ms"; }
 function sif {
   if [[ $(cat $p44 2>$p03) -eq 0 ]];then local e=off;else local e=on;fi;if [[ $(cat $p43 2>$p03) -eq 1 ]];then local d=off;else local d=on;fi;local i=$(fl0|wc -l);local n=$(fl1|wc -l)
   [[ $1$e = on && $d = on ]] && e0t $i && e0t $n && return
@@ -590,6 +592,7 @@ function uur { nex "$s00 daemon-reload";sudo dpkg-reconfigure -plow unattended-u
 [[ $1 = nrs ]] && { nrs; }
 [[ $1 = hsh ]] && { cex "$s07";hsh; }
 [[ $1 = hch ]] && { hch; }
+[[ $1 = hdi ]] && { hdi; }
 [[ $1 = hca ]] && { if vct;then hch;else ssh $(snc $cuvc) "$p53 hch";fi;if n1t;then hch;else ssh $(snc $cun1) "$p53 hch";fi;if mct;then hch;else ssh $(snc $cumv) "$p53 hch";fi;if n2t;then hch;else ssh $(snc $cun2) "$p53 hch";fi; }
 [[ $1 = hrs ]] && { hrs; }
 [[ $1 = dmr ]] && { dmr; }
@@ -829,7 +832,7 @@ if [[ ! $1 ]];then
   m="$m\nw[s|a|pr|l [e]]\t\tfirewall status|arranca|para|logs [exclude]"
   m="$m\nn[sh|rs]\t\tnetwork show|reset"
   m="$m\nd[sh [url]|rs]\t\tdns show [url]|reset"
-  m="$m\nh[sh|rs|ch|ca]\t\ttime sync show|restart|timesyncd check $cunt|timesyncd check $cunt ($cuvc, $cun1, $cumv, $cun2)"
+  m="$m\nh[sh|rs|ch|ca|di]\t$s45 show|restart|check|check -> ($(snc $cuvc),$(snc $cun1),$(snc $cumv),$(snc $cun2))|diff ($(snc $cunm)-$(snc $cunt))"
   m="$m\nr[sh|rs|pt]\t\trestart gap show|reset|print"
   m="$m\ni[sh|ch]\t\texternal ip show|change"
   m="$m\nj[sh|rs]\t\tjournal logs show|reset"
