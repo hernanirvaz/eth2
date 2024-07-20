@@ -353,27 +353,28 @@ function tmp {
   local g=$(printf '%5.0fC %10s %5s' $n $dt 2>$p03);g0t $i && local g="$g $(printf 'sata: %.0fC' $i 2>$p03)";g0t $l && local g="$g $(printf 'nvme: %.0fC' $l 2>$p03)"
   local g="$g $(printf '%s %s' $d $e 2>$p03)";swn "TEMP $g"
 }
-function cl0 { $s09 -4 query $1 2>$p03|sed -En "$e05"                                                                           2>$p03; }
-function cl1 { printf "${1%.}"                                                                                                  2>$p03; }
-function cl2 { local n=0;while :;do local s=$(cl0 $1);if [[ $s ]];then break;else if [[ $n -lt 2 ]];then ((n++));else local s=$1;break;fi;fi;done;cl1 $s; }
-function cl3 { if [[ $1 =~ ^[0-9]+ ]];then cl2 $1;else cl1 $1;fi; }
-function cl4 { printf "server: $(cl3 ${2:0}) offset: $4 delay: $6 jitter: $8"                                                   2>$p03; }
-function cl5 { local n=$3;printf "server$n: $(cl3 ${1:1}) offset: ${9}ms delay: ${8}ms jitter: ${10}ms"                         2>$p03; }
-function cl6 { printf $(cl3 ${2:0})                                                                                             2>$p03; }
-function cl7 { $s07 $s45-status|sed -En "$e48"                                                                                  2>$p03; }
-function cl8 { printf "server$2: $(cl3 $1) offset: $5 $6 delay: $4 jitter: $3"                                                  2>$p03; }
+function clq { $s09 -4 query $1 2>$p03|sed -En "$e05"                                        2>$p03; }
+function cls { $s07 $s45-status 2>$p03|sed -En "$e48"                                        2>$p03; }
+function cly { $s07             2>$p03|sed -En "$e54"                                        2>$p03; }
+function clo { if [[ $(cly) = yes ]];then printf OK;else printf NO;fi                        2>$p03; }
+function cl0 { printf "${1%.}"                                                               2>$p03; }
+function cl1 { local n=0;while :;do local s=$(clq $1);if [[ $s ]];then break;else if [[ $n -lt 2 ]];then ((n++));else local s=$1;break;fi;fi;done;cl0 $s; }
+function cl2 { if [[ $1 =~ ^[0-9]+ ]];then cl1 $1;else cl0 $1;fi; }
+function cl3 { cl2 $2; }
+function cl4 { printf "server: $(cl2 $2) offset: $4 delay: $6 jitter: $8"                    2>$p03; }
+function cl5 { printf "server$3: $(cl2 ${1:1}) offset: ${9}ms delay: ${8}ms jitter: ${10}ms" 2>$p03; }
+function cl6 { printf "server$2: $(cl2 $1    ) offset: $5 $6 delay: $4 jitter: $3"           2>$p03; }
 function clk {
-  if [[ $($s07|sed -En "$e54") = yes ]];then local e='OK';else local e='NO';fi
   if tsa $s19;then
-    local e="CSYS $e";m="$(printf '%-40s' "$(ss2 $s19)"   2>$p03) $(cl4 $(cl7))"
+    local e="CSYS $(clo)";m="$(printf '%-40s' "$(ss2 $s19)"   2>$p03) $(cl4 $(cls))"
   elif tsa ntp;then
-    local e="CNTP $e";m="$(printf '%-40s' "$(ss2 ntp)"    2>$p03) $(cl5 $(ntpq -pn|grep '^\*[0-9]'))"
+    local e="CNTP $(clo)";m="$(printf '%-40s' "$(ss2 ntp)"    2>$p03) $(cl5 $(ntpq -pn|grep '^\*[0-9]'))"
   else
-    local e="CHRY $e";m="$(printf '%-40s' "$(ss2 chrony)" 2>$p03) $(cl8 $(chronyc -n sources|sed -En "$e74") $(chronyc tracking|sed -En "$e73"))"
+    local e="CHRY $(clo)";m="$(printf '%-40s' "$(ss2 chrony)" 2>$p03) $(cl6 $(chronyc -n sources|sed -En "$e74") $(chronyc tracking|sed -En "$e73"))"
   fi;dts
   if tsa $s12;then swn "$e $(nu1 %3i $(ll2 "$g22"|wc -l)) $dt $m";else swn "$e     $dt $m";fi
 }
-function hch { if tsa $s19;then local s=$(cl6 $(cl7));echo "timesyncd check $cunm -> $s";[[ $s && $cunt != $s ]] && nex "$s06 $s19";fi; }
+function hch { if tsa $s19;then local s=$(cl3 $(cls));m="-> $s";[[ $s && $cunt != $s ]] && m="$m $(nex "$s06 $s19")";elif tsa ntp;then m="-> ntp";else m="-> chrony";fi;swn "$s45 $cunm check $(clo) $m"; }
 function sif {
   if [[ $(cat $p44 2>$p03) -eq 0 ]];then local e=off;else local e=on;fi;if [[ $(cat $p43 2>$p03) -eq 1 ]];then local d=off;else local d=on;fi;local i=$(fl0|wc -l);local n=$(fl1|wc -l)
   [[ $1$e = on && $d = on ]] && e0t $i && e0t $n && return
