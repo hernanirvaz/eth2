@@ -16,7 +16,7 @@ if [[ $(hostname) = hrv-zotac2 ]];then
   alias tcd='cd /var/lib/transmission-daemon/downloads'
 fi
 if [[ $(hostname) = hrv-intel5 || $(hostname) = hrv-intel6 ]];then
-  alias ah='t6 ah'
+  alias aa='t6 ah'
 fi
 
 alias hs='t6 hs0'
