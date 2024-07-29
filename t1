@@ -322,9 +322,9 @@ s50='https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=ET
 s51='debian-transmission'
 s52='pool 0.de.pool.ntp.org iburst'
 s52="${s52}\npool 1.de.pool.ntp.org iburst"
+s52="${s52}\npool 2.de.pool.ntp.org iburst"
 s52="${s52}\npool 0.pt.pool.ntp.org iburst"
 s52="${s52}\npool 0.europe.pool.ntp.org iburst"
-s52="${s52}\npool 1.europe.pool.ntp.org iburst"
 
 e00="s%^ *#* *NTP *=.*$%NTP=$zip1 $zip2 time.google.com time.cloudflare.com time.facebook.com%i";if [[ $cunm = $cuvc || $cunm = $cun1 || $cunm = $cun2 || $cunm = $cumv ]];then e00="${e00};s%^ *#* *PollIntervalMaxSec *=.*$%PollIntervalMaxSec=1200%i";fi
 e01='s%^ *ENABLED=.*$%ENABLED=0%i'
