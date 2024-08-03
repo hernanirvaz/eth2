@@ -371,7 +371,7 @@ function clk {
   elif tsa ntp;then
     local e="CNTP $(clo)";m="$(printf '%-40s' "$(ss2 ntp)"    2>$p03) $(cl5 $(ntpq -pn|grep '^\*[0-9]'))"
   else
-    local e="CHRY $(clo)";m="$(printf '%-40s' "$(ss2 chrony)" 2>$p03) $(cl6 $(chronyc -n sources|sed -En "$e74") $(chronyc tracking|sed -En "$e73"))"
+    local e="CHRY $(clo)";m="$(printf '%-40s' "$(ss2 chrony)" 2>$p03) $(cl6 $(chronyc -n sources|sed -En "$e74") $(chronyc -n tracking|sed -En "$e73"))"
   fi;dts
   if tsa $s12;then swn "$e $(nu1 %3i $(ll2 "$g22"|wc -l)) $dt $m";else swn "$e     $dt $m";fi
 }
