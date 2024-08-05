@@ -547,7 +547,7 @@ function gp0 { if tsa $s10;then bp;gp;local i=$(pt2 $(pex "du -s $p08"));sudo -u
 # offset The mean time offset. (ms)
 # delay  This is the mean execution time required to send a request to the time source, and receive the reply from that source. (ms)
 # jitter This indicates how much packet delays from individual pollings vary from the mean packet delay. (ms)
-function hsh { if tsa $s19;then cex "$s07 $s45-status";cex "$s07 show-$s45";elif tsa ntp;then swb ntp;ntpq -p;else swb chrony;chronyc sources;echo;chronyc tracking;fi; }
+function hsh { if tsa $s19;then cex "$s07 $s45-status";cex "$s07 show-$s45";elif tsa ntp;then swb ntp;ntpq -p;else swb "chrony sources";chronyc sources;swb "chrony tracking";chronyc tracking;fi; }
 
 function wpf { if tsa $s44;then ll6 "$g43";fi;ll2 "$g42"|fln "$g39"; }
 function wpe { wpf|sed -E "$e52"|sort -t: -k2n -k3n -k4n; }
