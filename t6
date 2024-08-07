@@ -551,7 +551,7 @@ function hsh { if tsa $s19;then cex "$s07 $s45-status";cex "$s07 show-$s45";elif
 
 function wpf { if tsa $s44;then ll6 "$g43";fi;ll2 "$g42"|fln "$g39"; }
 function wpe { wpf|sed -E "$e52"|sort -t: -k2n -k3n -k4n; }
-function pba { if n1t;then wpe          ;else ssh $(snc $cun1) "$p53 pb"   ;fi;if n2t;then wpe          ;else ssh $(snc $cun2) "$p53 pb"   ;fi;if vst;then if vct;then wpe          ;else ssh $(snc $cuvc) "$p53 pb"   ;fi;fi;if mst;then if mct;then wpe;else ssh $(snc $cumv) "$p53 pb";fi;fi; }
+function bba { if n1t;then wpe          ;else ssh $(snc $cun1) "$p53 bb"   ;fi;if n2t;then wpe          ;else ssh $(snc $cun2) "$p53 bb"   ;fi;if vst;then if vct;then wpe          ;else ssh $(snc $cuvc) "$p53 bb"   ;fi;fi;if mst;then if mct;then wpe;else ssh $(snc $cumv) "$p53 bb";fi;fi; }
 function caa { if n1t;then cll "$e50" $1;else ssh $(snc $cun1) "$p53 cl $1";fi;if n2t;then cll "$e50" $1;else ssh $(snc $cun2) "$p53 cl $1";fi;if vst;then if vct;then cll "$e50" $1;else ssh $(snc $cuvc) "$p53 cl $1";fi;fi;if mst;then if mct;then rll "$e51" $1;else ssh $(snc $cumv) "$p53 rl $1";fi;fi; }
 function eaa { if n1t;then ell "$e50" $1;else ssh $(snc $cun1) "$p53 el $1";fi;if n2t;then ell "$e50" $1;else ssh $(snc $cun2) "$p53 el $1";fi; }
 function laa { caa $1;eaa $1; }
@@ -561,9 +561,9 @@ function epf { if tsa $s10;then gl0;swn "$m";fi;if tsa $s11;then ul0;swn "$m";fi
 function cpf { if tsa $s12;then bl0;swn "$m";fi;if tsa $s13;then vl0;swn "$m";fi;if tsa $s14;then ml0;swn "$m";fi; }
 function uur { nex "$s00 daemon-reload";sudo dpkg-reconfigure -plow unattended-upgrades;nex "$s06 unattended-upgrades";cex "unattended-upgrade -d"; }
 
-[[ $1 = pb  ]] && { wpe; }
-[[ $1 = pba ]] && { pba|sort -t: -k2n -k3n -k4n; }
-[[ $1 = pbz ]] && { wpf; }
+[[ $1 = bb  ]] && { wpe; }
+[[ $1 = bba ]] && { bba|sort -t: -k2n -k3n -k4n; }
+[[ $1 = bbz ]] && { wpf; }
 [[ $1 = ca  ]] && { caa $2|sort -t: -k2n -k3n -k4n; }
 [[ $1 = ea  ]] && { eaa $2|sort -t: -k2n -k3n -k4n; }
 [[ $1 = la  ]] && { laa $2|sort -t: -k2n -k3n -k4n; }
@@ -811,7 +811,7 @@ if [[ ! $1 ]];then
   m="$m\nirb               [h]\tsys (if needed)\t\t\t\treboot\t\tafter h hours"
   m="$m\nr[sh|pt|rs]\t\tshow|print|reset restart proces info "
   m="$m\nyj\t\t\tsystem journal"
-  m="$m\npb[a]\t\t\tproduce block\tlog/all\t\tlines"
+  m="$m\nbb[a]\t\t\tproduce block\tlog/all\t\tlines"
   m="$m\n[lec][la]\t[hh:mm]\tel+cc/el/cc\tlog/all\t\tlines"
   m="$m\n[secrla][li]\t[hh:mm]\tsys/el/cc/relay\tlog/internal\tlines"
   m="$m\n[ecv]i[iurhp12c]\tec/cc/vc\tlog/elapsed\tlines"
