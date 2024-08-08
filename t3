@@ -64,7 +64,7 @@ if [[ $cunm = $znm1 || $cunm = $znm2 || $cunm = $znm3 || $cunm = $inm5 || $cunm 
   if [[ -f $p04/$s13.service ]];then swu "vc ja instalado";else swu 'vc NAO PODE SER INSTALADO AQUI';fi
 else
   othe=''
-  othe="$othe --builder-proposals --builder-boost-factor 100"                                                                                                 # 1*mev>local ? mev : local
+  othe="$othe --builder-proposals --builder-boost-factor 100"                                                                                                 # factor/100*mev > local ? mev : local
   if [[ $cust = hrv ]];then
     othe="$othe --beacon-nodes http://$iip5:5052,http://$iip6:5052"
   else
