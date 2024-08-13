@@ -543,7 +543,7 @@ function gp0 { if tsa $s10;then bp;gp;local i=$(pt2 $(pex "du -s $p08"));sudo -u
 # offset The mean time offset. (ms)
 # delay  This is the mean execution time required to send a request to the time source, and receive the reply from that source. (ms)
 # jitter This indicates how much packet delays from individual pollings vary from the mean packet delay. (ms)
-function hsh { if tsa $s19;then cex "$s07 $s45-status";cex "$s07 show-$s45";elif tsa ntp;then swb ntp;ntpq -p;else swb "chrony sources";chronyc sources;swb "chrony tracking";chronyc tracking;fi; }
+function hsh { cex "$s07";if tsa $s19;then cex "$s07 $s45-status";cex "$s07 show-$s45";elif tsa ntp;then swb ntp;ntpq -p;else swb "chrony sources";chronyc sources;swb "chrony tracking";chronyc tracking;fi; }
 
 function wpf { if tsa $s44;then ll6 "$g43";fi;ll2 "$g42"|fln "$g39"; }
 function wpe { wpf|sed -E "$e52"|sort -t: -k2n -k3n -k4n; }
@@ -586,7 +586,8 @@ function uur { nex "$s00 daemon-reload";sudo dpkg-reconfigure -plow unattended-u
 [[ $1 = drs ]] && { dpa; }
 [[ $1 = nsh ]] && { nsh; }
 [[ $1 = nrs ]] && { nrs; }
-[[ $1 = hsh ]] && { cex "$s07";hsh; }
+[[ $1 = hsh ]] && { hsh; }
+[[ $1 = hsa ]] && { if z1t;then hsh;else swn "hsh@$cunt";ssh $(snc $cunt) "$p53 hsh";fi; }
 [[ $1 = hch ]] && { hch; }
 [[ $1 = hca ]] && {    if vct;then hch          ;else         ssh $(snc $cuvc) "$p53 hch"  ;fi;if n1t;then hch          ;else         ssh $(snc $cun1) "$p53 hch"  ;fi;if mct;then hch          ;else         ssh $(snc $cumv) "$p53 hch"  ;fi;if n2t;then hch          ;else         ssh $(snc $cun2) "$p53 hch";fi; }
 [[ $1 = hdi ]] && { swn "$s45 diff ($(snc $cunt)-$(snc $cunm)): $(hdi)ms"; }
@@ -830,7 +831,7 @@ if [[ ! $1 ]];then
   m="$m\nw[s|a|pr|l [e]]\t\tfirewall status|arranca|para|logs [exclude]"
   m="$m\nn[sh|rs]\t\tnetwork show|reset"
   m="$m\nd[sh [url]|rs]\t\tdns show [url]|reset"
-  m="$m\nh[sh|rs|ch|ca|di|da]\t$s45 show|restart|check|check all|diff ($(snc $cunt)-$(snc $cunm))|diff all avg"
+  m="$m\nh[sh|sa|rs|ch|ca|di|da]\t$s45 show|show@$(snc $cunt)|restart|check|check all|diff ($(snc $cunt)-$(snc $cunm))|diff all avg"
   m="$m\nr[sh|rs|pt]\t\trestart gap show|reset|print"
   m="$m\ni[sh|ch]\t\texternal ip show|change"
   m="$m\nj[sh|rs]\t\tjournal logs show|reset"
