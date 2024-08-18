@@ -17,6 +17,7 @@ if [[ $(hostname) = hrv-zotac2 ]];then
 fi
 if [[ $(hostname) = hrv-intel5 || $(hostname) = hrv-intel6 ]];then
   alias aa='t6 ah'
+  alias pp='t6 csp'
 fi
 
 alias hh='t6 hs0'
