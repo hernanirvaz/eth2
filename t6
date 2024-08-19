@@ -660,7 +660,7 @@ function uur { nex "$s00 daemon-reload";sudo dpkg-reconfigure -plow unattended-u
 [[ $1 = uur ]] && { uur; }
 [[ $1 = lp  ]] && { pex 'ss -tunlp'; }
 [[ $1 = ish ]] && { curl -s https://ipinfo.io/ip;echo; }
-[[ $1 = ich ]] && { ll2 "($g06|$g08).*ip[:=] +[0-9]"|sed -E "$e50"; }
+[[ $1 = ich ]] && { ll2 "$g57"|sed -E "$e50"; }
 # outros journal system/lighthouse
 [[ $1 = sl  ]] && { sll        $2; }
 [[ $1 = el  ]] && { ell "$e50" $2; }
