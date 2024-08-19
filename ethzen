@@ -1,6 +1,6 @@
 erq () { echo -e "\nresolvectl query ${1:-pt.archive.ubuntu.com}";resolvectl query "${1:-pt.archive.ubuntu.com}"; }
 ocp () { echo -e "\nscp $1 ocp" ;scp ~/eth2/ethztc $1:~/.bash_aliases;scp ~/eth2/ethkeys $1:~/.ssh/authorized_keys; }
-ecp () { echo -e "\nscp $1 eth2";scp ~/eth2/t[1-8] ~/eth2/e? $1:~/eth2; }
+ecp () { echo -e "\nscp $1 eth2";scp ~/eth2/t[1-9] ~/eth2/e? $1:~/eth2; }
 esl () { echo -e "\nssh $1     ";ssh $1; }
 ei0 () { echo -e "export H=\"$1\"\nexport E=\"$2\"\nexport R=\"$3\"\npr=$4"; }
 ei1 () { echo -e "echo>>~/.bashrc\necho \"export PATH=\\\"~/eth2:\\\$PATH\\\"\">>~/.bashrc\necho \"export H=\\\"$1\\\"\">>~/.bashrc\necho \"export V=\\\"$2\\\"\">>~/.bashrc\necho \"export K=\\\"$3\\\"\">>~/.bashrc\necho \"export E=\\\"$4\\\"\">>~/.bashrc\necho \"export B=\\\"$5\\\"\">>~/.bashrc\necho \"PS1=\\\"\\\$H:\\\h: \\\"\">>~/.bashrc\nchmod 755 ~/eth2/t[1-9]*"; }
