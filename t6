@@ -400,7 +400,7 @@ function cpe {
   if g0t $i;then if g0t $n;then m="$m sl: ${e:0:53}";m="$m $l: ${d:0:54}";else m="$m sl: ${e:0:112}";fi;else if g0t $n;then m="$m $l: ${d:0:112}";fi;fi
   (( i+n )) && swn "$m";m=
   fft $p45 && m="$m, reboot $(($(sra)/60/60)) hours ago $(rsf|tail -n1)";s5t && m="$m, sync/propose duties on";[[ $m ]] && swn "INFO        $dt${m#*,}"       # reboot/duties info
-  g0t $(nu0 $(/usr/lib/update-notifier/apt-check 2>&1|sed 's%;% %g')) && { apt list --upgradable 2>$p03|grep -v Listing;echo; }
+  if g0t $(nu0 $(/usr/lib/update-notifier/apt-check 2>&1|sed 's%;% %g'));then apt list --upgradable 2>$p03|grep -v Listing;echo;fi
 }
 # Plex Media Server
 function xop { pde 32400 plex delete;pai 32400 192.168.8.0/24 plex       ;pde 80 nginx delete;pai 80 192.168.8.0/24 nginx       ; }
