@@ -58,6 +58,7 @@ function irt { [[ $cunm = $cumv                                   || $cunm = $vn
 function v1t { [[ $cunm = $vnm1 ]]; }
 function vst { [[ $cun1 != $cuvc && $cun2 != $cuvc ]]; }
 function mst { [[ $cun1 != $cumv && $cun2 != $cumv ]]; }
+function nst { [[ $cust = hrv && $cumv != $cunt ]]; }
 function s1t { e0t $(ls $1.* 2>$p03|wc -l); }
 function s2t { g0t $(ls $1.* 2>$p03|wc -l); }
 function s3t { s2t $1 || g0t $(bwc); }
@@ -485,7 +486,18 @@ function hst { sso NETH $s44; }
 function hsb { sso BEAC $s12; }
 function hsv { sso VALI $s13; }
 function hsm { sso MEVB $s14; }
-function hs0 { echo $1;if [[ $cunm = $1 ]];then hsg;hsu;hst;hsb;hsv;hsm;cpe;else ssh $(snc $1) "$p53 hse";ssh $(snc $1) "$p53 hsc";fi; }
+function hss { echo $1;if [[ $cunm = $1 ]];then hsg;hsu;hst;hsb;hsv;hsm;cpe;else ssh $(snc $1) "$p53 hse";ssh $(snc $1) "$p53 hsc";fi; }
+function hs0 {
+  if n1t;then
+    printf '\n%.0s' {1..40};csp;echo
+    if vst;then if vct;then hsv;cpe;else echo $cuvc;ssh $(snc $cuvc) "$p53 hsv";fi;fi;hss $cun1;hss $cun2
+    if mst;then if mct;then hsm;cpe;else echo $cumv;ssh $(snc $cumv) "$p53 hsm";fi;fi
+    if nst;then if z1t;then     cpe;else echo $cunt;ssh $(snc $cunt) "$p53 cpe";fi;fi;echo
+    if mct;then mre;else ssh $(snc $cumv) "$p53 mre";fi|sort -n;echo;epf;cpf
+  else
+    hss $cunm
+  fi
+}
 function nsh { $s08 list;$s08 status;$s09 status|sed -En "$e26"; }                                                                                            # network/dns info
 function wlp { local e="$1";shift;until [[ $# -lt 1 ]];do e="$e|$1";shift;done;ll3|grep 'UFW BLOCK'|if [[ $e ]];then egrep -v "$e";else cat;fi; }
 function c0c { local e="$e11";[[ $(sed -n "$e12" $p04/$s12.service 2>$p03) = $iip6 ]] && e="$e10";sed "$e" $s12.sav > $p04/$s12.service; }                    # cc change el server
@@ -552,7 +564,8 @@ function caa { if n1t;then cll "$e50" $1;else ssh $(snc $cun1) "$p53 cl $1";fi;i
 function eaa { if n1t;then ell "$e50" $1;else ssh $(snc $cun1) "$p53 el $1";fi;if n2t;then ell "$e50" $1;else ssh $(snc $cun2) "$p53 el $1";fi; }
 function laa { caa $1;eaa $1; }
 function fsp { local n=${2:-0};if [[ $n -gt 0 ]];then local i=${3:-9};else local i=${3:-0};fi;grep -v "$1 *[$n-9][0-9]"|grep "$1 *[0-$i]"|sort -k2n; }
-function esp { if tsa $s44;then ll2 "$g11.*$g30"|sed -E "$e67";else ll2 "$g11.*$g35"|sed -E "$e68";fi; }
+function esp { if tsa $s44;then ll2 "$g11.*$g30"|sed -E "$e67";else ll2 "$g11.*$g35"|sed -E "$e68";fi|fsp "$g31" $2 $3; }
+function csp {                                                      ll2 "$g50"      |sed -E "$e49"   |fsp "$g31" $2 $3; }
 function epf { if tsa $s10;then gl0;swn "$m";fi;if tsa $s11;then ul0;swn "$m";fi;if tsa $s44;then tl0;swn "$m";fi; }
 function cpf { if tsa $s12;then bl0;swn "$m";fi;if tsa $s13;then vl0;swn "$m";fi;if tsa $s14;then ml0;swn "$m";fi; }
 function uur { nex "$s00 daemon-reload";sudo dpkg-reconfigure -plow unattended-upgrades;nex "$s06 unattended-upgrades";cex "unattended-upgrade -d"; }
@@ -636,9 +649,9 @@ function uur { nex "$s00 daemon-reload";sudo dpkg-reconfigure -plow unattended-u
 [[ $1 = eh  ]] && { eh0 $2; }
 [[ $1 = ch  ]] && { ch0 $2; }
 [[ $1 = bh  ]] && { bh0 $2; }
-[[ $1 = hs0 ]] && { if n1t;then if vst;then if vct;then hsv;cpe;else echo $cuvc;ssh $(snc $cuvc) "$p53 hsv";fi;fi;hs0 $cun1;hs0 $cun2;if mst;then if mct;then hsm;cpe;else echo $cumv;ssh $(snc $cumv) "$p53 hsm";fi;fi;if [[ $cust = hrv && $cumv != $cunt ]];then if z1t;then cpe;else echo $cunt;ssh $(snc $cunt) "$p53 cpe";fi;fi;else hs0 $cunm;fi; }
-[[ $1 = hs1 ]] && { hs0 $cun1; }
-[[ $1 = hs2 ]] && { hs0 $cun2; }
+[[ $1 = hs0 ]] && { hs0; }
+[[ $1 = hs1 ]] && { hss $cun1; }
+[[ $1 = hs2 ]] && { hss $cun2; }
 [[ $1 = hse ]] && { hsg;hsu;hst; }
 [[ $1 = hsc ]] && { hsb;hsv;hsm;cpe; }
 [[ $1 = hsv ]] && { hsv;cpe; }
@@ -690,8 +703,8 @@ function uur { nex "$s00 daemon-reload";sudo dpkg-reconfigure -plow unattended-u
 [[ $1 = vi1 ]] && { ll5 "$g16" ${2:-$n22}|grep $(sni $cun1)                  |sed -E "$e50"; }
 [[ $1 = vi2 ]] && { ll5 "$g16" ${2:-$n22}|grep $(sni $cun2)                  |sed -E "$e50"; }
 [[ $1 = vic ]] && { ll5 "$g17" ${2:-$(($n22/2))}                             |sed -E "$e50"; }
-[[ $1 = csp ]] && { ll2 "$g50"                                               |sed -E "$e49"|fsp "$g31" $2 $3; }
-[[ $1 = esp ]] && { esp                                                                    |fsp "$g31" $2 $3; }
+[[ $1 = csp ]] && { csp; }
+[[ $1 = esp ]] && { esp; }
 [[ $1 = wa  ]] && { wa; }
 [[ $1 = we  ]] && { yex 'ufw enable'; }
 [[ $1 = wpr ]] && { cex 'ufw disable'; }
