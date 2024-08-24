@@ -2,10 +2,10 @@
 
 source /home/eth/eth2/t1
 
-function cc1 { local f=$(basename $1);sex "cp $1 $f.sav";cmw $f.sav 644 eth         ;sed  -E "$2" $f.sav > $f.new;sex "cp $f.new $1"; }                       # edit             file
-function cc2 { local f=$(basename $1);sex "cp $1 $f.sav";cp $1 $f.new               ;echo -e "$2"       >> $f.new;sex "cp $f.new $1"; }                       # add lines to end file
-function cc3 { local f=$(basename $1);sex "cp $1 $f.sav";sed -E "$2" $f.sav > $f.new;echo -e "$3"       >> $f.new;sex "cp $f.new $1"; }                       # add lines to pos file
-function cc4 { local f=$(basename $1);sex "cp $1 $f.sav"                            ;echo -e "$2"        > $f.new;sex "cp $f.new $1"; }                       # replace lines of file
+function cc1 { local f=$(basename $1);sex "cp $1 $f.sav";cmw $f.sav 644 eth      ;sef "$2" $f.sav > $f.new;sex "cp $f.new $1"; }                              # edit             file
+function cc2 { local f=$(basename $1);sex "cp $1 $f.sav";cp $1 $f.new            ;echo -e "$2"   >> $f.new;sex "cp $f.new $1"; }                              # add lines to end file
+function cc3 { local f=$(basename $1);sex "cp $1 $f.sav";sef "$2" $f.sav > $f.new;echo -e "$3"   >> $f.new;sex "cp $f.new $1"; }                              # add lines to pos file
+function cc4 { local f=$(basename $1);sex "cp $1 $f.sav"                         ;echo -e "$2"    > $f.new;sex "cp $f.new $1"; }                              # replace lines of file
 
 [[ -x $p02/eth2/t ]] || ln -s $p02/eth2/t6 $p02/eth2/t                                                                                                        # link base commands
 if [[ $(pex 'ufw status'|grep -i inactive) ]];then

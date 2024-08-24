@@ -26,7 +26,7 @@ function dsd {
   [[ -x $p02/deposit ]] || { swb 'TEM DE TER DEPOSIT';return; }
   local v=${1:-1};local n=${2:-25}
   [[ -d $p19 && $(ls $p19           2>$p03) ]] || { if [[ $M ]];then if obn;then swb 'TEM DE ESTAR OFFLINE';else swb "GERAR $v CHAVES A PARTIR DE $n";$p02/deposit --language English --non_interactive existing-mnemonic --mnemonic "$M" --validator_start_index $n --num_validators $v --chain mainnet --keystore_password $K --execution_address $s26;fi;else swb 'TEM DE TER M';fi; }
-  [[ -d $p19 && $(ls $p19/key*.json 2>$p03) ]] && { swb 'DEVE ARQUIVAR CHAVES & ACTUALIZAR VARS';sed -n "$r28" $p19/key*.json;echo;  }
+  [[ -d $p19 && $(ls $p19/key*.json 2>$p03) ]] && { swb 'DEVE ARQUIVAR CHAVES & ACTUALIZAR VARS';for k in $(ls $p19/key*.json);do snf "$e22" $k;done; }
 }
 function ewc {
   srv hrv-zen || return

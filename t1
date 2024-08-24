@@ -151,6 +151,8 @@ g57="($g06|$g08).*ip[:=] +[0-9]"
 
 function sni { case $1 in $inm5) printf $iip5;;$inm6) printf $iip6;;$znm1) printf $zip1;;$znm2) printf $zip2;;$znm3) printf $zip3;;$znm4) printf $zip4;;$vnm1) printf $vis1;;$vnm2) printf $vis2;;$vnm3) printf $vis3;;esac; }
 function snc { if [[ ${1:0:3} = hrv ]];then printf ${1/[a-z]*-/}|tr -d '[aoel]';else case $1 in $vnm1) printf $vnd1;;$vnm2) printf $vnd2;;$vnm3) printf $vnd3;;*) printf $1;;esac;fi; }
+function sef { sed -E  "$1" $2 2>$p03; }
+function snf { sed -En "$1" $2 2>$p03; }
 
 s00='systemctl'
 s01="$s00 status"
@@ -341,28 +343,28 @@ e06='s%timeout *=.*$%timeout=1%i'
 e07='/dnssec-validation/q'
 e08="s%^ *pool  *([^a-z])%# pool \1%;/^ *#.*Specify/a \\$s52"
 e09='s%.*registerValidator +[0-9]+ +([^ ]+) *$%\1%p'
-e10="s%--execution-endpoint  *\([^ ]*/\)[0-9\.]*:8551[^ ]*%--execution-endpoint \1$iip5:8551%"
-e11="s%--execution-endpoint  *\([^ ]*/\)[0-9\.]*:8551[^ ]*%--execution-endpoint \1$iip6:8551%"
-e12="s%.*--execution-endpoint  *[^ ]*/\([0-9\.]*\):8551.*%\1%p"
+e10="s%--execution-endpoint  *([^ ]*)[0-9\.]*:8551[^ ]*%--execution-endpoint \1$iip5:8551%"
+e11="s%--execution-endpoint  *([^ ]*)[0-9\.]*:8551[^ ]*%--execution-endpoint \1$iip6:8551%"
+e12="s%.*--execution-endpoint  *[^ ]*/([0-9\.]*):8551.*%\1%p"
 e13='s%^ *#*NTP=.*$%NTP=time.google.com time.cloudflare.com time.facebook.com%i'
 e14='s%--subscribe-all-subnets --import-all-attestations %%'
 e15='s%--validator-monitor-file%--subscribe-all-subnets --import-all-attestations --validator-monitor-file%'
-e16='s%--beacon-nodes *\([^ ]*:5052\),\([^ ]*:5052\)[^ ]*%--beacon-nodes \2,\1%'
-e17="s%hrv-zotac\([0-9]\).*%hrv-zotac\1 ztc\1%;/127.0.1.1/a \\"
+e16='s%--beacon-nodes *([^ ]*:5052),([^ ]*:5052)[^ ]*%--beacon-nodes \2,\1%'
+e17="s%hrv-zotac([0-9]).*%hrv-zotac\1 ztc\1%;/127.0.1.1/a \\"
 [[ $cunm = $znm1 ]] && e17="$e17\n$zip2\thrv-zotac2 ztc2\n$zip3\thrv-zotac3 ztc3\n$zip4\thrv-zotac4 ztc4\n$iip5\thrv-intel5 int5\n$iip6\thrv-intel6 int6"
 [[ $cunm = $znm2 ]] && e17="$e17\n$zip1\thrv-zotac1 ztc1\n$zip3\thrv-zotac3 ztc3\n$zip4\thrv-zotac4 ztc4\n$iip5\thrv-intel5 int5\n$iip6\thrv-intel6 int6"
 [[ $cunm = $znm3 ]] && e17="$e17\n$zip1\thrv-zotac1 ztc1\n$zip2\thrv-zotac2 ztc2\n$zip4\thrv-zotac4 ztc4\n$iip5\thrv-intel5 int5\n$iip6\thrv-intel6 int6"
 [[ $cunm = $znm4 ]] && e17="$e17\n$zip1\thrv-zotac1 ztc1\n$zip2\thrv-zotac2 ztc2\n$zip3\thrv-zotac3 ztc3\n$iip5\thrv-intel5 int5\n$iip6\thrv-intel6 int6"
 [[ $cunm = $inm5 ]] && e17="$e17\n$zip1\thrv-zotac1 ztc1\n$zip2\thrv-zotac2 ztc2\n$zip3\thrv-zotac3 ztc3\n$zip4\thrv-zotac4 ztc4\n$iip6\thrv-intel6 int6"
 [[ $cunm = $inm6 ]] && e17="$e17\n$zip1\thrv-zotac1 ztc1\n$zip2\thrv-zotac2 ztc2\n$zip3\thrv-zotac3 ztc3\n$zip4\thrv-zotac4 ztc4\n$iip5\thrv-intel5 int5"
-e18='s%.*fee_recipient"."\([^"]*\)".*pubkey":"\([^"]*\)".*%pubkey: \2, fee: \1%p'
+e18='s%.*fee_recipient"."([^"]*)".*pubkey":"([^"]*)".*%pubkey: \2, fee: \1%p'
 e19="s%^$g00$g01($g03) +.*UFW BLOCK]%ufwk: \2.000 BLCK%"
 e19="$e19;s% MAC=[^ ]*%%"
 e19="$e19;s% IN=[^ ]*%%"
 e19="$e19;s% OUT=[^ ]*%%"
-e20='s%.*\(Temperature\|Sensor\|Package\|Core\|Composite\|temp[0-9]\).*: *\([-+][0-9][0-9]*\.[0-9]*\).*%\2%p'
-e21='s%.* \([0-9]*:[0-9]*\):[0-9]*.*%\1%'
-e22='s%.*pubkey": "\([^"]*\)".*%0x\1%p'
+e20='s%.*(Temperature|Sensor|Package|Core|Composite|temp[0-9]).*: *([-+][0-9][0-9]*\.[0-9]*).*%\2%p'
+e21='s%.* ([0-9]*:[0-9]*):[0-9]*.*%\1%'
+e22='s%.*pubkey": "([^"]*)".*%0x\1\n%p'
 e23='/^ *\/swap/s%^%#%;/ext4 +defaults +/s%defaults%defaults,noatime%'
 e24="s%download-dir\":[^,]+,%download-dir\": \"$p59\",%"
 e24="$e24;s%incomplete-dir\":[^,]+,%incomplete-dir\": \"$p59\",%"
@@ -372,7 +374,7 @@ e24="$e24;s%rpc-username\":[^,]+,%rpc-username\": \"eu\",%"
 e24="$e24;s%rpc-password\":[^,]+,%rpc-password\": \"\",%"
 e25='s%Type=.*$%Type=simple%'
 e26='s%(Current DNS)[^:]+:%   \1:%ip'
-e27='s%GRUB_CMDLINE_LINUX_DEFAULT *= *"\(..*\)"%GRUB_CMDLINE_LINUX_DEFAULT="\1 pcie_aspm=off"%;s%GRUB_CMDLINE_LINUX_DEFAULT *= *""%GRUB_CMDLINE_LINUX_DEFAULT="pcie_aspm=off"%'
+e27='s%GRUB_CMDLINE_LINUX_DEFAULT *= *"(.+)"%GRUB_CMDLINE_LINUX_DEFAULT="\1 pcie_aspm=off"%;s%GRUB_CMDLINE_LINUX_DEFAULT *= *""%GRUB_CMDLINE_LINUX_DEFAULT="pcie_aspm=off"%'
 e28="s%APT::Periodic::Update-Package-Lists.*$%APT::Periodic::Update-Package-Lists \"1\";%i"
 e28="${e28};s%APT::Periodic::Unattended-Upgrade.*$%APT::Periodic::Unattended-Upgrade \""
 case $cunm in $znm4) e28="${e28}5";;$inm6) e28="${e28}2";;*) e28="${e28}1";;esac
@@ -479,8 +481,8 @@ n26=90
 n27=19000
 n28=10000
 n29=18800
-n30=4000;[[ $n30 -eq 0 ]] && n30=$(curl -sX GET "$s50" 2>$p03|sed -En "$e70")
-n31=$($s01 $s12 2>$p03|sed -En "$e71")
+n30=4000;[[ $n30 -eq 0 ]] && n30=$(curl -sX GET "$s50" 2>$p03|snf "$e70")
+n31=$($s01 $s12 2>$p03|snf "$e71")
 n32=4
 n33=30
 n34=10
