@@ -44,7 +44,7 @@ function t0t { [[ $(cat $p43 2>$p03) -eq 0 && $(fl0|wc -l) -gt 20 ]]; }         
 function t1t { [[ $(cat $p43 2>$p03) -eq 1 && $(fl0|wc -l) -le 10 ]]; }                                                                                       # cpu    turbo recomended test
 function t2t { [[ $(cat $p44 2>$p03) -eq 1 && $(fl1|wc -l) -gt 10 ]]; }                                                                                       # usb messages            test
 function t3t { [[ $(cat $p43 2>$p03) -eq 1 ]]; }                                                                                                              # cpu no turbo            test
-function v0t { g0t $(grep $d0 $p12 2>$p03|wc -l); }                                                                                                           # cc  log day             test
+function v0t { g0t $(grep -c $d0 $p12 2>$p03); }                                                                                                              # cc  log day             test
 function z1t { [[ $cunm = $cunt ]]; }                                                                                                                         # main ntp                test
 function z4t { [[ $cunm = $znm4 ]]; }                                                                                                                         # best zotac              test
 function n1t { [[ $cunm = $cun1 ]]; }
@@ -223,7 +223,7 @@ function bff { grep "BEAC.*$1" $p12 2>$p03; }                                   
 function bb1 { if [[ $(echo $@|jq -r .data.is_syncing) = false ]];then printf 'synced';else printf 'syncing: %6i' $(bsi $@);fi; }                             # get cl syncing distance remaining
 function bmp { printf '%4i %3s %3i %4i iearhp: %4i %4i %4i %2i %2i %2i %4i' ${a[0]} $b5 $b4 $(b03 $zk $zz $zx $zw) $i0 $i1 $i4 $b1 $i2 $i3 $(b01) 2>$p03; }
 function bl0 { dts;ok=OK;if tsa $s12;then bl3;bv0;bnn;bb0;blo;else m="BSRV NOT ON $dt";fi; }                                                                  # cc report
-function bl1 { z1=${1:-$(echo "$l0"|grep -v ' INFO '|wc -l)};z2=${2:-$(echo "$l0"|grep ' INFO '|wc -l)};z3=${3:-$(bl4 success)};ok=${4:-OK}; }                # set info lines,success activities
+function bl1 { z1=${1:-$(echo "$l0"|grep -cv ' INFO ')};z2=${2:-$(echo "$l0"|grep -c ' INFO ')};z3=${3:-$(bl4 success)};ok=${4:-OK}; }                        # set info lines,success activities
 function bl2 { zk=${1:-$(bl4 missing)};zz=${2:-$(bl4 target)};zx=${3:-$(bl4 head)};zw=${4:-$(bl4 had)}; }                                                     # set missing/target/head/had activities
 function bl3 { b0=${1:-$(ll2 "$g08.*$g53"|wc -l)};if [[ $2$3$4$5$6$7 ]];then i0=$2;i1=$3;i4=$4;b1=$5;i2=$6;i3=$7;else svi $n21;fi; }                          # set pub-blocks & imported/observed delays
 function bl4 { echo "$l3"|snf "s%.*$1.*validators: *\[(.*)\].*%\1%p"|wc -w; }                                                                                 # get number of paid activities
@@ -291,7 +291,7 @@ function bo5 { bo0|head -n$((b6>b2?b6:b2<5?5:b2))|tail -n$((b6>0?b6:b2>n12?n12:b
 function boa { local g=${1:-$n16};local e=$(bo4 $g);printf 'BO%5i %3i\n' $(echo "$e"|wc -l) $g 2>$p03;echo "$e";((g<n17)) && boa $((g+n18)); }                # recursively show homologous nodes report
 function bod {
   fft $p12 || return;l2=$(bff 23:58);local e='';while read -a v;do
-    if [[ ${v[9]} -ge $1 && $(echo "$l2"|grep ${v[5]}|wc -l) -gt $2 ]];then local e="$e ${v[3]}";l2=$(echo "$l2"|grep -v ${v[3]});fi                          # gather delete info
+    if [[ ${v[9]} -ge $1 && $(echo "$l2"|grep -c ${v[5]}) -gt $2 ]];then local e="$e ${v[3]}";l2=$(echo "$l2"|grep -v ${v[3]});fi                          # gather delete info
   done <<< $(bo1);if [[ $e ]];then local e=${e:1};local e=${e// /\\|};bdw $p12 $e;bdw $p13 $e;fi                                                              # perform logs delete
 }
 function bh0 {
@@ -526,7 +526,7 @@ function tvc {
 }
 function svr { local t='';for t in $(printf '%s\n' $@|sort -u);do curl -sX GET "$s47=$t"|snf "$e18";done; }                                                   # show mev validator registration
 function mvr { if [[ $(ls $p19/key*.json 2>$p03) ]];then svr $(for k in $(ls $p19/key*.json);do snf "$e22" $k;done);else svr ${b[@]};fi; }                    # choose validator keys
-function mre { local s=n;for s in $(rlr|snf "$e09"|sort -u);do printf '%3i %s\n' $(rlr|grep -o $s|wc -l) $s;done; }
+function mre { local s=n;for s in $(rlr|snf "$e09"|sort -u);do printf '%3i %s\n' $(rlr|grep -co $s) $s;done; }
 function ibk {
   local f="$p02/pubkeys.old";cp $p58/pubkeys $f
   echo "$(cat $f)$(for f in $(jq -r .pubkey $p19/key*.json 2>$p03);do printf %s ",0x$f";done)" > $p02/pubkeys.new
