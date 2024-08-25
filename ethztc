@@ -15,9 +15,11 @@ if [[ $(hostname) = hrv-zotac2 ]];then
   alias tfs='transmission-remote -n 'eu:' -si'
   alias tcd='cd /var/lib/transmission-daemon/downloads'
 fi
-if [[ $(hostname) = hrv-intel5 || $(hostname) = hrv-intel6 ]];then
+if   [[ $(hostname) = hrv-intel5 || $(hostname) = hrv-intel6 ]];then
   alias aa='t6 ah'
   alias pp='t6 csp'
+elif [[ $(hostname) = hrv-zotac3 || $(hostname) = hrv-zotac4 ]];then
+  alias aa='t6 ch'
 fi
 
 alias hh='t6 hs0'
