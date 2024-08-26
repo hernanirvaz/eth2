@@ -563,7 +563,7 @@ function bba { if n1t;then wpe          ;else ssh $(snc $cun1) "$p53 bb"   ;fi;i
 function caa { if n1t;then cll "$e50" $1;else ssh $(snc $cun1) "$p53 cl $1";fi;if n2t;then cll "$e50" $1;else ssh $(snc $cun2) "$p53 cl $1";fi;if vst;then if vct;then cll "$e50" $1;else ssh $(snc $cuvc) "$p53 cl $1";fi;fi;if mst;then if mct;then rll "$e51" $1;else ssh $(snc $cumv) "$p53 rl $1";fi;fi; }
 function eaa { if n1t;then ell "$e50" $1;else ssh $(snc $cun1) "$p53 el $1";fi;if n2t;then ell "$e50" $1;else ssh $(snc $cun2) "$p53 el $1";fi; }
 function laa { caa $1;eaa $1; }
-function fsp { grep -v "$g31: *[${1:-1}-9][0-9]"|grep "$g31: *[0-${2:-5}]"|sort -k2n; }
+function fsp { grep -v "$g31: *[${1:-1}-9][0-9]"|grep "$g31: *[0-${2:-9}]"|sort -k2n; }
 function esp { if tsa $s44;then ll6 "$g36.*$g30"|sef "$e67";else ll2 "$g11.*$g35"|sef "$e68";fi|fsp $1 $2; }
 function csp { ll2 "$g50"|sef "$e49"                                                           |fsp $1 $2; }
 function epf { if tsa $s10;then gl0;swn "$m";fi;if tsa $s11;then ul0;swn "$m";fi;if tsa $s44;then tl0;swn "$m";fi; }
