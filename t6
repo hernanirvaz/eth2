@@ -372,7 +372,7 @@ function clk {
   elif tsa ntp;then
     local e="CNTP $(clo)";m="$(printf '%-40s' "$(ss2 ntp)"    2>$p03) $(cl5 $(ntpq -pn|grep '^\*[0-9]'))"
   else
-    local e="CHRY $(clo)";m="$(printf '%-40s' "$(ss2 chrony)" 2>$p03) $(cl6 $(chronyc -cn sources|snf "$e74") $(chronyc -cn tracking|snf "$e73"))"
+    local e="CHRY $(clo)";m="$(printf '%-40s' "$(ss2 chrony)" 2>$p03) $(cl6 $(chronyc -cn sources|snf "$e68") $(chronyc -cn tracking|snf "$e67"))"
   fi;dts
   if tsa $s12;then swn "$e $(nu1 %3i $(ll2 "$g22"|wc -l)) $dt $m";else swn "$e     $dt $m";fi
 }
@@ -563,8 +563,8 @@ function caa { if n1t;then cll "$e50" $1;else ssh $(snc $cun1) "$p53 cl $1";fi;i
 function eaa { if n1t;then ell "$e50" $1;else ssh $(snc $cun1) "$p53 el $1";fi;if n2t;then ell "$e50" $1;else ssh $(snc $cun2) "$p53 el $1";fi; }
 function laa { caa $1;eaa $1; }
 function fsp { grep -v "$g31: *[${1:-1}-9][0-9]"|grep "$g31: *[0-${2:-9}]"|sort -k2n; }
-function esp { if tsa $s44;then ll6 "$g36.*$g30"|sef "$e67";else ll2 "$g11.*$g35"|sef "$e68";fi|fsp $1 $2; }
-function csp { ll2 "$g50"|sef "$e49"                                                           |fsp $1 $2; }
+function esp { if tsa $s44;then ll2 "$g11.*$g30"|sef "$e29;s%$g30%peers:%i";else ll2 "$g11.*$g35"|sef "$e29;s%(\.[0-9]{2,}) *.*$g35 *%\1 peers: %i";fi|fsp $1 $2; }
+function csp { ll2 "$g50"|sef "$e49"                                                                                                                  |fsp $1 $2; }
 function epf { if tsa $s10;then gl0;swn "$m";fi;if tsa $s11;then ul0;swn "$m";fi;if tsa $s44;then tl0;swn "$m";fi; }
 function cpf { if tsa $s12;then bl0;swn "$m";fi;if tsa $s13;then vl0;swn "$m";fi;if tsa $s14;then ml0;swn "$m";fi; }
 function uur { nex "$s00 daemon-reload";sudo dpkg-reconfigure -plow unattended-upgrades;nex "$s06 unattended-upgrades";cex "unattended-upgrade -d"; }
