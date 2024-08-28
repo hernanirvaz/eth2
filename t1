@@ -328,14 +328,15 @@ s52="${s52}\npool 1.de.pool.ntp.org iburst"
 s52="${s52}\npool 2.de.pool.ntp.org iburst"
 s52="${s52}\npool 0.pt.pool.ntp.org iburst"
 s52="${s52}\npool 0.europe.pool.ntp.org iburst"
-s53="\nUnattended-Upgrade::Blacklisted-Services {"
-s53="${s53}\n\t\"eth-*.service\";"
-s53="${s53}\n};"
+s53='sgms:'
+s54="\nUnattended-Upgrade::Blacklisted-Services {"
+s54="${s54}\n\t\"eth-*.service\";"
+s54="${s54}\n};"
 
 e00="s%^ *#* *NTP *=.*$%NTP=$zip1 $zip2 time.google.com time.cloudflare.com time.facebook.com%i";if [[ $cunm = $cuvc || $cunm = $cun1 || $cunm = $cun2 || $cunm = $cumv ]];then e00="${e00};s%^ *#* *PollIntervalMaxSec *=.*$%PollIntervalMaxSec=1200%i";fi
 e01='s%^ *ENABLED=.*$%ENABLED=0%i'
 e02='s%bind[^"]*"%bind -4"%'
-e03="s%^ */*(.*codename}-updates.*$)%\1%i;s%^ */* *Unattended-Upgrade::Mail .*$%Unattended-Upgrade::Mail \"hernanilr@gmail.com\";%i;s%^ */* *Unattended-Upgrade::OnlyOnACPower.*$%Unattended-Upgrade::OnlyOnACPower \"false\";%i;\$a\\$s53"
+e03="s%^ */*(.*codename}-updates.*$)%\1%i;s%^ */* *Unattended-Upgrade::Mail .*$%Unattended-Upgrade::Mail \"hernanilr@gmail.com\";%i;s%^ */* *Unattended-Upgrade::OnlyOnACPower.*$%Unattended-Upgrade::OnlyOnACPower \"false\";%i;\$a\\$s54"
 e03='s%^ */*(.*codename}-updates.*$)%\1%i;s%^ */* *Unattended-Upgrade::Mail .*$%Unattended-Upgrade::Mail "hernanilr@gmail.com";%i;s%^ */* *Unattended-Upgrade::OnlyOnACPower.*$%Unattended-Upgrade::OnlyOnACPower "false";%i'
 e04='s%^ *printf%# printf%i'
 e05='s%^[^: ]+: *([^ ]+).*$%\1%p'
