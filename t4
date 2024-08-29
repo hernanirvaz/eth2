@@ -4,7 +4,7 @@ source /home/eth/eth2/t1
 
 function hlp {
   local e=''
-  e="$e\n$(basename $0) linux|reboot|besu [version]|geth [version] [commit]|net[vd] [version] [commit]|mev [go version]|cc [version] [rust version]|cp\n"
+  e="$e\n$(basename $0) linux|reboot|besu [version]|geth [version] [commit]|net[vd] [version] [commit]|mev [go version] [mev version]|cc [version] [rust version]|cp\n"
   e="$e\n  besu|geth|net[vd]|cc\tupgrade besu|geth|nethermind v-version/d-database|lighthouse"
   e="$e\n  mev\t\t\tupgrade mev-boost"
   e="$e\n  cp\t\t\tcopy & propagate  lighthouse"
@@ -21,7 +21,7 @@ if [[ $1 = besu ]];then sex "rm -fr $p00/besu.sav"      ;sex "mv $p00/besu      
 if [[ $1 = geth ]];then sex "rm -f  $p00/geth.sav"      ;sex "mv $p00/geth      $p00/geth.sav"       ;gtv $2 $3 ;fi
 if [[ $1 = netv ]];then nnv D $2 $3;sex "rm -fr $p00/nethermind.sav";t6 tgp;nex "mv $p00/nethermind $p00/nethermind.sav";nnv S $2 $3;t6 ta;fi
 if [[ $1 = netd ]];then                                              t6 tgp;nex "rm -rf $p61/nethermind_db/mainnet"                 ;t6 ta;fi
-if [[ $1 = mev  ]];then sex "rm -f  $p00/mev-boost.sav" ;sex "cp $p00/mev-boost $p00/mev-boost.sav"  ;gnv $2;mnv;fi
+if [[ $1 = mev  ]];then sex "rm -f  $p00/mev-boost.sav" ;sex "cp $p00/mev-boost $p00/mev-boost.sav"  ;gnv $2;mnv $3;fi
 [[ $1 = cc || $1 = cp ]] || { [[ $1 ]] || hlp;exit; }
 if [[ $1 = cc && ($cunm = $znm2 || $cunm = $znm4 || $cunm = $inm5 || $cunm = $vnm1) ]];then [[ -x $p02/.cargo/bin/rustup ]] && t6 ruv $3;t6 luc $2;fi
 t6 lpi
