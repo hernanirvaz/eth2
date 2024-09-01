@@ -298,7 +298,7 @@ function bh0 {
   fft $p12 || return;tail -n${1:-$n12} $p12;[[ $1 ]] && return;local e='0     x9  x5  x1  x0   er   if   c2'
   boi;swn "BO $(printf '%4i %3i%35s%16s' $b2 $ln     2>$p03)$e";bo5
   bl0;swn "BL $(printf '%8i%35s%16s'     $(llc $p12) 2>$p03)$e\n$m";bm0
-  bmo;swn "BM $(printf '%4i %3i%35s  4    5    6   0     8    9   10  avg %2i %9i' $(b00) $(llc $p13) ' ' $nz $n20 2>$p03)\n$m"
+  bmo;swn "BM $(printf '%4i %3i%35s i4   i5   i6   0    i8   i9  i10  avg %2i %9i' $(b00) $(llc $p13) ' ' $nz $n20 2>$p03)\n$m"
 }
 function bwd { local n=$((($(date +%s)-n09)/(12*32)-0));for n in $n $((n+1));do curl -sH "$s28" -X POST -d"$(sn0)" "$s32/sync/$n";curl -sH "$s28" -X GET "$s32/proposer/$n";done 2>$p03|jq -r $s35; }
 function bwc { bwd|grep -Ex "$(sn1)"|wc -l; }                                                                                                                 # get my # validators
