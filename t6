@@ -493,7 +493,9 @@ function hs0 {
     if vst;then if vct;then hsv;cpe;else echo $cuvc;ssh $(snc $cuvc) "$p53 hsv";fi;fi;hss $cun1;hss $cun2
     if mst;then if mct;then hsm;cpe;else echo $cumv;ssh $(snc $cumv) "$p53 hsm";fi;fi
     if nst;then if z1t;then     cpe;else echo $cunt;ssh $(snc $cunt) "$p53 cpe";fi;fi;echo
-    if mct;then mre;else ssh $(snc $cumv) "$p53 mre";fi|sort -n;echo;csp;echo;epf;cpf
+    local e=$(if mct;then mre;else ssh $(snc $cumv) "$p53 mre";fi|sort -n);if [[ $e ]];then echo -e "$e\n";fi
+    local e=$(csp                                                        );if [[ $e ]];then echo -e "$e\n";fi
+    epf;cpf
   else
     hss $cunm
   fi
