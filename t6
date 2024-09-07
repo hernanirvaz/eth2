@@ -571,13 +571,18 @@ function epf { if tsa $s10;then gl0;swn "$m";fi;if tsa $s11;then ul0;swn "$m";fi
 function cpf { if tsa $s12;then bl0;swn "$m";fi;if tsa $s13;then vl0;swn "$m";fi;if tsa $s14;then ml0;swn "$m";fi; }
 function uur { nex "$s00 daemon-reload";sudo dpkg-reconfigure -plow unattended-upgrades;nex "$s06 unattended-upgrades";cex "unattended-upgrade -d"; }
 
+function mke { if tsa $s44;then m="$m $s44";fi; }
+function mkc { if tsa $s12;then m="$m $s12";fi; }
+function msk { if [[ ! -f $p69 ]];then sex "mkdir -p $(dirname $p69)";m=;mke;mkc;local f=$(basename $p69);echo -e "[Service]\n$s54$m\n$s55$m" > $f.new;sex "cp $f.new $p69";cmw $p69 644 root;dmr;fi; }
+
+[[ $1 = msk ]] && { msk; }
+
 [[ $1 = bb  ]] && { wpe; }
 [[ $1 = bba ]] && { bba|sort -t: -k2n -k3n -k4n; }
 [[ $1 = bbz ]] && { wpf; }
 [[ $1 = ca  ]] && { caa $2|sort -t: -k2n -k3n -k4n; }
 [[ $1 = ea  ]] && { eaa $2|sort -t: -k2n -k3n -k4n; }
 [[ $1 = la  ]] && { laa $2|sort -t: -k2n -k3n -k4n; }
-
 [[ $1 = irb ]] && { irb $2;pas; }
 [[ $1 = eip ]] && { if [[ $2 && $3 ]];then curl -s4 "https://$2:$3@dyn.dns.he.net/nic/update?hostname=$2" &>$p03;fi;pas; }
 [[ $1 = eiz ]] && { if [[ $2 && $3 ]];then curl -s4 "https://$2:$3@dyn.dns.he.net/nic/update?hostname=$2"       ;fi;echo; }
@@ -859,5 +864,6 @@ if [[ ! $1 ]];then
   m="$m\nsnr\t\t\tremove snapd"
   m="$m\nlp\t\t\tlista portas"
   m="$m\neip\t\t\tset dynamic DNS"
+  m="$m\nmsk\t\t\tmask my services on $(basename $(dirname $p69) .service.d)"
   swn "\n$m\n"
 fi
