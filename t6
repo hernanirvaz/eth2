@@ -573,9 +573,10 @@ function uur { nex "$s00 daemon-reload";sudo dpkg-reconfigure -plow unattended-u
 
 function mke { if tsa $s44;then m="$m $s44";fi; }
 function mkc { if tsa $s12;then m="$m $s12";fi; }
-function msk { if [[ ! -f $p69 ]];then sex "mkdir -p $(dirname $p69)";m=;mke;mkc;local f=$(basename $p69);echo -e "[Service]\n$s54$m\n$s55$m" > $f.new;sex "cp $f.new $p69";cmw $p69 644 root;dmr;fi; }
+function msk { if [[ ! -f $p69 ]];then sex "mkdir -p $(dirname $p69)";m=;mke;mkc;local f=$(basename $p69);echo -e "[Service]\n$s54$m'\n$s55$m;systemctl daemon-reload'" > $f.new;sex "cp $f.new $p69";cmw $p69 644 root;dmr;nex "systemctl restart apt-daily-upgrade";nex "systemctl status apt-daily-upgrade";fi; }
 
 [[ $1 = msk ]] && { msk; }
+[[ $1 = ulg ]] && { nex "cat $p70"|snf "$g60"; }
 
 [[ $1 = bb  ]] && { wpe; }
 [[ $1 = bba ]] && { bba|sort -t: -k2n -k3n -k4n; }
@@ -864,6 +865,7 @@ if [[ ! $1 ]];then
   m="$m\nsnr\t\t\tremove snapd"
   m="$m\nlp\t\t\tlista portas"
   m="$m\neip\t\t\tset dynamic DNS"
-  m="$m\nmsk\t\t\tmask my services on $(basename $(dirname $p69) .service.d)"
+  m="$m\nmsk\t\t\tmask my services for $(basename $(dirname $p69) .service.d)"
+  m="$m\nulg\t\t\tshow update logs for $(basename $(dirname $p69) .service.d)"
   swn "\n$m\n"
 fi

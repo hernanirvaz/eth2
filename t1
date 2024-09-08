@@ -88,6 +88,7 @@ p66='/dev/null';[[ $cunm = $inm5 || $cunm = $inm6 ]] && p66='/dev/nvme0n1'
 p67='/etc/hosts'
 p68='/etc/chrony/chrony.conf'
 p69='/etc/systemd/system/apt-daily-upgrade.service.d/override.conf'
+p70='/var/log/unattended-upgrades/unattended-upgrades-dpkg.log'
 
 g00='(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) +'
 g01='[0-9]{1,2} +'
@@ -150,6 +151,7 @@ g55='execution_time_ms:'
 g56='attestable_delay_ms:'
 g57="($g06|$g08).*ip[:=] +[0-9]"
 g58="($g02)($g03)(\.[0-9]{3})[0-9]*$g24"
+g60="/Log +started: +$g23/,/Log +ended: +$g23/p"
 
 function sni { case $1 in $inm5) printf $iip5;;$inm6) printf $iip6;;$znm1) printf $zip1;;$znm2) printf $zip2;;$znm3) printf $zip3;;$znm4) printf $zip4;;$vnm1) printf $vis1;;$vnm2) printf $vis2;;$vnm3) printf $vis3;;esac; }
 function snc { if [[ ${1:0:3} = hrv ]];then printf ${1/[a-z]*-/}|tr -d '[aoel]';else case $1 in $vnm1) printf $vnd1;;$vnm2) printf $vnd2;;$vnm3) printf $vnd3;;*) printf $1;;esac;fi; }
@@ -331,8 +333,8 @@ s52="${s52}\npool 2.de.pool.ntp.org iburst"
 s52="${s52}\npool 0.pt.pool.ntp.org iburst"
 s52="${s52}\npool 0.europe.pool.ntp.org iburst"
 s53='sgms:'
-s54='ExecStartPre=/usr/bin/systemctl mask'
-s55='ExecStartPost=/usr/bin/systemctl unmask'
+s54="ExecStartPre=/bin/bash -c 'function zmv { local f=;for f in \$@;do mv $p04/\$f.service $p02/\$f.apt;done; };zmv"
+s55="ExecStartPost=/bin/bash -c 'function zmv { local f=;for f in \$@;do mv $p02/\$f.apt $p04/\$f.service;done; };zmv"
 
 e00="s%^ *#* *NTP *=.*$%NTP=$zip1 $zip2 time.google.com time.cloudflare.com time.facebook.com%i";if [[ $cunm = $cuvc || $cunm = $cun1 || $cunm = $cun2 || $cunm = $cumv ]];then e00="${e00};s%^ *#* *PollIntervalMaxSec *=.*$%PollIntervalMaxSec=1200%i";fi
 e01='s%^ *ENABLED=.*$%ENABLED=0%i'
