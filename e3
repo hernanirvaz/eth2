@@ -32,7 +32,10 @@ User=eth1
 Group=eth1
 Restart=always
 RestartSec=60
+StartLimitIntervalSec=600
+StartLimitBurst=9
 TimeoutStopSec=600
+RuntimeMaxSec=infinity
 Environment="JAVA_OPTS=-Xmx8g"
 ExecStart=$p00/besu/bin/besu --data-path=$p09/data $epec
 ExecStopPost=+$p02/eth2/t7 BESUSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS

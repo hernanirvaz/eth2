@@ -31,7 +31,10 @@ User=eth1
 Group=eth1
 Restart=always
 RestartSec=60
+StartLimitIntervalSec=600
+StartLimitBurst=9
 TimeoutStopSec=600
+RuntimeMaxSec=infinity
 WorkingDirectory=$p61
 Environment="DOTNET_BUNDLE_EXTRACT_BASE_DIR=$p61"
 ExecStart=$p00/nethermind/nethermind --config mainnet --datadir $p61$othe
