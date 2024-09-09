@@ -34,6 +34,10 @@ User=eth4
 Group=eth4
 Restart=always
 RestartSec=60
+StartLimitIntervalSec=600
+StartLimitBurst=9
+TimeoutStopSec=600
+RuntimeMaxSec=infinity
 ExecStart=$p00/mev-boost -mainnet -log-no-version $epmv
 ExecStopPost=+$p02/eth2/t7 MEVBSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 
