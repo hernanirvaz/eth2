@@ -32,8 +32,6 @@ User=eth1
 Group=eth1
 Restart=always
 RestartSec=60
-StartLimitIntervalSec=600
-StartLimitBurst=9
 TimeoutStopSec=600
 RuntimeMaxSec=infinity
 Environment="JAVA_OPTS=-Xmx8g"

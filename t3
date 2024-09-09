@@ -52,8 +52,6 @@ else
 	Group=eth2
 	Restart=always
 	RestartSec=60
-	StartLimitIntervalSec=600
-	StartLimitBurst=9
 	TimeoutStopSec=600
 	RuntimeMaxSec=infinity
 	ExecStart=$p00/lighthouse --datadir $p05 bn --network mainnet --port $pp2p --target-peers $tarp --http-address $apip --staking$othe
@@ -95,8 +93,6 @@ else
 		Group=eth3
 		Restart=always
 		RestartSec=60
-		StartLimitIntervalSec=600
-		StartLimitBurst=9
 		TimeoutStopSec=600
 		RuntimeMaxSec=infinity
 		ExecStart=$p00/lighthouse --datadir $p05 vc --network mainnet$othe
