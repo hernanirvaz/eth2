@@ -578,6 +578,7 @@ function ulg { local d=${1:-$(date +%F)};nex "cat $p70"|snf "/Log +started: +$d 
 
 [[ $1 = msk ]] && { msk; }
 [[ $1 = ulg ]] && { ulg $2; }
+[[ $1 = ulr ]] && { ulg $2|snf '/Restarting services/,/^ *$/p'; }
 
 [[ $1 = bb  ]] && { wpe; }
 [[ $1 = bba ]] && { bba|sort -t: -k2n -k3n -k4n; }
@@ -866,7 +867,8 @@ if [[ ! $1 ]];then
   m="$m\nsnr\t\t\tremove snapd"
   m="$m\nlp\t\t\tlista portas"
   m="$m\neip\t\t\tset dynamic DNS"
-  m="$m\nmsk\t\t\tmask my services for $(basename $(dirname $p69) .service.d)"
-  m="$m\nulg [d]\t\t\tshow update logs for $(basename $(dirname $p69) .service.d) on d($(date +%F))"
+  m="$m\nmsk\t\t\tmask my services\t\tfor $(basename $(dirname $p69) .service.d)"
+  m="$m\nulg [d]\t\t\tshow update logs\t\tfor $(basename $(dirname $p69) .service.d) on d($(date +%F))"
+  m="$m\nulr [d]\t\t\tshow restarting services\tfor $(basename $(dirname $p69) .service.d) on d($(date +%F))"
   swn "\n$m\n"
 fi
