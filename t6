@@ -867,8 +867,8 @@ if [[ ! $1 ]];then
   m="$m\nsnr\t\t\tremove snapd"
   m="$m\nlp\t\t\tlista portas"
   m="$m\neip\t\t\tset dynamic DNS"
-  m="$m\nmsk\t\t\tmask my services\t\tfor $(basename $(dirname $p69) .service.d)"
-  m="$m\nulg [d]\t\t\tshow update logs\t\tfor $(basename $(dirname $p69) .service.d) on d($(date +%F))"
-  m="$m\nulr [d]\t\t\tshow restarting services\tfor $(basename $(dirname $p69) .service.d) on d($(date +%F))"
+  m="$m\nmsk    \t\t\tmask my services\t\tfor $(basename $(dirname $p69) .service.d)"
+  m="$m\nulg [d]\t\t\tshow update logs d($(date +%F))\tfor $(basename $(dirname $p69) .service.d)"
+  m="$m\nulr [d]\t\t\tshow restartings d($(date +%F))\tfor $(basename $(dirname $p69) .service.d)"
   swn "\n$m\n"
 fi
