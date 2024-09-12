@@ -574,11 +574,12 @@ function uur { nex "$s00 daemon-reload";sudo dpkg-reconfigure -plow unattended-u
 function mke { if tsa $s44;then m="$m $s44";fi; }
 function mkc { if tsa $s12;then m="$m $s12";fi; }
 function msk { if [[ ! -f $p69 ]];then sex "mkdir -p $(dirname $p69)";m=;mke;mkc;local f=$(basename $p69);echo -e "[Service]\n$s54$m'\n$s55$m;systemctl daemon-reload'" > $f.new;sex "cp $f.new $p69";cmw $p69 644 root;dmr;nex "systemctl restart apt-daily-upgrade";nex "systemctl status apt-daily-upgrade";fi; }
-function ulg { local d=${1:-$(date +%F)};nex "cat $p70"|snf "/Log +started: +$d +/,/Log +ended: +$d +/p"; }
+function ulg { local d=${1:-$(date +%F)};nex "cat $p70"|snf "/$g60$d/,/$g61$d/p"; }
+function ulr { ulg $1|snf "/$g59/,/^ *$/p"|egrep -v "$g59|^ *$"; }
 
 [[ $1 = msk ]] && { msk; }
 [[ $1 = ulg ]] && { ulg $2; }
-[[ $1 = ulr ]] && { ulg $2|snf '/Restarting services/,/^ *$/p'; }
+[[ $1 = ulr ]] && { ulr $2; }
 
 [[ $1 = bb  ]] && { wpe; }
 [[ $1 = bba ]] && { bba|sort -t: -k2n -k3n -k4n; }
