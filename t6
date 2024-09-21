@@ -486,10 +486,10 @@ function hst { sso NETH $s44; }
 function hsb { sso BEAC $s12; }
 function hsv { sso VALI $s13; }
 function hsm { sso MEVB $s14; }
-function hss { echo $1;if [[ $cunm = $1 ]];then hsg;hsu;hst;hsb;hsv;hsm;cpe;else ssh $(snc $1) "$p53 hse";ssh $(snc $1) "$p53 hsc";fi; }
+function hss { echo $1;if [[ $cunm = $1 ]];then hsg;hsu;hst;hsb;hsv;hsm;cpe;uls "$g59" "$(ulg)";else ssh $(snc $1) "$p53 hse";ssh $(snc $1) "$p53 hsc";fi; }
 function hs0 {
   if n1t;then
-    printf '\n%.0s' {1..40};
+    printf '\n%.0s' {1..40}
     if vst;then if vct;then hsv;cpe;else echo $cuvc;ssh $(snc $cuvc) "$p53 hsv";fi;fi;hss $cun1;hss $cun2
     if mst;then if mct;then hsm;cpe;else echo $cumv;ssh $(snc $cumv) "$p53 hsm";fi;fi
     if nst;then if z1t;then     cpe;else echo $cunt;ssh $(snc $cunt) "$p53 cpe";fi;fi;echo
@@ -571,14 +571,10 @@ function epf { if tsa $s10;then gl0;swn "$m";fi;if tsa $s11;then ul0;swn "$m";fi
 function cpf { if tsa $s12;then bl0;swn "$m";fi;if tsa $s13;then vl0;swn "$m";fi;if tsa $s14;then ml0;swn "$m";fi; }
 function uur { nex "$s00 daemon-reload";sudo dpkg-reconfigure -plow unattended-upgrades;nex "$s06 unattended-upgrades";cex "unattended-upgrade -d"; }
 
-function mke { if tsa $s44;then m="$m $s44";fi; }
-function mkc { if tsa $s12;then m="$m $s12";fi; }
-function msk { if [[ ! -f $p69 ]];then sex "mkdir -p $(dirname $p69)";m=;mke;mkc;local f=$(basename $p69);echo -e "[Service]\n$s54$m'\n$s55$m;systemctl daemon-reload'" > $f.new;sex "cp $f.new $p69";cmw $p69 644 root;dmr;nex "systemctl restart apt-daily-upgrade";nex "systemctl status apt-daily-upgrade";fi; }
-function ulg { local d=${1:-$(date +%F)};nex "cat $p70"|snf "/$g60$d/,/$g61$d/p"; }
-function uls { local e=$(echo "$2"|snf "/$1/,/^ *$/p"|egrep -v "$1|^ *$"|sort -u);if [[ $e ]];then echo -e "\n$1";echo "$e";fi; }
+function ulg { local d=${1:-$(date +%F)};nex "cat $p69"|snf "/$g60$d/,/$g61$d/p"; }
+function uls { local e=$(echo "$2"|snf "/$1/,/^ *$/p"|egrep -v "$1|^ *$"|sort -u);if [[ $e ]];then echo "$1";echo -e "$e\n";fi; }
 function ulr { local s=$(ulg $1);uls "$g59" "$s";uls "$g62" "$s"; }
 
-[[ $1 = msk ]] && { msk; }
 [[ $1 = ulg ]] && { ulg $2; }
 [[ $1 = ulr ]] && { ulr $2; }
 
@@ -869,8 +865,7 @@ if [[ ! $1 ]];then
   m="$m\nsnr\t\t\tremove snapd"
   m="$m\nlp\t\t\tlista portas"
   m="$m\neip\t\t\tset dynamic DNS"
-  m="$m\nmsk    \t\t\tmask my services\t\tfor $(basename $(dirname $p69) .service.d)"
-  m="$m\nulg [d]\t\t\tshow update logs d($(date +%F))\tfor $(basename $(dirname $p69) .service.d)"
-  m="$m\nulr [d]\t\t\tshow restartings d($(date +%F))\tfor $(basename $(dirname $p69) .service.d)"
+  m="$m\nulg [d]\t\t\tshow update logs d($(date +%F)) on $(basename $p69)"
+  m="$m\nulr [d]\t\t\tshow restartings d($(date +%F)) on $(basename $p69)"
   swn "\n$m\n"
 fi

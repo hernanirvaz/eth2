@@ -87,8 +87,7 @@ p65='/etc/ssh/sshd_config.d/50-cloud-init.conf'
 p66='/dev/null';[[ $cunm = $inm5 || $cunm = $inm6 ]] && p66='/dev/nvme0n1'
 p67='/etc/hosts'
 p68='/etc/chrony/chrony.conf'
-p69='/etc/systemd/system/apt-daily-upgrade.service.d/override.conf'
-p70='/var/log/unattended-upgrades/unattended-upgrades-dpkg.log'
+p69='/var/log/unattended-upgrades/unattended-upgrades-dpkg.log'
 
 g00='(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) +'
 g01='[0-9]{1,2} +'
@@ -336,8 +335,6 @@ s52="${s52}\npool 2.de.pool.ntp.org iburst"
 s52="${s52}\npool 0.pt.pool.ntp.org iburst"
 s52="${s52}\npool 0.europe.pool.ntp.org iburst"
 s53='sgms:'
-s54="ExecStartPre=/bin/bash -c 'function zmv { local f=;for f in \$@;do mv $p04/\$f.service $p02/\$f.apt;done; };zmv"
-s55="ExecStartPost=/bin/bash -c 'function zmv { local f=;for f in \$@;do mv $p02/\$f.apt $p04/\$f.service;done; };zmv"
 
 e00="s%^ *#* *NTP *=.*$%NTP=$zip1 $zip2 time.google.com time.cloudflare.com time.facebook.com%i";if [[ $cunm = $cuvc || $cunm = $cun1 || $cunm = $cun2 || $cunm = $cumv ]];then e00="${e00};s%^ *#* *PollIntervalMaxSec *=.*$%PollIntervalMaxSec=1200%i";fi
 e01='s%^ *ENABLED=.*$%ENABLED=0%i'
