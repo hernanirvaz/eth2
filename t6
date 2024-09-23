@@ -401,7 +401,7 @@ function cpe {
   if g0t $i;then if g0t $n;then m="$m sl: ${e:0:53}";m="$m $l: ${d:0:54}";else m="$m sl: ${e:0:112}";fi;else if g0t $n;then m="$m $l: ${d:0:112}";fi;fi
   (( i+n )) && swn "$m";m=
   fft $p45 && m="$m, reboot $(($(sra)/60/60)) hours ago $(rsf|tail -n1)";s5t && m="$m, sync/propose duties on";[[ $m ]] && swn "INFO        $dt${m#*,}"       # reboot/duties info
-  if g0t $(nu0 $(/usr/lib/update-notifier/apt-check 2>&1|sed 's%;% %g'));then apt list --upgradable 2>$p03|grep -v Listing;echo;fi;uls "$g59" "$(ulg)"
+  if g0t $(nu0 $(/usr/lib/update-notifier/apt-check 2>&1|sed 's%;% %g'));then apt list --upgradable 2>$p03|grep -v Listing;echo;fi;mre;csp;uls "$g59" "$(ulg)"
 }
 # Plex Media Server
 function xop { pde 32400 plex delete;pai 32400 192.168.8.0/24 plex       ;pde 80 nginx delete;pai 80 192.168.8.0/24 nginx       ; }
@@ -493,8 +493,6 @@ function hs0 {
     if vst;then if vct;then hsv;cpe;else echo $cuvc;ssh $(snc $cuvc) "$p53 hsv";fi;fi;hss $cun1;hss $cun2
     if mst;then if mct;then hsm;cpe;else echo $cumv;ssh $(snc $cumv) "$p53 hsm";fi;fi
     if nst;then if z1t;then     cpe;else echo $cunt;ssh $(snc $cunt) "$p53 cpe";fi;fi;echo
-    local e=$(if mct;then mre;else ssh $(snc $cumv) "$p53 mre";fi|sort -n);if [[ $e ]];then echo -e "$e\n";fi
-    local e=$(csp                                                        );if [[ $e ]];then echo -e "$e\n";fi
     epf;cpf
   else
     hss $cunm
@@ -528,7 +526,7 @@ function tvc {
 }
 function svr { local t='';for t in $(printf '%s\n' $@|sort -u);do curl -sX GET "$s47=$t"|snf "$e18";done; }                                                   # show mev validator registration
 function mvr { if [[ $(ls $p19/key*.json 2>$p03) ]];then svr $(for k in $(ls $p19/key*.json);do snf "$e22" $k;done);else svr ${b[@]};fi; }                    # choose validator keys
-function mre { local s=n;for s in $(rlr|snf "$e09"|sort -u);do printf '%3i %s\n' $(rlr|grep -co $s) $s;done; }
+function mre { if mct;then local s=n;local e=$(for s in $(rlr|snf "$e09"|sort -u);do printf '%3i %s\n' $(rlr|grep -co $s) $s;done|sort -n);if [[ $e ]];then echo -e "$e\n";fi;fi; }
 function ibk {
   local f="$p02/pubkeys.old";cp $p58/pubkeys $f
   echo "$(cat $f)$(for f in $(jq -r .pubkey $p19/key*.json 2>$p03);do printf %s ",0x$f";done)" > $p02/pubkeys.new
@@ -565,8 +563,8 @@ function caa { if n1t;then cll "$e50" $1;else ssh $(snc $cun1) "$p53 cl $1";fi;i
 function eaa { if n1t;then ell "$e50" $1;else ssh $(snc $cun1) "$p53 el $1";fi;if n2t;then ell "$e50" $1;else ssh $(snc $cun2) "$p53 el $1";fi; }
 function laa { caa $1;eaa $1; }
 function fsp { grep -v "$g31: *[${1:-1}-9][0-9]"|grep "$g31: *[0-${2:-9}]"|sort -k2n; }
-function esp { if tsa $s44;then ll2 "$g11.*$g30"|sef "$e29;s%$g30%peers:%i";else ll2 "$g11.*$g35"|sef "$e29;s%(\.[0-9]{2,}) *.*$g35 *%\1 peers: %i";fi|fsp $1 $2; }
-function csp { ll2 "$g50"|sef "$e49"                                                                                                                  |fsp $1 $2; }
+function esp { if iet;then if tsa $s44;then ll2 "$g11.*$g30"|sef "$e29;s%$g30%peers:%i";else ll2 "$g11.*$g35"|sef "$e29;s%(\.[0-9]{2,}) *.*$g35 *%\1 peers: %i";fi|fsp $1 $2;fi; }
+function csp { if ict;then local e=$(ll2 "$g50"|sef "$e49"|fsp $1 $2);if [[ $e ]];then echo -e "$e\n";fi;fi; }
 function epf { if tsa $s10;then gl0;swn "$m";fi;if tsa $s11;then ul0;swn "$m";fi;if tsa $s44;then tl0;swn "$m";fi; }
 function cpf { if tsa $s12;then bl0;swn "$m";fi;if tsa $s13;then vl0;swn "$m";fi;if tsa $s14;then ml0;swn "$m";fi; }
 function uur { nex "$s00 daemon-reload";sudo dpkg-reconfigure -plow unattended-upgrades;nex "$s06 unattended-upgrades";cex "unattended-upgrade -d"; }
@@ -591,7 +589,7 @@ function ulr { local s=$(ulg $1);uls "$g59" "$s";uls "$g62" "$s"; }
 [[ $1 = bpi ]] && { bcp ${2:-connected}|jq -r "$s48\"Incoming\"$s49"; }
 [[ $1 = bpo ]] && { bcp ${2:-connected}|jq -r "$s48\"Outgoing\"$s49"; }
 [[ $1 = mvr ]] && { mvr; }
-[[ $1 = mre ]] && { if mct;then mre;else ssh $(snc $cumv) "$p53 mre";fi|sort -n; }
+[[ $1 = mre ]] && { mre; }
 [[ $1 = jwt ]] && { sjw; }
 [[ $1 = lpi ]] && { lpi $p02/.cargo/bin/lighthouse; }
 [[ $1 = luc ]] && { luc $p02/.cargo/bin/lighthouse ${2:-v5.3.0}; }
