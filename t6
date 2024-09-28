@@ -114,7 +114,7 @@ function ssf { g0t $1 || return;local f=$2.s${4:-00}n${5:-00}s$(stg $1);touch $f
 function ssw { while :;do local t=$(sng);if [[ $(sf2 $t) -lt $1 || 24 -ge $(sfn $t) ]];then ssf $(smn $(sfn $t)) $2 $t $1;else break;fi;s1t $2 && break;done; }
 function csn { if g0t $#;then nr=${@:$#};nm=$(nu6 $@);nd=$(nu7 $@);nz=$(nu8 $@);else nr=0;nm=0;nd=0;nz=0;fi; }
 function esn { if g0t $#;then er=${@:$#};em=$(nu6 $@);ed=$(nu7 $@);ez=$(nu8 $@);else er=0;em=0;ed=0;ez=0;fi; }
-function npn { if [[ $1 -ge 100 ]];then printf '%10s %5s nod%03i %3i' $dt $1 $2;else printf '%10s %5s nod%03i: %2i' $dt $1 $2;fi 2>$p03; }                    # get date/nodes info
+function npn { if [[ $2 -ge 100 ]];then printf '%10s %5s nod%03i %3i' $dt $1 $2;else printf '%10s %5s nod%03i: %2i' $dt $1 $2;fi 2>$p03; }                    # get date/nodes info
 function bnn { csn $(ln3 "$g31:" $g08) $(bpc $(bcl peer_count)); }                                                                                            # set cur/min/std cc peers
 function sz0 { gnn 0          ;printf 'el:p%03i:m%03i:l%03i:z%02i:d%04i p2p:%5i %s     iu: %4i %5i %4i'                 $er $em $(b06) $ez $ed $(ss5 $1 port    ) "$(gb1 $(gcl eth.syncing))" $e1 $e2 $(ei0)                 2>$p03; }
 function sz1 { unn 0          ;printf 'el:p%03i:m%03i:l%03i:z%02i:d%04i p2p:%5i %s      i: %4i'                         $er $em $(b06) $ez $ed $(ss5 $1 p2p-port) "$(ub1 $(ucl eth_syncing))" $e1                            2>$p03; }
