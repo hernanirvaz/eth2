@@ -9,9 +9,13 @@ zip3='192.168.8.31' ;znm3='hrv-zotac3'
 zip4='192.168.8.34' ;znm4='hrv-zotac4'
 iip5='192.168.8.37' ;inm5='hrv-intel5'
 iip6='192.168.8.40' ;inm6='hrv-intel6'
-vip1='141.95.64.32' ;vnd1='ns3204840.ip-141-95-64.eu'   ;vnm1=${vnd1%%.*};vis1='192.168.8.1'
-vip2='57.129.28.225';vnd2='ns3053175.ip-57-129-28.eu'   ;vnm2=${vnd2%%.*};vis2='192.168.8.2'
-vip3='161.97.85.32' ;vnd3='vmi1007895.contaboserver.net';vnm3=${vnd3%%.*};vis3='192.168.8.3'
+if [[ $cust = hrv ]];then
+vip1='57.129.52.53'              ;vnd1='ns3238168.ip-57-129-52.eu'   ;vnm1=${vnd1%%.*};vis1='192.168.8.1'
+else
+vip1=$(hostname -I|cut -d' ' -f1);vnd1=$(hostname).$(hostname -d)    ;vnm1=$(hostname);vis1='192.168.8.1'
+fi
+vip2='57.129.28.225'             ;vnd2='ns3053175.ip-57-129-28.eu'   ;vnm2=${vnd2%%.*};vis2='192.168.8.2'
+vip3='161.97.85.32'              ;vnd3='vmi1007895.contaboserver.net';vnm3=${vnd3%%.*};vis3='192.168.8.3'
 cuvc=$znm4
 nxvc=$znm4
 cun1=$inm6
@@ -79,7 +83,7 @@ p57="/etc/nut/upsd.conf"
 p58='/var/lib/jwtethereum'
 p59='/var/lib/transmission-daemon/downloads'
 p60='/var/lib/plexmediaserver/mp4'
-p61='/var/lib/nethermind';[[ $cunm = $vnm1 || $cunm = $vnm2 ]] && p61='/el/nethermind';[[ $cunm = $inm5 || $cunm = $inm6 ]] && p61='/nl/nethermind'
+p61='/var/lib/nethermind';[[ $cunm = $inm5 || $cunm = $inm6 ]] && p61='/nl/nethermind'
 p62="$p02/nethermind.log"
 p63="$p02/neth.rs"
 p64="$p02/dns.log"

@@ -19,8 +19,7 @@ t6 lpi                                                                          
 if [[ $cunm = $znm1 || $cunm = $znm2 || $cunm = $znm3 || $cunm = $znm4 || -f $p04/$s12.service ]];then
   if [[ -f $p04/$s12.service ]];then swu "cc ja instalado";else swu 'cc NAO DEVE SER INSTALADO AQUI';fi
 else
-  apip='127.0.0.1'
-  if [[ $cunm = $inm5 ]];then apip="$iip5";tarp=40;else apip="$iip6";tarp=100;fi
+  if [[ $cunm = $inm5 ]];then apip="$iip5";tarp=80;elif [[ $cunm = $inm6 ]];then apip="$iip6";tarp=80;else apip='127.0.0.1';tarp=80;fi
   othe=''
   othe="$othe --execution-endpoint http://$apip:8551 --execution-jwt $p58/jwt"
   othe="$othe --suggested-fee-recipient $s26"                                                                                                                 # bn level fees
@@ -29,7 +28,7 @@ else
   othe="$othe --builder http://$zip3:18550"                                                                                                                   # external payload mev-boost
   othe="$othe --subscribe-all-subnets --import-all-attestations"                                                                                              # better income
   othe="$othe --disable-upnp"                                                                                                                                 # disable UPnP support
-  if [[ $cunm = $inm5 ]];then othe="$othe --checkpoint-sync-url http://$iip6:5052";else othe="$othe --checkpoint-sync-url http://$iip5:5052";fi
+  if [[ $cunm = $inm5 ]];then othe="$othe --checkpoint-sync-url http://$iip6:5052";elif [[ $cunm = $inm6 ]];then othe="$othe --checkpoint-sync-url http://$iip5:5052";else othe="$othe --checkpoint-sync-url https://mainnet.checkpoint.sigp.io";fi
   # othe="$othe --disable-duplicate-warn-logs"                                                                                                                # no logs on duplicate gossip messages
   # othe="$othe --execution-timeout-multiplier 1"                                                                                                             # multiply default execution timeouts
   # othe="$othe --slasher --slasher-broadcast false"                                                                                                          # only the proposer who includes proof of offenses in blocks earn rewards, not the identifier of offenses
@@ -62,7 +61,7 @@ else
 	EOF
   sex "mv $s12.service $p04";cmw $p04/$s12.service 644
 fi
-if [[ $cunm = $znm1 || $cunm = $znm2 || $cunm = $znm3 || $cunm = $inm5 || $cunm = $inm6 || $cunm = $vnm1 || -f $p04/$s13.service ]];then
+if [[ $cunm = $znm1 || $cunm = $znm2 || $cunm = $znm3 || $cunm = $inm5 || $cunm = $inm6 || $cunm = $vnm2 || -f $p04/$s13.service ]];then
   if [[ -f $p04/$s13.service ]];then swu "vc ja instalado";else swu 'vc NAO PODE SER INSTALADO AQUI';fi
 else
   othe=''

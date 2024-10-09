@@ -1,8 +1,10 @@
 #!/bin/bash
 
-source /home/eu/i0
+ip=$(hostname -I);if [[ ${ip%%.*} -eq 192 ]];then iu=eu;else iu=ubuntu;fi
+source /home/$iu/i0
 
 sc='/etc/ssh/sshd_config'
+ss='/lib/systemd/system/ssh.socket'
 sm='/etc/ssmtp/ssmtp.conf'
 un=eth
 sh=ssh
@@ -17,3 +19,4 @@ s2="s%^ *#* *root *=.*$%root=hernanilr@gmail.com%i"
 s2="$s2;s%^ *#* *mailhub *=.*$%mailhub=mail.smtp2go.com:587\nAuthUser=fruga.pt\nAuthPass=$E\nUseSTARTTLS=YES%i"
 s2="$s2;s%^ *#* *rewriteDomain *=.*$%rewriteDomain=fruga.pt%i"
 s2="$s2;s%^ *#* *FromLineOverride *=.*$%FromLineOverride=YES%i"
+s3="s%^ *ListenStream *=.*$%ListenStream=$pr%i"

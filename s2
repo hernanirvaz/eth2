@@ -1,10 +1,11 @@
 #!/bin/bash
 
-source /home/eu/s0
+ip=$(hostname -I);if [[ ${ip%%.*} -eq 192 ]];then iu=eu;else iu=ubuntu;fi
+source /home/$iu/s0
 
 usermod -aG sudo $un
 mkdir -p $uh/.ssh $uh/${un}2
-mv /home/eu/${un}keys $uh/.ssh/authorized_keys
+mv /home/$iu/${un}keys $uh/.ssh/authorized_keys
 chown -R $un:$un $uh/.ssh $uh/${un}2
 chmod 700 $uh/.ssh
 chmod 600 $uh/.ssh/authorized_keys
