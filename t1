@@ -22,6 +22,12 @@ cun1=$inm6
 cun2=$inm5
 cumv=$znm3
 cunt=$znm1
+cuvc=$vnm1
+nxvc=$vnm1
+cun1=$vnm1
+cun2=$vnm2
+cumv=$vnm1
+cunt=$vnm1
 
 p00='/usr/local/bin'
 p01='/var/log/syslog'
