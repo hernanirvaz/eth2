@@ -9,7 +9,7 @@ pp2p=30303;ndp || pp2p=30304
 abrb=11052984
 fptv=256 # Gb
 nimh=4   # Gb
-apip='127.0.0.1';if [[ $cunm = $inm5 ]];then apip="$iip5";else apip="$iip6";fi
+if [[ $cunm = $inm5 ]];then apip="$iip5";elif [[ $cunm = $inm6 ]];then apip="$iip6";else apip='127.0.0.1';fi
 othe=''
 othe="$othe --Network.MaxActivePeers $maxp"
 othe="$othe --Network.DiscoveryPort $pp2p --Network.P2PPort $pp2p"

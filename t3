@@ -25,7 +25,7 @@ else
   othe="$othe --suggested-fee-recipient $s26"                                                                                                                 # bn level fees
   othe="$othe --validator-monitor-file $p58/pubkeys"                                                                                                          # monitor validators
   othe="$othe --prune-payloads false"                                                                                                                         # fetch/keep execution payloads default true
-  othe="$othe --builder http://$zip3:18550"                                                                                                                   # external payload mev-boost
+  if [[ $cust = hrv ]];then othe="$othe --builder http://$zip3:18550";else othe="$othe --builder http://$apip:18550";fi
   othe="$othe --subscribe-all-subnets --import-all-attestations"                                                                                              # better income
   othe="$othe --disable-upnp"                                                                                                                                 # disable UPnP support
   if [[ $cunm = $inm5 ]];then othe="$othe --checkpoint-sync-url http://$iip6:5052";elif [[ $cunm = $inm6 ]];then othe="$othe --checkpoint-sync-url http://$iip5:5052";else othe="$othe --checkpoint-sync-url https://mainnet.checkpoint.sigp.io";fi
@@ -69,7 +69,7 @@ else
   if [[ $cust = hrv ]];then
     othe="$othe --beacon-nodes http://$iip5:5052,http://$iip6:5052"
   else
-    othe="$othe --beacon-nodes http://$vis2:5052,http://$vis1:5052"
+    othe="$othe --beacon-nodes http://$vis1:5052"
   fi
   othe="$othe --suggested-fee-recipient $s26"                                                                                                                 # vc level fees
   othe="$othe --broadcast subscriptions,attestations,blocks,sync-committee"                                                                                   # broadcast to all beacon nodes
