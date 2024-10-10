@@ -722,9 +722,10 @@ function ulr { local s=$(ulg $1);uls "$g59" "$s";uls "$g62" "$s"; }
 # journal
 [[ $1 = yj  ]] && { jrn "" "$2"; }
 [[ $1 = ej  ]] && { jrn "-u $s10 -u $s11 -u $s44" "$2"; }
-[[ $1 = cj  ]] && { jrn "-u $s12"                 "$2"; }
-[[ $1 = mj  ]] && { jrn                 "-u $s14" "$2"; }
+[[ $1 = bj  ]] && { jrn "-u $s12"                 "$2"; }
 [[ $1 = vj  ]] && { jrn         "-u $s13"         "$2"; }
+[[ $1 = cj  ]] && { jrn "-u $s12 -u $s13"         "$2"; }
+[[ $1 = mj  ]] && { jrn                 "-u $s14" "$2"; }
 [[ $1 = sj  ]] && { jrn "-u $s20" "$2"; }
 # arranca
 [[ $1 = ga  ]] && { dmr;ga; }
