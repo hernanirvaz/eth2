@@ -565,7 +565,7 @@ function eaa { if n1t;then ell "$e50" $1;else ssh $(snc $cun1) "$p53 el $1";fi;i
 function laa { caa $1;eaa $1; }
 function fsp { grep -v "$g31: *[${1:-1}-9][0-9]"|grep "$g31: *[0-${2:-9}]"|sort -k2n; }
 function esp { if iet;then if tsa $s44;then ll2 "$g11.*$g30"|sef "$e29;s%$g30%peers:%i";else ll2 "$g11.*$g35"|sef "$e29;s%(\.[0-9]{2,}) *.*$g35 *%\1 peers: %i";fi|fsp $1 $2;fi; }
-function csp { if ict;then local e=$(ll2 "$g50"|sef "$e49"|fsp $1 $2);if [[ $e ]];then echo -e "$e\n";fi;fi; }
+function csp { if ict;then local e=$(ll2 "$g50"|sef "$e49"|fsp $1 $2);[[ $1$2 ]] || e=$(echo "$e"|tail -n5);if [[ $e ]];then echo -e "$e\n";fi;fi; }
 function epf { if tsa $s10;then gl0;swn "$m";fi;if tsa $s11;then ul0;swn "$m";fi;if tsa $s44;then tl0;swn "$m";fi; }
 function cpf { if tsa $s12;then bl0;swn "$m";fi;if tsa $s13;then vl0;swn "$m";fi;if tsa $s14;then ml0;swn "$m";fi; }
 function uur { nex "$s00 daemon-reload";sudo dpkg-reconfigure -plow unattended-upgrades;nex "$s06 unattended-upgrades";cex "unattended-upgrade -d"; }
