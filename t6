@@ -49,6 +49,7 @@ function z1t { [[ $cunm = $cunt ]]; }                                           
 function z4t { [[ $cunm = $znm4 ]]; }                                                                                                                         # best zotac              test
 function n1t { [[ $cunm = $cun1 ]]; }
 function n2t { [[ $cunm = $cun2 ]]; }
+function n3t { [[ $cun1 != $cun2 ]]; }
 function vct { [[ $cunm = $cuvc ]]; }
 function mct { [[ $cunm = $cumv ]]; }
 function i5t { [[ $cunm = $inm5 ]]; }
@@ -490,7 +491,7 @@ function hss { echo $1;if [[ $cunm = $1 ]];then hsg;hsu;hst;hsb;hsv;hsm;cpe;else
 function hs0 {
   if n1t;then
     printf '\n%.0s' {1..40}
-    if vst;then if vct;then hsv;cpe;else echo $cuvc;ssh $(snc $cuvc) "$p53 hsv";fi;fi;hss $cun1;hss $cun2
+    if vst;then if vct;then hsv;cpe;else echo $cuvc;ssh $(snc $cuvc) "$p53 hsv";fi;fi;hss $cun1;if n3t;then hss $cun2;fi
     if mst;then if mct;then hsm;cpe;else echo $cumv;ssh $(snc $cumv) "$p53 hsm";fi;fi
     if nst;then if z1t;then     cpe;else echo $cunt;ssh $(snc $cunt) "$p53 cpe";fi;fi;echo
     epf;cpf
