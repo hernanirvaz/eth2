@@ -1,4 +1,7 @@
-if [[ $(hostname) = hrv-zotac2 ]];then
+cunm=$(hostname)
+cust=${cunm:0:3}
+
+if [[ $cunm = hrv-zotac2 ]];then
   d=/var/lib/plexmediaserver/mp4
   rsy () { echo RSYNC $1 $2;rsync --ignore-existing --delete -rvz $1 $2; }
   rmv () { rsy $d/movie ztc1:; }
@@ -15,16 +18,20 @@ if [[ $(hostname) = hrv-zotac2 ]];then
   alias tfs='transmission-remote -n 'eu:' -si'
   alias tcd='cd /var/lib/transmission-daemon/downloads'
 fi
-if   [[ $(hostname) = hrv-intel5 || $(hostname) = hrv-intel6 ]];then
+if   [[ $cunm = hrv-intel5 || $cunm = hrv-intel6 ]];then
   alias aa='t6 ah'
   alias pp='t6 csp'
-elif [[ $(hostname) = hrv-zotac3 || $(hostname) = hrv-zotac4 ]];then
+elif [[ $cunm = hrv-zotac3 || $cunm = hrv-zotac4 ]];then
   alias aa='t6 ch'
+else
+  alias aa='t6 ah'
+fi
+if [[ $cust = hrv ]];then
+  alias rt='echo meo:$V;telnet 192.168.8.1'
+  alias nt='sudo iftop -nNPBF $(hostname -I)'
 fi
 
 alias hh='t6 hs0'
 alias rr='t6 mre'
 alias ky='ssh-keygen -t ed25519 -C "$(whoami)@$(hostname)";cat ~/.ssh/id_ed25519.pub'
-alias nt='sudo iftop -nNPBF $(hostname -I)'
-alias rt='echo meo:$V;telnet 192.168.8.1'
 alias xx='exit'
