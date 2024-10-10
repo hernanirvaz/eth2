@@ -546,7 +546,7 @@ b[590906]='0xa15449ffda354fc6f9de4bd6f020b419bf23e4256d6396213e81c302f7814a25993
 b[590907]='0x82b93acde57a8c5ef6da79e79a8aca4438e035ec890f1bd7db7c356de4926841ab649e3d25c67e7714c976bc49e5a034'
 b[1027307]='0x83c7c2d579df3b6f00513730e1bd2acb8c1515ecd0d158535d9e6c37dadbfbff20d9abd442527fdce970c3dd2818e710'
 
-function ndp { [[ $cunm = $inm5 || $cunm = $vnm1 || $cunm = $vnm2 ]]; }
+function ndp { [[ $cunm = $inm5 || $cunm = $vnm2 ]]; }
 function tsa { $s00 is-active  --quiet $1 2>$p03; }
 function tse { $s00 is-enabled --quiet $1 2>$p03; }
 function hrs { if tsa $s19;then nex "$s06 $s19";elif tsa ntp;then nex "$s06 ntp";else nex "$s06 chrony";fi; }
