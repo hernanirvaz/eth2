@@ -10,8 +10,7 @@ othe="--http.corsdomain 'chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn' --
 othe="$othe --cache 16384"                                                                                                                                  # after v1.30.0 NOT recomended
 othe="$othe --state.scheme=path"                                                                                                                            # after v1.14+ default
 othe=''
-apip='127.0.0.1'
-if [[ $cunm = $inm5 ]];then apip="$iip5";else apip="$iip6";fi
+if [[ $cunm = $inm5 ]];then apip="$iip5";elif [[ $cunm = $inm6 ]];then apip="$iip6";else apip='127.0.0.1';fi
 cd
 cat <<-EOF > $s10.service
 [Unit]
