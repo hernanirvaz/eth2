@@ -524,7 +524,7 @@ function luc {                                                                  
 function ruv { if [[ $1 ]];then swn "RUST OVERRIDE SET $1";rustup override set $1;else swn 'RUST UPDATE';rustup update stable;fi; }                           # set/update rust version
 function tvc {
   swn "$s24";[[ $cuvc = $nxvc ]] && return;if vct && tsa $s13;then swn "TRANSFERIR VC -> $(snc $nxvc) (SIM/nao)?";else return;fi;local rsp=nao;read rsp
-  if [[ $rsp = SIM && ! -f $p05/vc_slash && ! -f $p05/vc_lock && -f $p05/vc_keys ]];then vrs PR 24;vd;swu "COPY SLASH -> $nxvc";local f=$p02/$(basename $p18);sex "cp $p18 $p02";cmw $f 666 eth;scp -P $(spt $nxvc) -i $p02/.ssh/id_ed25519 $f $(snc $nxvc):~;sex "rm $f";fi
+  if [[ $rsp = SIM && ! -f $p05/vc_slash && ! -f $p05/vc_lock && -f $p05/vc_keys ]];then vrs PR $n03;vd;swu "COPY SLASH -> $nxvc";local f=$p02/$(basename $p18);sex "cp $p18 $p02";cmw $f 666 eth;scp -P $(spt $nxvc) -i $p02/.ssh/id_ed25519 $f $(snc $nxvc):~;sex "rm $f";fi
 }
 function svr { local t='';for t in $(printf '%s\n' $@|sort -u);do curl -sX GET "$s47=$t"|snf "$e18";done; }                                                   # show mev validator registration
 function mvr { if [[ $(ls $p19/key*.json 2>$p03) ]];then svr $(for k in $(ls $p19/key*.json);do snf "$e22" $k;done);else svr ${b[@]};fi; }                    # choose validator keys
