@@ -28,7 +28,7 @@ else
   if [[ $cust = hrv ]];then othe="$othe --builder http://$zip3:18550";else othe="$othe --builder http://$apip:18550";fi
   othe="$othe --subscribe-all-subnets --import-all-attestations"                                                                                              # better income
   othe="$othe --disable-upnp"                                                                                                                                 # disable UPnP support
-  if [[ $cunm = $inm5 ]];then othe="$othe --checkpoint-sync-url http://$iip6:5052";elif [[ $cunm = $inm6 ]];then othe="$othe --checkpoint-sync-url http://$iip5:5052";else othe="$othe --checkpoint-sync-url https://mainnet.checkpoint.sigp.io";fi
+  if [[ $cunm = $inm5 ]];then othe="$othe --checkpoint-sync-url http://$iip6:5052";elif [[ $cunm = $inm6 ]];then othe="$othe --checkpoint-sync-url http://$iip5:5052";else othe="$othe --checkpoint-sync-url https://mainnet.checkpoint.sigp.io --disable-backfill-rate-limiting";fi
   # othe="$othe --disable-duplicate-warn-logs"                                                                                                                # no logs on duplicate gossip messages
   # othe="$othe --execution-timeout-multiplier 1"                                                                                                             # multiply default execution timeouts
   # othe="$othe --slasher --slasher-broadcast false"                                                                                                          # only the proposer who includes proof of offenses in blocks earn rewards, not the identifier of offenses
