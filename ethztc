@@ -25,6 +25,7 @@ elif [[ $cunm = hrv-zotac3 || $cunm = hrv-zotac4 ]];then
   alias aa='t6 ch'
 else
   alias aa='t6 ah'
+  alias pp='t6 csp'
 fi
 if [[ $cust = hrv ]];then
   alias rt='echo meo:$V;telnet 192.168.8.1'
