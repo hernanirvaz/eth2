@@ -5,6 +5,8 @@ esl () { echo -e "\nssh $1     ";ssh $1; }
 ei0 () { echo -e "export H=\"$1\"\nexport E=\"$2\"\nexport R=\"$3\"\npr=$4"; }
 ei1 () { echo -e "echo>>~/.bashrc\necho \"export PATH=\\\"~/eth2:\\\$PATH\\\"\">>~/.bashrc\necho \"export H=\\\"$1\\\"\">>~/.bashrc\necho \"export V=\\\"$2\\\"\">>~/.bashrc\necho \"export K=\\\"$3\\\"\">>~/.bashrc\necho \"export E=\\\"$4\\\"\">>~/.bashrc\necho \"export B=\\\"$5\\\"\">>~/.bashrc\necho \"PS1=\\\"\\\$H:\\\h: \\\"\">>~/.bashrc\nchmod 755 ~/eth2/t[1-9] ~/eth2/e?"; }
 cc0 () { if [[ ${1%%.*} -eq 192 ]];then local u=eu;else local u=ubuntu;fi;local s="$u@$1";scp -P 22 ~/eth2/s? ~/eth2/ethkeys ~/i0 $s:~;echo -e "\n\nsudo -i\nbash /home/$u/s1\n\n";ssh -p 22 $s;scp -P $2 -i ~/.ssh/id_ed25519 ~/eth2/t[1-9] ~/eth2/e? $1:~/eth2;scp -P $2 -i ~/.ssh/id_ed25519 ~/eth2/ethztc $1:~/.bash_aliases;scp -P $2 -i ~/.ssh/id_ed25519 ~/i1 $1:~;ssh -p $2 -i ~/.ssh/id_ed25519 $1 'sh i1';echo -e "\n\nky # gerar key & copiar para ethkeys\nt2 # setup\n\n";ssh -p $2 -i ~/.ssh/id_ed25519 $1; }
+nip () { echo ${N%%:*}; }
+npt () { echo ${N#*:}; }
 
 alias v1='esl ns3238168.ip-57-129-52.eu'
 alias v2='esl ns3238168.ip-57-129-52.eu'
@@ -27,12 +29,14 @@ alias zo='ocp int6         ;ocp int5         ;ocp ztc4         ;ocp ztc3        
 alias rp='ecp int6.fruga.pt;ecp int5.fruga.pt;ecp ztc4.fruga.pt;ecp ztc3.fruga.pt;ecp ztc1.fruga.pt;ecp ztc2.fruga.pt'
 alias ro='ocp int6.fruga.pt;ocp int5.fruga.pt;ocp ztc4.fruga.pt;ocp ztc3.fruga.pt;ocp ztc1.fruga.pt;ocp ztc2.fruga.pt'
 
+alias pi="ping \$(nip)"
 alias hk='cat /dev/null>~/.ssh/known_hosts'
 alias gp='cd ~/eth2;git pull;cd'
 alias gc='cd ~/eth2;git commit -am "cleanup";git push;cd'
 alias gd='cd ~/eth2;git diff'
 alias gv='cd;vi eth2/t[1-8] eth2/e?'
 
+alias lk="ei0 \$H \$E \$R \$(npt) >~/i0;ei1 \$H \$V \$K \$E \$B >~/i1;cc0 \$(nip) \$(npt)"
 alias fw='echo "export R=\"$(</dev/urandom tr -dc "A-Za-z0-9?%&_+=@~#\,.?/"|head -c50)\"";echo "export H=\"$(</dev/urandom tr -dc "A-Za-z0-9?%&_+=@~#\,.?/"|head -c30)\"";echo "export V=\"$(</dev/urandom tr -dc "A-Za-z0-9"|head -c8)\"";echo "export K=\"$(</dev/urandom tr -dc "A-Za-z0-9?%&_+=@~#\,.?/"|head -c60)\"";echo "export W=\"$(</dev/urandom tr -dc "A-Za-z0-9?%&_+=@~#\,.?/"|head -c60)\"";'
 alias rq='erq;erq changelogs.ubuntu.com;erq ppa.launchpad.net;erq github.com'
 alias xx='exit'
