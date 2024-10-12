@@ -11,7 +11,7 @@ function cc4 { local f=$(basename $1);sex "cp $1 $f.sav"                        
 if [[ $(pex 'ufw status'|grep -i inactive) ]];then
   swu 'INIT FIREWALL';sex 'ufw default deny incoming';sex 'ufw default allow outgoing'                                                                        # base ufw
   pde 22/tcp ossh
-  [[ $cunm = $vnm1 || $cunm = $vnm2 ]] && { ple 2020/tcp nssh; }                                                                                              # limit ssh
+  [[ $cunm = $vnm1 || $cunm = $vnm2 ]] && { ple 2020/tcp nssh;pae 123/udp ntp; }
   [[ $cunm = $znm1 ]] && { ple 2021/tcp nssh;pai 123/udp 192.168.8.0/24 ntp; }                                                                                # limit ssh;allow ntp
   [[ $cunm = $znm2 ]] && { ple 2022/tcp nssh;pai 123/udp 192.168.8.0/24 ntp; }                                                                                # limit ssh;allow ntp
   [[ $cunm = $znm3 ]] && { ple 2023/tcp nssh; }                                                                                                               # limit ssh
@@ -39,23 +39,25 @@ if [[ $cunm = $znm2 ]];then
   sex "ln -s $p60/movie $p59/lmv";sex "ln -s $p60/tv $p59/ltv";sex "ln -s $p60/tv2 $p59/lt2"                                                                  # plex - transmission
   t6 rpd;t6 rea                                                                                                                                               # enable transmission
 fi
-if [[ $cunm = $znm1 || $cunm = $znm2 ]];then
+if [[ $cunm = $znm1 || $cunm = $znm2 || $cunm = $vnm1 ]];then
   sex "$s07 set-ntp false"                                                                                                                                    # use ntp (sophisticated)
-  if [[ $cunm = $znm1 ]];then
+  if [[ $cunm = $znm1 || $cunm = $vnm1 ]];then
     sex 'apt install chrony -y'
-    cc3 $p68 "$e72" "\nallow 192.168.8.0/24\n$s52";cmw $p68 644 root;nex "$s06 chrony"                                                                        # hrony config synchronization
+    cc3 $p68 "$e72" "\nallow 192.168.8.0/24\n$s52";cmw $p68 644 root;nex "$s06 chrony"
   else
     sex 'apt install ntp -y'
-    cc1 $p31 "$e08"                               ;cmw $p31 644 root;nex "$s06 ntp"                                                                           # ntp config synchronization
+    cc1 $p31 "$e08"                               ;cmw $p31 644 root;nex "$s06 ntp"
   fi
-  sex 'apt install bind9 bind9utils -y'                                                                                                                       # install dependencies & ntp & bind
-  cc3 $p29 "$e07" "$s40"       ;cmw $p29 644 root bind                                                                                                        # named my options
-  cc1 $p30 "$e02"              ;cmw $p30 644 root                                                                                                             # use only ipv4
-  t6 spd;t6 sea;nex "$s02 systemd-resolved";nex "$s03 systemd-resolved"                                                                                       # DNS stop & start
 else
   sex "$s07 set-ntp true"                                                                                                                                     # use timesyncd (lightweight)
 fi
 if [[ $cust = hrv ]];then
+  if [[ $cunm = $znm1 || $cunm = $znm2 ]];then
+    sex 'apt install bind9 bind9utils -y'                                                                                                                     # install bind
+    cc3 $p29 "$e07" "$s40"       ;cmw $p29 644 root bind                                                                                                      # named my options
+    cc1 $p30 "$e02"              ;cmw $p30 644 root                                                                                                           # use only ipv4
+    t6 spd;t6 sea;nex "$s02 systemd-resolved";nex "$s03 systemd-resolved"                                                                                     # DNS stop & start
+  fi
   swu 'ROOTKIT SCANNER';sex 'apt install lm-sensors chkrootkit -y';cex 'chkrootkit'
   sex "$s07 set-timezone Europe/Lisbon"
   cc1 $p20 "$e00"                                                                                                                                             # my time servers
