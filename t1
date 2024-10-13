@@ -168,8 +168,8 @@ g61='Log +ended: +'
 g62='Service restarts being deferred'
 
 function sni { case $1 in $inm5) printf $iip5;;$inm6) printf $iip6;;$znm1) printf $zip1;;$znm2) printf $zip2;;$znm3) printf $zip3;;$znm4) printf $zip4;;$vnm1) printf $vis1;;$vnm2) printf $vis2;;$vnm3) printf $vis3;;esac; }
-function snc { if [[ ${1:0:3} = hrv ]];then printf ${1/[a-z]*-/}|tr -d '[aoel]';else case $1 in $vnm1) printf $vnd1;;$vnm2) printf $vnd2;;$vnm3) printf $vnd3;;*) printf $1;;esac;fi; }
-function spt { if [[ ${1:0:3} = hrv ]];then printf 202${1##*[!0-9]};else printf 2020;fi; }
+function snc { if [[ ${1/-*/} = hrv ]];then if [[ $cust = hrv ]];then local s='';else local s='.fruga.pt';fi;local v=${1/*-/};printf ${v//[aoel]/}$s;else case $1 in $vnm1) printf $vnd1;;$vnm2) printf $vnd2;;$vnm3) printf $vnd3;;*) printf $1;;esac;fi; }
+function spt { if [[ ${1/-*/} = hrv ]];then printf 202${1##*[!0-9]};else printf 2020;fi; }
 function sef { sed -E  "$1" $2 2>$p03; }
 function snf { sed -En "$1" $2 2>$p03; }
 
@@ -322,7 +322,10 @@ s42="$s42\nproxy_redirect off;"
 s42="$s42\nproxy_buffering off;"
 s42="$s42\nlocation / { proxy_pass http://plex_backend; }"
 s42="$s42\n}"
-s43="Host ns3204840.ip-141-95-64.eu\n  Port 2020\n  IdentityFile ~/.ssh/id_ed25519"
+s44="Port 2020\n  IdentityFile ~/.ssh/id_ed25519"
+s43=""
+[[ $cust = hrv   ]] && s43="$s43\n\nHost $vnd1\n  $s44"
+[[ $cunm = $vnm1 ]] && s43="$s43\n\nHost ztc1.fruga.pt\n  Port 2021\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc2.fruga.pt\n  Port 2022\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc3.fruga.pt\n  Port 2023\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc4.fruga.pt\n  Port 2024\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int5.fruga.pt\n  Port 2025\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int6.fruga.pt\n  Port 2026\n  IdentityFile ~/.ssh/id_ed25519"
 [[ $cunm = $znm1 ]] && s43="$s43\n\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int5\n  Port 2025\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int6\n  Port 2026\n  IdentityFile ~/.ssh/id_ed25519"
 [[ $cunm = $znm2 ]] && s43="$s43\n\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc3\n  Port 2023\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int5\n  Port 2025\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int6\n  Port 2026\n  IdentityFile ~/.ssh/id_ed25519"
 [[ $cunm = $znm3 ]] && s43="$s43\n\nHost ztc1\n  Port 2021\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc2\n  Port 2022\n  IdentityFile ~/.ssh/id_ed25519\n\nHost ztc4\n  Port 2024\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int5\n  Port 2025\n  IdentityFile ~/.ssh/id_ed25519\n\nHost int6\n  Port 2026\n  IdentityFile ~/.ssh/id_ed25519"
