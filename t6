@@ -302,8 +302,8 @@ function bh0 {
   bl0;swn "BL $(printf '%8i%35s%15s'     $(llc $p12) 2>$p03)$e\n$m";bm0
   bmo;swn "BM $(printf '%4i %3i%34s i4   i5   i6   0    i8   i9  i10  avg %2i %9i' $(b00) $(llc $p13) ' ' $nz $n20 2>$p03)\n$m"
 }
-function bwd { local n=$((($(date +%s)-n09)/(12*32)-0));for n in $n $((n+1));do curl -sH "$s28" -X POST -d"$(sn0)" "$s32/sync/$n";curl -sH "$s28" -X GET "$s32/proposer/$n";done 2>$p03|jq -r $s35; }
-function bwc { bwd|grep -Ex "$(sn1)"|wc -l; }                                                                                                                 # get my # validators
+function bwd { local n=$((($(date +%s)-n09)/(12*32)-0));for n in $n $((n+1));do curl -sH "$s28" -X POST -d"$(viv)" "$s32/sync/$n";curl -sH "$s28" -X GET "$s32/proposer/$n";done 2>$p03|jq -r $s35; }
+function bwc { bwd|grep -Ex "$(vix)"|wc -l; }                                                                                                                 # get my # validators
 function ero { dts;swn "$(printf 'R%03i %2s SRV'      $2 $1     2>$p03) $(npn $en $er)" >> $3  ; }
 function vro { dts;swn "$(printf 'VL%2s %6i %10s %5s' $1 $2 $dt 2>$p03)"                >> $p49; }
 function bro { if fft $p12;then dts;bnn;bb0;swn "$(printf 'R%03i %2s %3i' $2 $1 $(b08) 2>$p03) $(npn $nn $nr)" >> $p12;else vro $1 $2;fi; }
@@ -524,7 +524,7 @@ function luc {                                                                  
 function ruv { if [[ $1 ]];then swn "RUST OVERRIDE SET $1";rustup override set $1;else swn 'RUST UPDATE';rustup update stable;fi; }                           # set/update rust version
 function tvc {
   swn "$s24";[[ $cuvc = $nxvc ]] && return;if vct && tsa $s13;then swn "TRANSFERIR VC -> $(snc $nxvc) (SIM/nao)?";else return;fi;local rsp=nao;read rsp
-  if [[ $rsp = SIM && ! -f $p05/vc_slash && ! -f $p05/vc_lock && -f $p05/vc_keys ]];then vrs PR $n03;vd;swu "COPY SLASH -> $nxvc";local f=$p02/$(basename $p18);sex "cp $p18 $p02";cmw $f 666 eth;scp -P $(spt $nxvc) -i $p02/.ssh/id_ed25519 $f $(snc $nxvc):~;sex "rm $f";fi
+  if [[ $rsp = SIM && ! -f $p05/vc_slash && ! -f $p05/vc_lock && -f $p05/vc_keys ]];then vrs PR $n03;vd;swu "COPY SLASH -> $nxvc";local f=$p02/$(basename $p18);sex "cp $p18 $p02";cmw $f 666 eth;mcp $f $(sn2 $nxvc);sex "rm $f";fi
 }
 function svr { local t='';for t in $(printf '%s\n' $@|sort -u);do curl -sX GET "$s47=$t"|snf "$e18";done; }                                                   # show mev validator registration
 function mvr { if [[ $(ls $p19/key*.json 2>$p03) ]];then svr $(for k in $(ls $p19/key*.json);do snf "$e22" $k;done);else svr ${b[@]};fi; }                    # choose validator keys
@@ -543,10 +543,10 @@ function ivk {
     if [[ -f $f ]];then dts;swn "$(printf 'BSRV VK %3i %10s %5s' $(ls $p19/key*.json 2>$p03|wc -l) $dt 2>$p03)" >> $f;fi
   fi
 }
-function sn0 { printf %s "[\"$(echo ${!b[@]}|sed "s% %\",\"%g")\"]"; }
-function sn1 { printf %s "$(echo ${!b[@]}|sed "s% %|%g")"; }
-function sns { local n=$((($1-n04)/32));for n in $n $((n+1));do curl -sH "$s28" -X POST -d"$(sn0)" "$s32/attester/$n"|jq -r $s34;done 2>$p03;echo $(((n+1)*32)); }
-function sng { local t=$(((($(date +%s)-n09)/12)+n04));local e=0;local i=0;local s=0;for s in $(sns $t|sort -nu);do if ((s<t));then continue;else if (((s-t)>e));then e=$((s-t));i=$t;fi;fi;t=$((s+1));done;printf '%s %i' $(date -d@$((n09+i*12)) +%T) $((e*12)); }
+function viv { printf %s "[\"$(echo ${!b[@]}|sed "s% %\",\"%g")\"]"; }
+function vix { printf %s "$(echo ${!b[@]}|sed "s% %|%g")"; }
+function slt { local n=$((($1-n04)/32));for n in $n $((n+1));do curl -sH "$s28" -X POST -d"$(viv)" "$s32/attester/$n"|jq -r $s34;done 2>$p03;echo $(((n+1)*32)); }
+function sng { local t=$(((($(date +%s)-n09)/12)+n04));local e=0;local i=0;local s=0;for s in $(slt $t|sort -nu);do if ((s<t));then continue;else if (((s-t)>e));then e=$((s-t));i=$t;fi;fi;t=$((s+1));done;printf '%s %i' $(date -d@$((n09+i*12)) +%T) $((e*12)); }
 function bcc { printf p;if n1t;then if bpt;then if rbt $n06;then printf r;else printf c;fi;else if bdt;then printf d;else printf _;fi;fi;else if rbt;then printf r;else if bdt;then printf d;else printf _;fi;fi;fi;printf :; }
 function btn { if n1t;then printf $1;else printf $n03;fi; }
 function irb { rm -f $p39.*;if rbt $1;then if vct;then brs RB 0 0 $n02;else gps;ups;tps;bps;sex reboot;fi;else if fft $p45;then touch $p39.$1.hours;fi;fi; }
@@ -577,8 +577,8 @@ function ulr { local s=$(ulg $1);uls "$g59" "$s";uls "$g62" "$s"; }
 [[ $1 = ulg ]] && { ulg $2; }
 [[ $1 = ulr ]] && { ulr $2; }
 
-function vcp { local e="-P 2020 -i $p02/.ssh/id_ed25519";case ${2:-v1} in v1) eval "scp $e $1 $vnd1:${3:-~}";;v2) eval "scp $e $1 $vnd2:${3:-~}";;v3) eval "scp $e $1 $vnd3:${3:-~}";;esac; }
-[[ $1 = vcp ]] && { vcp $2 $3 $4; }
+function mcp { local s=${2:-v1};local f=${3:-~};if [[ ${s:0:1} = v ]];then local e="-P 2020 -i $p02/.ssh/id_ed25519";eval "scp $e $1 $(sns $s):$f";else eval "scp $1 $(sns $s):$f";fi; }
+[[ $1 = mcp ]] && { mcp $2 $3 $4; }
 
 [[ $1 = bb  ]] && { wpe; }
 [[ $1 = bba ]] && { bba|sort -t: -k2n -k3n -k4n; }

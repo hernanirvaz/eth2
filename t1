@@ -169,6 +169,8 @@ g62='Service restarts being deferred'
 
 function sni { case $1 in $inm5) printf $iip5;;$inm6) printf $iip6;;$znm1) printf $zip1;;$znm2) printf $zip2;;$znm3) printf $zip3;;$znm4) printf $zip4;;$vnm1) printf $vis1;;$vnm2) printf $vis2;;$vnm3) printf $vis3;;esac; }
 function snc { if [[ ${1/-*/} = hrv ]];then if [[ $cust = hrv ]];then local s='';else local s='.fruga.pt';fi;local v=${1/*-/};printf ${v//[aoel]/}$s;else case $1 in $vnm1) printf $vnd1;;$vnm2) printf $vnd2;;$vnm3) printf $vnd3;;*) printf $1;;esac;fi; }
+function sns { if [[ ${1:0:1} = z   ]];then if [[ ${1:1:1} -le 4 ]];then printf ${1/z/ztc};else printf ${1/z/int};fi;else case $1 in v1) printf $vnd1;;v2) printf $vnd2;;v3) printf $vnd3;;*) printf $1;;esac;fi; }
+function sn2 { if [[ ${1/-*/} = hrv ]];then printf z${1//[a-z-]/};else case $1 in $vnm1) printf v1;;$vnm2) printf v2;;$vnm3) printf v3;;*) printf $1;;esac;fi; }
 function spt { if [[ ${1/-*/} = hrv ]];then printf 202${1##*[!0-9]};else printf 2020;fi; }
 function sef { sed -E  "$1" $2 2>$p03; }
 function snf { sed -En "$1" $2 2>$p03; }
