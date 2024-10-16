@@ -9,10 +9,13 @@ zip3='192.168.8.31' ;znm3='hrv-zotac3'
 zip4='192.168.8.34' ;znm4='hrv-zotac4'
 iip5='192.168.8.37' ;inm5='hrv-intel5'
 iip6='192.168.8.40' ;inm6='hrv-intel6'
+vip1='57.129.52.53' ;vnd1='ns3238168.ip-57-129-52.eu'
+vip2='57.129.28.225';vnd2='ns3053175.ip-57-129-28.eu'
+vip3='161.97.85.32' ;vnd3='vmi1007895.contaboserver.net'
+vnm1=${vnd1%%.*};vis1='127.0.0.1'
+vnm2=${vnd2%%.*};vis2='127.0.0.1'
+vnm3=${vnd3%%.*};vis3='127.0.0.1'
 if [[ $cust = hrv ]];then
-vip1='57.129.52.53'              ;vnd1='ns3238168.ip-57-129-52.eu'   ;vnm1=${vnd1%%.*};vis1='127.0.0.1'
-vip2='57.129.28.225'             ;vnd2='ns3053175.ip-57-129-28.eu'   ;vnm2=${vnd2%%.*};vis2='127.0.0.1'
-vip3='161.97.85.32'              ;vnd3='vmi1007895.contaboserver.net';vnm3=${vnd3%%.*};vis3='127.0.0.1'
 cuvc=$znm4
 nxvc=$vnm1
 cun1=$inm6
@@ -20,9 +23,6 @@ cun2=$inm5
 cumv=$znm3
 cunt=$znm1
 else
-vip1=$(hostname -I|cut -d' ' -f1);vnd1=$(hostname).$(hostname -d)    ;vnm1=$(hostname);vis1='127.0.0.1'
-vip2='57.129.28.225'             ;vnd2='ns3053175.ip-57-129-28.eu'   ;vnm2=${vnd2%%.*};vis2='127.0.0.1'
-vip3='161.97.85.32'              ;vnd3='vmi1007895.contaboserver.net';vnm3=${vnd3%%.*};vis3='127.0.0.1'
 cuvc=$vnm1
 nxvc=$vnm1
 cun1=$vnm1

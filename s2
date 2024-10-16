@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ip=$(hostname -I);if [[ ${ip%%.*} -eq 192 ]];then iu=eu;else iu=ubuntu;fi
+ip=$(hostname -I);if [[ ${ip%%.*} -eq 192 ]];then iu=eu;else iu=ubuntu;echo -e "\nvip1='$(hostname -I|cut -d' ' -f1)';vnd1='$(hostname).$(hostname -d)'\nFIX ~/eth2/t1\n";fi
 source /home/$iu/s0
 
 usermod -aG sudo $un
@@ -9,4 +9,5 @@ mv /home/$iu/${un}keys $uh/.ssh/authorized_keys
 chown -R $un:$un $uh/.ssh $uh/${un}2
 chmod 700 $uh/.ssh
 chmod 600 $uh/.ssh/authorized_keys
-echo -e "\n$R";passwd
+echo -e "\n$R"
+passwd
