@@ -682,6 +682,7 @@ function mcp { local s=${2:-v1};local f=${3:-~};if [[ ${s:0:1} = v ]];then local
 [[ $1 = jrs ]] && { nex "journalctl --vacuum-time=3days";nex "journalctl --verify"; }
 [[ $1 = uur ]] && { uur; }
 [[ $1 = lp  ]] && { pex 'ss -tunlp'; }
+[[ $1 = lc  ]] && { pex 'lsof -i -P -n'; }
 [[ $1 = ish ]] && { curl -s https://ipinfo.io/ip;echo; }
 [[ $1 = ich ]] && { ll2 "$g57"|sef "$e50"; }
 # outros journal system/lighthouse
@@ -868,7 +869,7 @@ if [[ ! $1 ]];then
   m="$m\nchk\t\t\tcheck server with chkrootkit"
   m="$m\nlup\t\t\tcheck apt list --upgradable"
   m="$m\nsnr\t\t\tremove snapd"
-  m="$m\nlp\t\t\tlista portas"
+  m="$m\nl[p|c]\t\t\tlista portas|connections"
   m="$m\neip\t\t\tset dynamic DNS"
   m="$m\nulg [d]\t\t\tshow update logs d($(date +%F)) on $(basename $p69)"
   m="$m\nulr [d]\t\t\tshow restartings d($(date +%F)) on $(basename $p69)"
