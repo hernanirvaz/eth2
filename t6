@@ -456,7 +456,7 @@ function pa  { tsa $s16 || cex "$s03 $s16"; }                                   
 function na  { tsa $s17 || cex "$s03 $s17"; }                                                                                                                 # start prometheus-node-exporter
 function fa  { tsa $s18 || cex "$s03 $s18"; }                                                                                                                 # start grafana-server
 function ma  { tsa $s14 || cex "$s03 $s14"; }                                                                                                                 # start mev-boost
-function wa  { if [[ $(pex 'ufw status'|grep -i inactive) ]];then yex 'ufw enable';else swu 'FIREWALL ALREADY ACTIVE';fi; }                                   # enable ufw : Proceed with operation (y|n)?
+function wa  { if [[ $(pex 'ufw status'|grep -i inactive) ]];then yex 'ufw enable';else swu 'FIREWALL ALREADY ACTIVE';fi;cex 'ufw reload'; }                  # enable ufw : Proceed with operation (y|n)?
 # stop/disable eth-geth eth-beacon eth-validator prometheus prometheus-node-exporter grafana-server mev-boost
 function gps { tsa $s10 && sex "$s02 $s10"; }                                                                                                                 # silent stop eth-geth
 function ups { tsa $s11 && sex "$s02 $s11"; }                                                                                                                 # silent stop eth-besu
