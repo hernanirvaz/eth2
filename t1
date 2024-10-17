@@ -392,7 +392,7 @@ e01='s%^ *ENABLED=.*$%ENABLED=0%i'
 e02='s%bind[^"]*"%bind -4"%'
 e03="s%^ */*(.*codename}-updates.*$)%\1%i;s%^ */* *Unattended-Upgrade::Mail .*$%Unattended-Upgrade::Mail \"hernanilr@gmail.com\";%i;s%^ */* *Unattended-Upgrade::OnlyOnACPower.*$%Unattended-Upgrade::OnlyOnACPower \"true\";%i;/Unattended-Upgrade::Package-Blacklist/i\Unattended-Upgrade::Services-Blacklist { \"$s12.service\"; \"$s13.service\"; };"
 e04='s%^ *printf%# printf%i'
-e05='s%^[^: ]+: *([^ ]+).*$%\1%p'
+e05='s%^[^ ]+: +([^ ]+).*$%\1%p'
 e06='s%timeout *=.*$%timeout=1%i'
 e07='/dnssec-validation/q'
 e08="s%^ *pool  *([^a-z])%# pool \1%;/^ *#.*Specify/a \\$s52"

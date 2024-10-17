@@ -362,7 +362,7 @@ function tmp {
   local g=$(printf '%5.0fC %10s %5s' $n $dt 2>$p03);g0t $i && local g="$g $(printf 'sata: %.0fC' $i 2>$p03)";g0t $l && local g="$g $(printf 'nvme: %.0fC' $l 2>$p03)"
   local g="$g $(printf '%s %s' $d $e 2>$p03)";swn "TEMP $g"
 }
-function clq { $s09 -4 query $1 2>$p03|snf "$e05"; }
+function clq { $s09 query $1    2>$p03|snf "$e05"; }
 function cls { $s07 $s45-status 2>$p03|snf "$e48"; }
 function cly { $s07             2>$p03|snf "$e54"; }
 function clo { if [[ $(cly) = yes ]];then printf OK;else printf NO;fi                                        2>$p03; }
