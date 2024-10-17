@@ -100,9 +100,9 @@ function eh0 {
 }
 function ch0 {
   local s=$1;local n=${2:-$n13};local i=${2:-0}
-  if [[ $s = CL            ]];then if fft $p12;then tail -n$n $p12;fi;if [[ $i -eq 0 ]] && tsa $s12;then bl0;swn "BL $(printf '%8i' $(llc $p12) 2>$p03)\n$m\n\n";fi;fi
-  if [[ $s = CL || $s = VL ]];then if fft $p49;then tail -n$n $p49;fi;if [[ $i -eq 0 ]] && tsa $s13;then vl0;swn "VL $(printf '%8i' $(llc $p49) 2>$p03)\n$m\n\n";fi;fi
-  if [[ $s = CL || $s = ML ]];then if fft $p52;then tail -n$n $p52;fi;if [[ $i -eq 0 ]] && tsa $s14;then ml0;swn "ML $(printf '%8i' $(llc $p52) 2>$p03)\n$m\n\n";fi;fi
+  if [[ $s = CL            ]];then if fft $p12;then tail -n$n $p12;fi;if [[ $i -eq 0 ]] && tsa $s12;then bl0;swn "BL $(printf '%8i' $(llc $p12) 2>$p03)\n$m";fi;fi
+  if [[ $s = CL || $s = VL ]];then if fft $p49;then tail -n$n $p49;fi;if [[ $i -eq 0 ]] && tsa $s13;then vl0;swn "VL $(printf '%8i' $(llc $p49) 2>$p03)\n$m";fi;fi
+  if [[ $s = CL || $s = ML ]];then if fft $p52;then tail -n$n $p52;fi;if [[ $i -eq 0 ]] && tsa $s14;then ml0;swn "ML $(printf '%8i' $(llc $p52) 2>$p03)\n$m";fi;fi
 }
 function eb0 { e0=$(ll2 "$g12"|wc -l);ok=OK;fft $1 || return;[[ $(echo $@|grep false) && ($e0 -eq $(ln0 $s53 $1|tail -n1) || $(ei0) -gt $n24) && $(era $1) -eq 1 ]] && ok=BK; }
 function stg { local n=${1:-0};if ((n>3599));then printf %s $(($(date -d@$n +%H)-1))h;fi;if ((n>0));then printf %s $(date -d@$n +%Mm%Ss);fi;printf %s .$(date -d@$(($(date +%s)+$n)) +%H%M%S); }
@@ -655,7 +655,7 @@ function mcp { local s=${2:-v1};local f=${3:-~};if [[ ${s:0:1} = v ]];then local
 [[ $1 = bnf ]] && { bm0;bno;swn "$m" >> $p14; }
 [[ $1 = bm  ]] && { bm0;bmo;swn "$m"; }
 [[ $1 = bmf ]] && { bm0;[[ $2 ]] && b4=$2;bms;v0t && swn "$m" >> $p13;if n1t;then if fft $p45;then bpt && brs RB 0 $((n05*20)) $n00;else bpt && brs PE $b4 $n05 $n02;fi;else rbt && brs RB 0 $n05 $n03;fi; }
-[[ $1 = ah  ]] && { eh0 $2|tail -n10;swn "BH";bh0 $2|tail -n40; }
+[[ $1 = ah  ]] && { eh0 $2|tail -n5;swn "BH";if tsa $s13;then bh0 $2|tail -n35;ch0 VL $2|tail -n5;else bh0 $2|tail -n45;fi; }
 [[ $1 = eh  ]] && { eh0 $2; }
 [[ $1 = ch  ]] && { ch0 CL $2; }
 [[ $1 = vh  ]] && { ch0 VL $2; }
