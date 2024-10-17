@@ -175,6 +175,42 @@ function spt { if [[ ${1/-*/} = hrv ]];then printf 202${1##*[!0-9]};else printf 
 function sef { sed -E  "$1" $2 2>$p03; }
 function snf { sed -En "$1" $2 2>$p03; }
 
+n00=84
+n01=84
+n02=72
+n03=48
+n04=3
+n05=120
+n06=12
+n07=99
+n08=22238623
+n09=1606824023
+n10=4500
+n11=500
+n12=24
+n13=42
+n14=7128
+n15=100000
+n16=40
+n17=100
+n18=10
+n19=70
+n20=4000
+n21=2
+n22=200
+n23=20000
+n24=9999
+n25=50
+n26=90
+n27=19000
+n28=10000
+n29=18800
+n30=4000;[[ $n30 -eq 0 ]] && n30=$(curl -sX GET "$s50" 2>$p03|snf "$e70")
+n31=$($s01 $s12 2>$p03|snf "$e71")
+n32=4
+n33=30
+n34=10
+
 s00='systemctl'
 s01="$s00 status"
 s02="$s00 stop"
@@ -201,12 +237,14 @@ s22='nginx'
 s23="JAVA_HOME='/usr/lib/jvm/java-11-openjdk-amd64'"
 s24=""
 s24="$s24\n1 [$nxvc]\tset $(basename $p19)"
-s24="$s24\n2 [$cuvc]\tt6 tvc (vrs PR 24;vd;scp slash $nxvc:~)"
+s24="$s24\n2 [$cuvc]\tt6 tvc (vrs PR 36;vd;scp slash $nxvc:~)"
 s24="$s24\n3 [$nxvc]\tt3 (keys,slash,srv)"
 s24="$s24\n4\t\tcheck slash,srv,dirs"
 s24="$s24\n5\t\trm vc_lock;cuvc=$nxvc"
 s24="$s24\n6\t\tSLEEP 7m"
-s24="$s24\n7\t\tt6 vea\n"
+s24="$s24\n7\t\tt6 vea"
+s24="$s24\n8 [$cuvc]\trm -rf $p17"
+s24="$s24\n9 [$cuvc]\trm -f $p04/$s13.service\n"
 s25='0x27C7f54e48956A906aF2CBFBC8684b437776403d'
 s26='0x534029B6371dc4453DD750Bc1198181F55C859fe'
 s27="--connection=http://$(sni $cun2):5052 --allow-insecure-connections"
@@ -472,42 +510,6 @@ e73='s%^.*mev-boost +(v[0-9]+\.[0-9]+)(\.[0-9]+)?.*$%\1\2%'
 e74="s%^$g58 +[^ ]+([a-z1-9]{4}) +([a-zA-Z]{4})[^ ]+ +"
 e75="$e74%\4: \2\3 \U\5\t%"
 e74="$e74%\U\5 %"
-
-n00=84
-n01=84
-n02=72
-n03=48
-n04=3
-n05=120
-n06=12
-n07=99
-n08=22238623
-n09=1606824023
-n10=4500
-n11=500
-n12=24
-n13=42
-n14=7128
-n15=100000
-n16=40
-n17=100
-n18=10
-n19=70
-n20=4000
-n21=2
-n22=200
-n23=20000
-n24=9999
-n25=50
-n26=90
-n27=19000
-n28=10000
-n29=18800
-n30=4000;[[ $n30 -eq 0 ]] && n30=$(curl -sX GET "$s50" 2>$p03|snf "$e70")
-n31=$($s01 $s12 2>$p03|snf "$e71")
-n32=4
-n33=30
-n34=10
 
 j0='.ata_sct_temperature_history.table|join(" ")'
 j1='.temperature.current'

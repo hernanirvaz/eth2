@@ -99,10 +99,10 @@ function eh0 {
   if fft $p62;then tail -n$n $p62;fi;if [[ $i -eq 0 ]] && tsa $s44;then tl0;swn "NL $(printf '%8i' $(llc $p62) 2>$p03)\n$m";fi
 }
 function ch0 {
-  local n=${1:-$n13};local i=${1:-0}
-  if fft $p12;then tail -n$n $p12;fi;if [[ $i -eq 0 ]] && tsa $s12;then bl0;swn "BL $(printf '%8i' $(llc $p12) 2>$p03)\n$m";fi
-  if fft $p49;then tail -n$n $p49;fi;if [[ $i -eq 0 ]] && tsa $s13;then vl0;swn "VL $(printf '%8i' $(llc $p49) 2>$p03)\n$m";fi
-  if fft $p52;then tail -n$n $p52;fi;if [[ $i -eq 0 ]] && tsa $s14;then ml0;swn "ML $(printf '%8i' $(llc $p52) 2>$p03)\n$m";fi
+  local s=$1;local n=${2:-$n13};local i=${2:-0}
+  if [[ $s = CL            ]];then if fft $p12;then tail -n$n $p12;fi;if [[ $i -eq 0 ]] && tsa $s12;then bl0;swn "BL $(printf '%8i' $(llc $p12) 2>$p03)\n$m\n\n";fi;fi
+  if [[ $s = CL || $s = VL ]];then if fft $p49;then tail -n$n $p49;fi;if [[ $i -eq 0 ]] && tsa $s13;then vl0;swn "VL $(printf '%8i' $(llc $p49) 2>$p03)\n$m\n\n";fi;fi
+  if [[ $s = CL || $s = ML ]];then if fft $p52;then tail -n$n $p52;fi;if [[ $i -eq 0 ]] && tsa $s14;then ml0;swn "ML $(printf '%8i' $(llc $p52) 2>$p03)\n$m\n\n";fi;fi
 }
 function eb0 { e0=$(ll2 "$g12"|wc -l);ok=OK;fft $1 || return;[[ $(echo $@|grep false) && ($e0 -eq $(ln0 $s53 $1|tail -n1) || $(ei0) -gt $n24) && $(era $1) -eq 1 ]] && ok=BK; }
 function stg { local n=${1:-0};if ((n>3599));then printf %s $(($(date -d@$n +%H)-1))h;fi;if ((n>0));then printf %s $(date -d@$n +%Mm%Ss);fi;printf %s .$(date -d@$(($(date +%s)+$n)) +%H%M%S); }
@@ -524,7 +524,7 @@ function luc {                                                                  
 function ruv { if [[ $1 ]];then swn "RUST OVERRIDE SET $1";rustup override set $1;else swn 'RUST UPDATE';rustup update stable;fi; }                           # set/update rust version
 function tvc {
   swn "$s24";[[ $cuvc = $nxvc ]] && return;if vct && tsa $s13;then swn "TRANSFERIR VC -> $(snc $nxvc) (SIM/nao)?";else return;fi;local rsp=nao;read rsp
-  if [[ $rsp = SIM && ! -f $p05/vc_slash && ! -f $p05/vc_lock && -f $p05/vc_keys ]];then vrs PR $n03;vd;swu "COPY SLASH -> $nxvc";local f=$p02/$(basename $p18);sex "cp $p18 $p02";cmw $f 666 eth;mcp $f $(sn2 $nxvc);sex "rm $f";fi
+  if [[ $rsp = SIM && ! -f $p05/vc_slash && ! -f $p05/vc_lock && -f $p05/vc_keys ]];then touch $p50;vrs PR 36;vd;swu "COPY SLASH -> $nxvc";local f=$p02/$(basename $p18);sex "cp $p18 $p02";cmw $f 666 eth;mcp $f $(sn2 $nxvc);sex "rm $f";fi
 }
 function nky { ls $p19/key*.json 2>$p03|wc -l; }
 function svr { local t='';for t in $(printf '%s\n' $@|sort -u);do curl -sX GET "$s47=$t"|snf "$e18";done; }                                                   # show mev validator registration
@@ -657,7 +657,9 @@ function mcp { local s=${2:-v1};local f=${3:-~};if [[ ${s:0:1} = v ]];then local
 [[ $1 = bmf ]] && { bm0;[[ $2 ]] && b4=$2;bms;v0t && swn "$m" >> $p13;if n1t;then if fft $p45;then bpt && brs RB 0 $((n05*20)) $n00;else bpt && brs PE $b4 $n05 $n02;fi;else rbt && brs RB 0 $n05 $n03;fi; }
 [[ $1 = ah  ]] && { eh0 $2|tail -n10;swn "BH";bh0 $2|tail -n40; }
 [[ $1 = eh  ]] && { eh0 $2; }
-[[ $1 = ch  ]] && { ch0 $2; }
+[[ $1 = ch  ]] && { ch0 CL $2; }
+[[ $1 = vh  ]] && { ch0 VL $2; }
+[[ $1 = mh  ]] && { ch0 ML $2; }
 [[ $1 = bh  ]] && { bh0 $2; }
 [[ $1 = hs0 ]] && { hs0; }
 [[ $1 = hs1 ]] && { hss $cun1; }
