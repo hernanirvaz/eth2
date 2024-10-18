@@ -122,8 +122,8 @@ function sz0 { gnn 0          ;printf 'el:p%03i:m%03i:l%03i:z%02i:d%04i p2p:%5i 
 function sz1 { unn 0          ;printf 'el:p%03i:m%03i:l%03i:z%02i:d%04i p2p:%5i %s      i: %4i'                         $er $em $(b06) $ez $ed $(ss5 $1 p2p-port) "$(ub1 $(ucl eth_syncing))" $e1                            2>$p03; }
 function sz5 { tnn 0          ;printf 'el:p%03i:m%03i:l%03i:z%02i:d%04i p2p:%5i %s     ps: %4i %5i %4i'                 $er $em $(b06) $ez $ed $(ss5 $1 P2PPort ) "$(tb1 $(tcl eth_syncing))" $e1 $e2 $(ei0)                 2>$p03; }
 function sz2 { dtl;svi;bv0;bnn;printf 'cl:p%03i:m%03i:l%03i:z%02i:d%04i p2p:%5i %s iearhp: %4i %5i %4i %2i %2i %2i %4i' $nr $nm $(b05) $nz $nd $(ss5 $1 port    ) "$(bb1 $(bcl syncing))"     $i0 $i1 $i4 $b1 $i2 $i3 $(b01) 2>$p03; }
-function sz3 { svv $n23       ;printf 'vl:m%03i:b%03i:c%02i api:%s'                                                     $v0 $v1 $v2            $(ss4 $1 "$e32" nodes)                                                        2>$p03; }
 function sz4 { smm 0          ;printf 'ml:h%03i:r%03i api:%s'                                                           $m0 $m1                $(ss4 $1 "$e32" addr )                                                        2>$p03; }
+function sz3 { svv $n23       ;if n3t;then printf 'vl:m%03i:b%03i:c%02i api:%s' $v0 $v1 $v2 $(ss4 $1 "$e32" nodes) 2>$p03;else printf 'vl:m%03i:c%03i api:%s' $v0 $v2 $(ss4 $1 "$e32" nodes) 2>$p03;fi; }
 function sso { tse $2 || return;dts;local e="$1 $(printf '%6s %10s %5s %-40s' $(ss3 $2) $dt "$(ss2 $2)" 2>$p03)";case $1 in GETH) e="$e $(sz0 $2)";;BESU) e="$e $(sz1 $2)";;NETH) e="$e $(sz5 $2)";;BEAC) e="$e $(sz2 $2)";;VALI) e="$e $(sz3 $2)";;MEVB) e="$e $(sz4 $2)";;esac;swn "$e"; }
 # el control commands
 function grs {
