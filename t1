@@ -16,7 +16,7 @@ vnm1=${vnd1%%.*};vis1='127.0.0.1'
 vnm2=${vnd2%%.*};vis2='127.0.0.1'
 vnm3=${vnd3%%.*};vis3='127.0.0.1'
 if [[ $cust = hrv ]];then
-cuvc=$vnm1
+cuvc=$znm4
 nxvc=$znm4
 cun1=$inm6
 cun2=$inm5
