@@ -409,7 +409,7 @@ function cpe {
   if g0t $i;then if g0t $n;then m="$m sl: ${e:0:53}";m="$m $l: ${d:0:54}";else m="$m sl: ${e:0:112}";fi;else if g0t $n;then m="$m $l: ${d:0:112}";fi;fi
   (( i+n )) && swn "$m";m=
   fft $p45 && m="$m, reboot $(($(sra)/60/60)) hours ago $(rsf|tail -n1)";s5t && m="$m, sync/propose duties on";[[ $m ]] && swn "INFO        $dt${m#*,}"       # reboot/duties info
-  if g0t $(nu0 $(/usr/lib/update-notifier/apt-check 2>&1|sed 's%;% %g'));then apt list --upgradable 2>$p03|grep -v Listing;echo;fi;uls "$g59" "$(ulg)";esp;csp;mre
+  if g0t $(nu0 $(/usr/lib/update-notifier/apt-check 2>&1|sed 's%;% %g'));then apt list --upgradable 2>$p03|grep -v Listing;fi;uls "$g59" "$(ulg)";esp;csp;mre
 }
 # Plex Media Server
 function xop { pde 32400 plex delete;pai 32400 192.168.8.0/24 plex       ;pde 80 nginx delete;pai 80 192.168.8.0/24 nginx       ; }
@@ -535,7 +535,6 @@ function tvc {
 function nky { ls $p19/key*.json 2>$p03|wc -l; }
 function svr { local t='';for t in $(printf '%s\n' $@|sort -u);do curl -sX GET "$s47=$t"|snf "$e18";done; }                                                   # show mev validator registration
 function mvr { if [[ $(nky) -gt 0 ]];then svr $(for k in $(ls $p19/key*.json);do snf "$e22" $k;done);else svr ${b[@]};fi; }                                   # choose validator keys
-function mre { if mct;then local s=n;local e=$(for s in $(rlr|snf "$e09"|sort -u);do printf '%3i %s\n' $(rlr|grep -co $s) $s;done|sort -n);if [[ $e ]];then echo -e "$e\n";fi;fi; }
 function vko { if fft $p49;then         swn "$(printf 'KADD %6i %10s %5s' $(nky) $dt 2>$p03)"                >> $p49;fi; }
 function bko { if fft $p12;then bv0;bnn;swn "$(printf 'KADD %6i'          $(nky)     2>$p03) $(npn $nn $nr)" >> $p12;fi; }
 function ibk {
@@ -572,14 +571,15 @@ function caa { if n1t;then cll "$e50" $1;else ssh $(snc $cun1) "$p53 cl $1";fi;i
 function eaa { if n1t;then ell "$e50" $1;else ssh $(snc $cun1) "$p53 el $1";fi;if n2t;then ell "$e50" $1;else ssh $(snc $cun2) "$p53 el $1";fi; }
 function laa { caa $1;eaa $1; }
 function fsp { grep -v "$g31 *[${1:-1}-9][0-9]"|grep "$g31 *[0-${2:-9}]"|sort -k2n; }
-function esp { iet || return;if tsa $s44;then local e=$(ll2 "$g11.*$g30:"|sef "$e76");else local e=$(ll2 "$g11.*$g35"|sef "$e77");fi;local e=$(echo "$e"|fsp $1 $2);[[ $1$2 ]] || e=$(echo "$e"|tail -n3);if [[ $e ]];then echo -e "$e\n";fi; }
-function csp { ict || return;local e=$(ll2 "$g50:"|sef "$e78"|fsp $1 $2);[[ $1$2 ]] || e=$(echo "$e"|tail -n3);if [[ $e ]];then echo -e "$e\n";fi; }
+function esp { iet || return;if tsa $s44;then local e=$(ll2 "$g11.*$g30:"|sef "$e76");else local e=$(ll2 "$g11.*$g35"|sef "$e77");fi;local e=$(echo "$e"|fsp $1 $2);[[ $1$2 ]] || e=$(echo "$e"|tail -n3);if [[ $e ]];then echo -e "\n$e";fi; }
+function csp { ict || return;local e=$(ll2 "$g50:"|sef "$e78"|fsp $1 $2);[[ $1$2 ]] || e=$(echo "$e"|tail -n3);if [[ $e ]];then echo -e "\n$e";fi; }
+function mre { mct || return;local s=n;local e=$(for s in $(rlr|snf "$e09"|sort -u);do printf '%3i %s\n' $(rlr|grep -co $s) $s;done|sort -n);if [[ $e ]];then echo -e "\n$e";fi; }
 function epf { if tsa $s10;then gl0;swn "$m";fi;if tsa $s11;then ul0;swn "$m";fi;if tsa $s44;then tl0;swn "$m";fi; }
 function cpf { if tsa $s12;then bl0;swn "$m";fi;if tsa $s13;then vl0;swn "$m";fi;if tsa $s14;then ml0;swn "$m";fi; }
 function uur { nex "$s00 daemon-reload";sudo dpkg-reconfigure -plow unattended-upgrades;nex "$s06 unattended-upgrades";cex "unattended-upgrade -d"; }
 
 function ulg { local d=${1:-$(date +%F)};nex "cat $p69"|snf "/$g60$d/,/$g61$d/p"; }
-function uls { local e=$(echo "$2"|snf "/$1/,/^ *$/p"|egrep -v "$1|^ *$"|sort -u);if [[ $e ]];then echo "$1";echo -e "$e\n";fi; }
+function uls { local e=$(echo "$2"|snf "/$1/,/^ *$/p"|egrep -v "$1|^ *$"|sort -u);if [[ $e ]];then echo -e "\n$1$e";fi; }
 function ulr { local s=$(ulg $1);uls "$g59" "$s";uls "$g62" "$s"; }
 [[ $1 = ulg ]] && { ulg $2; }
 [[ $1 = ulr ]] && { ulr $2; }
