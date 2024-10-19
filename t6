@@ -398,6 +398,7 @@ function ell { tg2 $2|if [[ $1 ]];then sef "$1";else cat;fi; }
 function lll { tg3 $2|if [[ $1 ]];then sef "$1"|sort -t: -k2n -k3n -k4n;else cat;fi; }
 function rll { ll2 "$g09"|fln "$g47" $2|if [[ $1 ]];then sef "$1";else cat;fi; }
 function rlr { ll2 "$g48"|sef "$e51"; }
+function upl { local e=$(apt list --upgradable 2>$p03|grep -ahv Listing);[[ $e ]] && echo -e "\n$e"; }
 function cpe {
   clk;[[ $1 = c ]] && return;tmp;[[ $1 = p ]] && return;sif $1
   m=$(sll "$e74"|sef "$e30");if [[ $m ]];then local i=$(echo "$m"|wc -l);local e=$(echo "$m"|tail -n1);else local i=0;local e=;fi;m=;local n=0;local d=;local l=ou
@@ -409,7 +410,7 @@ function cpe {
   if g0t $i;then if g0t $n;then m="$m sl: ${e:0:53}";m="$m $l: ${d:0:54}";else m="$m sl: ${e:0:112}";fi;else if g0t $n;then m="$m $l: ${d:0:112}";fi;fi
   (( i+n )) && swn "$m";m=
   fft $p45 && m="$m, reboot $(($(sra)/60/60)) hours ago $(rsf|tail -n1)";s5t && m="$m, sync/propose duties on";[[ $m ]] && swn "INFO        $dt${m#*,}"       # reboot/duties info
-  if g0t $(nu0 $(/usr/lib/update-notifier/apt-check 2>&1|sed 's%;% %g'));then apt list --upgradable 2>$p03|grep -v Listing;fi;uls "$g59" "$(ulg)";esp;csp;mre
+  upl;uls "$g59" "$(ulg)";esp;csp;mre
 }
 # Plex Media Server
 function xop { pde 32400 plex delete;pai 32400 192.168.8.0/24 plex       ;pde 80 nginx delete;pai 80 192.168.8.0/24 nginx       ; }
@@ -571,9 +572,9 @@ function caa { if n1t;then cll "$e50" $1;else ssh $(snc $cun1) "$p53 cl $1";fi;i
 function eaa { if n1t;then ell "$e50" $1;else ssh $(snc $cun1) "$p53 el $1";fi;if n2t;then ell "$e50" $1;else ssh $(snc $cun2) "$p53 el $1";fi; }
 function laa { caa $1;eaa $1; }
 function fsp { grep -v "$g31 *[${1:-1}-9][0-9]"|grep "$g31 *[0-${2:-9}]"|sort -k2n; }
-function esp { iet || return;if tsa $s44;then local e=$(ll2 "$g11.*$g30:"|sef "$e76");else local e=$(ll2 "$g11.*$g35"|sef "$e77");fi;local e=$(echo "$e"|fsp $1 $2);[[ $1$2 ]] || e=$(echo "$e"|tail -n3);if [[ $e ]];then echo -e "\n$e";fi; }
-function csp { ict || return;local e=$(ll2 "$g50:"|sef "$e78"|fsp $1 $2);[[ $1$2 ]] || e=$(echo "$e"|tail -n3);if [[ $e ]];then echo -e "\n$e";fi; }
-function mre { mct || return;local s=n;local e=$(for s in $(rlr|snf "$e09"|sort -u);do printf '%3i %s\n' $(rlr|grep -co $s) $s;done|sort -n);if [[ $e ]];then echo -e "\n$e";fi; }
+function esp { iet || return;if tsa $s44;then local e=$(ll2 "$g11.*$g30:"|sef "$e76");else local e=$(ll2 "$g11.*$g35"|sef "$e77");fi;local e=$(echo "$e"|fsp $1 $2);[[ $1$2 ]] || e=$(echo "$e"|tail -n3);[[ $e ]] && echo -e "\n$e"; }
+function csp { ict || return;local e=$(ll2 "$g50:"|sef "$e78"|fsp $1 $2);[[ $1$2 ]] || e=$(echo "$e"|tail -n3);[[ $e ]] && echo -e "\n$e"; }
+function mre { mct || return;local s=n;local e=$(for s in $(rlr|snf "$e09"|sort -u);do printf '%3i %s\n' $(rlr|grep -co $s) $s;done|sort -n);[[ $e ]] && echo -e "\n$e"; }
 function epf { if tsa $s10;then gl0;swn "$m";fi;if tsa $s11;then ul0;swn "$m";fi;if tsa $s44;then tl0;swn "$m";fi; }
 function cpf { if tsa $s12;then bl0;swn "$m";fi;if tsa $s13;then vl0;swn "$m";fi;if tsa $s14;then ml0;swn "$m";fi; }
 function uur { nex "$s00 daemon-reload";sudo dpkg-reconfigure -plow unattended-upgrades;nex "$s06 unattended-upgrades";cex "unattended-upgrade -d"; }
