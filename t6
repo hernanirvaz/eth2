@@ -536,8 +536,8 @@ function tvc {
 function nky { ls $p19/key*.json 2>$p03|wc -l; }
 function svr { local t='';for t in $(printf '%s\n' $@|sort -u);do curl -sX GET "$s47=$t"|snf "$e18";done; }                                                   # show mev validator registration
 function mvr { if [[ $(nky) -gt 0 ]];then svr $(for k in $(ls $p19/key*.json);do snf "$e22" $k;done);else svr ${b[@]};fi; }                                   # choose validator keys
-function vko { if fft $p49;then         swn "$(printf 'KADD %6i %10s %5s' $(nky) $dt 2>$p03)"                >> $p49;fi; }
-function bko { if fft $p12;then bv0;bnn;swn "$(printf 'KADD %6i'          $(nky)     2>$p03) $(npn $nn $nr)" >> $p12;fi; }
+function vko { if fft $p49;then         swn "$(printf 'KADD OK %3i %10s %5s' $(nky) $dt 2>$p03)"                >> $p49;fi; }
+function bko { if fft $p12;then bv0;bnn;swn "$(printf 'KADD OK %3i'          $(nky)     2>$p03) $(npn $nn $nr)" >> $p12;fi; }
 function ibk {
   local f="$p02/pubkeys.old";cp $p58/pubkeys $f                          ;cex "$s02 $s12"
   echo "$(cat $f)$(for f in $(jq -r .pubkey $p19/key*.json 2>$p03);do printf %s ",0x$f";done)" > $p02/pubkeys.new
