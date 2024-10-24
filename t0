@@ -6,7 +6,7 @@ function sbn { printf %s $($p02/ethdo $s27 node info 2>$p03|cut -d: -f2); }
 function obn { ping -qnc 1 -W 1 $gipw &>$p03; }
 function srv { if [[ $cunm = $1 ]];then cd $p02;return;else swb "TEM DE ESTAR $1";return 1;fi; }
 function tve { local f='';echo;for f in $(ls $p19/key*.json 2>$p03);do echo $(basename $f);done;echo;swn 'QUER MESMO SAIR ESTES VALIDATORS (SIM/nao)?';read rsp;if [[ $rsp = SIM ]];then return 0;else return 1;fi; }
-function lve { [[ -d $p19 && $(ls $p19/key*.json 2>$p03) ]] && tve && { echo;swn "STORE($K) EXIT-PHRASE(Exit my validator)";echo;local f='';for f in $(ls $p19/key*.json 2>$p03);do echo $p00/lighthouse --datadir $p05 account validator exit --keystore $f --beacon-node http://$zip4:5052;done; }; }
+function lve { [[ -d $p19 && $(ls $p19/key*.json 2>$p03) ]] && tve && { echo;swn "STORE($K)";echo;local f='';for f in $(ls $p19/key*.json 2>$p03);do echo $p00/lighthouse --datadir $p05 account validator exit --no-confirmation --keystore $f --beacon-node http://$(sni $cun2):5052;done; }; }
 function ove { if obn;then swb 'TEM DE ESTAR OFFLINE';return 1;else return 0;fi; }
 function eve {
   [[ -x $p02/ethdo     ]] || { dnv                              ; }
