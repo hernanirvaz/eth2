@@ -499,8 +499,8 @@ function hsm { sso MEVB $s14; }
 function hss { echo $1;if [[ $cunm = $1 ]];then hsg;hsu;hst;hsb;hsv;hsm;cpe;else ssh $(snc $1) "$p53 hse;$p53 hsc";fi; }
 function hs0 {
   if n1t;then
-    printf '\n%.0s' {1..40}
-    if vst;then if vct;then hsv;cpe;else echo $cuvc;ssh $(snc $cuvc) "$p53 hsv";fi;fi;hss $cun1;if n3t;then hss $cun2;fi
+    printf '\n%.0s' {1..40};hss $cun1;if n3t;then hss $cun2;fi
+    if vst;then if vct;then hsv;cpe;else echo $cuvc;ssh $(snc $cuvc) "$p53 hsv";fi;fi
     if mst;then if mct;then hsm;cpe;else echo $cumv;ssh $(snc $cumv) "$p53 hsm";fi;fi
     if nst;then if z1t;then     cpe;else echo $cunt;ssh $(snc $cunt) "$p53 cpe";fi;fi;echo
     epf;cpf
