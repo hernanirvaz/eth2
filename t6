@@ -568,9 +568,9 @@ function hsh { cex "$s07";if tsa $s19;then cex "$s07 $s45-status";cex "$s07 show
 
 function wpf { if tsa $s44;then ll6 "$g43";fi;ll2 "$g42"|fln "$g39"; }
 function wpe { wpf|sef "$e52"|sort -t: -k2n -k3n -k4n; }
-function bba { if n1t;then wpe          ;else ssh $(snc $cun1) "$p53 bb"   ;fi;if n2t;then wpe          ;else ssh $(snc $cun2) "$p53 bb"   ;fi;if vst;then if vct;then wpe          ;else ssh $(snc $cuvc) "$p53 bb"   ;fi;fi;if mst;then if mct;then wpe;else ssh $(snc $cumv) "$p53 bb";fi;fi; }
-function caa { if n1t;then cll "$e50" $1;else ssh $(snc $cun1) "$p53 cl $1";fi;if n2t;then cll "$e50" $1;else ssh $(snc $cun2) "$p53 cl $1";fi;if vst;then if vct;then cll "$e50" $1;else ssh $(snc $cuvc) "$p53 cl $1";fi;fi;if mst;then if mct;then rll "$e51" $1;else ssh $(snc $cumv) "$p53 rl $1";fi;fi; }
-function eaa { if n1t;then ell "$e50" $1;else ssh $(snc $cun1) "$p53 el $1";fi;if n2t;then ell "$e50" $1;else ssh $(snc $cun2) "$p53 el $1";fi; }
+function bba { if n1t;then wpe          ;else ssh $(snc $cun1) "$p53 bb"   ;fi;if n3t;then if n2t;then wpe          ;else ssh $(snc $cun2) "$p53 bb"   ;fi;fi;if vst;then if vct;then wpe          ;else ssh $(snc $cuvc) "$p53 bb"   ;fi;fi;if mst;then if mct;then wpe;else ssh $(snc $cumv) "$p53 bb";fi;fi; }
+function caa { if n1t;then cll "$e50" $1;else ssh $(snc $cun1) "$p53 cl $1";fi;if n3t;then if n2t;then cll "$e50" $1;else ssh $(snc $cun2) "$p53 cl $1";fi;fi;if vst;then if vct;then cll "$e50" $1;else ssh $(snc $cuvc) "$p53 cl $1";fi;fi;if mst;then if mct;then rll "$e51" $1;else ssh $(snc $cumv) "$p53 rl $1";fi;fi; }
+function eaa { if n1t;then ell "$e50" $1;else ssh $(snc $cun1) "$p53 el $1";fi;if n3t;then if n2t;then ell "$e50" $1;else ssh $(snc $cun2) "$p53 el $1";fi;fi; }
 function laa { caa $1;eaa $1; }
 function fsp { grep -v "$g31 *[${1:-1}-9][0-9]"|grep "$g31 *[0-${2:-8}]"|sort -k2n; }
 function esp { iet || return;if tsa $s44;then local e=$(ll2 "$g11.*$g30:"|sef "$e76");else local e=$(ll2 "$g11.*$g35"|sef "$e77");fi;local e=$(echo "$e"|fsp $1 $2);[[ $1$2 ]] || e=$(echo "$e"|tail -n3);[[ $e ]] && echo -e "\n$e"; }
