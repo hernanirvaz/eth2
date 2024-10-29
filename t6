@@ -466,19 +466,19 @@ function fa  { tsa $s18 || cex "$s03 $s18"; }                                   
 function ma  { tsa $s14 || cex "$s03 $s14"; }                                                                                                                 # start mev-boost
 function wa  { if [[ $(pex 'ufw status'|grep -i inactive) ]];then yex 'ufw enable';else swu 'FIREWALL ALREADY ACTIVE';fi;cex 'ufw reload'; }                  # enable ufw : Proceed with operation (y|n)?
 # stop/disable eth-geth eth-beacon eth-validator prometheus prometheus-node-exporter grafana-server mev-boost
-function gps { tsa $s10 && sex "$s02 $s10"; }                                                                                                                 # silent stop eth-geth
-function ups { tsa $s11 && sex "$s02 $s11"; }                                                                                                                 # silent stop eth-besu
-function tps { tsa $s44 && sex "$s02 $s44"; }                                                                                                                 # silent stop eth-nethermind
-function bps { tsa $s12 && sex "$s02 $s12"; }                                                                                                                 # silent stop eth-beacon
-function gp  { tsa $s10 && cex "$s02 $s10"; }                                                                                                                 # stop eth-geth
-function up  { tsa $s11 && cex "$s02 $s11"; }                                                                                                                 # stop eth-besu
-function tp  { tsa $s44 && cex "$s02 $s44"; }                                                                                                                 # stop eth-nethermind
-function bp  { tsa $s12 && cex "$s02 $s12"; }                                                                                                                 # stop eth-beacon
-function vp  { tsa $s13 && cex "$s02 $s13";touch $p05/vc_slash; }                                                                                             # stop eth-validator
-function pp  { tsa $s16 && cex "$s02 $s16"; }                                                                                                                 # stop prometheus
-function np  { tsa $s17 && cex "$s02 $s17"; }                                                                                                                 # stop prometheus-node-exporter
-function fp  { tsa $s18 && cex "$s02 $s18"; }                                                                                                                 # stop grafana-server
-function mp  { tsa $s14 && cex "$s02 $s14"; }                                                                                                                 # stop mev-boost
+function gps { sex "$s02 $s10"; }                                                                                                                             # silent stop eth-geth
+function ups { sex "$s02 $s11"; }                                                                                                                             # silent stop eth-besu
+function tps { sex "$s02 $s44"; }                                                                                                                             # silent stop eth-nethermind
+function bps { sex "$s02 $s12"; }                                                                                                                             # silent stop eth-beacon
+function gp  { cex "$s02 $s10"; }                                                                                                                             # stop eth-geth
+function up  { cex "$s02 $s11"; }                                                                                                                             # stop eth-besu
+function tp  { cex "$s02 $s44"; }                                                                                                                             # stop eth-nethermind
+function bp  { cex "$s02 $s12"; }                                                                                                                             # stop eth-beacon
+function vp  { cex "$s02 $s13";touch $p05/vc_slash; }                                                                                                         # stop eth-validator
+function pp  { cex "$s02 $s16"; }                                                                                                                             # stop prometheus
+function np  { cex "$s02 $s17"; }                                                                                                                             # stop prometheus-node-exporter
+function fp  { cex "$s02 $s18"; }                                                                                                                             # stop grafana-server
+function mp  { cex "$s02 $s14"; }                                                                                                                             # stop mev-boost
 function gd  { cex "$s05 $s10";eco;sex 'ufw reload'; }                                                                                                        # disable eth-geth
 function ud  { cex "$s05 $s11";eco;sex 'ufw reload'; }                                                                                                        # disable eth-besu
 function td  { cex "$s05 $s44";eco;sex 'ufw reload'; }                                                                                                        # disable eth-nethermind
