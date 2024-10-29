@@ -314,10 +314,10 @@ function bwc { bwd|grep -Ex "$(vix)" 2>$p03|wc -l; }
 function ero { dts;swn "$(printf 'R%03i %2s SRV'      $2 $1     2>$p03) $(npn $en $er)" >> $3  ; }
 function vro { dts;swn "$(printf 'VL%2s %6i %10s %5s' $1 $2 $dt 2>$p03)"                >> $p49; }
 function bro { if fft $p12;then dts;bnn;bb0;swn "$(printf 'R%03i %2s %3i' $2 $1 $(b08) 2>$p03) $(npn $nn $nr)" >> $p12;else vro $1 $2;fi; }
-# slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168; $2 = RB SD VC PE BN BK
+# slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168; $2 = RB PR BN VC BK PE
 function cpr { snp $s12 $2 $n16 $n17 $nn;[[ $1 = VC ]] && sex "$s02 $s13"; }
 function car { sex "$s03 $s12"          ;[[ $1 = VC ]] && sex "$s03 $s13"; }
-function cfb { if [[ $1 = RB ]];then gps;ups;tps;bro $1 $3;cpr $1 $2;rm -f $p50 $p42.*;sex reboot;else cpr $1 $2;car $1;ssf $n26 $p42;bro $1 $3;fi; }
+function cfb { if [[ $1 = RB ]];then gps;ups;tps;bro $1 $3;cpr $1 $2;rm -f $p50 $p42.*;sex reboot;elif [[ $1 = PR ]];then bro $1 $3;cpr $1 $2;else cpr $1 $2;car $1;ssf $n26 $p42;bro $1 $3;fi; }
 function vfb { sex "$s02 $s13";touch $p05/vc_slash;dmr;vro $1 $2;if [[ $1 = RS ]];then sex "$s03 $s13";rm -f $p05/vc_slash;elif [[ $1 = RB ]];then gps;ups;tps;bps;rm -f $p50 $p46.* $p05/vc_slash;sex reboot;fi; }
 function brs {
   s3t $p42 && return;touch $p42.a$(stg);if g0t $3;then ssf $3 $p42;s4t $p42 && return;touch $p42.b$(stg);fi;bv0;ssw $4 $p42;s4t $p42 && return
@@ -632,6 +632,7 @@ function mcp { local s=${2:-v1};local f=${3:-~};if [[ ${s:0:1} = v ]];then local
 [[ $1 = tmp ]] && { dts;tmp s; }
 [[ $1 = sif ]] && { dts;sif s; }
 [[ $1 = tgp ]] && { touch $p50;trs PR ${2:-0}   ${3:-$n03}; }
+[[ $1 = bgp ]] && { touch $p50;brs PR ${2:-0}   ${3:-$n03}; }
 [[ $1 = grs ]] && { touch $p50;grs SR ${2:-0}   ${3:-$n03}; }
 [[ $1 = trs ]] && { touch $p50;trs SR ${2:-0}   ${3:-$n03}; }
 [[ $1 = urs ]] && { touch $p50;urs SR ${2:-0}   ${3:-$n03}; }
