@@ -632,7 +632,7 @@ function mcp { local s=${2:-v1};local f=${3:-~};if [[ ${s:0:1} = v ]];then local
 [[ $1 = tmp ]] && { dts;tmp s; }
 [[ $1 = sif ]] && { dts;sif s; }
 [[ $1 = tgp ]] && { touch $p50;trs PR ${2:-0}   ${3:-$n03}; }
-[[ $1 = bgp ]] && { touch $p50;brs PR ${2:-0}   ${3:-$n03}; }
+[[ $1 = bgp ]] && { touch $p50;brs PR ${2:-0} 0 ${3:-$n03}; }
 [[ $1 = grs ]] && { touch $p50;grs SR ${2:-0}   ${3:-$n03}; }
 [[ $1 = trs ]] && { touch $p50;trs SR ${2:-0}   ${3:-$n03}; }
 [[ $1 = urs ]] && { touch $p50;urs SR ${2:-0}   ${3:-$n03}; }
