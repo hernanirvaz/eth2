@@ -61,13 +61,12 @@ function v1t { [[ $cunm = $vnm1 ]]; }
 function vst { [[ $cun1 != $cuvc && $cun2 != $cuvc ]]; }
 function mst { [[ $cun1 != $cumv && $cun2 != $cumv ]]; }
 function nst { [[ $cust = hrv && $cumv != $cunt ]]; }
-function s1t { e0t $(ls $1.* 2>$p03|wc -l); }
-function s2t { g0t $(ls $1.* 2>$p03|wc -l); }
+function s1t {             e0t $(ls $1.* 2>$p03|wc -l); }
+function s2t { fft $p70 || g0t $(ls $1.* 2>$p03|wc -l); }
 function s3t { s2t $1 || g0t $(bwc); }
 function s4t { s1t $1 || g0t $(bwc); }
 function s5t { ict    && g0t $(bwc); }
 function s6t { [[ -e $1 && -b $1 ]]; }
-function s7t { local s=$(basename $p62);sex "rm -f $p61/$s";sex "cp $p62 $p61/$s";[[ -f $p61/$1$s && -s $p61/$s ]]; }
 function rbt { [[ $(sra) -ge $((60*60*${1:-9})) ]]; }
 function ipt { [[ $(date +%s) -ge $(bss $1 6) ]]; }
 function pct { [[ $b4 -ne 0 ]]; }
@@ -175,7 +174,6 @@ function tl0 {
     m="NSRV NOT ON $dt"
   fi
 }
-function tl1 { s6t $p66 || return;rm -f $p50 $p63.*;local n=$(date +%s);sex "$s02 $s44";sex "umount $p66";sex "fsck -fy $p66";sex "mount $p66";dmr;tfa FS $(($(date +%s)-n));rm -f $p50 $p63.*; }
 function urs {
   s2t $p41 && return;uv0;uq0;touch $p41.a$(stg);ssw $3 $p41;s1t $p41 && return
   local t=$(sng);local f=$p41.i$(stg);touch $f;local n=0;paf;while fft $f;do ((n+=$(sfn $t)));ssf $(sfn $t) $p41 $t
@@ -653,7 +651,7 @@ function mcp { local s=${2:-v1};local f=${3:-~};if [[ ${s:0:1} = v ]];then local
 [[ $1 = up  ]] && { ul0;swn "$m"; }
 [[ $1 = upf ]] && { ul0;swn "$m" >> $p11;[[ $ok != OK ]] && urs $ok 0 $n03; }
 [[ $1 = tp  ]] && { tl0;swn "$m"; }
-[[ $1 = tpf ]] && { tl0;swn "$m" >> $p62;[[ $ok != OK ]] && trs $ok 0 $n03; } # s7t $2 || tl1; # filesystem is NOK fsck
+[[ $1 = tpf ]] && { tl0;swn "$m" >> $p62;[[ $ok != OK ]] && trs $ok 0 $n03; }
 [[ $1 = bp  ]] && { bl0;swn "$m"; }
 [[ $1 = bpf ]] && { bl0;swn "$m" >> $p12;if [[ $d1 = 23:58 ]];then if bdt;then bdl $d0;else if [[ $(llc $p12) -gt $n14 ]];then bod 0 9;fi;fi;fi;[[ $ok != OK ]] && brs $ok 0 0 $(btn $n02);pas; }
 [[ $1 = vp  ]] && { vl0;swn "$m"; }
@@ -687,8 +685,9 @@ function mcp { local s=${2:-v1};local f=${3:-~};if [[ ${s:0:1} = v ]];then local
 [[ $1 = brm ]] && { brm; }
 [[ $1 = bsl ]] && { bsl; }
 [[ $1 = rsh ]] && { rsf Gg;echo $(sf1) $(sng); }
-[[ $1 = rrs ]] && { cd $p02;rm -f $p50 *.rs.*; }
+[[ $1 = rrs ]] && { cd $p02;rm -f $p50 $p70 *.rs.*; }
 [[ $1 = rpt ]] && { touch $p50; }
+[[ $1 = rlk ]] && { touch $p70; }
 [[ $1 = jsh ]] && { nex "journalctl --disk-usage"; }
 [[ $1 = jrs ]] && { nex "journalctl --vacuum-time=3days";nex "journalctl --verify"; }
 [[ $1 = uur ]] && { uur; }
@@ -870,7 +869,7 @@ if [[ ! $1 ]];then
   m="$m\nn[sh|rs]\t\tnetwork show|reset"
   m="$m\nd[sh [url]|rs]\t\tdns show [url]|reset"
   m="$m\nh[sh|sa|rs|ch|ca|di|da]\t$s45 show|show@$(snc $cunt)|restart|check|check all|diff ($(snc $cunt)-$(snc $cunm))|diff all avg"
-  m="$m\nr[sh|rs|pt]\t\trestart gap show|reset|print"
+  m="$m\nr[sh|rs|pt|lk]\t\trestart gap show|reset|print|lock"
   m="$m\ni[sh|ch]\t\texternal ip show|change"
   m="$m\nj[sh|rs]\t\tjournal logs show|reset"
   m="$m\nf[sh|rf|ud [d]]\t\tfirmware show|refres|hupdate [device-id]"
