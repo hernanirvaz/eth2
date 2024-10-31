@@ -80,7 +80,7 @@ p46="$p02/vc.rs"
 p47='/etc/apt/preferences.d'
 p48='/etc/default/grub'
 p49="$p02/validator.log"
-p50="$p02/restart.print"
+p50="$p02/restart"
 p51='/etc/apt/apt.conf.d/20auto-upgrades'
 p52="$p02/mev.log"
 p53="export H=$H;$p02/eth2/t6"
@@ -100,7 +100,6 @@ p66='/dev/null';[[ $cunm = $inm5 || $cunm = $inm6 ]] && p66='/dev/nvme0n1'
 p67='/etc/hosts'
 p68='/etc/chrony/chrony.conf'
 p69='/var/log/unattended-upgrades/unattended-upgrades-dpkg.log'
-p70="$p02/restart.lock"
 
 g00='(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) +'
 g01='[0-9]{1,2} +'
