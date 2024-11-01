@@ -388,7 +388,8 @@ s53='sgms:'
 e00="s%^ *#* *NTP *=.*$%NTP=$zip1 $zip2 time.google.com time.cloudflare.com time.facebook.com%i";if [[ $cunm = $cuvc || $cunm = $cun1 || $cunm = $cun2 || $cunm = $cumv ]];then e00="${e00};s%^ *#* *PollIntervalMaxSec *=.*$%PollIntervalMaxSec=1200%i";fi
 e01='s%^ *ENABLED=.*$%ENABLED=0%i'
 e02='s%bind[^"]*"%bind -4"%'
-e03="s%^ */*(.*codename}-updates.*$)%\1%i;s%^ */* *Unattended-Upgrade::Mail .*$%Unattended-Upgrade::Mail \"hernanilr@gmail.com\";%i;s%^ */* *Unattended-Upgrade::OnlyOnACPower.*$%Unattended-Upgrade::OnlyOnACPower \"true\";%i;/Unattended-Upgrade::Package-Blacklist/i\Unattended-Upgrade::Services-Blacklist { \"$s12.service\"; \"$s13.service\"; };"
+e04='false';[[ ${cunm:4:5} = zotac ]] && e04='true' # intel NUCs erradamente give battery power to unattended upgrades
+e03="s%^ */*(.*codename}-updates.*$)%\1%i;s%^ */* *Unattended-Upgrade::Mail .*$%Unattended-Upgrade::Mail \"hernanilr@gmail.com\";%i;s%^ */* *Unattended-Upgrade::OnlyOnACPower.*$%Unattended-Upgrade::OnlyOnACPower \"$e04\";%i;/Unattended-Upgrade::Package-Blacklist/i\Unattended-Upgrade::Services-Blacklist { \"$s12.service\"; \"$s13.service\"; };"
 e04='s%^ *printf%# printf%i'
 e05='s%^[^ ]+: +([^ ]+).*$%\1%p'
 e06='s%timeout *=.*$%timeout=1%i'
