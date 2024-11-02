@@ -19,7 +19,7 @@ if [[ $cust = hrv ]];then
 cuvc=$znm4
 nxvc=$znm4
 cun1=$inm6
-cun2=$inm5
+cun2=$inm6
 cumv=$znm3
 cunt=$znm1
 else
