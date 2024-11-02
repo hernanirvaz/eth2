@@ -16,4 +16,4 @@ apt install ssmtp jq -y &>> apt.out
 sse $sm $(basename $sm).sav "$s2" 640 root:mail
 passwd -l root
 echo -e "\n$H";adduser --comment "" $un
-echo -e "\n\nbash /home/$iu/s2\n\n"
+echo -e "\n\n\n\nbash /home/$iu/s2\n\n\n\n"

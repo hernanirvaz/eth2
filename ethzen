@@ -4,7 +4,7 @@ function ecp { echo -e "\nscp $1 eth2";scp ~/eth2/t[1-9] ~/eth2/e? $1:~/eth2; }
 function esl { echo -e "\nssh $1     ";ssh $1; }
 function ei0 { echo -e "export H=\"$1\"\nexport E=\"$2\"\nexport R=\"$3\"\npr=$4"; }
 function ei1 { echo -e "echo>>~/.bashrc\necho \"export PATH=\\\"~/eth2:\\\$PATH\\\"\">>~/.bashrc\necho \"export H=\\\"$1\\\"\">>~/.bashrc\necho \"export V=\\\"$2\\\"\">>~/.bashrc\necho \"export K=\\\"$3\\\"\">>~/.bashrc\necho \"export E=\\\"$4\\\"\">>~/.bashrc\necho \"export B=\\\"$5\\\"\">>~/.bashrc\necho \"PS1=\\\"\\\$H:\\\h: \\\"\">>~/.bashrc\nchmod 755 ~/eth2/t[1-9] ~/eth2/e?"; }
-function cc0 { if [[ ${1%%.*} -eq 192 ]];then local u=eu;else local u=ubuntu;fi;local s="$u@$1";scp -P 22 ~/eth2/s? ~/eth2/ethkeys ~/i0 $s:~;echo -e "\n\nsudo -i\nbash /home/$u/s1\n\n";ssh -p 22 $s;scp -P $2 -i ~/.ssh/id_ed25519 ~/eth2/t[1-9] ~/eth2/e? $1:~/eth2;scp -P $2 -i ~/.ssh/id_ed25519 ~/eth2/ethztc $1:~/.bash_aliases;scp -P $2 -i ~/.ssh/id_ed25519 ~/i1 $1:~;ssh -p $2 -i ~/.ssh/id_ed25519 $1 'sh i1';echo -e "\n\nky # gerar key & copiar para ethkeys\nt2 # setup\n\n";ssh -p $2 -i ~/.ssh/id_ed25519 $1; }
+function cc0 { if [[ ${1%%.*} -eq 192 ]];then local u=eu;else local u=ubuntu;fi;local s="$u@$1";scp -P 22 ~/eth2/s? ~/eth2/ethkeys ~/i0 $s:~;echo -e "\n\n\n\nsudo -i\nbash /home/$u/s1\n\n\n\n";ssh -p 22 $s;scp -P $2 -i ~/.ssh/id_ed25519 ~/eth2/t[1-9] ~/eth2/e? $1:~/eth2;scp -P $2 -i ~/.ssh/id_ed25519 ~/eth2/ethztc $1:~/.bash_aliases;scp -P $2 -i ~/.ssh/id_ed25519 ~/i1 $1:~;ssh -p $2 -i ~/.ssh/id_ed25519 $1 'sh i1';echo -e "\n\nky # gerar key & copiar para ethkeys\nt2 # setup\n\n";ssh -p $2 -i ~/.ssh/id_ed25519 $1; }
 function nip { echo ${N%%:*}; }
 function npt { echo ${N#*:}; }
 
