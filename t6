@@ -466,7 +466,6 @@ function wa  { if [[ $(pex 'ufw status'|grep -i inactive) ]];then yex 'ufw enabl
 function pp  { cex "$s02 $s16"; }                                                                                                                             # stop prometheus
 function np  { cex "$s02 $s17"; }                                                                                                                             # stop prometheus-node-exporter
 function fp  { cex "$s02 $s18"; }                                                                                                                             # stop grafana-server
-function mp  { cex "$s02 $s14"; }                                                                                                                             # stop mev-boost
 function gd  { cex "$s05 $s10";eco;sex 'ufw reload'; }                                                                                                        # disable eth-geth
 function ud  { cex "$s05 $s11";eco;sex 'ufw reload'; }                                                                                                        # disable eth-besu
 function td  { cex "$s05 $s44";eco;sex 'ufw reload'; }                                                                                                        # disable eth-nethermind
@@ -475,7 +474,7 @@ function vd  { cex "$s05 $s13";vco;sex 'ufw reload';touch $p05/vc_lock 2>$p03; }
 function pd  { cex "$s05 $s16";pai 9090/tcp 192.168.8.0/24 $s16 delete;sex 'ufw reload'; }                                                                    # disable prometheus
 function nd  { cex "$s05 $s17"; }                                                                                                                             # disable prometheus-node-exporter
 function fd  { cex "$s05 $s18";pai 3000/tcp 192.168.8.0/24 grafana delete;sex 'ufw reload'; }                                                                 # disable grafana-server
-function md  { cex "$s05 $s14";if n4t;then nfw 18550 mev delete;fi;sex 'ufw reload'; }                                                                                       # disable mev-boost
+function md  { cex "$s05 $s14";if n4t;then nfw 18550 mev delete;fi;sex 'ufw reload'; }                                                                        # disable mev-boost
 function pas { t2t && sex "$p54 usbstop";t1t && sex "$p54 cputurbo";t0t && sex "$p54 cpunoturbo"; }                                                           # set usb/cpu parameters
 function paf { t3t && sex "$p54 cputurbo"; }                                                                                                                  # set turbo   parameter
 function hsg { sso GETH $s10; }
