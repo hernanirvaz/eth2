@@ -25,7 +25,7 @@ fi
 [[ -f $p04/$s10.service || -f $p04/$s11.service || -f $p04/$s44.service || -f $p04/$s12.service || -f $p04/$s13.service ]] && exit                            # el/cl instalados -> exit
 
 t4 linux
-swu 'ADDITIONAL LINUX'   ;sex 'apt install python3-pip net-tools apt-listchanges landscape-common software-properties-common smartmontools curl -y'
+swu 'ADDITIONAL LINUX'   ;sex 'apt install python3-pip net-tools apt-listchanges landscape-common software-properties-common smartmontools lm-sensors curl -y'
 swu 'UNATTENDED UPGRADES';cex 'apt install unattended-upgrades update-notifier-common -y'
 swu 'LINUX CONFIG'
 if [[ $cunm = $znm2 ]];then
@@ -59,7 +59,7 @@ if [[ $cust = hrv ]];then
     cc1 $p30 "$e02"              ;cmw $p30 644 root                                                                                                           # use only ipv4
     t6 spd;t6 sea;nex "$s02 systemd-resolved";nex "$s03 systemd-resolved"                                                                                     # DNS stop & start
   fi
-  swu 'ROOTKIT SCANNER';sex 'apt install lm-sensors chkrootkit -y';cex 'chkrootkit'
+  swu 'ROOTKIT SCANNER';sex 'apt install chkrootkit -y';cex 'chkrootkit'
   sex "$s07 set-timezone Europe/Lisbon"
   cc1 $p20 "$e00"                                                                                                                                             # my time servers
   cc1 $p21 "$e01"              ;cmw $p21 644 root                                                                                                             # motd-news disable

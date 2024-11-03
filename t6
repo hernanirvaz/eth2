@@ -350,15 +350,18 @@ function bdw { fft $1 || return;cp $1 $1.o;grep -v $2 $1.o > $1;grep $2 $1.o > $
 function bdl { local d=$(pt0 $1 sai);[[ $d = sai ]] && return;bdw $p12 $d;bdw $p13 $d; }                                                                      #         delete cc log day
 function wif { echo $@|sef "$e59"; }                                                                                                                          # get ufw info
 function sm0 { pex "smartctl --json=c -x $1"|jq -r "$j3" 2>$p03; }
-function sm1 { local s=$(pex "smartctl --json=c -x $1");echo $s|jq -r "$j1" 2>$p03;echo $s|jq -r "$j0" 2>$p03; }
-function sm2 { (sensors 2>$p03;sleep 1;sensors 2>$p03)|snf "$e20"; }
+function sm1 { pex "smartctl --json=c -x $1"|jq -r "$j4" 2>$p03; }
+function sm2 { pex "smartctl --json=c -x $1"|jq -r "$j5" 2>$p03; }
+function sm3 { (sensors 2>$p03;sleep 1;sensors 2>$p03)|snf "$e20"; }
+function sm4 { local s=$(pex "smartctl --json=c -x $1");echo $s|jq -r "$j1" 2>$p03;echo $s|jq -r "$j0" 2>$p03; }
+function sm5 { local g='';local f='';for f in $(ls $p66 2>$p03);do local g="$g+$(sm2 $f)";done;printf %i $(($g)); }
 function tmp {
   local g=$(fl0);local d=$(echo "$g"|grep throttled|head -n1|sef "$e21");local e=$(echo "$g"|grep normal|tail -n1|sef "$e21")
-  local g=''    ;local f=''        ;for f in $(ls /dev/nvme[0-9] 2>$p03);do local g=$(echo $g $(sm0 $f));done;local l=$(nu5 1 $g)
-  local g=''    ;local f='/dev/sda';[[ -b $f ]] && local g=$(sm1 $f);local i=$(nu5 1 $g);local n=$(nu5 1 $(sm2))
-  [[ $1$d$e || $l -ge $n19 || $i -ge $n19 || $n -ge $n19 ]] || return;[[ $d ]] && local d="throttled: $d";[[ $e ]] && local e="normal: $e"
+  local g=''    ;local f=''        ;for f in $(ls $p66 2>$p03);do local g=$(echo $g $(sm0 $f));done;local l=$(nu5 1 $g)
+  local g=''    ;local f='/dev/sda';[[ -b $f ]] && local g=$(sm4 $f);local i=$(nu5 1 $g);local n=$(nu5 1 $(sm3))
+  [[ $1$d$e || $l -ge $n19 || $i -ge $n19 || $n -ge $n19 ]] || return
   local g=$(printf '%5.0fC %10s %5s' $n $dt 2>$p03);g0t $i && local g="$g $(printf 'sata: %.0fC' $i 2>$p03)";g0t $l && local g="$g $(printf 'nvme: %.0fC' $l 2>$p03)"
-  local g="$g $(printf '%s %s' $d $e 2>$p03)";swn "TEMP $g"
+  [[ $d ]] && local d="throttled: $d";[[ $e ]] && local e="normal: $e";local g="$g $(printf '%s %s' $d $e 2>$p03)";swn "TEMP $g"
 }
 function clq { $s09 query $1    2>$p03|snf "$e05"; }
 function cls { $s07 $s45-status 2>$p03|snf "$e48"; }
@@ -384,7 +387,14 @@ function clk {
 }
 function hch { if tsa $s19;then local s=$(cl3 $(cls));m="-> $s";[[ $s && $cunt != $s ]] && m="$m $(nex "$s06 $s19")";elif tsa ntp;then m="-> ntp";else m="-> chrony";fi;swn "$s45 $cunm check $(clo) $m"; }
 function hdi { local s='+%S.%N';local n=$(date $s);if z1t;then local i=$n;else local i=$(ssh $(snc $cunt) "date $s");fi;local e='10^3';nu2 "($e*$i)-($e*$n)"; }
-function sif { if [[ $(cat $p44 2>$p03) -eq 0 ]];then local e=off;else local e=on;fi;if [[ $(cat $p43 2>$p03) -eq 1 ]];then local d=off;else local d=on;fi;local i=$(fl0|wc -l);local n=$(fl1|wc -l);[[ on$1 = on ]] && e0t $i && e0t $n && return;swn "INFO$(printf '%3i %3i %10s %5s' $n $i $dt 2>$p03) usb $e, turbo $d, ufw $(wif $(pex 'ufw status'|grep Status:)), uptime:$(uptime|sef "$e55")"; }
+function sif {
+  if [[ $(cat $p44 2>$p03) -eq 0 ]];then local e=off;else local e=on;fi;local i=$(fl0|wc -l)
+  if [[ $(cat $p43 2>$p03) -eq 1 ]];then local d=off;else local d=on;fi;local n=$(fl1|wc -l)
+  [[ $1 ]] || g0t $i || g0t $n && swn "INFO$(printf '%3i %3i %10s %5s' $n $i $dt 2>$p03) usb $e, turbo $d, ufw $(wif $(pex 'ufw status'|grep Status:)), uptime:$(uptime|sef "$e55")"
+  local n=$(sm5)
+  [[ $1 ]] || g0t $n || return
+  local g=$(printf '%6.0f %10s %5s' $n $dt 2>$p03);local f='';for f in $(ls $p66 2>$p03);do local g="$g$(printf " $(basename $f): $(sm1 $f)" 2>$p03)";done;swn "NVME $g"
+}
 function tg1 { ll6 "$g36"|tln "$g25" $1; }
 function tg2 { if tsa $s44;then tg1 $1;else ll2 "$g11"|fln "$g25" $1;fi; }
 function tg3 { if tsa $s44;then tg1 $1;fi;  ll2 "$g14"|fln "$g47" $1; }
@@ -398,7 +408,7 @@ function rll { ll2 "$g09"|fln "$g47" $2|if [[ $1 ]];then sef "$1";else cat;fi; }
 function rlr { ll2 "$g48"|sef "$e51"; }
 function upl { local e=$(apt list --upgradable 2>$p03|grep -ahv Listing);[[ $e ]] && echo -e "\n$e"; }
 function cpe {
-  clk;[[ $1 = c ]] && return;tmp;[[ $1 = p ]] && return;sif $1
+  clk;[[ $1 = c ]] && return;tmp;[[ $1 = p ]] && return;sif
   m=$(sll "$e74"|sef "$e30");if [[ $m ]];then local i=$(echo "$m"|wc -l);local e=$(echo "$m"|tail -n1);else local i=0;local e=;fi;m=;local n=0;local d=;local l=ou
   if [[ ! $m ]];then if ict;then m=$(cll "$e50;$e31");local l=cl;fi;fi
   if [[ ! $m ]];then if iet;then m=$(ell "$e50;$e31");local l=el;fi;fi

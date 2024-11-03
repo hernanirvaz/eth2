@@ -96,7 +96,7 @@ p62="$p02/nethermind.log"
 p63="$p02/neth.rs"
 p64="$p02/dns.log"
 p65='/etc/ssh/sshd_config.d/50-cloud-init.conf'
-p66='/dev/null';[[ $cunm = $inm5 || $cunm = $inm6 ]] && p66='/dev/nvme0n1'
+p66='/dev/nvme[0-2]'
 p67='/etc/hosts'
 p68='/etc/chrony/chrony.conf'
 p69='/var/log/unattended-upgrades/unattended-upgrades-dpkg.log'
@@ -520,6 +520,8 @@ e79='s%disable-upnp%disable-upnp --checkpoint-sync-url';if [[ $cunm = $inm5 ]];t
 j0='.ata_sct_temperature_history.table|join(" ")'
 j1='.temperature.current'
 j3='.nvme_smart_health_information_log.temperature_sensors|join(" ")'
+j4='.nvme_smart_health_information_log|"erros_cml \(.critical_warning)+\(.media_errors)+\(.num_err_log_entries),used \(.percentage_used)%,spare \(.available_spare)%"'
+j5='.nvme_smart_health_information_log|"\(.critical_warning)+\(.media_errors)"'
 
 w0='{if(match($0,/'
 w1='([0-9,]+(\.[0-9]+)?) *'
