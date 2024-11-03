@@ -22,8 +22,9 @@ if [[ $(pex 'ufw status'|grep -i inactive) ]];then
 else
   cex 'ufw status numbered'                                                                                                                                   # show
 fi
-[[ -f $p04/$s10.service || -f $p04/$s11.service || -f $p04/$s12.service || -f $p04/$s13.service ]] && exit                                                    # ec/cl instalados -> exit
-swu 'UPDATE LINUX'       ;t4 linux
+[[ -f $p04/$s10.service || -f $p04/$s11.service || -f $p04/$s44.service || -f $p04/$s12.service || -f $p04/$s13.service ]] && exit                            # el/cl instalados -> exit
+
+t4 linux
 swu 'ADDITIONAL LINUX'   ;sex 'apt install python3-pip net-tools apt-listchanges landscape-common software-properties-common smartmontools curl -y'
 swu 'UNATTENDED UPGRADES';cex 'apt install unattended-upgrades update-notifier-common -y'
 swu 'LINUX CONFIG'
@@ -83,5 +84,6 @@ cc1 $p25 "$e04"                ;cmw $p25 755 root                               
 cc1 $p27 "$e53";cc2 $p27 "$s38";cmw $p27 644 root                                                                                                             # new logrotate add
 [[ -x $p28 ]] && sex "chmod -x $p28"                                                                                                                          # motd overlayroot unexecute
 t6 uur                                                                                                                                                        # unattended-upgrades conf
+swb 'FINAL'
 swn 'sudo netplan apply'
-swn 'AND reboot'
+swn 'sudo reboot'
