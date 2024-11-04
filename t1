@@ -427,7 +427,8 @@ e24="$e24;s%rpc-username\":[^,]+,%rpc-username\": \"eu\",%"
 e24="$e24;s%rpc-password\":[^,]+,%rpc-password\": \"\",%"
 e25='s%Type=.*$%Type=simple%'
 e26='s%(Current DNS)[^:]+:%   \1:%ip'
-e27='s%GRUB_CMDLINE_LINUX_DEFAULT *= *"(.+)"%GRUB_CMDLINE_LINUX_DEFAULT="\1 pcie_aspm=off"%;s%GRUB_CMDLINE_LINUX_DEFAULT *= *""%GRUB_CMDLINE_LINUX_DEFAULT="pcie_aspm=off"%'
+e28='pcie_aspm=off';[[ $cunm = teste$inm5 ]] && e28="$e28 pci=noaer" # Disabling AER (Advanced Error Reporting) logging
+e27="s%GRUB_CMDLINE_LINUX_DEFAULT *= *\"(.+)\"%GRUB_CMDLINE_LINUX_DEFAULT=\"\1 $e28\"%;s%GRUB_CMDLINE_LINUX_DEFAULT *= *\"\"%GRUB_CMDLINE_LINUX_DEFAULT=\"$e28\"%"
 e28="s%APT::Periodic::Update-Package-Lists.*$%APT::Periodic::Update-Package-Lists \"1\";%i"
 e28="${e28};s%APT::Periodic::Unattended-Upgrade.*$%APT::Periodic::Unattended-Upgrade \""
 case $cunm in $znm4) e28="${e28}5";;$vnm1) e28="${e28}5";;$inm6) e28="${e28}2";;*) e28="${e28}1";;esac
