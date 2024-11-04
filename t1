@@ -520,7 +520,7 @@ e79='s%disable-upnp%disable-upnp --checkpoint-sync-url';if [[ $cunm = $inm5 ]];t
 j0='.ata_sct_temperature_history.table|join(" ")'
 j1='.temperature.current'
 j3='.nvme_smart_health_information_log.temperature_sensors|join(" ")'
-j4='.nvme_smart_health_information_log|"erros_cml \(.critical_warning)+\(.media_errors)+\(.num_err_log_entries),used \(.percentage_used)%,spare \(.available_spare)%"'
+j4='.nvme_smart_health_information_log|"\(.critical_warning) \(.media_errors) \(.num_err_log_entries) \(.percentage_used) \(.available_spare)"'
 j5='.nvme_smart_health_information_log|"\(.critical_warning)+\(.media_errors)"'
 
 w0='{if(match($0,/'
