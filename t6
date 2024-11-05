@@ -577,6 +577,7 @@ function mre { mct || return;local s=n;local e=$(for s in $(rlr|snf "$e09"|sort 
 function epf { if tsa $s10;then gl0;swn "$m";fi;if tsa $s11;then ul0;swn "$m";fi;if tsa $s44;then tl0;swn "$m";fi; }
 function cpf { if tsa $s12;then bl0;swn "$m";fi;if tsa $s13;then vl0;swn "$m";fi;if tsa $s14;then ml0;swn "$m";fi; }
 function uur { swb 'UNATTENDED UPGRADE RESTART >> ~/apt.out';nex "$s00 daemon-reload";sudo dpkg-reconfigure -plow unattended-upgrades;sudo $s06 unattended-upgrades &>> $p02/apt.out;sudo unattended-upgrade -d &>> $p02/apt.out; }
+function fst { local s="nvme smart-log";if [[ $1 ]];then cex "$s /dev/$1";else local f='';for f in $(ls $p66 2>$p03);do swl "$s $f";pex "$s $f";done|egrep -aiv "$s54";fi; }
 
 function ulg { local d=${1:-$(date +%F)};nex "cat $p69"|snf "/$g60$d/,/$g61$d/p"; }
 function uls { local e=$(echo "$2"|snf "/$1/,/^ *$/p"|egrep -v "$1|^ *$"|sort -u);if [[ $e ]];then echo -e "\n$1$e";fi; }
@@ -627,6 +628,7 @@ function mcp { local s=${2:-v1};local f=${3:-~};if [[ ${s:0:1} = v ]];then local
 [[ $1 = fsh ]] && { dex 'fwupdmgr get-devices'; }
 [[ $1 = frf ]] && { dex 'fwupdmgr refresh --force';dex 'fwupdmgr get-updates'; }
 [[ $1 = fud ]] && { dex "fwupdmgr update $2"; }
+[[ $1 = fst ]] && { fst $2; }
 [[ $1 = tmp ]] && { dts;tmp s; }
 [[ $1 = sif ]] && { dts;sif s; }
 [[ $1 = tgp ]] && { touch $p50.print;trs PR ${2:-0}   ${3:-$n03}; }
@@ -872,7 +874,7 @@ if [[ ! $1 ]];then
   m="$m\nr[sh|rs|pt|lk]\t\trestart gap show|reset|print|lock"
   m="$m\ni[sh|ch]\t\texternal ip show|change"
   m="$m\nj[sh|rs]\t\tjournal logs show|reset"
-  m="$m\nf[sh|rf|ud [d]]\t\tfirmware show|refres|hupdate [device-id]"
+  m="$m\nf[sh|rf|(ud|st) [d]]\tfirmware device show|refres|(hupdate|selftest-nvme) [id]|"
   m="$m\nvex [n]\t\t\texpectations n=validators(${#b[@]})"
   m="$m\ntmp\t\t\ttemperature show"
   m="$m\nsif\t\t\tsystem info show"
