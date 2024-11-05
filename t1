@@ -384,7 +384,7 @@ s52="${s52}\npool 2.de.pool.ntp.org iburst"
 s52="${s52}\npool 0.pt.pool.ntp.org iburst"
 s52="${s52}\npool 0.europe.pool.ntp.org iburst"
 s53='sgms:'
-s54='threshold|read|write|written|namespace|temperature|thermal|power'
+s54='threshold|read|write|written|namespace|temperature|thermal|power|shutdowns|controller|endurance'
 
 e00="s%^ *#* *NTP *=.*$%NTP=$zip1 $zip2 time.google.com time.cloudflare.com time.facebook.com%i";if [[ $cunm = $cuvc || $cunm = $cun1 || $cunm = $cun2 || $cunm = $cumv ]];then e00="${e00};s%^ *#* *PollIntervalMaxSec *=.*$%PollIntervalMaxSec=1200%i";fi
 e01='s%^ *ENABLED=.*$%ENABLED=0%i'
@@ -518,6 +518,7 @@ e76="$e29;s%\t$g30: *$e78% INFO peers \1%i"
 e77="$e29;s%(\.[0-9]{1,}) *.*$g35 *$e78%\1 peers \2%i"
 e78="$e29;s%(\.[0-9]{1,} INFO) *.*$g31: *$e78%\1 peers \2%i"
 e79='s%disable-upnp%disable-upnp --checkpoint-sync-url';if [[ $cunm = $inm5 ]];then e79="$e79 http://$iip6:5052%";elif [[ $cunm = $inm6 ]];then e79="$e79 http://$iip5:5052%";else e79="$e79 https://mainnet.checkpoint.sigp.io%";fi
+e80='s%\t{3}:%\t%'
 
 j0='.ata_sct_temperature_history.table|join(" ")'
 j1='.temperature.current'
