@@ -3,7 +3,7 @@
 ip=$(hostname -I);if [[ ${ip%%.*} -eq 192 ]];then iu=eu;else iu=ubuntu;fi
 source /home/$iu/s0
 
-function sse { cp $1 $2;sed -E "$3" $2 > $1;chown $5 $1;chmod $4 $1; }
+function sse { local f=$(basename $1);cp $1 $f.sav;sed -E "$2" $f.sav > $1;cp $1 $f.new;chmod $3 $1;chown $4 $1; }
 
 echo -e "\napt update"
 apt update -y           &>> apt.out
@@ -11,9 +11,9 @@ apt full-upgrade -y     &>> apt.out
 apt dist-upgrade -y     &>> apt.out
 apt autoremove          &>> apt.out
 apt autoclean           &>> apt.out
-sse $sc $(basename $sc).sav "$s1" 644 root:root;if [[ ${ip%%.*} -ne 192 ]];then sse $ss $(basename $ss).sav "$s3" 644 root:root;fi;systemctl daemon-reload;systemctl reload $sh;systemctl restart $sh
+sse $sc "$s1" 644 root:root;if [[ ${ip%%.*} -ne 192 ]];then sse $ss "$s3" 644 root:root;fi;systemctl daemon-reload;systemctl reload $sh;systemctl restart $sh
 apt install ssmtp jq -y &>> apt.out
-sse $sm $(basename $sm).sav "$s2" 640 root:mail
+sse $sm "$s2" 640 root:mail
 passwd -l root
 echo -e "\n$H";adduser --comment "" $un
 echo -e "\n\n\n\nbash /home/$iu/s2\n\n\n\n"
