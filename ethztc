@@ -2,7 +2,7 @@ cunm=$(hostname)
 cust=${cunm:0:3}
 
 if [[ $cunm = hrv-zotac2 ]];then
-  d=/var/lib/plexmediaserver/mp4
+  d=/home/eth/.mp4
   rsy () { echo RSYNC $1 $2;rsync --ignore-existing --delete -rvz $1 $2; }
   rmv () { rsy $d/movie ztc1:; }
   rlt () { rsy $d/lust  ztc1:; }

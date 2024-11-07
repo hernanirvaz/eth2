@@ -588,6 +588,20 @@ function ulr { local s=$(ulg $1);uls "$g59" "$s";uls "$g62" "$s"; }
 function mcp { local s=${2:-v1};local f=${3:-~};if [[ ${s:0:1} = v ]];then local e="-P 2020 -i $p02/.ssh/id_ed25519";eval "scp $e $1 $(sns $s):$f";else eval "scp $1 $(sns $s):$f";fi; }
 [[ $1 = mcp ]] && { mcp $2 $3 $4; }
 
+function plx {
+  swu 'PLEX SERVER'        ;sex 'apt install dirmngr ca-certificates apt-transport-https -y'
+  echo deb https://downloads.plex.tv/repo/deb public main | sudo tee /etc/apt/sources.list.d/plexmediaserver.list                                             # add apt source for plex
+  curl https://downloads.plex.tv/plex-keys/PlexSign.key | sudo apt-key add -;sex 'apt update'                                                                 # add apt key    for plex
+  cex 'apt install nginx plexmediaserver -y'                                                                                                                  # instal nginx/plex
+  if [[ ! -d $p60 ]];then sex "mkdir -p $p60";cmw $p60 775 plex;fi;cc4 $p32 "$s42"                ;cmw $p32 644 root;sex "$s00 reload $s22"                   # config nginx/plex
+  xp;xd;xe;dmr;xa                                                                                                                                             # enable nginx/plex
+  swu 'TRANSMISSION SERVER';cex 'apt install transmission-cli transmission-common transmission-daemon -y';sex "usermod -a -G $s51 eu"                         # instal transmission
+  if [[ ! -d $p59 ]];then sex "mkdir -p $p59";cmw $p59 775 $s51;fi;cc1 $p33 "$e24";cc1 $p34 "$e25";cmw $p33 600 $s51;sex "$s00 reload $s15"                   # config transmission
+  sex "ln -s $p60/movie $p59/lmv";sex "ln -s $p60/tv $p59/ltv";sex "ln -s $p60/tv2 $p59/lt2"                                                                  # plex - transmission
+  rp;rd;re;dmr;ra                                                                                                                                             # enable transmission
+}
+[[ $1 = plx ]] && { plx; }
+
 [[ $1 = bb  ]] && { wpe; }
 [[ $1 = bba ]] && { bba|sort -t: -k2n -k3n -k4n; }
 [[ $1 = bbz ]] && { wpf; }
@@ -829,7 +843,6 @@ function mcp { local s=${2:-v1};local f=${3:-~};if [[ ${s:0:1} = v ]];then local
 [[ $1 = rds ]] && { rd; }
 [[ $1 = sds ]] && { sd; }
 [[ $1 = mds ]] && { md; }
-[[ $1 = lup ]] && { apt list --upgradable; }
 [[ $1 = vex ]] && { gnv;[[ -x $p00/ethdo ]] || dlv;swu "expectations for ${2:-${#b[@]}} validators";ethdo $s27 validator expectation --validators=${2:-${#b[@]}}; }
 
 if [[ ! $1 ]];then
@@ -879,12 +892,12 @@ if [[ ! $1 ]];then
   m="$m\ntmp\t\t\ttemperature show"
   m="$m\nsif\t\t\tsystem info show"
   m="$m\nchk\t\t\tcheck server with chkrootkit"
-  m="$m\nlup\t\t\tcheck apt list --upgradable"
   m="$m\nsnr\t\t\tremove snapd"
   m="$m\nl[p|c]\t\t\tlista portas|connections"
   m="$m\neip\t\t\tset dynamic DNS"
   m="$m\nulg [d]\t\t\tshow update logs d($(date +%F)) on $(basename $p69)"
   m="$m\nulr [d]\t\t\tshow restartings d($(date +%F)) on $(basename $p69)"
   m="$m\nmcp [o] [s] [d]\t\tscp <[o]riginal> <[s]erver>:<[d]estination>"
+  m="$m\nplx\t\t\tinstalar plex server"
   swn "\n$m\n"
 fi
