@@ -9,7 +9,7 @@ function cc4 { local f=$(basename $1);sex "cp $1 $f.sav"                        
 
 [[ -x $p02/eth2/t ]] || ln -s $p02/eth2/t6 $p02/eth2/t                                                                                                        # link base commands
 if [[ $(pex 'ufw status'|grep -i inactive) ]];then
-  swu 'INIT FIREWALL';sex 'ufw default deny incoming';sex 'ufw default allow outgoing'                                                                        # base ufw
+  swb 'INIT FIREWALL';sex 'ufw default deny incoming';sex 'ufw default allow outgoing'                                                                        # base ufw
   pde 22/tcp ossh
   [[ $cunm = $vnm1 || $cunm = $vnm2 || $cunm = $vnm3 ]] && { ple 2020/tcp nssh; }
   [[ $cunm = $znm1 ]] && { ple 2021/tcp nssh;pai 123/udp 192.168.8.0/24 ntp;pai 323/udp 192.168.8.0/24 ptp; }
@@ -22,13 +22,11 @@ if [[ $(pex 'ufw status'|grep -i inactive) ]];then
 else
   cex 'ufw status numbered'                                                                                                                                   # show
 fi
-[[ -f $p04/$s10.service || -f $p04/$s11.service || -f $p04/$s44.service || -f $p04/$s12.service || -f $p04/$s13.service ]] && exit                            # el/cl instalados -> exit
+[[ -f $p04/$s10.service || -f $p04/$s11.service || -f $p04/$s44.service || -f $p04/$s12.service || -f $p04/$s13.service ]] && exit
 
-t4 linux
-swu 'ADDITIONAL LINUX'   
 sex 'apt install python3-pip net-tools apt-listchanges landscape-common software-properties-common smartmontools lm-sensors nvme-cli curl -y'
-cex 'apt install unattended-upgrades update-notifier-common -y'
-swu 'LINUX CONFIG'
+sex 'apt install unattended-upgrades update-notifier-common -y'
+t4 linux
 if [[ $cunm = $znm2 ]];then
   swu 'PLEX SERVER'        ;sex 'apt install dirmngr ca-certificates apt-transport-https -y'
   echo deb https://downloads.plex.tv/repo/deb public main | sudo tee /etc/apt/sources.list.d/plexmediaserver.list                                             # add apt source for plex
@@ -58,9 +56,9 @@ if [[ $cust = hrv ]];then
     sex 'apt install bind9 bind9utils -y'                                                                                                                     # install bind
     cc3 $p29 "$e07" "$s40"       ;cmw $p29 644 root bind                                                                                                      # named my options
     cc1 $p30 "$e02"              ;cmw $p30 644 root                                                                                                           # use only ipv4
-    t6 spd;t6 sea;nex "$s02 systemd-resolved";nex "$s03 systemd-resolved"                                                                                     # DNS stop & start
+    t6 spd;t6 sea;sex "$s02 systemd-resolved";sex "$s03 systemd-resolved"                                                                                     # DNS stop & start
   fi
-  swu 'ROOTKIT SCANNER';sex 'apt install chkrootkit -y';cex 'chkrootkit'
+  sex 'apt install chkrootkit -y';cex 'chkrootkit'
   sex "$s07 set-timezone Europe/Lisbon"
   cc1 $p20 "$e00"                                                                                                                                             # my time servers
   cc1 $p21 "$e01"              ;cmw $p21 644 root                                                                                                             # motd-news disable
@@ -71,12 +69,12 @@ if [[ $cust = hrv ]];then
   cc4 $p35 "$s43"              ;cmw $p35 644 root                                                                                                             # ssh config
   cc1 $p65 "$e69"              ;cmw $p65 600 root                                                                                                             # ssh config
   cc1 $p37 "$e23"              ;cmw $p37 644 root                                                                                                             # no swap - bad for IOPS
-  nex 'update-grub'
+  sex 'update-grub'
 else
   sex "$s07 set-timezone Europe/Berlin"
   cc1 $p20 "$e13"                                                                                                                                             # general time servers
   cc4 $p35 "$s43"              ;cmw $p35 644 root                                                                                                             # ssh config
-  nex "mv -f /etc/motd $p02/motd.sav"                                                                                                                         # no contabo info
+  sex "mv -f /etc/motd $p02/motd.sav"                                                                                                                         # no contabo info
 fi                             ;cmw $p20 644 root;hrs                                                                                                         # timesyncd cmod & restart
 cc1 $p23 "$e03"                ;cmw $p23 644 root                                                                                                             # unattended-upgrades base
 cc1 $p51 "$e28"                ;cmw $p51 644 root                                                                                                             # unattended-upgrades period

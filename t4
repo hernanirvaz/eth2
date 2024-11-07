@@ -13,8 +13,8 @@ function hlp {
 function bck { [[ -f $p04/$1.service ]] || return;grep -q checkpoint-sync-url $p04/$1.service && return;cp $p04/$1.service $p02/$1.sav;sef "$e79" $p02/$1.sav > $p04/$1.service;nex "$s00 daemon-reload"; }
 
 if [[ $1 = linux || $1 = reboot ]];then
-  swu 'FULL-UPGRADE >> ~/apt.out'
-  cex 'apt update -y'
+  swb 'FULL-UPGRADE >> ~/apt.out'
+  sex 'apt update -y'
   sudo apt full-upgrade -y &>> $p02/apt.out
   sudo apt dist-upgrade -y &>> $p02/apt.out
   sudo apt autoremove   -y &>> $p02/apt.out

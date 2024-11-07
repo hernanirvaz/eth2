@@ -576,7 +576,7 @@ function csp { ict || return;local e=$(ll2 "$g50:"|sef "$e78"|fsp $1 $2);[[ $1$2
 function mre { mct || return;local s=n;local e=$(for s in $(rlr|snf "$e09"|sort -u);do printf '%3i %s\n' $(rlr|grep -co $s) $s;done|sort -n);[[ $e ]] && echo -e "\n$e"; }
 function epf { if tsa $s10;then gl0;swn "$m";fi;if tsa $s11;then ul0;swn "$m";fi;if tsa $s44;then tl0;swn "$m";fi; }
 function cpf { if tsa $s12;then bl0;swn "$m";fi;if tsa $s13;then vl0;swn "$m";fi;if tsa $s14;then ml0;swn "$m";fi; }
-function uur { swb 'UNATTENDED UPGRADE RESTART >> ~/apt.out';nex "$s00 daemon-reload";sudo dpkg-reconfigure -plow unattended-upgrades;sudo $s06 unattended-upgrades &>> $p02/apt.out;sudo unattended-upgrade -d &>> $p02/apt.out; }
+function uur { swb 'UNATTENDED UPGRADE RESTART >> ~/apt.out';sex "$s00 daemon-reload";sudo dpkg-reconfigure -plow unattended-upgrades;sudo $s06 unattended-upgrades &>> $p02/apt.out;sudo unattended-upgrade -d &>> $p02/apt.out; }
 function fst { local s="nvme smart-log";if [[ $1 ]];then cex "$s /dev/$1";else local f='';for f in $(ls $p66 2>$p03);do swl "$s $f";pex "$s $f";done|egrep -aiv "$s54"|sef "$e80";fi; }
 
 function ulg { local d=${1:-$(date +%F)};nex "cat $p69"|snf "/$g60$d/,/$g61$d/p"; }
