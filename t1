@@ -90,7 +90,7 @@ p56="/etc/nut/upsmon.conf"
 p57="/etc/nut/upsd.conf"
 p58='/var/lib/jwtethereum'
 p59='/var/lib/transmission-daemon/downloads'
-p60="$p02/.mp4"
+p60="/var/lib/plexmediaserver/mp4"
 p61='/var/lib/nethermind';[[ $cunm = $inm5 || $cunm = $inm6 ]] && p61='/nl/nethermind'
 p62="$p02/nethermind.log"
 p63="$p02/neth.rs"
