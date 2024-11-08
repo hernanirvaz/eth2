@@ -422,8 +422,8 @@ function cpe {
   upl;uls "$g59" "$(ulg)";esp;csp;mre
 }
 # Plex Media Server
-function xop { pde 32400 plex delete;pai 32400 192.168.8.0/24 plex       ;pde 80 nginx delete;pai 80 192.168.8.0/24 nginx       ; }
-function xco { pde 32400 plex       ;pai 32400 192.168.8.0/24 plex delete;pde 80 nginx       ;pai 80 192.168.8.0/24 nginx delete; }
+function xop { pde 32400 plex delete;pai 32400 192.168.8.0/24 plex       ;pde 80 ngweb delete;pai 80 192.168.8.0/24 ngweb       ;pde 443 ngssl delete;pai 443 192.168.8.0/24 ngssl       ; }
+function xco { pde 32400 plex       ;pai 32400 192.168.8.0/24 plex delete;pde 80 ngweb       ;pai 80 192.168.8.0/24 ngweb delete;pde 443 ngssl       ;pai 443 192.168.8.0/24 ngssl delete; }
 function xe  { xop;sex 'ufw reload';cex "$s04 $s22";cex "$s04 $s21"; }                                                                                        # enable  plexmediaserver
 function xa  { tsa $s22 || cex "$s03 $s22";tsa $s21 || cex "$s03 $s21"; }                                                                                     # start   plexmediaserver
 function xp  { tsa $s22 && cex "$s02 $s22";tsa $s21 && cex "$s02 $s21"; }                                                                                     # stop    plexmediaserver
@@ -590,15 +590,16 @@ function mcp { local s=${2:-v1};local f=${3:-~};if [[ ${s:0:1} = v ]];then local
 
 function plx {
   swu 'PLEX SERVER'        ;sex 'apt install dirmngr ca-certificates apt-transport-https -y'
-  echo deb https://downloads.plex.tv/repo/deb public main | sudo tee /etc/apt/sources.list.d/plexmediaserver.list                                             # add apt source for plex
-  curl https://downloads.plex.tv/plex-keys/PlexSign.key | sudo apt-key add -;sex 'apt update'                                                                 # add apt key    for plex
-  cex 'apt install nginx plexmediaserver -y'                                                                                                                  # instal nginx/plex
-  if [[ ! -d $p60 ]];then sex "mkdir -p $p60";cmw $p60 775 plex;fi;cc4 $p32 "$s42"                ;cmw $p32 644 root;sex "$s00 reload $s22"                   # config nginx/plex
-  xp;xd;xe;dmr;xa                                                                                                                                             # enable nginx/plex
-  swu 'TRANSMISSION SERVER';cex 'apt install transmission-cli transmission-common transmission-daemon -y';sex "usermod -a -G $s51 eu"                         # instal transmission
-  if [[ ! -d $p59 ]];then sex "mkdir -p $p59";cmw $p59 775 $s51;fi;cc1 $p33 "$e24";cc1 $p34 "$e25";cmw $p33 600 $s51;sex "$s00 reload $s15"                   # config transmission
-  sex "ln -s $p60/movie $p59/lmv";sex "ln -s $p60/tv $p59/ltv";sex "ln -s $p60/tv2 $p59/lt2"                                                                  # plex - transmission
-  rp;rd;re;dmr;ra                                                                                                                                             # enable transmission
+  echo deb https://downloads.plex.tv/repo/deb public main | sudo tee /etc/apt/sources.list.d/plexmediaserver.list
+  curl https://downloads.plex.tv/plex-keys/PlexSign.key | sudo apt-key add -;sex 'apt update'
+  cex 'apt install nginx plexmediaserver -y'
+  sex "mkdir -p $p60";cmw $p60 775 plex;cc4 $p32 "$s42";cmw $p32 644 root;cex "nginx -t";sex "$s00 reload $s22"
+  sex "mkdir -p $p60/movie";sex "mkdir -p $p60/tv";sex "mkdir -p $p60/tv2";sex "mkdir -p $p60/lust";sex "chown -R plex:plex $p60"
+  xp;xd;xe;dmr;xa
+  swu 'TRANSMISSION SERVER';cex 'apt install transmission-cli transmission-common transmission-daemon -y';sex "usermod -a -G $s51 eu"
+  sex "mkdir -p $p59";cmw $p59 775 $s51;cc1 $p33 "$e24";cc1 $p34 "$e25";cmw $p33 600 $s51;sex "$s00 reload $s15"
+  sex "ln -s $p60/movie $p59/lmv";sex "ln -s $p60/tv $p59/ltv";sex "ln -s $p60/tv2 $p59/lt2"
+  rp;rd;re;dmr;ra
 }
 [[ $1 = plx ]] && { plx; }
 
