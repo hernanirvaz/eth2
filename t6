@@ -599,7 +599,7 @@ function plx {
   xp;xd;xe;dmr;xa
   swu 'TRANSMISSION SERVER';cex 'apt install transmission-cli transmission-common transmission-daemon -y';sex "usermod -a -G $s51 eu"
   sex "mkdir -p $p59";cmw $p59 775 $s51;cc1 $p33 "$e24";cc1 $p34 "$e25";cmw $p33 600 $s51;sex "$s00 reload $s15"
-  sex "ln -s $p60/movie $p59/lmv";sex "ln -s $p60/tv $p59/ltv";sex "ln -s $p60/tv2 $p59/lt2"
+  sex "ln -s $p60/movie $p59/lmv";sex "ln -s $p60/tv $p59/ltv";sex "ln -s $p60/tv2 $p59/lt2";sex "ln -s $p60/lust $p59/llt"
   rp;rd;re;dmr;ra
 }
 [[ $1 = plx ]] && { plx; }
