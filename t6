@@ -376,14 +376,15 @@ function cl4 { printf "ntp0: $(cl2 $2) offset: $4 delay: $6 jitter: $8"         
 function cl5 { printf "ntp$3: $(cl2 ${1:1}) offset: ${9}ms delay: ${8}ms jitter: ${10}ms"                    2>$p03; }
 function cl6 { printf "ntp$2: $(cl2 $1    ) offset: $(clf $5 +) delay: $(clf $4) jitter: $(clf $3)"          2>$p03; }
 function clk {
+  local s=$(clo);if tsa $s12;then local n=$(ll2 "$g21"|wc -l);else local n=0;fi;dts;[[ $s = OK && $n -eq 0 && $cunm != $cunt ]] && return
   if tsa $s19;then
-    local e="CSYS $(clo)";m="$(printf '%-40s' "$(ss2 $s19)"   2>$p03) $(cl4 $(cls))"
+    local e="CSYS $s";m="$(printf '%-40s' "$(ss2 $s19)"   2>$p03) $(cl4 $(cls))"
   elif tsa ntp;then
-    local e="CNTP $(clo)";m="$(printf '%-40s' "$(ss2 ntp)"    2>$p03) $(cl5 $(ntpq -pn|grep '^\*[0-9]'))"
+    local e="CNTP $s";m="$(printf '%-40s' "$(ss2 ntp)"    2>$p03) $(cl5 $(ntpq -pn|grep '^\*[0-9]'))"
   else
-    local e="CHRY $(clo)";m="$(printf '%-40s' "$(ss2 chrony)" 2>$p03) $(cl6 $(chronyc -cn sources|snf "$e68") $(chronyc -cn tracking|snf "$e67"))"
-  fi;dts
-  if tsa $s12;then swn "$e $(nu1 %3i $(ll2 "$g21"|wc -l)) $dt $m";else swn "$e     $dt $m";fi
+    local e="CHRY $s";m="$(printf '%-40s' "$(ss2 chrony)" 2>$p03) $(cl6 $(chronyc -cn sources|snf "$e68") $(chronyc -cn tracking|snf "$e67"))"
+  fi
+  if tsa $s12;then swn "$e $(nu1 %3i $n) $dt $m";else swn "$e     $dt $m";fi
 }
 function hch { if tsa $s19;then local s=$(cl3 $(cls));m="-> $s";[[ $s && $cunt != $s ]] && m="$m $(nex "$s06 $s19")";elif tsa ntp;then m="-> ntp";else m="-> chrony";fi;swn "$s45 $cunm check $(clo) $m"; }
 function hdi { local s='+%S.%N';local n=$(date $s);if z1t;then local i=$n;else local i=$(ssh $(snc $cunt) "date $s");fi;local e='10^3';nu2 "($e*$i)-($e*$n)"; }
