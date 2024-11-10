@@ -11,7 +11,7 @@ fptv=256  # Gb
 nimh=4    # Gb
 # The bigger the cache size, the bigger the disk space savings.
 # Pruning cache more than 2000MB is not recommended as it may cause long memory pruning time which affect attestation.
-imcv=128 # Mb default 128 (1024MB) max 250 (2000MB)
+imcv=189 # Mb default 128 (1024MB) max 250 (2000MB)
 if [[ $cunm = $inm5 ]];then apip="$iip5";elif [[ $cunm = $inm6 ]];then apip="$iip6";else apip='127.0.0.1';fi
 othe=''
 othe="$othe --Network.MaxActivePeers $maxp"
