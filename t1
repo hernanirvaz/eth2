@@ -422,9 +422,13 @@ e22='s%.*pubkey": "([^"]*)".*%0x\1\n%p'
 e23='/^ *\/swap/s%^%#%;/ext4 +defaults +/s%defaults%defaults,noatime%'
 e24="s%download-dir\":[^,]+,%download-dir\": \"$p59\",%"
 e24="$e24;s%incomplete-dir\":[^,]+,%incomplete-dir\": \"$p59\",%"
+e24="$e24;s%rpc-authentication-required\":[^,]+,%rpc-authentication-required\": false,%"
+e24="$e24;s%rpc-bind-address\":[^,]+,%rpc-bind-address\": \"$(sni $cunm)\",%"
 e24="$e24;s%rpc-enabled\":[^,]+,%rpc-enabled\": true,%"
+e24="$e24;s%rpc-host-whitelist-enabled\":[^,]+,%rpc-host-whitelist-enabled\": false,%"
+e24="$e24;s%rpc-socket-mode\":[^,]+,%rpc-socket-mode\": \"0755\",%"
 e24="$e24;s%rpc-whitelist\":[^,]+,%rpc-whitelist\": \"127.0.0.1,192.168.8.*\",%"
-e24="$e24;s%rpc-username\":[^,]+,%rpc-username\": \"eu\",%"
+e24="$e24;s%rpc-username\":[^,]+,%rpc-username\": \"\",%"
 e24="$e24;s%rpc-password\":[^,]+,%rpc-password\": \"\",%"
 e25='s%Type=.*$%Type=simple%'
 e26='s%(Current DNS)[^:]+:%   \1:%ip'
