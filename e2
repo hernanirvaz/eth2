@@ -7,8 +7,11 @@ nnv N $1 $2
 maxp=10
 pp2p=30303;ndp || pp2p=30304
 abrb=11052984
-fptv=256 # Gb
-nimh=4   # Gb
+fptv=256  # Gb
+nimh=4    # Gb
+# The bigger the cache size, the bigger the disk space savings.
+# Pruning cache more than 2000MB is not recommended as it may cause long memory pruning time which affect attestation.
+imcv=128 # Mb default 128 (1024MB) max 250 (2000MB)
 if [[ $cunm = $inm5 ]];then apip="$iip5";elif [[ $cunm = $inm6 ]];then apip="$iip6";else apip='127.0.0.1';fi
 othe=''
 othe="$othe --Network.MaxActivePeers $maxp"
@@ -16,7 +19,7 @@ othe="$othe --Network.DiscoveryPort $pp2p --Network.P2PPort $pp2p"
 othe="$othe --JsonRpc.Enabled true --JsonRpc.Host $apip"
 othe="$othe --JsonRpc.EngineHost $apip --JsonRpc.EnginePort 8551 --JsonRpc.JwtSecretFile $p58/jwt"
 othe="$othe --Sync.SnapSync true --Sync.AncientBodiesBarrier $abrb --Sync.AncientReceiptsBarrier $abrb"
-othe="$othe --Pruning.Mode Hybrid --Pruning.FullPruningTrigger VolumeFreeSpace --Pruning.FullPruningThresholdMb $(($fptv*10**3))"
+othe="$othe --Pruning.Mode Hybrid --Pruning.FullPruningTrigger VolumeFreeSpace --Pruning.FullPruningThresholdMb $(($fptv*10**3)) --Pruning.CacheMb $((8*$imcv))"
 # othe="$othe --Init.MemoryHint $(($nimh*10**9))"
 # othe="$othe --Db.StateDbDisableCompression true"
 cd
