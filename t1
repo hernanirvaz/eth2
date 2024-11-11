@@ -100,6 +100,10 @@ p66='/dev/nvme[0-2]'
 p67='/etc/hosts'
 p68='/etc/chrony/chrony.conf'
 p69='/var/log/unattended-upgrades/unattended-upgrades-dpkg.log'
+p70='/etc/profile.d/rvm.sh'
+p71="$p02/.bashrc"
+p72='cns.keys'
+p73='hernanirvaz-f2e8fb66dbc0.json'
 
 g00='(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) +'
 g01='[0-9]{1,2} +'

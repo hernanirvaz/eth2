@@ -602,21 +602,16 @@ function plx {
   sex "ln -s $p60/movie $p59/lmv";sex "ln -s $p60/tv $p59/ltv";sex "ln -s $p60/tv2 $p59/lt2";sex "ln -s $p60/lust $p59/llt"
   rp;rd;re;dmr;ra
 }
-[[ $1 = plx ]] && { plx; }
-
-function rvm {
-  swu 'RVM INSTALL';sex "apt-add-repository -y ppa:rael-gc/rvm";sex "apt-get update";sex "apt-get install rvm";sex "usermod -a -G rvm $USER"
-  echo 'source "/etc/profile.d/rvm.sh"' >> ~/.bashrc
-  sex "reboot"
-}
-[[ $1 = rvm ]] && { rvm; }
+function rvm { [[ -f $p70 ]] && return;swu 'RVM INSTALL';cex 'apt-add-repository -y ppa:rael-gc/rvm';cex 'apt update';cex 'apt install rvm -y';cex "usermod -a -G rvm $USER";echo "source $p70" >> $p71;sex "reboot"; }
 function cns {
-  swu 'CNS INSTALL'
-  rvm install ruby-3.3.0
-  gem install cns
-  gpg --batch --yes --passphrase "$B" -d cns.keys.gpg                      >> ~/.bashrc
-  gpg --batch --yes --passphrase "$B" -d hernanirvaz-f2e8fb66dbc0.json.gpg > .hernanirvaz-f2e8fb66dbc0.json
+  if [[ -f $p70 ]];then swu 'CNS INSTALL';else echo "needs rvm installed";return;fi;local s=$(rvm list)
+  if [[ $(echo "$s"|grep ruby-3.3.0) ]];then echo "$s";else rvm install ruby-3.3.0;fi
+  if [[ $(gem list cns|grep cns) ]];then echo "cns ja instalada";else sex "apt install libcurl4-openssl-dev -y";gem install cns --no-document;fi
+  if [[ -f $p02/$p72.gpg ]];then gpg --batch --yes --passphrase "$B" -d $p02/$p72.gpg >> $p71      ;rm -f $p02/$p72.gpg;else echo "needs $p02/$p72.gpg";fi
+  if [[ -f $p02/$p73.gpg ]];then gpg --batch --yes --passphrase "$B" -d $p02/$p73.gpg  > $p02/.$p73;rm -f $p02/$p73.gpg;else echo "needs $p02/$p73.gpg";fi
 }
+[[ $1 = plx ]] && { plx; }
+[[ $1 = rvm ]] && { rvm; }
 [[ $1 = cns ]] && { cns; }
 
 [[ $1 = bb  ]] && { wpe; }
@@ -916,5 +911,7 @@ if [[ ! $1 ]];then
   m="$m\nulr [d]\t\t\tshow restartings d($(date +%F)) on $(basename $p69)"
   m="$m\nmcp [o] [s] [d]\t\tscp <[o]riginal> <[s]erver>:<[d]estination>"
   m="$m\nplx\t\t\tinstalar plex server"
+  m="$m\nrvm\t\t\tinstalar rvm"
+  m="$m\ncns\t\t\tinstalar cns ruby gem"
   swn "\n$m\n"
 fi
