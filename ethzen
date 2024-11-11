@@ -1,6 +1,7 @@
 function erq { echo -e "\nresolvectl query ${1:-pt.archive.ubuntu.com}";resolvectl query "${1:-pt.archive.ubuntu.com}"; }
 function ocp { echo -e "\nscp $1 ocp" ;scp ~/eth2/ethztc $1:~/.bash_aliases;scp ~/eth2/ethkeys $1:~/.ssh/authorized_keys; }
 function ecp { echo -e "\nscp $1 eth2";scp ~/eth2/t[1-9] ~/eth2/e? $1:~/eth2; }
+function ccp { echo -e "\nscp $1 ccp" ;scp ~/eth2/cns.keys.gpg $1:~;scp ~/eth2/hernanirvaz-f2e8fb66dbc0.json.gpg $1:~; }
 function esl { echo -e "\nssh $1     ";ssh $1; }
 function ei0 { echo -e "export H=\"$1\"\nexport E=\"$2\"\nexport R=\"$3\"\npr=$4"; }
 function ei1 { echo -e "echo>>~/.bashrc\necho \"export PATH=\\\"~/eth2:\\\$PATH\\\"\">>~/.bashrc\necho \"export H=\\\"$1\\\"\">>~/.bashrc\necho \"export V=\\\"$2\\\"\">>~/.bashrc\necho \"export K=\\\"$3\\\"\">>~/.bashrc\necho \"export E=\\\"$4\\\"\">>~/.bashrc\necho \"export B=\\\"$5\\\"\">>~/.bashrc\necho \"PS1=\\\"\\\$H:\\\h: \\\"\">>~/.bashrc\nchmod 755 ~/eth2/t[1-9] ~/eth2/e?"; }
@@ -25,9 +26,9 @@ alias r6='esl int6.fruga.pt'
 alias vp='ecp ns3238168.ip-57-129-52.eu'
 alias vo='ocp ns3238168.ip-57-129-52.eu'
 alias zp='ecp int6         ;ecp int5         ;ecp ztc4         ;ecp ztc3         ;ecp ztc1         ;ecp ztc2'
-alias zo='ocp int6         ;ocp int5         ;ocp ztc4         ;ocp ztc3         ;ocp ztc1         ;ocp ztc2'
+alias zo='ocp int6         ;ocp int5         ;ocp ztc4         ;ocp ztc3         ;ocp ztc1         ;ocp ztc2         ;ccp ztc1         '
 alias rp='ecp int6.fruga.pt;ecp int5.fruga.pt;ecp ztc4.fruga.pt;ecp ztc3.fruga.pt;ecp ztc1.fruga.pt;ecp ztc2.fruga.pt'
-alias ro='ocp int6.fruga.pt;ocp int5.fruga.pt;ocp ztc4.fruga.pt;ocp ztc3.fruga.pt;ocp ztc1.fruga.pt;ocp ztc2.fruga.pt'
+alias ro='ocp int6.fruga.pt;ocp int5.fruga.pt;ocp ztc4.fruga.pt;ocp ztc3.fruga.pt;ocp ztc1.fruga.pt;ocp ztc2.fruga.pt;ccp ztc1.fruga.pt'
 
 alias pi="ping \$(nip)"
 alias hk='cat /dev/null>~/.ssh/known_hosts'

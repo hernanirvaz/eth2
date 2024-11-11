@@ -604,6 +604,21 @@ function plx {
 }
 [[ $1 = plx ]] && { plx; }
 
+function rvm {
+  swu 'RVM INSTALL';sex "apt-add-repository -y ppa:rael-gc/rvm";sex "apt-get update";sex "apt-get install rvm";sex "usermod -a -G rvm $USER"
+  echo 'source "/etc/profile.d/rvm.sh"' >> ~/.bashrc
+  sex "reboot"
+}
+[[ $1 = rvm ]] && { rvm; }
+function cns {
+  swu 'CNS INSTALL'
+  rvm install ruby-3.3.0
+  gem install cns
+  gpg --batch --yes --passphrase "$B" -d cns.keys.gpg                      >> ~/.bashrc
+  gpg --batch --yes --passphrase "$B" -d hernanirvaz-f2e8fb66dbc0.json.gpg > .hernanirvaz-f2e8fb66dbc0.json
+}
+[[ $1 = cns ]] && { cns; }
+
 [[ $1 = bb  ]] && { wpe; }
 [[ $1 = bba ]] && { bba|sort -t: -k2n -k3n -k4n; }
 [[ $1 = bbz ]] && { wpf; }
