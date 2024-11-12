@@ -16,7 +16,7 @@ if [[ $cunm = hrv-zotac2 ]];then
   frm () { if [[ $1 ]];then ffr $d $1;else ffr $d txt;ffr $d jpg;ffr $d nfo;fi; }
   cug () { local s=${1:-plex};echo chmdug $s $d;sudo chown $s:$s -R $d;sudo find $d -type d -exec chmod 755 {} \;;sudo find $d -type f -exec chmod 644 {} \;; }
   tll () { transmission-remote $cuip:9091 -l; }
-  trl () { tll|sed -En 's%^ +([0-9]+) +100\%.*$%\1%p'; }
+  trl () { tll|sed -En 's%^ +([0-9]+) +100\% +.+Done +.+$%\1%p'; }
   prl () { local s=$1;shift;until [[ $# -lt 1 ]];do local s="$s,$1";shift;done;[[ $s ]] && printf $s; }
   trm () { local e=$(prl $(trl));[[ $e ]] || return;echo -e "remove $e\n";tll;transmission-remote $cuip:9091 -t $e --remove; }
   alias tcd='cd /var/lib/transmission-daemon/downloads'
