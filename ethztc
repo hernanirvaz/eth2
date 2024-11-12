@@ -2,6 +2,8 @@ cunm=$(hostname)
 cust=${cunm:0:3}
 
 if [[ $cunm = hrv-zotac2 ]];then
+  cuip=$(hostname -I)
+  cuip=${cuip%% *}
   d=/var/lib/plexmediaserver/mp4
   rsy () { echo RSYNC $1 $2;rsync --ignore-existing --delete -rvz $1 $2; }
   rmv () { rsy $d/movie ztc1:; }
@@ -13,10 +15,10 @@ if [[ $cunm = hrv-zotac2 ]];then
   fls () { if [[ $1 ]];then ffl $d $1;else ffl $d txt;ffl $d jpg;ffl $d nfo;fi; }
   frm () { if [[ $1 ]];then ffr $d $1;else ffr $d txt;ffr $d jpg;ffr $d nfo;fi; }
   cug () { local s=${1:-plex};echo chmdug $s $d;sudo chown $s:$s -R $d;sudo find $d -type d -exec chmod 755 {} \;;sudo find $d -type f -exec chmod 644 {} \;; }
-  tll () { transmission-remote 192.168.8.28:9091 -l; }
+  tll () { transmission-remote $cuip:9091 -l; }
   trl () { tll|sed -En 's%^ +([0-9]+) +100\%.*$%\1%p'; }
   prl () { local s=$1;shift;until [[ $# -lt 1 ]];do local s="$s,$1";shift;done;[[ $s ]] && printf $s; }
-  trm () { local e=$(prl $(trl));[[ $e ]] || return;echo -e "remove $e\n";transmission-remote 192.168.8.28:9091 -l;transmission-remote 192.168.8.28:9091 -t $e --remove; }
+  trm () { local e=$(prl $(trl));[[ $e ]] || return;echo -e "remove $e\n";tll;transmission-remote $cuip:9091 -t $e --remove; }
   alias tcd='cd /var/lib/transmission-daemon/downloads'
 fi
 if   [[ $cunm = hrv-intel5 || $cunm = hrv-intel6 ]];then
