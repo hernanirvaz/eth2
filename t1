@@ -23,7 +23,7 @@ cun2=$inm5
 cumv=$znm3
 cunt=$znm1
 else
-cuvc=$vnm1
+cuvc=$znm4
 nxvc=$znm4
 cun1=$vnm1
 cun2=$vnm1
@@ -587,15 +587,15 @@ function ups { sex "$s02 $s11"; }
 function tps { sex "$s02 $s44"; }
 function bps { sex "$s02 $s12"; }
 function vps { sex "$s02 $s13";touch $p05/vc_slash 2>$p03; }
-function mps { sex "$s02 $s14"; }                                                                                                                             # stop mev-boost
+function mps { sex "$s02 $s14"; }
 function gp  { cex "$s02 $s10"; }
 function up  { cex "$s02 $s11"; }
 function tp  { cex "$s02 $s44"; }
 function bp  { cex "$s02 $s12"; }
 function vp  { cex "$s02 $s13";touch $p05/vc_slash 2>$p03; }
-function mp  { cex "$s02 $s14"; }                                                                                                                             # stop mev-boost
+function mp  { cex "$s02 $s14"; }
 function fft { [[ -f $1 ]]; }
-function srb { rm -f $1.* 2>$p03;if [[ $2 = RB ]];then if fft $p50.print;then gp;up;tp;bp;vp;mp;rm -f $p50.print 2>$p03;cex reboot;else gps;ups;tps;bps;vps;mps;sex reboot;fi;else rm -f $p50.print 2>$p03;fi; }
+function srb { rm -f $1.* 2>$p03;if [[ $2 = RB ]];then if fft $p50.print;then gp;up;tp;bp;vp;mp;rm -f $p05/vc_slash $p50.print 2>$p03;cex reboot;else gps;ups;tps;bps;vps;mps;rm -f $p05/vc_slash 2>$p03;sex reboot;fi;else rm -f $p50.print 2>$p03;fi; }
 function idi { local e="deny from $1 to $2"                       ;if [[ $4 ]];then nex "ufw $4 $e";else nex "ufw $e comment $3";fi; }
 function pde { local e="deny $1"                                  ;if [[ $3 ]];then nex "ufw $3 $e";else nex "ufw $e comment $2";fi; }
 function pai { local e="allow from $2 to any port ${1/\// proto }";if [[ $4 ]];then nex "ufw $4 $e";else nex "ufw $e comment $3";fi; }
