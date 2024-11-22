@@ -23,8 +23,8 @@ cun2=$inm5
 cumv=$znm3
 cunt=$znm1
 else
-cuvc=$znm4
-nxvc=$znm4
+cuvc=$vnm1
+nxvc=$vnm1
 cun1=$vnm1
 cun2=$vnm1
 cumv=$vnm1
