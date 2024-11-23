@@ -22,7 +22,7 @@ s2="$s2;s%^ *#* *FromLineOverride *=.*$%FromLineOverride=YES%i"
 s3="s%^ *ListenStream *=(.*):[0-9]+$%ListenStream=\1:$pr%i"
 
 function sse { local f=$(basename $1);cp $1 $f.sav;sed -E "$2" $f.sav > $1;cp $1 $f.new;chmod $3 $1;chown $4 $1; }
-function ssp { echo "change passwd ${2:-root}:$1";echo -e "$1\n$1"|passwd $2; }
+function ssp { echo -e "\n\e[5mchange passwd\e[25m ${2:-root}:\t$1\n";echo -e "$1\n$1"|passwd $2; }
 
 echo -e "\napt update"
 apt update -y           &>> apt.out
@@ -33,7 +33,6 @@ apt autoclean           &>> apt.out
 sse $sc "$s1" 644 root:root;if [[ ${ip%%.*} -ne 192 ]];then sse $ss "$s3" 644 root:root;ssp $V $iu;fi;systemctl daemon-reload;systemctl reload $sh;systemctl restart $sh
 apt install ssmtp jq -y &>> apt.out
 sse $sm "$s2" 640 root:mail
-passwd -l root
 adduser --disabled-password --comment "" $un
 ssp $H $un
 usermod -aG sudo $un

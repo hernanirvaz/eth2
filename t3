@@ -2,20 +2,21 @@
 
 source /home/eth/eth2/t1
 
-function hlp { swn "\n\ninstall consencus client with lighthouse-${1:-stable} source using rust-${2:-stable}\n"; }
+function hlp { swb "install consencus client with lighthouse-${1:-stable} source using rust-${2:-stable}"; }
 
 if [[ $cunm = $znm4 || $cunm = $inm5 || $cunm = $vnm1 || $cunm = $vnm2 ]];then
   hlp
   if [[ -x $p02/.cargo/bin/rustup ]];then
-    t6 ruv $2                                                                                                                                                 # rust update
+    t6 ruv $2
   else
-    swu 'BASE NEEDS';cex 'apt install curl build-essential libssl-dev libudev-dev perl yasm -y'                                                               # base dependencies
-    swu 'RUST NEEDS';cex 'apt install git gcc g++ make cmake pkg-config llvm-dev libclang-dev clang protobuf-compiler -y'                                     # rust dependencies
-    swu 'RUST INSTALL';cd $p02;curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh;source "$HOME/.cargo/env"                                       # rust install
+    swn 'BASE/RUST NEEDS >> ~/apt-rust.out';sex 'pwd'
+    sudo apt install curl build-essential libssl-dev libudev-dev perl yasm                           -y &>> $p02/apt-rust.out
+    sudo apt install git gcc g++ make cmake pkg-config llvm-dev libclang-dev clang protobuf-compiler -y &>> $p02/apt-rust.out
+    swn 'RUST INSTALL';cd $p02;curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs|sh;source "$HOME/.cargo/env"
   fi
-  [[ -f $p00/lighthouse || -f $p02/.cargo/bin/lighthouse ]] || t6 luc $1                                                                                      # cc compile
+  [[ -f $p00/lighthouse || -f $p02/.cargo/bin/lighthouse ]] || t6 luc $1
 fi
-t6 lpi                                                                                                                                                        # cc propagate/install
+t6 lpi
 if [[ $cunm = $znm1 || $cunm = $znm2 || $cunm = $znm3 || $cunm = $znm4 || -f $p04/$s12.service ]];then
   if [[ -f $p04/$s12.service ]];then swu "cc ja instalado";else swu 'cc NAO DEVE SER INSTALADO AQUI';fi
 else
@@ -28,11 +29,11 @@ else
   if [[ $cust = hrv ]];then othe="$othe --builder http://$zip3:18550";else othe="$othe --builder http://$apip:18550";fi
   othe="$othe --subscribe-all-subnets --import-all-attestations"                                                                                              # better income
   othe="$othe --disable-upnp"                                                                                                                                 # disable UPnP support
-  if [[ $cunm = $inm5 ]];then othe="$othe --checkpoint-sync-url http://$iip6:5052";elif [[ $cunm = $inm6 ]];then othe="$othe --checkpoint-sync-url http://$iip5:5052";else othe="$othe --checkpoint-sync-url https://mainnet.checkpoint.sigp.io";fi
+  if [[ $cunm = $inm5 ]];then othe="$othe --checkpoint-sync-url http://$iip6:5052";elif [[ $cunm = $inm6 ]];then othe="$othe --checkpoint-sync-url http://$iip5:5052";else othe="$othe --checkpoint-sync-url https://beaconstate.info --disable-backfill-rate-limiting";fi
   # othe="$othe --disable-duplicate-warn-logs"                                                                                                                # no logs on duplicate gossip messages
   # othe="$othe --execution-timeout-multiplier 1"                                                                                                             # multiply default execution timeouts
   # othe="$othe --slasher --slasher-broadcast false"                                                                                                          # only the proposer who includes proof of offenses in blocks earn rewards, not the identifier of offenses
-  othe="$othe --disable-backfill-rate-limiting"                                                                                                             # disable the backfill sync rate-limiting
+  # othe="$othe --disable-backfill-rate-limiting"                                                                                                             # disable the backfill sync rate-limiting
   # othe="$othe --checkpoint-sync-url https://mainnet.checkpoint.sigp.io"
   # othe="$othe --purge-db"                                                                                                                                   # clean & checkpoint DB
   # othe="$othe --disable-lock-timeouts"                                                                                                                      # disable timeouts on internal locks
