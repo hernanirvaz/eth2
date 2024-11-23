@@ -32,7 +32,7 @@ else
   # othe="$othe --disable-duplicate-warn-logs"                                                                                                                # no logs on duplicate gossip messages
   # othe="$othe --execution-timeout-multiplier 1"                                                                                                             # multiply default execution timeouts
   # othe="$othe --slasher --slasher-broadcast false"                                                                                                          # only the proposer who includes proof of offenses in blocks earn rewards, not the identifier of offenses
-  # othe="$othe --disable-backfill-rate-limiting"                                                                                                             # disable the backfill sync rate-limiting
+  othe="$othe --disable-backfill-rate-limiting"                                                                                                             # disable the backfill sync rate-limiting
   # othe="$othe --checkpoint-sync-url https://mainnet.checkpoint.sigp.io"
   # othe="$othe --purge-db"                                                                                                                                   # clean & checkpoint DB
   # othe="$othe --disable-lock-timeouts"                                                                                                                      # disable timeouts on internal locks
