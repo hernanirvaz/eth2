@@ -30,7 +30,7 @@ apt full-upgrade -y     &>> apt.out
 apt dist-upgrade -y     &>> apt.out
 apt autoremove          &>> apt.out
 apt autoclean           &>> apt.out
-sse $sc "$s1" 644 root:root;if [[ ${ip%%.*} -ne 192 ]];then sse $ss "$s3" 644 root:root;echo -e "$V\n$V"|passwd $iu;fi;systemctl daemon-reload;systemctl reload $sh;systemctl restart $sh
+sse $sc "$s1" 644 root:root;if [[ ${ip%%.*} -ne 192 ]];then sse $ss "$s3" 644 root:root;ssp $V $iu;fi;systemctl daemon-reload;systemctl reload $sh;systemctl restart $sh
 apt install ssmtp jq -y &>> apt.out
 sse $sm "$s2" 640 root:mail
 passwd -l root
