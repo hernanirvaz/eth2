@@ -2,11 +2,10 @@
 
 source /home/eth/eth2/t1
 
-#function rno { local i="scale=$(($2+1));($1)+(0.5/10^$2)";local n="scale=$2;$(echo $i|bc 2>$p03)/1";echo $i >> rni.out;echo $n >> rnn.out;echo $n|bc 2>$p03; }
-#function rnd { local i="scale=$(($2+1));($1)+(0.5/10^$2)";local n="scale=$2;$(echo $i|bc 2>$p03)/1";echo $n|bc 2>$p03; }
+function rno { local d=${1:-0};local s=${2:-0};if [[ $d =~ ^0x ]];then local d=$(printf %i $d 2>$p03);fi;local i="scale=$(($s+1));($d)+(0.5/10^$s)";local n="scale=$s;$(echo $i|bc 2>$p03)/1";echo $i >> rni.out;echo $n >> rnn.out;echo $n|bc 2>$p03; }
+function rnd { local d=${1:-0};local s=${2:-0};if [[ $d =~ ^0x ]];then local d=$(printf %i $d 2>$p03);fi;local i="scale=$(($s+1));($d)+(0.5/10^$s)";local n="scale=$s;$(echo $i|bc 2>$p03)/1";echo $n|bc 2>$p03; }
 #function nu0 { rno "${1:-0}" 0   2>$p03; }
 #function nu2 { rnd "$1" ${2:-0}  2>$p03; }
-function no0 { printf %i         ${1:-0}                            2>$p03; }                                                                                 # get unformated integer output
 function nu0 { printf %i         ${1:-0}                            2>$p03; }                                                                                 # get unformated integer output
 function nu1 { printf $1 ${2:-0} 2>$p03; }
 function nu2 { printf ${3:-%i} $(echo "scale=${2:-1};$1"|bc 2>$p03) 2>$p03; }                                                                                 # get precision calculations
@@ -167,8 +166,8 @@ function trs {
 function tdi { if g0t $1;then l4=$(ll6 "$g37"|tail -n$1);else l4=$(ll6 "$g37");fi;e1=$(nu5 2 $(ln2 "${w0}\| *$w1$w4"));e2=$(nu5 2 $(ln2 "${w0}slot *$w1$w4")); }
 function tcl { curl $s30 -sX POST -H "Content-Type: application/json" --data "{\"jsonrpc\":\"2.0\",\"method\":\"$1\",\"params\":[],\"id\":0}" 2>$p03|jq -r .result; }
 function tv0 { en=$(ss5 $s44 MaxActivePeers); }
-function tq0 { er=$(no0 $(tcl net_peerCount)); }
-function tnn { esn $(ln3 "$g30:" $g10) $(no0 $(tcl net_peerCount));tdi $1; }
+function tq0 { er=$(nu0 $(tcl net_peerCount)); }
+function tnn { esn $(ln3 "$g30:" $g10) $(nu0 $(tcl net_peerCount));tdi $1; }
 function tb1 { if [[ $(echo $@|grep false) ]];then printf 'synced';else printf  'syncing';fi; }
 function tb2 { if [[ $(echo $@|grep false) ]];then printf ''      ;else printf ' syncing';fi; }
 function tl0 {
