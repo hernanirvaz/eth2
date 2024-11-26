@@ -2,17 +2,17 @@
 
 source /home/eth/eth2/t1
 
+#function nu3 {                  if [[ $# -gt 0 ]];then local i=0;local s=0;for i in $@;do if [[ $i =~ ^[0-9] ]];then local s+=+$i;else local s+=$i;fi;done;local s="scale=0;($s+0.5)/1";echo $s|bc 2>$p03;else printf %i;fi; }
+#function nu2 { printf ${3:-%i} $(echo "scale=${2:-1};$1"|bc 2>$p03) 2>$p03; }
 #function rnd { local n=${2:-0};local i="scale=$((n+1));(${1:-0})+(0.5/10^$n)";echo "scale=$n;$(echo $i|bc 2>$p03)/1"|bc 2>$p03; }
 function nu0 { printf $1 ${2:-0} 2>$p03; }
 function nu1 { printf %i ${1:-0} 2>$p03; }
-function nu2 { printf ${3:-%i} $(echo "scale=${2:-1};$1"|bc 2>$p03) 2>$p03; }
-#function nu2 { local s=${2:-0};echo "scale=0;$(echo "scale=$((s+1));($1)+(0.5/10^$s)"|bc 2>$p03)/1"|bc 2>$p03; }
-#function ltn { printf %+i $@ 2>$p03; }
-function nu3 {                  if [[ $# -gt 0 ]];then local i=0;local s=0;for i in $@;do if [[ $i =~ ^[0-9] ]];then local s+=+$i;else local s+=$i;fi;done;local s="scale=0;($s+0.5)/1";echo $s|bc 2>$p03;else printf %i;fi; }
+function nu2 { local s=${2:-0};echo "scale=0;$(echo "scale=$((s+1));($1)+(0.5/10^$s)"|bc 2>$p03)/1"|bc 2>$p03; }
+function nu3 { echo "scale=0;0$(printf %+i $@ 2>$p03)"|bc 2>$p03; }
 function nu4 { local n=$1;shift;if [[ $# -gt 0 ]];then local i=0;local s=0;for i in $@;do if [[ $i =~ ^[0-9] ]];then local s+=+$i;else local s+=$i;fi;done;local i="scale=$((n+1));($s+0.5/10^$n)/$#";local s="scale=0 ;($(echo $i|bc 2>$p03)+0.5)*10^$n/1";echo $s|bc 2>$p03;else printf %i;fi; }
 function nu5 { local n=$1;shift;if [[ $# -gt 0 ]];then local i=0;local s=0;for i in $@;do if [[ $i =~ ^[0-9] ]];then local s+=+$i;else local s+=$i;fi;done;local i="scale=$((n+1));($s+0.5/10^$n)/$#";local s="scale=0 ;($(echo $i|bc 2>$p03)+0.5)/1"      ;echo $s|bc 2>$p03;else printf %i;fi; }
 function nu6 { local n=$1;shift;if [[ $# -gt 0 ]];then local i=0;local s=0;for i in $@;do if [[ $i =~ ^[0-9] ]];then local s+=+$i;else local s+=$i;fi;done;local i="scale=$((n+1));($s+0.5/10^$n)/$#";local s="scale=$n;($(echo $i|bc 2>$p03)+0.5/10^$n)/1";echo $s|bc 2>$p03;else printf %i;fi; }
-function nu7 { nu2 "sqrt(((0$(printf +%i^2 $@ 2>$p03))-(0$(printf +%i $@ 2>$p03))^2/$#)/$#)*1000" 4; }                                                        # get std from list numbers
+function nu7 { nu2 "sqrt(((0$(printf %+i^2 $@ 2>$p03))-(0$(printf %+i $@ 2>$p03))^2/$#)/$#)*1000" 4; }                                                        # get std from list numbers
 function nu8 { printf '%i\n' $@ 2>$p03|grep -c '^0$'; }                                                                                                       # get # zeros from list numbers
 function nu9 { printf '%i\n' $@ 2>$p03|sort -n|head -n1; }                                                                                                    # get min from list numbers
 function ll0 { local f=$p16/logs/beacon.log   ;echo $H|sudo -S cat                       $f.1     $f     2>$p03|tail -n$((n15*2)); }                          # get cc intern lines
@@ -121,12 +121,12 @@ function csn { if g0t $#;then nr=${@:$#};nm=$(nu9 $@);nd=$(nu7 $@);nz=$(nu8 $@);
 function esn { if g0t $#;then er=${@:$#};em=$(nu9 $@);ed=$(nu7 $@);ez=$(nu8 $@);else er=0;em=0;ed=0;ez=0;fi; }
 function npn { if [[ $2 -ge 100 ]];then printf '%10s %5s nod%03i %3i' $dt $1 $2;else printf '%10s %5s nod%03i: %2i' $dt $1 $2;fi 2>$p03; }                    # get date/nodes info
 function bnn { csn $(ln3 "$g31:" $g08) $(bpc $(bcl peer_count)); }                                                                                            # set cur/min/std cc peers
-function sz0 { gnn 0          ;printf 'el:p%03i:m%03i:l%03i:z%02i:d%04i p2p:%5i %s     iu: %4i %5i %4i'                 $er $em $(b06) $ez $ed $(ss5 $1 port    ) "$(gb1 $(gcl eth.syncing))" $e1 $e2 $(ei0)                 2>$p03; }
-function sz1 { unn 0          ;printf 'el:p%03i:m%03i:l%03i:z%02i:d%04i p2p:%5i %s      i: %4i'                         $er $em $(b06) $ez $ed $(ss5 $1 p2p-port) "$(ub1 $(ucl eth_syncing))" $e1                            2>$p03; }
-function sz5 { tnn 0          ;printf 'el:p%03i:m%03i:l%03i:z%02i:d%04i p2p:%5i %s     ps: %4i %5i %4i'                 $er $em $(b06) $ez $ed $(ss5 $1 P2PPort ) "$(tb1 $(tcl eth_syncing))" $e1 $e2 $(ei0)                 2>$p03; }
-function sz2 { dtl;svi;bv0;bnn;printf 'cl:p%03i:m%03i:l%03i:z%02i:d%04i p2p:%5i %s iearhp: %4i %5i %4i %2i %2i %2i %4i' $nr $nm $(b05) $nz $nd $(ss5 $1 port    ) "$(bb1 $(bcl syncing))"     $i0 $i1 $i4 $b1 $i2 $i3 $(b01) 2>$p03; }
-function sz4 { smm 0          ;printf 'ml:h%03i:r%03i api:%s'                                                           $m0 $m1                $(ss4 $1 "$e32" addr )                                                        2>$p03; }
-function sz3 { svv $n23       ;if n3t;then printf 'vl:m%03i:b%03i:c%02i api:%s' $v0 $v1 $v2 $(ss4 $1 "$e32" nodes) 2>$p03;else printf 'vl:m%03i:c%03i api:%s' $v0 $v2 $(ss4 $1 "$e32" nodes) 2>$p03;fi; }
+function sz0 {         gv0;gnn 0;printf 'el:p%03i:m%03i:l%03i:z%02i:d%04i p2p:%5i %s     iu: %4i %5i %4i'                 $er $em $(b06) $ez $ed $(ss5 $1 port    ) "$(gb1 $(gcl eth.syncing))" $e1 $e2 $(ei0)                 2>$p03; }
+function sz1 {         uv0;unn 0;printf 'el:p%03i:m%03i:l%03i:z%02i:d%04i p2p:%5i %s      i: %4i'                         $er $em $(b06) $ez $ed $(ss5 $1 p2p-port) "$(ub1 $(ucl eth_syncing))" $e1                            2>$p03; }
+function sz5 {         tv0;tnn 0;printf 'el:p%03i:m%03i:l%03i:z%02i:d%04i p2p:%5i %s     ps: %4i %5i %4i'                 $er $em $(b06) $ez $ed $(ss5 $1 P2PPort ) "$(tb1 $(tcl eth_syncing))" $e1 $e2 $(ei0)                 2>$p03; }
+function sz2 { dtl;svi;bv0;bnn  ;printf 'cl:p%03i:m%03i:l%03i:z%02i:d%04i p2p:%5i %s iearhp: %4i %5i %4i %2i %2i %2i %4i' $nr $nm $(b05) $nz $nd $(ss5 $1 port    ) "$(bb1 $(bcl syncing))"     $i0 $i1 $i4 $b1 $i2 $i3 $(b01) 2>$p03; }
+function sz4 { smm 0            ;printf 'ml:h%03i:r%03i api:%s'                                                           $m0 $m1                $(ss4 $1 "$e32" addr )                                                        2>$p03; }
+function sz3 { svv $n23         ;if n3t;then printf 'vl:m%03i:b%03i:c%02i api:%s' $v0 $v1 $v2 $(ss4 $1 "$e32" nodes) 2>$p03;else printf 'vl:m%03i:c%03i api:%s' $v0 $v2 $(ss4 $1 "$e32" nodes) 2>$p03;fi; }
 function sso { tse $2 || return;dts;local e="$1 $(printf '%6s %10s %5s %-40s' $(ss3 $2) $dt "$(ss2 $2)" 2>$p03)";case $1 in GETH) e="$e $(sz0 $2)";;BESU) e="$e $(sz1 $2)";;NETH) e="$e $(sz5 $2)";;BEAC) e="$e $(sz2 $2)";;VALI) e="$e $(sz3 $2)";;MEVB) e="$e $(sz4 $2)";;esac;swn "$e"; }
 # el control commands
 function grs {
@@ -341,7 +341,7 @@ function brl {                                                                  
 function brm {                                                                                                                                                # recalculate cc-daily logs
   fft $p12 && fft $p13 || return;rm -f $p13.r;bmi;local d=0000-00-00;local l=0;local n=0;local h=0;local g=0;unset v;while read -a v;do
     d=${v[3]};h=$g;g=$(grep -n "$d 23:58" $p12|cut -d: -f1);[[ ${g:=$h} -le $h ]] && continue;dts $d\ ${v[4]};nn=$(printf %i ${v[5]:3:3} 2>$p03)              # get next cc log position
-    nr=${v[6]};l2=$(brh $g|bfl 23:58);bo2 $d;((l+=b2));((n+=1));b3=$(nu2 "$l/$n")                                                                               # cur/avg homologous position
+    nr=${v[6]};l2=$(brh $g|bfl 23:58);bo2 $d;((l+=b2));((n+=1));b3=$(nu2 "$l/$n")                                                                             # cur/avg homologous position
     l1=$(brh $g|tail -n$((g-h))|bfl);if [[ $l1 ]];then bl2 $(echo "$l1"|tail -n1|snf "$e49");bm1;fi;bm2                                                       # sum err arrays
     b5=${v[10]};b4=${v[11]};i0=${v[14]};i1=${v[15]};i4=${v[16]};b1=${v[17]};i2=${v[18]};i3=${v[19]};bms;swn "$m" >> $p13.r                                    # new cc-daily output
   done <<< $(cat $p13)
