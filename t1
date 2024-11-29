@@ -18,8 +18,8 @@ vnm3=${vnd3%%.*};vis3='127.0.0.1'
 if [[ $cust = hrv ]];then
 cuvc=$znm4
 nxvc=$znm4
-cun1=$inm6
-cun2=$inm5
+cun1=$inm5
+cun2=$inm6
 cumv=$znm3
 cunt=$znm1
 else
@@ -440,7 +440,7 @@ e28='pcie_aspm=off';[[ $cunm = teste$inm5 ]] && e28="$e28 pci=noaer" # Disabling
 e27="s%GRUB_CMDLINE_LINUX_DEFAULT *= *\"(.+)\"%GRUB_CMDLINE_LINUX_DEFAULT=\"\1 $e28\"%;s%GRUB_CMDLINE_LINUX_DEFAULT *= *\"\"%GRUB_CMDLINE_LINUX_DEFAULT=\"$e28\"%"
 e28="s%APT::Periodic::Update-Package-Lists.*$%APT::Periodic::Update-Package-Lists \"1\";%i"
 e28="${e28};s%APT::Periodic::Unattended-Upgrade.*$%APT::Periodic::Unattended-Upgrade \""
-case $cunm in $znm4) e28="${e28}5";;$vnm1) e28="${e28}5";;$inm6) e28="${e28}2";;*) e28="${e28}1";;esac
+case $cunm in $cuvc) e28="${e28}5";;$cun1) e28="${e28}2";;*) e28="${e28}1";;esac
 e28="${e28}\";%i;/APT::Periodic::Unattended-Upgrade/a \\"
 e28="${e28}APT::Periodic::AutocleanInterval \"1\";"
 if [[ $cunm = $cuvc && $cunm = $cun1 && $cunm = $cun2 ]];then e30='el';e31='cl';else case $cunm in $cun1) e30='e1';e31='b1';;$cun2) e30='e2';e31='b2';;$cuvc) e30='el';e31='vc';;*) e30='el';e31='cl';;esac;fi;if [[ $cust = hrv ]];then e32='hrv-(zotac|intel)[0-9]';else e32='ns([0-9]{7})';fi
