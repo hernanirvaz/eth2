@@ -443,7 +443,7 @@ e28="${e28};s%APT::Periodic::Unattended-Upgrade.*$%APT::Periodic::Unattended-Upg
 case $cunm in $cuvc) e28="${e28}5";;$cun1) e28="${e28}2";;*) e28="${e28}1";;esac
 e28="${e28}\";%i;/APT::Periodic::Unattended-Upgrade/a \\"
 e28="${e28}APT::Periodic::AutocleanInterval \"1\";"
-if [[ $cunm = $cuvc && $cunm = $cun1 && $cunm = $cun2 ]];then e30='el';e31='cl';else case $cunm in $cun1) e30='e1';e31='b1';;$cun2) e30='e2';e31='b2';;$cuvc) e30='el';e31='vc';;*) e30='el';e31='cl';;esac;fi;if [[ $cust = hrv ]];then e32='hrv-(zotac|intel)[0-9]';else e32='ns([0-9]{7})';fi
+if [[ $cunm = $cuvc && $cunm = $cun1 && $cunm = $cun2 ]];then e30='el';e31='cl';else case $cunm in $cun1) e30='em';e31='bm';;$cun2) e30='es';e31='bs';;$cuvc) e30='el';e31='vc';;*) e30='el';e31='cl';;esac;fi;if [[ $cust = hrv ]];then e32='hrv-(zotac|intel)[0-9]';else e32='ns([0-9]{7})';fi
 e33="$e32 +nethermind$g05 +$g01$g00$g03 +"
 e35="$e32 +lighthouse$g05 +$g00$g01$g03($g04)[0-9]* +([A-Z]{4,}) +"
 e29="s%^$g58 +$e35%$e31\5: \2\3 \8\t%"                                                                 # syslog lighthouse
