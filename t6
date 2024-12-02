@@ -73,7 +73,7 @@ function ipt { [[ $(date +%s) -ge $(bss $1 6) ]]; }
 function pct { [[ $b4 -ne 0 ]]; }
 function hat { [[ ${a[$nn]} -ge ${a[0]} ]]; }                                                                                                                 # function hat { [[ $b2 -gt $(b00) ]]; }
 function bdt { [[ $(b03 $zk $zz $zx $zw) -gt $n20 || $nz -gt 0 ]]; }
-function pmt { [[ $nm -gt $(b05) ]]; }
+function pmt { [[ $nm -gt $(b05 $nn) ]]; }
 function sft { [[ -f $p04/$1.service ]]; }
 function bpt { [[ $(era $p12 $n12) -eq 1 ]] && ( (pct && pmt && hat && ! bdt && ! fft $p45) || rbt $n06); }
 function llc { pt2 $(wc -l $1 2>$p03) 0; }                                                                                                                    # get log line count
@@ -118,10 +118,10 @@ function csn { if g0t $#;then nr=${@:$#};nm=$(nu9 $@);nd=$(nu7 $@);nz=$(nu8 $@);
 function esn { if g0t $#;then er=${@:$#};em=$(nu9 $@);ed=$(nu7 $@);ez=$(nu8 $@);else er=0;em=0;ed=0;ez=0;fi; }
 function npn { if [[ $2 -ge 100 ]];then printf '%10s %5s nod%03i %3i' $dt $1 $2;else printf '%10s %5s nod%03i: %2i' $dt $1 $2;fi 2>$p03; }                    # get date/nodes info
 function bnn { csn $(ln3 "$g31:" $g08) $(bpc $(bcl peer_count)); }                                                                                            # set cur/min/std cc peers
-function sz0 {         gv0;gnn 0;printf 'el:p%03i:m%03i:l%03i:z%02i:d%04i p2p:%5i %s     iu: %4i %5i %4i'                 $er $em $(b06) $ez $ed $(ss5 $1 port    ) "$(gb1 $(gcl eth.syncing))" $e1 $e2 $(ei0)                 2>$p03; }
-function sz1 {         uv0;unn 0;printf 'el:p%03i:m%03i:l%03i:z%02i:d%04i p2p:%5i %s      i: %4i'                         $er $em $(b06) $ez $ed $(ss5 $1 p2p-port) "$(ub1 $(ucl eth_syncing))" $e1                            2>$p03; }
-function sz5 {         tv0;tnn 0;printf 'el:p%03i:m%03i:l%03i:z%02i:d%04i p2p:%5i %s     ps: %4i %5i %4i'                 $er $em $(b06) $ez $ed $(ss5 $1 P2PPort ) "$(tb1 $(tcl eth_syncing))" $e1 $e2 $(ei0)                 2>$p03; }
-function sz2 { dtl;svi;bv0;bnn  ;printf 'cl:p%03i:m%03i:l%03i:z%02i:d%04i p2p:%5i %s iearhp: %4i %5i %4i %2i %2i %2i %4i' $nr $nm $(b05) $nz $nd $(ss5 $1 port    ) "$(bb1 $(bcl syncing))"     $i0 $i1 $i4 $b1 $i2 $i3 $(b01) 2>$p03; }
+function sz0 {         gv0;gnn 0;printf 'el:p%03i:m%03i:l%03i:z%02i:d%04i p2p:%5i %s     iu: %4i %5i %4i'                 $er $em $(b05 $en) $ez $ed $(ss5 $1 port    ) "$(gb1 $(gcl eth.syncing))" $e1 $e2 $(ei0)                 2>$p03; }
+function sz1 {         uv0;unn 0;printf 'el:p%03i:m%03i:l%03i:z%02i:d%04i p2p:%5i %s      i: %4i'                         $er $em $(b05 $en) $ez $ed $(ss5 $1 p2p-port) "$(ub1 $(ucl eth_syncing))" $e1                            2>$p03; }
+function sz5 {         tv0;tnn 0;printf 'el:p%03i:m%03i:l%03i:z%02i:d%04i p2p:%5i %s     ps: %4i %5i %4i'                 $er $em $(b05 $en) $ez $ed $(ss5 $1 P2PPort ) "$(tb1 $(tcl eth_syncing))" $e1 $e2 $(ei0)                 2>$p03; }
+function sz2 { dtl;svi;bv0;bnn  ;printf 'cl:p%03i:m%03i:l%03i:z%02i:d%04i p2p:%5i %s iearhp: %4i %5i %4i %2i %2i %2i %4i' $nr $nm $(b05 $nn) $nz $nd $(ss5 $1 port    ) "$(bb1 $(bcl syncing))"     $i0 $i1 $i4 $b1 $i2 $i3 $(b01) 2>$p03; }
 function sz4 { smm 0            ;printf 'ml:h%03i:r%03i api:%s'                                                           $m0 $m1                $(ss4 $1 "$e32" addr )                                                        2>$p03; }
 function sz3 { svv $n23         ;if n3t;then printf 'vl:m%03i:s%03i:c%02i api:%s' $v0 $v1 $v2 $(ss4 $1 "$e32" nodes) 2>$p03;else printf 'vl:m%03i:c%03i api:%s' $v0 $v2 $(ss4 $1 "$e32" nodes) 2>$p03;fi; }
 function sso { tse $2 || return;dts;local e="$1 $(printf '%6s %10s %5s %-40s' $(ss3 $2) $dt "$(ss2 $2)" 2>$p03)";case $1 in GETH) e="$e $(sz0 $2)";;BESU) e="$e $(sz1 $2)";;NETH) e="$e $(sz5 $2)";;BEAC) e="$e $(sz2 $2)";;VALI) e="$e $(sz3 $2)";;MEVB) e="$e $(sz4 $2)";;esac;swn "$e"; }
@@ -208,17 +208,16 @@ function b01 { nu2 "(0.300*$i0+0.200*$i1+0.469*$i4+0.001*$b1+0.010*$i2+0.020*$i3
 function b02 { nu2 "(($1*$n28+$2*$n29+$3*$n10+$4*$n11)/${5:-1}*$n30/1000000)      " 7 ; }                                                                     # get penalty
 function b03 { nu2 "(($1*$n28+$2*$n29+$3*$n10+$4*$n11)/${5:-1}*$n30/1000000)+2*$nn" 7 ; }                                                                     # get penalty delete idx
 function b04 { nu2 "($1*$n27+$2*$n08)*$n30/100000000"                               7 ; }                                                                     # get reward
-function b05 { nu2 "0.90*$nn"                                                         ; }                                                                     # get min target peers limit
-function b06 { nu2 "0.90*$en"                                                         ; }                                                                     # get min target peers limit
-function b07 { nu2 "1.50*$z1"                                                         ; }                                                                     # get numerator general errors
-function b08 { nu1 $((z2>500?$(b07)/z2:0))                                            ; }                                                                     # get restart idx
+function b05 { nu2 "0.90*$1"                                                          ; }                                                                     # get min target limit
+function b06 { nu2 "1.50*$z1"                                                         ; }                                                                     # get numerator general errors
+function bri { nu1 $((z2>500?$(b06)/z2:0))                                            ; }                                                                     # get restart idx
 function bsi { nu1 $(echo $@|jq -r .data.sync_distance 2>$p03)                        ; }                                                                     # get cl syncing distance
 function bpc { nu1 $(echo $@|jq -r .data.connected     2>$p03)                        ; }                                                                     # get cl peers connected
 function bv0 { nn=$(ss5 $s12 target-peers); }                                                                                                                 # set configured peers
 function bs0 { l0=$(ll2 "$g08.*$n31]"|tail -n1000); }                                                                                                         # set last cc log lines
 function bs3 { l3=$(ll2 "$g45"); }                                                                                                                            # set attesta log lines
 function bs5 { l5=$(echo "$l1"|snf "s%.+$(nu0 nod%03i $1)$g52%\1\t\2\t\3\t\4%p"); }                                                                           # set penalty errors log lines
-function bb0 { bs0;bs3;bl1;bl2;[[ (1 -eq $(era $p12 $n12) && $(b08) -ge 1) || (1 -eq $(era $p12 5) && $(b08) -ge 5) ]] && ok=BK; }                            # set ok (OK/BK)
+function bb0 { bs0;bs3;bl1;bl2;[[ (1 -eq $(era $p12 $n12) && $(bri) -ge 1) || (1 -eq $(era $p12 5) && $(bri) -ge 5) ]] && ok=BK; }                            # set ok (OK/BK)
 function bfl { grep "BEAC.*$1"      2>$p03; }                                                                                                                 # filter cc lines
 function bff { grep "BEAC.*$1" $p12 2>$p03; }                                                                                                                 # filter cc log
 function bb1 { if [[ $(echo $@|jq -r .data.is_syncing) = false ]];then printf 'synced';else printf 'syncing: %6i' $(bsi $@);fi; }                             # get cl syncing distance remaining
@@ -245,8 +244,8 @@ function vlo {
 #    0  1   2          3     4       5   6     7    8    9  10 11  12 13  14  15  16   17   18   19      20   21   22   23 24    25  26   27
 # BEAC OK   0 2024-04-02 16:07 nod100: 107 rpab: 3023 2696 3978 0 er:  0  15  84  28    6  994   12 iearhp: 1083 4354 3218 17 66290  62 1473
 function blo {
-  m="BEAC $ok $(printf '%3i' $(b08) 2>$p03) $(npn $nn $nr) $(printf 'rpab: %4i %4i %4i %1i' $(b04 $z3 $b0) $(b02 $zk $zz $zx $zw) $z3 $b0 2>$p03)"
-  m="$m $(printf 'er: %2i %3i %3i %3i %4i %4i %4i iearhp: %4i %4i %4i %2i %2i %2i %4i' $zk $zz $zx $zw $z1 $z2 $(b07) $i0 $i1 $i4 $b1 $i2 $i3 $(b01) 2>$p03)"
+  m="BEAC $ok $(printf '%3i' $(bri) 2>$p03) $(npn $nn $nr) $(printf 'rpab: %4i %4i %4i %1i' $(b04 $z3 $b0) $(b02 $zk $zz $zx $zw) $z3 $b0 2>$p03)"
+  m="$m $(printf 'er: %2i %3i %3i %3i %4i %4i %4i iearhp: %4i %4i %4i %2i %2i %2i %4i' $zk $zz $zx $zw $z1 $z2 $(b06) $i0 $i1 $i4 $b1 $i2 $i3 $(b01) 2>$p03)"
 }
 #  0    1   2          3     4       5  6   7     8    9   10   11   12   13   14   15  16  17   18      19   20   21   22 23    24  25   26
 # BM   50  22 2024-04-02 16:10 nod100: 110 mp:  679  874 1149  792  772 1341 1638 1043 p_: -60 2896 iearhp: 1281 3938 3593 17 50734  65 1632
@@ -311,7 +310,7 @@ function bwd { local n=$((($(date +%s)-n09)/(12*32)-0));for n in $n $((n+1));do 
 function bwc { bwd|grep -Ex "$(vix)" 2>$p03|wc -l; }
 function ero { dts;swn "$(printf 'R%03i %2s SRV'      $2 $1     2>$p03) $(npn $en $er)" >> $3  ; }
 function vro { dts;swn "$(printf 'VL%2s %6i %10s %5s' $1 $2 $dt 2>$p03)"                >> $p49; }
-function bro { if fft $p12;then dts;bnn;bb0;swn "$(printf 'R%03i %2s %3i' $2 $1 $(b08) 2>$p03) $(npn $nn $nr)" >> $p12;else vro $1 $2;fi; }
+function bro { if fft $p12;then dts;bnn;bb0;swn "$(printf 'R%03i %2s %3i' $2 $1 $(bri) 2>$p03) $(npn $nn $nr)" >> $p12;else vro $1 $2;fi; }
 # slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168; $2 = RB PR BN VC BK PE
 function cpr { snp $s12 $2 $n16 $n17 $nn;[[ $1 = VC ]] && sex "$s02 $s13"; }
 function car { sex "$s03 $s12"          ;[[ $1 = VC ]] && sex "$s03 $s13"; }
