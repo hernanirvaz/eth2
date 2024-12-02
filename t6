@@ -285,7 +285,7 @@ function bnz { local g=${3:-$n16};if ((g<=n17));then bnz "${1:-0}${2:-+}${z[$g]}
 function bnx { local g=${3:-$n16};if ((g<=n17));then bnx "${1:-0}${2:-+}${x[$g]}" "$2" $((g+n18));else printf "$1";fi; }                                      # sum recursively failed head   err array
 function bnw { local g=${3:-$n16};if ((g<=n17));then bnw "${1:-0}${2:-+}${w[$g]}" "$2" $((g+n18));else printf "$1";fi; }                                      # sum recursively delay         err array
 function boi {
-  unset v;read -a v <<< $(bff|tail -n1);local n=0;local t=${1:-${v[4]}};b6=0;while :;do l2=$(bff $t);if [[ $l2 ]];then break;else t=${v[4]};fi;done           # set homologous lines
+  unset v;read -a v <<< $(bff|tail -n1);local n=0;local t=${1:-${v[4]}};b6=0;while :;do l2=$(bff $t);if [[ $l2 ]];then break;else local t=${v[4]};fi;done     # set homologous lines
   while :;do bo2 ${v[3]};if e0t $b2 && [[ $n -lt 99 ]];then ((n+=1));v[3]=$(date -d "$n days ago $t" +%F);else break;fi;done;ln=$(echo "$l2"|wc -l)           # set homologous position
 }
 function bo0 { echo "$l2"|sort -k10n -k4r; }                                                                                                                  # get homologous lines sorted
@@ -301,10 +301,10 @@ function bod {
   done <<< $(bo1);if [[ $e ]];then local e=${e:1};local e=${e// /\\|};bdw $p12 $e;bdw $p13 $e;fi                                                              # perform logs delete
 }
 function bh0 {
-  fft $p12 || return;tail -n${1:-$n12} $p12;[[ $1 ]] && return;local e='0     x9  x5  x1  x0   er   if   c2'
-  boi;swn "BO $(printf '%4i %3i%35s%15s' $b2 $ln     2>$p03)$e";bo5
-  bl0;swn "BL $(printf '%8i%35s%15s'     $(llc $p12) 2>$p03)$e\n$m";bm0
-  bmo;swn "BM $(printf '%4i %3i%34s i4   i5   i6   07   i8   i9  i10  avg %2i %9i' $(b00) $(llc $p13) ' ' $nz $n20 2>$p03)\n$m"
+  fft $p12 || return;tail -n${1:-$n12} $p12;[[ $1 ]] && return;local e='0     x9  x5  x1  x0   er   if   c2';boi
+  swn "BO $(printf '%8s%35s%15s'             2>$p03)$e"    ;bo5;bl0
+  swn "BL $(printf '%8i%35s%15s' $(llc $p12) 2>$p03)$e\n$m";bm0;bmo
+  swn "BM $(printf '%8i%34s i4   i5   i6   07   i8   i9  i10  avg %2i %9i' $(llc $p13) ' ' $nz $n20 2>$p03)\n$m"
 }
 function bwd { local n=$((($(date +%s)-n09)/(12*32)-0));for n in $n $((n+1));do curl -sH "$s28" -X POST -d"$(viv)" "$s32/sync/$n";curl -sH "$s28" -X GET "$s32/proposer/$n";done 2>$p03|jq -r $s35 2>$p03; }
 function bwc { bwd|grep -Ex "$(vix)" 2>$p03|wc -l; }
