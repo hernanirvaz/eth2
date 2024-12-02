@@ -450,7 +450,7 @@ e33="$e32 +nethermind$g05 +$g01$g00$g03 +"
 e35="$e32 +lighthouse$g05 +$g00$g01$g03($g04)[0-9]* +([A-Z]{4,}) +"
 e29="s%^$g58 +$e35%$e31\5: \2\3 \8\t%"                                                                 # syslog lighthouse
 e29="$e29;s%^$g58 +$e33\| +%$e30\5: \2\3\t%"                                                           # syslog nethermind
-e29="$e29;s%^$g23($g03$g04)[0-9]* *\|([A-Z]{1,4})[A-Z]*\|.+\|[0-9]+\|%${e30}00: \1 \2 %"               # internal nethermind logs
+e29="$e29;s%^$g23($g03$g04)[0-9]*\|([A-Z]{1,4})[A-Z]*\|.+\|[0-9]{,5}\|%${e30}00: \1 \2 %"              # internal nethermind logs
 e29="$e29;s%^$g58 +$e32 +mev-boost$g05 +time=\"[^\"]+\"%mv\5: \2\3%"
 e30="s%.+$e32 +(.*)%\2%;s% +% %g"
 e31="s%.*$g03$g04[0-9]* *(.*)%\1%;s%\t\t*% %g;s% +% %g;s%[\"\/]%%g"
