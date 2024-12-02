@@ -14,14 +14,10 @@ nimh=4    # Gb
 imcv=128 # Mb default 128 (1024MB) max 250 (2000MB)
 if [[ $cunm = $inm5 ]];then apip="$iip5";elif [[ $cunm = $inm6 ]];then apip="$iip6";else apip='127.0.0.1';fi
 othe=''
-othe="$othe --Network.MaxActivePeers $maxp"
-othe="$othe --Network.DiscoveryPort $pp2p --Network.P2PPort $pp2p"
-othe="$othe --JsonRpc.Enabled true --JsonRpc.Host $apip"
-othe="$othe --JsonRpc.EngineHost $apip --JsonRpc.EnginePort 8551 --JsonRpc.JwtSecretFile $p58/jwt"
-othe="$othe --Sync.SnapSync true --Sync.AncientBodiesBarrier $abrb --Sync.AncientReceiptsBarrier $abrb"
-othe="$othe --Pruning.Mode Hybrid --Pruning.FullPruningTrigger VolumeFreeSpace --Pruning.FullPruningThresholdMb $(($fptv*10**3)) --Pruning.CacheMb $((8*$imcv))"
-# othe="$othe --Init.MemoryHint $(($nimh*10**9))"
-# othe="$othe --Db.StateDbDisableCompression true"
+othe="$othe --network-maxactivepeers $maxp --network-discoveryport $pp2p --network-p2pport $pp2p"
+othe="$othe --jsonrpc-enabled true --jsonrpc-host $apip --jsonrpc-enginehost $apip --jsonrpc-engineport 8551 --jsonrpc-jwtsecretfile $p58/jwt"
+othe="$othe --sync-snapsync true --sync-ancientbodiesbarrier $abrb --sync-ancientreceiptsbarrier $abrb"
+othe="$othe --pruning-mode Hybrid --pruning-fullpruningtrigger VolumeFreeSpace --pruning-fullpruningthresholdmb $(($fptv*10**3)) --pruning-cachemb $((8*$imcv))"
 cd
 cat <<-EOF > $s44.service
 [Unit]
@@ -38,7 +34,7 @@ TimeoutStopSec=600
 RuntimeMaxSec=infinity
 WorkingDirectory=$p61
 Environment="DOTNET_BUNDLE_EXTRACT_BASE_DIR=$p61"
-ExecStart=$p00/nethermind/nethermind --config mainnet --datadir $p61$othe
+ExecStart=$p00/nethermind/nethermind --config mainnet --data-dir $p61$othe
 ExecStopPost=+$p02/eth2/t7 NETHSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 
 [Install]
