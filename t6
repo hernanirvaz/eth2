@@ -326,7 +326,7 @@ function vrs {
 }
 function brh { head -n${1:-0} $p12; }                                                                                                                         # new cc head lines
 function brl {                                                                                                                                                # recalculate cc logs
-  fft $p12 || return;rm -f $p12.r;unset v;while read -a v;do ok=${v[1]};dts ${v[3]}\ ${v[4]};nn=$(printf %i ${v[5]:3:3} 2>$p03);nr=${v[6]}
+  fft $p12 || return;rm -f $p12.r;unset v;while read -a v;do ok=${v[1]};dts ${v[3]}\ ${v[4]};nn=$(echo ${v[5]}|sef "$e81");nr=${v[6]}
     if [[ ${v[0]} = BEAC ]];then
       bl1 ${v[17]} ${v[18]} ${v[10]} ${v[1]};bl2 ${v[13]} ${v[14]} ${v[15]} ${v[16]};bl3 ${v[11]} ${v[21]} ${v[22]} ${v[23]} ${v[24]} ${v[25]} ${v[26]};blo
     else
@@ -336,7 +336,7 @@ function brl {                                                                  
 }
 function brm {                                                                                                                                                # recalculate cc-daily logs
   fft $p12 && fft $p13 || return;rm -f $p13.r;bmi;local d=0000-00-00;local l=0;local n=0;local h=0;local g=0;unset v;while read -a v;do
-    d=${v[3]};h=$g;g=$(grep -n "$d 23:58" $p12|cut -d: -f1);[[ ${g:=$h} -le $h ]] && continue;dts $d\ ${v[4]};nn=$(printf %i ${v[5]:3:3} 2>$p03)              # get next cc log position
+    d=${v[3]};h=$g;g=$(grep -n "$d 23:58" $p12|cut -d: -f1);[[ ${g:=$h} -le $h ]] && continue;dts $d\ ${v[4]};nn=$(echo ${v[5]}|sef "$e81")                   # get next cc log position
     nr=${v[6]};l2=$(brh $g|bfl 23:58);bo2 $d;((l+=b2));((n+=1));b3=$(nu2 "$l/$n")                                                                             # cur/avg homologous position
     l1=$(brh $g|tail -n$((g-h))|bfl);if [[ $l1 ]];then bl2 $(echo "$l1"|tail -n1|snf "$e49");bm1;fi;bm2                                                       # sum err arrays
     b5=${v[10]};b4=${v[11]};i0=${v[14]};i1=${v[15]};i4=${v[16]};b1=${v[17]};i2=${v[18]};i3=${v[19]};bms;swn "$m" >> $p13.r                                    # new cc-daily output
