@@ -374,7 +374,7 @@ function cl2 { if [[ $1 =~ ^[0-9]+ ]];then cl1 $1;else cl0 $1;fi; }
 function cl3 { cl2 $2; }
 function cl4 { printf "ntp0: $(cl2 $2) offset: $4 delay: $6 jitter: $8"                           2>$p03; }
 function cl5 { printf "ntp$3: $(cl2 ${1:1}) offset: ${9}ms delay: ${8}ms jitter: ${10}ms"         2>$p03; }
-function cl6 { printf "ntp$2: $(cl2 $1    ) offset: $(clf $5) delay: $(clf $4) jitter: $(clf $3)" 2>$p03; }
+function cl6 { printf "ntp$2: $(cl2 $1    ) offset: $(clf $5) error: $(clf $4) jitter: $(clf $3)" 2>$p03; }
 function clk {
   local s=$(clo);if tsa $s12;then local n=$(ll2 "$g21"|wc -l);else local n=0;fi;dts;[[ $s = OK && $n -eq 0 && $cunm != $cunt ]] && return
   if tsa $s19;then
