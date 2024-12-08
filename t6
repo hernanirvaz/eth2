@@ -376,7 +376,7 @@ function cl4 { printf "ntp0: $(cl2 $2) offset: $4 delay: $6 jitter: $8"         
 function cl5 { printf "ntp$3: $(cl2 ${1:1}) offset: ${9}ms delay: ${8}ms jitter: ${10}ms"         2>$p03; }
 function cl6 { printf "ntp$2: $(cl2 $1    ) offset: $(clf $5) error: $(clf $4) jitter: $(clf $3)" 2>$p03; }
 function clk {
-  local s=$(clo);if tsa $s12;then local n=$(ll2 "$g21"|wc -l);else local n=0;fi;dts;[[ $s = OK && $n -eq 0 && $cunm != $cunt ]] && return
+  local s=$(clo);if tsa $s12;then local n=$(ll2 "$g21"|wc -l);else local n=0;fi;dts;[[ $1$s = OK && $n -eq 0 && $cunm != $cunt ]] && return
   if tsa $s19;then
     local e="CSYS $s";m="$(printf '%-40s' "$(ss2 $s19)"   2>$p03) $(cl4 $(cls))"
   elif tsa ntp;then
@@ -409,7 +409,7 @@ function rll { ll2 "$g09"|fln "$g47" $2|if [[ $1 ]];then sef "$1";else cat;fi; }
 function rlr { ll2 "$g48"|sef "$e51"; }
 function upl { local e=$(apt list --upgradable 2>$p03|grep -ahv Listing);[[ $e ]] && echo -e "\n$e"; }
 function cpe {
-  clk;[[ $1 = c ]] && return;tmp;[[ $1 = p ]] && return;sif
+  clk $1;[[ $1 = c ]] && return;tmp;[[ $1 = p ]] && return;sif
   m=$(sll "$e74"|sef "$e30");if [[ $m ]];then local i=$(echo "$m"|wc -l);local e=$(echo "$m"|tail -n1);else local i=0;local e=;fi;m=;local n=0;local d=;local l=ou
   if [[ ! $m ]];then if ict;then m=$(cll "$e50;$e31");local l=cl;fi;fi
   if [[ ! $m ]];then if iet;then m=$(ell "$e50;$e31");local l=el;fi;fi
@@ -889,7 +889,7 @@ if [[ ! $1 ]];then
   m="$m\ncc[a|r|e]\t\tcc add/remove long-lived parms|change cc-el"
   m="$m\nvcc\t\t\tvc switch cc order"
   m="$m\ntvc\t\t\tvc transfer ($cuvc -> $nxvc)"
-  m="$m\ncpe [cp]\t\tclock & cpu & errors status"
+  m="$m\ncpe [cp]\t\tclock & temperature & errors status"
   m="$m\nm[vr|re]\t\tmev validator registration|relay erros"
   m="$m\nw[s|a|pr|l [e]]\t\tfirewall status|arranca|para|logs [exclude]"
   m="$m\nn[sh|rs]\t\tnetwork show|reset"
