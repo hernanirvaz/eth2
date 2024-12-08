@@ -391,8 +391,13 @@ s53='sgms:'
 s54='threshold|read|write|written|namespace|temperature|thermal|power|shutdowns|controller|endurance'
 s55='net_peerCount'
 s56='[Mm]ax[Aa]ctive[Pp]eers'
+s57="server $zip1 iburst prefer minpoll 3 maxpoll 5"
+s57="${s57}\nserver $zip2 iburst minpoll 3 maxpoll 5"
 
-e00="s%^ *#* *NTP *=.*$%NTP=$zip1 $zip2 time.google.com time.cloudflare.com time.facebook.com%i";if [[ $cunm = $cuvc || $cunm = $cun1 || $cunm = $cun2 || $cunm = $cumv ]];then e00="${e00};s%^ *#* *PollIntervalMaxSec *=.*$%PollIntervalMaxSec=1200%i";fi
+e01='PollIntervalMinSec'
+e02='PollIntervalMaxSec'
+e14="s%^ *#* *$e01 *=.*$%$e01=12%i;s%^ *#* *$e02 *=.*$%$e02=32%i"
+e00="s%^ *#* *NTP *=.*$%NTP=$zip1 $zip2 time.google.com time.cloudflare.com time.facebook.com%i";if [[ $cunm = $cuvc || $cunm = $cun1 || $cunm = $cun2 || $cunm = $cumv ]];then e00="$e00;$e14";fi
 e01='s%^ *ENABLED=.*$%ENABLED=0%i'
 e02='s%bind[^"]*"%bind -4"%'
 e04='false';[[ ${cunm:4:5} = zotac ]] && e04='true' # intel NUCs erradamente give battery power to unattended upgrades
@@ -406,7 +411,7 @@ e09='s%.*registerValidator +[0-9]+ +([^ ]+) *$%\1%p'
 e10="s%--execution-endpoint  *([^ ]*)[0-9\.]*:8551[^ ]*%--execution-endpoint \1$iip5:8551%"
 e11="s%--execution-endpoint  *([^ ]*)[0-9\.]*:8551[^ ]*%--execution-endpoint \1$iip6:8551%"
 e12="s%.*--execution-endpoint  *[^ ]*/([0-9\.]*):8551.*%\1%p"
-e13='s%^ *#*NTP=.*$%NTP=time.google.com time.cloudflare.com time.facebook.com%i'
+e13="s%^ *#*NTP=.*$%NTP=time.google.com time.cloudflare.com time.facebook.com%i;$e14"
 e14='s%--subscribe-all-subnets --import-all-attestations %%'
 e15='s%--validator-monitor-file%--subscribe-all-subnets --import-all-attestations --validator-monitor-file%'
 e16='s%--beacon-nodes *([^ ]*:5052),([^ ]*:5052)[^ ]*%--beacon-nodes \2,\1%'

@@ -22,17 +22,18 @@ fi
 sex 'apt install python3-pip net-tools apt-listchanges landscape-common software-properties-common smartmontools lm-sensors nvme-cli curl -y'
 sex 'apt install unattended-upgrades update-notifier-common -y'
 t4 linux
-if [[ $cunm = $znm1 || $cunm = $znm2 || $cunm = $vnm1 ]];then
-  sex "$s07 set-ntp false"                                                                                                                                    # use ntp (sophisticated)
-  if [[ $cunm = $znm1 || $cunm = $vnm1 ]];then
-    sex 'apt install chrony -y'
-    cc3 $p68 "$e72" "\nallow 192.168.8.0/24\n$s52";cmw $p68 644 root;sex "$s06 chrony"
-  else
-    sex 'apt install ntp -y'
-    cc1 $p31 "$e08"                               ;cmw $p31 644 root;sex "$s06 ntp"
-  fi
+sex "$s07 set-ntp false"                                                                                                                                      # use ntp (sophisticated)
+if [[ $cunm = $znm2 ]];then
+  sex 'apt install ntp -y'
+  cc1 $p31 "$e08"                                 ;cmw $p31 644 root;sex "$s06 ntp"
 else
-  sex "$s07 set-ntp true"                                                                                                                                     # use timesyncd (lightweight)
+  sex 'apt install chrony -y'
+  if [[ $cunm = $znm1 ]];then
+    cc3 $p68 "$e72" "\nallow 192.168.8.0/24\n$s52"
+  else
+    cc3 $p68 "$e72" "\n$s57"
+  fi
+  cmw $p68 644 root;sex "$s06 chrony"
 fi
 if [[ $cust = hrv ]];then
   if [[ $cunm = $znm1 || $cunm = $znm2 ]];then
