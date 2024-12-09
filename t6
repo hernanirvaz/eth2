@@ -377,16 +377,16 @@ function cl5 { printf "ntp$3: $(cl2 ${1:1}) offset: ${9}ms delay: ${8}ms jitter:
 function cl6 { printf "ntp$2: $(cl2 $1    ) offset: $(clf $5) error: $(clf $4) jitter: $(clf $3)" 2>$p03; }
 function clk {
   local s=$(clo);if tsa $s12;then local n=$(ll2 "$g21"|wc -l);else local n=0;fi;dts;[[ $1$s = OK && $n -eq 0 && $cunm != $cunt ]] && return
-  if tsa $s19;then
-    local e="CSYS $s";m="$(printf '%-40s' "$(ss2 $s19)"   2>$p03) $(cl4 $(cls))"
+  if tsa $s58;then
+    local e="CHRY $s";m="$(printf '%-40s' "$(ss2 $s58)" 2>$p03) $(cl6 $(chronyc -cn sources|snf "$e68") $(chronyc -cn tracking|snf "$e67"))"
   elif tsa ntp;then
-    local e="CNTP $s";m="$(printf '%-40s' "$(ss2 ntp)"    2>$p03) $(cl5 $(ntpq -pn|grep '^\*[0-9]'))"
+    local e="CNTP $s";m="$(printf '%-40s' "$(ss2 ntp)"  2>$p03) $(cl5 $(ntpq -pn|grep '^\*[0-9]'))"
   else
-    local e="CHRY $s";m="$(printf '%-40s' "$(ss2 chrony)" 2>$p03) $(cl6 $(chronyc -cn sources|snf "$e68") $(chronyc -cn tracking|snf "$e67"))"
+    local e="CSYS $s";m="$(printf '%-40s' "$(ss2 $s19)" 2>$p03) $(cl4 $(cls))"
   fi
   if tsa $s12;then swn "$e $(nu0 %3i $n) $dt $m";else swn "$e     $dt $m";fi
 }
-function hch { if tsa $s19;then local s=$(cl3 $(cls));m="-> $s";[[ $s && $cunt != $s ]] && m="$m $(nex "$s06 $s19")";elif tsa ntp;then m="-> ntp";else m="-> chrony";fi;swn "$s45 $cunm check $(clo) $m"; }
+function hch { if tsa $s58;then m="-> $s58";elif tsa ntp;then m="-> ntp";else local s=$(cl3 $(cls));m="-> $s";[[ $s && $cunt != $s ]] && m="$m $(nex "$s06 $s19")";fi;swn "$s45 $cunm check $(clo) $m"; }
 function hdi { local s='+%S.%N';local n=$(date $s);if z1t;then local i=$n;else local i=$(ssh $(snc $cunt) "date $s");fi;local e='10^3';nu2 "($e*$i)-($e*$n)"; }
 function si0 { printf '%s: erro_cml %i,used %s,spare %s; ' $(basename $1) $(($2+$3+$4)) $5% $6% 2>$p03; }
 function sif {
@@ -562,7 +562,7 @@ function irb { rm -f $p39.*;s2t $p39 && return;if rbt $1;then if vct;then brs RB
 # offset The mean time offset. (ms)
 # delay  This is the mean execution time required to send a request to the time source, and receive the reply from that source. (ms)
 # jitter This indicates how much packet delays from individual pollings vary from the mean packet delay. (ms)
-function hsh { cex "$s07";if tsa $s19;then cex "$s07 $s45-status";cex "$s07 show-$s45";elif tsa ntp;then swb ntp;ntpq -p;else swb "chrony sources";chronyc sources;swb "chrony tracking";chronyc tracking;fi; }
+function hsh { cex "$s07";if tsa $s58;then swb "$s58 sources";chronyc sources;swb "$s58 tracking";chronyc tracking;elif tsa ntp;then swb ntp;ntpq -p;else cex "$s07 $s45-status";cex "$s07 show-$s45";fi; }
 
 function wpf { if tsa $s44;then ll6 "$g43";fi;ll2 "$g42"|fln "$g39"; }
 function wpe { wpf|sef "$e52"|sort -t: -k2n -k3n -k4n; }
