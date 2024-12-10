@@ -376,7 +376,7 @@ function cl4 { printf "ntp0: $(cl2 $2) offset: $4 delay: $6 jitter: $8"         
 function cl5 { printf "ntp$3: $(cl2 ${1:1}) offset: ${9}ms delay: ${8}ms jitter: ${10}ms"         2>$p03; }
 function cl6 { printf "ntp$2: $(cl2 $1    ) offset: $(clf $5) error: $(clf $4) jitter: $(clf $3)" 2>$p03; }
 function clk {
-  local s=$(clo);if tsa $s12;then local n=$(ll2 "$g21"|wc -l);else local n=0;fi;dts;[[ $1$s = OK && $n -eq 0 && $cunm != $cunt ]] && return
+  m='';local s=$(clo);if tsa $s12;then local n=$(ll2 "$g21"|wc -l);else local n=0;fi;dts;[[ $1$s = OK && $n -eq 0 && $cunm != $cunt ]] && return
   if tsa $s58;then
     local e="CHRY $s";m="$(printf '%-40s' "$(ss2 $s58)" 2>$p03) $(cl6 $(chronyc -cn sources|snf "$e68") $(chronyc -cn tracking|snf "$e67"))"
   elif tsa ntp;then
@@ -384,9 +384,9 @@ function clk {
   else
     local e="CSYS $s";m="$(printf '%-40s' "$(ss2 $s19)" 2>$p03) $(cl4 $(cls))"
   fi
-  if tsa $s12;then swn "$e $(nu0 %3i $n) $dt $m";else swn "$e     $dt $m";fi
+  if tsa $s12;then m="$e $(nu0 %3i $n) $dt $m";else m="$e     $dt $m";fi
 }
-function hch { if tsa $s58;then m="-> $s58";elif tsa ntp;then m="-> ntp";else local s=$(cl3 $(cls));m="-> $s";[[ $s && $cunt != $s ]] && m="$m $(nex "$s06 $s19")";fi;swn "$s45 $cunm check $(clo) $m"; }
+function hch { clk h;swn "$(snc $cunm)${m:4}"; }
 function hdi { local s='+%S.%N';local n=$(date $s);if z1t;then local i=$n;else local i=$(ssh $(snc $cunt) "date $s");fi;local e='10^3';nu2 "($e*$i)-($e*$n)"; }
 function si0 { printf '%s: erro_cml %i,used %s,spare %s; ' $(basename $1) $(($2+$3+$4)) $5% $6% 2>$p03; }
 function sif {
@@ -409,7 +409,7 @@ function rll { ll2 "$g09"|fln "$g47" $2|if [[ $1 ]];then sef "$1";else cat;fi; }
 function rlr { ll2 "$g48"|sef "$e51"; }
 function upl { local e=$(apt list --upgradable 2>$p03|grep -ahv Listing);[[ $e ]] && echo -e "\n$e"; }
 function cpe {
-  clk $1;[[ $1 = h ]] && return;tmp;[[ $1 = p ]] && return;sif
+  clk $1;[[ $m ]] && swn "$m";[[ $1 = h ]] && return;tmp;[[ $1 = p ]] && return;sif
   m=$(sll "$e74"|sef "$e30");if [[ $m ]];then local i=$(echo "$m"|wc -l);local e=$(echo "$m"|tail -n1);else local i=0;local e=;fi;m=;local n=0;local d=;local l=ou
   if [[ ! $m ]];then if ict;then m=$(cll "$e50;$e31");local l=cl;fi;fi
   if [[ ! $m ]];then if iet;then m=$(ell "$e50;$e31");local l=el;fi;fi
@@ -644,9 +644,9 @@ function cns {
 [[ $1 = hsh ]] && { hsh; }
 [[ $1 = hsa ]] && { if z1t;then hsh;else swn "hsh@$cunt";ssh $(snc $cunt) "$p53 hsh";fi; }
 [[ $1 = hch ]] && { hch; }
-[[ $1 = hca ]] && {    if vct;then hch          ;else         ssh $(snc $cuvc) "$p53 hch"  ;fi;if n1t;then hch          ;else         ssh $(snc $cun1) "$p53 hch"  ;fi;if mct;then hch          ;else         ssh $(snc $cumv) "$p53 hch"  ;fi;if n2t;then hch          ;else         ssh $(snc $cun2) "$p53 hch";fi; }
 [[ $1 = hdi ]] && { swn "$s45 diff ($(snc $cunt)-$(snc $cunm)): $(hdi)ms"; }
 [[ $1 = hd0 ]] && { hdi; }
+[[ $1 = hca ]] && {    if vct;then hch          ;else         ssh $(snc $cuvc) "$p53 hch"  ;fi;if n1t;then hch          ;else         ssh $(snc $cun1) "$p53 hch"  ;fi;if mct;then hch          ;else         ssh $(snc $cumv) "$p53 hch"  ;fi;if n2t;then hch          ;else         ssh $(snc $cun2) "$p53 hch";fi; }
 [[ $1 = hda ]] && { m=;if vct;then m="$m $(hdi)";else m="$m $(ssh $(snc $cuvc) "$p53 hd0")";fi;if n1t;then m="$m $(hdi)";else m="$m $(ssh $(snc $cun1) "$p53 hd0")";fi;if mct;then m="$m $(hdi)";else m="$m $(ssh $(snc $cumv) "$p53 hd0")";fi;if n2t;then m="$m $(hdi)";else m="$m $(ssh $(snc $cun2) "$p53 hd0")";fi;swn "$s45 diff avg($(snc $cunt)-($(snc $cuvc),$(snc $cun1),$(snc $cumv),$(snc $cun2))): $(nu5 0 $m)ms"; }
 [[ $1 = hrs ]] && { hrs; }
 [[ $1 = dmr ]] && { dmr; }
