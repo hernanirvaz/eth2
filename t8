@@ -20,7 +20,7 @@ epmv="-addr $(sni $cunm):18550"                                                 
 epmv="$epmv -request-timeout-getheader 950"                                                                                                                   # timeout getHeader         default 950
 epmv="$epmv -request-timeout-getpayload 4000"                                                                                                                 # timeout getPayload        default 4000
 epmv="$epmv -request-timeout-regval 6500"                                                                                                                     # timeout registerValidator default 3000
-epmv="$epmv -min-bid 0.01"                                                                                                                                    # minimum bid to accept from a relay
+epmv="$epmv -min-bid 0.005"                                                                                                                                   # minimum bid to accept from a relay
 epmv="$epmv -relay-check -relays $rlys"
 cd
 cat <<-EOF > $s14.service
