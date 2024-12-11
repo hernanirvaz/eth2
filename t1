@@ -21,7 +21,7 @@ nxvc=$znm4
 cun1=$inm5
 cun2=$inm6
 cumv=$znm3
-cunt=$znm2
+cunt=$znm1
 else
 cuvc=$vnm1
 nxvc=$vnm1
@@ -517,7 +517,7 @@ e63='s%.*highestBlock" *: *"0x([^"]+)".*%\1%ip'
 e64='s%.*currentBlock" *: *"0x([^"]+)".*%\1%ip'
 e65='s%([Pp]eers[ =]*)[0-9]+%\1'
 e66='s%^[^,]+(https?)%\1%;s%@([^@ ]+) +.*$%@\1%;s%https?[^@]+@%%g;s%,% %gp'
-e67='s%^([^,]+,){5}([^,]+),.*$%\2%p'
+e67='s%^([^,]+,){6}([^,]+),.*$%\2%p'
 e68='s%^.,\*,([^,]+),([^,]+),([^,]+,){3}([^,]+),[^,]+,([^,]+).*$%\1 \2 \4 \5%p'
 e69="s%^ *#* *PasswordAuthentication  *.*$%PasswordAuthentication no%i"
 e70='s%.*price": *([0-9]*\.?[0-9]+).*%\1%p'

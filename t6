@@ -387,7 +387,6 @@ function clk {
   if tsa $s12;then m="$e $(nu0 %3i $n) $dt $m";else m="$e     $dt $m";fi
 }
 function hch { clk h;swn "$(snc $cunm)${m:4}"; }
-function hdi { local s='+%S.%N';local n=$(date $s);if z1t;then local i=$n;else local i=$(ssh $(snc $cunt) "date $s");fi;local e='10^3';nu2 "($e*$i)-($e*$n)"; }
 function si0 { printf '%s: erro_cml %i,used %s,spare %s; ' $(basename $1) $(($2+$3+$4)) $5% $6% 2>$p03; }
 function sif {
   if [[ $(cat $p44 2>$p03) -eq 0 ]];then local e=off;else local e=on;fi;local i=$(fl0|wc -l)
@@ -562,7 +561,7 @@ function irb { rm -f $p39.*;s2t $p39 && return;if rbt $1;then if vct;then brs RB
 # offset The mean time offset. (ms)
 # delay  This is the mean execution time required to send a request to the time source, and receive the reply from that source. (ms)
 # jitter This indicates how much packet delays from individual pollings vary from the mean packet delay. (ms)
-function hsh { cex "$s07";if tsa $s58;then swb "$s58 sources";chronyc sources;swb "$s58 tracking";chronyc tracking;elif tsa ntp;then swb ntp;ntpq -p;else cex "$s07 $s45-status";cex "$s07 show-$s45";fi; }
+function hsh { cex "$s07";if tsa $s58;then swb "$s58 sources";chronyc sources;swb "$s58 tracking";chronyc tracking;elif tsa ntp;then swb ntp;ntpq -p;else cex "$s07 $s45-status";cex "$s07 show-$s45";fi;echo;hch; }
 
 function wpf { if tsa $s44;then ll6 "$g43";fi;ll2 "$g42"|fln "$g39"; }
 function wpe { wpf|sef "$e52"|sort -t: -k2n -k3n -k4n; }
@@ -642,12 +641,9 @@ function cns {
 [[ $1 = nsh ]] && { nsh; }
 [[ $1 = nrs ]] && { nrs; }
 [[ $1 = hsh ]] && { hsh; }
-[[ $1 = hsa ]] && { if z1t;then hsh;else swn "hsh@$cunt";ssh $(snc $cunt) "$p53 hsh";fi; }
+[[ $1 = hsn ]] && { if z1t;then hsh;else swn "hsh@$cunt";ssh $(snc $cunt) "$p53 hsh";fi; }
 [[ $1 = hch ]] && { hch; }
-[[ $1 = hdi ]] && { swn "$s45 diff ($(snc $cunt)-$(snc $cunm)): $(hdi)ms"; }
-[[ $1 = hd0 ]] && { hdi; }
-[[ $1 = hca ]] && {    if vct;then hch          ;else         ssh $(snc $cuvc) "$p53 hch"  ;fi;if n1t;then hch          ;else         ssh $(snc $cun1) "$p53 hch"  ;fi;if mct;then hch          ;else         ssh $(snc $cumv) "$p53 hch"  ;fi;if n2t;then hch          ;else         ssh $(snc $cun2) "$p53 hch";fi; }
-[[ $1 = hda ]] && { m=;if vct;then m="$m $(hdi)";else m="$m $(ssh $(snc $cuvc) "$p53 hd0")";fi;if n1t;then m="$m $(hdi)";else m="$m $(ssh $(snc $cun1) "$p53 hd0")";fi;if mct;then m="$m $(hdi)";else m="$m $(ssh $(snc $cumv) "$p53 hd0")";fi;if n2t;then m="$m $(hdi)";else m="$m $(ssh $(snc $cun2) "$p53 hd0")";fi;swn "$s45 diff avg($(snc $cunt)-($(snc $cuvc),$(snc $cun1),$(snc $cumv),$(snc $cun2))): $(nu5 0 $m)ms"; }
+[[ $1 = hca ]] && { if vct;then hch;else ssh $(snc $cuvc) "$p53 hch";fi;if n1t;then hch;else ssh $(snc $cun1) "$p53 hch";fi;if mct;then hch;else ssh $(snc $cumv) "$p53 hch";fi;if n2t;then hch;else ssh $(snc $cun2) "$p53 hch";fi; }
 [[ $1 = hrs ]] && { hrs; }
 [[ $1 = dmr ]] && { dmr; }
 [[ $1 = fsh ]] && { dex 'fwupdmgr get-devices'; }
@@ -894,7 +890,7 @@ if [[ ! $1 ]];then
   m="$m\nw[s|a|pr|l [e]]\t\tfirewall status|arranca|para|logs [exclude]"
   m="$m\nn[sh|rs]\t\tnetwork show|reset"
   m="$m\nd[sh [url]|rs]\t\tdns show [url]|reset"
-  m="$m\nh[sh|sa|rs|ch|ca|di|da]\t$s45 show|show@$(snc $cunt)|restart|check|check all|diff ($(snc $cunt)-$(snc $cunm))|diff all avg"
+  m="$m\nh[sh|sn|rs|ch|ca]\t$s45 show|show@$(snc $cunt)|restart|check|check all"
   m="$m\nr[sh|rs|pt|lk]\t\trestart gap show|reset|print|lock"
   m="$m\ni[sh|ch]\t\texternal ip show|change"
   m="$m\nj[sh|rs]\t\tjournal logs show|reset"
