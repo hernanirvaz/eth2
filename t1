@@ -424,7 +424,7 @@ e17="s%hrv-zotac([0-9]).*%hrv-zotac\1 ztc\1%;/127.0.1.1/a \\"
 [[ $cunm = $inm5 ]] && e17="$e17\n$zip1\thrv-zotac1 ztc1\n$zip2\thrv-zotac2 ztc2\n$zip3\thrv-zotac3 ztc3\n$zip4\thrv-zotac4 ztc4\n$iip6\thrv-intel6 int6"
 [[ $cunm = $inm6 ]] && e17="$e17\n$zip1\thrv-zotac1 ztc1\n$zip2\thrv-zotac2 ztc2\n$zip3\thrv-zotac3 ztc3\n$zip4\thrv-zotac4 ztc4\n$iip5\thrv-intel5 int5"
 e18='s%.*fee_recipient"."([^"]*)".*pubkey":"([^"]*)".*%pubkey: \2, fee: \1%p'
-e19="s%^$g58 +[^ ]+([a-z1-9]{4}) +([a-zA-Z]{4}).*UFW BLOCK]%\4: \2\3 \U\5 ufw%"
+e19="s%^$g58 +[^ ]+([a-z1-9]{4}) +([^ ]{4}).*UFW BLOCK]%\4: \2\3 \U\5 ufw%"
 e19="$e19;s% MAC=[^ ]*%%"
 e19="$e19;s% IN=[^ ]*%%"
 e19="$e19;s% OUT=[^ ]*%%"
@@ -524,7 +524,7 @@ e70='s%.*price": *([0-9]*\.?[0-9]+).*%\1%p'
 e71='s%.*PID: *([0-9]+).*%\1%p'
 e72='s%^ *pool  *%# pool %'
 e73='s%^.*mev-boost +(v[0-9]+\.[0-9]+)(\.[0-9]+)?.*$%\1\2%'
-e75="s%^$g58 +[^ ]+([a-z1-9]{4}) +([a-zA-Z]{4})[^ ]+ +"
+e75="s%^$g58 +[^ ]+([a-z1-9]{4}) +([^ ]{4})[^ ]+ +"
 e74="$e75%\U\5 %"
 e75="$e75%\4: \2\3 \U\5\t%"
 e78='([0-9]{1,}).*$'
