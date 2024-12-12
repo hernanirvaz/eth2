@@ -18,8 +18,8 @@ vnm3=${vnd3%%.*};vis3='127.0.0.1'
 if [[ $cust = hrv ]];then
 cuvc=$znm4
 nxvc=$znm4
-cun1=$inm5
-cun2=$inm6
+cun1=$inm6
+cun2=$inm5
 cumv=$znm3
 cunt=$znm1
 else
@@ -158,7 +158,7 @@ g49="$g08.*$g22"
 g50="$g08.*$g31"
 g51="$g09.*$g34"
 g52='.+er: +([0-9]+) +([0-9]+) +([0-9]+) +([0-9]+).+'
-g53='Block from API'
+g53='Block from (API|monitored)'
 g54='imported_time_ms:'
 g55='execution_time_ms:'
 g56='attestable_delay_ms:'
@@ -178,7 +178,7 @@ function sef { sed -E  "$1" $2 2>$p03; }
 function snf { sed -En "$1" $2 2>$p03; }
 
 n00=84
-n01=84
+n01=60
 n02=72
 n03=48
 n04=3
