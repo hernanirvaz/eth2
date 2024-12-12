@@ -417,8 +417,9 @@ function cpe {
   if [[ ! $m ]];then local n=0;local d=;else local n=$(lll|wc -l);local d=$(echo "$m"|tail -n1);fi
   m="ERRO$(printf '%3i%4i %10s %5s' $i $n $dt 2>$p03)"
   if g0t $i;then if g0t $n;then m="$m sl: ${e:0:53}";m="$m $l: ${d:0:54}";else m="$m sl: ${e:0:112}";fi;else if g0t $n;then m="$m $l: ${d:0:112}";fi;fi
-  (( i+n )) && swn "$m";m=
-  fft $p45 && m="$m, reboot $(($(sra)/60/60)) hours ago $(rsf|tail -n1)";s5t && m="$m, sync/propose duties on";[[ $m ]] && swn "INFO        $dt${m#*,}"       # reboot/duties info
+  (( i+n )) && swn "$m"
+  m=;fft $p45 && m="$(echo $m), reboot $(($(sra)/60/60)) hours ago $(rsf|tail -n1)";s5t && m="$(echo $m), sync/propose duties on"
+  [[ $m ]] && swn "INFO        $dt${m#*,}"
   upl;uls "$g59" "$(ulg)";esp;csp;mre
 }
 # Plex Media Server
