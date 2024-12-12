@@ -55,6 +55,7 @@ function n4t { [[ $cun1 != $cun2 || $cun1 != $cumv ]]; }
 function vct { [[ $cunm = $cuvc ]]; }
 function mct { [[ $cunm = $cumv ]]; }
 function i5t { [[ $cunm = $inm5 ]]; }
+function i6t { [[ $cunm = $inm6 ]]; }
 function ict { [[ $cunm = $cuvc || $cunm = $cun1 || $cunm = $cun2 ]]; }
 function iet { [[ $cunm = $cun1 || $cunm = $cun2 ]]; }
 function irt { [[ $cunm = $cumv                                   || $cunm = $vnm1 || $cunm = $vnm2 ]]; }
@@ -120,7 +121,7 @@ function npn { local n=${1:-0};local i=${2:-0};if [[ $n -ge 100 ]];then printf '
 function bnn { csn $(ln3 "$g31:" $g08) $(bpc $(bcl peer_count)); }                                                                                            # set cur/min/std cc peers
 function sz0 {         gv0;gnn 0;printf 'el:p%03i:m%03i:l%03i:z%02i:d%04i p2p:%5i %s     iu: %4i %5i %4i'                 $er $em $(b05 $en) $ez $ed $(ss5 $1 port    ) "$(gb1 $(gcl eth.syncing))" $e1 $e2 $(ei0)                 2>$p03; }
 function sz1 {         uv0;unn 0;printf 'el:p%03i:m%03i:l%03i:z%02i:d%04i p2p:%5i %s      i: %4i'                         $er $em $(b05 $en) $ez $ed $(ss5 $1 p2p-port) "$(ub1 $(ucl eth_syncing))" $e1                            2>$p03; }
-function sz5 {         tv0;tnn 0;printf 'el:p%03i:m%03i:l%03i:z%02i:d%04i p2p:%5i %s     ps: %4i %5i %4i'                 $er $em $(b05 $en) $ez $ed $(ss5 $1 P2PPort ) "$(tb1 $(tcl eth_syncing))" $e1 $e2 $(ei0)                 2>$p03; }
+function sz5 {         tv0;tnn 0;printf 'el:p%03i:m%03i:l%03i:z%02i:d%04i p2p:%5i %s     ps: %4i %5i %4i'                 $er $em $(b05 $en) $ez $ed $(ss5 $1 $s59    ) "$(tb1 $(tcl eth_syncing))" $e1 $e2 $(ei0)                 2>$p03; }
 function sz2 { dtl;svi;bv0;bnn  ;printf 'cl:p%03i:m%03i:l%03i:z%02i:d%04i p2p:%5i %s iearhp: %4i %5i %4i %2i %2i %2i %4i' $nr $nm $(b05 $nn) $nz $nd $(ss5 $1 port    ) "$(bb1 $(bcl syncing))"     $i0 $i1 $i4 $b1 $i2 $i3 $(b01) 2>$p03; }
 function sz4 { smm 0            ;printf 'ml:h%03i:r%03i api:%s'                                                           $m0 $m1                $(ss4 $1 "$e32" addr )                                                        2>$p03; }
 function sz3 { svv $n23         ;if n3t;then printf 'vl:m%03i:s%03i:c%02i api:%s' $v0 $v1 $v2 $(ss4 $1 "$e32" nodes) 2>$p03;else printf 'vl:m%03i:c%03i api:%s' $v0 $v2 $(ss4 $1 "$e32" nodes) 2>$p03;fi; }
@@ -513,10 +514,10 @@ function cce { sft $s12 || return;local s=$p04/$s12.service;cp $s $p02/$s12.sav;
 function vcc { sft $s13 || return;local s=$p04/$s13.service;cp $s $p02/$s13.sav;sef "$e16" $s13.sav > $s;cmw $s 644 eth;cat $s; }                             # vc switch cc order
 function dpa { tsa $s20 && nex "$s02 $s20";nex "$s02 systemd-resolved";tse $s20 && nex "$s03 $s20";nex "$s03 systemd-resolved"; }                             # DNS stop/start
 function nrs { nex 'netplan apply';dpa; }                                                                                                                     # netplan/DNS restart
-function lcp { local f=$1;shift;[[ -x $f ]] && until [[ $# -lt 1 ]];do if [[ $1 = $(snc $cunm) ]];then lci $f;else scp $f $1:$p02;fi;shift;done; }            # propagate lighthouse
+function lcp { local f=$1;shift;[[ -x $f ]] && until [[ $# -lt 1 ]];do if [[ $1 = $(snc $cunm) ]];then lci $f;else ssh $1 "rm -rf $p02/$(basename $f)";scp $f $1:$p02;fi;shift;done; }
 function lci { [[ -x $1 && ! -d $1   ]] || return;sex "mv $p00/lighthouse $p00/lighthouse.sav";sex "cp $1 $p00"; }                                            # lighthouse binary install
 function lmd { [[ -x $p00/lighthouse ]] || return;cmw $p00/lighthouse 755 eth;swb 'LIGHT INSTALADO'; }                                                        # lighthouse set permissions
-function lpi { v1t && lcp $1 $vnd1;z4t && lcp $1 ztc4;i5t && lcp $1 int5 int6;lci $p02/lighthouse;sex "rm -f $p02/lighthouse $1";lmd; }
+function lpi { v1t && lcp $1 $vnd1;z4t && lcp $1 ztc4;i5t && lcp $1 int5 int6;i6t && lcp $1 int6 int5;lci $p02/lighthouse;sex "rm -f $p02/lighthouse $1";lmd; }
 function luc {                                                                                                                                                # lighthouse upgrade/compile
   if fft $p06/lighthouse/README.md;then
     cd $p06/lighthouse;make clean;cargo clean                                                                                                                 # clean compile dirs
@@ -529,7 +530,7 @@ function luc {                                                                  
 function ruv { if [[ $1 ]];then swn "RUST OVERRIDE SET $1";rustup override set $1;else swn 'RUST UPDATE';rustup update stable;fi; }                           # set/update rust version
 function tvc {
   swn "$s24";[[ $cuvc = $nxvc ]] && return;if vct && tsa $s13;then swn "TRANSFERIR VC -> $(snc $nxvc) (SIM/nao)?";else return;fi;local rsp=nao;read rsp
-  if [[ $rsp = SIM && ! -f $p05/vc_slash && ! -f $p05/vc_lock && -f $p05/vc_keys ]];then touch $p50.print;vrs PR 36;vd;swu "COPY SLASH -> $nxvc";local f=$p02/$(basename $p18);cex "cp $p18 $p02";cmw $f 666 eth;mcp $f $(sn2 $nxvc);sex "rm $f";fi
+  if [[ $rsp = SIM && ! -f $p05/vc_slash && ! -f $p05/vc_lock && -f $p05/vc_keys ]];then touch $p50.print;vrs PR 36;rm -f $p50.print;vd;swu "COPY SLASH -> $nxvc";local f=$p02/$(basename $p18);cex "cp $p18 $p02";cmw $f 666 eth;mcp $f $(sn2 $nxvc);sex "rm $f";fi
 }
 function nky { ls $p19/key*.json 2>$p03|wc -l; }
 function svr { local t='';for t in $(printf '%s\n' $@|sort -u);do curl -sX GET "$s47=$t"|snf "$e18";done; }                                                   # show mev validator registration
@@ -628,7 +629,7 @@ function cns {
 [[ $1 = mre ]] && { mre; }
 [[ $1 = jwt ]] && { sjw; }
 [[ $1 = lpi ]] && { lpi $p02/.cargo/bin/lighthouse; }
-[[ $1 = luc ]] && { luc $p02/.cargo/bin/lighthouse ${2:-v5.3.0}; }
+[[ $1 = luc ]] && { luc $p02/.cargo/bin/lighthouse ${2:-v6.0.0}; }
 [[ $1 = ruv ]] && { ruv $2; }
 [[ $1 = ccr ]] && { llt && ble "$e14"; }
 [[ $1 = cca ]] && { llt || ble "$e15"; }
@@ -652,20 +653,20 @@ function cns {
 [[ $1 = fst ]] && { fst $2; }
 [[ $1 = tmp ]] && { dts;tmp s; }
 [[ $1 = sif ]] && { dts;sif s; }
-[[ $1 = tgp ]] && { touch $p50.print;trs PR ${2:-0}   ${3:-$n03}; }
-[[ $1 = bgp ]] && { touch $p50.print;brs PR ${2:-0} 0 ${3:-$n03}; }
-[[ $1 = grs ]] && { touch $p50.print;grs SR ${2:-0}   ${3:-$n03}; }
-[[ $1 = trs ]] && { touch $p50.print;trs SR ${2:-0}   ${3:-$n03}; }
-[[ $1 = urs ]] && { touch $p50.print;urs SR ${2:-0}   ${3:-$n03}; }
-[[ $1 = brs ]] && { touch $p50.print;brs BN ${2:-0} 0 ${3:-$(btn $n02)}; }
-[[ $1 = crs ]] && { touch $p50.print;brs VC ${2:-0} 0 ${3:-$n02}; }
-[[ $1 = vrs ]] && { touch $p50.print;vrs RS           ${2:-$n03}; }
-[[ $1 = grb ]] && { touch $p50.print;grs RB ${2:-0}   ${2:-$n02}; }
-[[ $1 = trb ]] && { touch $p50.print;trs RB ${2:-0}   ${2:-$n02}; }
-[[ $1 = urb ]] && { touch $p50.print;urs RB ${2:-0}   ${2:-$n02}; }
-[[ $1 = brb ]] && { touch $p50.print;brs RB ${2:-0} 0 ${2:-$(btn $n00)}; }
-[[ $1 = vrb ]] && { touch $p50.print;vrs RB           ${2:-$n02}; }
-[[ $1 = ivk ]] && { touch $p50.print;ivk              ${2:-$n01}; }
+[[ $1 = tgp ]] && { touch $p50.print;trs PR ${2:-0}   ${3:-$n03}       ;rm -f $p50.print; }
+[[ $1 = bgp ]] && { touch $p50.print;brs PR ${2:-0} 0 ${3:-$n03}       ;rm -f $p50.print; }
+[[ $1 = grs ]] && { touch $p50.print;grs SR ${2:-0}   ${3:-$n03}       ;rm -f $p50.print; }
+[[ $1 = trs ]] && { touch $p50.print;trs SR ${2:-0}   ${3:-$n03}       ;rm -f $p50.print; }
+[[ $1 = urs ]] && { touch $p50.print;urs SR ${2:-0}   ${3:-$n03}       ;rm -f $p50.print; }
+[[ $1 = brs ]] && { touch $p50.print;brs BN ${2:-0} 0 ${3:-$(btn $n02)};rm -f $p50.print; }
+[[ $1 = crs ]] && { touch $p50.print;brs VC ${2:-0} 0 ${3:-$n02}       ;rm -f $p50.print; }
+[[ $1 = vrs ]] && { touch $p50.print;vrs RS           ${2:-$n03}       ;rm -f $p50.print; }
+[[ $1 = grb ]] && { touch $p50.print;grs RB ${2:-0}   ${2:-$n02}       ;rm -f $p50.print; }
+[[ $1 = trb ]] && { touch $p50.print;trs RB ${2:-0}   ${2:-$n02}       ;rm -f $p50.print; }
+[[ $1 = urb ]] && { touch $p50.print;urs RB ${2:-0}   ${2:-$n02}       ;rm -f $p50.print; }
+[[ $1 = brb ]] && { touch $p50.print;brs RB ${2:-0} 0 ${2:-$(btn $n00)};rm -f $p50.print; }
+[[ $1 = vrb ]] && { touch $p50.print;vrs RB           ${2:-$n02}       ;rm -f $p50.print; }
+[[ $1 = ivk ]] && { touch $p50.print;ivk              ${2:-$n01}       ;rm -f $p50.print; }
 [[ $1 = ep  ]] && { epf; }
 [[ $1 = cp  ]] && { cpf; }
 [[ $1 = ap  ]] && { epf;cpf; }

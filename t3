@@ -4,7 +4,7 @@ source /home/eth/eth2/t1
 
 function hlp { swb "install consencus client with lighthouse-${1:-stable} source using rust-${2:-stable}"; }
 
-if [[ $cunm = $znm4 || $cunm = $inm5 || $cunm = $vnm1 || $cunm = $vnm2 ]];then
+if [[ $cunm = $znm4 || $cunm = $inm5 || $cunm = $inm6 || $cunm = $vnm1 || $cunm = $vnm2 ]];then
   hlp
   if [[ -x $p02/.cargo/bin/rustup ]];then
     t6 ruv $2
