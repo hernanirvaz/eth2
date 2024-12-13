@@ -29,7 +29,7 @@ if [[ $cunm = $znm1 || $cunm = $znm2 || $cunm = $vnm1 ]];then
 else
   cc3 $p68 "$e72" "\n$s57"
 fi
-cmw $p68 644 root;sex "$s06 $s58"
+cmw $p68 644 root;sex "$s06 $s56"
 if [[ $cust = hrv ]];then
   if [[ $cunm = $znm1 || $cunm = $znm2 ]];then
     sex 'apt install bind9 bind9utils -y'                                                                                                                     # install bind
