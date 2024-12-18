@@ -389,7 +389,7 @@ function clk {
   if tsa $s12;then m="$e $(nu0 %3i $n) $dt $m";else m="$e     $dt $m";fi
 }
 function hch { clk h;swn "$(snc $cunm)${m:4}"; }
-function hca { if vct;then hch;else ssh $(snc $cuvc) "$p53 hch";fi;if n1t;then hch;else ssh $(snc $cun1) "$p53 hch";fi;if mct;then hch;else ssh $(snc $cumv) "$p53 hch";fi;if n2t;then hch;else ssh $(snc $cun2) "$p53 hch";fi; }
+function hca { if n1t;then hch;else ssh $(snc $cun1) "$p53 hch";fi;if n2t;then hch;else ssh $(snc $cun2) "$p53 hch";fi;if vct;then hch;else ssh $(snc $cuvc) "$p53 hch";fi;if mct;then hch;else ssh $(snc $cumv) "$p53 hch";fi; }
 function si0 { printf '%s: erro_cml %i,used %s,spare %s; ' $(basename $1) $(($2+$3+$4)) $5% $6% 2>$p03; }
 function sif {
   if [[ $(cat $p44 2>$p03) -eq 0 ]];then local e=off;else local e=on;fi;local i=$(fl0|wc -l)
