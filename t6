@@ -47,6 +47,7 @@ function t2t { [[ $(cat $p44 2>$p03) -eq 1 && $(fl1|wc -l) -gt 10 ]]; }         
 function t3t { [[ $(cat $p43 2>$p03) -eq 1 ]]; }                                                                                                              # cpu no turbo            test
 function v0t { g0t $(grep -c $d0 $p12 2>$p03); }                                                                                                              # cc  log day             test
 function z1t { [[ $cunm = $cunt ]]; }                                                                                                                         # main ntp                test
+function z2t { [[ $cunm = $znm1 || $cunm = $znm2 ]]; }                                                                                                        # chrony ntp              test
 function z4t { [[ $cunm = $znm4 ]]; }                                                                                                                         # best zotac              test
 function n1t { [[ $cunm = $cun1 ]]; }
 function n2t { [[ $cunm = $cun2 ]]; }
@@ -377,7 +378,7 @@ function cl4 { printf "ntp0: $(cl2 $2) offset: $4 delay: $6 jitter: $8"         
 function cl5 { printf "ntp$3: $(cl2 ${1:1}) offset: ${9}ms delay: ${8}ms jitter: ${10}ms"         2>$p03; }
 function cl6 { printf "ntp$2: $(cl2 $1    ) offset: $(clf $5) error: $(clf $4) jitter: $(clf $3)" 2>$p03; }
 function clk {
-  m='';local s=$(clo);if tsa $s12;then local n=$(ll2 "$g21"|wc -l);else local n=0;fi;dts;[[ $1$s = OK && $n -eq 0 && $cunm != $cunt ]] && return
+  m='';local s=$(clo);if tsa $s12;then local n=$(ll2 "$g21"|wc -l);else local n=0;fi;dts;if [[ $1$s = OK && $n -eq 0 ]];then z2t || return;fi
   if tsa $s56;then
     local e="CHRY $s";m="$(printf '%-40s' "$(ss2 $s56)" 2>$p03) $(cl6 $(chronyc -cn sources|snf "$e68") $(chronyc -cn tracking|snf "$e67"))"
   elif tsa ntp;then
