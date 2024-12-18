@@ -502,8 +502,7 @@ function hs0 {
   if n1t;then
     printf '\n%.0s' {1..40};hss $cun1;if n3t;then hss $cun2;fi
     if vst;then if vct;then hsv;cpe;else echo $cuvc;ssh $(snc $cuvc) "$p53 hsv";fi;fi
-    if mst;then if mct;then hsm;cpe;else echo $cumv;ssh $(snc $cumv) "$p53 hsm";fi;fi
-    if nst;then if z1t;then     cpe;else echo $cunt;ssh $(snc $cunt) "$p53 cpe";fi;fi;echo
+    if mst;then if mct;then hsm;cpe;else echo $cumv;ssh $(snc $cumv) "$p53 hsm";fi;fi;echo
     epf;cpf
   else
     hss $cunm
