@@ -374,9 +374,9 @@ function cl0 { printf "${1%.}"                                                  
 function cl1 { local n=0;while :;do local s=$(clq $1);if [[ $s ]];then break;else if [[ $n -lt 2 ]];then ((n++));else local s=$1;break;fi;fi;done;cl0 $s; }
 function cl2 { if [[ $1 =~ ^[0-9]+ ]];then cl1 $1;else cl0 $1;fi; }
 function cl3 { cl2 $2; }
-function cl4 { printf "ntp0: $(cl2 $2) offset: $4 delay: $6 jitter: $8"                           2>$p03; }
-function cl5 { printf "ntp$3: $(cl2 ${1:1}) offset: ${9}ms delay: ${8}ms jitter: ${10}ms"         2>$p03; }
-function cl6 { printf "ntp$2: $(cl2 $1    ) offset: $(clf $5) error: $(clf $4) jitter: $(clf $3)" 2>$p03; }
+function cl4 { printf "delay: $6\toffset: $4\tjitter: $8\tntp0: $(cl2 $2)"                       2>$p03; }
+function cl5 { printf "delay: ${8}ms\toffset: ${9}ms\tjitter: ${10}ms\tntp$3: $(cl2 ${1:1})"     2>$p03; }
+function cl6 { printf "error: $(clf $4)\toffset: $(clf $5)\tjitter: $(clf $3)\tntp$2: $(cl2 $1)" 2>$p03; }
 function clk {
   m='';local s=$(clo);if tsa $s12;then local n=$(ll2 "$g21"|wc -l);else local n=0;fi;dts;if [[ $1$s = OK && $n -eq 0 ]];then z2t || return;fi
   if tsa $s56;then
