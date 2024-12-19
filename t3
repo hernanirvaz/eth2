@@ -26,7 +26,7 @@ else
   othe="$othe --suggested-fee-recipient $s26"                                                                                                                 # bn level fees
   othe="$othe --validator-monitor-file $p58/pubkeys"                                                                                                          # monitor validators
   othe="$othe --prune-payloads false"                                                                                                                         # fetch/keep execution payloads default true
-  if [[ $cust = hrv ]];then othe="$othe --builder http://$zip3:18550";else othe="$othe --builder http://$apip:18550";fi
+  if sht;then othe="$othe --builder http://$zip3:18550";else othe="$othe --builder http://$apip:18550";fi
   othe="$othe --subscribe-all-subnets --import-all-attestations"                                                                                              # better income
   othe="$othe --disable-upnp"                                                                                                                                 # disable UPnP support
   if [[ $cunm = $inm5 ]];then othe="$othe --checkpoint-sync-url http://$iip6:5052";elif [[ $cunm = $inm6 ]];then othe="$othe --checkpoint-sync-url http://$iip5:5052";else othe="$othe --checkpoint-sync-url https://beaconstate.info --disable-backfill-rate-limiting";fi
@@ -67,7 +67,7 @@ if [[ $cunm = $znm1 || $cunm = $znm2 || $cunm = $znm3 || $cunm = $inm5 || $cunm 
 else
   othe=''
   othe="$othe --builder-proposals --builder-boost-factor 100"                                                                                                 # factor/100*mev > local ? mev : local
-  if [[ $cust = hrv ]];then
+  if sht;then
     othe="$othe --beacon-nodes http://$iip5:5052,http://$iip6:5052"
   else
     othe="$othe --beacon-nodes http://$vis1:5052"

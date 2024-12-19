@@ -30,7 +30,7 @@ else
   cc3 $p68 "$e72" "\n$s57"
 fi
 cmw $p68 644 root;sex "$s06 $s56"
-if [[ $cust = hrv ]];then
+if sht;then
   if [[ $cunm = $znm1 || $cunm = $znm2 ]];then
     sex 'apt install bind9 bind9utils -y'                                                                                                                     # install bind
     cc3 $p29 "$e07" "$s40"       ;cmw $p29 644 root bind                                                                                                      # named my options

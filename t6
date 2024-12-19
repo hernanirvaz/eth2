@@ -63,7 +63,7 @@ function irt { [[ $cunm = $cumv                                   || $cunm = $vn
 function v1t { [[ $cunm = $vnm1 ]]; }
 function vst { [[ $cun1 != $cuvc && $cun2 != $cuvc ]]; }
 function mst { [[ $cun1 != $cumv && $cun2 != $cumv ]]; }
-function nst { [[ $cust = hrv && $cumv != $cunt ]]; }
+function nst { sht && [[ $cumv != $cunt ]]; }
 function s1t {                  e0t $(ls $1.* 2>$p03|wc -l); }
 function s2t { fft $p50.lock || g0t $(ls $1.* 2>$p03|wc -l); }
 function s3t { s2t $1 || g0t $(bwc); }
@@ -389,7 +389,8 @@ function clk {
   if tsa $s12;then m="$e $(nu0 %3i $n) $dt $m";else m="$e     $dt $m";fi
 }
 function hch { clk h;swn "$(snc $cunm)${m:4}"; }
-function hca { if n1t;then hch;else ssh $(snc $cun1) "$p53 hch";fi;if n2t;then hch;else ssh $(snc $cun2) "$p53 hch";fi;if vct;then hch;else ssh $(snc $cuvc) "$p53 hch";fi;if mct;then hch;else ssh $(snc $cumv) "$p53 hch";fi; }
+function t2n { if [[ $znm1 = $cunt ]];then printf $znm2;else printf $znm1;fi; }
+function hca { if n1t;then hch;else ssh $(snc $cun1) "$p53 hch";fi;if n2t;then hch;else ssh $(snc $cun2) "$p53 hch";fi;if vct;then hch;else ssh $(snc $cuvc) "$p53 hch";fi;if mct;then hch;else ssh $(snc $cumv) "$p53 hch";fi;if z1t;then hch;else ssh $(snc $cunt) "$p53 hch";fi;local s=$(t2n);if sht && [[ $cumv != $s ]];then ssh $(snc $s) "$p53 hch";fi; }
 function si0 { printf '%s: erro_cml %i,used %s,spare %s; ' $(basename $1) $(($2+$3+$4)) $5% $6% 2>$p03; }
 function sif {
   if [[ $(cat $p44 2>$p03) -eq 0 ]];then local e=off;else local e=on;fi;local i=$(fl0|wc -l)
@@ -446,7 +447,7 @@ function sa  { tsa $s20 || cex "$s03 $s20"; }                                   
 function sp  { tsa $s20 && cex "$s02 $s20"; }                                                                                                                 # stop    named
 function sd  { cex "$s05 $s20";sco;sex 'ufw reload'; }                                                                                                        # disable named
 # el/cc/vc
-function nfw { if [[ $cust = hrv ]];then pai $1 192.168.8.0/24 $2 $3;else pai $1 192.168.8.0/24 $2 $3;fi; }
+function nfw { if sht;then pai $1 192.168.8.0/24 $2 $3;else pai $1 192.168.8.0/24 $2 $3;fi; }
 function eop { local e=30303;ndp || e=30304;pae $e elp2p;if n4t;then pde 8545 elapi delete;pde 8551 eljwt delete;nfw 8545 elapi       ;nfw 8551 eljwt       ;fi; }
 function eco { local e=30303;ndp || e=30304;pde $e elp2p;if n4t;then pde 8545 elapi       ;pde 8551 eljwt       ;nfw 8545 elapi delete;nfw 8551 eljwt delete;fi; }
 function bop { local e=9004 ;ndp || e=9000 ;pae $e clp2p;if n4t;then pde 5052 clapi delete;pde 8551 cljwt delete;nfw 5052 clapi       ;nfw 8551 cljwt       ;fi;pae "$((e+1))/udp" clquic; }

@@ -15,7 +15,10 @@ vip3='161.97.85.32' ;vnd3='vmi1007895.contaboserver.net'
 vnm1=${vnd1%%.*};vis1='127.0.0.1'
 vnm2=${vnd2%%.*};vis2='127.0.0.1'
 vnm3=${vnd3%%.*};vis3='127.0.0.1'
-if [[ $cust = hrv ]];then
+
+function sht { [[ $cust = hrv ]]; }
+
+if sht;then
 cuvc=$znm4
 nxvc=$znm4
 cun1=$inm6
@@ -171,7 +174,7 @@ g62='Service restarts being deferred'
 
 function sni { case $1 in $inm5) printf $iip5;;$inm6) printf $iip6;;$znm1) printf $zip1;;$znm2) printf $zip2;;$znm3) printf $zip3;;$znm4) printf $zip4;;$vnm1) printf $vis1;;$vnm2) printf $vis2;;$vnm3) printf $vis3;;esac; }
 function sns { if [[ ${#1} -gt 2 ]];then printf $1;else if [[ ${1:0:1} = z ]];then if [[ ${1:1:1} -le 4 ]];then printf ${1/z/ztc};else printf ${1/z/int};fi;else case $1 in v1) printf $vnd1;;v2) printf $vnd2;;v3) printf $vnd3;;*) printf $1;;esac;fi;fi; }
-function snc { if [[ ${1/-*/} = hrv ]];then if [[ $cust = hrv ]];then local s='';else local s='.fruga.pt';fi;local v=${1/*-/};printf ${v//[aoel]/}$s;else case $1 in $vnm1) printf $vnd1;;$vnm2) printf $vnd2;;$vnm3) printf $vnd3;;*) printf $1;;esac;fi; }
+function snc { if [[ ${1/-*/} = hrv ]];then if sht;then local s='';else local s='.fruga.pt';fi;local v=${1/*-/};printf ${v//[aoel]/}$s;else case $1 in $vnm1) printf $vnd1;;$vnm2) printf $vnd2;;$vnm3) printf $vnd3;;*) printf $1;;esac;fi; }
 function sn2 { if [[ ${1/-*/} = hrv ]];then snc $1;else case $1 in $vnm1) printf v1;;$vnm2) printf v2;;$vnm3) printf v3;;*) printf $1;;esac;fi; }
 function spt { if [[ ${1/-*/} = hrv ]];then printf 202${1##*[!0-9]};else printf 2020;fi; }
 function sef { sed -E  "$1" $2 2>$p03; }
@@ -366,7 +369,7 @@ s42="$s42\nlocation / { proxy_pass http://plex_backend; }"
 s42="$s42\n}"
 s44="\n  IdentityFile ~/.ssh/id_ed25519"
 s43=""
-[[ $cust = hrv   ]] && s43="$s43\n\nHost $vnd1\n  Port 2020$s44"
+sht                 && s43="$s43\n\nHost $vnd1\n  Port 2020$s44"
 [[ $cunm = $vnm1 ]] && s43="$s43\n\nHost ztc1.fruga.pt\n  Port 2021$s44\n\nHost ztc2.fruga.pt\n  Port 2022$s44\n\nHost ztc3.fruga.pt\n  Port 2023$s44\n\nHost ztc4.fruga.pt\n  Port 2024$s44\n\nHost int5.fruga.pt\n  Port 2025$s44\n\nHost int6.fruga.pt\n  Port 2026$s44"
 [[ $cunm = $znm1 ]] && s43="$s43\n\nHost ztc2\n  Port 2022$s44\n\nHost ztc3\n  Port 2023$s44\n\nHost ztc4\n  Port 2024$s44\n\nHost int5\n  Port 2025$s44\n\nHost int6\n  Port 2026$s44"
 [[ $cunm = $znm2 ]] && s43="$s43\n\nHost ztc1\n  Port 2021$s44\n\nHost ztc3\n  Port 2023$s44\n\nHost ztc4\n  Port 2024$s44\n\nHost int5\n  Port 2025$s44\n\nHost int6\n  Port 2026$s44"
@@ -450,7 +453,7 @@ e28="${e28};s%APT::Periodic::Unattended-Upgrade.*$%APT::Periodic::Unattended-Upg
 case $cunm in $cuvc) e28="${e28}5";;$cun1) e28="${e28}2";;*) e28="${e28}1";;esac
 e28="${e28}\";%i;/APT::Periodic::Unattended-Upgrade/a \\"
 e28="${e28}APT::Periodic::AutocleanInterval \"1\";"
-if [[ $cunm = $cuvc && $cunm = $cun1 && $cunm = $cun2 ]];then e30='el';e31='cl';else case $cunm in $cun1) e30='em';e31='bm';;$cun2) e30='es';e31='bs';;$cuvc) e30='el';e31='vc';;*) e30='el';e31='cl';;esac;fi;if [[ $cust = hrv ]];then e32='hrv-(zotac|intel)[0-9]';else e32='ns([0-9]{7})';fi
+if [[ $cunm = $cuvc && $cunm = $cun1 && $cunm = $cun2 ]];then e30='el';e31='cl';else case $cunm in $cun1) e30='em';e31='bm';;$cun2) e30='es';e31='bs';;$cuvc) e30='el';e31='vc';;*) e30='el';e31='cl';;esac;fi;if sht;then e32='hrv-(zotac|intel)[0-9]';else e32='ns([0-9]{7})';fi
 e33="$e32 +nethermind$g05 +$g01$g00$g03 +"
 e35="$e32 +lighthouse$g05 +$g00$g01$g03($g04)[0-9]* +([A-Z]{4,}) +"
 e29="s%^$g58 +$e35%$e31\5: \2\3 \8\t%"                                                                 # syslog lighthouse
