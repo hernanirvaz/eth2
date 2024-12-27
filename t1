@@ -146,7 +146,7 @@ g34='duration='
 g35='peercount='
 g36="^$g23$g03$g04[0-9]* *\|[A-Z]{4,}\|"
 g37="$g36.*Processed"
-g38=' autostart app-snap| number of Error Log entries increased'
+g38='0 +new.+0 +unknown'
 g39='request was cancelled|error making request to relay|Invalid execution payload'
 g40="error calling registerValidator on relay"
 g41="($g00$g01|$g02)"
