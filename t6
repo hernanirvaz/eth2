@@ -10,8 +10,8 @@ function nu0 { printf $1 ${2:-0} 2>$p03; }
 function nu1 { printf %i ${1:-0} 2>$p03; }
 function nu2 { local s=${2:-0};echo "scale=$((s+1));$1"|bc 2>$p03|xargs printf %.0f 2>$p03; }
 function nu3 { echo "scale=0;0$(printf %+i $@ 2>$p03)"|bc 2>$p03; }
-function nu4 { local s=$1;shift;if [[ $# -gt 0 ]];then echo "scale=$((s+1));((0$(printf +%s $@ 2>$p03))/$#)*10^$s"|bc 2>$p03|xargs printf %.0f 2>$p03;else printf %i;fi; }
-function nu5 { local s=$1;shift;if [[ $# -gt 0 ]];then echo "scale=$((s+1));((0$(printf +%s $@ 2>$p03))/$#)"      |bc 2>$p03|xargs printf %.0f 2>$p03;else printf %i;fi; }
+function nu4 { local s=$1;shift;if [[ $# -gt 0 ]];then echo "scale=$((s+1));((0$(printf %+i $@ 2>$p03))/$#)*10^$s"|bc 2>$p03|xargs printf %.0f 2>$p03;else printf %i;fi; }
+function nu5 { local s=$1;shift;if [[ $# -gt 0 ]];then echo "scale=$((s+1));((0$(printf %+i $@ 2>$p03))/$#)"      |bc 2>$p03|xargs printf %.0f 2>$p03;else printf %i;fi; }
 function nu6 { local s=$1;echo "scale=9;$2"|bc 2>$p03|xargs printf "%.${s}f"; }
 function nu7 { nu2 "sqrt(((0$(printf %+i^2 $@ 2>$p03))-(0$(printf %+i $@ 2>$p03))^2/$#)/$#)*1000" 4; }                                                        # get std list numbers
 function nu8 { printf '%i\n' $@ 2>$p03|grep -c '^0$'; }                                                                                                       # get # zeros list numbers
