@@ -386,12 +386,7 @@ s48='.[].peer_info|select(.connection_direction=='
 s49=').client.agent_string'
 s50='https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=ETH&convert=EUR&CMC_PRO_API_KEY=3ae5f3df-bd71-489d-a9dd-b626995fba31'
 s51='debian-transmission'
-if [[ $cunm = $znm1 || $cunm = $vnm1 ]];then
-  s52='pool 0.de.pool.ntp.org iburst minpoll 3 maxpoll 8'
-  s52="${s52}\npool 1.de.pool.ntp.org iburst minpoll 3 maxpoll 10"
-else
-  s52='pool 0.europe.pool.ntp.org iburst minpoll 3 maxpoll 8'
-fi
+if [[ $cunm = $znm1 || $cunm = $vnm1 ]];then s53='de';else s53='europe';fi;s52="pool 0.$s53.pool.ntp.org iburst"
 s53='sgms:'
 s54='threshold|read|write|written|namespace|temperature|thermal|power|shutdowns|controller|endurance'
 s55='net_peerCount'
