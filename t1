@@ -391,8 +391,8 @@ s53='sgms:'
 s54='threshold|read|write|written|namespace|temperature|thermal|power|shutdowns|controller|endurance'
 s55='net_peerCount'
 s56='chrony'
-s57="server $zip1 iburst minpoll 3 maxpoll 8"
-s57="${s57}\nserver $zip2 iburst minpoll 3 maxpoll 8"
+s57="server $zip1 iburst minpoll 3 maxpoll 6"
+s57="${s57}\nserver $zip2 iburst minpoll 3 maxpoll 6"
 
 e01='PollIntervalMinSec'
 e02='PollIntervalMaxSec'
