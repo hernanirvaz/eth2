@@ -24,7 +24,6 @@ if [[ $cunm = hrv-zotac2 ]];then
 fi
 if   [[ $cunm = hrv-intel5 || $cunm = hrv-intel6 ]];then
   alias aa='t6 ah'
-  alias pp='t6 csp'
 elif [[ $cunm = hrv-zotac3 || $cunm = hrv-zotac4 ]];then
   alias aa='t6 ch'
 fi
@@ -33,10 +32,9 @@ if [[ $cust = hrv ]];then
   alias nt='sudo iftop -nNPBF $(hostname -I)'
 else
   alias aa='t6 ah'
-  alias pp='t6 csp'
 fi
 
 alias hh='t6 hs0'
-alias rr='t6 mre'
+alias tt='t6 hsh'
 alias ky='ssh-keygen -t ed25519 -C "$(whoami)@$(hostname)";cat ~/.ssh/id_ed25519.pub'
 alias xx='exit'
