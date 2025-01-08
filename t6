@@ -503,9 +503,11 @@ function hsb { sso BEAC $s12; }
 function hsv { sso VALI $s13; }
 function hsm { sso MEVB $s14; }
 function hss { echo $1;if [[ $cunm = $1 ]];then hsg;hsu;hst;hsb;hsv;hsm;cpe;else ssh $(snc $1) "$p53 hse;$p53 hsc";fi; }
+function hhh { printf '\n%.0s' {1..4}; }
 function hs0 {
+  hhh
   if n1t;then
-    printf '\n%.0s' {1..40};hss $cun1;if n3t;then hss $cun2;fi
+    hss $cun1;if n3t;then hss $cun2;fi
     if vst;then if vct;then hsv;cpe;else echo $cuvc;ssh $(snc $cuvc) "$p53 hsv";fi;fi
     if mst;then if mct;then hsm;cpe;else echo $cumv;ssh $(snc $cumv) "$p53 hsm";fi;fi;echo
     epf;cpf
@@ -649,7 +651,7 @@ function cns {
 [[ $1 = drs ]] && { dpa; }
 [[ $1 = nsh ]] && { nsh; }
 [[ $1 = nrs ]] && { nrs; }
-[[ $1 = hsh ]] && { hsh;echo;if n1t;then hca;else hch;fi; }
+[[ $1 = hsh ]] && { hhh;hsh;echo;if n1t;then hca;else hch;fi; }
 [[ $1 = hsn ]] && { if z1t;then hsh;echo;hch;else swn "hsh@$cunt";ssh $(snc $cunt) "$p53 hsh";fi; }
 [[ $1 = hch ]] && { hch; }
 [[ $1 = hca ]] && { hca; }
@@ -694,7 +696,7 @@ function cns {
 [[ $1 = bnf ]] && { bm0;bno;swn "$m" >> $p14; }
 [[ $1 = bm  ]] && { bm0;bmo;swn "$m"; }
 [[ $1 = bmf ]] && { bm0;[[ $2 ]] && b4=$2;bms;v0t && swn "$m" >> $p13;if n1t;then if fft $p45;then bpt && brs RB $b4 $((n05*20)) $n00;else bpt && brs PE $b4 $n05 $n02;fi;else rbt && brs RB 0 $n05 $n03;fi; }
-[[ $1 = ah  ]] && { if tsa $s13;then ah0 4 30 $2;swn "VL";ch0 VL $2|tail -n4;else ah0 5 45 $2;fi;if tsa $s14;then swn "ML";ch0 ML $2|tail -n4;fi; }
+[[ $1 = ah  ]] && { hhh;if tsa $s13;then ah0 4 30 $2;swn "VL";ch0 VL $2|tail -n4;else ah0 5 45 $2;fi;if tsa $s14;then swn "ML";ch0 ML $2|tail -n4;fi; }
 [[ $1 = eh  ]] && { eh0 $2; }
 [[ $1 = ch  ]] && { ch0 CL $2; }
 [[ $1 = vh  ]] && { ch0 VL $2; }
