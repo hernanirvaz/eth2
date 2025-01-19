@@ -7,10 +7,13 @@ if [[ $cunm = hrv-zotac2 ]];then
   d=/var/lib/plexmediaserver/mp4
   rsy () { echo RSYNC $1 $2;rsync --ignore-existing --delete -rvz $1 $2; }
   smv () { rsy $d/movie ztc1:; }
-  slt () { rsy $d/lust  ztc1:; }
   stv () { rsy $d/tv2   ztc1:;rsy $d/tv ztc3:; }
+  slt () { rsy $d/lust  ztc1:; }
   sal () { smv;stv;slt; }
-  pal () { rsy ztc1:~/movie ~;rsy ztc1:~/tv2 ~;rsy ztc3:~/tv ~;rsy ztc1:~/lust ~; }
+  pmv () { rsy ztc1:~/movie ~; }
+  ptv () { rsy ztc1:~/tv2 ~;rsy ztc3:~/tv ~; }
+  plt () { rsy ztc1:~/lust ~; }
+  pal () { pmv;ptv;plt; }
   ffl () { echo findls $2 $1;find $1 -name "*.$2" -print; }
   ffr () { echo findrm $2 $1;find $1 -name "*.$2" -exec sudo rm {} \;; }
   fll () { if [[ $1 ]];then ffl $d $1;else ffl $d txt;ffl $d jpg;ffl $d nfo;fi; }
@@ -20,7 +23,7 @@ if [[ $cunm = hrv-zotac2 ]];then
   trl () { tll|sed -En 's%^ +([0-9]+) +100\% +.+Done +.+$%\1%p'; }
   prl () { local s=$1;shift;until [[ $# -lt 1 ]];do local s="$s,$1";shift;done;[[ $s ]] && printf $s; }
   trm () { local e=$(prl $(trl));[[ $e ]] || return;echo -e "remove $e\n";tll;transmission-remote $cuip:9091 -t $e --remove; }
-  alias rcd='cd /var/lib/transmission-daemon/downloads;echo -e "\ncug\t\tchange user & permissions\npal\t\tpull all\ns[mv|tv|lt|al]\tsync movie|tv|lt|all\nf[ll|rm]\tlist|remove removables\nt[ll|rm]\tlist|remove done transmissions\n"'
+  alias rcd='cd /var/lib/transmission-daemon/downloads;echo -e "\ncug\t\t\tchange user & permissions\n[ps][mv|tv|lt|al]\tpull|sync movie|tv|lt|all\nf[ll|rm]\t\tlist|remove removables\nt[ll|rm]\t\tlist|remove done transmissions\n"'
   alias rp='t6 rpd'
   alias ra='t6 rea'
 fi
