@@ -20,9 +20,9 @@ if [[ $cunm = hrv-zotac2 ]];then
   trl () { tll|sed -En 's%^ +([0-9]+) +100\% +.+Done +.+$%\1%p'; }
   prl () { local s=$1;shift;until [[ $# -lt 1 ]];do local s="$s,$1";shift;done;[[ $s ]] && printf $s; }
   trm () { local e=$(prl $(trl));[[ $e ]] || return;echo -e "remove $e\n";tll;transmission-remote $cuip:9091 -t $e --remove; }
-  alias tcd='cd /var/lib/transmission-daemon/downloads;echo -e "\ncug\t\tchange user & permissions\nrap\t\tpull all\nr[mv|tv|ar]\tsync movie|tv*|all\nf[ll|rm]\tlist|remove removables\nt[ll|rm]\tlist|remove done transmissions\n"'
-  alias tp='t6 tpd'
-  alias ta='t6 tea'
+  alias rcd='cd /var/lib/transmission-daemon/downloads;echo -e "\ncug\t\tchange user & permissions\nrap\t\tpull all\nr[mv|tv|ar]\tsync movie|tv*|all\nf[ll|rm]\tlist|remove removables\nt[ll|rm]\tlist|remove done transmissions\n"'
+  alias rp='t6 rpd'
+  alias ra='t6 rea'
 fi
 if   [[ $cunm = hrv-intel5 || $cunm = hrv-intel6 ]];then
   alias aa='t6 ah'
