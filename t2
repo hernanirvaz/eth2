@@ -2,13 +2,15 @@
 
 source /home/eth/eth2/t1
 
+function top { pai 123/udp 192.168.8.0/24 ntp;pai 323/udp 192.168.8.0/24 ptp; }
+
 [[ -x $p02/eth2/t ]] || ln -s $p02/eth2/t6 $p02/eth2/t                                                                                                        # link base commands
 if [[ $(pex 'ufw status'|grep -i inactive) ]];then
   swb 'INIT FIREWALL';sex 'ufw default deny incoming';sex 'ufw default allow outgoing'                                                                        # base ufw
   pde 22/tcp ossh
   [[ $cunm = $vnm1 || $cunm = $vnm2 || $cunm = $vnm3 ]] && { ple 2020/tcp nssh; }
-  [[ $cunm = $znm1 ]] && { ple 2021/tcp nssh;pai 123/udp 192.168.8.0/24 ntp;pai 323/udp 192.168.8.0/24 ptp; }
-  [[ $cunm = $znm2 ]] && { ple 2022/tcp nssh;pai 123/udp 192.168.8.0/24 ntp;pai 323/udp 192.168.8.0/24 ptp; }
+  [[ $cunm = $znm1 ]] && { ple 2021/tcp nssh;top; }
+  [[ $cunm = $znm2 ]] && { ple 2022/tcp nssh;top; }
   [[ $cunm = $znm3 ]] && { ple 2023/tcp nssh; }                                                                                                               # limit ssh
   [[ $cunm = $znm4 ]] && { ple 2024/tcp nssh; }                                                                                                               # limit ssh
   [[ $cunm = $inm5 ]] && { ple 2025/tcp nssh; }                                                                                                               # limit ssh

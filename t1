@@ -107,6 +107,8 @@ p70='/etc/profile.d/rvm.sh'
 p71="$p02/.bashrc"
 p72='cns.keys'
 p73='hernanirvaz-f2e8fb66dbc0.json'
+p74='/etc/exports'
+p75='/etc/nfs.conf'
 
 g00='(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) +'
 g01='[0-9]{1,2} +'
@@ -216,6 +218,22 @@ n31=$($s01 $s12 2>$p03|snf "$e71")
 n32=4
 n33=30
 n34=10
+n35=20048
+n36=32765
+n37=32768
+n38=875
+n39=111
+n40=2049
+n41=32400 # Main Plex Media Server port.
+n42=32469 # Plex DLNA Server.
+n43=3005  # Plex Companion.
+n44=8324  # Plex for Roku.
+n45=32410 # GDM network discovery.
+n46=32411
+n47=32412
+n48=32413
+n49=32414
+n50=5353  # Bonjour/Avahi network discovery.
 
 s00='systemctl'
 s01="$s00 status"
@@ -339,7 +357,7 @@ done
 s42="upstream plex_backend { server $zip2:32400; keepalive 32; }"
 s42="$s42\nserver {"
 s42="$s42\nlisten 80;"
-s42="$s42\nserver_name ztc2;"
+s42="$s42\nserver_name $znm2;"
 s42="$s42\nsend_timeout 100m;"
 if [[ $cunm = $znm1 || $cunm = $znm3 || $cunm = $inm6 ]];then
   s42="$s42\nresolver 192.168.8.4 valid=300s;"
@@ -398,6 +416,14 @@ s55='net_peerCount'
 s56='chrony'
 s57="server $zip1 iburst minpoll 3 maxpoll 6"
 s57="${s57}\nserver $zip2 iburst minpoll 3 maxpoll 6"
+s58='nfs-kernel-server'
+s59="$p60 192.168.8.0/24(rw,sync,no_subtree_check)"
+s60='plex'
+s61='[nfsd]'
+s61="${s61}\nmountd-port=$n35"
+s61="${s61}\nstatd-port=$n36"
+s61="${s61}\nlockd-port=$n37"
+s61="${s61}\nrquotad-port=$n38"
 
 e01='PollIntervalMinSec'
 e02='PollIntervalMaxSec'

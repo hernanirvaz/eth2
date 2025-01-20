@@ -8,6 +8,13 @@ function ei1 { echo -e "echo>>~/.bashrc\necho \"export PATH=\\\"\\\$PATH:/home/e
 function cc0 { if [[ ${1%%.*} -eq 192 ]];then local u=eu;else local u=ubuntu;fi;local s="$u@$1";scp -P 22 ~/eth2/s? ~/eth2/ethkeys ~/i0 $s:~;echo -e "\n\n\n\nsudo -i\nbash /home/$u/s0\n\n\n\n";ssh -p 22 $s;scp -P $2 -i ~/.ssh/id_ed25519 ~/eth2/t[1-9] ~/eth2/e? $1:~/eth2;scp -P $2 -i ~/.ssh/id_ed25519 ~/eth2/ethztc $1:~/.bash_aliases;scp -P $2 -i ~/.ssh/id_ed25519 ~/i1 $1:~;ssh -p $2 -i ~/.ssh/id_ed25519 $1 'sh i1';echo -e "\n\nky # gerar key & copiar para ethkeys\nt2 # setup\n\n";ssh -p $2 -i ~/.ssh/id_ed25519 $1; }
 function nip { echo ${N%%:*}; }
 function npt { echo ${N#*:}; }
+function nfc {
+  local d='/mnt/mp4'
+  sudo apt update
+  sudo apt install nfs-common -y
+  sudo mkdir -p $d
+  sudo mount 192.168.8.28:/var/lib/plexmediaserver/mp4 $d
+}
 
 alias v1='esl ns3238168.ip-57-129-52.eu'
 alias v2='esl ns3238168.ip-57-129-52.eu'
