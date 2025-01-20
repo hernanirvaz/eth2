@@ -10,10 +10,12 @@ function nip { echo ${N%%:*}; }
 function npt { echo ${N#*:}; }
 function nfc {
   local d='/mnt/mp4'
-  sudo apt update
-  sudo apt install nfs-common -y
-  sudo mkdir -p $d
-  sudo mount 192.168.8.28:/var/lib/plexmediaserver/mp4 $d
+  if ! systemctl is-active --quiet nfs-client.target;then
+    sudo apt update                &>> nfc.out
+    sudo apt install nfs-common -y &>> nfc.out
+  fi
+  [[ -d $d        ]] || sudo mkdir -p $d
+  [[ -d $d/movie/ ]] || sudo mount 192.168.8.28:/var/lib/plexmediaserver/mp4 $d
 }
 
 alias v1='esl ns3238168.ip-57-129-52.eu'
