@@ -501,8 +501,9 @@ e38='s%(hash|root) *= *([^ ,]*),? *%%g'                                         
 e38="$e38;s%[0-9]+ +[0-9]+ +[0-9]+ +%%g;s%[0-9]+ +[0-9]+ +%%g"                                         # EL
 e39='s%(finalized_root|block|head|parent_hash|pubkey|block_hash|peer_id|graffiti) *: *([^, ]*),? *%%g' # CL
 e40='s%(Some|Slot) *\(([^ ]*)\)%\2%g;s%,? *(module) *: *([^ ,]*),? *%%g'                               # CL
+e40="$e40;s%builder_boost_factor: +None,%%"                                                            # CL
+e40="$e40;s%local_block_value: +([0-9]{17}) *,%lv: 💰 0.0\1 💰%"                                       # CL
 e40="$e40;s%relay_value:%rv:%g"                                                                        # CL
-e40="$e40;s%block_value:%bv:%g"                                                                        # CL
 e40="$e40;s%block_slot:%bl:%g"                                                                         # CL
 e41="s%snapdiffs *= *%sdf=%g;s%triediffs *= *%tdf=%g;s%triedirty *= *%tdt=%g;$e38"                     # ALL EL
 e42="$e41;s%(service|num_failed) *: *([^ ,]*),? *%\2 %g;$e39;$e40"                                     # ALL EL/CL
@@ -532,7 +533,7 @@ e50="$e50;s%$g55%ED%g"
 e50="$e50;s%$g56%AD%g"
 e50="$e50;$e37"
 e51="$e47;$e37"
-e52="$e47;$e37;s%blockNumber=[0-9]+ +getHeader +%%i;s%slot=[0-9]+ +%%i;s%relays=%%i;s%best +bid +%%i;s% +value=([0-9]*\.[0-9]+)%\t\t💰💰 \1 💰💰%"
+e52="$e47;$e37;s%blockNumber=[0-9]+ +getHeader +%%i;s%slot=[0-9]+ +%%i;s%relays=%%i;s%best +bid +%%i;s% +value=([0-9]*\.[0-9]+)%\t\t💰 \1 💰%"
 e53="s%^ *$p01%# $p01%"
 e54='s%.*synchronized: *([a-z]*) *%\1%p'
 e55="s%$g03%%;s%[0-9]* users*,%%;s% average([^,]*).*%\1%;s%  *% %g"

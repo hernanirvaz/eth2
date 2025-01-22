@@ -430,42 +430,56 @@ function cpe {
   upl;uls "$g59" "$(ulg)";esp;csp;mre
 }
 
+function pop { pde $1 $2 delete;pai $1 192.168.8.0/24 $2; }
 # Plex Media Server
 function xop {
-  pde $n41 $s60 delete;pai $n41 192.168.8.0/24 $s60
-  pde $n42 $s60 delete;pai $n42 192.168.8.0/24 $s60
-  pde $n43 $s60 delete;pai $n43 192.168.8.0/24 $s60
-  pde $n44 $s60 delete;pai $n44 192.168.8.0/24 $s60
-  pde $n45 $s60 delete;pai $n45 192.168.8.0/24 $s60
-  pde $n46 $s60 delete;pai $n46 192.168.8.0/24 $s60
-  pde $n47 $s60 delete;pai $n47 192.168.8.0/24 $s60
-  pde $n48 $s60 delete;pai $n48 192.168.8.0/24 $s60
-  pde $n49 $s60 delete;pai $n49 192.168.8.0/24 $s60
-  pde $n50 $s60 delete;pai $n50 192.168.8.0/24 $s60
-  pde 80  ngweb delete;pai 80  192.168.8.0/24 ngweb
-  pde 443 ngssl delete;pai 443 192.168.8.0/24 ngssl
+  pop $n35 nfs-mountd
+  pop $n36 nfs-statd
+  pop $n37 nfs-lockd
+  pop $n38 nfs-rquotad
+  pop $n39 nfs-rpcbind
+  pop $n40 nfs
+  pop $n41 ${s60}
+  pop $n42 ${s60}-DLNA
+  pop $n43 ${s60}-companion
+  pop $n44 ${s60}-Roku
+  pop $n45 ${s60}-GDM
+  pop $n46 ${s60}-GDM
+  pop $n47 ${s60}-GDM
+  pop $n48 ${s60}-GDM
+  pop $n49 ${s60}-GDM
+  pop $n50 ${s60}-discovery
+  pop 80   ${s22}-web
+  pop 443  ${s22}-ssl
 }
+function pco { pde $1 $2;pai $1 192.168.8.0/24 $2 delete; }
 function xco {
-  pde $n41 $s60;pai $n41 192.168.8.0/24 $s60 delete
-  pde $n42 $s60;pai $n42 192.168.8.0/24 $s60 delete
-  pde $n43 $s60;pai $n43 192.168.8.0/24 $s60 delete
-  pde $n44 $s60;pai $n44 192.168.8.0/24 $s60 delete
-  pde $n45 $s60;pai $n45 192.168.8.0/24 $s60 delete
-  pde $n46 $s60;pai $n46 192.168.8.0/24 $s60 delete
-  pde $n47 $s60;pai $n47 192.168.8.0/24 $s60 delete
-  pde $n48 $s60;pai $n48 192.168.8.0/24 $s60 delete
-  pde $n49 $s60;pai $n49 192.168.8.0/24 $s60 delete
-  pde $n50 $s60;pai $n50 192.168.8.0/24 $s60 delete
-  pde 80  ngweb;pai 80  192.168.8.0/24 ngweb delete
-  pde 443 ngssl;pai 443 192.168.8.0/24 ngssl delete
+  pco $n35 nfs-mountd
+  pco $n36 nfs-statd
+  pco $n37 nfs-lockd
+  pco $n38 nfs-rquotad
+  pco $n39 nfs-rpcbind
+  pco $n40 nfs
+  pco $n41 ${s60}
+  pco $n42 ${s60}-DLNA
+  pco $n43 ${s60}-companion
+  pco $n44 ${s60}-Roku
+  pco $n45 ${s60}-GDM
+  pco $n46 ${s60}-GDM
+  pco $n47 ${s60}-GDM
+  pco $n48 ${s60}-GDM
+  pco $n49 ${s60}-GDM
+  pco $n50 ${s60}-discovery
+  pco 80   ${s22}-web
+  pco 443  ${s22}-ssl
 }
 function xe  { xop;sex 'ufw reload';cex "$s04 $s22";cex "$s04 $s21"; }                                                                                        # enable  plexmediaserver
 function xa  { tse $s22 && cex "$s03 $s22";tsa $s21 || cex "$s03 $s21"; }                                                                                     # start   plexmediaserver
 function xp  { tse $s22 && cex "$s02 $s22";tsa $s21 && cex "$s02 $s21"; }                                                                                     # stop    plexmediaserver
 function xd  { cex "$s05 $s21";cex "$s05 $s22";xco;sex 'ufw reload'; }                                                                                        # disable plexmediaserver
 # Transmission BitTorrent Daemon
-function rop { pae 51413 torrent;pde 9091 torrent delete;pai 9091 192.168.8.0/24 torrent       ; }
-function rco { pde 51413 torrent;pde 9091 torrent       ;pai 9091 192.168.8.0/24 torrent delete; }
+function rop { pae 51413 torrent;pop 9091 torrent; }
+function rco { pde 51413 torrent;pco 9091 torrent; }
 function re  { rop;sex 'ufw reload';cex "$s04 $s15"; }                                                                                                        # enable  transmission-daemon
 function ra  { tsa $s15 || cex "$s03 $s15"; }                                                                                                                 # start   transmission-daemon
 function rp  { tsa $s15 && cex "$s02 $s15"; }                                                                                                                 # stop    transmission-daemon
@@ -529,15 +543,15 @@ function hst { sso NETH $s44; }
 function hsb { sso BEAC $s12; }
 function hsv { sso VALI $s13; }
 function hsm { sso MEVB $s14; }
-function hss { echo $1;if [[ $cunm = $1 ]];then hsg;hsu;hst;hsb;hsv;hsm;cpe;else ssh $(snc $1) "$p53 hse;$p53 hsc";fi; }
+function hss { echo -e "\n$1";if [[ $cunm = $1 ]];then hsg;hsu;hst;hsb;hsv;hsm;cpe;else ssh $(snc $1) "$p53 hse;$p53 hsc";fi; }
 function hhh { printf '\n%.0s' {1..4}; }
 function hs0 {
   hhh
   if n1t;then
     hss $cun1;if n3t;then hss $cun2;fi
-    if vst;then if vct;then hsv;cpe;else echo $cuvc;ssh $(snc $cuvc) "$p53 hsv";fi;fi
-    if mst;then if mct;then hsm;cpe;else echo $cumv;ssh $(snc $cumv) "$p53 hsm";fi;fi;echo
-    epf;cpf
+    if vst;then if vct;then hsv;cpe;else echo -e "\n$cuvc";ssh $(snc $cuvc) "$p53 hsv";fi;fi
+    if mst;then if mct;then hsm;cpe;else echo -e "\n$cumv";ssh $(snc $cumv) "$p53 hsm";fi;fi
+    echo;epf;cpf
   else
     hss $cunm
   fi
@@ -625,7 +639,7 @@ function ulr { local s=$(ulg $1);uls "$g59" "$s";uls "$g62" "$s"; }
 function mcp { local s=${2:-v1};local f=${3:-~};if [[ ${s:0:1} = v ]];then local e="-P 2020 -i $p02/.ssh/id_ed25519";eval "scp $e $1 $(sns $s):$f";else eval "scp $1 $(sns $s):$f";fi; }
 [[ $1 = mcp ]] && { mcp $2 $3 $4; }
 
-function ngx { sex "apt install $s22 -y";cc4 $p32 "$s42";cmw $p32 644 root;cex "nginx -t";sex "$s00 reload $s22"; }
+function ngx { sex "apt install $s22 -y";cc4 $p32 "$s42";cmw $p32 644 root;sex "$s00 reload $s22";sudo nginx -t &>> $p02/$s60.out; }
 function plx {
   # p32='/etc/nginx/conf.d/plexmediaserver.conf'
   # p60="/var/lib/plexmediaserver/mp4"
@@ -635,13 +649,17 @@ function plx {
   local u=downloads.plex.tv
   local o=/etc/apt/sources.list.d/plexmediaserver.list
   swu 'PLEX SERVER';sex 'apt install dirmngr ca-certificates apt-transport-https -y'
-  curl -fsSL https://$u/plex-keys/PlexSign.key | sudo gpg --dearmor | sudo tee $k
-  echo deb [signed-by=$k] https://$u/repo/deb public main | sudo tee $o
+  # curl -fsSL https://$u/plex-keys/PlexSign.key | sudo gpg --dearmor | sudo tee $k
+  # echo deb [signed-by=$k] https://$u/repo/deb public main | sudo tee $o
   # alternative commands to add keyrings
-  # curl https://$u/plex-keys/PlexSign.key | sudo apt-key add -
-  # echo deb https://$u/repo/deb public main | sudo tee $o
-  sex 'apt update';sex 'apt upgrade';cex 'apt install plexmediaserver -y'
-  sex "usermod -aG $s60 $meeu";sex "mkdir -p $p60";cmw $p60 775 $s60;sex "mkdir -p $p60/movie";sex "mkdir -p $p60/tv";sex "mkdir -p $p60/tv2";sex "mkdir -p $p60/lust";sex "chown -R $s60:$s60 $p60"
+  curl https://$u/plex-keys/PlexSign.key | sudo apt-key add -
+  echo deb https://$u/repo/deb public main | sudo tee $o
+  sudo apt update                  -y &>> $p02/$s60.out
+  sudo apt upgrade                 -y &>> $p02/$s60.out
+  sudo apt install plexmediaserver -y &>> $p02/$s60.out
+  sex "usermod -aG $s60 $meeu";sex "mkdir -p $p60";cmw $p60 775 $s60
+  sex "mkdir -p $p60/movie";sex "mkdir -p $p60/tv";sex "mkdir -p $p60/tv2";sex "mkdir -p $p60/lust"
+  sex "chown -R $s60:$s60 $p60"
   [[ $1 ]] && ngx
   xp;xd;xe;dmr;xa
   # $zip2:32400/web/index.html#!/setup
@@ -658,12 +676,6 @@ function tms {
   rp;rd;re;dmr;ra
 }
 function nfs {
-  # n35=20048
-  # n36=32765
-  # n37=32768
-  # n38=875
-  # n39=111
-  # n40=2049
   # p74='/etc/exports'
   # p75='/etc/nfs.conf'
   # s58='nfs-kernel-server'
@@ -673,16 +685,7 @@ function nfs {
   # s61="${s61}\nstatd-port=$n36"
   # s61="${s61}\nlockd-port=$n37"
   # s61="${s61}\nrquotad-port=$n38"
-  swu 'NFS SERVER';sex "apt install $s58 -y"
-  cc2 $p74 "$s59";cc2 $p75 "$s61"
-  pai $n35 192.168.8.0/24 mountd
-  pai $n36 192.168.8.0/24 statd
-  pai $n37 192.168.8.0/24 lockd
-  pai $n38 192.168.8.0/24 rquotad
-  pai $n39 192.168.8.0/24 rpcbind
-  pai $n40 192.168.8.0/24 nfs
-  sex 'ufw reload'
-  sex "$s00 restart $s58"
+  swu 'NFS SERVER';sex "apt install $s58 -y";cc2 $p74 "$s59";cc2 $p75 "$s61";sex 'ufw reload';sex "$s00 restart $s58"
 }
 function rvm { [[ -f $p70 ]] && return;swu 'RVM INSTALL';cex 'apt-add-repository -y ppa:rael-gc/rvm';cex 'apt update';cex 'apt install rvm -y';cex "usermod -a -G rvm $USER";echo "source $p70" >> $p71;sex "reboot"; }
 function cns {
