@@ -16,6 +16,7 @@ function nfc {
   fi
   [[ -d $d        ]] || sudo mkdir -p $d
   [[ -d $d/movie/ ]] || sudo mount 192.168.8.28:/var/lib/plexmediaserver/mp4 $d
+  ll $d
 }
 
 alias v1='esl ns3238168.ip-57-129-52.eu'
