@@ -109,6 +109,7 @@ p72='cns.keys'
 p73='hernanirvaz-f2e8fb66dbc0.json'
 p74='/etc/exports'
 p75='/etc/nfs.conf'
+p76='/etc/samba/smb.conf'
 
 g00='(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) +'
 g01='[0-9]{1,2} +'
@@ -234,6 +235,10 @@ n47=32412
 n48=32413
 n49=32414
 n50=5353  # Bonjour/Avahi network discovery.
+n51=445   # SMB
+n52=137   # NetBIOS Name Service
+n53=138   # NetBIOS Datagram Service
+n54=139   # SMB traffic over NetBIOS
 
 s00='systemctl'
 s01="$s00 status"
@@ -424,6 +429,15 @@ s61="${s61}\nmountd-port=$n35"
 s61="${s61}\nstatd-port=$n36"
 s61="${s61}\nlockd-port=$n37"
 s61="${s61}\nrquotad-port=$n38"
+s62='smbd'
+s63='nmbd'
+s64='[mp4]'
+s64="${s64}\npath=$p60"
+s64="${s64}\nbrowsable=yes"
+s64="${s64}\nread only=no"
+s64="${s64}\nwritable=yes"
+s64="${s64}\nguest ok=yes"
+s64="${s64}\nforce user=$s60"
 
 e01='PollIntervalMinSec'
 e02='PollIntervalMaxSec'

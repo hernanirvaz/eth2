@@ -433,12 +433,6 @@ function cpe {
 function pop { pde $1 $2 delete;pai $1 192.168.8.0/24 $2; }
 # Plex Media Server
 function xop {
-  pop $n35 nfs-mountd
-  pop $n36 nfs-statd
-  pop $n37 nfs-lockd
-  pop $n38 nfs-rquotad
-  pop $n39 nfs-rpcbind
-  pop $n40 nfs
   pop $n41 ${s60}
   pop $n42 ${s60}-DLNA
   pop $n43 ${s60}-companion
@@ -454,12 +448,6 @@ function xop {
 }
 function pco { pde $1 $2;pai $1 192.168.8.0/24 $2 delete; }
 function xco {
-  pco $n35 nfs-mountd
-  pco $n36 nfs-statd
-  pco $n37 nfs-lockd
-  pco $n38 nfs-rquotad
-  pco $n39 nfs-rpcbind
-  pco $n40 nfs
   pco $n41 ${s60}
   pco $n42 ${s60}-DLNA
   pco $n43 ${s60}-companion
@@ -473,10 +461,10 @@ function xco {
   pco 80   ${s22}-web
   pco 443  ${s22}-ssl
 }
-function xe  { xop;sex 'ufw reload';cex "$s04 $s22";cex "$s04 $s21"; }                                                                                        # enable  plexmediaserver
-function xa  { tse $s22 && cex "$s03 $s22";tsa $s21 || cex "$s03 $s21"; }                                                                                     # start   plexmediaserver
-function xp  { tse $s22 && cex "$s02 $s22";tsa $s21 && cex "$s02 $s21"; }                                                                                     # stop    plexmediaserver
-function xd  { cex "$s05 $s21";cex "$s05 $s22";xco;sex 'ufw reload'; }                                                                                        # disable plexmediaserver
+function xe  { xop;sex 'ufw reload';cex "$s04 $s22";cex "$s04 $s21";cex "$s04 $s58";cex "$s04 $s62 $s63"; }
+function xa  { tse $s22 && cex "$s03 $s22";tsa $s21 || cex "$s03 $s21";tse $s58 && cex "$s03 $s58";tse $s62 && cex "$s03 $s62 $s63"; }
+function xp  { tse $s22 && cex "$s02 $s22";tsa $s21 && cex "$s02 $s21";tse $s58 && cex "$s02 $s58";tse $s62 && cex "$s02 $s62 $s63"; }
+function xd  { cex "$s05 $s21";cex "$s05 $s22";cex "$s05 $s58";cex "$s05 $s62 $s63";xco;sex 'ufw reload'; }
 # Transmission BitTorrent Daemon
 function rop { pae 51413 torrent;pop 9091 torrent; }
 function rco { pde 51413 torrent;pco 9091 torrent; }
@@ -641,10 +629,6 @@ function mcp { local s=${2:-v1};local f=${3:-~};if [[ ${s:0:1} = v ]];then local
 
 function ngx { sex "apt install $s22 -y";cc4 $p32 "$s42";cmw $p32 644 root;sex "$s00 reload $s22";sudo nginx -t &>> $p02/$s60.out; }
 function plx {
-  # p32='/etc/nginx/conf.d/plexmediaserver.conf'
-  # p60="/var/lib/plexmediaserver/mp4"
-  # s22='nginx'
-  # s60='plex'
   local k=/usr/share/keyrings/plex.gpg
   local u=downloads.plex.tv
   local o=/etc/apt/sources.list.d/plexmediaserver.list
@@ -665,27 +649,28 @@ function plx {
   # $zip2:32400/web/index.html#!/setup
 }
 function tms {
-  # p33='/etc/transmission-daemon/settings.json'
-  # p34='/usr/lib/systemd/system/transmission-daemon.service'
-  # p59='/var/lib/transmission-daemon/downloads'
-  # s51='debian-transmission'
-  # s15='transmission-daemon'
   swu 'TRANSMISSION SERVER';sex "apt install transmission-cli transmission-common $s15 -y"
   sex "usermod -aG $s51 $meeu";sex "mkdir -p $p59";cmw $p59 775 $s51;cc1 $p33 "$e24";cc1 $p34 "$e25";cmw $p33 600 $s51;sex "$s00 reload $s15"
   sex "ln -s $p60/movie $p59/lmv";sex "ln -s $p60/tv $p59/ltv";sex "ln -s $p60/tv2 $p59/lt2";sex "ln -s $p60/lust $p59/llt"
   rp;rd;re;dmr;ra
 }
 function nfs {
-  # p74='/etc/exports'
-  # p75='/etc/nfs.conf'
-  # s58='nfs-kernel-server'
-  # s59="$p60 192.168.8.0/24(rw,sync,no_subtree_check)"
-  # s61='[nfsd]'
-  # s61="${s61}\nmountd-port=$n35"
-  # s61="${s61}\nstatd-port=$n36"
-  # s61="${s61}\nlockd-port=$n37"
-  # s61="${s61}\nrquotad-port=$n38"
-  swu 'NFS SERVER';sex "apt install $s58 -y";cc2 $p74 "$s59";cc2 $p75 "$s61";sex 'ufw reload';sex "$s00 restart $s58"
+  swu 'NFS SERVER';sex "apt install $s58 -y";cc2 $p74 "$s59";cc2 $p75 "$s61"
+  pai $n35 192.168.8.0/24 nfs-mountd
+  pai $n36 192.168.8.0/24 nfs-statd
+  pai $n37 192.168.8.0/24 nfs-lockd
+  pai $n38 192.168.8.0/24 nfs-rquotad
+  pai $n39 192.168.8.0/24 nfs-rpcbind
+  pai $n40 192.168.8.0/24 nfs
+  sex 'ufw reload';sex "$s00 restart $s58"
+}
+function smb {
+  swu 'SMB SERVER';sex "apt install samba -y";cc2 $p76 "$s64"
+  pai $n51/tcp 192.168.8.0/24 ${s62}-SMB
+  pai $n52/udp 192.168.8.0/24 ${s62}-NBNS
+  pai $n53/udp 192.168.8.0/24 ${s62}-NBDS
+  pai $n54/tcp 192.168.8.0/24 ${s62}-NetBIOS
+  sex 'ufw reload';sex "smbpasswd -n $s60";sex "$s00 restart $s62 $s63"
 }
 function rvm { [[ -f $p70 ]] && return;swu 'RVM INSTALL';cex 'apt-add-repository -y ppa:rael-gc/rvm';cex 'apt update';cex 'apt install rvm -y';cex "usermod -a -G rvm $USER";echo "source $p70" >> $p71;sex "reboot"; }
 function cns {
@@ -695,7 +680,9 @@ function cns {
   if [[ -f $p02/$p72.gpg ]];then gpg --batch --yes --passphrase "$B" -d $p02/$p72.gpg >> $p71      ;rm -f $p02/$p72.gpg;else echo "needs $p02/$p72.gpg";fi
   if [[ -f $p02/$p73.gpg ]];then gpg --batch --yes --passphrase "$B" -d $p02/$p73.gpg  > $p02/.$p73;rm -f $p02/$p73.gpg;else echo "needs $p02/$p73.gpg";fi
 }
-[[ $1 = plx ]] && { if [[ $cunm = $znm2 ]];then plx $2;tms;nfs;fi; }
+[[ $1 = plx ]] && { if [[ $cunm = $znm2 ]];then plx $2;tms;fi; }
+[[ $1 = nfs ]] && { if [[ $cunm = $znm2 ]];then nfs;fi; }
+[[ $1 = smb ]] && { if [[ $cunm = $znm2 ]];then smb;fi; }
 [[ $1 = rvm ]] && { rvm; }
 [[ $1 = cns ]] && { cns; }
 
@@ -993,6 +980,8 @@ if [[ ! $1 ]];then
   m="$m\nulr [d]\t\t\tshow restartings d($(date +%F)) on $(basename $p69)"
   m="$m\nmcp [o] [s] [d]\t\tscp <[o]riginal> <[s]erver>:<[d]estination>"
   m="$m\nplx [s]\t\t\tinstalar $s60/[$s22] servers"
+  m="$m\nnfs\t\t\tinstalar $s58"
+  m="$m\nsmb\t\t\tinstalar $s62/$s63 servers"
   m="$m\nrvm\t\t\tinstalar rvm"
   m="$m\ncns\t\t\tinstalar cns ruby gem"
   swn "\n$m\n"
