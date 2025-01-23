@@ -503,6 +503,9 @@ e39='s%(finalized_root|block|head|parent_hash|pubkey|block_hash|peer_id|graffiti
 e40='s%(Some|Slot) *\(([^ ]*)\)%\2%g;s%,? *(module) *: *([^ ,]*),? *%%g'                               # CL
 e40="$e40;s%builder_boost_factor: +None,%%"                                                            # CL
 e40="$e40;s%local_block_value: +([0-9]{17}) *,%lv: 💰 0.0\1 💰%"                                       # CL
+e40="$e40;s%local_block_value: +([0-9]{16}) *,%lv: 💰 0.00\1 💰%"                                      # CL
+e40="$e40;s%local_block_value: +([0-9]{15}) *,%lv: 💰 0.000\1 💰%"                                     # CL
+e40="$e40;s%local_block_value: +([0-9]{14}) *,%lv: 💰 0.0000\1 💰%"                                    # CL
 e40="$e40;s%relay_value:%rv:%g"                                                                        # CL
 e40="$e40;s%block_slot:%bl:%g"                                                                         # CL
 e41="s%snapdiffs *= *%sdf=%g;s%triediffs *= *%tdf=%g;s%triedirty *= *%tdt=%g;$e38"                     # ALL EL
