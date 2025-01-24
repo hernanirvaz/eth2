@@ -638,9 +638,12 @@ function plx {
   # alternative commands to add keyrings
   curl https://$u/plex-keys/PlexSign.key | sudo apt-key add -
   echo deb https://$u/repo/deb public main | sudo tee $o
-  sudo apt update                  -y &>> $p02/$s60.out
-  sudo apt upgrade                 -y &>> $p02/$s60.out
-  sudo apt install plexmediaserver -y &>> $p02/$s60.out
+  sudo apt update                              -y &>> $p02/$s60.out
+  sudo apt upgrade                             -y &>> $p02/$s60.out
+  sudo apt install --reinstall ca-certificates -y &>> $p02/$s60.out
+  sudo update-ca-certificates                     &>> $p02/$s60.out
+  sudo apt install plexmediaserver             -y &>> $p02/$s60.out
+  sudo apt upgrade openssl                        &>> $p02/$s60.out
   sex "usermod -aG $s60 $meeu";sex "mkdir -p $p60";cmw $p60 775 $s60
   sex "mkdir -p $p60/movie";sex "mkdir -p $p60/tv";sex "mkdir -p $p60/tv2";sex "mkdir -p $p60/lust"
   sex "chown -R $s60:$s60 $p60"
