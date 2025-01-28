@@ -110,6 +110,10 @@ p73='hernanirvaz-f2e8fb66dbc0.json'
 p74='/etc/exports'
 p75='/etc/nfs.conf'
 p76='/etc/samba/smb.conf'
+p77='/etc/os-release'
+p78='/etc/apt/trusted.gpg.d/jellyfin.gpg'
+p79='/etc/apt/sources.list.d/jellyfin.list'
+p80="/media/mp4"
 
 g00='(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) +'
 g01='[0-9]{1,2} +'
@@ -239,6 +243,7 @@ n51=445   # SMB
 n52=137   # NetBIOS Name Service
 n53=138   # NetBIOS Datagram Service
 n54=139   # SMB traffic over NetBIOS
+n55=8096  # Jellyfin Software Media System
 
 s00='systemctl'
 s01="$s00 status"
@@ -422,7 +427,7 @@ s56='chrony'
 s57="server $zip1 iburst minpoll 3 maxpoll 6"
 s57="${s57}\nserver $zip2 iburst minpoll 3 maxpoll 6"
 s58='nfs-kernel-server'
-s59="$p60 192.168.8.0/24(rw,sync,no_subtree_check)"
+if [[ -d $p60 ]];then s59="$p60 192.168.8.0/24(rw,sync,no_subtree_check)";else s59="$p80 192.168.8.0/24(rw,sync,no_subtree_check)";fi
 s60='plex'
 s61='[nfsd]'
 s61="${s61}\nmountd-port=$n35"
@@ -432,12 +437,14 @@ s61="${s61}\nrquotad-port=$n38"
 s62='smbd'
 s63='nmbd'
 s64='[mp4]'
-s64="${s64}\npath=$p60"
+if [[ -d $p60 ]];then s64="${s64}\npath=$p60";else s64="${s64}\npath=$p80";fi
 s64="${s64}\nbrowsable=yes"
 s64="${s64}\nread only=no"
 s64="${s64}\nwritable=yes"
 s64="${s64}\nguest ok=yes"
 s64="${s64}\nforce user=$s60"
+s65='https://repo.jellyfin.org/ubuntu'
+s66='jellyfin'
 
 e01='PollIntervalMinSec'
 e02='PollIntervalMaxSec'
@@ -580,6 +587,7 @@ e76="$e29;s%\t$g30: *$e78% INFO peers \1%i"
 e77="$e29;s%(\.[0-9]{1,}) *.*$g35 *$e78%\1 peers \2%i"
 e78="$e29;s%(\.[0-9]{1,} INFO) *.*$g31: *$e78%\1 peers \2%i"
 e79='s%disable-upnp%disable-upnp --checkpoint-sync-url';if [[ $cunm = $inm5 ]];then e79="$e79 http://$iip6:5052%";elif [[ $cunm = $inm6 ]];then e79="$e79 http://$iip5:5052%";else e79="$e79 https://mainnet.checkpoint.sigp.io%";fi
+e80='s%^ *VERSION_CODENAME *= *%%p'
 
 j0='.ata_sct_temperature_history.table|join(" ")'
 j1='.temperature.current'
@@ -671,4 +679,3 @@ function cc1 { local f=$(basename $1);sex "cp $1 $f.sav";cmw $f.sav 644 eth     
 function cc2 { local f=$(basename $1);sex "cp $1 $f.sav";cp $1 $f.new            ;echo -e "$2"   >> $f.new;sex "cp $f.new $1"; }                              # add lines to end file
 function cc3 { local f=$(basename $1);sex "cp $1 $f.sav";sef "$2" $f.sav > $f.new;echo -e "$3"   >> $f.new;sex "cp $f.new $1"; }                              # add lines to pos file
 function cc4 { local f=$(basename $1);sex "cp $1 $f.sav"                         ;echo -e "$2"    > $f.new;sex "cp $f.new $1"; }                              # replace lines of file
-

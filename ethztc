@@ -4,21 +4,24 @@ cust=${cunm:0:3}
 if [[ $cunm = hrv-zotac2 ]];then
   cuip=$(hostname -I)
   cuip=${cuip%% *}
-  d=/var/lib/plexmediaserver/mp4
+  mt1 () { id jellyfin &>>/dev/null; }
+  mt2 () { id plex     &>>/dev/null; }
+  mdi () { if mt1;then echo /media/mp4;elif mt2;then echo /var/lib/plexmediaserver/mp4;else echo /media/mp4;fi; }
+  mus () { if mt1;then echo jellyfin  ;elif mt2;then echo plex                        ;else echo eth       ;fi; }
   rsy () { echo RSYNC $1 $2;rsync --ignore-existing --delete -rvz $1 $2; }
-  smv () { rsy $d/movie ztc1:; }
-  stv () { rsy $d/tv2   ztc1:;rsy $d/tv ztc3:; }
-  slt () { rsy $d/lust  ztc1:; }
+  smv () { local d=$(mdi);rsy $d/movie ztc1:; }
+  stv () { local d=$(mdi);rsy $d/tv2   ztc1:;rsy $d/tv ztc3:; }
+  slt () { local d=$(mdi);rsy $d/lust  ztc1:; }
   sal () { smv;sleep 2;stv;sleep 2;slt; }
   pmv () { rsy ztc1:~/movie ~; }
   ptv () { rsy ztc1:~/tv2 ~;rsy ztc3:~/tv ~; }
   plt () { rsy ztc1:~/lust ~; }
   pal () { pmv;ptv;plt; }
-  ffl () { echo findls $2 $1;find $1 -name "*.$2" -print; }
-  ffr () { echo findrm $2 $1;find $1 -name "*.$2" -exec sudo rm {} \;; }
-  fll () { if [[ $1 ]];then ffl $d $1;else ffl $d txt;ffl $d jpg;ffl $d nfo;fi; }
-  frm () { if [[ $1 ]];then ffr $d $1;else ffr $d txt;ffr $d jpg;ffr $d nfo;fi; }
-  cug () { local s=${1:-plex};echo chmdug $s $d;sudo chown $s:$s -R $d;sudo find $d -type d -exec chmod 755 {} \;;sudo find $d -type f -exec chmod 644 {} \;; }
+  ffl () { local d=$(mdi);echo findls $1 $d;find $d -name "*.$1" -print; }
+  ffr () { local d=$(mdi);echo findrm $1 $d;find $d -name "*.$1" -exec sudo rm {} \;; }
+  fll () { if [[ $1 ]];then ffl $1;else ffl txt;ffl jpg;fi; }
+  frm () { if [[ $1 ]];then ffr $1;else ffr txt;ffr jpg;fi; }
+  cug () { local d=$(mdi);local s=${1:-$(mus)};echo chmdug $s $d;sudo chown $s:$s -R $d;sudo find $d -type d -exec chmod 755 {} \;;sudo find $d -type f -exec chmod 644 {} \;; }
   tll () { transmission-remote $cuip:9091 -l; }
   trl () { tll|sed -En 's%^ +([0-9]+) +100\% +.+Done +.+$%\1%p'; }
   prl () { local s=$1;shift;until [[ $# -lt 1 ]];do local s="$s,$1";shift;done;[[ $s ]] && printf $s; }

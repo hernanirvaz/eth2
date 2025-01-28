@@ -15,9 +15,11 @@ function nfc {
     sudo apt install nfs-common -y &>> nfc.out
   fi
   [[ -d $d        ]] || sudo mkdir -p $d
-  [[ -d $d/movie/ ]] || sudo mount 192.168.8.28:/var/lib/plexmediaserver/mp4 $d
+  [[ -d $d/movie/ ]] || sudo mount 192.168.8.28:$1 $d
   ll $d
 }
+function nfj { nfc '/media/mp4'; }
+function nfp { nfc '/var/lib/plexmediaserver/mp4'; }
 
 alias v1='esl ns3238168.ip-57-129-52.eu'
 alias v2='esl ns3238168.ip-57-129-52.eu'

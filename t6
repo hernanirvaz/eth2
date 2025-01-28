@@ -430,8 +430,15 @@ function cpe {
   upl;uls "$g59" "$(ulg)";esp;csp;mre
 }
 
-# Plex Media Server
 function pop { pde $1 $2 delete;pai $1 192.168.8.0/24 $2; }
+function pco { pde $1 $2;pai $1 192.168.8.0/24 $2 delete; }
+
+# Jellyfin Software Media System
+function je  { pop $n55 $s66;pop 80 ${s22}-web;pop 443 ${s22}-ssl;sex 'ufw reload';cex "$s04 $s22";cex "$s04 $s66"; }
+function ja  { tse $s22 && cex "$s03 $s22";tsa $s66 || cex "$s03 $s66"; }
+function jp  { tse $s22 && cex "$s02 $s22";tsa $s66 && cex "$s02 $s66"; }
+function jd  { cex "$s05 $s66";cex "$s05 $s22";pco $n55 $s66;pco 80 ${s22}-web;pco 443 ${s22}-ssl;sex 'ufw reload'; }
+# Plex Media Server
 function xop {
   pop $n41 ${s60}
   pop $n42 ${s60}-DLNA
@@ -446,7 +453,6 @@ function xop {
   pop 80   ${s22}-web
   pop 443  ${s22}-ssl
 }
-function pco { pde $1 $2;pai $1 192.168.8.0/24 $2 delete; }
 function xco {
   pco $n41 ${s60}
   pco $n42 ${s60}-DLNA
@@ -643,13 +649,26 @@ function plx {
   sudo apt install --reinstall ca-certificates -y &>> $p02/$s60.out
   sudo update-ca-certificates                     &>> $p02/$s60.out
   sudo apt install plexmediaserver             -y &>> $p02/$s60.out
-  sudo apt upgrade openssl                        &>> $p02/$s60.out
   sex "usermod -aG $s60 $meeu";sex "mkdir -p $p60";cmw $p60 775 $s60
   sex "mkdir -p $p60/movie";sex "mkdir -p $p60/tv";sex "mkdir -p $p60/tv2";sex "mkdir -p $p60/lust"
   sex "chown -R $s60:$s60 $p60"
   [[ $1 ]] && ngx
   xp;xd;xe;dmr;xa
   # $zip2:32400/web/index.html#!/setup
+}
+function jly {
+  swu 'JELLYFIN SERVER';sex 'apt install ca-certificates apt-transport-https -y'
+  curl -fsSL $s65/jellyfin_team.gpg.key | sudo gpg --dearmor -o $p78
+  echo "deb [arch=$(dpkg --print-architecture)] $s65 $(snf "$e80" $p77) main" | sudo tee $p79
+  sudo apt update                              -y &>> $p02/$s66.out
+  sudo apt upgrade                             -y &>> $p02/$s66.out
+  sudo apt install --reinstall ca-certificates -y &>> $p02/$s66.out
+  sudo update-ca-certificates                     &>> $p02/$s66.out
+  sudo apt install $s66                        -y &>> $p02/$s66.out
+  cex "chown -R $s66:adm /etc/$s66";cex "usermod -aG $s66 $meeu"
+  sex "mkdir -p $p80";cmw $p80 750 $s66;sex "chown -R $s66:$s66 $p80"
+  jp;jd;je;dmr;ja
+  echo http://$zip2:$n55
 }
 function tms {
   swu 'TRANSMISSION SERVER';sex "apt install transmission-cli transmission-common $s15 -y"
@@ -673,7 +692,9 @@ function smb {
   pai $n52/udp 192.168.8.0/24 ${s62}-NBNS
   pai $n53/udp 192.168.8.0/24 ${s62}-NBDS
   pai $n54/tcp 192.168.8.0/24 ${s62}-NetBIOS
-  sex 'ufw reload';sex "smbpasswd -n $s60";sex "$s00 restart $s62 $s63"
+  sex 'ufw reload'
+  if [[ -d $p60 ]];then sex "smbpasswd -n $s60";else sex "smbpasswd -n $s66";fi
+  sex "$s00 restart $s62 $s63"
 }
 function rvm { [[ -f $p70 ]] && return;swu 'RVM INSTALL';cex 'apt-add-repository -y ppa:rael-gc/rvm';cex 'apt update';cex 'apt install rvm -y';cex "usermod -a -G rvm $USER";echo "source $p70" >> $p71;sex "reboot"; }
 function cns {
@@ -683,9 +704,11 @@ function cns {
   if [[ -f $p02/$p72.gpg ]];then gpg --batch --yes --passphrase "$B" -d $p02/$p72.gpg >> $p71      ;rm -f $p02/$p72.gpg;else echo "needs $p02/$p72.gpg";fi
   if [[ -f $p02/$p73.gpg ]];then gpg --batch --yes --passphrase "$B" -d $p02/$p73.gpg  > $p02/.$p73;rm -f $p02/$p73.gpg;else echo "needs $p02/$p73.gpg";fi
 }
-[[ $1 = plx ]] && { if [[ $cunm = $znm2 ]];then plx $2;tms;fi; }
+[[ $1 = plx ]] && { if [[ $cunm = $znm2 ]];then plx $2;fi; }
+[[ $1 = jly ]] && { if [[ $cunm = $znm2 ]];then jly;fi; }
 [[ $1 = nfs ]] && { if [[ $cunm = $znm2 ]];then nfs;fi; }
 [[ $1 = smb ]] && { if [[ $cunm = $znm2 ]];then smb;fi; }
+[[ $1 = tms ]] && { if [[ $cunm = $znm2 ]];then tms;fi; }
 [[ $1 = rvm ]] && { rvm; }
 [[ $1 = cns ]] && { cns; }
 
@@ -876,6 +899,7 @@ function cns {
 [[ $1 = bpd ]] && { bp;bd; }
 [[ $1 = vpd ]] && { vp;vd; }
 [[ $1 = xpd ]] && { xp;xd; }
+[[ $1 = jpd ]] && { jp;jd; }
 [[ $1 = rpd ]] && { rp;rd; }
 [[ $1 = spd ]] && { sp;sd; }
 [[ $1 = mpd ]] && { mp;md; }
@@ -887,6 +911,7 @@ function cns {
 [[ $1 = rea ]] && { re;dmr;ra; }
 [[ $1 = sea ]] && { se;dmr;sa; }
 [[ $1 = xea ]] && { xe;dmr;xa; }
+[[ $1 = jea ]] && { je;dmr;ja; }
 [[ $1 = mea ]] && { me;dmr;ma; }
 # enable
 [[ $1 = ge  ]] && { ge; }
@@ -932,7 +957,7 @@ function cns {
 if [[ ! $1 ]];then
   m="letra 1"
   m="$m\n[g|t|u|b|c|v|m]\t\tgeth|nethermind|besu|beacon|cc|vc|mev"
-  m="$m\n[x|r|s]\t\t\t$s21|$s15|$s20"
+  m="$m\n[j|x|r|s]\t\t$s66|$s21|$s15|$s20"
   m="$m\nletra 2"
   m="$m\n[e|j|h|p[f]|a[j]]\tenable|journal|historic report|progress report [file]|arranca [journal]"
   m="$m\n[pr|ds|pd|pa|ea]\tpara|disable|para/disable|para/arranca|enable/arranca"
@@ -983,6 +1008,8 @@ if [[ ! $1 ]];then
   m="$m\nulr [d]\t\t\tshow restartings d($(date +%F)) on $(basename $p69)"
   m="$m\nmcp [o] [s] [d]\t\tscp <[o]riginal> <[s]erver>:<[d]estination>"
   m="$m\nplx [s]\t\t\tinstalar $s60/[$s22] servers"
+  m="$m\njly\t\t\tinstalar $s66"
+  m="$m\ntms\t\t\tinstalar $s15"
   m="$m\nnfs\t\t\tinstalar $s58"
   m="$m\nsmb\t\t\tinstalar $s62/$s63 servers"
   m="$m\nrvm\t\t\tinstalar rvm"
