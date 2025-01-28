@@ -430,8 +430,8 @@ function cpe {
   upl;uls "$g59" "$(ulg)";esp;csp;mre
 }
 
-function pop { pde $1 $2 delete;pai $1 192.168.8.0/24 $2; }
 # Plex Media Server
+function pop { pde $1 $2 delete;pai $1 192.168.8.0/24 $2; }
 function xop {
   pop $n41 ${s60}
   pop $n42 ${s60}-DLNA
