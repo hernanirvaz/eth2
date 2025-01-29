@@ -673,7 +673,11 @@ function jly {
 function tms {
   swu 'TRANSMISSION SERVER';sex "apt install transmission-cli transmission-common $s15 -y"
   sex "usermod -aG $s51 $meeu";sex "mkdir -p $p59";cmw $p59 775 $s51;cc1 $p33 "$e24";cc1 $p34 "$e25";cmw $p33 600 $s51;sex "$s00 reload $s15"
-  sex "ln -s $p60/movie $p59/lmv";sex "ln -s $p60/tv $p59/ltv";sex "ln -s $p60/tv2 $p59/lt2";sex "ln -s $p60/lust $p59/llt"
+  if [[ -d $p60 ]];then
+    sex "ln -s $p60/movie $p59/lmv";sex "ln -s $p60/tv $p59/ltv";sex "ln -s $p60/tv2 $p59/lt2";sex "ln -s $p60/lust $p59/llt"
+  else
+    sex "ln -s $p80/movie $p59/lmv";sex "ln -s $p80/tv $p59/ltv";sex "ln -s $p80/tv2 $p59/lt2";sex "ln -s $p80/lust $p59/llt"
+  fi
   rp;rd;re;dmr;ra
 }
 function nfs {
