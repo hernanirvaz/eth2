@@ -657,7 +657,7 @@ function plx {
   # $zip2:32400/web/index.html#!/setup
 }
 function jly {
-  swu 'JELLYFIN SERVER';sex 'apt install ca-certificates apt-transport-https -y'
+  swu 'JELLYFIN SERVER';sex 'apt install ca-certificates apt-transport-https intel-opencl-icd -y'
   curl -fsSL $s65/jellyfin_team.gpg.key | sudo gpg --dearmor -o $p78
   echo "deb [arch=$(dpkg --print-architecture)] $s65 $(snf "$e80" $p77) main" | sudo tee $p79
   sudo apt update                              -y &>> $p02/$s66.out
@@ -665,7 +665,7 @@ function jly {
   sudo apt install --reinstall ca-certificates -y &>> $p02/$s66.out
   sudo update-ca-certificates                     &>> $p02/$s66.out
   sudo apt install $s66                        -y &>> $p02/$s66.out
-  cex "chown -R $s66:adm /etc/$s66";cex "usermod -aG $s66 $meeu"
+  cex "chown -R $s66:adm /etc/$s66";cex "usermod -aG $s66 $meeu";sex "usermod -aG render $s66"
   sex "mkdir -p $p80";cmw $p80 750 $s66;sex "chown -R $s66:$s66 $p80"
   jp;jd;je;dmr;ja
   echo http://$zip2:$n55
