@@ -17,16 +17,16 @@ if [[ $cunm = hrv-zotac2 ]];then
   ptv () { rsy ztc1:~/tv2 ~;rsy ztc3:~/tv ~; }
   plt () { rsy ztc1:~/lust ~; }
   pal () { pmv;ptv;plt; }
-  ffl () { local d=$(mdi);echo findls $1 $d;find $d -name "*.$1" -print; }
-  ffr () { local d=$(mdi);echo findrm $1 $d;find $d -name "*.$1" -exec sudo rm {} \;; }
-  fll () { if [[ $1 ]];then ffl $1;else ffl txt;ffl jpg;fi; }
-  frm () { if [[ $1 ]];then ffr $1;else ffr txt;ffr jpg;fi; }
-  cug () { local d=$(mdi);local s=${1:-$(mus)};echo chmdug $s $d;sudo chown $s:$s -R $d;sudo find $d -type d -exec chmod 755 {} \;;sudo find $d -type f -exec chmod 644 {} \;; }
-  tll () { transmission-remote $cuip:9091 -l; }
-  trl () { tll|sed -En 's%^ +([0-9]+) +100\% +.+Done +.+$%\1%p'; }
-  prl () { local s=$1;shift;until [[ $# -lt 1 ]];do local s="$s,$1";shift;done;[[ $s ]] && printf $s; }
-  trm () { local e=$(prl $(trl));[[ $e ]] || return;echo -e "remove $e\n";tll;transmission-remote $cuip:9091 -t $e --remove; }
-  hlp () { echo -e "\ncug\t\t\tchange user & permissions\n[ps][mv|tv|lt|al]\tpull|sync movie|tv|lt|all\nf[ll|rm]\t\tlist|remove removables\nt[ll|rm]\t\tlist|remove done transmissions\n"; }
+  fi0 () { local d=$(mdi);echo findls $1 $d;find $d -name "*.$1" -print; }
+  fi1 () { local d=$(mdi);echo findrm $1 $d;find $d -name "*.$1" -exec sudo rm {} \;; }
+  fll () { if [[ $1 ]];then fi0 $1;else fi0 txt;fi0 jpg;fi; }
+  frm () { if [[ $1 ]];then fi1 $1;else fi1 txt;fi1 jpg;fi; }
+  fom () { local d=$(mdi);local s=${1:-$(mus)};echo "ch[own|mod] $s $d";sudo chown $s:$s -R $d;sudo find $d -type d -exec chmod 755 {} \;;sudo find $d -type f -exec chmod 644 {} \;; }
+  rll () { transmission-remote $cuip:9091 -l; }
+  ri0 () { rll|sed -En 's%^ +([0-9]+) +100\% +.+Done +.+$%\1%p'; }
+  ri1 () { local s=$1;shift;until [[ $# -lt 1 ]];do local s="$s,$1";shift;done;[[ $s ]] && printf $s; }
+  rrm () { local e=$(ri1 $(ri0));[[ $e ]] || return;echo -e "remove $e\n";rll;transmission-remote $cuip:9091 -t $e --remove; }
+  hlp () { echo -e "\n[ps][mv|tv|lt|al]\tpull|sync movie|tv|lt|all\nf[ll|rm|om]\t\tlist|remove|permission files\nr[ll|rm]\t\tlist|remove done transmissions\n"; }
   alias rcd='cd /var/lib/transmission-daemon/downloads;hlp'
   alias rp='t6 rpd'
   alias ra='t6 rea'
