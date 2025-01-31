@@ -301,11 +301,11 @@ function bo3 { b3=$(nu5 0 $b2 $(ln0 BM $p13)); }                                
 function bo4 { bo0|grep $(printf 'nod%03i' $1 2>$p03); }                                                                                                      # get homologous node lines sorted
 function bo5 { bo0|head -n$((b6>b2?b6:b2<5?5:b2))|tail -n$((b6>0?b6:b2>n12?n12:b2<5?5:b2)); }                                                                 # homologous report
 function boa { local g=${1:-$n16};local e=$(bo4 $g);printf 'BO%5i %3i\n' $(echo "$e"|wc -l) $g 2>$p03;echo "$e";((g<n17)) && boa $((g+n18)); }                # recursively show homologous nodes report
+function bsm { brm;[[ -s $p13.r ]] && cp $p13.r $p13; }
 function bod {
   fft $p12 || return;l2=$(bff 23:58);if [[ $1 = o ]];then local s=$(bo1);else local s=$(bo0);fi;local e='';while read -a v;do
-    if [[ ${v[9]} -ge $2 && $(echo "$l2"|grep -c ${v[5]}) -gt $3 ]];then local e="$e ${v[3]}";l2=$(echo "$l2"|grep -v ${v[3]});fi                             # gather delete info
-  done <<< "$s";if [[ $e ]];then local e=${e:1};local e=${e// /\\|};bdw $p12 $e;bdw $p13 $e;fi                                                                # perform logs delete
-  brm;[[ -s $p13.r ]] && cp $p13.r $p13
+    if [[ ${v[9]} -ge $2 && $(echo "$l2"|grep -c ${v[5]}) -gt $3 ]];then local e="$e|${v[3]}";l2=$(echo "$l2"|grep -v ${v[3]});fi                             # gather delete info
+  done <<< "$s";if [[ $e ]];then local e=${e:1};bdw $p12 "$e";bdw $p13 "$e";fi;bsm
 }
 function bh0 {
   fft $p12 || return;tail -n${1:-$n12} $p12;[[ $1 ]] && return;boi;bl0;local e=$(printf '%1i     x9  x5  x1  x0   er   if   c2' $b0 2>$p03);local s=$(printf 'i4   i5   i6   %1i7   i8   i9  i10  avg' $b0 2>$p03)
@@ -353,8 +353,8 @@ function bsl {                                                                  
   fft $p12 && fft $p14 || return;rm -f $p12.s;tail -n$(($(llc $p12)-$(tail -n1 $p14|cut -d' ' -f2))) $p12 > $p12.s                                            # new    cc      log output
   rm -f $p14.s;head -n$(($(llc $p14)-1)) $p14 > $p14.s;tail -n1 $p14|sef "$e60" >> $p14.s                                                                     # new    barqivo log output
 }
-function bdw { fft $1 || return;cp $1 $1.o;grep -v $2 $1.o > $1;grep $2 $1.o > $1.d; }                                                                        # work to delete cc log day
-function bdl { local d=$(pt0 $1 sai);[[ $d = sai ]] && return;bdw $p12 $d;bdw $p13 $d; }                                                                      #         delete cc log day
+function bdw { fft $1 || return;cp $1 $1.o;egrep -v "$2" $1.o > $1;egrep "$2" $1.o > $1.d; }                                                                  # work to delete cc log day
+function bdl { local d=$(pt0 $1 sai);[[ $d = sai ]] && return;bdw $p12 $d;bdw $p13 $d;bsm; }                                                                  #         delete cc log day
 function wif { echo $@|sef "$e59"; }                                                                                                                          # get ufw info
 function sm0 { pex "smartctl --json=c -x $1"|jq -r "$j3" 2>$p03; }
 function sm1 { pex "smartctl --json=c -x $1"|jq -r "$j4" 2>$p03; }
