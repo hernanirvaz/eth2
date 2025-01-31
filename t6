@@ -302,9 +302,9 @@ function bo4 { bo0|grep $(printf 'nod%03i' $1 2>$p03); }                        
 function bo5 { bo0|head -n$((b6>b2?b6:b2<5?5:b2))|tail -n$((b6>0?b6:b2>n12?n12:b2<5?5:b2)); }                                                                 # homologous report
 function boa { local g=${1:-$n16};local e=$(bo4 $g);printf 'BO%5i %3i\n' $(echo "$e"|wc -l) $g 2>$p03;echo "$e";((g<n17)) && boa $((g+n18)); }                # recursively show homologous nodes report
 function bod {
-  fft $p12 || return;l2=$(bff 23:58);local e='';while read -a v;do
-    if [[ ${v[9]} -ge $1 && $(echo "$l2"|grep -c ${v[5]}) -gt $2 ]];then local e="$e ${v[3]}";l2=$(echo "$l2"|grep -v ${v[3]});fi                             # gather delete info
-  done <<< $(bo1);if [[ $e ]];then local e=${e:1};local e=${e// /\\|};bdw $p12 $e;bdw $p13 $e;fi                                                              # perform logs delete
+  fft $p12 || return;l2=$(bff 23:58);if [[ $1 = o ]];then local s=$(bo1);else local s=$(bo0);fi;local e='';while read -a v;do
+    if [[ ${v[9]} -ge $2 && $(echo "$l2"|grep -c ${v[5]}) -gt $3 ]];then local e="$e ${v[3]}";l2=$(echo "$l2"|grep -v ${v[3]});fi                             # gather delete info
+  done <<< "$s";if [[ $e ]];then local e=${e:1};local e=${e// /\\|};bdw $p12 $e;bdw $p13 $e;fi                                                                # perform logs delete
 }
 function bh0 {
   fft $p12 || return;tail -n${1:-$n12} $p12;[[ $1 ]] && return;boi;bl0;local e=$(printf '%1i     x9  x5  x1  x0   er   if   c2' $b0 2>$p03);local s=$(printf 'i4   i5   i6   %1i7   i8   i9  i10  avg' $b0 2>$p03)
@@ -780,7 +780,7 @@ function cns {
 [[ $1 = tp  ]] && { tl0;swn "$m"; }
 [[ $1 = tpf ]] && { tl0;swn "$m" >> $p62;[[ $ok != OK ]] && trs $ok 0 $n03; }
 [[ $1 = bp  ]] && { bl0;swn "$m"; }
-[[ $1 = bpf ]] && { bl0;swn "$m" >> $p12;if [[ $d1 = 23:58 ]];then if bdt;then bdl $d0;else if [[ $(llc $p12) -gt $n14 ]];then bod 0 5;fi;fi;fi;[[ $ok != OK ]] && brs $ok 0 0 $(btn $n02);pas; }
+[[ $1 = bpf ]] && { bl0;swn "$m" >> $p12;if [[ $d1 = 23:58 ]];then if bdt;then bdl $d0;else if [[ $(llc $p12) -gt $n14 ]];then bod o 0 5;fi;fi;fi;[[ $ok != OK ]] && brs $ok 0 0 $(btn $n02);pas; }
 [[ $1 = vp  ]] && { vl0;swn "$m"; }
 [[ $1 = vpf ]] && { vl0;swn "$m" >> $p49; }
 [[ $1 = mp  ]] && { ml0;swn "$m"; }
@@ -806,7 +806,8 @@ function cns {
 [[ $1 = bo  && -f $p12 ]] && { boi $(pt1 $@ 00:00);if [[ $(pt3 $@ s) = n ]];then b6=$b2;else b6=$(pt2 $@ 0);fi;bo5; }
 [[ $1 = boc && -f $p12 ]] && { unset v;read -a v <<< $(bff|tail -n1);l2=$(bff $(pt1 $2 ${v[4]}));boa; }
 [[ $1 = bol && -f $p12 ]] && { l2=$(bff 23:58);boa; }
-[[ $1 = bod ]] && { bod ${2:-0} ${3:-5}; }
+[[ $1 = bod ]] && { bod o ${2:-0} ${3:-5}; }
+[[ $1 = brd ]] && { bod r ${2:-0} ${3:-5}; }
 [[ $1 = bdl ]] && { bdl $2; }
 [[ $1 = brl ]] && { brl; }
 [[ $1 = brm ]] && { brm; }
@@ -980,7 +981,7 @@ if [[ ! $1 ]];then
   m="$m\nbsl\t\t\tshrink cc minute log using barqivo"
   m="$m\nbdl yyyy-mm-dd\t\tdelete cc log day"
   m="$m\nbo  [lines]\t\thomologous report [with max lines]"
-  m="$m\nbod [p] [n]\t\tdelete logs for last penalty >= p(0) && node days > n(1)"
+  m="$m\nb[or]d [p] [n]\t\tdelete logs for last penalty >= p(0) && node days > n(5) in [o]rder or [r]everse"
   m="$m\nbo[cl]\t\t\tall homologous nodes report at [current|last(23:58)] time"
   m="$m\nbm[f]\t\t\tcc-daily report [file add & $s12 nodes change/restart]"
   m="$m\nbn[f]\t\t\tarqivo report [file add]"
