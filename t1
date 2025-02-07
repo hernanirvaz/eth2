@@ -114,6 +114,7 @@ p77='/etc/os-release'
 p78='/etc/apt/trusted.gpg.d/jellyfin.gpg'
 p79='/etc/apt/sources.list.d/jellyfin.list'
 p80="/media/mp4"
+p81='/etc/needrestart/needrestart.conf'
 
 g00='(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) +'
 g01='[0-9]{1,2} +'
@@ -588,6 +589,12 @@ e77="$e29;s%(\.[0-9]{1,}) *.*$g35 *$e78%\1 peers \2%i"
 e78="$e29;s%(\.[0-9]{1,} INFO) *.*$g31: *$e78%\1 peers \2%i"
 e79='s%disable-upnp%disable-upnp --checkpoint-sync-url';if [[ $cunm = $inm5 ]];then e79="$e79 http://$iip6:5052%";elif [[ $cunm = $inm6 ]];then e79="$e79 http://$iip5:5052%";else e79="$e79 https://mainnet.checkpoint.sigp.io%";fi
 e80='s%^ *VERSION_CODENAME *= *%%p'
+e81='/^ *# *\$nrconf\{blacklist_rc\}/a \'
+if [[ $cunm = $cun1 || $cunm = $cun2 ]];then
+  e81="$e81\$nrconf{blacklist_rc}=['$s12.service'];"
+elif [[ $cunm = $cuvc ]];then
+  e81="$e81\$nrconf{blacklist_rc}=['$s13.service'];"
+fi
 
 j0='.ata_sct_temperature_history.table|join(" ")'
 j1='.temperature.current'
