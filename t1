@@ -589,7 +589,7 @@ e77="$e29;s%(\.[0-9]{1,}) *.*$g35 *$e78%\1 peers \2%i"
 e78="$e29;s%(\.[0-9]{1,} INFO) *.*$g31: *$e78%\1 peers \2%i"
 e79='s%disable-upnp%disable-upnp --checkpoint-sync-url';if [[ $cunm = $inm5 ]];then e79="$e79 http://$iip6:5052%";elif [[ $cunm = $inm6 ]];then e79="$e79 http://$iip5:5052%";else e79="$e79 https://mainnet.checkpoint.sigp.io%";fi
 e80='s%^ *VERSION_CODENAME *= *%%p'
-e81='/^ *\$nrconf\{override_rc\}/a \    qr(^eth-.+\.service$) => 0, # do not restart ethereum services'
+e81='/^ *\$nrconf\{override_rc\}/a \    qr(^eth-.+\\.service$) => 0, # do not restart ethereum services'
 
 j0='.ata_sct_temperature_history.table|join(" ")'
 j1='.temperature.current'
