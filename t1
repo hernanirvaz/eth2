@@ -437,15 +437,14 @@ s61="${s61}\nlockd-port=$n37"
 s61="${s61}\nrquotad-port=$n38"
 s62='smbd'
 s63='nmbd'
-s64='[mp4]'
-if [[ -d $p60 ]];then s64="${s64}\npath=$p60";else s64="${s64}\npath=$p80";fi
-s64="${s64}\nbrowsable=yes"
-s64="${s64}\nread only=no"
-s64="${s64}\nwritable=yes"
-s64="${s64}\nguest ok=yes"
-s64="${s64}\nforce user=$s60"
+s64='jellyfin'
 s65='https://repo.jellyfin.org/ubuntu'
-s66='jellyfin'
+s66='[mp4]'
+if [[ -d $p60 ]];then s66="${s66}\npath=$p60\nforce user=$s60";else s66="${s66}\npath=$p80\nforce user=$s60";fi
+s66="${s66}\nbrowsable=yes"
+s66="${s66}\nread only=no"
+s66="${s66}\nwritable=yes"
+s66="${s66}\nguest ok=yes"
 
 e01='PollIntervalMinSec'
 e02='PollIntervalMaxSec'
