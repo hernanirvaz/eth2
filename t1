@@ -500,7 +500,7 @@ e28='pcie_aspm=off';[[ $cunm = teste$inm5 ]] && e28="$e28 pci=noaer" # Disabling
 e27="s%GRUB_CMDLINE_LINUX_DEFAULT *= *\"(.+)\"%GRUB_CMDLINE_LINUX_DEFAULT=\"\1 $e28\"%;s%GRUB_CMDLINE_LINUX_DEFAULT *= *\"\"%GRUB_CMDLINE_LINUX_DEFAULT=\"$e28\"%"
 e28="s%APT::Periodic::Update-Package-Lists.*$%APT::Periodic::Update-Package-Lists \"1\";%i"
 e28="${e28};s%APT::Periodic::Unattended-Upgrade.*$%APT::Periodic::Unattended-Upgrade \""
-case $cunm in $cuvc) e28="${e28}5";;$cun1) e28="${e28}2";;*) e28="${e28}1";;esac
+case $cunm in $cuvc) e28="${e28}4";;$cun1) e28="${e28}2";;*) e28="${e28}1";;esac
 e28="${e28}\";%i;/APT::Periodic::Unattended-Upgrade/a \\"
 e28="${e28}APT::Periodic::AutocleanInterval \"1\";"
 if [[ $cunm = $cuvc && $cunm = $cun1 && $cunm = $cun2 ]];then e30='el';e31='cl';else case $cunm in $cun1) e30='em';e31='bm';;$cun2) e30='es';e31='bs';;$cuvc) e30='el';e31='vc';;*) e30='el';e31='cl';;esac;fi;if sht;then e32='hrv-(zotac|intel)[0-9]';else e32='ns([0-9]{7})';fi
