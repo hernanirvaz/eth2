@@ -427,8 +427,7 @@ function cpe {
   if g0t $i;then if g0t $n;then m="$m sl: ${e:0:53}";m="$m $l: ${d:0:54}";else m="$m sl: ${e:0:112}";fi;else if g0t $n;then m="$m $l: ${d:0:112}";fi;fi
   (( i+n )) && swn "$m"
   m=;fft $p45 && m="$(echo $m), reboot $(($(sra)/60/60)) hours ago $(rsf|tail -n1)";s5t && m="$(echo $m), sync/propose duties on"
-  [[ $m ]] && swn "INFO        $dt${m#*,}"
-  upl;uls "$g59" "$(ulg)";esp;csp;mre
+  [[ $m ]] && swn "INFO        $dt${m#*,}";upl;esp;csp;mre
 }
 
 function pop { pde $1 $2 delete;pai $1 192.168.8.0/24 $2; }
