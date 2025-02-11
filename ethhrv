@@ -3,5 +3,6 @@ alias gd='if [[ $(basename $(dirname $(pwd))) = ruby ]];then git diff;fi'
 alias gt='if [[ $(basename $(dirname $(pwd))) = ruby ]];then git status;fi'
 alias gc='if [[ $(basename $(dirname $(pwd))) = ruby ]];then git commit -am "cleanup";git push;fi'
 alias gv='if [[ $(basename $(dirname $(pwd))) = ruby ]];then vi lib/*.rb lib/$(basename $(pwd))/*.rb;fi'
+alias gu='if [[ $(basename $(dirname $(pwd))) = ruby ]];then bundle update;bundle install;fi'
 
 alias xx='exit'
