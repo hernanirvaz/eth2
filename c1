@@ -1,0 +1,12 @@
+MAILTO=
+H=
+GOOGLE_APPLICATION_CREDENTIALS=
+ETHERSCAN_API_KEY=
+KRAKEN_API_KEY=
+KRAKEN_API_SECRET=
+BITCOINDE_API_KEY=
+BITCOINDE_API_SECRET=
+
+   29  * * * * t6 irb 1
+10,40  * * * * t6 eip meo.fruga.pt <key>
+   50 11 * * * cns ceth
