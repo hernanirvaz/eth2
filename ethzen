@@ -43,10 +43,10 @@ alias rp='ecp int6.fruga.pt;ecp int5.fruga.pt;ecp ztc4.fruga.pt;ecp ztc3.fruga.p
 alias ro='ocp int6.fruga.pt;ocp int5.fruga.pt;ocp ztc4.fruga.pt;ocp ztc3.fruga.pt;ocp ztc1.fruga.pt;ocp ztc2.fruga.pt;ccp ztc1.fruga.pt'
 
 alias pi="ping \$(nip)"
-alias hk='cat /dev/null>~/.ssh/known_hosts'
 alias gp='cd ~/eth2;git pull;cd'
 alias gc='cd ~/eth2;git commit -am "cleanup";git push;cd'
 alias gd='cd ~/eth2;git diff'
+alias gt='cd ~/eth2;git status'
 alias gv='cd;vi eth2/t[1-8] eth2/e?'
 
 alias lk="ei0 \$H \$E \$R \$V \$(npt) >~/i0;ei1 \$H \$V \$K \$E \$B >~/i1;cc0 \$(nip) \$(npt)"
