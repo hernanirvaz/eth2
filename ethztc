@@ -1,6 +1,11 @@
 cunm=$(hostname)
 cust=${cunm:0:3}
 
+if [[ $cunm = hrv-zotac1 ]];then
+  alias ce='cns ceth'
+  alias ct='tail -n10 cns.log'
+  alias ca='cns ceth;tail -n10 cns.log'
+fi
 if [[ $cunm = hrv-zotac2 ]];then
   cuip=$(hostname -I)
   cuip=${cuip%% *}
