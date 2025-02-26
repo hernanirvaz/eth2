@@ -17,7 +17,8 @@ if [[ $(pex 'ufw status'|grep -i inactive) ]];then
   [[ $cunm = $inm6 ]] && { ple 2026/tcp nssh; }                                                                                                               # limit ssh
   sex 'ufw reload';yex 'ufw enable'                                                                                                                           # reload/enable
 else
-  cex 'ufw status numbered'                                                                                                                                   # show
+  swb 'script ja executou'
+  exit
 fi
 [[ -f $p04/$s10.service || -f $p04/$s11.service || -f $p04/$s44.service || -f $p04/$s12.service || -f $p04/$s13.service ]] && exit
 
