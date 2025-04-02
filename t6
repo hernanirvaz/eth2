@@ -3,19 +3,24 @@
 source /home/eth/eth2/t1
 
 #function nu2 { local s=${2:-0};echo "scale=0;$(echo "scale=$((s+1));($1)+(0.5/10^$s)"|bc 2>$p03)/1"|bc 2>$p03; }
+#function nu2 { local s=${2:-0};echo "scale=$((s+1));$1"|bc 2>$p03|xargs printf %.0f 2>$p03; }
+#function nu3 { echo "scale=0;0$(printf %+i $@ 2>$p03)"|bc 2>$p03; }
 #function nu4 { local s=$1;shift;if [[ $# -gt 0 ]];then echo "scale=0;$(echo "scale=$((s+1));((0$(printf %+f $@ 2>$p03))/$#)+(0.5/10^$s)"|bc 2>$p03)*10^$s/1"|bc 2>$p03;else printf %i;fi; }
 #function nu5 { local s=$1;shift;if [[ $# -gt 0 ]];then echo "scale=0;$(echo "scale=$((s+1));((0$(printf %+f $@ 2>$p03))/$#)+(0.5/10^$s)"|bc 2>$p03)/1"      |bc 2>$p03;else printf %i;fi; }
+#function nu4 { local s=$1;shift;if [[ $# -gt 0 ]];then echo "scale=$((s+1));((0$(printf %+f $@ 2>$p03))/$#)*10^$s"|bc 2>$p03|xargs printf %.0f 2>$p03;else printf %i;fi; }
+#function nu5 { local s=$1;shift;if [[ $# -gt 0 ]];then echo "scale=$((s+1));((0$(printf %+f $@ 2>$p03))/$#)"      |bc 2>$p03|xargs printf %.0f 2>$p03;else printf %i;fi; }
 #function nu6 { local s=$1;echo "scale=$s;${2%%[^+-]*}$(echo "scale=9;(${2#*[+-]})+(0.5/10^$s)"|bc 2>$p03)/1"|bc 2>$p03; }
-function nu0 { printf $1 ${2:-0} 2>$p03; }
-function nu1 { printf %i ${1:-0} 2>$p03; }
-function nu2 { local s=${2:-0};echo "scale=$((s+1));$1"|bc 2>$p03|xargs printf %.0f 2>$p03; }
-function nu3 { echo "scale=0;0$(printf %+i $@ 2>$p03)"|bc 2>$p03; }
-function nu4 { local s=$1;shift;if [[ $# -gt 0 ]];then echo "scale=$((s+1));((0$(printf %+f $@ 2>$p03))/$#)*10^$s"|bc 2>$p03|xargs printf %.0f 2>$p03;else printf %i;fi; }
-function nu5 { local s=$1;shift;if [[ $# -gt 0 ]];then echo "scale=$((s+1));((0$(printf %+f $@ 2>$p03))/$#)"      |bc 2>$p03|xargs printf %.0f 2>$p03;else printf %i;fi; }
-function nu6 { local s=$1;echo "scale=9;$2"|bc 2>$p03|xargs printf "%.${s}f"; }
-function nu7 { nu2 "sqrt(((0$(printf %+i^2 $@ 2>$p03))-(0$(printf %+i $@ 2>$p03))^2/$#)/$#)*1000" 4; }                                                        # get std list numbers
-function nu8 { printf '%i\n' $@ 2>$p03|grep -c '^0$'; }                                                                                                       # get # zeros list numbers
-function nu9 { printf '%i\n' $@ 2>$p03|sort -n|head -n1; }                                                                                                    # get min list numbers
+#function nu6 { local s=$1;echo "scale=9;$2"|bc 2>$p03|xargs printf "%.${s}f"; }
+function nu0 { LC_NUMERIC=C printf $1 ${2:-0} 2>$p03; }
+function nu1 { LC_NUMERIC=C printf %i ${1:-0} 2>$p03; }
+function nu2 { local s=${2:-0};LC_NUMERIC=C printf %.0f $(LC_NUMERIC=C bc <<< "scale=$((s+1));$1" 2>$p03) 2>$p03; }
+function nu3 { LC_NUMERIC=C bc <<< "scale=0;0$(LC_NUMERIC=C printf %+i $@ 2>$p03)" 2>$p03; }
+function nu4 { local s=$1;shift;if [[ $# -gt 0 ]];then LC_NUMERIC=C printf %.0f $(LC_NUMERIC=C bc <<< "scale=$((s+1));((0$(printf %+f $@ 2>$p03))/$#)*10^$s" 2>$p03) 2>$p03;else printf %i;fi; }
+function nu5 { local s=$1;shift;if [[ $# -gt 0 ]];then LC_NUMERIC=C printf %.0f $(LC_NUMERIC=C bc <<< "scale=$((s+1));((0$(printf %+f $@ 2>$p03))/$#)"       2>$p03) 2>$p03;else printf %i;fi; }
+function nu6 { local s=$1;LC_NUMERIC=C printf "%.${s}f" $(LC_NUMERIC=C bc <<< "scale=9;$2" 2>$p03); }
+function nu7 { nu2 "sqrt(((0$(LC_NUMERIC=C printf %+i^2 $@ 2>$p03))-(0$(LC_NUMERIC=C printf %+i $@ 2>$p03))^2/$#)/$#)*1000" 4; }                              # get std list numbers
+function nu8 { LC_NUMERIC=C printf '%i\n' $@ 2>$p03|grep -c '^0$'; }                                                                                          # get # zeros list numbers
+function nu9 { LC_NUMERIC=C printf '%i\n' $@ 2>$p03|sort -n|head -n1; }                                                                                       # get min list numbers
 function ll0 { local f=$p16/logs/beacon.log   ;echo $H|sudo -S cat                       $f.1     $f     2>$p03|tail -n$((n15*2)); }                          # get cc intern lines
 function ll1 { local f=$p16/logs/beacon.log   ;echo $H|sudo -S egrep -ah  "$1"           $f.1     $f     2>$p03|tail -n$n15      ; }                          # get cc intern lines (specific)
 function ll2 { local f=$p01                   ;echo $H|sudo -S egrep -ah  "$1"                    $f     2>$p03                  ; }                          # get all eth syslog lines
