@@ -51,8 +51,9 @@ function t1t { [[ $(cat $p43 2>$p03) -eq 1 && $(fl0|wc -l) -le 10 ]]; }         
 function t2t { [[ $(cat $p44 2>$p03) -eq 1 && $(fl1|wc -l) -gt 10 ]]; }                                                                                       # usb messages            test
 function t3t { [[ $(cat $p43 2>$p03) -eq 1 ]]; }                                                                                                              # cpu no turbo            test
 function v0t { g0t $(grep -c $d0 $p12 2>$p03); }                                                                                                              # cc  log day             test
-function z1t { [[ $cunm = $cunt ]]; }                                                                                                                         # main ntp                test
-function z2t { [[ $cunm = $znm1 || $cunm = $znm2 ]]; }                                                                                                        # chrony ntp              test
+function z1t { [[ $cunm = $cut1 ]]; }                                                                                                                         # main ntp                test
+function z2t { [[ $cunm = $cut2 ]]; }                                                                                                                         # auxi ntp                test
+function ztt { [[ $cunm = $cut1 || $cunm = $cut2 ]]; }                                                                                                        # external chrony ntp     test
 function z4t { [[ $cunm = $znm4 ]]; }                                                                                                                         # best zotac              test
 function n1t { [[ $cunm = $cun1 ]]; }
 function n2t { [[ $cunm = $cun2 ]]; }
@@ -64,11 +65,10 @@ function i5t { [[ $cunm = $inm5 ]]; }
 function i6t { [[ $cunm = $inm6 ]]; }
 function ict { [[ $cunm = $cuvc || $cunm = $cun1 || $cunm = $cun2 ]]; }
 function iet { [[ $cunm = $cun1 || $cunm = $cun2 ]]; }
-function irt { [[ $cunm = $cumv                                   || $cunm = $vnm1 || $cunm = $vnm2 ]]; }
+function irt { [[ $cunm = $cumv || $cunm = $vnm1 || $cunm = $vnm2 ]]; }
 function v1t { [[ $cunm = $vnm1 ]]; }
 function vst { [[ $cun1 != $cuvc && $cun2 != $cuvc ]]; }
 function mst { [[ $cun1 != $cumv && $cun2 != $cumv ]]; }
-function nst { sht && [[ $cumv != $cunt ]]; }
 function s1t {                  e0t $(ls $1.* 2>$p03|wc -l); }
 function s2t { fft $p50.lock || g0t $(ls $1.* 2>$p03|wc -l); }
 function s3t { s2t $1 || g0t $(bwc); }
@@ -395,8 +395,7 @@ function clk {
   if tsa $s12;then m="$e $(nu0 %3i $n) $dt $m";else m="$e     $dt $m";fi
 }
 function hch { clk h;swn "$(snc $cunm)${m:4}"; }
-function t2n { if [[ $znm1 = $cunt ]];then printf $znm2;else printf $znm1;fi; }
-function hca { if n1t;then hch;else ssh $(snc $cun1) "$p53 hch";fi;if n2t;then hch;else ssh $(snc $cun2) "$p53 hch";fi;if vct;then hch;else ssh $(snc $cuvc) "$p53 hch";fi;if mct;then hch;else ssh $(snc $cumv) "$p53 hch";fi;if z1t;then hch;else ssh $(snc $cunt) "$p53 hch";fi;local s=$(t2n);if sht && [[ $cumv != $s ]];then ssh $(snc $s) "$p53 hch";fi; }
+function hca { if n1t;then hch;else ssh $(snc $cun1) "$p53 hch";fi;if n2t;then hch;else ssh $(snc $cun2) "$p53 hch";fi;if vct;then hch;else ssh $(snc $cuvc) "$p53 hch";fi;if mct;then hch;else ssh $(snc $cumv) "$p53 hch";fi;if z1t;then hch;else ssh $(snc $cut1) "$p53 hch";fi;if z2t;then hch;else ssh $(snc $cut2) "$p53 hch";fi; }
 function si0 { printf '%s: erro_cml %i,used %s,spare %s; ' $(basename $1) $(($2+$3+$4)) $5% $6% 2>$p03; }
 function sif {
   if [[ $(cat $p44 2>$p03) -eq 0 ]];then local e=off;else local e=on;fi;local i=$(fl0|wc -l)
@@ -550,7 +549,7 @@ function hs0 {
   else
     hss $cunm
   fi
-  if z2t;then hsh;echo;hch;fi
+  if ztt;then hsh;echo;hch;fi
 }
 function nsh { $s08 list;$s08 status;$s09 status|snf "$e26"; }                                                                                                # network/dns info
 function wlp { local e="$1";shift;until [[ $# -lt 1 ]];do e="$e|$1";shift;done;ll3|grep -ah 'UFW BLOCK'|if [[ $e ]];then grep -Eahv "$e";else cat;fi; }
@@ -601,9 +600,9 @@ function slt { local n=$((($1-n04)/32));for n in $n $((n+1));do curl -sH "$s28" 
 function sng { local t=$(((($(date +%s)-n09)/12)+n04));local e=0;local i=0;local s=0;for s in $(slt $t|sort -nu);do if ((s<t));then continue;else if (((s-t)>e));then e=$((s-t));i=$t;fi;fi;t=$((s+1));done;printf '%s %i' $(date -d@$((n09+i*12)) +%T) $((e*12)); }
 function bcc { printf p;if n1t;then if bpt;then if rbt $n06;then printf r;else printf c;fi;else if bdt;then printf d;else printf _;fi;fi;else if rbt;then printf r;else if bdt;then printf d;else printf _;fi;fi;fi;printf :; }
 function btn { if n1t;then printf $1;else printf $n03;fi; }
-function hct { local t=$(chronyc -cn sources);if grep -Eq "$g65" <<< "$e";then true;else grep -Eq "$g66" <<< "$e";fi; }
-function hc1 { z2t || return;hct && return;sex "$s04 $s56";sex "$s06 $s56"; }
-function irb { rm -f $p39.*;s2t $p39 && return;if rbt $1;then if vct;then brs RB 0 0 $n02;else srb $p39 RB;fi;else if fft $p45;then touch $p39.$1.hours;else hc1;fi;fi; }
+function hct { local t=$(chronyc -cn sources);if grep -Eq "$g65" <<< "$t";then true;else grep -Eq "$g66" <<< "$t";fi; }
+function hrc { ztt || return;hct && return;sex "$s04 $s56";sex "$s06 $s56"; }
+function irb { rm -f $p39.*;s2t $p39 && return;if rbt $1;then if vct;then brs RB 0 0 $n02;else srb $p39 RB;fi;else if fft $p45;then touch $p39.$1.hours;else hrc;fi;fi; }
 # ntpq -p output
 # when   The time after the last poll event. When when reaches the value of poll then the next polling action occurs. (s)
 # poll   The current polling interval. (s)
@@ -748,7 +747,6 @@ function cns {
 [[ $1 = nsh ]] && { nsh; }
 [[ $1 = nrs ]] && { nrs; }
 [[ $1 = hsh ]] && { hhh;hsh;echo;if n1t;then hca;else hch;fi; }
-[[ $1 = hsn ]] && { if z1t;then hsh;echo;hch;else swn "hsh@$cunt";ssh $(snc $cunt) "$p53 hsh";fi; }
 [[ $1 = hch ]] && { hch; }
 [[ $1 = hca ]] && { hca; }
 [[ $1 = hrs ]] && { hrs; }
@@ -999,7 +997,7 @@ if [[ ! $1 ]];then
   m="$m\nw[s|a|pr|l [e]]\t\tfirewall status|arranca|para|logs [exclude]"
   m="$m\nn[sh|rs]\t\tnetwork show|reset"
   m="$m\nd[sh [url]|rs]\t\tdns show [url]|reset"
-  m="$m\nh[sh|sn|rs|ch|ca]\t$s45 show|show@$(snc $cunt)|restart|check|check all"
+  m="$m\nh[sh|rs|ch|ca]\t\t$s45 show|restart|check|check all"
   m="$m\nr[sh|rs|pt|lk]\t\trestart gap show|reset|print|lock"
   m="$m\ni[sh|ch]\t\texternal ip show|change"
   m="$m\nj[sh|rs]\t\tjournal logs show|reset"
