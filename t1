@@ -41,11 +41,11 @@ p01='/var/log/syslog'
 p02='/home/eth'
 p03='/dev/null'
 p04='/etc/systemd/system'
-p05='/var/lib/lighthouse'  ;[[ $cunm = $inm5 || $cunm = $inm6 ]] && p05='/nl/lighthouse'
+p05='/var/lib/lighthouse'  ;[[ $cunm = z$inm5 || $cunm = $inm6 ]] && p05='/nl/lighthouse'
 p06=$p02
 p07='/usr/bin'
-p08='/var/lib/goethereum'  ;[[ $cunm = $vnm1 || $cunm = $vnm2 ]] && p08='/el/goethereum'  ;[[ $cunm = $inm5 || $cunm = $inm6 ]] && p08='/nl/goethereum'
-p09='/var/lib/javaethereum';[[ $cunm = $vnm1 || $cunm = $vnm2 ]] && p09='/el/javaethereum';[[ $cunm = $inm5 || $cunm = $inm6 ]] && p09='/nl/javaethereum'
+p08='/var/lib/goethereum'  ;[[ $cunm = $vnm1 || $cunm = $vnm2 ]] && p08='/el/goethereum'  ;[[ $cunm = z$inm5 || $cunm = $inm6 ]] && p08='/nl/goethereum'
+p09='/var/lib/javaethereum';[[ $cunm = $vnm1 || $cunm = $vnm2 ]] && p09='/el/javaethereum';[[ $cunm = z$inm5 || $cunm = $inm6 ]] && p09='/nl/javaethereum'
 p10="$p02/geth.log"
 p11="$p02/besu.log"
 p12="$p02/beacon.log"
@@ -61,7 +61,7 @@ p22='/etc/netplan/00-installer-config.yaml'
 p23='/etc/apt/apt.conf.d/50unattended-upgrades'
 p24='/etc/update-motd.d/00-header'
 p25='/etc/update-motd.d/10-help-text'
-p26='/etc/grub.d/30_os-prober'
+p26='/etc/grub.d/00_header'
 p27='/etc/logrotate.d/rsyslog'
 p28='/etc/update-motd.d/97-overlayroot'
 p29='/etc/bind/named.conf.options'
@@ -96,7 +96,7 @@ p57="/etc/nut/upsd.conf"
 p58='/var/lib/jwtethereum'
 p59='/var/lib/transmission-daemon/downloads'
 p60="/var/lib/plexmediaserver/mp4"
-p61='/var/lib/nethermind';[[ $cunm = $inm5 || $cunm = $inm6 ]] && p61='/nl/nethermind'
+p61='/var/lib/nethermind';[[ $cunm = z$inm5 || $cunm = $inm6 ]] && p61='/nl/nethermind'
 p62="$p02/nethermind.log"
 p63="$p02/neth.rs"
 p64="$p02/dns.log"
@@ -464,7 +464,7 @@ e04='false';[[ ${cunm:4:5} = zotac ]] && e04='true' # intel NUCs erradamente giv
 e03="s%^ */*(.*codename}-updates.*$)%\1%i;s%^ */* *Unattended-Upgrade::Mail .*$%Unattended-Upgrade::Mail \"hernanilr@gmail.com\";%i;s%^ */* *Unattended-Upgrade::OnlyOnACPower.*$%Unattended-Upgrade::OnlyOnACPower \"$e04\";%i;/Unattended-Upgrade::Package-Blacklist/i\Unattended-Upgrade::Services-Blacklist { \"$s12.service\"; \"$s13.service\"; };"
 e04='s%^ *printf%# printf%i'
 e05='s%^[^ ]+: +([^ ]+).*$%\1%p'
-e06='s%timeout *=.*$%timeout=1%i'
+e06='/if.*grub_platform += +efi.*/,/EOF/{s%set +timeout *=.*%set timeout=0%;s%set +timeout_style *=.*%set timeout_style=hidden%}'
 e07='/dnssec-validation/q'
 e08='s%\t{3}:%\t%'
 e09='s%.*registerValidator +[0-9]+ +([^ ]+) *$%\1%p'
