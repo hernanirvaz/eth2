@@ -17,6 +17,15 @@ function nu6 { local s=$1;nu0 %.${s}f $(nbc $2 9); }
 function nu7 { nu3 "sqrt(((0$(nl2 $@))-(0$(nl0 $@))^2/$#)/$#)*1000" 4; }                                                                                      # get std list numbers
 function nu8 { nl3 $@|grep -c '^0$'; }                                                                                                                        # get # zeros list numbers
 function nu9 { nl3 $@|sort -n|head -n1; }                                                                                                                     # get min list numbers
+function nby {
+  local k=1024;local m=$((k*1024));local g=$((m*1024));local t=$((g*1024))
+  if   (($1>=t));then nu0 %.1fT $(nbc "$1/$t" 2)
+  elif (($1>=g));then nu0 %.1fG $(nbc "$1/$g" 2)
+  elif (($1>=m));then nu0 %.1fM $(nbc "$1/$m" 2)
+  elif (($1>=k));then nu0 %.1fK $(nbc "$1/$k" 2)
+  else                nu0 %.0fB $1
+  fi
+}
 function sgn { local g="$1";shift;SUDO_ASKPASS=$p82 sudo -A grep -Eah  "$g" $@ 2>$p03; }
 function sgv { local g="$1";shift;SUDO_ASKPASS=$p82 sudo -A grep -Eahv "$g" $@ 2>$p03; }
 function sin {                                              grep -Eai  "$1"    2>$p03; }
@@ -627,7 +636,8 @@ function mre { mct || return;local s=n;local e=$(for s in $(rlr|snf "$e09"|sort 
 function epf { if tsa $s10;then gl0;swn "$m";fi;if tsa $s11;then ul0;swn "$m";fi;if tsa $s44;then tl0;swn "$m";fi; }
 function cpf { if tsa $s12;then bl0;swn "$m";fi;if tsa $s13;then vl0;swn "$m";fi;if tsa $s14;then ml0;swn "$m";fi; }
 function uur { swb 'UNATTENDED UPGRADE RESTART >> ~/apt.out';sex "$s00 daemon-reload";echo 'unattended-upgrades unattended-upgrades/enable_auto_updates boolean true'|sudo debconf-set-selections;sudo DEBIAN_FRONTEND=noninteractive dpkg-reconfigure -plow unattended-upgrades;sudo $s06 unattended-upgrades &>> $p02/apt.out;sudo unattended-upgrade -d &>> $p02/apt.out; }
-function fst { local s="nvme smart-log";if [[ $1 ]];then cex "$s /dev/$1";else local f='';for f in $(ls $p66 2>$p03);do swl "$s $f";pex "$s $f";done|grep -Eiv "$s54"|sef "$e08";fi; }
+function fdv { local d;local u;printf "\nDevice\tUsed\n";while IFS=$'\t' read d u;do printf "%s\t%s\n" $(basename $d) $(nby $u);done <<< $(pex 'nvme list -o json'|jq -r "$j6"); }
+function fst { local s="nvme smart-log";if [[ $1 ]];then cex "$s /dev/$1";else local f='';for f in $(ls $p66 2>$p03);do swl "$s $f";pex "$s $f";done|grep -Eiv "$s54"|sef "$e08";fi;fdv; }
 
 function ulg { local d=${1:-$(date +%F)};nex "cat $p69"|snf "/$g60$d/,/$g61$d/p"; }
 function uls { local e=$(snf "/$1/,/^ *$/p" <<< "$2"|grep -Ev "$1|^ *$"|sort -u);if [[ $e ]];then echo -e "\n$1\n$e";fi; }

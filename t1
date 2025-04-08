@@ -603,6 +603,7 @@ j1='.temperature.current'
 j3='.nvme_smart_health_information_log.temperature_sensors|join(" ")'
 j4='.nvme_smart_health_information_log|"\(.critical_warning) \(.media_errors) \(.num_err_log_entries) \(.percentage_used) \(.available_spare)"'
 j5='.nvme_smart_health_information_log|"\(.critical_warning)+\(.media_errors)"'
+j6='.Devices[]|[.DevicePath,.UsedBytes]|@tsv'
 
 w0='{if(match($0,/'
 w1='([0-9,]+(\.[0-9]+)?) *'
