@@ -636,8 +636,8 @@ function mre { mct || return;local s=n;local e=$(for s in $(rlr|snf "$e09"|sort 
 function epf { if tsa $s10;then gl0;swn "$m";fi;if tsa $s11;then ul0;swn "$m";fi;if tsa $s44;then tl0;swn "$m";fi; }
 function cpf { if tsa $s12;then bl0;swn "$m";fi;if tsa $s13;then vl0;swn "$m";fi;if tsa $s14;then ml0;swn "$m";fi; }
 function uur { swb 'UNATTENDED UPGRADE RESTART >> ~/apt.out';sex "$s00 daemon-reload";echo 'unattended-upgrades unattended-upgrades/enable_auto_updates boolean true'|sudo debconf-set-selections;sudo DEBIAN_FRONTEND=noninteractive dpkg-reconfigure -plow unattended-upgrades;sudo $s06 unattended-upgrades &>> $p02/apt.out;sudo unattended-upgrade -d &>> $p02/apt.out; }
-function fdv { local d;local u;local f;local n;printf "\nDevice\tUsed\tSerialNumber\tFirmware\n";while IFS=$'\t' read d u f n;do printf "%s\t%s\t%s\t%s\n" $(basename $d) $(nby $u) $n $f;done <<< $(pex 'nvme list -o json'|jq -r "$j6"); }
-function fst { local s="nvme smart-log";if [[ $1 ]];then cex "$s /dev/$1";else local f='';for f in $(ls $p66 2>$p03);do swl "$s $f";pex "$s $f";done|grep -Eiv "$s54"|sef "$e08";fi;fdv; }
+function fdv { local d;local u;local f;local n;printf "\nDevice\tUsed\tSerialNumber\tFirmware\n";while IFS=$'\t' read d u f n;do printf "%s\t%s\t%s\t%s\n" $(basename $d) $(nby $u) $n $f;done <<< $(pex 'nvme list -o json'|jq -r "$j6"|sort); }
+function fst { local s="nvme smart-log";if [[ $1 ]];then cex "$s /dev/$1";else local f='';for f in $(ls $p66 2>$p03|sort);do swl "$s $f";pex "$s $f";done|grep -Eiv "$s54"|sef "$e08";fi;fdv; }
 
 function ulg { local d=${1:-$(date +%F)};nex "cat $p69"|snf "/$g60$d/,/$g61$d/p"; }
 function uls { local e=$(snf "/$1/,/^ *$/p" <<< "$2"|grep -Ev "$1|^ *$"|sort -u);if [[ $e ]];then echo -e "\n$1\n$e";fi; }
