@@ -1,67 +1,13 @@
 #!/bin/bash
 
-echo "--> Stopping any potentially auto-assembled md arrays..."
-# Ignore errors if no arrays exist
-sudo mdadm --stop /dev/md*
+echo "--> Creating RAID-0 array (/dev/md0)..."
+sudo mdadm --create --verbose /dev/md0 --level=0 --raid-devices=3 /dev/nvme0n1p2 /dev/nvme1n1p1 /dev/nvme2n1p1
 sync
-echo "--> Done."
-
-echo "--> Partitioning /dev/nvme0n1 (ESP + RAID Member)..."
-sudo gdisk /dev/nvme0n1 <<EOF
-o
-Y
-n
-1
-
-+1G
-EF00
-n
-2
-
-
-FD00
-p
-w
-Y
-EOF
-if [ $? -ne 0 ]; then echo "ERROR: gdisk failed on /dev/nvme0n1"; exit 1; fi
-
-echo "--> Partitioning /dev/nvme1n1 (RAID Member)..."
-sudo gdisk /dev/nvme1n1 <<EOF
-o
-Y
-n
-1
-
-
-FD00
-p
-w
-Y
-EOF
-if [ $? -ne 0 ]; then echo "ERROR: gdisk failed on /dev/nvme1n1"; exit 1; fi
-
-echo "--> Partitioning /dev/nvme2n1 (RAID Member)..."
-sudo gdisk /dev/nvme2n1 <<EOF
-o
-Y
-n
-1
-
-
-FD00
-p
-w
-Y
-EOF
-if [ $? -ne 0 ]; then echo "ERROR: gdisk failed on /dev/nvme2n1"; exit 1; fi
-
+echo "--> Probing devices immediately after RAID creation..."
+sudo partprobe # Attempt to force kernel update
+sleep 15
 sync
-echo "--> Informing kernel about partition changes..."
-sudo partprobe
-sleep 5 # Give kernel a moment
-echo "--> Verification (lsblk):"
-sync
-lsblk /dev/nvme0n1
-lsblk /dev/nvme1n1
-lsblk /dev/nvme2n1
+echo "--> Verification (mdstat after probe):"
+cat /proc/mdstat
+echo "--> Verification (lsblk after probe):"
+lsblk /dev/md0
