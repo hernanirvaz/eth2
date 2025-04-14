@@ -1,16 +1,15 @@
 #!/bin/bash
 # Script d1: Wipe disks, create GPT partitions for ESP and RAID members.
-# Run from Live USB Alt+F2 shell BEFORE installer storage configuration.
+# Run from Live USB Alt+F2/F3 shell BEFORE installer storage configuration.
 
 set -e # Exit immediately if a command exits with a non-zero status
 
 if [ "$(id -u)" -ne 0 ]; then
-  echo "This script requires root privileges. Please run with sudo."
+  echo "This script requires root privileges. Please run with sudo." >&2
   exit 1
 fi
 
-echo "--- Script d1: Disk Preparation and Partitioning ---"
-
+echo "--- Script d1: Disk Preparation and Partitioning (v3 - No Udev Control) ---"
 echo "--> Attempting to stop any active md arrays..."
 mdadm --stop /dev/md* || echo "Info: No active md arrays found or error stopping them (may be normal)."
 sync
@@ -30,19 +29,17 @@ wipefs --all --force /dev/nvme2n1
 sync
 echo "--> Signature wiping complete."
 
-echo "--> Optional: Discarding all blocks (TRIM)... This may take some time per drive."
-# Consider commenting out if not needed or if causing delays/issues
-blkdiscard -f /dev/nvme0n1 || echo "Warning: blkdiscard failed on nvme0n1 (may not be supported/needed)."
-blkdiscard -f /dev/nvme1n1 || echo "Warning: blkdiscard failed on nvme1n1 (may not be supported/needed)."
-blkdiscard -f /dev/nvme2n1 || echo "Warning: blkdiscard failed on nvme2n1 (may not be supported/needed)."
+echo "--> Optional: Discarding all blocks (TRIM)..."
+blkdiscard -f /dev/nvme0n1 || echo "Warning: blkdiscard failed on nvme0n1."
+blkdiscard -f /dev/nvme1n1 || echo "Warning: blkdiscard failed on nvme1n1."
+blkdiscard -f /dev/nvme2n1 || echo "Warning: blkdiscard failed on nvme2n1."
 sync
 echo "--> Block discard complete (if run)."
 
 echo
-echo
-echo
 echo "--> Starting drive partitioning..."
-echo "--> Partitioning /dev/nvme0n1 (ESP + RAID Member)..."
+# --- Partition nvme0n1 ---
+echo "--> Partitioning /dev/nvme0n1..."
 gdisk /dev/nvme0n1 <<EOF
 o
 Y
@@ -60,8 +57,11 @@ p
 w
 Y
 EOF
+sync
+sleep 10 # Short delay after write
 
-echo "--> Partitioning /dev/nvme1n1 (RAID Member)..."
+# --- Partition nvme1n1 ---
+echo "--> Partitioning /dev/nvme1n1..."
 gdisk /dev/nvme1n1 <<EOF
 o
 Y
@@ -74,8 +74,11 @@ p
 w
 Y
 EOF
+sync
+sleep 10 # Short delay after write
 
-echo "--> Partitioning /dev/nvme2n1 (RAID Member)..."
+# --- Partition nvme2n1 ---
+echo "--> Partitioning /dev/nvme2n1..."
 gdisk /dev/nvme2n1 <<EOF
 o
 Y
@@ -88,17 +91,32 @@ p
 w
 Y
 EOF
-echo "--> Drive partitioning finished."
 sync
+sleep 10 # Short delay after write
+echo "--> Drive partitioning finished."
 
 echo "--> Informing kernel about partition changes..."
 partprobe
-sleep 10
+sleep 15 # Increased sleep slightly just in case it helps avoid race conditions
 sync
+echo "--> Kernel informed."
 
-echo "--> Verification (lsblk):"
+echo "--> Final Verification (lsblk):"
 lsblk /dev/nvme0n1
 lsblk /dev/nvme1n1
 lsblk /dev/nvme2n1
+# Verify a key partition exists
+if ! lsblk /dev/nvme0n1 | grep -q "nvme0n1p1"; then
+    echo "ERROR: Partition nvme0n1p1 not detected after partprobe. Aborting." >&2
+    exit 1
+fi
+if ! lsblk /dev/nvme1n1 | grep -q "nvme1n1p1"; then
+    echo "ERROR: Partition nvme0n1p1 not detected after partprobe. Aborting." >&2
+    exit 1
+fi
+if ! lsblk /dev/nvme2n1 | grep -q "nvme2n1p1"; then
+    echo "ERROR: Partition nvme2n1p1 not detected after partprobe. Aborting." >&2
+    exit 1
+fi
 
 echo "--- Script d1 Finished Successfully ---"
