@@ -1,0 +1,10 @@
+#!/bin/bash
+
+echo "--> Formatting ESP (/dev/nvme0n1p1)..."
+sudo mkfs.fat -F 32 -n ESP /dev/nvme0n1p1
+sync
+
+echo "--> Formatting Root partition (/dev/md0p1)..."
+sudo mkfs.ext4 -L ROOT_RAID0 /dev/md0p1
+sync
+echo "--> Filesystem formatting complete."

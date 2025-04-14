@@ -1,0 +1,30 @@
+#!/bin/bash
+
+echo "Attempting to stop any active md arrays..."
+# Use shell globbing and ignore errors if no arrays exist
+sudo mdadm --stop /dev/md*
+sync
+echo "Done attempting to stop arrays."
+
+echo "--> Zeroing mdadm superblocks..."
+sudo mdadm --zero-superblock /dev/nvme0n1 || echo "No md superblock on nvme0n1 or error."
+sudo mdadm --zero-superblock /dev/nvme1n1 || echo "No md superblock on nvme1n1 or error."
+sudo mdadm --zero-superblock /dev/nvme2n1 || echo "No md superblock on nvme2n1 or error."
+sync
+
+echo "Thoroughly Wipe Drives (Signatures)..."
+sudo wipefs --all --force /dev/nvme0n1
+sudo wipefs --all --force /dev/nvme1n1
+sudo wipefs --all --force /dev/nvme2n1
+sync
+echo "Signature wiping complete."
+
+echo "Optional: Discarding all blocks (TRIM)... This may take some time per drive."
+# Optional but good: Force block discard if drives support TRIM
+sudo blkdiscard -f /dev/nvme0n1
+sudo blkdiscard -f /dev/nvme1n1
+sudo blkdiscard -f /dev/nvme2n1
+sync
+echo "Block discard complete (if run)."
+
+echo "Drive preparation finished."

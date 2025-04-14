@@ -1,0 +1,8 @@
+# Verify md0 is active
+cat /proc/mdstat
+# Ensure mdadm.conf is correct
+sudo mdadm --detail --scan > /etc/mdadm/mdadm.conf # Overwrite with current scan
+sudo nano /etc/mdadm/mdadm.conf # Check it looks correct (one ARRAY line for /dev/md0)
+# Force update initramfs
+sudo update-initramfs -u -k all
+sudo reboot # Test default boot

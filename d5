@@ -1,0 +1,136 @@
+#!/bin/bash
+
+# Ensure script is run with root privileges
+if [ "$(id -u)" -ne 0 ]; then
+  echo "This script requires root privileges. Please run with sudo."
+  exit 1
+fi
+
+echo "--- UEFI Boot Entry Cleanup and GRUB Reinstall (v2 - Improved ESP Disk Detection) ---"
+
+# --- Step 1: Identify existing 'ubuntu' boot entries ---
+echo ""
+echo "STEP 1: Identifying existing 'ubuntu' boot entries..."
+echo "-------------------------------------------------"
+echo "Current UEFI Boot Entries (note BootXXXX for 'ubuntu'):"
+efibootmgr -v
+echo "-------------------------------------------------"
+read -p "Press Enter ONLY when you have noted the numbers to delete."
+
+# --- Step 2: Delete the identified 'ubuntu' entries ---
+echo ""
+echo "STEP 2: Deleting the identified 'ubuntu' entries..."
+echo "Enter the BootXXXX numbers one by one, pressing Enter after each."
+echo "Type 'done' when finished."
+while true; do
+  read -p "Enter BootXXXX number to delete (e.g., 0005) or 'done': " entry_num
+  if [[ "$entry_num" == "done" ]]; then
+    break
+  fi
+  if [[ "$entry_num" =~ ^[0-9A-Fa-f]{4}$ ]]; then
+    echo "Deleting Boot${entry_num}..."
+    efibootmgr -b "$entry_num" -B
+    if [ $? -ne 0 ]; then
+        echo "Warning: Failed to delete Boot${entry_num}. It might not exist or another error occurred."
+    fi
+  else
+    echo "Invalid format. Please enter 4 hexadecimal digits (e.g., 000A) or 'done'."
+  fi
+done
+
+# --- Step 3: Verify deletion and check remaining entries ---
+echo ""
+echo "STEP 3: Verifying deletion and checking remaining entries..."
+echo "-------------------------------------------------"
+efibootmgr -v
+echo "-------------------------------------------------"
+read -p "Confirm 'ubuntu' entries are gone. Press Enter to proceed OR Ctrl+C to abort."
+
+# --- Step 4: Find Physical Disk Device Hosting /boot/efi ---
+echo ""
+echo "STEP 4: Determining physical disk hosting /boot/efi..."
+
+# Ensure /boot/efi is mounted - Crucial Check
+echo "Verifying /boot/efi mountpoint..."
+ESP_MOUNT_INFO=$(findmnt -n -v -o SOURCE,TARGET,FSTYPE,OPTIONS,UUID /boot/efi)
+if [ -z "$ESP_MOUNT_INFO" ]; then
+    echo "ERROR: /boot/efi is not mounted. Cannot determine target disk."
+    echo "Attempting 'sudo mount -a'..."
+    mount -a # Try mounting based on fstab
+    ESP_MOUNT_INFO=$(findmnt -n -v -o SOURCE,TARGET,FSTYPE,OPTIONS,UUID /boot/efi) # Try again
+    if [ -z "$ESP_MOUNT_INFO" ]; then
+        echo "ERROR: Still cannot find mount for /boot/efi. Check /etc/fstab uses correct UUID and is correct. Aborting."
+        exit 1
+    fi
+fi
+echo "Current /boot/efi mount info:"
+echo "$ESP_MOUNT_INFO"
+
+# Extract the source device (might be /dev/xxx, UUID=xxx, LABEL=xxx)
+ESP_SOURCE=$(echo "$ESP_MOUNT_INFO" | awk '{print $1}')
+echo "Extracted ESP Source: $ESP_SOURCE"
+
+# Resolve SOURCE to a /dev/ path if it's not already one
+if [[ ! "$ESP_SOURCE" == /dev/* ]]; then
+    echo "Resolving source '$ESP_SOURCE' to /dev/ path..."
+    # Use findmnt again to resolve the source identifier to a block device path
+    ESP_PARTITION=$(findmnt -n -v -o SOURCE "$ESP_SOURCE")
+     if [ -z "$ESP_PARTITION" ] || [[ ! "$ESP_PARTITION" == /dev/* ]]; then
+        echo "ERROR: Could not resolve '$ESP_SOURCE' to a /dev/ block device. Check blkid output. Aborting."
+        blkid # Show available devices and UUIDs for debugging
+        exit 1
+    fi
+    echo "Resolved ESP Partition Path: ${ESP_PARTITION}"
+else
+    ESP_PARTITION="$ESP_SOURCE"
+    echo "ESP Source is already a /dev/ path: ${ESP_PARTITION}"
+fi
+
+# Get the parent disk kernel name (e.g., nvme0n1) from the resolved partition path
+echo "Getting parent disk name for ${ESP_PARTITION}..."
+PARENT_DISK_NAME=$(lsblk -no pkname "$ESP_PARTITION")
+
+# Check if parent disk name was found
+if [ -z "$PARENT_DISK_NAME" ]; then
+    echo "ERROR: Could not determine parent disk for partition '$ESP_PARTITION' using lsblk."
+    echo "Showing lsblk output for partition:"
+    lsblk "$ESP_PARTITION" # Show details for debugging
+    echo "Aborting."
+    exit 1
+fi
+
+# Construct the full path to the physical disk device
+TARGET_DISK_DEVICE="/dev/${PARENT_DISK_NAME}"
+echo "*** Determined Target Physical Disk for grub-install: ${TARGET_DISK_DEVICE} ***"
+echo "-------------------------------------------------"
+read -p "Verify the Target Disk above is correct. Press Enter to continue OR Ctrl+C to abort."
+
+
+# --- Step 5: Reinstall GRUB and create a clean UEFI entry ---
+echo ""
+echo "STEP 5: Reinstalling GRUB to ${TARGET_DISK_DEVICE} and creating clean UEFI entry..."
+# Use the auto-detected target disk device
+grub-install "${TARGET_DISK_DEVICE}" --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=ubuntu --recheck
+if [ $? -ne 0 ]; then echo "ERROR: grub-install failed. Aborting."; exit 1; fi
+
+# --- Step 6: Update GRUB configuration ---
+echo ""
+echo "STEP 6: Updating GRUB configuration (/boot/grub/grub.cfg)..."
+update-grub
+if [ $? -ne 0 ]; then echo "ERROR: update-grub failed. Aborting."; exit 1; fi
+
+# --- Step 7: Update initramfs ---
+echo ""
+echo "STEP 7: Updating initramfs..."
+update-initramfs -u -k all
+if [ $? -ne 0 ]; then echo "ERROR: update-initramfs failed. Aborting."; exit 1; fi
+
+# --- Step 8: Sync filesystems ---
+echo ""
+echo "STEP 8: Syncing filesystems..."
+sync
+
+echo "-------------------------------------------------"
+echo "Cleanup and GRUB reinstall complete."
+echo "You should now reboot."
+echo "COMMAND to reboot: sudo reboot"
