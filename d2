@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Ensure script is run with root privileges
 if [ "$(id -u)" -ne 0 ]; then
   echo "This script requires root privileges. Please run with sudo."
   exit 1
@@ -18,6 +17,8 @@ cat /proc/mdstat
 echo "--> Verification (lsblk after probe):"
 lsblk /dev/md0
 
+echo
+echo
 read -p "Press Enter ONLY IF OK"
 echo "--> Partitioning the RAID array /dev/md0..."
 parted -s /dev/md0 mklabel gpt                            # Create GPT label on the RAID device

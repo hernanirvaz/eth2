@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Ensure script is run with root privileges
 if [ "$(id -u)" -ne 0 ]; then
   echo "This script requires root privileges. Please run with sudo."
   exit 1
@@ -8,8 +7,7 @@ fi
 
 echo "--- UEFI Boot Entry Cleanup and GRUB Reinstall (v2 - Improved ESP Disk Detection) ---"
 
-# --- Step 1: Identify existing 'ubuntu' boot entries ---
-echo ""
+echo
 echo "STEP 1: Identifying existing 'ubuntu' boot entries..."
 echo "-------------------------------------------------"
 echo "Current UEFI Boot Entries (note BootXXXX for 'ubuntu'):"
@@ -17,8 +15,7 @@ efibootmgr -v
 echo "-------------------------------------------------"
 read -p "Press Enter ONLY when you have noted the numbers to delete."
 
-# --- Step 2: Delete the identified 'ubuntu' entries ---
-echo ""
+echo
 echo "STEP 2: Deleting the identified 'ubuntu' entries..."
 echo "Enter the BootXXXX numbers one by one, pressing Enter after each."
 echo "Type 'done' when finished."
@@ -38,19 +35,16 @@ while true; do
   fi
 done
 
-# --- Step 3: Verify deletion and check remaining entries ---
-echo ""
+echo
 echo "STEP 3: Verifying deletion and checking remaining entries..."
 echo "-------------------------------------------------"
 efibootmgr -v
 echo "-------------------------------------------------"
 read -p "Confirm 'ubuntu' entries are gone. Press Enter to proceed OR Ctrl+C to abort."
 
-# --- Step 4: Find Physical Disk Device Hosting /boot/efi ---
-echo ""
+echo
 echo "STEP 4: Determining physical disk hosting /boot/efi..."
 
-# Ensure /boot/efi is mounted - Crucial Check
 echo "Verifying /boot/efi mountpoint..."
 ESP_MOUNT_INFO=$(findmnt -n -v -o SOURCE,TARGET,FSTYPE,OPTIONS,UUID /boot/efi)
 if [ -z "$ESP_MOUNT_INFO" ]; then
