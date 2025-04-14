@@ -1,10 +1,27 @@
 #!/bin/bash
 
-echo "--> Formatting ESP (/dev/nvme0n1p1)..."
-sudo mkfs.fat -F 32 -n ESP /dev/nvme0n1p1
-sync
+# Ensure script is run with root privileges
+if [ "$(id -u)" -ne 0 ]; then
+  echo "This script requires root privileges. Please run with sudo."
+  exit 1
+fi
 
-echo "--> Formatting Root partition (/dev/md0p1)..."
-sudo mkfs.ext4 -L ROOT_RAID0 /dev/md0p1
+echo "Starting aggressive wipe. THIS WILL DESTROY ALL DATA."
+# Wipe start of each disk (destroys partition table & initial metadata)
+MBC=500
+dd if=/dev/zero of=/dev/nvme0n1 bs=1M count=$MBC status=progress conv=fsync
+dd if=/dev/zero of=/dev/nvme1n1 bs=1M count=$MBC status=progress conv=fsync
+dd if=/dev/zero of=/dev/nvme2n1 bs=1M count=$MBC status=progress conv=fsync
+
+# Optional but recommended: Wipe end of each disk (catches backup GPT & trailing metadata)
+# Get size in 512-byte sectors (use output from 'sudo fdisk -l /dev/nvmeXn1' or 'sudo blockdev --getsz /dev/nvmeXn1')
+# Calculate starting sector for last 100MB (approx): LAST_SECTOR = TOTAL_SECTORS - (100 * 1024 * 1024 / 512)
+TSC=$(blockdev --getsz /dev/nvme0n1)
+NUM=$((MBC * 1024 * 1024 / 512))
+LSC=$((TSC - NUM))
+dd if=/dev/zero of=/dev/nvme0n1 bs=512 seek=$LSC count=$NUM status=progress conv=fsync
+dd if=/dev/zero of=/dev/nvme1n1 bs=512 seek=$LSC count=$NUM status=progress conv=fsync
+dd if=/dev/zero of=/dev/nvme2n1 bs=512 seek=$LSC count=$NUM status=progress conv=fsync
+
 sync
-echo "--> Filesystem formatting complete."
+echo "Aggressive wipe complete."

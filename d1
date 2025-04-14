@@ -1,35 +1,43 @@
 #!/bin/bash
 
+# Ensure script is run with root privileges
+if [ "$(id -u)" -ne 0 ]; then
+  echo "This script requires root privileges. Please run with sudo."
+  exit 1
+fi
+
 echo "Attempting to stop any active md arrays..."
 # Use shell globbing and ignore errors if no arrays exist
-sudo mdadm --stop /dev/md*
+mdadm --stop /dev/md*
 sync
 echo "Done attempting to stop arrays."
 
 echo "--> Zeroing mdadm superblocks..."
-sudo mdadm --zero-superblock /dev/nvme0n1 || echo "No md superblock on nvme0n1 or error."
-sudo mdadm --zero-superblock /dev/nvme1n1 || echo "No md superblock on nvme1n1 or error."
-sudo mdadm --zero-superblock /dev/nvme2n1 || echo "No md superblock on nvme2n1 or error."
+mdadm --zero-superblock /dev/nvme0n1 || echo "No md superblock on nvme0n1 or error."
+mdadm --zero-superblock /dev/nvme1n1 || echo "No md superblock on nvme1n1 or error."
+mdadm --zero-superblock /dev/nvme2n1 || echo "No md superblock on nvme2n1 or error."
 sync
 
 echo "Thoroughly Wipe Drives (Signatures)..."
-sudo wipefs --all --force /dev/nvme0n1
-sudo wipefs --all --force /dev/nvme1n1
-sudo wipefs --all --force /dev/nvme2n1
+wipefs --all --force /dev/nvme0n1
+wipefs --all --force /dev/nvme1n1
+wipefs --all --force /dev/nvme2n1
 sync
 echo "Signature wiping complete."
 
 echo "Optional: Discarding all blocks (TRIM)... This may take some time per drive."
 # Optional but good: Force block discard if drives support TRIM
-sudo blkdiscard -f /dev/nvme0n1
-sudo blkdiscard -f /dev/nvme1n1
-sudo blkdiscard -f /dev/nvme2n1
+blkdiscard -f /dev/nvme0n1
+blkdiscard -f /dev/nvme1n1
+blkdiscard -f /dev/nvme2n1
 sync
 echo "Block discard complete (if run)."
 
-echo "Drive preparation finished."
+echo
+echo
+echo "Drive preparation start."
 echo "--> Partitioning /dev/nvme0n1 (ESP + RAID Member)..."
-sudo gdisk /dev/nvme0n1 <<EOF
+gdisk /dev/nvme0n1 <<EOF
 o
 Y
 n
@@ -49,7 +57,7 @@ EOF
 if [ $? -ne 0 ]; then echo "ERROR: gdisk failed on /dev/nvme0n1"; exit 1; fi
 
 echo "--> Partitioning /dev/nvme1n1 (RAID Member)..."
-sudo gdisk /dev/nvme1n1 <<EOF
+gdisk /dev/nvme1n1 <<EOF
 o
 Y
 n
@@ -64,7 +72,7 @@ EOF
 if [ $? -ne 0 ]; then echo "ERROR: gdisk failed on /dev/nvme1n1"; exit 1; fi
 
 echo "--> Partitioning /dev/nvme2n1 (RAID Member)..."
-sudo gdisk /dev/nvme2n1 <<EOF
+gdisk /dev/nvme2n1 <<EOF
 o
 Y
 n
@@ -77,13 +85,15 @@ w
 Y
 EOF
 if [ $? -ne 0 ]; then echo "ERROR: gdisk failed on /dev/nvme2n1"; exit 1; fi
+echo "Drive preparation finished."
+sync
 
-sync
 echo "--> Informing kernel about partition changes..."
-sudo partprobe
-sleep 5 # Give kernel a moment
-echo "--> Verification (lsblk):"
+partprobe
+sleep 15
 sync
+
+echo "--> Verification (lsblk):"
 lsblk /dev/nvme0n1
 lsblk /dev/nvme1n1
 lsblk /dev/nvme2n1
