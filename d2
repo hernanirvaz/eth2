@@ -1,33 +1,54 @@
 #!/bin/bash
+# Script d2: Create RAID-0 array and partition it for root filesystem.
+# Run from Live USB Alt+F2 shell AFTER d1 and BEFORE installer storage config.
+# Assumes partitions /dev/nvme0n1p2, /dev/nvme1n1p1, /dev/nvme2n1p1 exist.
+
+set -e # Exit immediately if a command exits with a non-zero status
 
 if [ "$(id -u)" -ne 0 ]; then
   echo "This script requires root privileges. Please run with sudo."
   exit 1
 fi
 
+echo "--- Script d2: RAID Creation and Partitioning ---"
+
 echo "--> Creating RAID-0 array (/dev/md0)..."
 mdadm --create --verbose /dev/md0 --level=0 --raid-devices=3 /dev/nvme0n1p2 /dev/nvme1n1p1 /dev/nvme2n1p1
-echo "--> Probing devices immediately after RAID creation..."
-partprobe
-sleep 15
+echo "--> RAID creation command issued."
+echo "--> Waiting briefly and probing devices..."
+sleep 10
+partprobe /dev/md0 || echo "Warning: partprobe on md0 reported an issue (might be harmless)."
 sync
 
-echo "--> Verification (mdstat after probe):"
+echo "--> Verification (mdstat): Check if md0 is active..."
 cat /proc/mdstat
-echo "--> Verification (lsblk after probe):"
+echo "--> Verification (lsblk): Check if md0 block device exists..."
 lsblk /dev/md0
+if [ ! -b /dev/md0 ]; then
+    echo "ERROR: /dev/md0 block device not found after creation. Aborting."
+    exit 1
+fi
 
 echo
 echo
-read -p "Press Enter ONLY IF OK"
+echo
+read -p "*** Verify md0 looks OK above. Press Enter to partition /dev/md0 OR Ctrl+C to abort ***"
+
 echo "--> Partitioning the RAID array /dev/md0..."
 parted -s /dev/md0 mklabel gpt                            # Create GPT label on the RAID device
-parted -s -a optimal /dev/md0 mkpart primary ext4 0% 100% # Create one partition spanning the whole array, hint its for ext4
+parted -s -a optimal /dev/md0 mkpart primary ext4 0% 100% # Create one partition spanning the whole array
 sync
+echo "--> RAID array partitioning command issued."
 
 echo "--> Informing kernel about partition on RAID array..."
-partprobe /dev/md0
-sleep 15
+partprobe /dev/md0 || echo "Warning: partprobe on md0 after partitioning reported an issue."
+sleep 10
 sync
 echo "--> Verification (lsblk): Should now show md0p1"
 lsblk /dev/md0
+if ! lsblk /dev/md0 | grep -q "md0p1"; then
+    echo "ERROR: /dev/md0p1 partition not detected after partitioning. Aborting."
+    exit 1
+fi
+
+echo "--- Script d2 Finished Successfully ---"

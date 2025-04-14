@@ -1,39 +1,47 @@
 #!/bin/bash
+# Script d1: Wipe disks, create GPT partitions for ESP and RAID members.
+# Run from Live USB Alt+F2 shell BEFORE installer storage configuration.
+
+set -e # Exit immediately if a command exits with a non-zero status
 
 if [ "$(id -u)" -ne 0 ]; then
   echo "This script requires root privileges. Please run with sudo."
   exit 1
 fi
 
-echo "Attempting to stop any active md arrays..."
-mdadm --stop /dev/md*
-sync
-echo "Done attempting to stop arrays."
+echo "--- Script d1: Disk Preparation and Partitioning ---"
 
-echo "--> Zeroing mdadm superblocks..."
-mdadm --zero-superblock /dev/nvme0n1 || echo "No md superblock on nvme0n1 or error."
-mdadm --zero-superblock /dev/nvme1n1 || echo "No md superblock on nvme1n1 or error."
-mdadm --zero-superblock /dev/nvme2n1 || echo "No md superblock on nvme2n1 or error."
+echo "--> Attempting to stop any active md arrays..."
+mdadm --stop /dev/md* || echo "Info: No active md arrays found or error stopping them (may be normal)."
 sync
+echo "--> Done attempting to stop arrays."
 
-echo "Thoroughly Wipe Drives (Signatures)..."
+echo "--> Zeroing mdadm superblocks (expect 'unrecognized' on whole disks - OK)..."
+mdadm --zero-superblock /dev/nvme0n1 || echo "Info: No md superblock found on /dev/nvme0n1 (Expected)"
+mdadm --zero-superblock /dev/nvme1n1 || echo "Info: No md superblock found on /dev/nvme1n1 (Expected)"
+mdadm --zero-superblock /dev/nvme2n1 || echo "Info: No md superblock found on /dev/nvme2n1 (Expected)"
+sync
+echo "--> Done zeroing superblocks."
+
+echo "--> Wiping all signatures..."
 wipefs --all --force /dev/nvme0n1
 wipefs --all --force /dev/nvme1n1
 wipefs --all --force /dev/nvme2n1
 sync
-echo "Signature wiping complete."
+echo "--> Signature wiping complete."
 
-echo "Optional: Discarding all blocks (TRIM)... This may take some time per drive."
-# Optional but good: Force block discard if drives support TRIM
-blkdiscard -f /dev/nvme0n1
-blkdiscard -f /dev/nvme1n1
-blkdiscard -f /dev/nvme2n1
+echo "--> Optional: Discarding all blocks (TRIM)... This may take some time per drive."
+# Consider commenting out if not needed or if causing delays/issues
+blkdiscard -f /dev/nvme0n1 || echo "Warning: blkdiscard failed on nvme0n1 (may not be supported/needed)."
+blkdiscard -f /dev/nvme1n1 || echo "Warning: blkdiscard failed on nvme1n1 (may not be supported/needed)."
+blkdiscard -f /dev/nvme2n1 || echo "Warning: blkdiscard failed on nvme2n1 (may not be supported/needed)."
 sync
-echo "Block discard complete (if run)."
+echo "--> Block discard complete (if run)."
 
 echo
 echo
-echo "Drive preparation start."
+echo
+echo "--> Starting drive partitioning..."
 echo "--> Partitioning /dev/nvme0n1 (ESP + RAID Member)..."
 gdisk /dev/nvme0n1 <<EOF
 o
@@ -52,7 +60,6 @@ p
 w
 Y
 EOF
-if [ $? -ne 0 ]; then echo "ERROR: gdisk failed on /dev/nvme0n1"; exit 1; fi
 
 echo "--> Partitioning /dev/nvme1n1 (RAID Member)..."
 gdisk /dev/nvme1n1 <<EOF
@@ -67,7 +74,6 @@ p
 w
 Y
 EOF
-if [ $? -ne 0 ]; then echo "ERROR: gdisk failed on /dev/nvme1n1"; exit 1; fi
 
 echo "--> Partitioning /dev/nvme2n1 (RAID Member)..."
 gdisk /dev/nvme2n1 <<EOF
@@ -82,16 +88,17 @@ p
 w
 Y
 EOF
-if [ $? -ne 0 ]; then echo "ERROR: gdisk failed on /dev/nvme2n1"; exit 1; fi
-echo "Drive preparation finished."
+echo "--> Drive partitioning finished."
 sync
 
 echo "--> Informing kernel about partition changes..."
 partprobe
-sleep 15
+sleep 10
 sync
 
 echo "--> Verification (lsblk):"
 lsblk /dev/nvme0n1
 lsblk /dev/nvme1n1
 lsblk /dev/nvme2n1
+
+echo "--- Script d1 Finished Successfully ---"
