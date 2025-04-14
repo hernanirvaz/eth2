@@ -11,3 +11,17 @@ echo "--> Verification (mdstat after probe):"
 cat /proc/mdstat
 echo "--> Verification (lsblk after probe):"
 lsblk /dev/md0
+
+read -p "Press Enter ONLY IF OK"
+echo "--> Partitioning the RAID array /dev/md0..."
+sudo parted -s /dev/md0 mklabel gpt # Create GPT label on the RAID device
+# Create one partition spanning the whole array, hint it's for ext4
+sudo parted -s -a optimal /dev/md0 mkpart primary ext4 0% 100%
+sync
+
+echo "--> Informing kernel about partition on RAID array..."
+sudo partprobe /dev/md0
+sleep 5
+sync
+echo "--> Verification (lsblk):"
+lsblk /dev/md0 # Should now show md0p1
