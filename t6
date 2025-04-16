@@ -915,6 +915,7 @@ function cns {
 [[ $1 = gpd ]] && { gp;gd; }
 [[ $1 = upd ]] && { up;ud; }
 [[ $1 = tpd ]] && { tp;td; }
+[[ $1 = tbp ]] && { tp;td;bp;bd; }
 [[ $1 = bpd ]] && { bp;bd; }
 [[ $1 = vpd ]] && { vp;vd; }
 [[ $1 = xpd ]] && { xp;xd; }
@@ -925,6 +926,7 @@ function cns {
 [[ $1 = gea ]] && { ge;dmr;ga; }
 [[ $1 = uea ]] && { ue;dmr;ua; }
 [[ $1 = tea ]] && { te;dmr;ta; }
+[[ $1 = tba ]] && { te;dmr;ta;sleep 10;be;ba; }
 [[ $1 = bea ]] && { be;dmr;ba; }
 [[ $1 = vea ]] && { ve;dmr;va; }
 [[ $1 = rea ]] && { re;dmr;ra; }
@@ -979,7 +981,7 @@ if [[ ! $1 ]];then
   m="$m\n[j|x|r|s]\t\t$s64|$s21|$s15|$s20"
   m="$m\nletra 2"
   m="$m\n[e|j|h|p[f]|a[j]]\tenable|journal|historic report|progress report [file]|arranca [journal]"
-  m="$m\n[pr|ds|pd|pa|ea]\tpara|disable|para/disable|para/arranca|enable/arranca"
+  m="$m\n[pr|ds|pd|pa|ea|ba|bp]\tpara|disable|para/disable|para/arranca|enable/arranca|[g|t|u]+beacon enable/arranca|[g|t|u]+beacon para/disable"
   m="$m\n"
   m="$m\n[g|t|u|b|c]rs [n] [g]\tgeth|nethermind|besu|cc|cc & vc\t\trestart\t\tn peers, mim gap"
   m="$m\nvrs               [g]\tvc\t\t\t\t\trestart\t\tmim gap"
