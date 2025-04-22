@@ -775,8 +775,8 @@ function cns {
 [[ $1 = grs ]] && { touch $p50.print;grs SR ${2:-0}   ${3:-$n03}       ;rm -f $p50.print; }
 [[ $1 = trs ]] && { touch $p50.print;trs SR ${2:-0}   ${3:-$n03}       ;rm -f $p50.print; }
 [[ $1 = urs ]] && { touch $p50.print;urs SR ${2:-0}   ${3:-$n03}       ;rm -f $p50.print; }
-[[ $1 = brs ]] && { touch $p50.print;brs BN ${2:-0} 0 ${3:-$(btn $n02)};rm -f $p50.print; }
-[[ $1 = crs ]] && { touch $p50.print;brs VC ${2:-0} 0 ${3:-$(btn $n02)};rm -f $p50.print; }
+[[ $1 = brs ]] && { touch $p50.print;brs BN ${2:-0} 0 ${3:-$(btn $n01)};rm -f $p50.print; }
+[[ $1 = crs ]] && { touch $p50.print;brs VC ${2:-0} 0 ${3:-$(btn $n01)};rm -f $p50.print; }
 [[ $1 = vrs ]] && { touch $p50.print;vrs RS           ${2:-$n03}       ;rm -f $p50.print; }
 [[ $1 = grb ]] && { touch $p50.print;grs RB ${2:-0}   ${2:-$n01}       ;rm -f $p50.print; }
 [[ $1 = trb ]] && { touch $p50.print;trs RB ${2:-0}   ${2:-$n01}       ;rm -f $p50.print; }
