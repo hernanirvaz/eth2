@@ -27,6 +27,7 @@ else
   othe="$othe --validator-monitor-file $p58/pubkeys"                                                                                                          # monitor validators
   othe="$othe --prune-payloads false"                                                                                                                         # fetch/keep execution payloads default true
   if sht;then othe="$othe --builder http://$zip3:18550";else othe="$othe --builder http://$apip:18550";fi
+  # othe="$othe --state-cache-size 128"                                                                                                                         # default 32 to keep memory constrained during non-finality
   othe="$othe --subscribe-all-subnets --import-all-attestations"                                                                                              # better income
   othe="$othe --disable-upnp"                                                                                                                                 # disable UPnP support
   if [[ $cunm = $inm5 ]];then othe="$othe --checkpoint-sync-url http://$iip6:5052";elif [[ $cunm = $inm6 ]];then othe="$othe --checkpoint-sync-url http://$iip5:5052";else othe="$othe --checkpoint-sync-url https://beaconstate.info --disable-backfill-rate-limiting";fi
