@@ -81,7 +81,7 @@ else
   if [[ ! -f $p05/vc_keys  && -d $p19 && $(ls $p19 2>$p03)          ]];then swu 'IMPORT KEYS';sex "mkdir -p $p05";cmw $p05 755 $meeu;imk;[[ -f $p17/validator_definitions.yml ]] && touch $p05/vc_keys;fi
   if [[ ! -f $p05/vc_lock  && -f $p05/vc_keys                       ]];then swn "\nDISABLE VC";touch $p05/vc_lock;fi
   if [[   -f $p05/vc_lock  && -f $p05/vc_keys && ! -f $p05/vc_slash ]];then sex "mkdir -p $p17";cmw $p17 755 $meeu;sis $p02/$(basename $p18);sex "chown -R eth3:eth3 $p17";cmw $p17 700 eth3;fi
-  if [[   -f $p05/vc_slash && -f $p05/vc_lock &&   -f $p05/vc_keys  ]];then
+  if [[   -f $p05/vc_lock &&   -f $p05/vc_keys  ]];then
     swu 'vc CONFIG'
     cat <<-EOF > $s13.service
 		[Unit]
