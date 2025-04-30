@@ -749,7 +749,7 @@ function cns {
 [[ $1 = mre ]] && { mre; }
 [[ $1 = jwt ]] && { sjw; }
 [[ $1 = lpi ]] && { lpi $p02/.cargo/bin/lighthouse; }
-[[ $1 = luc ]] && { luc $p02/.cargo/bin/lighthouse ${2:-v7.0.0}; }
+[[ $1 = luc ]] && { luc $p02/.cargo/bin/lighthouse ${2:-v7.0.1}; }
 [[ $1 = ruv ]] && { ruv $2; }
 [[ $1 = ccr ]] && { llt && ble "$e14"; }
 [[ $1 = cca ]] && { llt || ble "$e15"; }
