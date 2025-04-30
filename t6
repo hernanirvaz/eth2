@@ -256,9 +256,9 @@ function mlo { m="MEVB $(printf '%6i' $(rll|wc -l) 2>$p03) $dt $(printf 'http_av
 # VALI     69 2024-05-16 14:49 hrv-intel6: 10 hrv-intel5:  9 casp: 14
 function vlo {
   if n3t;then
-    m="VALI $(printf '%6i' $(vii|wc -l) 2>$p03) $dt $(printf '%s: %2i %s: %2i casp: %2i' $cun1 $v0 $cun2 $v1 $v2 2>$p03)";
+    m="VALI $(printf '%6i' $(vgi|wc -l) 2>$p03) $dt $(printf '%s: %2i %s: %2i casp: %2i' $cun1 $v0 $cun2 $v1 $v2 2>$p03)";
   else
-    m="VALI $(printf '%6i' $(vii|wc -l) 2>$p03) $dt $(printf '%s: %2i casp: %2i' $cun1 $v0 $v2 2>$p03)";
+    m="VALI $(printf '%6i' $(vgi|wc -l) 2>$p03) $dt $(printf '%s: %2i casp: %2i' $cun1 $v0 $v2 2>$p03)";
   fi
 }
 #    0  1   2          3     4       5   6     7    8    9  10 11  12 13  14  15  16   17   18   19      20   21   22   23 24    25  26   27
@@ -420,8 +420,9 @@ function sif {
 function tg1 { ll4 "$g36"|tln "$g25" $1; }
 function tg2 { if tsa $s44;then tg1 $1;else ll5 "$g11"|fln "$g25" $1;fi; }
 function tg3 { if tsa $s44;then tg1 $1;fi;  ll5 "$g14"|fln "$g47" $1; }
-function eii { if tsa $s44;then ll4 "$g37";else ll5 "$g12";fi|tail -n${1:-$n07}|sef "$e50"; }
-function vii { ll1       |fln "$g26" $1; }
+function egi { if tsa $s44;then ll4 "$g37";else ll5 "$g12";fi|tail -n${1:-$n07}; }
+function cgi { ll0       |fln "$g26" $1; }
+function vgi { ll1       |fln "$g26" $1; }
 function sll { ll6       |fln usb    $2|flp "$g29" $2|if [[ $1 ]];then sef "$1";else cat;fi; }
 function cll { ll5 "$g08"|fln "$g46" $2|if [[ $1 ]];then sef "$1";else cat;fi; }
 function ell { tg2 $2|if [[ $1 ]];then sef "$1";else cat;fi; }
@@ -853,18 +854,18 @@ function cns {
 [[ $1 = llz ]] && { lll ""     $2; }
 [[ $1 = cpu ]] && { fl0        $2; }
 [[ $1 = usb ]] && { fl1        $2; }
-[[ $1 = eii ]] && { eii $2; }
+[[ $1 = eii ]] && { egi $2                                                   |sef "$e50"; }
 [[ $1 = eiu ]] && { ll5 "$g44"|tail -n${2:-$n07}                             |sef "$e50"; }
 [[ $1 = al  ]] && { ll5 "$g45"|fln "$g28" $2                                 |sef "$e50"; }
 [[ $1 = alz ]] && { ll5 "$g45"|fln "$g28" $2                                            ; }
-[[ $1 = ci  ]] && { ll0       |fln "$g26" $2                                 |sef "$e50"; }
-[[ $1 = ciz ]] && { ll0       |fln "$g26" $2                                            ; }
+[[ $1 = ci  ]] && { cgi $2                                                   |sef "$e50"; }
+[[ $1 = ciz ]] && { cgi $2                                                              ; }
 [[ $1 = cii ]] && { ll2 "$g18"|tail -n${2:-$n21}                             |sef "$e50"; }
 [[ $1 = cir ]] && { ll5 "$g49"|if g0t ${2:-0};then tail -n${2:-0};else cat;fi|sef "$e50"; }
 [[ $1 = cih ]] && { ll2 "$g19"|tail -n${2:-$(si2 $n21)}                      |sef "$e50"; }
 [[ $1 = cip ]] && { ll2 "$g20"|tail -n${2:-$(si1 $n21)}                      |sef "$e50"; }
-[[ $1 = vi  ]] && { vii $2                                                   |sef "$e50"; }
-[[ $1 = viz ]] && { vii $2                                                              ; }
+[[ $1 = vi  ]] && { vgi $2                                                   |sef "$e50"; }
+[[ $1 = viz ]] && { vgi $2                                                              ; }
 [[ $1 = vi1 ]] && { ll3 "$g16" ${2:-$n22}|grep $(sni $cun1)                  |sef "$e50"; }
 [[ $1 = vi2 ]] && { ll3 "$g16" ${2:-$n22}|grep $(sni $cun2)                  |sef "$e50"; }
 [[ $1 = vic ]] && { ll3 "$g17" ${2:-$(($n22/2))}                             |sef "$e50"; }
