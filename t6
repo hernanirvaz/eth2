@@ -512,7 +512,13 @@ function ge  { eop;sex 'ufw reload';cex "$s04 $s10"; }                          
 function ue  { eop;sex 'ufw reload';cex "$s04 $s11"; }                                                                                                        # enable eth-besu
 function te  { eop;sex 'ufw reload';cex "$s04 $s44"; }                                                                                                        # enable eth-nethermind
 function be  { bop;sex 'ufw reload';cex "$s04 $s12"; }                                                                                                        # enable eth-beacon
-function ve  { vop;sex 'ufw reload';cex "$s04 $s13"; }                                                                                                        # enable eth-validator
+function ve  {
+  vct                   || return
+  fft $p04/$s13.service || return
+  fft $p05/vc_keys      || return
+  fft $p05/vc_lock      && return
+  vop;sex 'ufw reload';cex "$s04 $s13"
+}                                                                                                                                                             # enable eth-validator
 function pe  { pai 9090/tcp 192.168.8.0/24 $s16;sex 'ufw reload';cex "$s04 $s16"; }                                                                           # enable prometheus
 function ne  { sex 'ufw reload';cex "$s04 $s17"; }                                                                                                            # enable prometheus-node-exporter
 function fe  { pai 3000/tcp 192.168.8.0/24 grafana;sex 'ufw reload';cex "$s04 $s18"; }                                                                        # enable grafana-server
@@ -522,7 +528,10 @@ function ua  { tsa $s11 || cex "$s03 $s11"; }                                   
 function ta  { tsa $s44 || cex "$s03 $s44"; }                                                                                                                 # start eth-nethermind
 function ba  { tsa $s12 || cex "$s03 $s12"; }                                                                                                                 # start eth-beacon
 function va  {
-  vct && fft $p05/vc_keys && ! tsa $s13 || return                                                                                                             # cannot start eth-validator
+  vct                   || return
+  fft $p04/$s13.service || return
+  fft $p05/vc_keys      || return
+  tsa $s13              && return
   if fft $p05/vc_lock;then sis $p02/$(basename $p18);else cex "$s03 $s13";rm -f $p05/vc_slash 2>$p03;fi                                                       # start eth-validator
 }
 function pa  { tsa $s16 || cex "$s03 $s16"; }                                                                                                                 # start prometheus
