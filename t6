@@ -223,17 +223,17 @@ function ul0 {                                                                  
 # cc control commands
 function bcl { curl -sX GET "$s31/$1" -H "accept: application/json" 2>$p03; }                                                                                 # exec node  RPC HTTP
 function bcp { curl -sX GET "$s33/$1" -H "accept: application/json" 2>$p03; }                                                                                 # exec light RPC HTTP
-function ei0 { nu3 "(0.823*$e1+0.177*$e2)"                                            ; }                                                                     # get imported/updated/rejected data
-function b00 { nu3 "(0.10*$b3+0.90*$nn)"                                              ; }                                                                     # get change peers limit
-function b01 { nu3 "(0.300*$i0+0.200*$i1+0.469*$i4+0.001*$b1+0.010*$i2+0.020*$i3)"    ; }                                                                     # get imported/execution/attestable/reorgs/http/pscore index
-function b02 { nu3 "(($1*$n28+$2*$n29+$3*$n10+$4*$n11)/${5:-1}*$n30/1000000)      " 7 ; }                                                                     # get penalty
-function b03 { nu3 "(($1*$n28+$2*$n29+$3*$n10+$4*$n11)/${5:-1}*$n30/1000000)+2*$nn" 7 ; }                                                                     # get penalty delete idx
-function b04 { nu3 "($1*$n27+$2*$n08)*$n30/100000000"                               7 ; }                                                                     # get reward
-function b05 { nu3 "0.90*$1"                                                          ; }                                                                     # get min target limit
-function b06 { nu3 "1.50*$z1"                                                         ; }                                                                     # get numerator general errors
-function bri { nu1 $((z2>500?$(b06)/z2:0))                                            ; }                                                                     # get restart idx
-function bsi { nu1 $(jq -r .data.sync_distance <<< $@ 2>$p03)                         ; }                                                                     # get cl syncing distance
-function bpc { nu1 $(jq -r .data.connected     <<< $@ 2>$p03)                         ; }                                                                     # get cl peers connected
+function ei0 { nu3 "(0.823*$e1+0.177*$e2)"                                        ; }                                                                         # get imported/updated/rejected data
+function b00 { nu3 "(0.10*$b3+0.90*$nn)"                                          ; }                                                                         # get change peers limit
+function b01 { nu3 "(0.300*$i0+0.200*$i1+0.469*$i4+0.001*$b1+0.010*$i2+0.020*$i3)"; }                                                                         # get imported/execution/attestable/reorgs/http/pscore index
+function b02 { nu3 "(($1*$n28+$2*$n29+$3*$n10+$4*$n11)/${5:-1}*$n30/1000000)"   7 ; }                                                                         # get penalty
+function b03 { nu3 "(($1*$n28+$2*$n29+$3*$n10+$4*$n11)/${5:-1}*$n30/1000000)"   7 ; }                                                                         # get penalty delete idx
+function b04 { nu3 "($1*$n27+$2*$n08)*$n30/100000000"                           7 ; }                                                                         # get reward
+function b05 { nu3 "0.90*$1"                                                      ; }                                                                         # get min target limit
+function b06 { nu3 "1.50*$z1"                                                     ; }                                                                         # get numerator general errors
+function bri { nu1 $((z2>500?$(b06)/z2:0))                                        ; }                                                                         # get restart idx
+function bsi { nu1 $(jq -r .data.sync_distance <<< $@ 2>$p03)                     ; }                                                                         # get cl syncing distance
+function bpc { nu1 $(jq -r .data.connected     <<< $@ 2>$p03)                     ; }                                                                         # get cl peers connected
 function bv0 { nn=$(ss5 $s12 target-peers); }                                                                                                                 # set configured peers
 function bs0 { l0=$(ll5 "$g08.*$n31]"|tail -n1000); }                                                                                                         # set last cc log lines
 function bs3 { l3=$(ll5 "$g45"); }                                                                                                                            # set attesta log lines
@@ -802,7 +802,9 @@ function cns {
 [[ $1 = tp  ]] && { tl0;swn "$m"; }
 [[ $1 = tpf ]] && { tl0;swn "$m" >> $p62;[[ $ok != OK ]] && trs $ok 0 $n03; }
 [[ $1 = bp  ]] && { bl0;swn "$m"; }
-[[ $1 = bpf ]] && { bl0;swn "$m" >> $p12;if [[ $d1 = 23:58 ]];then if bdt;then bdl $d0;else if [[ $(llc $p12) -gt $n14 ]];then bdd o 0 5;fi;fi;fi;[[ $ok != OK ]] && brs $ok 0 0 $(btn $n02);pas; }
+
+function bml { [[ $d1 = 23:58 ]] || return;if bdt;then bdl $d0;else if [[ $(llc $p12) -gt $n14 ]];then bdd o 0 5;fi;fi; }
+[[ $1 = bpf ]] && { bl0;swn "$m" >> $p12;bml;[[ $ok != OK ]] && brs $ok 0 0 $(btn $n02);pas; }
 [[ $1 = vp  ]] && { vl0;swn "$m"; }
 [[ $1 = vpf ]] && { vl0;swn "$m" >> $p49; }
 [[ $1 = mp  ]] && { ml0;swn "$m"; }
