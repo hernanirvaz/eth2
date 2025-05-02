@@ -66,7 +66,7 @@ function t3t { [[ $(cat $p43 2>$p03) -eq 1 ]]; }                                
 function v0t { g0t $(grep -c $d0 $p12 2>$p03); }                                                                                                              # cc  log day             test
 function z1t { [[ $cunm = $cut1 ]]; }                                                                                                                         # main ntp                test
 function z2t { [[ $cunm = $cut2 ]]; }                                                                                                                         # auxi ntp                test
-function zdt { [[ $cut1 != $cut2 ]]; }
+function zdt { [[ $cut1 != $cut2 || $cun1 != $cut1 ]]; }
 function ztt { [[ $cunm = $cut1 || $cunm = $cut2 ]]; }                                                                                                        # external chrony ntp     test
 function z4t { [[ $cunm = $znm4 ]]; }                                                                                                                         # best zotac              test
 function n1t { [[ $cunm = $cun1 ]]; }
@@ -399,7 +399,13 @@ function clk {
   if tsa $s12;then m="$e $(nu0 %3i $n) $dt $m";else m="$e     $dt $m";fi
 }
 function hch { clk h;if sht;then local e=$(snc $cunm);else local e=${cunm:0:2}${cunm: -2};fi;swn "$e${m:4}"; }
-function hca { if n1t;then hch;else ssh $(snc $cun1) "$p53 hch";fi;if ndt;then if n2t;then hch;else ssh $(snc $cun2) "$p53 hch";fi;fi;if vct;then hch;else ssh $(snc $cuvc) "$p53 hch";fi;if mct;then hch;else ssh $(snc $cumv) "$p53 hch";fi;if z1t;then hch;else ssh $(snc $cut1) "$p53 hch";fi;if zdt;then if z2t;then hch;else ssh $(snc $cut2) "$p53 hch";fi;fi; }
+function hca {
+  if n1t;then hch;else ssh $(snc $cun1) "$p53 hch";fi
+  if ndt;then if n2t;then hch;else ssh $(snc $cun2) "$p53 hch";fi;fi
+  if vst;then if vct;then hch;else ssh $(snc $cuvc) "$p53 hch";fi;fi
+  if mst;then if mct;then hch;else ssh $(snc $cumv) "$p53 hch";fi;fi
+  if zdt;then if z1t;then hch;else ssh $(snc $cut1) "$p53 hch";fi;if z2t;then hch;else ssh $(snc $cut2) "$p53 hch";fi;fi
+}
 function si0 { printf '%s: erro_cml %i,used %s,spare %s; ' $(basename $1) $(($2+$3+$4)) $5% $6% 2>$p03; }
 function sif {
   if [[ $(cat $p44 2>$p03) -eq 0 ]];then local e=off;else local e=on;fi;local i=$(fl0|wc -l)
