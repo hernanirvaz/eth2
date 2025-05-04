@@ -295,7 +295,7 @@ case $cunm in $cun2) s34=$(sni $cun2);;$vnm1) s34=$vis1;;*) s34=$(sni $cun1);;es
 s30="http://$s34:8545"
 s31="http://$s34:5052/eth/v1/node"
 s32="http://$s34:5052/eth/v1/validator/duties"
-s33="http://$s34:5052/lighthouse/peers"
+s33="http://$s34:5052/lighthouse"
 s34='.data[].slot'
 s35='.data[].validator_index'
 s36='Package: snapd'
