@@ -104,8 +104,16 @@ function si1 { local n=${1:-0};printf %i $((20*n))   2>$p03; }
 function si2 { local n=${1:-0};printf %i $((1000*n)) 2>$p03; }
 function svi {
   local n=${1:-0}
-  b1=$(bio $(bnq health)) # old $(nu2 $(ln3 "$g64" "$g49"))
-  if g0t $n;then l4=$(ll2 "$g19"|tail -n$(si2 $n));l6=$(ll2 "$g18"|tail -n$n);else l4=$(ll2 "$g19");l6=$(ll2 "$g18");fi
+  if g0t $n;then
+    # old b1=$(nu2 $(ln3 "$g64" "$g49"))
+    b1=$(bio $(bnq health))
+    l4=$(ll2 "$g19"|tail -n$(si2 $n))
+    l6=$(ll2 "$g18"|tail -n$n)
+  else
+    b1=$(nu5 0 $(ln0 "$d0.+ieawhp: +[0-9]+ +[0-9]+ +[0-9]+" $p12))
+    l4=$(ll2 "$g19")
+    l6=$(ll2 "$g18")
+  fi
   i0=$(nu5 0 $(ln1 $g54))
   i1=$(nu5 0 $(ln1 $g55))
   i2=$(nu3 "$(nu5 0 $(ln2 "${w0}elapsed: *$w3"))/1000")
