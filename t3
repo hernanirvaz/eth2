@@ -88,6 +88,8 @@ else
 		Description=Lighthouse Consensus Client VC
 		Wants=network-online.target
 		After=network-online.target
+		ConditionPathExists=!$p05/vc_lock
+		ConditionPathExists=$p05/vc_keys
 		
 		[Service]
 		User=eth3
