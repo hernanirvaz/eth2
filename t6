@@ -105,21 +105,23 @@ function si2 { local n=${1:-0};printf %i $((1000*n)) 2>$p03; }
 function svi {
   local n=${1:-0}
   if g0t $n;then
-    # old b1=$(nu2 $(ln3 "$g64" "$g49"))
-    b1=$(bio $(bnq health))
-    l4=$(ll2 "$g19"|tail -n$(si2 $n))
     l6=$(ll2 "$g18"|tail -n$n)
+    i0=$(nu5 0 $(ln1 $g54))
+    i1=$(nu5 0 $(ln1 $g55))
+    i4=$(nu5 0 $(ln1 $g56))
+    b1=$(bio $(bnq health)) # old b1=$(nu2 $(ln3 "$g64" "$g49"))
+    l4=$(ll2 "$g19"|tail -n$(si2 $n))
+    i2=$(nu3 "$(nu5 0 $(ln2 "${w0}elapsed: *$w3"))/1000")
+    l6=$(ll2 "$g20"|tail -n$(si1 $n))
+    i3=$(nu5 2 $(ln1 $g15))
   else
-    b1=$(nu5 0 $(ln0 "$d0.+ieawhp: +[0-9]+ +[0-9]+ +[0-9]+" $p12))
-    l4=$(ll2 "$g19")
-    l6=$(ll2 "$g18")
+    i0=$(nu5 0 $(ln0 "$d0.+ieawhp:"                                         $p12))
+    i1=$(nu5 0 $(ln0 "$d0.+ieawhp: +[0-9]+"                                 $p12))
+    i4=$(nu5 0 $(ln0 "$d0.+ieawhp: +[0-9]+ +[0-9]+"                         $p12))
+    b1=$(nu5 0 $(ln0 "$d0.+ieawhp: +[0-9]+ +[0-9]+ +[0-9]+"                 $p12))
+    i2=$(nu5 0 $(ln0 "$d0.+ieawhp: +[0-9]+ +[0-9]+ +[0-9]+ +[0-9]+"         $p12))
+    i3=$(nu5 0 $(ln0 "$d0.+ieawhp: +[0-9]+ +[0-9]+ +[0-9]+ +[0-9]+ +[0-9]+" $p12))
   fi
-  i0=$(nu5 0 $(ln1 $g54))
-  i1=$(nu5 0 $(ln1 $g55))
-  i2=$(nu3 "$(nu5 0 $(ln2 "${w0}elapsed: *$w3"))/1000")
-  i4=$(nu5 0 $(ln1 $g56))
-  if g0t $n;then l6=$(ll2 "$g20"|tail -n$(si1 $n));else l6=$(ll2 "$g20");fi
-  i3=$(nu5 2 $(ln1 $g15))
 }
 function svv { l6=$(ll3 "$g16" $1);v0=$(nu4 1 $(ln1 $g33 ".*$(sni $cun1)"));if ndt;then v1=$(nu4 1 $(ln1 $g33 ".*$(sni $cun2)"));fi;l6=$(ll3 "$g17" $(($1/2)));v2=$(nu4 1 $(ln1 $g32)); }
 function smm { m0=$(nu4 3 $(ln4 "$g34" "$g09" $1));m1=$(rlr|wc -l); }
@@ -374,7 +376,7 @@ function brm {                                                                  
   d=${v[3]};h=$g;g=$(grep -n "$d 23:58" $p12|cut -d: -f1);[[ ${g:=$h} -le $h ]] && continue;dts $d\ ${v[4]};nn=$((10#${v[5]//[!0-9]/}));nr=${v[6]}
     l2=$(brh $g|bfl 23:58);bo2 $d;((l+=b2));((n+=1));b3=$(nu3 "$l/$n")                                                                                        # cur/avg homologous position
     l1=$(brh $g|tail -n$((g-h))|bfl);if [[ $l1 ]];then bl2 $(tail -n1 <<< "$l1"|snf "$e49");bm1;fi;bm2                                                        # sum err arrays
-    b5=${v[10]};b4=${v[11]};i0=${v[14]};i1=${v[15]};i4=${v[16]};b1=${v[17]};i2=${v[18]};i3=${v[19]};bms;swn "$m" >> $p13.r                                    # new cc-daily output
+    b5=${v[10]};b4=${v[11]};svi;bms;swn "$m" >> $p13.r
   done <<< $(cat $p13)
 }
 function bdw { fft $1 || return;cp $1 $1.o;grep -Eahv "$2" $1.o > $1;grep -Eah "$2" $1.o > $1.d; }                                                            # work to delete cc log day
