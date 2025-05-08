@@ -1001,7 +1001,10 @@ function bml { [[ $d1 = 23:58 ]] || return;if bdt;then bdl $d0;else if [[ $(llc 
 [[ $1 = rds ]] && { rd; }
 [[ $1 = sds ]] && { sd; }
 [[ $1 = mds ]] && { md; }
-[[ $1 = vex ]] && { gnv;[[ -x $p00/ethdo ]] || dlv;swu "expectations for ${2:-${#b[@]}} validators";ethdo $s27 validator expectation --validators=${2:-${#b[@]}}; }
+[[ $1 = vex ]] && { gnv;[[ -x $p00/ethdo    ]] || dlv;swu "expectations for ${2:-${#b[@]}} validators";ethdo $s27 validator expectation --validators=${2:-${#b[@]}}; }
+# .ethereal.json { "privatekey": "0x0000000000000000000000000000000000000000000000000000000000000001" }
+# [[ $1 = rex ]] && { gnv;[[ -x $p00/ethereal ]] || rlv;echo $s68 validator compound --validator=${b[11766]} --from=$s25; }
+[[ $1 = rex ]] && { gnv;[[ -x $p00/ethereal ]] || rlv;ethereal $s68 hd keys --seed="$M" --path="$s69/${2:-0}"; }
 
 if [[ ! $1 ]];then
   m="letra 1"
