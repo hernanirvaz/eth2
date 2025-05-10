@@ -1033,7 +1033,7 @@ if [[ ! $1 ]];then
   m="$m\nbp[io]\t\t\tcc peers [incoming|outgoing]"
   m="$m\nhs[012ecgubvm]\t\thistoric summary report [0-both|1-main|2-backup|el|cc|geth|besu|beacon|vc|mev]"
   m="$m\n[ec]sp [i] [n]\t\tel|cc show peers exclude [i(1)-9][0-9]|include [0-n(9)]"
-  m="$m\ncc[a|r|e]\t\tcc add/remove long-lived parms|change cc-el"
+  m="$m\ncc[a|r|e]\t\tcc [a]dd/[r]emove long-lived parms|toggle what [e]l to connect to ($inm6|$inm5)"
   m="$m\nvcc\t\t\tvc switch cc order"
   m="$m\ntvc\t\t\tvc transfer ($cuvc -> $nxvc)"
   m="$m\ncpe [hp]\t\thours & temperature & errors status"
