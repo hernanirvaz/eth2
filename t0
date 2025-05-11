@@ -45,10 +45,18 @@ function ewi {
   [[ -x $p02/ethdo ]] || { swb 'TEM DE TER ETHDO';return; }
   if obn;then for v in $@;do swn "Indice $v: $($p02/ethdo $s27 validator withdrawal --validator=$v)";done;else swb 'TEM DE ESTAR ONLINE';fi
 }
+function wsh {
+  srv hrv-zen || return;gnv
+  [[ -x $p00/ethereal ]] || { rlv                              ; }
+  [[ -x $p00/ethereal ]] || { swb 'TEM DE TER ETHEREAL' ;return; }
+  [[ $M               ]] || { swb 'TEM DE TER M        ';return; }
+  ove && $p00/ethereal hd keys --seed="$M" --path="$s69/${1:-0}"
+}
 
 [[ $1 = dsd ]] && { dsd $2 $3; }
 [[ $1 = ewc ]] && { ewc ${b[@]}; }
 [[ $1 = ewi ]] && { ewi ${b[@]}; }
+[[ $1 = wsh ]] && { wsh $2; }
 [[ $1 = eve ]] && { eve; }
 [[ $1 = eem ]] && { eem $2; }
 [[ $1 = lve ]] && { lve; }
@@ -58,6 +66,7 @@ if [[ ! $1 ]];then
   m="$m\ndsd [v] [n]\tStaking Deposit\t\t\t\t(v=chaves, n=chaves anteriores)"
   m="$m\newc\t\tBLS Withdrawal Credentials"
   m="$m\newi\t\tNext Withdrawal Information"
+  m="$m\nwsh [p]\t\tWallet show\t\t\t\t(ethereal p=path)"
   m="$m\neve\t\tvoluntary exit\t\t\t\t(ethdo)"
   m="$m\neem [v]\t\tvoluntary exit - generate signed json\t(ethdo v=validator)"
   m="$m\nlve\t\tvoluntary exit\t\t\t\t(lighthouse)"
