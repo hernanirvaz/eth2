@@ -8,6 +8,7 @@ function srv { if [[ $cunm = $1 ]];then cd $p02;return;else swb "TEM DE ESTAR $1
 function tve { local f='';echo;for f in $(ls $p19/key*.json 2>$p03);do echo $(basename $f);done;echo;swn 'QUER MESMO SAIR ESTES VALIDATORS (SIM/nao)?';read rsp;if [[ $rsp = SIM ]];then return 0;else return 1;fi; }
 function lve { [[ -d $p19 && $(ls $p19/key*.json 2>$p03) ]] && tve && { echo;swn "STORE($K)";echo;local f='';for f in $(ls $p19/key*.json 2>$p03);do echo $p00/lighthouse --datadir $p05 account validator exit --no-confirmation --keystore $f --beacon-node http://$(sni $cun2):5052;done; }; }
 function ove { if obn;then swb 'TEM DE ESTAR OFFLINE';return 1;else return 0;fi; }
+function ofe { if obn;then return 0;else swb 'TEM DE ESTAR ONLINE';return 1;fi; }
 function eve {
   [[ -x $p02/ethdo     ]] || { dnv                              ; }
   [[ -x $p02/ethdo     ]] || { swb 'TEM DE TER ETHDO'    ;return; }
@@ -59,25 +60,35 @@ function wsh {
   [[ $M               ]] || { swb 'TEM DE TER M        ';return; }
   ove && $p00/ethereal hd keys --seed="$M" --path="$s69/${1:-0}"
 }
+function wcc {
+  srv hrv-zen || return;gnv
+  [[ $1               ]] || { swb 'TEM DE TER INDEX    ';return; }
+  [[ $K               ]] || { swb 'TEM DE TER K        ';return; }
+  [[ -x $p00/ethereal ]] || { rlv                              ; }
+  [[ -x $p00/ethereal ]] || { swb 'TEM DE TER ETHEREAL' ;return; }
+  ofe && echo $p00/ethereal validator consolidate $s68 --source-validator="${b[$1]}" --target-validator="${b[-1]}" --from="$s70" --privatekey="$K"
+}
 
 [[ $1 = dsd ]] && { dsd $2 $3; }
 [[ $1 = esd ]] && { esd $2 $3; }
 [[ $1 = ewc ]] && { ewc ${b[@]}; }
 [[ $1 = ewi ]] && { ewi ${b[@]}; }
 [[ $1 = wsh ]] && { wsh $2; }
+[[ $1 = wcc ]] && { wcc $2; }
 [[ $1 = eve ]] && { eve; }
 [[ $1 = eem ]] && { eem $2; }
 [[ $1 = lve ]] && { lve; }
 
 if [[ ! $1 ]];then
   m=''
-  m="$m\ndsd [v] [n]\tStaking Deposit\t\t\t\t(v=chaves, n=chaves anteriores)"
-  m="$m\nesd [v] [n]\tEthStaker Deposit\t\t\t(v=chaves, n=chaves anteriores)"
   m="$m\newc\t\tBLS Withdrawal Credentials"
   m="$m\newi\t\tNext Withdrawal Information"
-  m="$m\nwsh [p]\t\tWallet show\t\t\t\t(ethereal p=path)"
-  m="$m\neve\t\tvoluntary exit\t\t\t\t(ethdo)"
-  m="$m\neem [v]\t\tvoluntary exit - generate signed json\t(ethdo v=validator)"
-  m="$m\nlve\t\tvoluntary exit\t\t\t\t(lighthouse)"
+  m="$m\ndsd [v] [n]\tStaking Deposit\t\t\t\t\t(v=chaves, n=chaves anteriores)"
+  m="$m\nesd [v] [n]\tEthStaker Deposit\t\t\t\t(v=chaves, n=chaves anteriores)"
+  m="$m\nwsh [p]\t\tWallet show\t\t\t\t\t(ethereal p=path)"
+  m="$m\nwcc  v\t\tconsolidate [v]alidator into compounding\t(ethereal v=index)"
+  m="$m\neve\t\tvoluntary exit\t\t\t\t\t(ethdo)"
+  m="$m\neem [v]\t\tvoluntary exit - generate signed json\t\t(ethdo v=validator)"
+  m="$m\nlve\t\tvoluntary exit\t\t\t\t\t(lighthouse)"
   swn "$m\n"
 fi
