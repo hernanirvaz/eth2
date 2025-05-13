@@ -14,6 +14,7 @@ function nu3 { local s=${2:-0};nu0 %.0f $(nbc "$1" $((s+1))); }
 function nu4 { local s=$1;shift;if [[ $# -gt 0 ]];then nu0 %.0f $(nbc "((0$(nl1 $@))/$#)*10^$s" $((s+1)));else printf %i;fi; }
 function nu5 { local s=$1;shift;if [[ $# -gt 0 ]];then nu0 %.0f $(nbc "((0$(nl1 $@))/$#)"       $((s+1)));else printf %i;fi; }
 function nu6 { local s=$1;nu0 %.${s}f $(nbc $2 9); }
+function nbi { local s=$1;nu1         $(nbc $1 9); }
 function nu7 { nu3 "sqrt(((0$(nl2 $@))-(0$(nl0 $@))^2/$#)/$#)*1000" 4; }                                                                                      # get std list numbers
 function nu8 { nl3 $@|grep -c '^0$'; }                                                                                                                        # get # zeros list numbers
 function nu9 { nl3 $@|sort -n|head -n1; }                                                                                                                     # get min list numbers
@@ -399,14 +400,14 @@ function clq { $s09 query $1    2>$p03|snf "$e05"; }
 function cls { $s07 $s45-status 2>$p03|snf "$e48"; }
 function cly { $s07             2>$p03|snf "$e54"; }
 function clo { if [[ $(cly) = yes ]];then printf OK;else printf NO;fi                             2>$p03; }
-function clf { local n=${1:-0};if [[ $(nu1 $n) -ne 0 ]];then printf %s $(nu6 6 $n)s;elif [[ $(nu6 0 "$n*10^3") -ne 0 ]];then printf %s $(nu6 3 "$n*10^3")ms;elif [[ $(nu6 0 "$n*10^6") -ne 0 ]];then printf %s $(nu6 2 "$n*10^6")us;elif [[ $(nu6 0 "$n*10^9") -ne 0 ]];then printf %s $(nu6 1 "$n*10^9")ns;else printf %s $n;fi; }
+function clf { local n=${1:-0};if [[ $(nu1 $n) -ne 0 ]];then printf %s $(nu6 6 $n)s;elif [[ $(nbi "$n*10^3") -ne 0 ]];then printf %6s $(nu6 0 "$n*10^3")ms;elif [[ $(nbi "$n*10^6") -ne 0 ]];then printf %6s $(nu6 0 "$n*10^6")us;elif [[ $(nbi "$n*10^9") -ne 0 ]];then printf %6s $(nu6 0 "$n*10^9")ns;else printf %s $n;fi; }
 function cl0 { printf "${1%.}"                                                                    2>$p03; }
 function cl1 { local n=0;while :;do local s=$(clq $1);if [[ $s ]];then break;else if [[ $n -lt 2 ]];then ((n++));else local s=$1;break;fi;fi;done;cl0 $s; }
 function cl2 { if [[ $1 =~ ^[0-9]+ ]];then cl1 $1;else cl0 $1;fi; }
 function cl3 { cl2 $2; }
-function cl4 { printf "dl: $6\tos: $4\tjt: $8\tn0: $(cl2 $2)"                       2>$p03; }
-function cl5 { printf "dl: ${8}ms\tos: ${9}ms\tjt: ${10}ms\tn$3: $(cl2 ${1:1})"     2>$p03; }
-function cl6 { printf "er: $(clf $4)\tos: $(clf $5)\tjt: $(clf $3)\tn$2: $(cl2 $1)" 2>$p03; }
+function cl4 { printf "dl: $6\tos: $4\tjt: $8\tn0: $(cl2 $2)"                   2>$p03; }
+function cl5 { printf "dl: ${8}ms\tos: ${9}ms\tjt: ${10}ms\tn$3: $(cl2 ${1:1})" 2>$p03; }
+function cl6 { printf "er:$(clf $4) os:$(clf $5) jt:$(clf $3) n$2:$(cl2 $1)"    2>$p03; }
 function clk {
   m='';local s=$(clo);if tsa $s12;then local n=$(ll5 "$g21"|wc -l);else local n=0;fi;dts;[[ $1$s = OK && $n -eq 0 ]] && return
   if tsa $s56;then
