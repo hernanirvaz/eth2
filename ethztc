@@ -17,7 +17,7 @@ if [[ $cunm = hrv-zotac2 ]];then
   smv () { local d=$(mdi);rsy $d/movie ztc1:; }
   stv () { local d=$(mdi);rsy $d/tv2   ztc1:;rsy $d/tv ztc3:; }
   slt () { local d=$(mdi);rsy $d/lust  ztc1:; }
-  sal () { smv;sleep 2;stv;sleep 2;slt; }
+  sal () { smv;sleep 10;stv;sleep 10;slt; }
   pmv () { rsy ztc1:~/movie ~; }
   ptv () { rsy ztc1:~/tv2 ~;rsy ztc3:~/tv ~; }
   plt () { rsy ztc1:~/lust ~; }
