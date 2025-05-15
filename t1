@@ -650,6 +650,7 @@ function ndp { [[ $cunm = $inm5 || $cunm = $vnm2 ]]; }
 function tsa { $s00 is-active  --quiet $1 2>$p03; }
 function tse { $s00 is-enabled --quiet $1 2>$p03; }
 function hrs { if [[ -f $p68 ]];then sex "$s04 $s56";sex "$s06 $s56";local e=$s56;elif tsa ntp;then sex "$s06 ntp";local e=ntp;else sex "$s06 $s19";local e=$s19;fi;swb "CLOCK RESET ($e)"; }
+function srv { if [[ $cunm = $1 ]];then cd $p02;return;else swb "TEM DE ESTAR $1";return 1;fi; }
 function swb { echo -e "\n\e[5m${1^^}\e[25m\n"; }
 function swu { echo -e "${1^^}"; }
 function swn { echo -e "$1"; }

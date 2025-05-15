@@ -677,6 +677,24 @@ function ulr { local s=$(ulg $1);uls "$g59" "$s";uls "$g62" "$s"; }
 function mcp { local s=${2:-v1};local f=${3:-~};if [[ ${s:0:1} = v ]];then local e="-P 2020 -i $p02/.ssh/id_ed25519";eval "scp $e $1 $(sns $s):$f";else eval "scp $1 $(sns $s):$f";fi; }
 [[ $1 = mcp ]] && { mcp $2 $3 $4; }
 
+function ipw { sex 'ufw allow out to 192.168.8.0/24';sex 'ufw default deny outgoing';sex 'ufw reload'; }
+function iaw { sex 'ufw default allow outgoing';sex 'ufw delete allow out to 192.168.8.0/24';sex 'ufw reload'; }
+function ksh {
+  srv hrv-zotac4 || return;gnv
+  [[ -x $p00/ethereal ]] || { rlv                              ; }
+  [[ -x $p00/ethereal ]] || { swb 'TEM DE TER ETHEREAL' ;return; }
+  [[ $M               ]] || { swb 'TEM DE TER M        ';return; }
+  ipw;$p00/ethereal hd keys --seed="$M" --path="$s69/${1:-0}"
+}
+function vcs {
+  srv hrv-zotac4 || return;gnv
+  [[ $1               ]] || { swb 'TEM DE TER INDEX    ';return; }
+  [[ $2               ]] || { swb 'TEM DE TER ADDRESS  ';return; }
+  [[ $K               ]] || { swb 'TEM DE TER K        ';return; }
+  [[ -x $p00/ethereal ]] || { rlv                              ; }
+  [[ -x $p00/ethereal ]] || { swb 'TEM DE TER ETHEREAL' ;return; }
+  ipw;echo $p00/ethereal validator consolidate $s68 --source-validator="${b[$1]}" --target-validator="${b[-1]}" --from="$2" --privatekey="$K" --debug
+}
 function ngx { sex "apt install $s22 -y";cc4 $p32 "$s42";cmw $p32 644 root;sex "$s00 reload $s22";sudo nginx -t &>> $p02/$s60.out; }
 function plx {
   local k=/usr/share/keyrings/plex.gpg
@@ -903,10 +921,8 @@ function bml { [[ $d1 = 23:58 ]] || return;if bdt;then bdl $d0;else if [[ $(llc 
 [[ $1 = wpr ]] && { cex 'ufw disable'; }
 [[ $1 = wds ]] && { cex 'ufw disable'; }
 [[ $1 = ws  ]] && { cex 'ufw status numbered'; }
-function wpi { sex 'ufw allow out to 192.168.8.0/24';sex 'ufw default deny outgoing';sex 'ufw reload'; }
-function wai { sex 'ufw default allow outgoing';sex 'ufw delete allow out to 192.168.8.0/24';sex 'ufw reload'; }
-[[ $1 = wpi ]] && { wpi; }
-[[ $1 = wai ]] && { wai; }
+[[ $1 = ipw ]] && { ipw; }
+[[ $1 = iaw ]] && { iaw; }
 [[ $1 = wl  ]] && { wlp ${@:2:$#}|sef "$e19"; }
 [[ $1 = wlz ]] && { wlp ${@:2:$#}; }
 # journal
@@ -1007,6 +1023,8 @@ function wai { sex 'ufw default allow outgoing';sex 'ufw delete allow out to 192
 [[ $1 = sds ]] && { sd; }
 [[ $1 = mds ]] && { md; }
 [[ $1 = vex ]] && { gnv;[[ -x $p00/ethdo    ]] || dlv;swu "expectations for ${2:-${#b[@]}} validators";ethdo $s27 validator expectation --validators=${2:-${#b[@]}}; }
+[[ $1 = ksh ]] && { ksh $2; }
+[[ $1 = vcs ]] && { vcs $2 $3; }
 
 if [[ ! $1 ]];then
   m="letra 1"
@@ -1040,7 +1058,8 @@ if [[ ! $1 ]];then
   m="$m\ntvc\t\t\tvc transfer ($cuvc -> $nxvc)"
   m="$m\ncpe [hp]\t\thours & temperature & errors status"
   m="$m\nm[vr|re]\t\tmev validator registration|relay erros"
-  m="$m\nw[s|a|pr|l [e]]\t\tfirewall status|arranca|para|logs [exclude]"
+  m="$m\nw[a|pr|s|l [e]]\t\tfirewall arranca|para|status|logs [exclude]"
+  m="$m\ni[a|p]w\t\t\tinternet arranca|para firewall"
   m="$m\nn[sh|rs]\t\tnetwork show|reset"
   m="$m\nd[sh [url]|rs]\t\tdns show [url]|reset"
   m="$m\nh[sh|rs|ch|ca]\t\t$s45 show|restart|check|check all"
