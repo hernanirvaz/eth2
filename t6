@@ -903,6 +903,10 @@ function bml { [[ $d1 = 23:58 ]] || return;if bdt;then bdl $d0;else if [[ $(llc 
 [[ $1 = wpr ]] && { cex 'ufw disable'; }
 [[ $1 = wds ]] && { cex 'ufw disable'; }
 [[ $1 = ws  ]] && { cex 'ufw status numbered'; }
+function wpi { sex 'ufw allow out to 192.168.8.0/24';sex 'ufw default deny outgoing';sex 'ufw reload'; }
+function wai { sex 'ufw default allow outgoing';sex 'ufw delete allow out to 192.168.8.0/24';sex 'ufw reload'; }
+[[ $1 = wpi ]] && { wpi; }
+[[ $1 = wai ]] && { wai; }
 [[ $1 = wl  ]] && { wlp ${@:2:$#}|sef "$e19"; }
 [[ $1 = wlz ]] && { wlp ${@:2:$#}; }
 # journal
