@@ -7,7 +7,7 @@ nnv N $1 $2
 maxp=10
 pp2p=30303;ndp || pp2p=30304
 abrb=11052984
-fptv=256  # Gb
+fptv=400  # Gb
 nimh=4    # Gb
 # The bigger the cache size, the bigger the disk space savings.
 # Pruning cache more than 2000MB is not recommended as it may cause long memory pruning time which affect attestation.
@@ -17,7 +17,7 @@ othe=''
 othe="$othe --network-maxactivepeers $maxp --network-discoveryport $pp2p --network-p2pport $pp2p"
 othe="$othe --jsonrpc-enabled true --jsonrpc-host $apip --jsonrpc-enginehost $apip --jsonrpc-engineport 8551 --jsonrpc-jwtsecretfile $p58/jwt"
 othe="$othe --sync-snapsync true --sync-ancientbodiesbarrier $abrb --sync-ancientreceiptsbarrier $abrb"
-othe="$othe --pruning-mode Hybrid --pruning-fullpruningtrigger VolumeFreeSpace --pruning-fullpruningthresholdmb $(($fptv*10**3)) --pruning-cachemb $((8*$imcv))"
+othe="$othe --pruning-mode Hybrid --pruning-fullpruningtrigger VolumeFreeSpace --pruning-fullpruningthresholdmb $(($fptv*1024)) --pruning-cachemb $((8*$imcv))"
 cd
 cat <<-EOF > $s44.service
 [Unit]
