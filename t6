@@ -624,13 +624,13 @@ function mvr { if [[ $(nky) -gt 0 ]];then svr $(for k in $(ls $p19/key*.json);do
 function vko { if fft $p49;then         swn "$(printf 'KADD OK %3i %10s %5s' $(nky) $dt 2>$p03)"                >> $p49;fi; }
 function bko { if fft $p12;then bv0;bnn;swn "$(printf 'KADD OK %3i'          $(nky)     2>$p03) $(npn $nr $nn)" >> $p12;fi; }
 function ibk {
+  if [[ -f $p58/pubkeys ]];then swn "\nADICIONAR KEYS pubkeys @($cunm)";else swn "\nADICIONAR KEYS pubkeys @($cun1, $cun2)";return;fi
   local f="$p02/pubkeys.old";cp $p58/pubkeys $f                          ;cex "$s02 $s12"
   echo "$(cat $f)$(for f in $(jq -r .pubkey $p19/key*.json 2>$p03);do printf %s ",0x$f";done)" > $p02/pubkeys.new
   local f="$p58/pubkeys";sex "cp $p02/pubkeys.new $f";cmw $f 400 eth2;dmr;cex "$s03 $s12";bko
 }
 function ivk {
-  vct && [[ $(nky) -gt 0 ]] || return
-  if tsa $s12;then ibk;else swn "\nADICIONAR KEYS pubkeys @($cun1, $cun2)";fi
+  vct && [[ $(nky) -gt 0 ]] || return;ibk
   if tsa $s13;then vrs PR $1;fi
   if ! tsa $s13;then
     swb 'IMPORTAR CHAVES';sex "chown -R $meeu:$meeu $p17";cmw $p17 755;imk;sex "chown -R eth3:eth3 $p17";cmw $p17 700
