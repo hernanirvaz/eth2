@@ -458,6 +458,7 @@ s67='--connect-timeout 1 --max-time 20'
 s68="--connection=http://$(sni $cun2):8545 --consensus-connection=http://$(sni $cun2):5052 --allow-insecure-connections"
 s69="m/44'/60'/0'/0"
 s70='0x27C7f54e48956A906aF2CBFBC8684b437776403d'
+s71='allow out to 192.168.8.0/24'
 
 e01='PollIntervalMinSec'
 e02='PollIntervalMaxSec'

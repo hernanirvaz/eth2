@@ -677,14 +677,15 @@ function ulr { local s=$(ulg $1);uls "$g59" "$s";uls "$g62" "$s"; }
 function mcp { local s=${2:-v1};local f=${3:-~};if [[ ${s:0:1} = v ]];then local e="-P 2020 -i $p02/.ssh/id_ed25519";eval "scp $e $1 $(sns $s):$f";else eval "scp $1 $(sns $s):$f";fi; }
 [[ $1 = mcp ]] && { mcp $2 $3 $4; }
 
-function ipw { sex 'ufw allow out to 192.168.8.0/24';sex 'ufw default deny outgoing';sex 'ufw reload'; }
-function iaw { sex 'ufw default allow outgoing';sex 'ufw delete allow out to 192.168.8.0/24';sex 'ufw reload'; }
+# function pai { local e="allow from $2 to any port ${1/\// proto }";if [[ $4 ]];then nex "ufw $4 $e";else nex "ufw $e comment $3";fi; }
+function ipw { sex "ufw $s71";sex 'ufw default deny outgoing';sex 'ufw reload';pex 'ufw status verbose'; }
+function iaw { sex 'ufw default allow outgoing';sex "ufw delete $s71";sex 'ufw reload';pex 'ufw status verbose'; }
 function ksh {
   srv hrv-zotac4 || return;gnv
   [[ -x $p00/ethereal ]] || { rlv                              ; }
   [[ -x $p00/ethereal ]] || { swb 'TEM DE TER ETHEREAL' ;return; }
   [[ $M               ]] || { swb 'TEM DE TER M        ';return; }
-  ipw;$p00/ethereal hd keys --seed="$M" --path="$s69/${1:-0}"
+  ipw;$p00/ethereal hd keys --seed="$M" --path="$s69/${1:-0}";iaw
 }
 function vcs {
   srv hrv-zotac4 || return;gnv
@@ -693,7 +694,7 @@ function vcs {
   [[ $K               ]] || { swb 'TEM DE TER K        ';return; }
   [[ -x $p00/ethereal ]] || { rlv                              ; }
   [[ -x $p00/ethereal ]] || { swb 'TEM DE TER ETHEREAL' ;return; }
-  ipw;echo $p00/ethereal validator consolidate $s68 --source-validator="${b[$1]}" --target-validator="${b[-1]}" --from="$2" --privatekey="$K" --debug
+  ipw;echo $p00/ethereal validator consolidate $s68 --source-validator="${b[$1]}" --target-validator="${b[-1]}" --from="$2" --privatekey="$K";iaw
 }
 function ngx { sex "apt install $s22 -y";cc4 $p32 "$s42";cmw $p32 644 root;sex "$s00 reload $s22";sudo nginx -t &>> $p02/$s60.out; }
 function plx {
