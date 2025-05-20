@@ -812,6 +812,7 @@ function cns {
 [[ $1 = hch ]] && { hch; }
 [[ $1 = hca ]] && { hca; }
 [[ $1 = hrs ]] && { hrs; }
+[[ $1 = hrc ]] && { hrc; }
 [[ $1 = dmr ]] && { dmr; }
 [[ $1 = fsh ]] && { dex 'fwupdmgr get-devices'; }
 [[ $1 = frf ]] && { dex 'fwupdmgr refresh --force';dex 'fwupdmgr get-updates'; }
@@ -1064,7 +1065,7 @@ if [[ ! $1 ]];then
   m="$m\ni[a|p]w\t\t\tinternet arranca|para firewall"
   m="$m\nn[sh|rs]\t\tnetwork show|reset"
   m="$m\nd[sh [url]|rs]\t\tdns show [url]|reset"
-  m="$m\nh[sh|rs|ch|ca]\t\t$s45 show|restart|check|check all"
+  m="$m\nh[sh|rs|ch|ca|rc]\t$s45 show|restart|check|check all|restart conditional"
   m="$m\nr[sh|rs|pt|lk]\t\trestart gap show|reset|print|lock"
   m="$m\ni[sh|ch]\t\texternal ip show|change"
   m="$m\nj[sh|rs]\t\tjournal logs show|reset"
