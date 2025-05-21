@@ -695,7 +695,7 @@ function vcs {
   [[ $K               ]] || { swb 'TEM DE TER K        ';return; }
   [[ -x $p00/ethereal ]] || { rlv                              ; }
   [[ -x $p00/ethereal ]] || { swb 'TEM DE TER ETHEREAL' ;return; }
-  ipw;echo $p00/ethereal validator consolidate $s68 --source-validator="${b[$1]}" --target-validator="${b[-1]}" --from="$2" --privatekey="$K" --debug
+  ipw;$p00/ethereal validator consolidate $s68 --source-validator="${b[$1]}" --target-validator="${b[-1]}" --from="$2" --privatekey="$K" --debug
 }
 function ngx { sex "apt install $s22 -y";cc4 $p32 "$s42";cmw $p32 644 root;sex "$s00 reload $s22";sudo nginx -t &>> $p02/$s60.out; }
 function plx {
