@@ -52,29 +52,11 @@ function ewi {
   [[ -x $p02/ethdo ]] || { swb 'TEM DE TER ETHDO';return; }
   if obn;then for v in $@;do swn "Indice $v: $($p02/ethdo $s27 validator withdrawal --validator=$v)";done;else swb 'TEM DE ESTAR ONLINE';fi
 }
-function wsh {
-  srv hrv-zen || return;gnv
-  [[ -x $p00/ethereal ]] || { rlv                              ; }
-  [[ -x $p00/ethereal ]] || { swb 'TEM DE TER ETHEREAL' ;return; }
-  [[ $M               ]] || { swb 'TEM DE TER M        ';return; }
-  ove && $p00/ethereal hd keys --seed="$M" --path="$s69/${1:-0}"
-}
-function wcc {
-  srv hrv-zen || return;gnv
-  [[ $1               ]] || { swb 'TEM DE TER INDEX    ';return; }
-  [[ $2               ]] || { swb 'TEM DE TER ADDRESS  ';return; }
-  [[ $K               ]] || { swb 'TEM DE TER K        ';return; }
-  [[ -x $p00/ethereal ]] || { rlv                              ; }
-  [[ -x $p00/ethereal ]] || { swb 'TEM DE TER ETHEREAL' ;return; }
-  ofe && echo $p00/ethereal validator consolidate $s68 --source-validator="${b[$1]}" --target-validator="${b[-1]}" --from="$2" --privatekey="$K" --debug 
-}
 
 [[ $1 = dsd ]] && { dsd $2 $3; }
 [[ $1 = esd ]] && { esd $2 $3; }
 [[ $1 = ewc ]] && { ewc ${b[@]}; }
 [[ $1 = ewi ]] && { ewi ${b[@]}; }
-[[ $1 = wsh ]] && { wsh $2; }
-[[ $1 = wcc ]] && { wcc $2 $3; }
 [[ $1 = eve ]] && { eve; }
 [[ $1 = eem ]] && { eem $2; }
 [[ $1 = lve ]] && { lve; }
@@ -85,8 +67,6 @@ if [[ ! $1 ]];then
   m="$m\newi\t\tNext Withdrawal Information"
   m="$m\ndsd [v] [n]\tStaking Deposit\t\t\t\t\t\t(v=chaves, n=chaves anteriores)"
   m="$m\nesd [v] [n]\tEthStaker Deposit\t\t\t\t\t(v=chaves, n=chaves anteriores)"
-  m="$m\nwsh [p]\t\tWallet show\t\t\t\t\t\t(ethereal p=path)"
-  m="$m\nwcc  v   w\tconsolidate [v]alidator [w]ithdrawal; into compound\t(ethereal v=index, w=address)"
   m="$m\neve\t\tvoluntary exit\t\t\t\t\t\t(ethdo)"
   m="$m\neem [v]\t\tvoluntary exit - generate signed json\t\t\t(ethdo v=validator)"
   m="$m\nlve\t\tvoluntary exit\t\t\t\t\t\t(lighthouse)"
