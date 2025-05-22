@@ -689,9 +689,8 @@ function ksh {
 function vcs {
   srv hrv-zotac4 && rlt || return
   [[ $1 ]] || { swb 'TEM DE TER INDEX  ';return; }
-  [[ $2 ]] || { swb 'TEM DE TER ADDRESS';return; }
   [[ $K ]] || { swb 'TEM DE TER K      ';return; }
-  ipw;$p00/ethereal validator consolidate $s68 --source-validator="${b[$1]}" --target-validator="${b[-1]}" --from="$2" --privatekey="$K" --verbose
+  ipw;$p00/ethereal validator consolidate $s68 --source-validator="${b[$1]}" --target-validator="${b[-1]}" --from="$s25" --privatekey="$K" --verbose
 }
 function vwd {
   srv hrv-zotac4 && rlt || return
@@ -1029,7 +1028,7 @@ function bml { [[ $d1 = 23:58 ]] || return;if bdt;then bdl $d0;else if [[ $(llc 
 [[ $1 = mds ]] && { md; }
 [[ $1 = vex ]] && { gnv;[[ -x $p00/ethdo    ]] || dlv;swu "expectations for ${2:-${#b[@]}} validators";ethdo $s27 validator expectation --validators=${2:-${#b[@]}}; }
 [[ $1 = ksh ]] && { ksh $2; }
-[[ $1 = vcs ]] && { vcs $2 $3; }
+[[ $1 = vcs ]] && { vcs $2; }
 [[ $1 = vwd ]] && { vwd $2; }
 
 if [[ ! $1 ]];then
