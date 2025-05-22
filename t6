@@ -695,7 +695,15 @@ function vcs {
   [[ $K               ]] || { swb 'TEM DE TER K        ';return; }
   [[ -x $p00/ethereal ]] || { rlv                              ; }
   [[ -x $p00/ethereal ]] || { swb 'TEM DE TER ETHEREAL' ;return; }
-  ipw;$p00/ethereal validator consolidate $s68 --source-validator="${b[$1]}" --target-validator="${b[-1]}" --from="$2" --privatekey="$K" --debug
+  ipw;$p00/ethereal validator consolidate $s68 --source-validator="${b[$1]}" --target-validator="${b[-1]}" --from="$2" --privatekey="$K" --verbose
+}
+function vwd {
+  srv hrv-zotac4 || return;gnv
+  [[ $K               ]] || { swb 'TEM DE TER K        ';return; }
+  [[ -x $p00/ethereal ]] || { rlv                              ; }
+  [[ -x $p00/ethereal ]] || { swb 'TEM DE TER ETHEREAL' ;return; }
+  local n=${1:-1};[[ $n =~ ^[0-9]*\.?[0-9]+$ ]] && local n=${n}eth
+  ipw;$p00/ethereal validator withdraw $s68 --from="$s70" --validator="${b[-1]}" --withdrawal-amount=$n --privatekey="$K" --verbose
 }
 function ngx { sex "apt install $s22 -y";cc4 $p32 "$s42";cmw $p32 644 root;sex "$s00 reload $s22";sudo nginx -t &>> $p02/$s60.out; }
 function plx {
@@ -1028,6 +1036,7 @@ function bml { [[ $d1 = 23:58 ]] || return;if bdt;then bdl $d0;else if [[ $(llc 
 [[ $1 = vex ]] && { gnv;[[ -x $p00/ethdo    ]] || dlv;swu "expectations for ${2:-${#b[@]}} validators";ethdo $s27 validator expectation --validators=${2:-${#b[@]}}; }
 [[ $1 = ksh ]] && { ksh $2; }
 [[ $1 = vcs ]] && { vcs $2 $3; }
+[[ $1 = vwd ]] && { vwd $2; }
 
 if [[ ! $1 ]];then
   m="letra 1"
