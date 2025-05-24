@@ -28,6 +28,7 @@ cut1=$znm1
 cut2=$znm2
 else
 cuvc=$vnm1
+nxvc=ztc4.fruga.pt
 nxvc=$vnm1
 cun1=$vnm1
 cun2=$vnm1
@@ -277,15 +278,15 @@ s21='plexmediaserver'
 s22='nginx'
 s23="JAVA_HOME='/usr/lib/jvm/java-11-openjdk-amd64'"
 s24=""
-s24="$s24\n1 [$nxvc]\tset $(basename $p19)"
-s24="$s24\n2 [$cuvc]\tt6 tvc (vrs PR 36;vd;scp slash $nxvc:~)"
-s24="$s24\n3 [$nxvc]\tt3 (keys,slash,srv)"
-s24="$s24\n4\t\tcheck slash,srv,dirs"
-s24="$s24\n5\t\trm vc_lock;cuvc=$nxvc"
-s24="$s24\n6\t\tSLEEP 7m"
-s24="$s24\n7\t\tt6 vea"
-s24="$s24\n8 [$cuvc]\trm -rf $p17"
-s24="$s24\n9 [$cuvc]\trm -f $p04/$s13.service\n"
+s24="$s24\n1 set $(basename $p19)\t\t\t\t\t[$nxvc]"
+s24="$s24\n2 t6 tvc (vrs PR 36;vd;scp slash $nxvc:~)\t[$cuvc]"
+s24="$s24\n3 t3 (keys,slash,srv)\t\t\t\t\t[$nxvc]"
+s24="$s24\n4 check slash,srv,dirs"
+s24="$s24\n5 rm vc_lock;cuvc=$nxvc"
+s24="$s24\n6 SLEEP 7m"
+s24="$s24\n7 t6 vea"
+s24="$s24\n8 rm -rf $p17\t\t\t[$cuvc]"
+s24="$s24\n9 rm -f $p04/$s13.service\t[$cuvc]\n"
 s25='0x27C7f54e48956A906aF2CBFBC8684b437776403d'
 s26='0x534029B6371dc4453DD750Bc1198181F55C859fe'
 s27="--connection=http://$(sni $cun2):5052 --allow-insecure-connections"

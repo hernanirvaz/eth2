@@ -23,7 +23,7 @@ else
   if [[ $cunm = $inm5 ]];then apip="$iip5";tarp=80;elif [[ $cunm = $inm6 ]];then apip="$iip6";tarp=80;else apip='127.0.0.1';tarp=80;fi
   othe=''
   othe="$othe --execution-endpoint http://$apip:8551 --execution-jwt $p58/jwt"
-  othe="$othe --suggested-fee-recipient $s26"                                                                                                                 # bn level fees
+  othe="$othe --suggested-fee-recipient $s25"                                                                                                                 # bn level fees
   othe="$othe --validator-monitor-file $p58/pubkeys"                                                                                                          # monitor validators
   othe="$othe --prune-payloads false"                                                                                                                         # fetch/keep execution payloads default true
   if sht;then othe="$othe --builder http://$zip3:18550";else othe="$othe --builder http://$apip:18550";fi
@@ -69,14 +69,13 @@ else
   othe=''
   othe="$othe --builder-proposals --builder-boost-factor 100"                                                                                                 # factor/100*mev > local ? mev : local
   if sht;then
-    othe="$othe --beacon-nodes http://$iip5:5052,http://$iip6:5052"
+    othe="$othe --beacon-nodes http://$iip6:5052,http://$iip5:5052"
   else
     othe="$othe --beacon-nodes http://$vis1:5052"
   fi
-  othe="$othe --suggested-fee-recipient $s26"                                                                                                                 # vc level fees
+  othe="$othe --suggested-fee-recipient $s25"                                                                                                                 # vc level fees
   othe="$othe --broadcast subscriptions,attestations,blocks,sync-committee"                                                                                   # broadcast to all beacon nodes
   # othe="$othe --monitoring-endpoint https://beaconcha.in/api/v1/client/metrics?apikey=$B&machine=$(snc $cunm)"                                              # monitor data for beaconcha.in app
-
   sau eth3;cd $p02
   if [[ ! -f $p05/vc_keys  && -d $p19 && $(ls $p19 2>$p03)          ]];then swu 'IMPORT KEYS';sex "mkdir -p $p05";cmw $p05 755 $meeu;imk;[[ -f $p17/validator_definitions.yml ]] && touch $p05/vc_keys;fi
   if [[ ! -f $p05/vc_lock  && -f $p05/vc_keys                       ]];then swn "\nDISABLE VC";touch $p05/vc_lock;fi
