@@ -616,7 +616,7 @@ function luc {                                                                  
 function ruv { if [[ $1 ]];then swn "RUST OVERRIDE SET $1";rustup override set $1;else swn 'RUST UPDATE';rustup update stable;fi; }                           # set/update rust version
 function tvc {
   swn "$s24";[[ $cuvc = $nxvc ]] && return;if vct && tsa $s13;then swn "TRANSFERIR VC -> $(snc $nxvc) (SIM/nao)?";else return;fi;local rsp=nao;read rsp
-  if [[ $rsp = SIM && ! -f $p05/vc_slash && ! -f $p05/vc_lock && -f $p05/vc_keys ]];then touch $p50.print;vrs PR 36;rm -f $p50.print;vd;swu "COPY SLASH -> $nxvc";local f=$p02/$(basename $p18);cex "cp $p18 $p02";cmw $f 666 eth;mcp $f $(sn2 $nxvc);sex "rm $f";fi
+  if [[ $rsp = SIM && ! -f $p05/vc_slash && ! -f $p05/vc_lock && -f $p05/vc_keys ]];then vrs PR $1;vd;swu "COPY SLASH -> $nxvc";local f=$p02/$(basename $p18);cex "cp $p18 $p02";cmw $f 666 eth;mcp $f $(sn2 $nxvc);sex "rm $f";fi
 }
 function nky { ls $p19/key*.json 2>$p03|wc -l; }
 function svr { local t='';for t in $(printf '%s\n' $@|sort -u);do curl -sX GET "$s47=$t"|snf "$e18";done; }                                                   # show mev validator registration
@@ -802,8 +802,6 @@ function cns {
 [[ $1 = ccr ]] && { llt && ble "$e14"; }
 [[ $1 = cca ]] && { llt || ble "$e15"; }
 [[ $1 = cce ]] && { cce; }
-[[ $1 = vcc ]] && { vcc; }
-[[ $1 = tvc ]] && { tvc; }
 [[ $1 = chk ]] && { cex 'chkrootkit'; }
 [[ $1 = dsh ]] && { $s09 query ${2:-smtp.gmail.com}; }
 [[ $1 = drs ]] && { dpa; }
@@ -835,6 +833,8 @@ function cns {
 [[ $1 = brb ]] && { touch $p50.print;brs RB ${2:-0} 0 ${2:-$(btn $n02)};rm -f $p50.print; }
 [[ $1 = vrb ]] && { touch $p50.print;vrs RB           ${2:-$n01}       ;rm -f $p50.print; }
 [[ $1 = ivk ]] && { touch $p50.print;ivk              ${2:-$n02}       ;rm -f $p50.print; }
+[[ $1 = tvc ]] && { touch $p50.print;tvc              ${2:-$n03}       ;rm -f $p50.print; }
+[[ $1 = vcc ]] && { vcc; }
 [[ $1 = ep  ]] && { epf; }
 [[ $1 = cp  ]] && { cpf; }
 [[ $1 = ap  ]] && { epf;cpf; }
@@ -1042,8 +1042,10 @@ if [[ ! $1 ]];then
   m="$m\n[g|t|u|b|c]rs [n] [g]\tgeth|nethermind|besu|cc|cc & vc\t\trestart\t\tn peers, mim gap"
   m="$m\nvrs               [g]\tvc\t\t\t\t\trestart\t\tmim gap"
   m="$m\n[g|t|u|b|v]rb     [g]\tgeth|nethermind|besu|cc|vc & sys\treboot\t\tmim gap"
-  m="$m\nivk               [g]\timport validator keys\t\t\t\t\tmim gap"
   m="$m\nirb               [h]\tsys (if needed)\t\t\t\treboot\t\tafter h hours"
+  m="$m\nivk               [g]\timport validator keys\t\t\t\t\tmim gap"
+  m="$m\ntvc               [g]\tvc transfer ($cuvc -> $nxvc)\t\t\tmim gap"
+  m="$m\nvcc\t\t\tvc switch cc order"
   m="$m\nyj\t\t\tsystem journal"
   m="$m\nbb[a]\t\t\t[all] produced block\t\t\t\tlog lines"
   m="$m\n[cv]i     [hh:mm]\tcc/vc\t\t\t\tinternal\tlog lines"
@@ -1059,8 +1061,6 @@ if [[ ! $1 ]];then
   m="$m\nhs[012ecgubvm]\t\thistoric summary report [0-both|1-main|2-backup|el|cc|geth|besu|beacon|vc|mev]"
   m="$m\n[ec]sp [i] [n]\t\tel|cc show peers exclude [i(1)-9][0-9]|include [0-n(9)]"
   m="$m\ncc[a|r|e]\t\tcc [a]dd/[r]emove long-lived parms|toggle what [e]l to connect to ($inm6|$inm5)"
-  m="$m\nvcc\t\t\tvc switch cc order"
-  m="$m\ntvc\t\t\tvc transfer ($cuvc -> $nxvc)"
   m="$m\ncpe [hp]\t\thours & temperature & errors status"
   m="$m\nm[vr|re]\t\tmev validator registration|relay erros"
   m="$m\nw[a|pr|s|l [e]]\t\tfirewall arranca|para|status|logs [exclude]"
