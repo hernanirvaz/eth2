@@ -573,7 +573,7 @@ e50="$e50;s%$g55%ED%g"
 e50="$e50;s%$g56%AD%g"
 e50="$e50;$e37"
 e51="$e47;$e37"
-e52="$e47;$e37;s%blockNumber=[0-9]+ +getHeader +%%i;s%slot=[0-9]+ +%%i;s%relays=%%i;s%best +bid +%%i;s% +value=([0-9]*\.[0-9]+)%\t\t💰 \1 💰%"
+e52="$e47;$e37;s% *(slotTimeSec|genesisTime)=[0-9]+%%ig;s%[^ ]+EthConsensusVersion=[^ ]+%%ig;s%[^ ]+ContentTypes?=[^ ]+%%ig;s%blockNumber=[0-9]+ +getHeader +%%i;s%slot=[0-9]+ +%%i;s%relays=%%i;s%best +bid +%%i;s% +value=([0-9]*\.[0-9]+)%\t\t💰 \1 💰%"
 e53="s%^ *$p01%# $p01%"
 e54='s%.*synchronized: *([a-z]*) *%\1%p'
 e55="s%$g03%%;s%[0-9]* users*,%%;s% average([^,]*).*%\1%;s%  *% %g"
