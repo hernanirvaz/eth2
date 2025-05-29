@@ -94,10 +94,9 @@ function rbt { [[ $(sra) -ge $((60*60*${1:-9})) ]]; }
 function ipt { [[ $(date +%s) -ge $(bss $1 6) ]]; }
 function pct { [[ $b4 -ne 0 ]]; }
 function hat { [[ ${a[$nn]} -ge ${a[0]} ]]; }                                                                                                                 # function hat { [[ $b2 -gt $(b00) ]]; }
-function bdt { [[ $(b03 $zk $zz $zx $zw) -gt $n20 || $nz -gt 0 ]]; }
-function pmt { [[ $nm -ge $(b05 $nn) ]]; }
+function bdt { [[ $(b03 $zk $zz $zx $zw) -gt $n20 || $nz -gt 0 || $nm -lt $(b05 $nn) ]]; }
 function sft { [[ -f $p04/$1.service ]]; }
-function bpt { [[ $(era $p12 $n12) -eq 1 ]] && ( (pct && pmt && hat && ! bdt && ! fft $p45) || rbt $n06); }
+function bpt { [[ $(era $p12 $n12) -eq 1 ]] && ( (pct && hat && ! bdt && ! fft $p45) || rbt $n06); }
 function llc { cat ${1:-$p03} 2>$p03|wc -l; }                                                                                                                 # get log line count
 function jrn { if [[ $2 ]];then local s="-g $2";else local s=;fi;cex "journalctl --no-hostname --no-full -f $1 $s"; }                                         # my journal   format
 function dmr { sex "$s00 daemon-reload"; }                                                                                                                    # daemon-reload
@@ -250,7 +249,7 @@ function b01 { nu3 "(0.300*$i0+0.200*$i1+0.469*$i4+0.001*$b1+0.010*$i2+0.020*$i3
 function b02 { nu3 "(($1*$n28+$2*$n29+$3*$n10+$4*$n11)/${5:-1}*$n30/1000000)"   7 ; }                                                                         # get penalty
 function b03 { nu3 "(($1*$n28+$2*$n29+$3*$n10+$4*$n11)/${5:-1}*$n30/1000000)"   7 ; }                                                                         # get penalty delete idx
 function b04 { nu3 "($1*$n27+$2*$n08)*$n30/100000000"                           7 ; }                                                                         # get reward
-function b05 { nu3 "0.70*$1"                                                      ; }                                                                         # get min target limit
+function b05 { nu3 "0.50*$1"                                                      ; }                                                                         # get min target limit
 function b06 { nu3 "1.50*$z1"                                                     ; }                                                                         # get numerator general errors
 function bri { nu1 $((z2>500?$(b06)/z2:0))                                        ; }                                                                         # get restart idx
 function bsi { nu1 $(jq -r .data.sync_distance        <<< $@ 2>$p03)              ; }                                                                         # get cl syncing distance
@@ -339,9 +338,9 @@ function bdd {
 }
 function bh0 {
   fft $p12 || return;tail -n${1:-$n12} $p12;[[ $1 ]] && return;boi;bl0;local e=$(printf '%1i     x9  x5  x1  x0   er   if   c2' $b0 2>$p03);local s=$(printf 'i4   i5   i6   %1i7   i8   i9  i10  avg' $b0 2>$p03)
-  swn "BO $(printf '%4i%4i%35s%15s'      $b2 $(wc -l <<< "$l2")        2>$p03)$e"    ;bo5
-  swn "BL $(printf '%8i%35s%15s'         $(llc $p12)                   2>$p03)$e\n$m";bm0;bmo
-  swn "BM $(printf '%8i%35s%37s %2i %9i' $(llc $p13) ' ' "$s" $nz $n20 2>$p03)\n$m"
+  swn "BO $(printf '%4i%4i%35s%15s'          $b2 $(wc -l <<< "$l2")                   2>$p03)$e"    ;bo5
+  swn "BL $(printf '%8i%35s%15s'             $(llc $p12)                              2>$p03)$e\n$m";bm0;bmo
+  swn "BM $(printf '%8i%35s%37s %2i %4i %4i' $(llc $p13) ' ' "$s" $nz $(b05 $nn) $n20 2>$p03)\n$m"
 }
 function bwd { local n=$((($(date +%s)-n09)/(12*32)-0));for n in $n $((n+1));do curl -sH "$s28" $s67 -X POST -d"$(viv)" "$s32/sync/$n";curl -sH "$s28" $s67 -X GET "$s32/proposer/$n";done 2>$p03|jq -r $s35 2>$p03; }
 function bwc { bwd|grep -Ex "$(vix)" 2>$p03|wc -l; }
@@ -846,7 +845,6 @@ function cns {
 [[ $1 = tp  ]] && { tl0;swn "$m"; }
 [[ $1 = tpf ]] && { tl0;swn "$m" >> $p62;[[ $ok != OK ]] && trs $ok 0 $n03; }
 [[ $1 = bp  ]] && { bl0;swn "$m"; }
-
 function bml { [[ $d1 = 23:58 ]] || return;if bdt;then bdl $d0;else if [[ $(llc $p12) -gt $n14 ]];then bdd o 0 5;fi;fi; }
 [[ $1 = bpf ]] && { bl0;swn "$m" >> $p12;bml;[[ $ok != OK ]] && brs $ok 0 0 $(btn $n02);pas; }
 [[ $1 = vp  ]] && { vl0;swn "$m"; }
