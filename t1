@@ -32,7 +32,6 @@ cut2=$znm2
 else
 cuvc=$vnm1
 nxvc=ztc4.fruga.pt
-nxvc=$vnm1
 cun1=$vnm1
 cun2=$vnm1
 cumv=$vnm1

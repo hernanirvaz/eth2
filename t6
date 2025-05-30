@@ -616,7 +616,7 @@ function luc {                                                                  
 function ruv { if [[ $1 ]];then swn "RUST OVERRIDE SET $1";rustup override set $1;else swn 'RUST UPDATE';rustup update stable;fi; }                           # set/update rust version
 function tvc {
   swn "$s24";[[ $cuvc = $nxvc ]] && return;if vct && tsa $s13;then swn "TRANSFERIR VC -> $(snc $nxvc) (SIM/nao)?";else return;fi;local rsp=nao;read rsp
-  if [[ $rsp = SIM && ! -f $p05/vc_slash && ! -f $p05/vc_lock && -f $p05/vc_keys ]];then vrs PR $1;vd;swu "COPY SLASH -> $nxvc";local f=$p02/$(basename $p18);cex "cp $p18 $p02";cmw $f 666 eth;mcp $f $(sn2 $nxvc);sex "rm $f";fi
+  if [[ $rsp = SIM && ! -f $p05/vc_slash && ! -f $p05/vc_lock && -f $p05/vc_keys ]];then vrs PR $1;vd;local f=$p02/$(basename $p18);sex "cp $p18 $p02";cmw $f 666 eth;mcp $f $(sn2 $nxvc);sex "rm $f";fi
 }
 function nky { ls $p19/key*.json 2>$p03|wc -l; }
 function svr { local t='';for t in $(printf '%s\n' $@|sort -u);do curl -sX GET "$s47=$t"|snf "$e18";done; }                                                   # show mev validator registration
@@ -676,7 +676,7 @@ function ulr { local s=$(ulg $1);uls "$g59" "$s";uls "$g62" "$s"; }
 [[ $1 = ulg ]] && { ulg $2; }
 [[ $1 = ulr ]] && { ulr $2; }
 
-function mcp { local s=${2:-v1};local f=${3:-~};if [[ ${s:0:1} = v ]];then local e="-P 2020 -i $p02/.ssh/id_ed25519";eval "scp $e $1 $(sns $s):$f";else eval "scp $1 $(sns $s):$f";fi; }
+function mcp { local s=${2:-v1};local f=${3:-~};if [[ ${s:0:1} = v ]];then local e="-P 2020 -i $p02/.ssh/id_ed25519";local n="scp $e $1 $(sns $s):$f";else local n="scp $1 $(sns $s):$f";fi;echo "$n";eval "$n"; }
 [[ $1 = mcp ]] && { mcp $2 $3 $4; }
 
 # function pai { local e="allow from $2 to any port ${1/\// proto }";if [[ $4 ]];then nex "ufw $4 $e";else nex "ufw $e comment $3";fi; }
@@ -834,7 +834,7 @@ function cns {
 [[ $1 = brb ]] && { touch $p50.print;brs RB ${2:-0} 0 ${2:-$(btn $n02)};rm -f $p50.print; }
 [[ $1 = vrb ]] && { touch $p50.print;vrs RB           ${2:-$n01}       ;rm -f $p50.print; }
 [[ $1 = ivk ]] && { touch $p50.print;ivk              ${2:-$n02}       ;rm -f $p50.print; }
-[[ $1 = tvc ]] && { touch $p50.print;tvc              ${2:-$n03}       ;rm -f $p50.print; }
+[[ $1 = tvc ]] && { touch $p50.print;tvc              ${2:-$n00}       ;rm -f $p50.print; }
 [[ $1 = vcc ]] && { vcc; }
 [[ $1 = ep  ]] && { epf; }
 [[ $1 = cp  ]] && { cpf; }
