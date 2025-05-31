@@ -2,7 +2,7 @@
 
 source /home/eth/eth2/t1
 
-if [[ $cunm != $cuvc ]];then
+if [[ $cunm != "$cuvc" ]];then
   swn "MONITOR NAO DEVE SER INSTALADO AQUI - DEVE FICAR EM $cuvc"
 else
   if [[ -f $p38/$s16.yml ]];then
@@ -11,7 +11,7 @@ else
     swu 'CONFIGURE PROMETHEUS'
     cex "apt install $s16 $s16-node-exporter -y"
     t6 fpr;t6 npr;t6 ppr
-    cd $p02
+    cd $p02 || exit
     cat <<-EOF > $s16.yml
 		global:
 		  scrape_interval:     15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.

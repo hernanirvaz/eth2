@@ -1,4 +1,6 @@
 #!/bin/bash
+# shellcheck disable=SC2086
+# shellcheck disable=SC2053
 
 source /home/eth/eth2/t1
 
@@ -14,11 +16,11 @@ function bck { [[ -f $p04/$1.service ]] || return;grep -q checkpoint-sync-url $p
 
 if [[ $1 = linux || $1 = reboot ]];then
   swb 'FULL-UPGRADE >> ~/apt.out';sex 'pwd'
-  sudo apt update -y       &>> $p02/apt.out
-  sudo apt full-upgrade -y &>> $p02/apt.out
-  sudo apt dist-upgrade -y &>> $p02/apt.out
-  sudo apt autoremove   -y &>> $p02/apt.out
-  sudo apt autoclean       &>> $p02/apt.out
+  sudo apt update -y       2>&1 | sudo tee -a $p02/apt.out
+  sudo apt full-upgrade -y 2>&1 | sudo tee -a $p02/apt.out
+  sudo apt dist-upgrade -y 2>&1 | sudo tee -a $p02/apt.out
+  sudo apt autoremove   -y 2>&1 | sudo tee -a $p02/apt.out
+  sudo apt autoclean       2>&1 | sudo tee -a $p02/apt.out
   [[ $1 = reboot ]] && { srb $p39 RB; }
 fi
 if [[ $1 = besu ]];then sex "rm -fr $p00/besu.sav"      ;sex "mv $p00/besu      $p00/besu.sav"       ;unv $2    ;fi

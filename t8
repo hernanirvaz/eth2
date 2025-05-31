@@ -1,4 +1,5 @@
 #!/bin/bash
+# shellcheck disable=SC2086
 
 source /home/eth/eth2/t1
 
@@ -24,7 +25,7 @@ epmv="$epmv -request-timeout-getpayload 4000"                                   
 epmv="$epmv -request-timeout-regval 6500"                                                                                                                     # timeout registerValidator default 3000
 epmv="$epmv -min-bid 0.005"                                                                                                                                   # minimum bid to accept from a relay
 epmv="$epmv -relay-check -relays $rlys"
-cd
+cd || exit
 cat <<-EOF > $s14.service
 [Unit]
 Description=mev-boost service

@@ -1,18 +1,20 @@
 #!/bin/bash
+# shellcheck disable=SC2086
+# shellcheck disable=SC2053
 
 source /home/eth/eth2/t1
 
 function hlp { swb "install consencus client with lighthouse-${1:-stable} source using rust-${2:-stable}"; }
 
 if [[ $cunm = $znm4 || $cunm = $inm5 || $cunm = $inm6 || $cunm = $vnm1 || $cunm = $vnm2 ]];then
-  hlp
+  hlp $1 $2
   if [[ -x $p02/.cargo/bin/rustup ]];then
     t6 ruv $2
   else
     swn 'BASE/RUST NEEDS >> ~/apt-rust.out';sex 'pwd'
-    sudo apt install curl build-essential libssl-dev libudev-dev perl yasm                           -y &>> $p02/apt-rust.out
-    sudo apt install git gcc g++ make cmake pkg-config llvm-dev libclang-dev clang protobuf-compiler -y &>> $p02/apt-rust.out
-    swn 'RUST INSTALL';cd $p02;curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs|sh;source "$HOME/.cargo/env"
+    sudo apt install curl build-essential libssl-dev libudev-dev perl yasm -y                           2>&1 | sudo tee -a $p02/apt-rust.out
+    sudo apt install git gcc g++ make cmake pkg-config llvm-dev libclang-dev clang protobuf-compiler -y 2>&1 | sudo tee -a $p02/apt-rust.out
+    swn 'RUST INSTALL';cd $p02 || exit;curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs|sh;source "$HOME/.cargo/env"
   fi
   [[ -f $p00/lighthouse || -f $p02/.cargo/bin/lighthouse ]] || t6 luc $1
 fi
@@ -40,7 +42,7 @@ else
   # othe="$othe --disable-lock-timeouts"                                                                                                                      # disable timeouts on internal locks
   # othe="$othe --monitoring-endpoint https://beaconcha.in/api/v1/client/metrics?apikey=$B&machine=$(snc $cunm)"                                              # monitor data for beaconcha.in app
   swu 'CONFIGURE BEACON';sex "mkdir -p $p16";cmw $p05 755 $meeu;sau eth2;sjw
-  cmw $p16 700 eth2;touch $p05/vc_lock;cd $p02                                                                                                                # IMPORTANTE LOCK vc
+  cmw $p16 700 eth2;touch $p05/vc_lock;cd $p02 || exit                                                                                                        # IMPORTANTE LOCK vc
   pp2p=9004;ndp || pp2p=9000
   cat <<-EOF > $s12.service
 	[Unit]
@@ -76,10 +78,10 @@ else
   othe="$othe --suggested-fee-recipient $s26"                                                                                                                 # vc level fees
   othe="$othe --broadcast subscriptions,attestations,blocks,sync-committee"                                                                                   # broadcast to all beacon nodes
   # othe="$othe --monitoring-endpoint https://beaconcha.in/api/v1/client/metrics?apikey=$B&machine=$(snc $cunm)"                                              # monitor data for beaconcha.in app
-  sau eth3;cd $p02
+  sau eth3;cd $p02 || exit
   if [[ ! -f $p05/vc_keys  && -d $p19 && $(ls $p19 2>$p03)          ]];then swb 'IMPORT KEYS';sex "mkdir -p $p05";cmw $p05 755 $meeu;imk;[[ -f $p17/validator_definitions.yml ]] && touch $p05/vc_keys;fi
   if [[ ! -f $p05/vc_lock  && -f $p05/vc_keys                       ]];then touch $p05/vc_lock;fi
-  if [[   -f $p05/vc_lock  && -f $p05/vc_keys && ! -f $p05/vc_slash ]];then sex "mkdir -p $p17";cmw $p17 755 $meeu;sis $p02/$(basename $p18);svd;fi
+  if [[   -f $p05/vc_lock  && -f $p05/vc_keys && ! -f $p05/vc_slash ]];then sex "mkdir -p \"$p17\"";cmw "$p17" 755 "$meeu";sis $p02/$(basename $p18);svd;fi
   if [[   -f $p05/vc_lock  && -f $p05/vc_keys                       ]];then
     cat <<-EOF > $s13.service
 		[Unit]
