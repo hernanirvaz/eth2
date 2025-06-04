@@ -1,3 +1,5 @@
+#!/bin/bash
+
 gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
 gsettings set org.gnome.desktop.interface gtk-theme 'Yaru-prussiangreen-dark'
 gsettings set org.gnome.desktop.background primary-color '#090807'
