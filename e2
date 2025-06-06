@@ -13,7 +13,8 @@ othe=''
 othe="$othe --network-maxactivepeers $maxp --network-discoveryport $pp2p --network-p2pport $pp2p"
 othe="$othe --jsonrpc-enabled true --jsonrpc-host $apip --jsonrpc-enginehost $apip --jsonrpc-engineport 8551 --jsonrpc-jwtsecretfile $p58/jwt"
 othe="$othe --sync-snapsync true --sync-ancientbodiesbarrier $abrb --sync-ancientreceiptsbarrier $abrb"
-othe="$othe --pruning-mode Hybrid --pruning-fullpruningtrigger VolumeFreeSpace --pruning-fullpruningthresholdmb $(($fptv*1024))"
+othe="$othe --pruning-mode Hybrid --pruning-fullpruningtrigger VolumeFreeSpace --pruning-fullpruningthresholdmb $((fptv*1024))"
+othe="$othe --Blocks.TargetBlockGasLimit $((n56*10**6))"
 cd
 cat <<-EOF > $s44.service
 [Unit]

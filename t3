@@ -77,6 +77,7 @@ else
   fi
   othe="$othe --suggested-fee-recipient $s26"                                                                                                                 # vc level fees
   othe="$othe --broadcast subscriptions,attestations,blocks,sync-committee"                                                                                   # broadcast to all beacon nodes
+  othe="$othe --gas-limit $((n56*10**6))"
   # othe="$othe --monitoring-endpoint https://beaconcha.in/api/v1/client/metrics?apikey=$B&machine=$(snc $cunm)"                                              # monitor data for beaconcha.in app
   sau eth3;cd $p02 || exit
   if [[ ! -f $p05/vc_keys  && -d $p19 && $(ls $p19 2>$p03)          ]];then swb 'IMPORT KEYS';sex "mkdir -p $p05";cmw $p05 755 $meeu;imk;[[ -f $p17/validator_definitions.yml ]] && touch $p05/vc_keys;fi
