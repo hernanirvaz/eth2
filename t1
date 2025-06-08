@@ -10,8 +10,7 @@ zip4='192.168.8.34' ;znm4='hrv-zotac4'
 iip5='192.168.8.37' ;inm5='hrv-intel5'
 iip6='192.168.8.40' ;inm6='hrv-intel6'
 pip1='192.168.8.127';pnm1='hrv-zen'
-pip2='192.168.8.197';pnm2='hrv-vivo'
-pip3='192.168.8.158';pnm3='hrv-lenovo'
+pip2='192.168.8.158';pnm2='hrv-lenovo'
 vip1='57.129.73.109';vnd1='ns3244686.ip-57-129-73.eu'
 vip2='57.129.28.225';vnd2='ns3053175.ip-57-129-28.eu'
 vip3='161.97.85.32' ;vnd3='vmi1007895.contaboserver.net'
@@ -493,7 +492,7 @@ e17="s%hrv-zotac([0-9]).*%hrv-zotac\1 ztc\1%;s%hrv-intel([0-9]).*%hrv-intel\1 in
 [[ $cunm = $znm4 ]] && e17="$e17\n$zip1\t$znm1 $(snc $znm1)\n$zip2\t$znm2 $(snc $znm2)\n$zip3\t$znm3 $(snc $znm3)\n$iip5\t$inm5 $(snc $inm5)\n$iip6\t$inm6 $(snc $inm6)"
 [[ $cunm = $inm5 ]] && e17="$e17\n$zip1\t$znm1 $(snc $znm1)\n$zip2\t$znm2 $(snc $znm2)\n$zip3\t$znm3 $(snc $znm3)\n$zip4\t$znm4 $(snc $znm4)\n$iip6\t$inm6 $(snc $inm6)"
 [[ $cunm = $inm6 ]] && e17="$e17\n$zip1\t$znm1 $(snc $znm1)\n$zip2\t$znm2 $(snc $znm2)\n$zip3\t$znm3 $(snc $znm3)\n$zip4\t$znm4 $(snc $znm4)\n$iip5\t$inm5 $(snc $inm5)"
-sht                 && e17="$e17\n$pip1\t$pnm1 $(snc $pnm1)\n$pip2\t$pnm2 $(snc $pnm2)\n$pip3\t$pnm3 $(snc $pnm3)"
+sht                 && e17="$e17\n$pip1\t$pnm1 $(snc $pnm1)\n$pip2\t$pnm2 $(snc $pnm2)"
 e18='s%.*fee_recipient"."([^"]*)".*pubkey":"([^"]*)".*%pubkey: \2, fee: \1%p'
 e19="s%^$g58 +[^ ]+([a-z1-9]{4}) +([^ ]{4}).*UFW BLOCK]%\4: \2\3 \U\5 ufw%"
 e19="$e19;s% MAC=[^ ]*%%"
