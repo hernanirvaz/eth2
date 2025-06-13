@@ -146,7 +146,7 @@ function ch0 {
   if [[ $s = CL || $s = ML ]];then if fft $p52;then tail -n$n $p52;fi;if [[ $i -eq 0 ]] && tsa $s14;then ml0;swn "ML $(printf '%8i' $(llc $p52) 2>$p03)\n$m";fi;fi
 }
 function ah0 { eh0 $3|tail -n$1;swn "BH";bh0 $3|tail -n$2; }
-function eb0 { e0=$(ll5 "$g12"|wc -l);ok=OK;fft $1 || return;[[ $(era $1) -gt 1 ]] && return;if [[ $er -lt 1 ]];then ok=BK;elif [[ $(grep false <<< $@) && ($e0 -eq $(ln0 $s53 $1|tail -n1) || $(ei0) -gt $n24) ]];then ok=BK;fi; }
+function eb0 { e0=$(ll5 "$g12"|wc -l);ok=OK;fft $1 || return;[[ $(era $1) -gt 1 ]] && return;if [[ $ez -gt 5 ]];then ok=BK;elif [[ $(grep false <<< $@) && ($e0 -eq $(ln0 $s53 $1|tail -n1) || $(ei0) -gt $n24) ]];then ok=BK;fi; }
 function stg { local n=${1:-0};if ((n>3599));then printf %s $(($(date -d@$n +%H)-1))h;fi;if ((n>0));then printf %s $(date -d@$n +%Mm%Ss);fi;printf %s .$(date -d@$(($(date +%s)+$n)) +%H%M%S); }
 function sf1 { printf %s ${1:-$(date +%H:%M:%S)}; }                                                                                                           # get filterd t7 parm 1
 function sf2 { printf %i ${2:-24}; }                                                                                                                          # get filterd t7 parm 2
