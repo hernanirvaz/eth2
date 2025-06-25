@@ -283,7 +283,7 @@ s22='nginx'
 s23="JAVA_HOME='/usr/lib/jvm/java-11-openjdk-amd64'"
 s24=""
 s24="$s24\n1 set $(basename $p19)\t\t\t\t\t[$nxvc]"
-s24="$s24\n2 t6 tvc (vrs PR 36;vd;scp slash $nxvc:~)\t[$cuvc]"
+s24="$s24\n2 t6 tvc (vrs PR $n00;vd;scp slash $nxvc:~)\t[$cuvc]"
 s24="$s24\n3 t3 (keys,slash,srv)\t\t\t\t\t[$nxvc]"
 s24="$s24\n4 check slash,srv,dirs"
 s24="$s24\n5 rm vc_lock;cuvc=$nxvc"
