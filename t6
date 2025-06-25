@@ -616,7 +616,7 @@ function luc {                                                                  
 function ruv { if [[ $1 ]];then swn "RUST OVERRIDE SET $1";rustup override set $1;else swn 'RUST UPDATE';rustup update stable;fi; }                           # set/update rust version
 function tvc {
   swn "$s24";[[ $cuvc = $nxvc ]] && return;if vct && tsa $s13;then swn "TRANSFERIR VC -> $(snc $nxvc) (SIM/nao)?";else return;fi;local rsp=nao;read rsp
-  if [[ $rsp = SIM && ! -f $p05/vc_slash && ! -f $p05/vc_lock && -f $p05/vc_keys ]];then vrs $1 $2;vd;local f=$p02/$(basename $p18);sex "cp $p18 $p02";cmw $f 666 eth;mcp $f $(sn2 $nxvc);sex "rm $f";fi
+  if [[ $rsp = SIM && ! -f $p05/vc_slash && ! -f $p05/vc_lock && -f $p05/vc_keys ]];then vrs $1 $2;vd;cex "ls -la $p17";cex "cat $p04/$s13.service";local f=$p02/$(basename $p18);sex "cp $p18 $p02";cmw $f 666 eth;mcp $f $(sn2 $nxvc);sex "rm $f";fi
 }
 function nky { ls $p19/key*.json 2>$p03|wc -l; }
 function svr { local t='';for t in $(printf '%s\n' $@|sort -u);do curl -sX GET "$s47=$t"|snf "$e18";done; }                                                   # show mev validator registration
