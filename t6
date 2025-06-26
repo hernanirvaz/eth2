@@ -636,8 +636,8 @@ function ivk {
     fft $p05/vc_lock || cex "$s03 $s13";vko $n
   fi
 }
-function viv { printf %s [\"$(sed 's% %","%g' <<< ${!b[@]})\"]; }
-function vix { printf %s $(sed 's% %|%g' <<< ${!b[@]}); }
+function viv { printf %s "[\"$(sed 's% %","%g' <<< ${!b[@]})\"]"; }
+function vix { printf %s "$(sed 's% %|%g' <<< ${!b[@]})"; }
 function slt { local n=$((($1-n04)/32));for n in $n $((n+1));do curl -sH "$s28" -X POST -d"$(viv)" "$s32/attester/$n"|jq -r $s34;done 2>$p03;echo $(((n+1)*32)); }
 function sng { local t=$(((($(date +%s)-n09)/12)+n04));local e=0;local i=0;local s=0;for s in $(slt $t|sort -nu);do if ((s<t));then continue;else if (((s-t)>e));then local e=$((s-t));local i=$t;fi;fi;local t=$((s+1));done;printf '%s %i' $(date -d@$((n09+i*12)) +%T) $((e*12)); }
 function bcc { printf p;if n1t;then if bpt;then if rbt $n06;then printf r;else printf c;fi;else if bdt;then printf d;else printf _;fi;fi;else if rbt;then printf r;else if bdt;then printf d;else printf _;fi;fi;fi;printf :; }
