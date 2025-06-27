@@ -6,7 +6,7 @@ source /home/eth/eth2/t1
 
 function hlp {
   local e=''
-  e="$e\n$(basename $0) linux|reboot|besu [version]|geth [version] [commit]|netv [version] [commit]|mev [go version] [mev version]|ligv [version] [rust version]|cp\n"
+  e="$e\n$(basename $0) linux|reboot|besu [version]|geth [version] [commit]|mev [go version] [mev version]|ligv [version] [rust version]|cp\n"
   e="$e\n  net[vd]|lig[vd]\tupgrade nethermind v-version/d-database|lighthouse v-version/d-database"
   e="$e\n  mev\t\t\tupgrade mev-boost"
   e="$e\n  cp\t\t\tcopy & propagate  lighthouse"
@@ -26,7 +26,7 @@ fi
 if [[ $1 = besu ]];then sex "rm -fr $p00/besu.sav"      ;sex "mv $p00/besu      $p00/besu.sav"       ;unv $2    ;fi
 if [[ $1 = geth ]];then sex "rm -f  $p00/geth.sav"      ;sex "mv $p00/geth      $p00/geth.sav"       ;gtv $2 $3 ;fi
 if [[ $1 = netv ]];then nnv D $2 $3;sex "rm -fr $p00/nethermind.sav";t6 tgp;nex "mv $p00/nethermind $p00/nethermind.sav";nnv S $2 $3;t6 ta;fi
-if [[ $1 = netd ]];then t6 tgp;nex "rm -rf $p61/nethermind_db/mainnet"                         ;touch $p50.lock;fi
+if [[ $1 = netd ]];then t6 tgp;nex "rm -rf $p61/nethermind_db/mainnet";t6 tea;fi
 if [[ $1 = ligd ]];then t6 bgp;nex "rm -rf $p16";nex "mkdir -p $p16";cmw $p16 700 eth2;bck $s12;touch $p50.lock;fi
 if [[ $1 = mev  ]];then sex "rm -f  $p00/mev-boost.sav" ;sex "cp $p00/mev-boost $p00/mev-boost.sav"  ;gnv $2;mnv $3;fi
 [[ $1 = ligv || $1 = cp ]] || { [[ $1 ]] || hlp;exit; }
