@@ -254,7 +254,7 @@ n52=137   # NetBIOS Name Service
 n53=138   # NetBIOS Datagram Service
 n54=139   # SMB traffic over NetBIOS
 n55=8096  # Jellyfin Software Media System
-n56=60    # Gas Block Limit - Max gas allowed in a block current default 36
+n56=45    # Gas Block Limit - Max gas allowed in a block current default 36
 n57=10
 
 s00='systemctl'
