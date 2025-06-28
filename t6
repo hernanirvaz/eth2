@@ -31,11 +31,12 @@ function sgn { local g="$1";shift;SUDO_ASKPASS=$p82 sudo -A grep -Eah  "$g" $@ 2
 function sgv { local g="$1";shift;SUDO_ASKPASS=$p82 sudo -A grep -Eahv "$g" $@ 2>$p03; }
 function sin {                                              grep -Eai  "$1"    2>$p03; }
 function siv {                                              grep -Eaiv "$1"    2>$p03; }
+function lfl { find $p61/logs -type f -printf "%T@\t%p\n"|sort -nr|head -n2|sort -n|cut -f2; }
 function ll0 { local f=$p16/logs/beacon.log   ;SUDO_ASKPASS=$p82 sudo -A cat $f.1 $f 2>$p03|tail -n$((n15*2)); }                                              # get cc intern lines
 function ll1 { local f=$p17/logs/validator.log;SUDO_ASKPASS=$p82 sudo -A cat $f.1 $f 2>$p03|tail -n$n15      ; }                                              # get vc intern lines
 function ll2 { local f=$p16/logs/beacon.log   ;sgn "$1"           $f.1     $f|tail -n$n15; }                                                                  # get cc intern lines (specific)
 function ll3 { local f=$p17/logs/validator.log;sgn "$1" $f.3 $f.2 $f.1     $f|tail -n$2  ; }                                                                  # get vc intern lines (specific)
-function ll4 { local f=$p61/logs/mainnet.logs ;sgn "$1"           $f.0.txt $f.txt        ; }                                                                  # get neth intern lines
+function ll4 {                                 sgn "$1" $(lfl)                           ; }                                                                  # get neth intern lines
 function ll5 { local f=$p01                   ;sgn "$1"                    $f            ; }                                                                  # get all eth syslog lines
 function ll6 { local f=$p01                   ;sgv "$g13"                  $f            ; }                                                                  # get not eth syslog lines
 function ln0 {                   snf "s%.*$1 *([0-9]+).*%\1%p" $2; }                                                                                          # get sed list of numbers (file)
