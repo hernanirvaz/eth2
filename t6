@@ -287,8 +287,8 @@ function vlo {
 #    0  1   2          3     4       5   6     7    8    9  10 11  12 13  14  15  16   17   18   19      20   21   22   23 24    25  26   27
 # BEAC OK   0 2024-04-02 16:07 nod100: 107 rpab: 3023 2696 3978 0 er:  0  15  84  28    6  994   12 iearhp: 1083 4354 3218 17 66290  62 1473
 function blo {
-  m="BEAC $ok $(printf '%3i' $(bri) 2>$p03) $(npn $nr $nn) $(printf 'rpab: %3i %3i %3i %1i' $(b04 $z3 $b0) $(b02 $zk $zz $zx $zw) $z3 $b0 2>$p03)"
-  m="$m $(printf 'er: %1i %2i %2i %2i %3i %4i %4i iearhp: %4i %3i %4i %2i %2i %2i %4i' $zk $zz $zx $zw $z1 $z2 $(b06) $i0 $i1 $i4 $b1 $i2 $i3 $(b01) 2>$p03)"
+  m="BEAC $ok $(printf '%3i' $(bri) 2>$p03) $(npn $nr $nn) $(printf 'rpab: %4i %3i %3i %1i' $(b04 $z3 $b0) $(b02 $zk $zz $zx $zw) $z3 $b0 2>$p03)"
+  m="$m $(printf 'er: %1i %1i %2i %2i %3i %4i %4i iearhp: %4i %3i %4i %2i %2i %2i %4i' $zk $zz $zx $zw $z1 $z2 $(b06) $i0 $i1 $i4 $b1 $i2 $i3 $(b01) 2>$p03)"
 }
 #  0    1   2          3     4       5  6   7     8    9   10   11   12   13   14   15  16  17   18      19   20   21   22 23    24  25   26
 # BM   50  22 2024-04-02 16:10 nod100: 110 mp:  679  874 1149  792  772 1341 1638 1043 p_: -60 2896 iearhp: 1281 3938 3593 17 50734  65 1632
@@ -339,9 +339,9 @@ function bdd {
   done <<< "$s";if [[ $e ]];then local e=${e:1};bdw $p12 "$e";bdw $p13 "$e";fi;bsm
 }
 function bh0 {
-  fft $p12 || return;tail -n${1:-$n12} $p12;[[ $1 ]] && return;boi;bl0;local e=$(printf '%1i    x9 x5 x1 x0  er   if   c2' $b0 2>$p03);local s=$(printf 'i4  i5  i6  %2i  i8  i9 i10 avg' $b0 2>$p03)
-  swn "BO $(printf '%4i%4i%34s%13s'          $b2 $(wc -l <<< "$l2")                   2>$p03)$e"    ;bo5
-  swn "BL $(printf '%8i%34s%13s'             $(llc $p12)                              2>$p03)$e\n$m";bm0;bmo
+  fft $p12 || return;tail -n${1:-$n12} $p12;[[ $1 ]] && return;boi;bl0;local e=$(printf '%1i     9 5  1  0 err norm  idx' $b0 2>$p03);local s=$(printf 'i4  i5  i6  i7%1i i8  i9 i10 avg' $b0 2>$p03)
+  swn "BO $(printf '%4i%4i%34s%14s'          $b2 $(wc -l <<< "$l2")                   2>$p03)$e"    ;bo5
+  swn "BL $(printf '%8i%34s%14s'             $(llc $p12)                              2>$p03)$e\n$m";bm0;bmo
   swn "BM $(printf '%8i%34s%28s %2i %4i %4i' $(llc $p13) ' ' "$s" $nz $(b05 $nn) $n20 2>$p03)\n$m"
 
 }
