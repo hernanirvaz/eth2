@@ -11,7 +11,8 @@ fptv=400  # Gb
 if [[ $cunm = $inm5 ]];then apip="$iip5";elif [[ $cunm = $inm6 ]];then apip="$iip6";else apip='127.0.0.1';fi
 othe=''
 othe="$othe --network-maxactivepeers $maxp --network-discoveryport $pp2p --network-p2pport $pp2p"
-othe="$othe --jsonrpc-enabled true --jsonrpc-host $apip --jsonrpc-enginehost $apip --jsonrpc-engineport 8551 --jsonrpc-jwtsecretfile $p58/jwt --sync-snapsync true"
+othe="$othe --jsonrpc-enabled true --jsonrpc-host $apip --jsonrpc-enginehost $apip --jsonrpc-engineport 8551 --jsonrpc-jwtsecretfile $p58/jwt"
+othe="$othe --sync-snapsync true"
 # othe="$othe --sync-ancientbodiesbarrier $abrb --sync-ancientreceiptsbarrier $abrb"
 othe="$othe --pruning-mode Hybrid --pruning-fullpruningtrigger VolumeFreeSpace --pruning-fullpruningthresholdmb $((fptv*1024))"
 othe="$othe --Blocks.TargetBlockGasLimit $((n56*10**6))"
