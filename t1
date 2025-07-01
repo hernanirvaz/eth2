@@ -23,8 +23,8 @@ function sht { [[ $cust = hrv ]]; }
 if sht;then
 cuvc=$znm4
 nxvc=$znm4
-cun1=$inm5
-cun2=$inm6
+cun1=$inm6
+cun2=$inm5
 cumv=$znm3
 cut1=$znm1
 cut2=$znm2
