@@ -40,7 +40,7 @@ function ll4 {                                 sgn "$1" $(lfl)                  
 function ll5 { local f=$p01                   ;sgn "$1"                    $f            ; }                                                                  # get all eth syslog lines
 function ll6 { local f=$p01                   ;sgv "$g13"                  $f            ; }                                                                  # get not eth syslog lines
 function ln0 {                   snf "s%.*$1 *([0-9]+).*%\1%p" $2; }                                                                                          # get sed list of numbers (file)
-function ln1 { if [[ $l6 ]];then snf "s%.*$1 *[+-]?([0-9]*\.?[0-9]+)$2.*%\1%p" <<< "$l6";fi; }                                                                # get sed list of numbers (stdin)
+function ln1 { if [[ $l6 ]];then snf "s%.*$1 *\"?[+-]?([0-9]*\.?[0-9]+)\"?$2.*%\1%p" <<< "$l6";fi; }                                                          # get sed list of numbers (stdin)
 function ln2 { if [[ $l4 ]];then gawk "$1" <<< "$l4" 2>$p03;fi; }                                                                                             # get awk list of numbers (µs|ms|s)
 function ln3 { l6=$(ll5 "$2.*$1");ln1 $1; }                                                                                                                   # get numbers all  syslog lines
 function ln4 { if g0t $3;then l6=$(ll5 "$2.*$1"|tail -n$3);else l6=$(ll5 "$2.*$1");fi;ln1 $1; }                                                               # get numbers tail syslog lines
@@ -160,7 +160,7 @@ function ssw { while :;do local t=$(sng);if [[ $(sf2 $t) -lt $1 || 24 -ge $(sfn 
 function csn { if g0t $#;then nr=${@:$#};nm=$(nu9 $@);nd=$(nu7 $@);nz=$(nu8 $@);else nr=0;nm=0;nd=0;nz=0;fi; }
 function esn { if g0t $#;then er=${@:$#};em=$(nu9 $@);ed=$(nu7 $@);ez=$(nu8 $@);else er=0;em=0;ed=0;ez=0;fi; }
 function npn { local n=${1:-0};local i=${2:-0};if [[ $n -ge 100 ]];then printf '%10s %5s nod%03i %3i' $dt $i $n 2>$p03;else printf '%10s %5s nod%03i: %2i' $dt $i $n 2>$p03;fi; }
-function bnn { csn $(ln3 "$g31:" $g08) $(bpc $(bcl peer_count)); }                                                                                            # set cur/min/std cc peers
+function bnn { csn $(ln3 "$g50:") $(bpc $(bcl peer_count)); }                                                                                                 # set cur/min/std cc peers
 function sz0 {         gv0;gnn 0;printf 'el:e%04i:p%03i:m%03i:z%02i:d%04i p2p:%5i %s     iu: %4i %5i %4i'                 $(tg2|wc -l) $er $em $ez $ed $(ss5 $1 port    ) "$(gb1 $(gcl eth.syncing))" $e1 $e2 $(ei0)                 2>$p03; }
 function sz1 {         uv0;unn 0;printf 'el:e%04i:p%03i:m%03i:z%02i:d%04i p2p:%5i %s      i: %4i'                         $(tg2|wc -l) $er $em $ez $ed $(ss5 $1 p2p-port) "$(ub1 $(ucl eth_syncing))" $e1                            2>$p03; }
 function sz5 {         tv0;tnn 0;printf 'el:e%04i:p%03i:m%03i:z%02i:d%04i p2p:%5i %s     ps: %4i %5i %4i'                 $(tg2|wc -l) $er $em $ez $ed $(ss5 $1 p2pport ) "$(tb1 $(tcl eth_syncing))" $e1 $e2 $(ei0)                 2>$p03; }
@@ -800,7 +800,7 @@ function cns {
 [[ $1 = mre ]] && { mre; }
 [[ $1 = jwt ]] && { sjw; }
 [[ $1 = lpi ]] && { lpi $p02/.cargo/bin/lighthouse; }
-[[ $1 = luc ]] && { luc $p02/.cargo/bin/lighthouse ${2:-v7.0.1}; }
+[[ $1 = luc ]] && { luc $p02/.cargo/bin/lighthouse ${2:-v7.1.0}; }
 [[ $1 = ruv ]] && { ruv $2; }
 [[ $1 = ccr ]] && { llt && ble "$e14"; }
 [[ $1 = cca ]] && { llt || ble "$e15"; }

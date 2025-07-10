@@ -6,7 +6,7 @@ source /home/eth/eth2/t1
 
 function hlp {
   local e=''
-  e="$e\n$(basename $0) linux|reboot|besu [version]|geth [version] [commit]|mev [go version] [mev version]|ligv [version] [rust version]|cp\n"
+  e="$e\n$(basename $0) linux|reboot|besu [version]|geth [version] [commit]|mev [go version] [mev version]|cp\n"
   e="$e\n  net[vd]|lig[vd]\tupgrade nethermind v-version/d-database|lighthouse v-version/d-database"
   e="$e\n  mev\t\t\tupgrade mev-boost"
   e="$e\n  cp\t\t\tcopy & propagate  lighthouse"
