@@ -661,7 +661,7 @@ function bba { if n1t;then wpe          ;else ssh $(snc $cun1) "$p53 bb"   ;fi;i
 function caa { if n1t;then cll "$e50" $1;else ssh $(snc $cun1) "$p53 cl $1";fi;if ndt;then if n2t;then cll "$e50" $1;else ssh $(snc $cun2) "$p53 cl $1";fi;fi;if vst;then if vct;then cll "$e50" $1;else ssh $(snc $cuvc) "$p53 cl $1";fi;fi;if mst;then if mct;then rll "$e51" $1;else ssh $(snc $cumv) "$p53 rl $1";fi;fi; }
 function eaa { if n1t;then ell "$e50" $1;else ssh $(snc $cun1) "$p53 el $1";fi;if ndt;then if n2t;then ell "$e50" $1;else ssh $(snc $cun2) "$p53 el $1";fi;fi; }
 function laa { caa $1;eaa $1; }
-function fsp { grep -v "$g31 *[${1:-1}-9][0-9]"|grep "$g31 *[0-${2:-7}]"|sort -k2n; }
+function fsp { local n=${1:-1};if [[ $n -gt 9 ]];then grep -v "$g31 *${n:0:1}[${n:1:1}-9][0-9]";else grep -v "$g31 *[$n-9][0-9]";fi|grep "$g31 *[0-${2:-7}]"|sort -k2n; }
 function esp { iet || return;if tsa $s44;then local e=$(ll5 "$g11.*$g30:"|sef "$e76");else local e=$(ll5 "$g11.*$g35"|sef "$e77");fi;local e=$(fsp $1 $2 <<< "$e");[[ $1$2 ]] || e=$(tail -n3 <<< "$e");[[ $e ]] && echo -e "\n$e"; }
 function csp { ict || return;local e=$(ll5 "$g50:"|sef "$e78"|fsp $1 $2);[[ $1$2 ]] || e=$(tail -n3 <<< "$e");[[ $e ]] && echo -e "\n$e"; }
 function mre { mct || return;local s=n;local e=$(for s in $(rlr|snf "$e09"|sort -u);do printf '%3i %s\n' $(rlr|grep -co $s) $s;done|sort -n);[[ $e ]] && echo -e "\n$e"; }
