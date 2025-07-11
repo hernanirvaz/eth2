@@ -31,14 +31,14 @@ function sgn { local g="$1";shift;SUDO_ASKPASS=$p82 sudo -A grep -Eah  "$g" $@ 2
 function sgv { local g="$1";shift;SUDO_ASKPASS=$p82 sudo -A grep -Eahv "$g" $@ 2>$p03; }
 function sin {                                              grep -Eai  "$1"    2>$p03; }
 function siv {                                              grep -Eaiv "$1"    2>$p03; }
-function lfl { find $p61/logs -type f -printf "%T@\t%p\n"|sort -nr|head -n2|sort -n|cut -f2; }
-function ll0 { local f=$p16/logs/beacon.log   ;SUDO_ASKPASS=$p82 sudo -A cat $f.1 $f 2>$p03|tail -n$((n15*2)); }                                              # get cc intern lines
-function ll1 { local f=$p17/logs/validator.log;SUDO_ASKPASS=$p82 sudo -A cat $f.1 $f 2>$p03|tail -n$n15      ; }                                              # get vc intern lines
-function ll2 { local f=$p16/logs/beacon.log   ;sgn "$1"           $f.1     $f|tail -n$n15; }                                                                  # get cc intern lines (specific)
-function ll3 { local f=$p17/logs/validator.log;sgn "$1" $f.3 $f.2 $f.1     $f|tail -n$2  ; }                                                                  # get vc intern lines (specific)
-function ll4 {                                 sgn "$1" $(lfl)                           ; }                                                                  # get neth intern lines
-function ll5 { local f=$p01                   ;sgn "$1"                    $f            ; }                                                                  # get all eth syslog lines
-function ll6 { local f=$p01                   ;sgv "$g13"                  $f            ; }                                                                  # get not eth syslog lines
+function lfl { SUDO_ASKPASS=$p82 sudo -A find $1 -name "$2*" -type f -printf "%T@\t%p\n" 2>$p03|sort -nr|head -n$3|sort -n|cut -f2; }
+function ll0 { local f=$(lfl $p16/logs beacon    2);[[ $f ]] || return;SUDO_ASKPASS=$p82 sudo -A cat $f|tail -n$((n15*2)); }                                  # get cc intern lines
+function ll1 { local f=$(lfl $p17/logs validator 2);[[ $f ]] || return;SUDO_ASKPASS=$p82 sudo -A cat $f|tail -n$n15      ; }                                  # get vc intern lines
+function ll2 { local f=$(lfl $p16/logs beacon    2);[[ $f ]] || return;sgn "$1" $f|tail -n$n15      ; }                                                       # get cc intern lines (specific)
+function ll3 { local f=$(lfl $p17/logs validator 4);[[ $f ]] || return;sgn "$1" $f|tail -n$2        ; }                                                       # get vc intern lines (specific)
+function ll4 { local f=$(lfl $p61/logs mainnet   2);[[ $f ]] || return;sgn "$1" $f                  ; }                                                       # get neth intern lines
+function ll5 {                           sgn "$1"   $p01                                        ; }                                                           # get all eth syslog lines
+function ll6 {                           sgv "$g13" $p01                                        ; }                                                           # get not eth syslog lines
 function ln0 {                   snf "s%.*$1 *([0-9]+).*%\1%p" $2; }                                                                                          # get sed list of numbers (file)
 function ln1 { if [[ $l6 ]];then snf "s%.*$1 *\"?[+-]?([0-9]*\.?[0-9]+)\"?$2.*%\1%p" <<< "$l6";fi; }                                                          # get sed list of numbers (stdin)
 function ln2 { if [[ $l4 ]];then gawk "$1" <<< "$l4" 2>$p03;fi; }                                                                                             # get awk list of numbers (µs|ms|s)
@@ -112,8 +112,8 @@ function svi {
     i1=$(nu5 0 $(ln1 $g55))
     i4=$(nu5 0 $(ln1 $g56))
     b1=$(nu2 $(ln3 "$g64" "$g49"))
-    l4=$(ll2 "$g19"|tail -n$(si2 $n))
-    i2=$(nu3 "$(nu5 0 $(ln2 "${w0}elapsed: *$w3"))/1000")
+    l6=$(ll2 "$g19"|tail -n$(si2 $n))
+    i2=$(nu5 0 $(ln1 $g66))
     l6=$(ll2 "$g20"|tail -n$(si1 $n))
     i3=$(nu5 2 $(ln1 $g15))
   else
@@ -125,7 +125,7 @@ function svi {
     i3=$(nu5 0 $(ln0 "$d0.+iearhp: +[0-9]+ +[0-9]+ +[0-9]+ +[0-9]+ +[0-9]+" $p12))
   fi
 }
-function svv { l6=$(ll3 "$g16" $1);v0=$(nu4 1 $(ln1 $g33 ".*$(sni $cun1)"));if ndt;then v1=$(nu4 1 $(ln1 $g33 ".*$(sni $cun2)"));fi;l6=$(ll3 "$g17" $(($1/2)));v2=$(nu4 1 $(ln1 $g32)); }
+function svv { l6=$(ll3 "$g16" $1);v0=$(nu4 1 $(ln1 "$(sni $cun1).*$g33"));if ndt;then v1=$(nu4 1 $(ln1 "$(sni $cun2).*$g33"));fi;l6=$(ll3 "$g17" $(($1/2)));v2=$(nu4 1 $(ln1 $g32)); }
 function smm { m0=$(nu4 3 $(ln4 "$g34" "$g09" $1));m1=$(rlr|wc -l); }
 function spc { nn=$2;cp $p04/$1.service $p02/$1.sav;sef "$e65$2%" $p02/$1.sav > $p04/$1.service; }                                                            # service configuration change/reload
 function snp { sft $1 || return;local n=$(($2+$5));(($2!=0&&n>=$3&&n<=$4)) && spc $1 $n;tsa $1 && sex "$s02 $1";dmr; }                                        # service peers change/stop
