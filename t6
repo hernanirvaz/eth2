@@ -856,7 +856,7 @@ function bml { [[ $d1 = 23:58 ]] || return;if bdt;then bdl $d0;else if [[ $(llc 
 [[ $1 = mpf ]] && { ml0;swn "$m" >> $p52; }
 [[ $1 = bn  ]] && { bm0;bno;swn "$m"; }
 [[ $1 = bm  ]] && { bm0;bmo;swn "$m"; }
-[[ $1 = bmf ]] && { bm0;[[ $2 ]] && b4=$2;bms;v0t && swn "$m" >> $p13;if n1t;then if fft $p45;then bpt && brs RB 0 $((n05*4)) $n00;else bpt && brs PE $b4 $n05 $n02;fi;else rbt && brs RB 0 $n05 $n03;fi; }
+[[ $1 = bmf ]] && { bm0;[[ $2 ]] && b4=$2;bms;v0t && swn "$m" >> $p13;if n1t;then if fft $p45;then bpt && brs RB 0 $((n05*7)) $n00;else bpt && brs PE $b4 $n05 $n02;fi;else rbt && brs RB 0 $n05 $n03;fi; }
 [[ $1 = ah  ]] && { hhh;if tsa $s13;then ah0 4 30 $2;swn "VL";ch0 VL $2|tail -n4;else ah0 5 45 $2;fi;if tsa $s14;then swn "ML";ch0 ML $2|tail -n4;fi; }
 [[ $1 = eh  ]] && { eh0 $2; }
 [[ $1 = ch  ]] && { ch0 CL $2; }
