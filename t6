@@ -98,7 +98,7 @@ function pmt { [[ $nm -ge $(b05 $nn) ]]; }
 function hat { [[ ${a[$nn]} -ge ${a[0]} ]]; }                                                                                                                 # function hat { [[ $b2 -gt $(b00) ]]; }
 function bdt { [[ $(b03 $zk $zz $zx $zw) -gt $n20 || $nz -ge $n57 ]]; }
 function sft { [[ -f $p04/$1.service ]]; }
-function bpt { [[ $(era $p12 $n12) -eq 1 ]] && ( (pct && pmt && hat && ! bdt && ! fft $p45) || rbt $n06); }
+function bpt { [[ $(era $p12 $n12) -eq 1 ]] && ( (pct && pmt && hat && ! bdt && ! fft $p45 && ! fft $p50.lock) || rbt $n06); }
 function llc { cat ${1:-$p03} 2>$p03|wc -l; }                                                                                                                 # get log line count
 function jrn { if [[ $2 ]];then local s="-g $2";else local s=;fi;cex "journalctl --no-hostname --no-full -f $1 $s"; }                                         # my journal   format
 function dmr { sex "$s00 daemon-reload"; }                                                                                                                    # daemon-reload
