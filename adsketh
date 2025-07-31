@@ -1,15 +1,15 @@
 function erq { echo -e "\nresolvectl query ${1:-pt.archive.ubuntu.com}";resolvectl query "${1:-pt.archive.ubuntu.com}"; }
 # function esl { echo -e "\nssh $1     ";ssh $1; }
-# function ocp { echo -e "\nscp $1 ocp" ;scp ~/eth2/ethztc $1:~/.bash_aliases;scp ~/eth2/ethkeys $1:~/.ssh/authorized_keys; }
+# function ocp { echo -e "\nscp $1 ocp" ;scp ~/eth2/adsketh $1:~/.bash_aliases;scp ~/eth2/keth $1:~/.ssh/authorized_keys; }
 # function ecp { echo -e "\nscp $1 eth2";scp ~/eth2/t[1-9] ~/eth2/e? $1:~/eth2; }
 # function ccp { echo -e "\nscp $1 ccp" ;scp ~/eth2/cns.keys.gpg $1:~;scp ~/eth2/hernanirvaz-f2e8fb66dbc0.json.gpg $1:~; }
 function esl { echo -e "\nssh $1:$2     ";ssh -p $2 -i ~/.ssh/id_ed25519 $1; }
-function ocp { echo -e "\nscp $1:$2 ocp ";scp -P $2 -i ~/.ssh/id_ed25519 ~/eth2/ethztc $1:~/.bash_aliases;scp -P $2 -i ~/.ssh/id_ed25519 ~/eth2/ethkeys $1:~/.ssh/authorized_keys; }
+function ocp { echo -e "\nscp $1:$2 ocp ";scp -P $2 -i ~/.ssh/id_ed25519 ~/eth2/adsketh $1:~/.bash_aliases;scp -P $2 -i ~/.ssh/id_ed25519 ~/eth2/keth $1:~/.ssh/authorized_keys; }
 function ecp { echo -e "\nscp $1:$2 eth2";scp -P $2 -i ~/.ssh/id_ed25519 ~/eth2/t[1-9] ~/eth2/e? $1:~/eth2; }
 function ccp { echo -e "\nscp $1:$2 ccp" ;scp -P $2 -i ~/.ssh/id_ed25519 ~/eth2/cns.keys.gpg $1:~;scp -P $2 -i ~/.ssh/id_ed25519 ~/eth2/hernanirvaz-f2e8fb66dbc0.json.gpg $1:~; }
 function ei0 { echo -e "export H=\"$1\"\nexport E=\"$2\"\nexport R=\"$3\"\nexport V=\"$4\"\npr=$5"; }
 function ei1 { echo -e "echo>>~/.bashrc\necho \"export PATH=\\\"\\\$PATH:/home/eth/eth2\\\"\">>~/.bashrc\necho \"export H=\\\"$1\\\"\">>~/.bashrc\necho \"export V=\\\"$2\\\"\">>~/.bashrc\necho \"export K=\\\"$3\\\"\">>~/.bashrc\necho \"export E=\\\"$4\\\"\">>~/.bashrc\necho \"export B=\\\"$5\\\"\">>~/.bashrc\necho \"PS1=\\\"\\\$H:\\\h: \\\"\">>~/.bashrc\nchmod 755 ~/eth2/t[1-9] ~/eth2/e?"; }
-function cc0 { if [[ ${1%%.*} -eq 192 ]];then local u=eu;else local u=ubuntu;fi;local s="$u@$1";scp -P 22 ~/eth2/s? ~/eth2/ethkeys ~/i0 $s:~;echo -e "\n\n\n\nsudo -i\nbash /home/$u/s0\n\n\n\n";ssh -p 22 $s;scp -P $2 -i ~/.ssh/id_ed25519 ~/eth2/t[1-9] ~/eth2/e? $1:~/eth2;scp -P $2 -i ~/.ssh/id_ed25519 ~/eth2/ethztc $1:~/.bash_aliases;scp -P $2 -i ~/.ssh/id_ed25519 ~/i1 $1:~;ssh -p $2 -i ~/.ssh/id_ed25519 $1 'sh i1';echo -e "\n\nky # gerar key & copiar para ethkeys\nt2 # setup\n\n";ssh -p $2 -i ~/.ssh/id_ed25519 $1; }
+function cc0 { if [[ ${1%%.*} -eq 192 ]];then local u=eu;else local u=ubuntu;fi;local s="$u@$1";scp -P 22 ~/eth2/s? ~/eth2/keth ~/i0 $s:~;echo -e "\n\n\n\nsudo -i\nbash /home/$u/s0\n\n\n\n";ssh -p 22 $s;scp -P $2 -i ~/.ssh/id_ed25519 ~/eth2/t[1-9] ~/eth2/e? $1:~/eth2;scp -P $2 -i ~/.ssh/id_ed25519 ~/eth2/adsketh $1:~/.bash_aliases;scp -P $2 -i ~/.ssh/id_ed25519 ~/i1 $1:~;ssh -p $2 -i ~/.ssh/id_ed25519 $1 'sh i1';echo -e "\n\nky # gerar key & copiar para keth\nt2 # setup\n\n";ssh -p $2 -i ~/.ssh/id_ed25519 $1; }
 function nip { echo ${N%%:*}; }
 function npt { echo ${N#*:}; }
 function nfc {
@@ -54,7 +54,7 @@ alias gd='cd ~/eth2;git diff'
 alias gt='cd ~/eth2;git status'
 alias gv='cd;vi eth2/t[1-8] eth2/e[1-9]'
 
-alias ky='ssh-keygen -t ed25519 -C "$(whoami)@$(hostname)";cat ~/.ssh/id_ed25519.pub'
+alias ky='ssh-keygen -f ~/.ssh/id_ed25519 -t ed25519 -C "$(whoami)@$(hostname)";cat ~/.ssh/id_ed25519.pub'
 alias lk="ei0 \$H \$E \$R \$V \$(npt) >~/i0;ei1 \$H \$V \$K \$E \$B >~/i1;cc0 \$(nip) \$(npt)"
 alias fw='echo "export R=\"$(</dev/urandom tr -dc "A-Za-z0-9?%&_+=@~#\,.?/"|head -c50)\"";echo "export H=\"$(</dev/urandom tr -dc "A-Za-z0-9?%&_+=@~#\,.?/"|head -c30)\"";echo "export V=\"$(</dev/urandom tr -dc "A-Za-z0-9"|head -c8)\"";echo "export K=\"$(</dev/urandom tr -dc "A-Za-z0-9?%&_+=@~#\,.?/"|head -c60)\"";echo "export W=\"$(</dev/urandom tr -dc "A-Za-z0-9?%&_+=@~#\,.?/"|head -c60)\"";'
 alias rq='erq;erq changelogs.ubuntu.com;erq ppa.launchpad.net;erq github.com'
