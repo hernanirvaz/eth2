@@ -28,7 +28,7 @@ User=eth1
 Group=eth1
 Restart=always
 RestartSec=60
-TimeoutStopSec=600
+TimeoutStopSec=400
 RuntimeMaxSec=infinity
 WorkingDirectory=$p61
 Environment="DOTNET_BUNDLE_EXTRACT_BASE_DIR=$p61"

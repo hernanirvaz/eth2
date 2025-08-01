@@ -37,7 +37,7 @@ User=eth1
 Group=eth1
 Restart=always
 RestartSec=60
-TimeoutStopSec=600
+TimeoutStopSec=400
 RuntimeMaxSec=infinity
 Environment="JAVA_OPTS=-Xmx8g"
 ExecStart=$p00/besu/bin/besu --data-path=$p09/data $epec
