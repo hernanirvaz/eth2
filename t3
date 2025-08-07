@@ -1,6 +1,5 @@
 #!/bin/bash
-# shellcheck disable=SC2086
-# shellcheck disable=SC2053
+# shellcheck disable=SC2053,SC2086
 
 source /home/eth/eth2/t1
 
