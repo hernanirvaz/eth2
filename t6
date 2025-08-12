@@ -304,12 +304,12 @@ function bm0 {                                                                  
   fft $p12 || return;bmi;b4=0;dts;bv0;bnn;bs3;bl2;svi                                                                                                         # set vars/arrays
   l1=$(bff);[[ $l1 ]] && bm1;bm2;e0t $b2 && boi;bo3;bm5;b5=$(bcc)                                                                                             # add cc lines & homologous/avg position
 }
-function bm1 { local g=${1:-$n16};while :;do bs5 $g;if [[ $l5 ]];then bkm $g;bzm $g;bxm $g;bwm $g;bcm $g;fi;g=$((g+n18));((g>n17)) && break;done; }           # recursively sum penalty errors arrays
+function bm1 { local g=${1:-$n16};while :;do bs5 $g;if [[ $l5 ]];then bkm $g;bzm $g;bxm $g;bwm $g;bcm $g;fi ;g=$((g+n18));((g>n17)) && break;done; }          # recursively sum penalty errors arrays
 function bm2 { k[0]=$(($(bnk)));z[0]=$(($(bnz)));x[0]=$(($(bnx)));w[0]=$(($(bnw)));c[0]=$(($(bnc)));a[0]=$(bm3 0);bm7; }                                      # tot err/cnt/penalty arrays
 function bm3 { b02 ${k[$1]} ${z[$1]} ${x[$1]} ${w[$1]} ${c[$1]}  ; }                                                                                          # get penalty from paid err arrays
-function bm5 { local g=${1:-$n16};local n=${a[0]};while :;do if ((a[g]<n));then b4=$((g-nn));n=${a[$g]};fi  ; g=$((g+n18));((g>n17)) && break;done; }         # set recursively peer change <- min penalties
-function bm6 { local g=${1:-$n16};                while :;do k[$g]=0;z[$g]=0;x[$g]=0;w[$g]=0;c[$g]=0;a[$g]=0; g=$((g+n18));((g>n17)) && break;done; }         # ini recursively penalty arrays
-function bm7 { local g=${1:-$n16};                while :;do a[$g]=$(bm3 $g)                                ; g=$((g+n18));((g>n17)) && break;done; }         # avg recursively penalty arrays
+function bm5 { local g=${1:-$n16};local n=${a[0]};while :;do if ((a[g]<n));then b4=$((g-nn));n=${a[$g]};fi  ;g=$((g+n18));((g>n17)) && break;done; }          # set recursively peer change <- min penalties
+function bm6 { local g=${1:-$n16};                while :;do k[$g]=0;z[$g]=0;x[$g]=0;w[$g]=0;c[$g]=0;a[$g]=0;g=$((g+n18));((g>n17)) && break;done; }          # ini recursively penalty arrays
+function bm7 { local g=${1:-$n16};                while :;do a[$g]=$(bm3 $g)                                ;g=$((g+n18));((g>n17)) && break;done; }          # avg recursively penalty arrays
 function bcm { local g=${1:-$n16};((c[g]+=$(wc -l <<< "$l5" 2>$p03)                        )); }                                                              # sum               cnt array
 function bkm { local g=${1:-$n16};((k[g]+=$((0$(printf '+%i' $(cut -f1 <<< "$l5") 2>$p03))))); }                                                              # sum missing       err array
 function bzm { local g=${1:-$n16};((z[g]+=$((0$(printf '+%i' $(cut -f2 <<< "$l5") 2>$p03))))); }                                                              # sum failed target err array
