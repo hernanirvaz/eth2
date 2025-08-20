@@ -189,7 +189,7 @@ g61='Log +ended: +'
 g62='Service restarts being deferred'
 g63='Reference|Stratum|Root|Leap|time|ppm'
 g64='reorg_distance:'
-g65='^\^,[^-],[^,]+,1,[^,]+,[1-3]77'
+g65='^\^,[^-,],[^,]+,1,[^,]+,[1-3]77'
 g66='elapsed_ms:'
 
 function sni { case $1 in $inm5) printf $iip5;;$inm6) printf $iip6;;$znm1) printf $zip1;;$znm2) printf $zip2;;$znm3) printf $zip3;;$znm4) printf $zip4;;$vnm1) printf $vis1;;$vnm2) printf $vis2;;$vnm3) printf $vis3;;esac; }
