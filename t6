@@ -340,10 +340,9 @@ function bdd {
 }
 function bh0 {
   fft $p12 || return;tail -n${1:-$n12} $p12;[[ $1 ]] && return;boi;bl0;local e=$(printf '%1i     9 5  1  0 err norm  idx' $b0 2>$p03);local s=$(printf 'i4  i5  i6  i7%1i i8  i9 i10 avg' $b0 2>$p03)
-  swn "BO $(printf '%4i%4i%34s%14s'          $b2 $(wc -l <<< "$l2")                   2>$p03)$e"    ;bo5
-  swn "BL $(printf '%8i%34s%14s'             $(llc $p12)                              2>$p03)$e\n$m";bm0;bmo
-  swn "BM $(printf '%8i%34s%28s %2i %4i %4i' $(llc $p13) ' ' "$s" $nz $(b05 $nn) $n20 2>$p03)\n$m"
-
+  swn "BO $(printf '%4i%4i%34s%14s'           $b2 $(wc -l <<< "$l2")                        2>$p03)$e"    ;bo5
+  swn "BL $(printf '%8i%34s%14s'              $(llc $p12)                                   2>$p03)$e\n$m";bm0;bmo
+  swn "BM $(printf '%8i%34s%28s%2i/%1i%4i%5i' $(llc $p13) ' ' "$s" $nz $n57 $(b05 $nn) $n20 2>$p03)\n$m"
 }
 function bwd { local n=$((($(date +%s)-n09)/(12*32)-0));for n in $n $((n+1));do curl -sH "$s28" $s67 -X POST -d"$(viv)" "$s32/sync/$n";curl -sH "$s28" $s67 -X GET "$s32/proposer/$n";done 2>$p03|jq -r $s35 2>$p03; }
 function bwc { bwd|grep -Ex "$(vix)" 2>$p03|wc -l; }
