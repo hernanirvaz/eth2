@@ -25,7 +25,7 @@ epec="$epec --rpc-http-cors-origins=chrome-extension://nkbihfbeogaeaoehlefnkodbe
 epec="$epec --max-peers=$maxp"                                                                                                                                # set p2p connections
 epec="$epec --engine-jwt-secret=$p58/jwt --host-allowlist=$alow --engine-host-allowlist=$alow"                                                                # MERGE
 epec="$epec --Xplugin-rocksdb-high-spec-enabled"                                                                                                              # boost Besu performance
-cd
+cd || exit
 cat <<-EOF > $s11.service
 [Unit]
 Description=Besu Execution Client

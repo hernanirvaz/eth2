@@ -11,7 +11,7 @@ othe="$othe --cache 16384"                                                      
 othe="$othe --state.scheme=path"                                                                                                                            # after v1.14+ default
 othe=''
 if [[ $cunm = $inm5 ]];then apip="$iip5";elif [[ $cunm = $inm6 ]];then apip="$iip6";else apip='127.0.0.1';fi
-cd
+cd || exit
 cat <<-EOF > $s10.service
 [Unit]
 Description=Geth Execution Client
