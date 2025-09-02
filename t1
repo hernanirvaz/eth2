@@ -154,13 +154,13 @@ g26="$g25| DEBU?G "
 g27='\sINFO\s'
 g28='success'
 g29='error'
-g30='[Pp]eers.*'
+g30='[Pp]eers'
 g31='[Pp]eers'
 g32='time_taken_ms:'
 g33='latency:'
 g34='duration='
 g35='peercount='
-g36="^$g23$g03$g04[0-9]* *\|[A-Z]{4,}\|"
+g36="^$g23$g03$g04[0-9]*\|[A-Z]{4,}\|"
 g37="$g36.*Processed"
 g38='0 +new.+0 +unknown'
 g39='request was cancelled|error making request to relay|Invalid execution payload'
@@ -607,7 +607,7 @@ e75="s%^$g58 +[^ ]+([a-z1-9]{4}) +([^ ]{4})[^ ]+ +"
 e74="$e75%\U\5 %"
 e75="$e75%\4: \2\3 \U\5\t%"
 e78='"?([0-9]{1,})"?.*$'
-e76="$e29;s%\t$g30: *$e78% INFO peers \1%i"
+e76="$e29;s%$g30: *$e78%peers \1%i"
 e77="$e29;s%(\.[0-9]{1,}) *.*$g35 *$e78%\1 peers \2%i"
 e78="$e29;s%(\.[0-9]{1,} INFO) *.*$g31: *$e78%\1 peers \2%i"
 e79='s%disable-upnp%disable-upnp --checkpoint-sync-url';if [[ $cunm = $inm5 ]];then e79="$e79 http://$iip6:5052%";elif [[ $cunm = $inm6 ]];then e79="$e79 http://$iip5:5052%";else e79="$e79 https://mainnet.checkpoint.sigp.io%";fi
