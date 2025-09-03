@@ -16,6 +16,8 @@ othe="$othe --sync-snapsync true"
 # othe="$othe --sync-ancientbodiesbarrier $abrb --sync-ancientreceiptsbarrier $abrb"
 othe="$othe --pruning-mode Hybrid --pruning-fullpruningtrigger VolumeFreeSpace --pruning-fullpruningthresholdmb $((fptv*1024))"
 othe="$othe --Blocks.TargetBlockGasLimit $((n56*10**6))"
+# first iteration of the Nethermind UI, providing an integrated interface to interact with and monitor the node
+# othe="$othe --healthchecks-enabled true --healthchecks-uienabled true"
 cd || exit
 cat <<-EOF > $s44.service
 [Unit]
