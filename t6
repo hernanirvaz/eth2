@@ -654,6 +654,7 @@ function irb { rm -f $p39.*;s2t $p39 && return;if rbt $1;then if vct;then brs RB
 # delay  This is the mean execution time required to send a request to the time source, and receive the reply from that source. (ms)
 # jitter This indicates how much packet delays from individual pollings vary from the mean packet delay. (ms)
 function hsh { if tsa $s56;then swb "$s07 & $s56 sources/sourcestats/tracking";pex "$s07";echo;paste <(chronyc sources) <(chronyc sourcestats|cut -c28-);echo;chronyc tracking|grep -Ev "$g63";elif tsa ntp;then swb "$s07 & ntp";pex "$s07";echo;ntpq -p;else swb "$s07 & $s45 status/show";pex "$s07";pex "$s07 $s45-status";pex "$s07 show-$s45";fi; }
+function tsh { local e=$(ll4 "$g67");local n=${1:-4};local s=$(nu4 $n $(snf "s%.*Block *$e84" <<< "$e"));local i=$(nu4 $n $(snf "s%.*Block *mb *$e84" <<< "$e"));if [[ $i -gt $s ]];then swl "MEV: $i +$(nu3 "($i-$s)/$s*100" 3)%\tEL: $s\t\t(eth*10^$n)";else swl "MEV: $i \tEL: $s +$(nu3 "($s-$i)/$i*100" 3)%\t(eth*10^$n)";fi; }
 
 function lsr { sort -t: -k2n -k3n -k4n; }
 function wpf { if tsa $s44;then ll4 "$g43";fi;ll5 "$g42"|fln "$g39"; }
@@ -923,6 +924,7 @@ function bml { [[ $d1 = 23:58 ]] || return;if bdt;then bdl $d0;else if [[ $(llc 
 [[ $1 = vic ]] && { ll3 "$g17" ${2:-$(($n22/2))}                             |sef "$e50"; }
 [[ $1 = csp ]] && { csp $2 $3; }
 [[ $1 = esp ]] && { esp $2 $3; }
+[[ $1 = tsh ]] && { tsh $2; }
 [[ $1 = wa  ]] && { wa; }
 [[ $1 = we  ]] && { yex 'ufw enable'; }
 [[ $1 = wpr ]] && { cex 'ufw disable'; }
@@ -1076,6 +1078,7 @@ if [[ ! $1 ]];then
   m="$m\nj[sh|rs]\t\tjournal logs show|reset"
   m="$m\nf[sh|rf|(ud|st) [d]]\tfirmware device show|refres|(hupdate|selftest-nvme) [id]|"
   m="$m\nvex [n]\t\t\texpectations n=validators(${#b[@]})"
+  m="$m\ntsh [p]\t\t\tshow avg MEV/EL block rewards in eth*10^[n] precision from nethermind logs today"
   m="$m\ntmp\t\t\ttemperature show"
   m="$m\nsif\t\t\tsystem info show"
   m="$m\nchk\t\t\tcheck server with chkrootkit"
