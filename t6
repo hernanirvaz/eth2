@@ -297,7 +297,7 @@ function blo {
 function bmo { m="BM $(printf '%4i %3i' $b2 $b3 2>$p03) $(npn $nr $nn) $(bma) $(bmp)"; }
 #  0    1   2          3     4       5   6   7    8    9  10  11   12      13   14   15   16 17    18  19   20
 # BM   50  22 2024-04-02 16:11 nod100: 101 mp: 1638 1043 p_: -60 2896 iearhp: 1275 3922 3593 18 50801  65 1627
-function bms { m="BM $(printf '%4i %3i' $b2 $b3 2>$p03) $(npn $nr $nn) mp: $(nu0 %3i ${a[$nn]}) $(bmp)"; }
+function bms { m="BM $(printf '%4i %3i' $b2 $b3 2>$p03) $(npn $nr $nn) mp: $(nu0 %3i ${a[$nn]}) $(bmp) $(ts1 4)"; }
 #    0   1          2     3    4 5 6 7 8 9 10 11   12 13 14 15 16 17 18 19   20 21 22 23 24 25 26 27   28 29 30 31 32 33 34 35   36 37 38 39 40 41 42 43
 # BEAC 682 2022-03-16 11:03 cnt: 4 7 0 0 0 10 10 mis: 20 20 20 20 20 20 20 mat: 14 45 30 30 30 30 30 mah: 94 68 40 40 40 40 40 dly: 79 09 50 50 50 50 50
 function bno { m="BEAC $(nu0 %6i $(llc $p12)) $dt $(bnc 'cnt:' ' ') $(bnk 'mis:' ' ') $(bnz 'mat:' ' ') $(bnx 'mah:' ' ') $(bnw 'dly:' ' ')"; }
@@ -654,7 +654,9 @@ function irb { rm -f $p39.*;s2t $p39 && return;if rbt $1;then if vct;then brs RB
 # delay  This is the mean execution time required to send a request to the time source, and receive the reply from that source. (ms)
 # jitter This indicates how much packet delays from individual pollings vary from the mean packet delay. (ms)
 function hsh { if tsa $s56;then swb "$s07 & $s56 sources/sourcestats/tracking";pex "$s07";echo;paste <(chronyc sources) <(chronyc sourcestats|cut -c28-);echo;chronyc tracking|grep -Ev "$g63";elif tsa ntp;then swb "$s07 & ntp";pex "$s07";echo;ntpq -p;else swb "$s07 & $s45 status/show";pex "$s07";pex "$s07 $s45-status";pex "$s07 show-$s45";fi; }
-function tsh { local e=$(ll4 "$g67");local n=${1:-4};local s=$(nu4 $n $(snf "s%.*Block *$e84" <<< "$e"));local i=$(nu4 $n $(snf "s%.*Block *mb *$e84" <<< "$e"));if [[ $i -gt $s ]];then swl "MEV: $i +$(nu3 "($i-$s)/$s*100" 3)%\tEL: $s\t\t(eth*10^$n)";else swl "MEV: $i \tEL: $s +$(nu3 "($s-$i)/$i*100" 3)%\t(eth*10^$n)";fi; }
+function ts0 { printf 'mev: %i el: %i %i%%' $1 $2 $3; }
+function ts1 { local n=$1;local e=$(ll4 "$g67");local s=$(nu4 $n $(snf "s%.*Block *$e84" <<< "$e"));local i=$(nu4 $n $(snf "s%.*Block *mb *$e84" <<< "$e"));if [[ $i -gt $s ]];then ts0 $i $s $(nu3 "($i-$s)/$s*100" 3);else ts0 $i $s $(nu3 "($s-$i)/$i*100" 3);fi; }
+function tsh { local n=${1:-4};local s=$(ts1 $n);echo -e "${s^^}\t(eth*10^$n)"; }
 
 function lsr { sort -t: -k2n -k3n -k4n; }
 function wpf { if tsa $s44;then ll4 "$g43";fi;ll5 "$g42"|fln "$g39"; }
