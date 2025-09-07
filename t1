@@ -200,6 +200,7 @@ function sn2 { if [[ ${1/-*/} = hrv ]];then snc $1;else case $1 in $vnm1) printf
 function spt { if [[ ${1/-*/} = hrv ]];then printf 202${1##*[!0-9]};else printf 2020;fi; }
 function sef { sed -E  "$1" $2 2>$p03; }
 function snf { sed -En "$1" $2 2>$p03; }
+function sgt { [[ $cunm = $znm2 || $cunm = $znm4 ]]; }
 
 # slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168,180,192,204,216,228,240,252,264,276,288,300
 n00=300
@@ -359,18 +360,18 @@ for m in $(ip -j link|jq -r '.[]|select(.operstate=="UP").ifname');do
   s41="$s41\n      critical: true"
   s41="$s41\n      routes:"
   s41="$s41\n        - to: 0.0.0.0/0"
-  if [[ $cunm = $znm1 || $cunm = $znm3 || $cunm = $inm6 ]];then
-  s41="$s41\n          via: 192.168.8.4"
-  else
+  if sgt;then
   s41="$s41\n          via: 192.168.8.1"
+  else
+  s41="$s41\n          via: 192.168.8.4"
   fi
   s41="$s41\n          metric: 100"
   s41="$s41\n          on-link: true"
   s41="$s41\n      nameservers:"
-  if [[ $cunm = $znm1 || $cunm = $znm3 || $cunm = $inm6 ]];then
-  s41="$s41\n        addresses: [192.168.8.4]"
-  else
+  if sgt;then
   s41="$s41\n        addresses: [192.168.8.1]"
+  else
+  s41="$s41\n        addresses: [192.168.8.4]"
   fi
   s41="$s41\n      link-local: [ ]"              # ;s41="$s41\n      link-local: [\"fe80::$(printf '%02x' $((0x${s42:0:2}|0x02)))${s42:3:2}:${s42:6:2}ff:fe${s42:9:2}:${s42:12:2}${s42:15:2}/64\"]"
 done
@@ -384,10 +385,10 @@ s42="$s42\nserver {"
 s42="$s42\nlisten 80;"
 s42="$s42\nserver_name $znm2;"
 s42="$s42\nsend_timeout 100m;"
-if [[ $cunm = $znm1 || $cunm = $znm3 || $cunm = $inm6 ]];then
-  s42="$s42\nresolver 192.168.8.4 valid=300s;"
-else
+if sgt;then
   s42="$s42\nresolver 192.168.8.1 valid=300s;"
+else
+  s42="$s42\nresolver 192.168.8.4 valid=300s;"
 fi
 s42="$s42\nresolver_timeout 10s;"
 s42="$s42\ngzip on;"
