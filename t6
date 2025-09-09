@@ -162,13 +162,13 @@ function csn { if g0t $#;then nr=${@:$#};nm=$(nu9 $@);nd=$(nu7 $@);nz=$(nu8 $@);
 function esn { if g0t $#;then er=${@:$#};em=$(nu9 $@);ed=$(nu7 $@);ez=$(nu8 $@);else er=0;em=0;ed=0;ez=0;fi; }
 function npn { local n=${1:-0};local i=${2:-0};if [[ $n -ge 100 ]];then printf '%10s %5s nod%03i %3i' $dt $i $n 2>$p03;else printf '%10s %5s nod%03i: %2i' $dt $i $n 2>$p03;fi; }
 function bnn { csn $(ln3 "$g50:") $(bpc $(bcl peer_count)); }                                                                                                 # set cur/min/std cc peers
-function szp { if [[ $3 -gt 0 ]];then if [[ $3 -ge ${5:-99} ]];then local e=d;else local e=z;fi;local n=$3;else local e=m;local n=$2;fi;printf 'p%03i:%s%03i:d%04i' $1 $e $n $4 2>$p03; }
-function sz0 {         gv0;gnn 0;printf 'el%04i:%s p2p:%5i %s     iu: %4i %5i %4i'                 $(tg2|wc -l) $(szp $er $em $ez $ed     ) $(ss5 $1 port    ) "$(gb1 $(gcl eth.syncing))" $e1 $e2 $(ei0)                 2>$p03; }
-function sz1 {         uv0;unn 0;printf 'el%04i:%s p2p:%5i %s      i: %4i'                         $(tg2|wc -l) $(szp $er $em $ez $ed     ) $(ss5 $1 p2p-port) "$(ub1 $(ucl eth_syncing))" $e1                            2>$p03; }
-function sz5 {         tv0;tnn 0;printf 'el%04i:%s p2p:%5i %s     ps: %4i %5i %4i'                 $(tg2|wc -l) $(szp $er $em $ez $ed     ) $(ss5 $1 p2pport ) "$(tb1 $(tcl eth_syncing))" $e1 $e2 $(ei0)                 2>$p03; }
-function sz2 { dtl;svi;bv0;bnn  ;printf 'cl%04i:%s p2p:%5i %s iearhp: %4i %5i %4i %2i %2i %2i %4i' $(cll|wc -l) $(szp $nr $nm $nz $nd $n57) $(ss5 $1 port    ) "$(bb1 $(bcl syncing))"     $i0 $i1 $i4 $b1 $i2 $i3 $(b01) 2>$p03; }
-function sz4 { smm 0            ;printf 'rl%04i:h%08i:r%04i api:%s'                                $(rll|wc -l) $m0 $m1                     $(ss4 $1 "$e32" addr )                                                        2>$p03; }
-function sz3 { svv $n23         ;if ndt;then printf 'vi%04i:m%03i:s%03i:c%04i api:%s' $(vgi|wc -l) $v0 $v1 $v2 $(ss4 $1 "$e32" nodes) 2>$p03;else printf 'vi%04i:m%03i:s000:c%04i api:%s' $(vgi|wc -l) $v0 $v2 $(ss4 $1 "$e32" nodes) 2>$p03;fi; }
+function szp { if [[ $3 -gt 0 ]];then if [[ $3 -ge ${5:-99} ]];then local e=d;else local e=z;fi;local n=$3;else local e=m;local n=$2;fi;printf 'p%03i %s%03i d%04i' $1 $e $n $4 2>$p03; }
+function sz0 {         gv0;gnn 0;printf 'el%04i %s p2p %05i %s     iu: %4i %5i %4i'                 $(tg2|wc -l) "$(szp $er $em $ez $ed     )" $(ss5 $1 port    ) "$(gb1 $(gcl eth.syncing))" $e1 $e2 $(ei0)                 2>$p03; }
+function sz1 {         uv0;unn 0;printf 'el%04i %s p2p %05i %s      i: %4i'                         $(tg2|wc -l) "$(szp $er $em $ez $ed     )" $(ss5 $1 p2p-port) "$(ub1 $(ucl eth_syncing))" $e1                            2>$p03; }
+function sz5 {         tv0;tnn 0;printf 'el%04i %s p2p %05i %s     ps: %4i %5i %4i'                 $(tg2|wc -l) "$(szp $er $em $ez $ed     )" $(ss5 $1 p2pport ) "$(tb1 $(tcl eth_syncing))" $e1 $e2 $(ei0)                 2>$p03; }
+function sz2 { dtl;svi;bv0;bnn  ;printf 'cl%04i %s p2p %05i %s iearhp: %4i %5i %4i %2i %2i %2i %4i' $(cll|wc -l) "$(szp $nr $nm $nz $nd $n57)" $(ss5 $1 port    ) "$(bb1 $(bcl syncing))"     $i0 $i1 $i4 $b1 $i2 $i3 $(b01) 2>$p03; }
+function sz4 { smm 0            ;printf 'rl%04i h%08i r%04i api %s'                                 $(rll|wc -l) $m0 $m1                       $(ss4 $1 "$e32" addr )                                                        2>$p03; }
+function sz3 { svv $n23         ;if ndt;then printf 'vi%04i m%03i s%03i c%04i api %s' $(vgi|wc -l) $v0 $v1 $v2 $(ss4 $1 "$e32" nodes) 2>$p03;else printf 'vi%04i m%03i s000 c%04i api %s' $(vgi|wc -l) $v0 $v2 $(ss4 $1 "$e32" nodes) 2>$p03;fi; }
 function sso { tse $2 || return;dts;local e="$1 $(printf '%6s %10s %5s %-40s' $(ss3 $2) $dt "$(ss2 $2)" 2>$p03)";case $1 in GETH) e="$e $(sz0 $2)";;BESU) e="$e $(sz1 $2)";;NETH) e="$e $(sz5 $2)";;BEAC) e="$e $(sz2 $2)";;VALI) e="$e $(sz3 $2)";;MEVB) e="$e $(sz4 $2)";;esac;swn "$e"; }
 # el control commands
 function grs {
@@ -186,8 +186,8 @@ function gc0 { nu1 $(snf "$e62" <<< $@); }                                      
 function gv0 { en=$(ss5 $s10 maxpeers); }                                                                                                                     # set configured peers
 function gq0 { er=$(nu1 $(gcl net.peerCount)); }                                                                                                              # set el current peers
 function gnn { esn $(ln3 "$g35" $g06) $(nu1 $(gcl net.peerCount));gdi $1;gdu $1; }
-function gb1 { if [[ $(grep false <<< $@) ]];then printf 'synced';else printf  'syncing: %6i' $(($(gi0 $@)-$(gc0 $@)));fi; }                                  # get el syncing blocks remaining
-function gb2 { if [[ $(grep false <<< $@) ]];then printf ''      ;else printf ' syncing: %6i' $(($(gi0 $@)-$(gc0 $@)));fi; }                                  # get el syncing blocks remaining
+function gb1 { if [[ $(grep false <<< $@) ]];then printf 'synced ';else printf  's%06i' $(($(gi0 $@)-$(gc0 $@)));fi; }                                        # get el syncing blocks remaining
+function gb2 { if [[ $(grep false <<< $@) ]];then printf ''       ;else printf ' s%06i' $(($(gi0 $@)-$(gc0 $@)));fi; }                                        # get el syncing blocks remaining
 function gl0 {                                                                                                                                                # el report
   dts;ok=OK
   if tsa $s10;then local e=$(gcl eth.syncing);gv0;gnn $n07;eb0 $p10 $e
@@ -209,8 +209,8 @@ function tcl { curl $s30 -sX POST -H "Content-Type: application/json" --data "{\
 function tv0 { en=$(ss5 $s44 maxactivepeers); }
 function tq0 { er=$(nu1 $(tcl $s55)); }
 function tnn { esn $(ln5 "$g30:" $g36) $(nu1 $(tcl $s55));tdi $1; }
-function tb1 { if [[ $(grep false <<< $@) ]];then printf 'synced';else printf  'syncing';fi; }
-function tb2 { if [[ $(grep false <<< $@) ]];then printf ''      ;else printf ' syncing';fi; }
+function tb1 { if [[ $(grep false <<< $@) ]];then printf 'synced ';else printf  'syncing';fi; }
+function tb2 { if [[ $(grep false <<< $@) ]];then printf ''       ;else printf ' syncing';fi; }
 function tl0 {
   dts;ok=OK
   if tsa $s44;then local e=$(tcl eth_syncing);tv0;tnn $n07;eb0 $p62 $e
@@ -234,8 +234,8 @@ function up0 { nu1 $((16#$(nu1 $(snf "$e56" <<< $@)))); }                       
 function uv0 { en=$(ss5 $s11 max-peers); }                                                                                                                    # set configured peers
 function uq0 { er=$(up0 $(ucl $s55)); }                                                                                                                       # set el current peers
 function unn { esn $(ln3 "$g31:" $g07) $(up0 $(ucl $s55));udi $1;e2=0; }                                                                                      # set cur/min/std el peers
-function ub1 { if [[ $(grep false <<< $@) ]];then printf 'synced';else printf  'syncing: %6i' $(($(ui0 $@)-$(uc0 $@)));fi; }                                  # get el syncing blocks remaining
-function ub2 { if [[ $(grep false <<< $@) ]];then printf ''      ;else printf ' syncing: %6i' $(($(ui0 $@)-$(uc0 $@)));fi; }                                  # get el syncing blocks remaining
+function ub1 { if [[ $(grep false <<< $@) ]];then printf 'synced ';else printf  's%06i' $(($(ui0 $@)-$(uc0 $@)));fi; }                                        # get el syncing blocks remaining
+function ub2 { if [[ $(grep false <<< $@) ]];then printf ''       ;else printf ' s%06i' $(($(ui0 $@)-$(uc0 $@)));fi; }                                        # get el syncing blocks remaining
 function ul0 {                                                                                                                                                # el report
   dts;ok=OK
   if tsa $s11;then local e=$(ucl eth_syncing);uv0;unn $n07;eb0 $p11 $e
@@ -265,7 +265,7 @@ function bs5 { l5=$(snf "s%.+$(nu0 nod%03i $1)$g52%\1\t\2\t\3\t\4%p" <<< "$l1");
 function bb0 { bs0;bs3;bl1;bl2;[[ (1 -eq $(era $p12 $n12) && $(bri) -ge 1) || (1 -eq $(era $p12 5) && $(bri) -ge 5) ]] && ok=BK; }                            # set ok (OK/BK)
 function bfl { grep "BEAC.*$1"      2>$p03; }                                                                                                                 # filter cc lines
 function bff { grep "BEAC.*$1" $p12 2>$p03; }                                                                                                                 # filter cc log
-function bb1 { if [[ $(jq -r .data.is_syncing <<< $@ 2>$p03) = false ]];then printf 'synced';else printf 'syncing: %6i' $(bsi $@);fi; }                       # get cl syncing distance remaining
+function bb1 { if [[ $(jq -r .data.is_syncing <<< $@ 2>$p03) = false ]];then printf 'synced ';else printf 's%06i' $(bsi $@);fi; }                             # get cl syncing distance remaining
 function bmp { printf '%3i %3s %3i %4i iearhp: %4i %3i %4i %2i %2i %2i %4i' ${a[0]} $b5 $b4 $(b03 $zk $zz $zx $zw) $i0 $i1 $i4 $b1 $i2 $i3 $(b01) 2>$p03; }
 function bl0 { dts;ok=OK;if tsa $s12;then bl3;bv0;bnn;bb0;blo;else m="BSRV NOT ON $dt";fi; }                                                                  # cc report
 function bl1 { z1=${1:-$(grep -cv "$g27" <<< "$l0")};z2=${2:-$(grep -c "$g27" <<< "$l0")};z3=${3:-$(bl4 success)};ok=${4:-OK}; }                              # set info lines,success activities
