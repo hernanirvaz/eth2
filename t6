@@ -414,7 +414,7 @@ function cl6 { printf "er:$(clf $4) os:$(clf $5) jt:$(clf $3) n$2:$(cl2 $1)"    
 function clk {
   m='';local s=$(clo);if tsa $s12;then local n=$(ll5 "$g21"|wc -l);else local n=0;fi;dts;[[ $1$s = OK && $n -eq 0 ]] && return
   if tsa $s56;then
-    local e="CHRY $s";m="$(printf '%-40s' "$(ss2 $s56)" 2>$p03) $(cl6 $(chronyc -cn sources|snf "$e68") $(chronyc -cn tracking|snf "$e67"))"
+    local e="CHRY $s";m="$(printf '%-40s' "$(ss2 $s56)" 2>$p03) $(cl6 $(chronyc -c sources|snf "$e68") $(chronyc -c tracking|snf "$e67"))"
   elif tsa ntp;then
     local e="CNTP $s";m="$(printf '%-40s' "$(ss2 ntp)"  2>$p03) $(cl5 $(ntpq -pn|grep '^\*[0-9]'))"
   else
@@ -645,7 +645,7 @@ function slt { local n=$((($1-n04)/32));for n in $n $((n+1));do curl -sH "$s28" 
 function sng { local t=$(((($(date +%s)-n09)/12)+n04));local e=0;local i=0;local s=0;for s in $(slt $t|sort -nu);do if ((s<t));then continue;else if (((s-t)>e));then local e=$((s-t));local i=$t;fi;fi;local t=$((s+1));done;printf '%s %i' $(date -d@$((n09+i*12)) +%T) $((e*12)); }
 function bcc { printf p;if n1t;then if bpt;then if rbt $n06;then printf r;else printf c;fi;else if bdt;then printf d;else printf _;fi;fi;else if rbt;then printf r;else if bdt;then printf d;else printf _;fi;fi;fi;printf :; }
 function btn { if n1t;then printf $1;else printf $n03;fi; }
-function hrc { ztt || return;chronyc -cn sources 2>$p03|grep -Eq "$g65" && return;sex "$s04 $s56";sex "$s06 $s56"; }
+function hrc { ztt || return;chronyc -c sources 2>$p03|grep -Eq "$g65" && return;sex "$s04 $s56";sex "$s06 $s56"; }
 function irb { rm -f $p39.*;s2t $p39 && return;if rbt $1;then if vct;then brs RB 0 0 $n02;else srb $p39 RB;fi;else if fft $p45;then touch $p39.$1.hours;else hrc;fi;fi; }
 # ntpq -p output
 # when   The time after the last poll event. When when reaches the value of poll then the next polling action occurs. (s)
