@@ -366,11 +366,11 @@ function vrs {
 }
 function brh { head -n${1:-0} $p12; }                                                                                                                         # new cc head lines
 function brl {                                                                                                                                                # recalculate cc logs
-  fft $p12 || return;rm -f $p12.r;unset v;while read -a v;do ok=${v[1]};dts ${v[3]}\ ${v[4]};nn=$((10#${v[5]//[!0-9]/}));nr=${v[6]}
+  fft $p12 || return;rm -f $p12.r;unset v;while read -a v;do ok=${v[1]};dts ${v[3]}\ ${v[4]};nr=${v[5]:-0};nn=$((10#${nr//[!0-9]/}));nr=${v[6]:-0}
     if [[ ${v[0]} = BEAC ]];then
       bl1 ${v[17]} ${v[18]} ${v[10]} ${v[1]};bl2 ${v[13]} ${v[14]} ${v[15]} ${v[16]};bl3 ${v[11]} ${v[21]} ${v[22]} ${v[23]} ${v[24]} ${v[25]} ${v[26]};blo
     else
-      m="${v[0]} $ok $(nu0 %3i ${v[2]})";if [[ ${v[0]} = BSRV ]];then m="$m $dt";else m="$m $(npn $nr $nn)";fi;swn "$m"
+      m="${v[0]} $ok";if [[ ${v[0]} = BSRV ]];then m="$m ${v[2]} $dt";else m="$m $(nu0 %3i ${v[2]}) $(npn $nr $nn)";fi;swn "$m"
     fi;swn "$m" >> $p12.r                                                                                                                                     # new cc output
   done <<< $(cat $p12)
 }
