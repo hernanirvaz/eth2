@@ -408,9 +408,9 @@ function cl0 { printf "${1%.}"                                                  
 function cl1 { local n=0;while :;do local s=$(clq $1);if [[ $s ]];then break;else if [[ $n -lt 2 ]];then ((n++));else local s=$1;break;fi;fi;done;cl0 $s; }
 function cl2 { if [[ $1 =~ ^[0-9]+ ]];then cl1 $1;else cl0 $1;fi; }
 function cl3 { cl2 $2; }
-function cl4 { printf "dl: $6\tos: $4\tjt: $8\tn0: $(cl2 $2)"                   2>$p03; }
-function cl5 { printf "dl: ${8}ms\tos: ${9}ms\tjt: ${10}ms\tn$3: $(cl2 ${1:1})" 2>$p03; }
-function cl6 { printf "er:$(clf $4) os:$(clf $5) jt:$(clf $3) n$2:$(cl2 $1)"    2>$p03; }
+function cl4 { printf "dl $6\tos $4\tjt $8\tn0 $(cl2 $2)"                    2>$p03; }
+function cl5 { printf "dl ${8}ms\tos ${9}ms\tjt ${10}ms\tn$3 $(cl2 ${1:1})"  2>$p03; }
+function cl6 { printf "er $(clf $4) os $(clf $5) jt $(clf $3) n$2 $(cl2 $1)" 2>$p03; }
 function clk {
   m='';local s=$(clo);if tsa $s12;then local n=$(ll5 "$g21"|wc -l);else local n=0;fi;dts;[[ $1$s = OK && $n -eq 0 ]] && return
   if tsa $s56;then
