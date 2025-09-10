@@ -6,7 +6,11 @@ KRAKEN_API_KEY=
 KRAKEN_API_SECRET=
 BITCOINDE_API_KEY=
 BITCOINDE_API_SECRET=
+PAYMIUM_API_KEY=
+PAYMIUM_API_SECRET=
+THEROCK_API_KEY=
+THEROCK_API_SECRET=
 
-   50  * * * * t6 irb 1
+   45  * * * * t6 irb 1
 10,40  * * * * t6 eip meo.fruga.pt <key>
    55 11 * * * cns ceth
