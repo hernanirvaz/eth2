@@ -126,7 +126,13 @@ function svi {
     i3=$(nu5 0 $(ln0 "$d0.+iearhp: +[0-9]+ +[0-9]+ +[0-9]+ +[0-9]+ +[0-9]+" $p12))
   fi
 }
-function svv { l6=$(ll3 "$g16" $1);v0=$(nu4 1 $(ln1 "$(sni $cun1).*$g33"));if ndt;then v1=$(nu4 1 $(ln1 "$(sni $cun2).*$g33"));fi;l6=$(ll3 "$g17" $(($1/2)));v2=$(nu4 1 $(ln1 $g32)); }
+function svv {
+  l6=$(ll3 "$g16" $1)
+  v0=$(nu4 1 $(ln1 "$(sni $cun1).*$g33"))
+  if ndt; then v1=$(nu4 1 $(ln1 "$(sni $cun2).*$g33")); fi
+  l6=$(ll3 "$g17" $(($1 / 2)))
+  v2=$(nu4 1 $(ln1 $g32))
+}
 function smm { m0=$(nu4 3 $(ln4 "$g34" "$g09" $1));m1=$(rlr|wc -l); }
 function spc { nn=$2;cp $p04/$1.service $p02/$1.sav;sef "$e65$2%" $p02/$1.sav > $p04/$1.service; }                                                            # service configuration change/reload
 function snp { sft $1 || return;local n=$(($2+$5));(($2!=0&&n>=$3&&n<=$4)) && spc $1 $n;tsa $1 && sex "$s02 $1";dmr; }                                        # service peers change/stop
@@ -136,16 +142,37 @@ function dtl { read _ _ _ d0 d1 _ <<< $(bff|tail -n1)          ;dt="$d0 $d1"; } 
 function tsy { if [[ $(grep false <<< $@) ]];then printf SYC;else printf NSY;fi; }                                                                            # get el SYN/NSY text
 function era { tail -n${2:-$n13} $1 2>$p03|cut -d' ' -f1|sort -u|wc -l; }                                                                                     # get el/cc restart activity
 function eh0 {
-  local n=${1:-$n13};local i=${1:-0}
+  local n=${1:-$n13}
+  local i=${1:-0}
   if fft $p10;then tail -n$n $p10;fi;if [[ $i -eq 0 ]] && tsa $s10;then gl0;swn "GL $(printf '%8i' $(llc $p10) 2>$p03)\n$m";fi
   if fft $p11;then tail -n$n $p11;fi;if [[ $i -eq 0 ]] && tsa $s11;then ul0;swn "UL $(printf '%8i' $(llc $p11) 2>$p03)\n$m";fi
   if fft $p62;then tail -n$n $p62;fi;if [[ $i -eq 0 ]] && tsa $s44;then tl0;swn "NL $(printf '%8i' $(llc $p62) 2>$p03)\n$m";fi
 }
 function ch0 {
-  local s=$1;local n=${2:-$n13};local i=${2:-0}
-  if [[ $s = CL            ]];then if fft $p12;then tail -n$n $p12;fi;if [[ $i -eq 0 ]] && tsa $s12;then bl0;swn "BL $(printf '%8i' $(llc $p12) 2>$p03)\n$m";fi;fi
-  if [[ $s = CL || $s = VL ]];then if fft $p49;then tail -n$n $p49;fi;if [[ $i -eq 0 ]] && tsa $s13;then vl0;swn "VL $(printf '%8i' $(llc $p49) 2>$p03)\n$m";fi;fi
-  if [[ $s = CL || $s = ML ]];then if fft $p52;then tail -n$n $p52;fi;if [[ $i -eq 0 ]] && tsa $s14;then ml0;swn "ML $(printf '%8i' $(llc $p52) 2>$p03)\n$m";fi;fi
+  local s=$1
+  local n=${2:-$n13}
+  local i=${2:-0}
+  if [[ $s = CL ]]; then
+    if fft $p12; then tail -n$n $p12; fi
+    if [[ $i -eq 0 ]] && tsa $s12; then
+      bl0
+      swn "BL $(printf '%8i' $(llc $p12) 2>$p03)\n$m"
+    fi
+  fi
+  if [[ $s = CL || $s = VL ]]; then
+    if fft $p49; then tail -n$n $p49; fi
+    if [[ $i -eq 0 ]] && tsa $s13; then
+      vl0
+      swn "VL $(printf '%8i' $(llc $p49) 2>$p03)\n$m"
+    fi
+  fi
+  if [[ $s = CL || $s = ML ]]; then
+    if fft $p52; then tail -n$n $p52; fi
+    if [[ $i -eq 0 ]] && tsa $s14; then
+      ml0
+      swn "ML $(printf '%8i' $(llc $p52) 2>$p03)\n$m"
+    fi
+  fi
 }
 function ah0 { eh0 $3|tail -n$1;swn "BH";bh0 $3|tail -n$2; }
 function eb0 { e0=$(ll5 "$g12"|wc -l);ok=OK;fft $1 || return;[[ $(era $1) -gt 1 ]] && return;if [[ $ez -ge $n57 ]];then ok=BK;elif [[ $(grep false <<< $@) && ($e0 -eq $(ln0 $s53 $1|tail -n1) || $(ei0) -gt $n24) ]];then ok=BK;fi; }
