@@ -35,7 +35,7 @@ else
 fi
 cmw $p68 644 root;sex "$s06 $s56"
 if sht;then
-  if [[ $cunm = $znm1 || $cunm = $znm2 ]];then
+  if false;then                                                                                                                                               # use gateway not bind9
     sex 'apt install bind9 bind9utils -y'                                                                                                                     # install bind
     cc3 $p29 "$e07" "$s40"       ;cmw $p29 644 root bind                                                                                                      # named my options
     cc1 $p30 "$e02"              ;cmw $p30 644 root                                                                                                           # use only ipv4
