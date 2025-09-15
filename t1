@@ -320,7 +320,6 @@ if [[ $cunm = $znm1 || $cunm = $znm2 ]];then
   else
     s40="$s40\n\tlisten-on { localhost; $zip2; };"
   fi
-  s40="$s40\n\tforwarders { 192.168.8.4; };"
 else
   s40="$s40\n\tlisten-on { any; };"
 fi
@@ -364,7 +363,7 @@ for m in $(ip -j link|jq -r '.[]|select(.operstate=="UP").ifname');do
   s41="$s41\n          metric: 100"
   s41="$s41\n          on-link: true"
   s41="$s41\n      nameservers:"
-  s41="$s41\n        addresses: [$zip1, $zip2]"
+  s41="$s41\n        addresses: [192.168.8.4]"
   s41="$s41\n      link-local: [ ]"              # ;s41="$s41\n      link-local: [\"fe80::$(printf '%02x' $((0x${s42:0:2}|0x02)))${s42:3:2}:${s42:6:2}ff:fe${s42:9:2}:${s42:12:2}${s42:15:2}/64\"]"
 done
 for m in $(ip -j link|jq -r '.[]|select(.operstate=="DOWN").ifname');do
@@ -377,7 +376,7 @@ s42="$s42\nserver {"
 s42="$s42\nlisten 80;"
 s42="$s42\nserver_name $znm2;"
 s42="$s42\nsend_timeout 100m;"
-s42="$s42\nresolver $zip2 valid=300s;"
+s42="$s42\nresolver 192.168.8.4 valid=300s;"
 s42="$s42\nresolver_timeout 10s;"
 s42="$s42\ngzip on;"
 s42="$s42\ngzip_vary on;"
