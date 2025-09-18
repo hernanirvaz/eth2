@@ -45,8 +45,8 @@ function ln2 { if [[ $l4 ]];then gawk "$1" <<< "$l4" 2>$p03;fi; }               
 function ln3 { l6=$(ll5 "$2.*$1");ln1 $1; }                                                                                                                   # get numbers all  syslog lines
 function ln4 { if g0t $3;then l6=$(ll5 "$2.*$1"|tail -n$3);else l6=$(ll5 "$2.*$1");fi;ln1 $1; }                                                               # get numbers tail syslog lines
 function ln5 { l6=$(ll4 "$2.*$1");ln1 $1; }                                                                                                                       # get numbers all  syslog lines
-function fl0 { ll6|tail -n300|flp "Core.*temperature" $1; }                                                                                                   # get temp  cpu lines
-function fl1 { ll6           |flp "$g29" $1|grep -i usb; }                                                                                                    # get error usb lines
+function fl0 { ll6|tail -n300|flp "Core.*temperature" $2|if [[ $1 ]];then sef "$1";else cat;fi; }                                                                                                   # get temp  cpu lines
+function fl1 { ll6           |flp "$g29" $2|grep -i usb |if [[ $1 ]];then sef "$1";else cat;fi; }                                                                                                    # get error usb lines
 function fln { if [[ $2 ]];then sin "^$g41$2";else siv "$1";fi; }                                                                                             # get negate re syslog lines
 function flp { if [[ $2 ]];then sin "^$g41$2";else sin "$1"|siv "$g38";fi; }                                                                                  # get posite re syslog lines
 function tln { if [[ $2 ]];then sin "^$g23$2";else siv "$1";fi; }                                                                                             # get negate re syslog lines
@@ -934,8 +934,8 @@ function bml { [[ $d1 = 23:58 ]] || return;if bdt;then bdl $d0;else if [[ $(llc 
 [[ $1 = clz ]] && { cll ""     $2; }
 [[ $1 = rlz ]] && { rll ""     $2; }
 [[ $1 = llz ]] && { lll ""     $2; }
-[[ $1 = cpu ]] && { fl0        $2; }
-[[ $1 = usb ]] && { fl1        $2; }
+[[ $1 = cpu ]] && { fl0 "$e75" $2; }
+[[ $1 = usb ]] && { fl1 "$e75" $2; }
 [[ $1 = eii ]] && { egi $2                                                   |sef "$e50"; }
 [[ $1 = eiu ]] && { ll5 "$g44"|tail -n${2:-$n07}                             |sef "$e50"; }
 [[ $1 = al  ]] && { ll5 "$g45"|fln "$g28" $2                                 |sef "$e50"; }
