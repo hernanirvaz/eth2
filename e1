@@ -2,7 +2,7 @@
 
 source /home/eth/eth2/t1
 
-swu 'INSTALAR GETH';sex "mkdir -p $p08/geth";sau eth1;sjw;cmw $p08 755 eth1;cmw $p08/geth 700 eth1
+swu "INSTALAR $s72";sex "mkdir -p $p08/geth";sau eth1;sjw;cmw $p08 755 eth1;cmw $p08/geth 700 eth1
 gtv $1 $2
 maxp=10
 pp2p=30303;ndp || pp2p=30304
@@ -26,7 +26,7 @@ RestartSec=60
 TimeoutStopSec=400
 RuntimeMaxSec=infinity
 ExecStart=$p00/geth --datadir $p08 --mainnet --port $pp2p --http --http.addr $apip --authrpc.addr $apip --maxpeers $maxp --authrpc.jwtsecret $p58/jwt$othe
-ExecStopPost=+$p02/eth2/t7 GETHSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
+ExecStopPost=+$p02/eth2/t7 ${s72}STP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 
 [Install]
 WantedBy=multi-user.target

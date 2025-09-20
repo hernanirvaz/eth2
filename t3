@@ -40,7 +40,7 @@ else
   # othe="$othe --purge-db"                                                                                                                                   # clean & checkpoint DB
   # othe="$othe --disable-lock-timeouts"                                                                                                                      # disable timeouts on internal locks
   # othe="$othe --monitoring-endpoint https://beaconcha.in/api/v1/client/metrics?apikey=$B&machine=$(snc $cunm)"                                              # monitor data for beaconcha.in app
-  swu 'CONFIGURE BEACON';sex "mkdir -p $p16";cmw $p05 755 $meeu;sau eth2;sjw
+  swu "CONFIGURE $s75";sex "mkdir -p $p16";cmw $p05 755 $meeu;sau eth2;sjw
   cmw $p16 700 eth2;touch $p05/vc_lock;cd $p02 || exit                                                                                                        # IMPORTANTE LOCK vc
   pp2p=9004;ndp || pp2p=9000
   cat <<-EOF > $s12.service
@@ -57,7 +57,7 @@ else
 	TimeoutStopSec=600
 	RuntimeMaxSec=infinity
 	ExecStart=$p00/lighthouse --datadir $p05 bn --network mainnet --port $pp2p --target-peers $tarp --http-address $apip --staking$othe
-	ExecStopPost=+$p02/eth2/t7 BEACSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
+	ExecStopPost=+$p02/eth2/t7 ${s75}STP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 	
 	[Install]
 	WantedBy=multi-user.target
@@ -78,6 +78,7 @@ else
   othe="$othe --broadcast subscriptions,attestations,blocks,sync-committee"                                                                                   # broadcast to all beacon nodes
   othe="$othe --gas-limit $((n56*10**6))"
   # othe="$othe --monitoring-endpoint https://beaconcha.in/api/v1/client/metrics?apikey=$B&machine=$(snc $cunm)"                                              # monitor data for beaconcha.in app
+  swu "CONFIGURE $s76";
   sau eth3;cd $p02 || exit
   if [[ ! -f $p05/vc_keys  && -d $p19 && $(ls $p19 2>$p03)          ]];then swb 'IMPORT KEYS';sex "mkdir -p $p05";cmw $p05 755 $meeu;imk;[[ -f $p17/validator_definitions.yml ]] && touch $p05/vc_keys;fi
   if [[ ! -f $p05/vc_lock  && -f $p05/vc_keys                       ]];then touch $p05/vc_lock;fi
@@ -99,7 +100,7 @@ else
 		TimeoutStopSec=600
 		RuntimeMaxSec=infinity
 		ExecStart=$p00/lighthouse --datadir $p05 vc --network mainnet$othe
-		ExecStopPost=+$p02/eth2/t7 VALISTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
+		ExecStopPost=+$p02/eth2/t7 ${s76}STP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 		
 		[Install]
 		WantedBy=multi-user.target

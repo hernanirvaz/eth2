@@ -40,7 +40,7 @@ RestartSec=60
 TimeoutStopSec=600
 RuntimeMaxSec=infinity
 ExecStart=$p00/mev-boost -mainnet -log-no-version $epmv
-ExecStopPost=+$p02/eth2/t7 MEVBSTP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
+ExecStopPost=+$p02/eth2/t7 ${s77}STP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 
 [Install]
 WantedBy=multi-user.target
