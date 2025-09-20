@@ -418,10 +418,14 @@ s48='.[].peer_info|select(.connection_direction=='
 s49=').client.agent_string'
 s50='https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=ETH&convert=EUR&CMC_PRO_API_KEY=3ae5f3df-bd71-489d-a9dd-b626995fba31'
 s51='debian-transmission'
-if [[ $cunm = $znm1 || $cunm = $vnm1 ]];then
+if [[ $cunm = $znm1 ]];then
   s52='pool 0.de.pool.ntp.org iburst maxsources 3'
   s52="${s52}\npool 1.de.pool.ntp.org iburst maxsources 3"
   s52="${s52}\npool 2.de.pool.ntp.org iburst maxsources 3"
+elif [[ $cunm = $vnm1 ]];then
+  s52='pool 0.ca.pool.ntp.org iburst maxsources 3'
+  s52="${s52}\npool 1.ca.pool.ntp.org iburst maxsources 3"
+  s52="${s52}\npool 2.ca.pool.ntp.org iburst maxsources 3"
 else
   s52='pool 0.europe.pool.ntp.org iburst maxsources 3'
   s52="${s52}\npool 1.europe.pool.ntp.org iburst maxsources 3"
