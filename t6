@@ -7,6 +7,7 @@ function nl0 { LC_NUMERIC=C printf '%+i'   $@         2>$p03; }
 function nl1 { LC_NUMERIC=C printf '%+f'   $@         2>$p03; }
 function nl2 { LC_NUMERIC=C printf '%+i^2' $@         2>$p03; }
 function nl3 { LC_NUMERIC=C printf '%i\n'  $@         2>$p03; }
+function nl4 { (( $2 == 0 )) && printf "%${1}s" || LC_NUMERIC=C printf "%${1}i" $2; }
 function nu0 { LC_NUMERIC=C printf "$1"    ${2:-0}    2>$p03; }
 function nu1 { LC_NUMERIC=C printf '%i'    ${1:-0}    2>$p03; }
 function nu2 { nbc "0$(nl0 $@)"; }
@@ -114,7 +115,7 @@ function svi {
     i4=$(nu5 0 $(ln1 $g56))
     b1=$(nu2 $(ln3 "$g64" "$g49"))
     l6=$(ll2 "$g19"|tail -n$(si2 $n))
-    i2=$(nu5 0 $(ln1 $g66))
+    i2=$(nu5 0 $(ln1 $g68))
     l6=$(ll2 "$g20"|tail -n$(si1 $n))
     i3=$(nu5 2 $(ln1 $g15))
   else
@@ -461,17 +462,35 @@ function cl2 { if [[ $1 =~ ^[0-9]+ ]];then cl1 $1;else cl0 $1;fi; }
 function cl3 { cl2 $2; }
 function cl4 { printf "dl $6\tos $4\tjt $8\tn0 $(cl2 $2)"                    2>$p03; }
 function cl5 { printf "dl ${8}ms\tos ${9}ms\tjt ${10}ms\tn$3 $(cl2 ${1:1})"  2>$p03; }
-function cl6 { printf "er $(clf $4) os $(clf $5) jt $(clf $3) n$2 $(cl2 $1)" 2>$p03; }
+function cl6 { printf "er $(clf $4) os $(clf $5) jt $(clf $3) n$2$(nl4 1 $6) $(cl2 $1)" 2>$p03; }
 function clk {
-  m='';local s=$(clo);if tsa $s12;then local n=$(ll5 "$g21"|wc -l);else local n=0;fi;dts;[[ $1$s = OK && $n -eq 0 ]] && return
-  if tsa $s56;then
-    local e="CHRY $s";m="$(printf '%-40s' "$(ss2 $s56)" 2>$p03) $(cl6 $(chronyc -c sources|snf "$e68") $(chronyc -c tracking|snf "$e67"))"
-  elif tsa ntp;then
-    local e="CNTP $s";m="$(printf '%-40s' "$(ss2 ntp)"  2>$p03) $(cl5 $(ntpq -pn|grep '^\*[0-9]'))"
+  local s;local n;local e;local l;local i
+  m=''
+  s=$(clo) # get clock sync status
+  if tsa $s12; then
+    n=$(ll5 "$g21" | wc -l) # count beacon time sensitive block arrived early
   else
-    local e="CSYS $s";m="$(printf '%-40s' "$(ss2 $s19)" 2>$p03) $(cl4 $(cls))"
+    n=0
   fi
-  if tsa $s12;then m="$e $(nu0 %3i $n) $dt $m";else m="$e     $dt $m";fi
+  dts
+  [[ $1$s = OK && $n -eq 0 ]] && return # no relevant clock output needed
+  if tsa $s56; then
+    e="CHRY $s"
+    l=$(chronyc -c sources 2>$p03)
+    if ztt; then
+      i=$(grep -E "$g65,[0-9],$g66" <<< "$l" | cut -d, -f4 | sort | head -n1) # get best appropriate stratum
+    else
+      i=0
+    fi
+    m="$(printf '%-40s' "$(ss2 $s56)" 2>$p03) $(cl6 $(snf "$e68" <<< "$l") $(chronyc -c tracking | snf "$e67") $i)"
+  elif tsa ntp; then
+    e="CNTP $s"
+    m="$(printf '%-40s' "$(ss2 ntp)" 2>$p03) $(cl5 $(ntpq -pn | grep '^\*[0-9]'))"
+  else
+    e="CSYS $s"
+    m="$(printf '%-40s' "$(ss2 $s19)" 2>$p03) $(cl4 $(cls))"
+  fi
+  m="$e $(nl4 3 $n) $dt $m"
 }
 function hch { clk h;if sht;then local e=$(snc $cunm);else local e=${cunm:0:2}${cunm: -2};fi;swn "$e${m:4}"; }
 function hca {
@@ -696,7 +715,7 @@ function slt { local n=$((($1-n04)/32));for n in $n $((n+1));do curl -sH "$s28" 
 function sng { local t=$(((($(date +%s)-n09)/12)+n04));local e=0;local i=0;local s=0;for s in $(slt $t|sort -nu);do if ((s<t));then continue;else if (((s-t)>e));then local e=$((s-t));local i=$t;fi;fi;local t=$((s+1));done;printf '%s %i' $(date -d@$((n09+i*12)) +%T) $((e*12)); }
 function bcc { printf p;if n1t;then if bpt;then if rbt $n06;then printf r;else printf c;fi;else if bdt;then printf d;else printf _;fi;fi;else if rbt;then printf r;else if bdt;then printf d;else printf _;fi;fi;fi;printf :; }
 function btn { if n1t;then printf $1;else printf $n03;fi; }
-function hrc { ztt || return;chronyc -c sources 2>$p03|grep -Eq "$g65" && return;sex "$s04 $s56";sex "$s06 $s56"; }
+function hrc { ztt || return;chronyc -c sources 2>$p03|grep -Eq "$g65,1,$g66" && return;sex "$s04 $s56";sex "$s06 $s56"; }
 function irb { rm -f $p39.*;s2t $p39 && return;if rbt $1;then if vct;then brs RB 0 0 $n02;else srb $p39 RB;fi;else if fft $p45;then touch $p39.$1.hours;else hrc;fi;fi; }
 # ntpq -p output
 # when   The time after the last poll event. When when reaches the value of poll then the next polling action occurs. (s)
