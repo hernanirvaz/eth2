@@ -420,12 +420,35 @@ function sm3 { (sensors 2>$p03;sleep 1;sensors 2>$p03)|snf "$e20"; }
 function sm4 { local s=$(pex "smartctl --json=c -x $1");jq -r "$j1" <<< $s 2>$p03;jq -r "$j0" <<< $s 2>$p03; }
 function sm5 { local g='';local f='';for f in $(ls $p66 2>$p03);do local g="$g+$(sm2 $f)";done;printf %i $(($g)); }
 function tmp {
-  local g=$(fl0);local d=$(grep throttled <<< "$g"|head -n1|sef "$e21");local e=$(grep normal <<< "$g"|tail -n1|sef "$e21")
-  local g=''    ;local f=''        ;for f in $(ls $p66 2>$p03);do local g=$(echo $g $(sm0 $f));done;local l=$(nu5 1 $g)
-  local g=''    ;local f='/dev/sda';[[ -b $f ]] && local g=$(sm4 $f);local i=$(nu5 1 $g);local n=$(nu5 1 $(sm3))
-  [[ $1$d$e || $l -ge $n19 || $i -ge $n19 || $n -ge $n19 ]] || return
-  local g=$(printf '%5iC %10s %5s' $n $dt 2>$p03);g0t $i && local g="$g $(printf 'sata: %iC' $i 2>$p03)";g0t $l && local g="$g $(printf 'nvme: %iC' $l 2>$p03)"
-  [[ $d ]] && local d="throttled: $d";[[ $e ]] && local e="normal: $e";local g="$g $(printf '%s %s' $d $e 2>$p03)";swn "TEMP $g"
+  local g;local d;local e;local f;local l;local i;local n
+  # cpu temp & throttling
+  g=$(fl0)
+  if [[ $g ]];then
+    d=$(grep throttled <<< "$g" | head -n1 | sef "$e21")
+    e=$(grep normal    <<< "$g" | tail -n1 | sef "$e21")
+  fi
+  # nvme & sata temps
+  g=''
+  for f in $(ls $p66 2>$p03); do
+    g="$g $(sm0 $f)"
+  done
+  l=$(nu5 1 $g)
+  g=''
+  f='/dev/sda'
+  [[ -b $f ]] && g=$(sm4 $f)
+  i=$(nu5 1 $g)
+  # avg sensors temp
+  n=$(nu5 1 $(sm3))
+
+  [[ $1$d$e || $l -ge $n19 || $i -ge $n19 || $n -ge $n19 ]] || return # no relevant temp output needed
+
+  g=$(printf '%5iC %10s %5s' $n $dt 2>$p03)
+  g0t $i && g="$g $(printf 'sata: %iC' $i 2>$p03)"
+  g0t $l && g="$g $(printf 'nvme: %iC' $l 2>$p03)"
+  [[ $d ]] && d="throttled: $d"
+  [[ $e ]] && e="normal: $e"
+  g="$g $(printf '%s %s' "$d" "$e" 2>$p03)"
+  swn "TEMP $g"
 }
 function clq { $s09 query $1    2>$p03|snf "$e05"; }
 function cls { $s07 $s45-status 2>$p03|snf "$e48"; }
