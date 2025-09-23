@@ -767,13 +767,14 @@ function vcs {
   srv hrv-zotac4 && rlt || return
   [[ $1 ]] || { swb 'TEM DE TER INDEX  ';return; }
   [[ $K ]] || { swb 'TEM DE TER K      ';return; }
-  ipw;$p00/ethereal validator consolidate $s68 --source-validator="${b[$1]}" --target-validator="${b[-1]}" --from="$s25" --privatekey="$K" --verbose
+  ipw
+  $p00/ethereal validator consolidate $s68 --source-validator="${b[$1]}" --target-validator="${b[-1]}" --from="$s25" --privatekey="$K" --verbose
 }
 function vwd {
   srv hrv-zotac4 && rlt || return
-  [[ $K ]] || { swb 'TEM DE TER K      ';return; }
   local n=${1:-1};[[ $n =~ ^[0-9]*\.?[0-9]+$ ]] && local n=${n}eth
-  ipw;$p00/ethereal validator withdraw $s68 --from="$s70" --validator="${b[-1]}" --withdrawal-amount=$n --privatekey="$K" --verbose
+  ipw
+  $p00/ethereal validator withdraw $s68 --from="$s70" --validator="${b[-1]}" --withdrawal-amount=$n --verbose
 }
 function ngx { sex "apt install $s22 -y";cc4 $p32 "$s42";cmw $p32 644 root;sex "$s00 reload $s22";sudo nginx -t &>> $p02/$s60.out; }
 function plx {
