@@ -7,7 +7,7 @@ function nl0 { LC_NUMERIC=C printf '%+i'   $@         2>$p03; }
 function nl1 { LC_NUMERIC=C printf '%+f'   $@         2>$p03; }
 function nl2 { LC_NUMERIC=C printf '%+i^2' $@         2>$p03; }
 function nl3 { LC_NUMERIC=C printf '%i\n'  $@         2>$p03; }
-function nl4 { (( $2 == 0 )) && printf "%${1}s" || LC_NUMERIC=C printf "%${1}i" $2; }
+function nl4 { [[ $2 -eq 0 ]] && printf "%${1}s" || LC_NUMERIC=C printf "%${1}i" $2; }
 function nu0 { LC_NUMERIC=C printf "$1"    ${2:-0}    2>$p03; }
 function nu1 { LC_NUMERIC=C printf '%i'    ${1:-0}    2>$p03; }
 function nu2 { nbc "0$(nl0 $@)"; }
@@ -482,7 +482,7 @@ function clk {
     else
       i=0
     fi
-    m="$(printf '%-40s' "$(ss2 $s56)" 2>$p03) $(cl6 $(snf "$e68" <<< "$l") $(chronyc -c tracking | snf "$e67") $i)"
+    m="$(printf '%-40s' "$(ss2 $s56)" 2>$p03) $(cl6 $(snf "$e68" <<< "$l") $(chronyc -c tracking | snf "$e67") ${i:-0})"
   elif tsa ntp; then
     e="CNTP $s"
     m="$(printf '%-40s' "$(ss2 ntp)" 2>$p03) $(cl5 $(ntpq -pn | grep '^\*[0-9]'))"
