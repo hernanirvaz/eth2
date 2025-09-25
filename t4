@@ -14,12 +14,13 @@ function hlp {
 function bck { [[ -f $p04/$1.service ]] || return;grep -q checkpoint-sync-url $p04/$1.service && return;cp $p04/$1.service $p02/$1.sav;sef "$e79" $p02/$1.sav > $p04/$1.service;nex "$s00 daemon-reload"; }
 
 if [[ $1 = linux || $1 = reboot ]];then
-  swb 'FULL-UPGRADE >> ~/apt.out';sex 'pwd'
-  sudo apt update -y       2>&1 | sudo tee -a $p02/apt.out
-  sudo apt full-upgrade -y 2>&1 | sudo tee -a $p02/apt.out
-  sudo apt dist-upgrade -y 2>&1 | sudo tee -a $p02/apt.out
-  sudo apt autoremove   -y 2>&1 | sudo tee -a $p02/apt.out
-  sudo apt autoclean       2>&1 | sudo tee -a $p02/apt.out
+  swb "FULL-UPGRADE >> ~/apt-t4$1.out";sex 'pwd'
+  sudo apt update -y       2>&1 | sudo tee -a $p02/apt-t4$1.out >$p03
+  sudo apt full-upgrade -y 2>&1 | sudo tee -a $p02/apt-t4$1.out >$p03
+  sudo apt dist-upgrade -y 2>&1 | sudo tee -a $p02/apt-t4$1.out >$p03
+  sudo apt autoremove   -y 2>&1 | sudo tee -a $p02/apt-t4$1.out >$p03
+  sudo apt autoclean       2>&1 | sudo tee -a $p02/apt-t4$1.out >$p03
+  sex "chown $meeu:$meeu $p02/apt-t4$1.out"
   [[ $1 = reboot ]] && { srb $p39 RB; }
 fi
 if [[ $1 = besu ]];then sex "rm -fr $p00/besu.sav"      ;sex "mv $p00/besu      $p00/besu.sav"       ;unv $2    ;fi

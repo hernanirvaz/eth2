@@ -741,7 +741,15 @@ function csp { ict || return;local e=$(ll5 "$g50:"|sef "$e78"|fsp $1 $2);[[ $1$2
 function mre { mct || return;local s=n;local e=$(for s in $(rlr|snf "$e09"|sort -u);do printf '%3i %s\n' $(rlr|grep -co $s) $s;done|sort -n);[[ $e ]] && echo -e "\n$e"; }
 function epf { if tsa $s10;then gl0;swn "$m";fi;if tsa $s11;then ul0;swn "$m";fi;if tsa $s44;then tl0;swn "$m";fi; }
 function cpf { if tsa $s12;then bl0;swn "$m";fi;if tsa $s13;then vl0;swn "$m";fi;if tsa $s14;then ml0;swn "$m";fi; }
-function uur { swb 'UNATTENDED UPGRADE RESTART >> ~/apt.out';sex "$s00 daemon-reload";echo 'unattended-upgrades unattended-upgrades/enable_auto_updates boolean true'|sudo debconf-set-selections;sudo DEBIAN_FRONTEND=noninteractive dpkg-reconfigure -plow unattended-upgrades;sudo $s06 unattended-upgrades &>> $p02/apt.out;sudo unattended-upgrade -d &>> $p02/apt.out; }
+function uur {
+  swb 'UNATTENDED UPGRADE RESTART >> ~/apt-uur.out'
+  sex "$s00 daemon-reload"
+  echo 'unattended-upgrades unattended-upgrades/enable_auto_updates boolean true' | sudo debconf-set-selections
+  sudo DEBIAN_FRONTEND=noninteractive dpkg-reconfigure -plow unattended-upgrades
+  sudo $s06 unattended-upgrades 2>&1 | sudo tee -a $p02/apt-uur.out >$p03
+  sudo unattended-upgrade -d    2>&1 | sudo tee -a $p02/apt-uur.out >$p03
+  sex "chown $meeu:$meeu $p02/apt-uur.out"
+}
 function fdv { [[ $1         ]] || return;printf "\nDevice\tUsed\tSerialNumber\tFirmware\tModel\n";local d;local u;local f;local n;local m;while IFS=$'\t' read d u m f n;do printf "%s\t%s\t%s\t%s\t%s\n" $(basename $d) $(nby $u) $n $f "$m";done <<< "$1"; }
 function fmd { [[ -b /dev/$1 ]] || return;printf "\n";pex "mdadm --detail /dev/$1"; }
 function fst { local s="nvme smart-log";if [[ $1 ]];then cex "$s /dev/$1";else local f='';for f in $(ls $p66 2>$p03|sort);do swl "$s $f";pex "$s $f";done|grep -Eiv "$s54"|sef "$e08";fi;fdv "$(pex 'nvme list -o json'|jq -r "$j6"|sort)";fmd $(cat $p89|snf "$e82"); }
@@ -798,13 +806,14 @@ function plx {
   # curl -fsSL https://$u/plex-keys/PlexSign.key | sudo gpg --dearmor | sudo tee $k
   # echo deb [signed-by=$k] https://$u/repo/deb public main | sudo tee $o
   # alternative commands to add keyrings
-  curl https://$u/plex-keys/PlexSign.key | sudo apt-key add -
+  curl https://$u/plex-keys/PlexSign.key   | sudo apt-key add -
   echo deb https://$u/repo/deb public main | sudo tee $o
-  sudo apt update                              -y &>> $p02/$s60.out
-  sudo apt upgrade                             -y &>> $p02/$s60.out
-  sudo apt install --reinstall ca-certificates -y &>> $p02/$s60.out
-  sudo update-ca-certificates                     &>> $p02/$s60.out
-  sudo apt install plexmediaserver             -y &>> $p02/$s60.out
+  sudo apt update                              -y 2>&1 | sudo tee -a $p02/$s60.out >$p03
+  sudo apt upgrade                             -y 2>&1 | sudo tee -a $p02/$s60.out >$p03
+  sudo apt install --reinstall ca-certificates -y 2>&1 | sudo tee -a $p02/$s60.out >$p03
+  sudo update-ca-certificates                     2>&1 | sudo tee -a $p02/$s60.out >$p03
+  sudo apt install plexmediaserver             -y 2>&1 | sudo tee -a $p02/$s60.out >$p03
+  sex "chown $meeu:$meeu $p02/$s60.out"
   sex "usermod -aG $s60 $meeu";sex "mkdir -p $p60";cmw $p60 775 $s60
   sex "mkdir -p $p60/movie";sex "mkdir -p $p60/tv";sex "mkdir -p $p60/tv2";sex "mkdir -p $p60/lust"
   sex "chown -R $s60:$s60 $p60"
@@ -816,11 +825,12 @@ function jly {
   swu 'JELLYFIN SERVER';sex 'apt install ca-certificates apt-transport-https intel-opencl-icd -y'
   curl -fsSL $s65/jellyfin_team.gpg.key | sudo gpg --dearmor -o $p78
   echo "deb [arch=$(dpkg --print-architecture)] $s65 $(snf "$e80" $p77) main" | sudo tee $p79
-  sudo apt update                              -y &>> $p02/$s64.out
-  sudo apt upgrade                             -y &>> $p02/$s64.out
-  sudo apt install --reinstall ca-certificates -y &>> $p02/$s64.out
-  sudo update-ca-certificates                     &>> $p02/$s64.out
-  sudo apt install $s64                        -y &>> $p02/$s64.out
+  sudo apt update                              -y 2>&1 | sudo tee -a $p02/$s64.out >$p03
+  sudo apt upgrade                             -y 2>&1 | sudo tee -a $p02/$s64.out >$p03
+  sudo apt install --reinstall ca-certificates -y 2>&1 | sudo tee -a $p02/$s64.out >$p03
+  sudo update-ca-certificates                     2>&1 | sudo tee -a $p02/$s64.out >$p03
+  sudo apt install $s64                        -y 2>&1 | sudo tee -a $p02/$s64.out >$p03
+  sex "chown $meeu:$meeu $p02/$s64.out"
   cex "chown -R $s64:adm /etc/$s64";cex "usermod -aG $s64 $meeu";sex "usermod -aG render $s64"
   sex "mkdir -p $p80";cmw $p80 750 $s64;sex "chown -R $s64:$s64 $p80"
   jp;jd;je;dmr;ja
