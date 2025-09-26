@@ -82,7 +82,7 @@ else
   sau eth3;cd $p02 || exit
   if [[ ! -f $p05/vc_keys  && -d $p19 && $(ls $p19 2>$p03)          ]];then swb 'IMPORT KEYS';sex "mkdir -p $p05";cmw $p05 755 $meeu;imk;[[ -f $p17/validator_definitions.yml ]] && touch $p05/vc_keys;fi
   if [[ ! -f $p05/vc_lock  && -f $p05/vc_keys                       ]];then touch $p05/vc_lock;fi
-  if [[   -f $p05/vc_lock  && -f $p05/vc_keys && ! -f $p05/vc_slash ]];then sex "mkdir -p \"$p17\"";cmw "$p17" 755 "$meeu";sis $p02/$(basename $p18);svd;fi
+  if [[   -f $p05/vc_lock  && -f $p05/vc_keys && ! -f $p05/vc_slash ]];then sex "mkdir -p $p17";cmw "$p17" 755 "$meeu";sis $p02/$(basename $p18);svd;fi
   if [[   -f $p05/vc_lock  && -f $p05/vc_keys                       ]];then
     cat <<-EOF > $s13.service
 		[Unit]
@@ -106,6 +106,6 @@ else
 		WantedBy=multi-user.target
 		EOF
     sex "mv $s13.service $p04";cmw $p04/$s13.service 644
-    swb "$s76 CONFIGURADO VERIFICAR TUDO (LOCK & SLASH DB)"
+    svc CONFIGURADO
   fi
 fi
