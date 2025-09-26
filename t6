@@ -1187,7 +1187,7 @@ if [[ ! $1 ]];then
   m="$m\neip\t\t\tset dynamic DNS"
   m="$m\nulg [d]\t\t\tshow update logs d($(date +%F)) on $(basename $p69)"
   m="$m\nulr [d]\t\t\tshow restartings d($(date +%F)) on $(basename $p69)"
-  m="$m\nmcp [o] [s] [d]\t\tscp <[o]riginal> <[s]erver>:<[d]estination>"
+  m="$m\nmcp <f> [s:v1] [d:~]\tscp <f>ile [s]erver:[d]estination"
   m="$m\nplx [s]\t\t\tinstalar $s60/[$s22] servers"
   m="$m\njly\t\t\tinstalar $s64"
   m="$m\ntms\t\t\tinstalar $s15"
