@@ -145,8 +145,8 @@ g17='DEBU?G Computed attestation selection proofs'
 g18='DEBU?G Delayed head block'
 g19='DEBU?G Processed HTTP API request'
 g20="DEBU?G Peer.*$g15 +[+-]?([0-9]|[0-9][0-9]|100)\."
-g21='WARN Block arrived early'
-g22='WARN Beacon chain re-org'
+g21='Block arrived early'
+g22='Beacon chain re-org'
 g23="$(date +%F) +"
 g24='[-\+][0-9]{2}:[0-9]{2}'
 g25='[ =\|]INFO[ \|]'
