@@ -96,11 +96,11 @@ function s6t { [[ -e $1 && -b $1 ]]; }
 function rbt { [[ $(sra) -ge $((60*60*${1:-9})) ]]; }
 function ipt { [[ $(date +%s) -ge $(bss $1 6) ]]; }
 function pct { [[ $b4 -ne 0 ]]; }
-function pmt { [[ $nm -ge $(b05 $nn) ]]; }
+function pmt { [[ $1 -ge $(b05 $2) ]]; }
 function hat { [[ ${a[$nn]} -ge ${a[0]} ]]; }                                                                                                                 # function hat { [[ $b2 -gt $(b00) ]]; }
 function bdt { [[ $(b03 $zk $zz $zx $zw) -gt $n20 || $nz -ge $n57 ]]; }
 function sft { [[ -f $p04/$1.service ]]; }
-function bpt { ! fft $p50.lock && [[ $(era $p12 $n12) -eq 1 ]] && ( (pct && pmt && hat && ! bdt && ! fft $p45) || rbt $n06); }
+function bpt { ! fft $p50.lock && [[ $(era $p12 $n12) -eq 1 ]] && ( (pct && pmt $nm $nr && hat && ! bdt && ! fft $p45) || rbt $n06); }
 function llc { if [[ -s  ${1:-$p03} ]];then grep -Ec "$s72|$s73|$s74|$s75|$s76|$s77" $1 2>$p03;else printf %i 0;fi; }                                         # get normal log line count
 function jrn { if [[ $2 ]];then local s="-g $2";else local s=;fi;cex "journalctl --no-hostname --no-full -f $1 $s"; }                                         # my journal   format
 function dmr { sex "$s00 daemon-reload"; }                                                                                                                    # daemon-reload
@@ -191,7 +191,13 @@ function csn { if g0t $#;then nr=${@:$#};nm=$(nu9 $@);nd=$(nu7 $@);nz=$(nu8 $@);
 function esn { if g0t $#;then er=${@:$#};em=$(nu9 $@);ed=$(nu7 $@);ez=$(nu8 $@);else er=0;em=0;ed=0;ez=0;fi; }
 function npn { local n=${1:-0};local i=${2:-0};if [[ $n -ge 100 ]];then printf '%10s %5s nod%03i %3i' $dt $i $n 2>$p03;else printf '%10s %5s nod%03i: %2i' $dt $i $n 2>$p03;fi; }
 function bnn { csn $(ln3 "$g50:") $(bpc $(bcl peer_count)); }                                                                                                 # set cur/min/std cc peers
-function szp { if [[ $3 -gt 0 ]];then if [[ $3 -ge ${5:-99} ]];then local e=d;else local e=z;fi;local n=$3;else local e=m;local n=$2;fi;printf 'p%03i %s%03i d%04i' $1 $e $n $4 2>$p03; }
+function szp {
+  local e;local s;local i=${5:-999};local n=$2
+  if pmt $2 $1;then s=$(swg p);e=$(swg m);else s=$(swr p);e=$(swr m);fi
+  if [[ $3 -gt 0 ]];then if [[ $3 -ge $i ]];then e=$(swr d);else e=$(swg z);fi;n=$3;fi
+  # p088 m078 d2865
+  printf '%s%03i %s%03i d%04i' $s $1 $e $n $4 2>$p03
+}
 function sz0 {         gv0;gnn 0;printf 'el%04i %s p2p %05i %s     iu: %4i %5i %4i'                 $(tg2|wc -l) "$(szp $er $em $ez $ed     )" $(ss5 $1 port    ) "$(gb1 $(gcl eth.syncing))" $e1 $e2 $(ei0)                 2>$p03; }
 function sz1 {         uv0;unn 0;printf 'el%04i %s p2p %05i %s      i: %4i'                         $(tg2|wc -l) "$(szp $er $em $ez $ed     )" $(ss5 $1 p2p-port) "$(ub1 $(ucl eth_syncing))" $e1                            2>$p03; }
 function sz5 {         tv0;tnn 0;printf 'el%04i %s p2p %05i %s     ps: %4i %5i %4i'                 $(tg2|wc -l) "$(szp $er $em $ez $ed     )" $(ss5 $1 p2pport ) "$(tb1 $(tcl eth_syncing))" $e1 $e2 $(ei0)                 2>$p03; }
@@ -373,7 +379,7 @@ function bh0 {
   fft $p12 || return;tail -n${1:-$n12} $p12;[[ $1 ]] && return;boi;bl0;local e=$(printf '%1i     9 5  1  0 err norm  idx' $b0  2>$p03)
   swn "BO $(printf '%4i%4i%34s%14s'                                            $b2 $(wc -l <<< "$l2")                       2>$p03)$e"    ;bo5
   swn "BL $(printf '%8i/%4i%34s%9s'                                            $(llc $p12) $n14                             2>$p03)$e\n$m";bm0;bmo
-  swn "BM $(printf '%8i%22i/%1i%4i/%2i   i4  i5  i6  i7%1i i8  i9 i10 avg%13i' $(llc $p13) $nz $n57 $nm $(b05 $nn) $b0 $n20 2>$p03)\n$m"
+  swn "BM $(printf '%8i%22i/%1i%4i/%2i   i4  i5  i6  i7%1i i8  i9 i10 avg%13i' $(llc $p13) $nz $n57 $nm $(b05 $nr) $b0 $n20 2>$p03)\n$m"
 }
 function bwd { local n=$((($(date +%s)-n09)/(12*32)-0));for n in $n $((n+1));do curl -sH "$s28" $s67 -X POST -d"$(viv)" "$s32/sync/$n";curl -sH "$s28" $s67 -X GET "$s32/proposer/$n";done 2>$p03|jq -r $s35 2>$p03; }
 function bwc { bwd|grep -Ex "$(vix)" 2>$p03|wc -l; }
