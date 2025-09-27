@@ -1188,7 +1188,6 @@ if [[ ! $1 ]];then
   m="$m\ncpe [hp]\t\thours & temperature & errors status"
   m="$m\nm[vr|re]\t\tmev validator registration|relay erros"
   m="$m\nw[a|pr|s|l [e]]\t\tfirewall arranca|para|status|logs [exclude]"
-  m="$m\ni[a|p]w\t\t\tinternet arranca|para firewall"
   m="$m\nn[sh|rs]\t\tnetwork show|reset"
   m="$m\nd[sh [url]|rs]\t\tdns show [url]|reset"
   m="$m\nh[sh|rs|ch|ca|rc]\t$s45 show|restart|check|check all|restart conditional"
