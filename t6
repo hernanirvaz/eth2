@@ -70,8 +70,9 @@ function t3t { [[ $(cat $p43 2>$p03) -eq 1 ]]; }                                
 function v0t { g0t $(grep -c $d0 $p12 2>$p03); }                                                                                                              # cc  log day             test
 function z1t { [[ $cunm = $cut1 ]]; }                                                                                                                         # main ntp                test
 function z2t { [[ $cunm = $cut2 ]]; }                                                                                                                         # auxi ntp                test
-function zdt { [[ $cut1 != $cut2 || $cun1 != $cut1 ]]; }
-function ztt { [[ $cunm = $cut1 || $cunm = $cut2 ]]; }                                                                                                        # external chrony ntp     test
+function zet { [[ $cut1 != $cut2 ]]; }                                                                                                                        # 2 ntp                   test
+function zdt { zet || [[ $cun1 != $cut1 ]]; }                                                                                                                 # 2 or external ntp       test
+function ztt { [[ $cunm = $cut1 || $cunm = $cut2 ]]; }                                                                                                        # external ntp            test
 function z4t { [[ $cunm = $znm4 ]]; }                                                                                                                         # best zotac              test
 function n1t { [[ $cunm = $cun1 ]]; }
 function n2t { [[ $cunm = $cun2 ]]; }
@@ -288,7 +289,7 @@ function b01 { nu3 "(0.300*$i0+0.200*$i1+0.469*$i4+0.001*$b1+0.010*$i2+0.020*$i3
 function b02 { nu3 "(($1*$n28+$2*$n29+$3*$n10+$4*$n11)/${5:-1}*$n30/1000000)"   7 ; }                                                                         # get penalty
 function b03 { nu3 "(($1*$n28+$2*$n29+$3*$n10+$4*$n11)/${5:-1}*$n30/1000000)"   7 ; }                                                                         # get penalty delete idx
 function b04 { nu3 "($1*$n27+$2*$n08)*$n30/100000000"                           7 ; }                                                                         # get reward
-function b05 { nu3 "0.90*$1"                                                      ; }                                                                         # get min target limit
+function b05 { nu3 "0.80*$1"                                                      ; }                                                                         # get min target limit
 function b06 { nu3 "4.90*$((z2>500?z1:0))"                                        ; }                                                                         # get numerator general errors
 function bri { nu1 $((z2>0?$(b06)/z2:0))                                          ; }                                                                         # get restart idx
 function bsi { nu1 $(jq -r .data.sync_distance <<< $@ 2>$p03)                     ; }                                                                         # get cl syncing distance
@@ -505,7 +506,7 @@ function hca {
   if ndt;then if n2t;then hch;else ssh $(snc $cun2) "$p53 hch";fi;fi
   if vst;then if vct;then hch;else ssh $(snc $cuvc) "$p53 hch";fi;fi
   if mst;then if mct;then hch;else ssh $(snc $cumv) "$p53 hch";fi;fi
-  if zdt;then if z1t;then hch;else ssh $(snc $cut1) "$p53 hch";fi;if z2t;then hch;else ssh $(snc $cut2) "$p53 hch";fi;fi
+  if zdt;then if z1t;then hch;else ssh $(snc $cut1) "$p53 hch";fi;zet && if z2t;then hch;else ssh $(snc $cut2) "$p53 hch";fi;fi
 }
 function si0 { printf '%s: erro_cml %i,used %s,spare %s; ' $(basename $1) $(($2+$3+$4)) $5% $6% 2>$p03; }
 function sif {
