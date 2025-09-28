@@ -39,6 +39,7 @@ function zfu { echo "$B"|gpg --batch --yes --pinentry-mode loopback --passphrase
 
 alias v1='esl ${N%%:*} ${N#*:}'
 alias v2='esl ns3238168.ip-57-129-52.eu 2020'
+alias z1='esl admin@ztc1 2021'
 alias z2='esl ztc2 2022'
 alias z3='esl ztc3 2023'
 alias z4='esl ztc4 2024'
