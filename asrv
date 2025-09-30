@@ -10,11 +10,11 @@ if [[ $cunm = hrv-zotac2 ]];then
   mus () { if mt1;then echo jellyfin  ;elif mt2;then echo plex                        ;else echo eth       ;fi; }
   rsy () { echo RSYNC $1 $2;rsync --ignore-existing --delete --numeric-ids -rv $1 $2; }
   smv () { local d=$(mdi);rsy $d/movie ztc3:; }
-  stv () { local d=$(mdi);rsy $d/tv2   int5:;rsy $d/tv int5:; }
+  stv () { local d=$(mdi);rsy $d/tv2   admin@ztc1:;rsy $d/tv admin@ztc1:; }
   slt () { local d=$(mdi);rsy $d/lust  ztc3:; }
   sal () { smv;sleep 10;stv;sleep 10;slt; }
   pmv () { rsy ztc3:~/movie ~; }
-  ptv () { rsy int5:~/tv2 ~;rsy int5:~/tv ~; }
+  ptv () { rsy admin@ztc1:~/tv2 ~;rsy admin@ztc1:~/tv ~; }
   plt () { rsy ztc3:~/lust ~; }
   pal () { pmv;ptv;plt; }
   fi0 () { local d=$(mdi);echo findls $1 $d;find $d -name "*.$1" -print; }
