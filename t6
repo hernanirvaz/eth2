@@ -340,9 +340,18 @@ function blo {
 #    0    1   2          3     4       5  6   7     8    9   10   11   12   13   14   15  16  17   18      19   20   21   22 23    24  25   26
 # BEAC   50  22 2024-04-02 16:10 nod100: 110 mp:  679  874 1149  792  772 1341 1638 1043 p_: -60 2896 iearhp: 1281 3938 3593 17 50734  65 1632
 function bmo { m="$s75 $(printf '%2i %3i' $b2 $b3 2>$p03) $(npn $nr $nn) $(bma) $(bmp)"; }
-#    0    1   2          3     4       5  6   7   8   9  10  11   12      13   14  15  16  17 18 19   20   21  22  23  24   25
-# BEAC   75  25 2025-09-02 23:59 nod080: 88 mp:  32  33 p_:  10  205 iearhp: 1016  57 4037  0 24 23 2210 mev: 229 el: 106 116%
-function bms { case $# in 4) local e=$(ts0 $2 $3 ${4%\%});;1) local e=;;*) local e=$(ts1 4);;esac;[[ $e ]] && local e=" $e";m="$s75 $(printf '%2i %3i' $b2 $b3 2>$p03) $(npn $nr $nn) mp: $(nu0 %3i ${a[$nn]}) $(bmp)$e"; }
+#    0    1   2          3     4       5  6   7   8   9  10  11   12      13   14  15  16  17 18 19   20   21  22  23  24   25       26   27
+# BEAC   75  25 2025-09-02 23:59 nod080: 88 mp:  32  33 p_:  10  205 iearhp: 1016  57 4037  0 24 23 2210 mev: 229 el: 106 116% peerstd: 2345
+function bms {
+  case $# in
+    5) local e=$(ts0 $2 $3 ${4%\%} $5) ;;
+    4) local e=$(ts0 $2 $3 ${4%\%}  0) ;;
+    1) local e= ;;
+    *) local e=$(ts1 4) ;;
+  esac
+  [[ $e ]] && local e=" $e"
+  m="$s75 $(printf '%2i %3i' $b2 $b3 2>$p03) $(npn $nr $nn) mp: $(nu0 %3i ${a[$nn]}) $(bmp)$e"
+}
 #    0   1          2     3    4 5 6 7 8 9 10 11   12 13 14 15 16 17 18 19   20 21 22 23 24 25 26 27   28 29 30 31 32 33 34 35   36 37 38 39 40 41 42 43
 # BEAC 682 2022-03-16 11:03 cnt: 4 7 0 0 0 10 10 mis: 20 20 20 20 20 20 20 mat: 14 45 30 30 30 30 30 mah: 94 68 40 40 40 40 40 dly: 79 09 50 50 50 50 50
 function bno { m="$s75 $(nu0 %6i $(llc $p12)) $dt $(bnc 'cnt:' ' ') $(bnk 'mis:' ' ') $(bnz 'mat:' ' ') $(bnx 'mah:' ' ') $(bnw 'dly:' ' ')"; }
@@ -420,13 +429,35 @@ function brl {                                                                  
     fi;swn "$m" >> $p12.r                                                                                                                                     # new cc output
   done <<< $(cat $p12)
 }
-function brm {                                                                                                                                                # recalculate cc-daily logs
-  fft $p12 && fft $p13 || return;rm -f $p13.r;bmi;local d=0000-00-00;local l=0;local n=0;local h=0;local g=0;unset v;while read -a v;do
-  d=${v[3]};h=$g;g=$(grep -n "$d 23:58" $p12|cut -d: -f1);[[ ${g:=$h} -le $h ]] && continue;dts $d\ ${v[4]};nn=$((10#${v[5]//[!0-9]/}));nr=${v[6]}
-    l2=$(brh $g|bfl 23:58);bo2 $d;((l+=b2));((n+=1));b3=$(nu3 "$l/$n")                                                                                        # cur/avg homologous position
-    l1=$(brh $g|tail -n$((g-h))|bfl);if [[ $l1 ]];then bl2 $(tail -n1 <<< "$l1"|snf "$e49");bm1;fi;bm2                                                        # sum err arrays
-    b5=${v[10]};b4=${v[11]};svi;bms mev ${v[22]} ${v[24]} ${v[25]};swn "$m" >> $p13.r
-  done <<< $(cat $p13)
+function brm { # recalculate cc-daily logs
+  fft $p12 && fft $p13 || return
+  rm -f $p13.r;bmi
+  local d=0000-00-00;local l=0;local n=0;local h=0;local g=0;unset v
+  while read -a v; do
+    d=${v[3]}
+    h=$g
+    g=$(grep -n "$d 23:58" $p12 | cut -d: -f1)
+    [[ ${g:=$h} -le $h ]] && continue
+    dts $d\ ${v[4]}
+    nn=$((10#${v[5]//[!0-9]/}))
+    nr=${v[6]}
+    l2=$(brh $g | bfl 23:58)
+    bo2 $d
+    ((l += b2))
+    ((n += 1))
+    b3=$(nu3 "$l/$n") # cur/avg homologous position
+    l1=$(brh $g | tail -n$((g - h)) | bfl)
+    if [[ $l1 ]]; then
+      bl2 $(tail -n1 <<<"$l1" | snf "$e49")
+      bm1
+    fi
+    bm2 # sum err arrays
+    b5=${v[10]}
+    b4=${v[11]}
+    svi
+    bms mev ${v[22]} ${v[24]} ${v[25]} ${v[27]}
+    swn "$m" >>$p13.r
+  done <<<$(cat $p13)
 }
 function bdw { fft $1 || return;cp $1 $1.o;grep -Eahv "$2" $1.o > $1;grep -Eah "$2" $1.o > $1.d; }                                                            # work to delete cc log day
 function bdl { local d=$(pt0 $1 sai);[[ $d = sai ]] && return;bdw $p12 $d;bdw $p13 $d;bsm; }                                                                  #         delete cc log day
@@ -739,8 +770,8 @@ function ivk {
     fft $p05/vc_lock || cex "$s03 $s13";vko $n
   fi
 }
-function viv { printf %s "[\"$(sed 's% %","%g' <<< ${!b[@]})\"]"; }
-function vix { printf %s "$(sed 's% %|%g' <<< ${!b[@]})"; }
+function viv { printf %s "[\"$(sed 's% %","%g' <<< ${!b[@]})\"]" 2>$p03; }
+function vix { printf %s "$(sed 's% %|%g' <<< ${!b[@]})" 2>$p03; }
 function slt { local n=$((($1-n04)/32));for n in $n $((n+1));do curl -sH "$s28" -X POST -d"$(viv)" "$s32/attester/$n"|jq -r $s34;done 2>$p03;echo $(((n+1)*32)); }
 function sng { local t=$(((($(date +%s)-n09)/12)+n04));local e=0;local i=0;local s=0;for s in $(slt $t|sort -nu);do if ((s<t));then continue;else if (((s-t)>e));then local e=$((s-t));local i=$t;fi;fi;local t=$((s+1));done;printf '%s %i' $(date -d@$((n09+i*12)) +%T) $((e*12)); }
 function bcc { printf p;if n1t;then if bpt;then if rbt $n06;then printf r;else printf c;fi;else if bdt;then printf d;else printf _;fi;fi;else if rbt;then printf r;else if bdt;then printf d;else printf _;fi;fi;fi;printf :; }
@@ -754,8 +785,24 @@ function irb { rm -f $p39.*;s2t $p39 && return;if rbt $1;then if vct;then brs RB
 # delay  This is the mean execution time required to send a request to the time source, and receive the reply from that source. (ms)
 # jitter This indicates how much packet delays from individual pollings vary from the mean packet delay. (ms)
 function hsh { if tsa $s56;then swb "$s07 & $s56 sources/sourcestats/tracking";pex "$s07";echo;paste <(chronyc sources) <(chronyc sourcestats|cut -c28-);echo;chronyc tracking|grep -Ev "$g63";elif tsa ntp;then swb "$s07 & ntp";pex "$s07";echo;ntpq -p;else swb "$s07 & $s45 status/show";pex "$s07";pex "$s07 $s45-status";pex "$s07 show-$s45";fi; }
-function ts0 { printf 'mev: %i el: %i %i%%' $1 $2 $3; }
-function ts1 { local n=$1;local e=$(ll4 "$g67");local s=$(nu4 $n $(snf "s%.*Block *$e84" <<< "$e"));local i=$(nu4 $n $(snf "s%.*Block *mb *$e84" <<< "$e"));if [[ $i -gt $s ]];then ts0 $i $s $(nu3 "($i-$s)/$s*100" 3);else ts0 $i $s $(nu3 "($s-$i)/$i*100" 3);fi; }
+function ts0 {
+  if [[ $4 -gt 0 ]]; then
+    printf 'mev: %i el: %i %i%% peerstd: %i' $1 $2 $3 $4 2>$p03
+  else
+    printf 'mev: %i el: %i %i%%'             $1 $2 $3    2>$p03
+  fi
+}
+function ts1 {
+  local n=$1
+  local e=$(ll4 "$g67")
+  local s=$(nu4 $n $(snf "s%.*Block *$e84" <<<"$e"))
+  local i=$(nu4 $n $(snf "s%.*Block *mb *$e84" <<<"$e"))
+  if [[ $i -gt $s ]]; then
+    ts0 $i $s $(nu3 "($i-$s)/$s*100" 3) $nd
+  else
+    ts0 $i $s $(nu3 "($s-$i)/$i*100" 3) $nd
+  fi
+}
 function tsh { local n=${1:-4};local s=$(ts1 $n);echo -e "${s^^}\t(eth*10^$n)"; }
 
 function lsr { sort -t: -k2n -k3n -k4n; }
