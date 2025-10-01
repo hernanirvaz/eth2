@@ -40,6 +40,7 @@ f[tm][12v]         ftv names first|second|mv command
 EOF
   }
 
+  alias z1='ssh -p 2021 -i ~/.ssh/id_ed25519 admin@ztc1'
   alias rcd='cd /var/lib/transmission-daemon/downloads;hlp'
   alias rp='t6 rpd'
   alias ra='t6 rea'
