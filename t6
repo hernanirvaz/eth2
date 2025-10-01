@@ -308,6 +308,15 @@ function bl1 { z1=${1:-$(grep -cv "$g27" <<< "$l0")};z2=${2:-$(grep -c "$g27" <<
 function bl2 { zk=${1:-$(bl4 missing)};zz=${2:-$(bl4 target)};zx=${3:-$(bl4 head)};zw=${4:-$(bl4 had)}; }                                                     # set missing/target/head/had activities
 function bl3 { b0=${1:-$(ll5 "$g08.*$g53"|wc -l)};if [[ $2$3$4$5$6$7 ]];then i0=$2;i1=$3;i4=$4;b1=$5;i2=$6;i3=$7;else svi $n21;fi; }                          # set pub-blocks & imported/observed delays
 function bl4 { snf "s%.*$1.*validators: *\[(.*)\].*%\1%p" <<< "$l3"|wc -w; }                                                                                  # get number of paid activities
+function bl5 {
+  dts
+  if tsa $s12; then
+    bv0;bnn
+    m="$s75        $dt $(printf 'nod%03i' $nn 2>$p03)$(szp $nr $nm $nz $nd $n57) limits: $(printf '%2i/%1i %2i/%2i' $nz $n57 $nm $(b05 $nr) 2>$p03)"
+  else
+    m="BSRV NOT ON $dt"
+  fi
+}
 function ml0 { dts;if tsa $s14;then smm $n32;mlo;else m="MSRV NOT ON $dt";fi; }
 function vl0 { dts;if tsa $s13;then svv $n22;vlo;else m="VSRV NOT ON $dt";fi; }
 #    0  1              2     3         4   5
@@ -967,6 +976,7 @@ function cns {
 [[ $1 = tp  ]] && { tl0;swn "$m"; }
 [[ $1 = tpf ]] && { tl0;swn "$m" >> $p62;[[ $ok != OK ]] && trs $ok 0 $n03; }
 [[ $1 = bp  ]] && { bl0;swn "$m"; }
+[[ $1 = bps ]] && { bl5;swn "$m"; }
 function bml { [[ $d1 = 23:58 ]] || return;if bdt;then bdl $d0;else if [[ $(llc $p12) -gt $n14 ]];then bdd o 0 5;fi;fi; }
 [[ $1 = bpf ]] && { bl0;swn "$m" >> $p12;bml;[[ $ok != OK ]] && brs $ok 0 0 $(btn $n02);pas; }
 [[ $1 = vp  ]] && { vl0;swn "$m"; }
@@ -1180,8 +1190,8 @@ if [[ ! $1 ]];then
   m="$m\nbo  [lines]\t\thomologous report [with max lines]"
   m="$m\nb[or]d [p] [n]\t\tdelete logs for last penalty >= p(0) && node days > n(5) in [o]rder or [r]everse"
   m="$m\nbo[cl]\t\t\tall homologous nodes report at [current|last(23:58)] time"
-  m="$m\nbm[f]\t\t\tcc-daily report [file add & $s12 nodes change/restart]"
-  m="$m\nbp[io]\t\t\tcc peers [incoming|outgoing]"
+  m="$m\nbp[fsio]\t\tcc-minutes\treport [file|peers {summary|incoming|outgoing}]"
+  m="$m\nbm[f]\t\t\tcc-daily\treport [file & $s12 nodes change/restart]"
   m="$m\nhs[012ecgubvm]\t\thistoric summary report [0-both|1-main|2-backup|el|cc|geth|besu|beacon|vc|mev]"
   m="$m\n[ec]sp [i] [n]\t\tel|cc show peers exclude [i(1)-9][0-9]|include [0-n(9)]"
   m="$m\ncc[a|r|e]\t\tcc [a]dd/[r]emove long-lived parms|toggle what [e]l to connect to ($inm6|$inm5)"
