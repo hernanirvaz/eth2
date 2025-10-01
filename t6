@@ -191,7 +191,7 @@ function ssw { while :;do local t=$(sng);if [[ $(sf2 $t) -lt $1 || 24 -ge $(sfn 
 function non { printf 'nod%03i' $1 2>$p03; }
 function csn { if g0t $#;then nr=${@:$#};nm=$(nu9 $@);nd=$(nu7 $@);nz=$(nu8 $@);else nr=0;nm=0;nd=0;nz=0;fi; }
 function esn { if g0t $#;then er=${@:$#};em=$(nu9 $@);ed=$(nu7 $@);ez=$(nu8 $@);else er=0;em=0;ed=0;ez=0;fi; }
-function npn { local n=${1:-0};local i=${2:-0};if [[ $n -ge 100 ]];then printf '%10s %5s %s %3i' $dt $i $(non $n) 2>$p03;else printf '%10s %5s %s: %2i' $dt $i $(non $n) 2>$p03;fi; }
+function npn { local n=${1:-0};local i=${2:-0};local s=$(non $i);if [[ $n -ge 100 ]];then printf '%10s %5s %s %3i' $dt $s $n 2>$p03;else printf '%10s %5s %s: %2i' $dt $s $n 2>$p03;fi; }
 function bnn { csn $(ln3 "$g50:") $(bpc $(bcl peer_count)); }                                                                                                 # set cur/min/std cc peers
 function szp {
   local e;local s;local i=${5:-999};local n=$2
