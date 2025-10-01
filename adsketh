@@ -54,9 +54,11 @@ alias r6='esl int6.fruga.pt 2026'
 alias vp='ecp ${N%%:*} ${N#*:}'
 alias vo='ocp ${N%%:*} ${N#*:}'
 alias zp='ecp int6          2026;ecp int5          2025;ecp ztc4          2024;ecp ztc3          2023;ecp ztc2          2022'
-alias zo='ocp int6          2026;ocp int5          2025;ocp ztc4          2024;ocp ztc3          2023;ocp ztc2          2022;ccp ztc2          2022'
+alias zo='ocp int6          2026;ocp int5          2025;ocp ztc4          2024;ocp ztc3          2023;ocp ztc2          2022'
+alias zk='ccp ztc2          2022'
 alias rp='ecp int6.fruga.pt 2026;ecp int5.fruga.pt 2025;ecp ztc4.fruga.pt 2024;ecp ztc3.fruga.pt 2023;ecp ztc2.fruga.pt 2022'
-alias ro='ocp int6.fruga.pt 2026;ocp int5.fruga.pt 2025;ocp ztc4.fruga.pt 2024;ocp ztc3.fruga.pt 2023;ocp ztc2.fruga.pt 2022;ccp ztc2.fruga.pt 2022'
+alias ro='ocp int6.fruga.pt 2026;ocp int5.fruga.pt 2025;ocp ztc4.fruga.pt 2024;ocp ztc3.fruga.pt 2023;ocp ztc2.fruga.pt 2022'
+alias rk='ccp ztc2.fruga.pt 2022'
 
 alias pi="ping \$(nip)"
 alias gp='cd ~/eth2;git pull;cd'
