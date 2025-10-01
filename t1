@@ -351,29 +351,8 @@ s41="$s41\nnetwork:"
 s41="$s41\n  ethernets:"
 for m in $(ip -j link|jq -r '.[]|select(.operstate=="UP").ifname');do
   s41="$s41\n    $m:"
-  s41="$s41\n      dhcp4: false"
-  [[ $cunm = $znm1 ]] && s41="$s41\n      addresses: [$zip1/24]"
-  [[ $cunm = $znm2 ]] && s41="$s41\n      addresses: [$zip2/24]"
-  [[ $cunm = $znm3 ]] && s41="$s41\n      addresses: [$zip3/24]"
-  [[ $cunm = $znm4 ]] && s41="$s41\n      addresses: [$zip4/24]"
-  [[ $cunm = $inm5 ]] && s41="$s41\n      addresses: [$iip5/24]"
-  [[ $cunm = $inm6 ]] && s41="$s41\n      addresses: [$iip6/24]"
+  s41="$s41\n      dhcp4: true"
   s41="$s41\n      critical: true"
-  s41="$s41\n      routes:"
-  s41="$s41\n        - to: 0.0.0.0/0"
-  if [[ $cunm = $znm2 ]];then
-  s41="$s41\n          via: 192.168.8.1"
-  else
-  s41="$s41\n          via: 192.168.8.25"
-  fi
-  s41="$s41\n          metric: 100"
-  s41="$s41\n          on-link: true"
-  s41="$s41\n      nameservers:"
-  if [[ $cunm = $znm2 ]];then
-  s41="$s41\n        addresses: [192.168.8.1]"
-  else
-  s41="$s41\n        addresses: [192.168.8.25]"
-  fi
   s41="$s41\n      link-local: [ ]"              # ;s41="$s41\n      link-local: [\"fe80::$(printf '%02x' $((0x${s42:0:2}|0x02)))${s42:3:2}:${s42:6:2}ff:fe${s42:9:2}:${s42:12:2}${s42:15:2}/64\"]"
 done
 for m in $(ip -j link|jq -r '.[]|select(.operstate=="DOWN").ifname');do
