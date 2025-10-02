@@ -352,8 +352,8 @@ s41="$s41\n  ethernets:"
 for m in $(ip -j link|jq -r '.[]|select(.operstate=="UP").ifname');do
   s41="$s41\n    $m:"
   s41="$s41\n      dhcp4: true"
+  s41="$s41\n      dhcp6: true"
   s41="$s41\n      critical: true"
-  s41="$s41\n      link-local: [ ]"              # ;s41="$s41\n      link-local: [\"fe80::$(printf '%02x' $((0x${s42:0:2}|0x02)))${s42:3:2}:${s42:6:2}ff:fe${s42:9:2}:${s42:12:2}${s42:15:2}/64\"]"
 done
 for m in $(ip -j link|jq -r '.[]|select(.operstate=="DOWN").ifname');do
   s41="$s41\n    $m:"
