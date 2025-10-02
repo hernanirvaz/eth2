@@ -39,22 +39,20 @@ r[ll|rm]           list|remove done transmissions
 f[tm][12v]         ftv names first|second|mv command
 EOF
   }
-
-  alias z1='ssh -p 2021 -i ~/.ssh/id_ed25519 admin@ztc1'
   alias rcd='cd /var/lib/transmission-daemon/downloads;hlp'
   alias rp='t6 rpd'
   alias ra='t6 rea'
   alias ce='cns ceth'
   alias ct='tail -n10 cns.log'
   alias ca='cns ceth;tail -n10 cns.log'
-fi
-if   [[ $cunm = hrv-intel5 || $cunm = hrv-intel6 ]];then
+elif [[ $cunm = hrv-intel5 || $cunm = hrv-intel6 ]];then
   alias aa='t6 ah'
 elif [[ $cunm = hrv-zotac3 || $cunm = hrv-zotac4 ]];then
   alias aa='t6 ch'
 fi
 if [[ $cust = hrv ]];then
-  alias rt='echo meo:$V;telnet 192.168.8.1'
+  alias zr='echo pfsense;ssh -p 2021 -i ~/.ssh/id_ed25519 admin@ztc1'
+  alias mr='echo meo:$V ;telnet 192.168.8.1'
   alias nt='sudo iftop -nNPBF $(hostname -I)'
 else
   alias aa='t6 ah'
