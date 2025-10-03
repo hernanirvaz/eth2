@@ -3,7 +3,7 @@ function esl { echo -e "\nssh $1:$2     ";ssh -p $2 -i ~/.ssh/id_ed25519 $1; }
 function cc1 { scp -P $2 -i ~/.ssh/id_ed25519 ~/eth2/asrv $1:~/.bash_aliases; }
 function cc2 { scp -P $2 -i ~/.ssh/id_ed25519 ~/eth2/t[1-9] ~/eth2/e? $1:~/eth2; }
 function ocp { echo -e "\nscp $1:$2 ocp ";cc1 $1 $2;scp -P $2 -i ~/.ssh/id_ed25519 ~/eth2/keth $1:~/.ssh/authorized_keys; }
-function rcp { echo -e "\nscp $1:$2 rcp "          ;scp -P $2 -i ~/.ssh/id_ed25519 ~/eth2/keth $1:~/.ssh/authorized_keys; }
+function rcp { echo -e "\nscp $1:$2 rcp "          ;scp -P $2 -i ~/.ssh/id_ed25519 ~/eth2/keth $1:~/.ssh/authorized_keys;scp -P $2 -i ~/.ssh/id_ed25519 ~/eth2/rt-pfsense-wan-check.sh $1:; }
 function ecp { echo -e "\nscp $1:$2 eth2";cc2 $1 $2; }
 function ccp { echo -e "\nscp $1:$2 ccp" ;scp -P $2 -i ~/.ssh/id_ed25519 ~/eth2/cns.keys.gpg $1:~;scp -P $2 -i ~/.ssh/id_ed25519 ~/eth2/hernanirvaz-f2e8fb66dbc0.json.gpg $1:~; }
 function ei0 { echo -e "export H=\"$1\"\nexport E=\"$2\"\nexport R=\"$3\"\nexport V=\"$4\"\npr=$5"; }
