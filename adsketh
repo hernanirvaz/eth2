@@ -1,11 +1,18 @@
+#!/usr/bin/bash
+
+function dnn { local s=$1;[[ ${s%%.*} =~ ^[a-zA-Z]+ && $(hostname -I | cut -d. -f1-3) != 192.168.8 ]] && s="$s.fruga.pt";[[ ${s%%.*} == ztc1 ]] && s="admin@$s";printf %s $s; }
+function dnp { local n=${1##*[!0-9]};local p=2020;[[ $1 =~ ^[a-z]{3}[0-9]$ ]] && p=$((p+n));printf %i $p; }
+function dnz { local p=$2;[[ $p ]] || p=$(dnp $1);printf %i $p; }
+function zcp { local p=$1;local d=$2;shift;shift;scp -P $p -i ~/.ssh/id_ed25519 $@ "$d"; }
+function zsh {                                   ssh -p $1 -i ~/.ssh/id_ed25519 $2 "$3"; }
 function erq { echo -e "\nresolvectl query ${1:-pt.archive.ubuntu.com}";resolvectl query "${1:-pt.archive.ubuntu.com}"; }
-function esl { echo -e "\nssh $1:$2     ";ssh -p $2 -i ~/.ssh/id_ed25519 $1; }
-function cc1 { scp -P $2 -i ~/.ssh/id_ed25519 ~/eth2/asrv $1:~/.bash_aliases; }
-function cc2 { scp -P $2 -i ~/.ssh/id_ed25519 ~/eth2/t[1-9] ~/eth2/e? $1:~/eth2; }
-function ocp { echo -e "\nscp $1:$2 ocp ";cc1 $1 $2;scp -P $2 -i ~/.ssh/id_ed25519 ~/eth2/keth $1:~/.ssh/authorized_keys; }
-function rcp { echo -e "\nscp $1:$2 rcp "          ;scp -P $2 -i ~/.ssh/id_ed25519 ~/eth2/keth $1:~/.ssh/authorized_keys;scp -P $2 -i ~/.ssh/id_ed25519 ~/eth2/rt-pfsense-wan-check.sh $1:; }
-function ecp { echo -e "\nscp $1:$2 eth2";cc2 $1 $2; }
-function ccp { echo -e "\nscp $1:$2 ccp" ;scp -P $2 -i ~/.ssh/id_ed25519 ~/eth2/cns.keys.gpg $1:~;scp -P $2 -i ~/.ssh/id_ed25519 ~/eth2/hernanirvaz-f2e8fb66dbc0.json.gpg $1:~; }
+function cc1 { zcp $2 $(dnn $1):~/.bash_aliases ~/eth2/asrv            ; }
+function cc2 { zcp $2 $(dnn $1):~/eth2          ~/eth2/t[1-9] ~/eth2/e?; }
+function esl { local p=$(dnz $1 $2);local s=$(dnn $1);echo -e "\nzsh $s:$p     ";zsh $p $s; }
+function ecp { local p=$(dnz $1 $2);local s=$(dnn $1);echo -e "\nzcp $s:$p eth2";cc2 $1 $p; }
+function ocp { local p=$(dnz $1 $2);local s=$(dnn $1);echo -e "\nzcp $s:$p ocp ";cc1 $1 $p;zcp $p $s:~/.ssh/authorized_keys ~/eth2/keth; }
+function ccp { local p=$(dnz $1 $2);local s=$(dnn $1);echo -e "\nzcp $s:$p ccp ";zcp $p $s: ~/eth2/cns.keys.gpg;zcp $p $s: ~/eth2/hernanirvaz-f2e8fb66dbc0.json.gpg; }
+function rcp { local p=$(dnz $1 $2);local s=$(dnn $1);echo -e "\nzcp $s:$p rcp ";zcp $p $s:~/.ssh/authorized_keys ~/eth2/keth;zcp $p $s: ~/eth2/rt-pfsense-wan-check.sh; }
 function ei0 { echo -e "export H=\"$1\"\nexport E=\"$2\"\nexport R=\"$3\"\nexport V=\"$4\"\npr=$5"; }
 function ei1 { echo -e "echo>>~/.bashrc\necho \"export PATH=\\\"\\\$PATH:/home/eth/eth2\\\"\">>~/.bashrc\necho \"export H=\\\"$1\\\"\">>~/.bashrc\necho \"export V=\\\"$2\\\"\">>~/.bashrc\necho \"export K=\\\"$3\\\"\">>~/.bashrc\necho \"export E=\\\"$4\\\"\">>~/.bashrc\necho \"export B=\\\"$5\\\"\">>~/.bashrc\necho \"PS1=\\\"\\\$H:\\\h: \\\"\">>~/.bashrc\nchmod 755 ~/eth2/t[1-9] ~/eth2/e?"; }
 function cc0 {
@@ -15,10 +22,10 @@ function cc0 {
   ssh -p 22 $s
   cc1 $1 $2
   cc2 $1 $2
-  scp -P $2 -i ~/.ssh/id_ed25519 ~/i1 $1:~
-  ssh -p $2 -i ~/.ssh/id_ed25519 $1 'sh i1'
+  zcp $2 $1: ~/i1
+  zsh $2 $1 'sh i1'
   echo -e "\n\nky # gerar key & copiar para keth\nt2 # setup\n\n"
-  ssh -p $2 -i ~/.ssh/id_ed25519 $1
+  zsh $2 $1
 }
 function nip { echo ${N%%:*}; }
 function npt { echo ${N#*:}; }
@@ -48,30 +55,22 @@ function zfu { echo "$B"|gpg --batch --yes --pinentry-mode loopback --passphrase
 
 alias v1='esl ${N%%:*} ${N#*:}'
 alias v2='esl ns3238168.ip-57-129-52.eu 2020'
-alias z2='esl ztc2 2022'
-alias z3='esl ztc3 2023'
-alias z4='esl ztc4 2024'
-alias z5='esl int5 2025'
-alias z6='esl int6 2026'
-alias r2='esl ztc2.fruga.pt 2022'
-alias r3='esl ztc3.fruga.pt 2023'
-alias r4='esl ztc4.fruga.pt 2024'
-alias r5='esl int5.fruga.pt 2025'
-alias r6='esl int6.fruga.pt 2026'
+alias zm='echo meo:$V ;telnet 192.168.8.1'
+alias rl="zsh 2021 $(dnn ztc1) 'tail -n20 ~/rt-pfsense-wan-check.log'"
 
+alias z1='esl ztc1'
+alias z2="esl ztc2"
+alias z3="esl ztc3"
+alias z4="esl ztc4"
+alias z5="esl int5"
+alias z6="esl int6"
+
+alias zp="ecp int6;ecp int5;ecp ztc4;ecp ztc3;ecp ztc2"
+alias zo="ocp int6;ocp int5;ocp ztc4;ocp ztc3;ocp ztc2;rcp ztc1"
+alias zk="ccp ztc2"
 alias vp='ecp ${N%%:*} ${N#*:}'
 alias vo='ocp ${N%%:*} ${N#*:}'
 alias vk='ccp ${N%%:*} ${N#*:}'
-alias zp='ecp int6          2026;ecp int5          2025;ecp ztc4          2024;ecp ztc3          2023;ecp ztc2          2022'
-alias zo='ocp int6          2026;ocp int5          2025;ocp ztc4          2024;ocp ztc3          2023;ocp ztc2          2022;rcp admin@ztc1          2021'
-alias zk='ccp ztc2          2022'
-alias rp='ecp int6.fruga.pt 2026;ecp int5.fruga.pt 2025;ecp ztc4.fruga.pt 2024;ecp ztc3.fruga.pt 2023;ecp ztc2.fruga.pt 2022'
-alias ro='ocp int6.fruga.pt 2026;ocp int5.fruga.pt 2025;ocp ztc4.fruga.pt 2024;ocp ztc3.fruga.pt 2023;ocp ztc2.fruga.pt 2022;rcp admin@ztc1.fruga.pt 2021'
-alias rk='ccp ztc2.fruga.pt 2022'
-
-alias zr='esl admin@ztc1 2021'
-alias rr='esl admin@ztc1.fruga.pt 2021'
-alias mr='echo meo:$V ;telnet 192.168.8.1'
 
 alias pi="ping \$(nip)"
 alias gp='cd ~/eth2;git pull;cd'
