@@ -13,6 +13,8 @@ function ecp { local p=$(dnz $1 $2);local s=$(dnn $1);echo -e "\nzcp $s:$p eth2"
 function ocp { local p=$(dnz $1 $2);local s=$(dnn $1);echo -e "\nzcp $s:$p ocp ";cc1 $1 $p;zcp $p $s:~/.ssh/authorized_keys ~/eth2/keth; }
 function ccp { local p=$(dnz $1 $2);local s=$(dnn $1);echo -e "\nzcp $s:$p ccp ";zcp $p $s: ~/eth2/cns.keys.gpg;zcp $p $s: ~/eth2/hernanirvaz-f2e8fb66dbc0.json.gpg; }
 function rcp { local p=$(dnz $1 $2);local s=$(dnn $1);echo -e "\nzcp $s:$p rcp ";zcp $p $s:~/.ssh/authorized_keys ~/eth2/keth;zcp $p $s: ~/eth2/rt-pfsense-wan-check.sh; }
+function ecv { local s='';for s in $@;do ecp $s;done; }
+function ocv { local s='';for s in $@;do ocp $s;done; }
 function ei0 { echo -e "export H=\"$1\"\nexport E=\"$2\"\nexport R=\"$3\"\nexport V=\"$4\"\npr=$5"; }
 function ei1 { echo -e "echo>>~/.bashrc\necho \"export PATH=\\\"\\\$PATH:/home/eth/eth2\\\"\">>~/.bashrc\necho \"export H=\\\"$1\\\"\">>~/.bashrc\necho \"export V=\\\"$2\\\"\">>~/.bashrc\necho \"export K=\\\"$3\\\"\">>~/.bashrc\necho \"export E=\\\"$4\\\"\">>~/.bashrc\necho \"export B=\\\"$5\\\"\">>~/.bashrc\necho \"PS1=\\\"\\\$H:\\\h: \\\"\">>~/.bashrc\nchmod 755 ~/eth2/t[1-9] ~/eth2/e?"; }
 function cc0 {
@@ -65,8 +67,8 @@ alias z4="esl ztc4"
 alias z5="esl int5"
 alias z6="esl int6"
 
-alias zp="ecp int6;ecp int5;ecp ztc4;ecp ztc3;ecp ztc2"
-alias zo="ocp int6;ocp int5;ocp ztc4;ocp ztc3;ocp ztc2;rcp ztc1"
+alias zp="ecv int6 int5 ztc4 ztc3 ztc2"
+alias zo="ocv int6 int5 ztc4 ztc3 ztc2;rcp ztc1"
 alias zk="ccp ztc2"
 alias vp='ecp ${N%%:*} ${N#*:}'
 alias vo='ocp ${N%%:*} ${N#*:}'
