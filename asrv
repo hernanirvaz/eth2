@@ -55,6 +55,7 @@ if [[ $cust = hrv ]];then
   alias mr='echo meo:$V ;telnet 192.168.8.1'
   alias nt='sudo iftop -nNPBF $(hostname -I)'
 else
+  alias rr='echo pfsense;ssh -p 2021 -i ~/.ssh/id_ed25519 admin@ztc1.fruga.pt'
   alias aa='t6 ah'
 fi
 
