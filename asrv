@@ -8,6 +8,7 @@ function dnp { local n=${1##*[!0-9]};local p=2020;[[ $1 =~ ^[a-z]{3}[0-9]$ ]] &&
 function dnz { local p=$2;[[ $p ]] || p=$(dnp $1);printf %i $p; }
 function zsh { ssh -p $1 -i ~/.ssh/id_ed25519 $2 "$3"; }
 function esl { local p=$(dnz $1 $2);local s=$(dnn $1);echo -e "\nzsh $s:$p";zsh $p $s; }
+function erq { local q=${1:-meo.fruga.pt};echo -e "\nresolvectl query $q";resolvectl query $q; }
 
 if [[ $cunm = hrv-zotac2 ]];then
   cuip=$(hostname -I)
@@ -68,6 +69,7 @@ alias z3="esl ztc3"
 alias z4="esl ztc4"
 alias z5="esl int5"
 alias z6="esl int6"
+alias rq='ifconfig;resolvectl status;erq;erq github.com;erq changelogs.ubuntu.com'
 
 if [[ $cust = hrv ]];then
   alias mr='echo meo:$V ;telnet 192.168.8.1'
