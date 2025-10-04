@@ -1,5 +1,13 @@
+#!/usr/bin/bash
+
 cunm=$(hostname)
 cust=${cunm:0:3}
+
+function dnn { local s=$1;[[ ${s%%.*} =~ ^[a-zA-Z]+ && $(hostname -I | cut -d. -f1-3) != 192.168.8 ]] && s="$s.fruga.pt";[[ ${s%%.*} == ztc1 ]] && s="admin@$s";printf %s $s; }
+function dnp { local n=${1##*[!0-9]};local p=2020;[[ $1 =~ ^[a-z]{3}[0-9]$ ]] && p=$((p+n));printf %i $p; }
+function dnz { local p=$2;[[ $p ]] || p=$(dnp $1);printf %i $p; }
+function zsh { ssh -p $1 -i ~/.ssh/id_ed25519 $2 "$3"; }
+function esl { local p=$(dnz $1 $2);local s=$(dnn $1);echo -e "\nzsh $s:$p";zsh $p $s; }
 
 if [[ $cunm = hrv-zotac2 ]];then
   cuip=$(hostname -I)
@@ -50,15 +58,24 @@ elif [[ $cunm = hrv-intel5 || $cunm = hrv-intel6 ]];then
 elif [[ $cunm = hrv-zotac3 || $cunm = hrv-zotac4 ]];then
   alias aa='t6 ch'
 fi
+
+alias z1='esl ztc1'
+alias zr='esl ztc1'
+alias zl="zsh 2021 $(dnn ztc1) 'tail -n20 ~/rt-pfsense-wan-check.log'"
+
+alias z2="esl ztc2"
+alias z3="esl ztc3"
+alias z4="esl ztc4"
+alias z5="esl int5"
+alias z6="esl int6"
+
 if [[ $cust = hrv ]];then
-  alias zr='echo pfsense;ssh -p 2021 -i ~/.ssh/id_ed25519 admin@ztc1'
   alias mr='echo meo:$V ;telnet 192.168.8.1'
-  alias nt='sudo iftop -nNPBF $(hostname -I)'
 else
-  alias rr='echo pfsense;ssh -p 2021 -i ~/.ssh/id_ed25519 admin@ztc1.fruga.pt'
   alias aa='t6 ah'
 fi
 
+alias nt='sudo iftop -nNPBF $(hostname -I|cut -d" " -f1)'
 alias hh='t6 hs0'
 alias tt='t6 hsh'
 alias ky='ssh-keygen -f ~/.ssh/id_ed25519 -t ed25519 -C "$(whoami)@$(hostname)";cat ~/.ssh/id_ed25519.pub'

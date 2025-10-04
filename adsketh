@@ -57,10 +57,12 @@ function zfu { echo "$B"|gpg --batch --yes --pinentry-mode loopback --passphrase
 
 alias v1='esl ${N%%:*} ${N#*:}'
 alias v2='esl ns3238168.ip-57-129-52.eu 2020'
-alias zm='echo meo:$V ;telnet 192.168.8.1'
-alias rl="zsh 2021 $(dnn ztc1) 'tail -n20 ~/rt-pfsense-wan-check.log'"
 
 alias z1='esl ztc1'
+alias zr='esl ztc1'
+alias zl="zsh 2021 $(dnn ztc1) 'tail -n20 ~/rt-pfsense-wan-check.log'"
+alias mr='echo meo:$V ;telnet 192.168.8.1'
+
 alias z2="esl ztc2"
 alias z3="esl ztc3"
 alias z4="esl ztc4"
