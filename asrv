@@ -69,7 +69,7 @@ alias z3="esl ztc3"
 alias z4="esl ztc4"
 alias z5="esl int5"
 alias z6="esl int6"
-alias rq='ifconfig;resolvectl status;erq;erq github.com;erq changelogs.ubuntu.com'
+alias rq='ifconfig;networkctl status;resolvectl status;erq;erq github.com;erq changelogs.ubuntu.com'
 
 if [[ $cust = hrv ]];then
   alias mr='echo meo:$V ;telnet 192.168.8.1'
