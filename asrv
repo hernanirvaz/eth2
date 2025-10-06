@@ -4,11 +4,11 @@ cunm=$(hostname)
 cust=${cunm:0:3}
 
 function msh { echo -e "\n\e[5;32m${*^^}\e[0m";eval "$*"; }
-function dnn { local s=$1;[[ ${s%%.*} =~ ^[a-zA-Z]+ && $(hostname -I | cut -d. -f1-3) != 192.168.8 ]] && s="$s.fruga.pt";[[ ${s%%.*} == ztc1 ]] && s="admin@$s";printf %s $s; }
-function dnp { local n=${1##*[!0-9]};local p=2020;[[ $1 =~ ^[a-z]{3}[0-9]$ ]] && p=$((p+n));printf %i $p; }
+function dnn { local s=$1;[[ ${s%%.*} =~ ^[a-zA-Z]+ && $(hostname -I | cut -d. -f1-3) != 192.168.8 ]] && s="$s.fruga.pt";[[ ${s%%.*} == hrv-zotac1 ]] && s="admin@$s";printf %s $s; }
+function dnp { local n=${1##*[!0-9]};local p=2020;[[ $1 =~ ^hrv-[a-z]{5}[0-9]$ ]] && p=$((p+n));printf %i $p; }
 function dnz { local p=$2;[[ $p ]] || p=$(dnp $1);printf %i $p; }
-function zsh { ssh -p $1 -i ~/.ssh/id_ed25519 $2 "$3"; }
-function esl { local p=$(dnz $1 $2);local s=$(dnn $1);echo -e "\nzsh $s:$p";zsh $p $s; }
+function zsh {                                   ssh -p $1 -i ~/.ssh/id_ed25519 $2 "$3"; }
+function esl { local p=$(dnz $1 $2);local s=$(dnn $1);echo -e "\nzsh $s:$p     ";zsh $p $s; }
 function erq { local q=${1:-meo.fruga.pt};msh resolvectl query $q; }
 
 if [[ $cunm = hrv-zotac2 ]];then
@@ -61,15 +61,16 @@ elif [[ $cunm = hrv-zotac3 || $cunm = hrv-zotac4 ]];then
   alias aa='t6 ch'
 fi
 
-alias z1='esl ztc1'
-alias zr='esl ztc1'
-alias zl="zsh 2021 $(dnn ztc1) 'tail -n20 ~/rt-pfsense-wan-check.log'"
+alias z1='esl hrv-zotac1'
+alias zr='esl hrv-zotac1'
+alias zl="zsh 2021 $(dnn hrv-zotac1) 'tail -n20 ~/rt-pfsense-wan-check.log'"
 
-alias z2="esl ztc2"
-alias z3="esl ztc3"
-alias z4="esl ztc4"
-alias z5="esl int5"
-alias z6="esl int6"
+alias z2="esl hrv-zotac2"
+alias z3="esl hrv-zotac3"
+alias z4="esl hrv-zotac4"
+alias z5="esl hrv-intel5"
+alias z6="esl hrv-intel6"
+
 alias rq='msh ip a;msh ip r;systemctl is-active --quiet systemd-networkd && msh networkctl status;msh resolvectl status;erq;erq github.com;erq changelogs.ubuntu.com'
 
 if [[ $cust = hrv ]];then

@@ -1,19 +1,20 @@
 #!/usr/bin/bash
 
 function msh { echo -e "\n\e[5;32m${*^^}\e[0m";eval "$*"; }
-function dnn { local s=$1;[[ ${s%%.*} =~ ^[a-zA-Z]+ && $(hostname -I | cut -d. -f1-3) != 192.168.8 ]] && s="$s.fruga.pt";[[ ${s%%.*} == ztc1 ]] && s="admin@$s";printf %s $s; }
-function dnp { local n=${1##*[!0-9]};local p=2020;[[ $1 =~ ^[a-z]{3}[0-9]$ ]] && p=$((p+n));printf %i $p; }
+function dnn { local s=$1;[[ ${s%%.*} =~ ^[a-zA-Z]+ && $(hostname -I | cut -d. -f1-3) != 192.168.8 ]] && s="$s.fruga.pt";[[ ${s%%.*} == hrv-zotac1 ]] && s="admin@$s";printf %s $s; }
+function dnp { local n=${1##*[!0-9]};local p=2020;[[ $1 =~ ^hrv-[a-z]{5}[0-9]$ ]] && p=$((p+n));printf %i $p; }
 function dnz { local p=$2;[[ $p ]] || p=$(dnp $1);printf %i $p; }
-function zcp { local p=$1;local d=$2;shift;shift;scp -P $p -i ~/.ssh/id_ed25519 $@ "$d"; }
 function zsh {                                   ssh -p $1 -i ~/.ssh/id_ed25519 $2 "$3"; }
-function erq { local q=${1:-meo.fruga.pt};msh resolvectl query $q; }
-function cc1 { zcp $2 $(dnn $1):~/.bash_aliases ~/eth2/asrv            ; }
-function cc2 { zcp $2 $(dnn $1):~/eth2          ~/eth2/t[1-9] ~/eth2/e?; }
 function esl { local p=$(dnz $1 $2);local s=$(dnn $1);echo -e "\nzsh $s:$p     ";zsh $p $s; }
+function erq { local q=${1:-meo.fruga.pt};msh resolvectl query $q; }
+
+function zcp { local p=$1;local d=$2;shift;shift;scp -P $p -i ~/.ssh/id_ed25519 $@ "$d"; }
 function ecp { local p=$(dnz $1 $2);local s=$(dnn $1);echo -e "\nzcp $s:$p eth2";cc2 $1 $p; }
 function ocp { local p=$(dnz $1 $2);local s=$(dnn $1);echo -e "\nzcp $s:$p ocp ";cc1 $1 $p;zcp $p $s:~/.ssh/authorized_keys ~/eth2/keth; }
 function ccp { local p=$(dnz $1 $2);local s=$(dnn $1);echo -e "\nzcp $s:$p ccp ";zcp $p $s: ~/eth2/cns.keys.gpg;zcp $p $s: ~/eth2/hernanirvaz-f2e8fb66dbc0.json.gpg; }
 function rcp { local p=$(dnz $1 $2);local s=$(dnn $1);echo -e "\nzcp $s:$p rcp ";zcp $p $s:~/.ssh/authorized_keys ~/eth2/keth;zcp $p $s: ~/eth2/rt-pfsense-wan-check.sh; }
+function cc1 { zcp $2 $(dnn $1):~/.bash_aliases ~/eth2/asrv            ; }
+function cc2 { zcp $2 $(dnn $1):~/eth2          ~/eth2/t[1-9] ~/eth2/e?; }
 function ecv { local s='';for s in $@;do ecp $s;done; }
 function ocv { local s='';for s in $@;do ocp $s;done; }
 function ei0 { echo -e "export H=\"$1\"\nexport E=\"$2\"\nexport R=\"$3\"\nexport V=\"$4\"\npr=$5"; }
@@ -60,20 +61,20 @@ function nrs { sudo netplan apply;sleep 10;sudo systemctl restart systemd-resolv
 alias v1='esl ${N%%:*} ${N#*:}'
 alias v2='esl ns3238168.ip-57-129-52.eu 2020'
 
-alias z1='esl ztc1'
-alias zr='esl ztc1'
-alias zl="zsh 2021 $(dnn ztc1) 'tail -n20 ~/rt-pfsense-wan-check.log'"
+alias z1='esl hrv-zotac1'
+alias zr='esl hrv-zotac1'
+alias zl="zsh 2021 $(dnn hrv-zotac1) 'tail -n20 ~/rt-pfsense-wan-check.log'"
 alias mr='echo meo:$V ;telnet 192.168.8.1'
 
-alias z2="esl ztc2"
-alias z3="esl ztc3"
-alias z4="esl ztc4"
-alias z5="esl int5"
-alias z6="esl int6"
+alias z2="esl hrv-zotac2"
+alias z3="esl hrv-zotac3"
+alias z4="esl hrv-zotac4"
+alias z5="esl hrv-intel5"
+alias z6="esl hrv-intel6"
 
-alias zp="ecv int6 int5 ztc4 ztc3 ztc2"
-alias zo="ocv int6 int5 ztc4 ztc3 ztc2;rcp ztc1"
-alias zk="ccp ztc2"
+alias zp="ecv hrv-intel6 hrv-intel5 hrv-zotac4 hrv-zotac3 hrv-zotac2"
+alias zo="ocv hrv-intel6 hrv-intel5 hrv-zotac4 hrv-zotac3 hrv-zotac2;rcp hrv-zotac1"
+alias zk="ccp hrv-zotac2"
 alias vp='ecp ${N%%:*} ${N#*:}'
 alias vo='ocp ${N%%:*} ${N#*:}'
 alias vk='ccp ${N%%:*} ${N#*:}'
