@@ -147,9 +147,9 @@ function era { tail -n${2:-$n13} $1 2>$p03|cut -d' ' -f1|sort -u|wc -l; }       
 function eh0 {
   local n=${1:-$n13}
   local i=${1:-0}
-  if fft $p10;then tail -n$n $p10;fi;if [[ $i -eq 0 ]] && tsa $s10;then gl0;swn "GL $(printf '%8i%19i/%-2i' $(llc $p10) $em $(b05 $er) 2>$p03)\n$m";fi
-  if fft $p11;then tail -n$n $p11;fi;if [[ $i -eq 0 ]] && tsa $s11;then ul0;swn "UL $(printf '%8i%19i/%-2i' $(llc $p11) $em $(b05 $er) 2>$p03)\n$m";fi
-  if fft $p62;then tail -n$n $p62;fi;if [[ $i -eq 0 ]] && tsa $s44;then tl0;swn "NL $(printf '%8i%19i/%-2i' $(llc $p62) $em $(b05 $er) 2>$p03)\n$m";fi
+  if fft $p10;then tail -n$n $p10;fi;if [[ $i -eq 0 ]] && tsa $s10;then gl0;swn "GL $(printf '%8i%20i/%-2i' $(llc $p10) $em $(b05 $er) 2>$p03)\n$m";fi
+  if fft $p11;then tail -n$n $p11;fi;if [[ $i -eq 0 ]] && tsa $s11;then ul0;swn "UL $(printf '%8i%20i/%-2i' $(llc $p11) $em $(b05 $er) 2>$p03)\n$m";fi
+  if fft $p62;then tail -n$n $p62;fi;if [[ $i -eq 0 ]] && tsa $s44;then tl0;swn "NL $(printf '%8i%20i/%-2i' $(llc $p62) $em $(b05 $er) 2>$p03)\n$m";fi
 }
 function ch0 {
   local s=$1
@@ -411,7 +411,7 @@ function bh0 {
   local e;boi;bl0;e=$(printf '%1i     9 5  1  0 err norm  idx' $b0 2>$p03)
   swn "BO $(printf '%4i%4i%34s%14s' $b2 $(wc -l <<< "$l2") 2>$p03)$e";bo5
   swn "BL $(printf '%8i/%4i%34s%9s' $(llc $p12) $n14 2>$p03)$e\n$m";bm0;bmo
-  swn "BM $(printf '%8i%19i/%-2i%3i/%-3i     i4  i5  i6  i7%1i i8  i9 i10 avg%13i' $(llc $p13) $nm $(b05 $nr) $nz $n57 $b0 $n20 2>$p03)\n$m"
+  swn "BM $(printf '%8i%20i/%-2i%2i/%-3i     i4  i5  i6  i7%1i i8  i9 i10 avg%13i' $(llc $p13) $nm $(b05 $nr) $nz $n57 $b0 $n20 2>$p03)\n$m"
 }
 function bwd { local n=$((($(date +%s)-n09)/(12*32)-0));for n in $n $((n+1));do curl -sH "$s28" $s67 -X POST -d"$(viv)" "$s32/sync/$n";curl -sH "$s28" $s67 -X GET "$s32/proposer/$n";done 2>$p03|jq -r $s35 2>$p03; }
 function bwc { bwd|grep -Ex "$(vix)" 2>$p03|wc -l; }
