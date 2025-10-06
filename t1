@@ -194,6 +194,7 @@ g66='[^,]+,[0-3][1357]7' # Reach of last 8 polls NTP requests binary ?? ??1 111
 g67="^$g23$g03$g04[0-9]*\|INFO\|Consensus.Processing.ProcessingStats\|[0-9]+\| *Block.+ETH"
 g68='elapsed_ms:'
 
+function snx { if [[ ${#1} -le 8 ]];then printf $1;else local s=bn${1#*-};printf ${s: -8}; fi; }
 function sni { case $1 in $inm5) printf $iip5;;$inm6) printf $iip6;;$znm1) printf $zip1;;$znm2) printf $zip2;;$znm3) printf $zip3;;$znm4) printf $zip4;;$vnm1) printf $vis1;;$vnm2) printf $vis2;;$vnm3) printf $vis3;;esac; }
 function sns { if [[ ${#1} -gt 2 ]];then printf $1;else if [[ ${1:0:1} = z ]];then if [[ ${1:1:1} -le 4 ]];then printf ${1/z/ztc};else printf ${1/z/int};fi;else case $1 in v1) printf $vnd1;;v2) printf $vnd2;;v3) printf $vnd3;;*) printf $1;;esac;fi;fi; }
 function snc { if [[ ${1/-*/} = hrv ]];then if sht;then local s='';else local s='.fruga.pt';fi;local v=${1/*-/};if [[ ${1:5:1} =~ [on] ]];then printf ${v//[aoel]/}$s;else printf $v$s;fi;else case $1 in $vnm1) printf $vnd1;;$vnm2) printf $vnd2;;$vnm3) printf $vnd3;;*) printf $1;;esac;fi; }
