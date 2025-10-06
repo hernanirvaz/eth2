@@ -261,7 +261,7 @@ n53=138   # NetBIOS Datagram Service
 n54=139   # SMB traffic over NetBIOS
 n55=8096  # Jellyfin Software Media System
 n56=45    # Gas Block Limit - Max gas allowed in a block current default 36
-n57=99    # max number of zero peers in order to trigger EL block/CL delete log
+n57=9     # max number of zero peers in order to trigger EL block/CL delete log
 n58=1
 
 s00='systemctl'
@@ -704,7 +704,37 @@ function dnv { local v=${1:-1.33.2};local f="ethdo-$v-linux-amd64.tar.gz";local 
 function dlv { local v=latest;local f="go/bin/ethdo"   ;local l='/usr/local/go/bin';cd $p02;sex "rm -rf go";$l/go install github.com/wealdtech/ethdo@$v      ;if [[ -f $f ]];then swu "INSTALAR $v ETHDO"  ;sex "cp $f $p00";fi;cmw $p00/ethdo    755 eth; }
 function rlv { local v=latest;local f="go/bin/ethereal";local l='/usr/local/go/bin';cd $p02;sex "rm -rf go";$l/go install github.com/wealdtech/ethereal/v2@$v;if [[ -f $f ]];then swu "INSTALAR $v ETHREAL";sex "cp $f $p00";fi;cmw $p00/ethereal 755 eth; }
 function rlt { gnv;[[ -x $p00/ethereal ]] || rlv;if [[ -x $p00/ethereal ]];then return 0;else swb 'TEM DE TER ETHEREAL';return 1;fi; }
-function nnv { local v=${2:-1.34.0};local s=nethermind;local f="$s-$v-${3:-100632d4}-linux-x64.zip";local e=nada;local rsp=nao;if [[ $1 != S ]];then curl -LO https://github.com/NethermindEth/$s/releases/download/$v/$f;local e=$(shc $f);echo -e "\nsha256:$e\n";fi;[[ $1 = D ]] && return;if [[ -f $f ]];then local e=$(shc $f);swn "INSTALAR $s (sha256:$e)?";read rsp;else swn "NAO EXISTE $s $f";fi;if [[ $rsp = sha256:$e ]];then t6 tgp;unzip $f -d $s;sex "rm -fr $p00/$s.sav";cex "mv $p00/$s $p00/$s.sav";sex "rm -rf $p00/$s";sex "cp -a $s $p00/$s";sex "chown eth1:eth1 -R $p00/$s";cmw $p00/$s 755 eth1;t6 ta;fi; }
+function nnv {
+  local v=${2:-1.34.1}
+  local s=nethermind
+  local f="$s-$v-${3:-c4238a37}-linux-x64.zip"
+  local e=nada
+  local rsp=nao
+  if [[ $1 != S ]]; then
+    curl -LO https://github.com/NethermindEth/$s/releases/download/$v/$f
+    e=$(shc "$f")
+    swn "\nsha256:$e\n"
+  fi
+  [[ $1 = D ]] && return
+  if [[ -s $f ]]; then
+    e=$(shc "$f")
+    swn "INSTALAR $s?"
+    read -r rsp
+  else
+    swn "NAO EXISTE $s $f"
+  fi
+  if [[ $rsp = "sha256:$e" ]]; then
+    t6 tgp
+    unzip "$f" -d "$s"
+    sex "rm -fr $p00/$s.sav"
+    cex "mv $p00/$s $p00/$s.sav"
+    sex "rm -rf $p00/$s"
+    sex "cp -a $s $p00/$s"
+    sex "chown eth1:eth1 -R $p00/$s"
+    cmw "$p00/$s" 755 eth1
+    t6 ta
+  fi
+}
 function gtv { local f="geth-linux-amd64-${1:-1.13.14}-${2:-2bd6bd01}";rm -rf $f*;curl -LO https://gethstore.blob.core.windows.net/builds/$f.tar.gz;local s=$(md5sum $f.tar.gz|cut -d' ' -f1);swn "\nINSTALAR $f ($s)?";local rsp=nao;read rsp;if [[ $rsp = $s ]];then tar xf $f.tar.gz;sex "cp $f/geth $p00";cmw $p00/geth 755 eth;fi; }
 function imk { local f="$p02/key.txt";echo $K > $f;$p00/lighthouse --datadir $p05 account validator import --network mainnet --reuse-password --password-file $f --directory $p19;rm -f $f; }
 function cc1 { local f=$(basename $1);sex "cp $1 $f.sav";cmw $f.sav 644 eth      ;sef "$2" $f.sav > $f.new;sex "cp $f.new $1"; }                              # edit             file
