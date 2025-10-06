@@ -77,6 +77,7 @@ else
   alias aa='t6 ah'
 fi
 
+alias st='speedtest --simple|grep -Ei "Ping|Download|Upload"|xargs'
 alias nt='sudo iftop -nNPBF $(hostname -I|cut -d" " -f1)'
 alias hh='t6 hs0'
 alias tt='t6 hsh'
