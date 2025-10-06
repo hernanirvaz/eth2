@@ -142,14 +142,14 @@ function snp { sft $1 || return;local n=$(($2+$5));(($2!=0&&n>=$3&&n<=$4)) && sp
 function sra { if fft $p45;then nu1 $(($(date +%s)-$(date -r $p45 +%s)));else printf %i;fi }                                                                  # system reboot age (secounds)
 function dts { read       d0 d1   <<< ${1:-$(date '+%F %H:%M')};dt="$d0 $d1"; }                                                                               # set date/time vars
 function dtl { read _ _ _ d0 d1 _ <<< $(bff|tail -n1)          ;dt="$d0 $d1"; }                                                                               # set date/time vars with last beacon log
-function tsy { if [[ $(grep false <<< $@) ]];then printf SYC;else printf NSY;fi; }                                                                            # get el SYN/NSY text
+function tsy { if grep -q false <<< "$@";then printf SYC;else printf NSY;fi; }                                                                                # get el SYN/NSY text
 function era { tail -n${2:-$n13} $1 2>$p03|cut -d' ' -f1|sort -u|wc -l; }                                                                                     # get el/cc restart activity
 function eh0 {
   local n=${1:-$n13}
   local i=${1:-0}
-  if fft $p10;then tail -n$n $p10;fi;if [[ $i -eq 0 ]] && tsa $s10;then gl0;swn "GL $(printf '%8i' $(llc $p10) 2>$p03)\n$m";fi
-  if fft $p11;then tail -n$n $p11;fi;if [[ $i -eq 0 ]] && tsa $s11;then ul0;swn "UL $(printf '%8i' $(llc $p11) 2>$p03)\n$m";fi
-  if fft $p62;then tail -n$n $p62;fi;if [[ $i -eq 0 ]] && tsa $s44;then tl0;swn "NL $(printf '%8i' $(llc $p62) 2>$p03)\n$m";fi
+  if fft $p10;then tail -n$n $p10;fi;if [[ $i -eq 0 ]] && tsa $s10;then gl0;swn "GL $(printf '%8i%19i/%-2i' $(llc $p10) $em $(b05 $er) 2>$p03)\n$m";fi
+  if fft $p11;then tail -n$n $p11;fi;if [[ $i -eq 0 ]] && tsa $s11;then ul0;swn "UL $(printf '%8i%19i/%-2i' $(llc $p11) $em $(b05 $er) 2>$p03)\n$m";fi
+  if fft $p62;then tail -n$n $p62;fi;if [[ $i -eq 0 ]] && tsa $s44;then tl0;swn "NL $(printf '%8i%19i/%-2i' $(llc $p62) $em $(b05 $er) 2>$p03)\n$m";fi
 }
 function ch0 {
   local s=$1
@@ -178,7 +178,17 @@ function ch0 {
   fi
 }
 function ah0 { eh0 $3|tail -n$1;bh0 $3|tail -n$2; }
-function eb0 { e0=$(ll5 "$g12"|wc -l);ok=OK;fft $1 || return;[[ $(era $1) -gt 1 ]] && return;if [[ $ez -ge $n57 ]];then ok=BK;elif [[ $(grep false <<< $@) && ($e0 -eq $(ln0 $s53 $1|tail -n1) || $(ei0) -gt $n24) ]];then ok=BK;fi; }
+function eb0 {
+  e0=$(ll5 "$g12" | wc -l)
+  ok=OK
+  fft $1 || return
+  [[ $(era $1) -gt 1 ]] && return
+  if [[ $ez -ge $n57 ]]; then
+    ok=BK
+  elif grep -q false <<< "$@" && [[ ($e0 -eq $(ln0 $s53 $1 | tail -n1) || $(ei0) -gt $n24) ]]; then
+    ok=BK
+  fi
+}
 function stg { local n=${1:-0};if ((n>3599));then printf %s $(($(date -d@$n +%H)-1))h;fi;if ((n>0));then printf %s $(date -d@$n +%Mm%Ss);fi;printf %s .$(date -d@$(($(date +%s)+$n)) +%H%M%S); }
 function sf1 { printf %s ${1:-$(date +%H:%M:%S)} 2>$p03; }                                                                                                    # get filterd t7 parm 1
 function sf2 { printf %i ${2:-24} 2>$p03; }                                                                                                                   # get filterd t7 parm 2
@@ -222,8 +232,8 @@ function gc0 { nu1 $(snf "$e62" <<< $@); }                                      
 function gv0 { en=$(ss5 $s10 maxpeers); }                                                                                                                     # set configured peers
 function gq0 { er=$(nu1 $(gcl net.peerCount)); }                                                                                                              # set el current peers
 function gnn { esn $(ln3 "$g35" $g06) $(nu1 $(gcl net.peerCount));gdi $1;gdu $1; }
-function gb1 { if [[ $(grep false <<< $@) ]];then printf 'synced ';else printf  's%06i' $(($(gi0 $@)-$(gc0 $@)));fi; }                                        # get el syncing blocks remaining
-function gb2 { if [[ $(grep false <<< $@) ]];then printf ''       ;else printf ' s%06i' $(($(gi0 $@)-$(gc0 $@)));fi; }                                        # get el syncing blocks remaining
+function gb1 { if grep -q false <<< "$@";then printf 'synced ';else printf  's%06i' $(($(gi0 $@)-$(gc0 $@)));fi; }                                            # get el syncing blocks remaining
+function gb2 { if grep -q false <<< "$@";then printf ''       ;else printf ' s%06i' $(($(gi0 $@)-$(gc0 $@)));fi; }                                            # get el syncing blocks remaining
 function gl0 {                                                                                                                                                # el report
   dts;ok=OK
   if tsa $s10;then local e=$(gcl eth.syncing);gv0;gnn $n07;eb0 $p10 $e
@@ -245,8 +255,8 @@ function tcl { curl $s30 -sX POST -H "Content-Type: application/json" --data "{\
 function tv0 { en=$(ss5 $s44 maxactivepeers); }
 function tq0 { er=$(nu1 $(tcl $s55)); }
 function tnn { esn $(ln5 "$g30:" $g36) $(nu1 $(tcl $s55));tdi $1; }
-function tb1 { if [[ $(grep false <<< $@) ]];then printf 'synced ';else printf  'syncing';fi; }
-function tb2 { if [[ $(grep false <<< $@) ]];then printf ''       ;else printf ' syncing';fi; }
+function tb1 { if grep -q false <<< "$@";then printf 'synced ';else printf  'syncing';fi; }
+function tb2 { if grep -q false <<< "$@";then printf ''       ;else printf ' syncing';fi; }
 function tl0 {
   dts;ok=OK
   if tsa $s44;then local e=$(tcl eth_syncing);tv0;tnn $n07;eb0 $p62 $e
@@ -270,8 +280,8 @@ function up0 { nu1 $((16#$(nu1 $(snf "$e56" <<< $@)))); }                       
 function uv0 { en=$(ss5 $s11 max-peers); }                                                                                                                    # set configured peers
 function uq0 { er=$(up0 $(ucl $s55)); }                                                                                                                       # set el current peers
 function unn { esn $(ln3 "$g31:" $g07) $(up0 $(ucl $s55));udi $1;e2=0; }                                                                                      # set cur/min/std el peers
-function ub1 { if [[ $(grep false <<< $@) ]];then printf 'synced ';else printf  's%06i' $(($(ui0 $@)-$(uc0 $@)));fi; }                                        # get el syncing blocks remaining
-function ub2 { if [[ $(grep false <<< $@) ]];then printf ''       ;else printf ' s%06i' $(($(ui0 $@)-$(uc0 $@)));fi; }                                        # get el syncing blocks remaining
+function ub1 { if grep -q false <<< "$@";then printf 'synced ';else printf  's%06i' $(($(ui0 $@)-$(uc0 $@)));fi; }                                            # get el syncing blocks remaining
+function ub2 { if grep -q false <<< "$@";then printf ''       ;else printf ' s%06i' $(($(ui0 $@)-$(uc0 $@)));fi; }                                            # get el syncing blocks remaining
 function ul0 {                                                                                                                                                # el report
   dts;ok=OK
   if tsa $s11;then local e=$(ucl eth_syncing);uv0;unn $n07;eb0 $p11 $e
@@ -395,10 +405,13 @@ function bdd {
   done <<< "$s";if [[ $e ]];then local e=${e:1};bdw $p12 "$e";bdw $p13 "$e";fi;bsm
 }
 function bh0 {
-  fft $p12 || return;tail -n${1:-$n12} $p12;[[ $1 ]] && return;boi;bl0;local e=$(printf '%1i     9 5  1  0 err norm  idx' $b0  2>$p03)
-  swn "BO $(printf '%4i%4i%34s%14s'                                            $b2 $(wc -l <<< "$l2")                       2>$p03)$e"    ;bo5
-  swn "BL $(printf '%8i/%4i%34s%9s'                                            $(llc $p12) $n14                             2>$p03)$e\n$m";bm0;bmo
-  swn "BM $(printf '%8i%19i/%-4i%4i/%-4i i4  i5  i6  i7%1i i8  i9 i10 avg%13i' $(llc $p13) $nz $n57 $nm $(b05 $nr) $b0 $n20 2>$p03)\n$m"
+  fft $p12 || return
+  tail -n${1:-$n12} $p12
+  [[ $1 ]] && return
+  local e;boi;bl0;e=$(printf '%1i     9 5  1  0 err norm  idx' $b0 2>$p03)
+  swn "BO $(printf '%4i%4i%34s%14s' $b2 $(wc -l <<< "$l2") 2>$p03)$e";bo5
+  swn "BL $(printf '%8i/%4i%34s%9s' $(llc $p12) $n14 2>$p03)$e\n$m";bm0;bmo
+  swn "BM $(printf '%8i%19i/%-2i%3i/%-3i     i4  i5  i6  i7%1i i8  i9 i10 avg%13i' $(llc $p13) $nm $(b05 $nr) $nz $n57 $b0 $n20 2>$p03)\n$m"
 }
 function bwd { local n=$((($(date +%s)-n09)/(12*32)-0));for n in $n $((n+1));do curl -sH "$s28" $s67 -X POST -d"$(viv)" "$s32/sync/$n";curl -sH "$s28" $s67 -X GET "$s32/proposer/$n";done 2>$p03|jq -r $s35 2>$p03; }
 function bwc { bwd|grep -Ex "$(vix)" 2>$p03|wc -l; }
