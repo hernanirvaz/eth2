@@ -10,14 +10,6 @@ sl0() { sleep 5; }
 sl1() { sleep 20; }
 
 if pig; then exit 0;fi
-
-lgm "Attempting to renew DHCP lease on WAN."
-/sbin/dhclient -r "$WAN"  ;sl0;/sbin/dhclient "$WAN"   ;sl1
-if pig; then lgm "WAN recovered after DHCP renewal.";exit 0;fi
-
-lgm "Attempting to bounce WAN interface."
-/sbin/ifconfig "$WAN" down;sl0;/sbin/ifconfig "$WAN" up;sl1
-if pig; then lgm "WAN recovered after bounce."      ;exit 0;fi
-
-lgm "Performing pfSense reboot as last resort."
-/sbin/reboot
+/sbin/dhclient -r $WAN  ;sl0;/sbin/dhclient $WAN   ;sl1;if pig;then lgm "WAN recovered after DHCP renewal.";exit 0;fi
+/sbin/ifconfig $WAN down;sl0;/sbin/ifconfig $WAN up;sl1;if pig;then lgm "WAN recovered after bounce."      ;exit 0;fi
+lgm "Performing pfSense reboot as last resort.";/sbin/reboot
