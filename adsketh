@@ -1,10 +1,14 @@
 #!/usr/bin/bash
 
-function msh { echo -e "\n\e[5;32m${*^^}\e[0m";eval "$*"; }
-function dnn { local s=$1;[[ ${s%%.*} =~ ^[a-zA-Z]+ && $(hostname -I | cut -d. -f1-3) != 192.168.8 ]] && s="$s.fruga.pt";[[ ${s%%.*} == hrv-zotac1 ]] && s="admin@$s";printf %s $s; }
+cunm=$(hostname)
+cust=${cunm:0:3}
+function sht { [[ $cust = hrv ]]; }
+function dnn { local s=$1;[[ ${s%%.*} =~ ^[a-zA-Z]+ ]] && ! sht && s="$s.fruga.pt";[[ ${s%%.*} == hrv-zotac1 ]] && s="admin@$s";printf %s $s; }
 function dnp { local n=${1##*[!0-9]};local p=2020;[[ $1 =~ ^hrv-[a-z]{5}[0-9]$ ]] && p=$((p+n));printf %i $p; }
 function dnz { local p=$2;[[ $p ]] || p=$(dnp $1);printf %i $p; }
-function zsh {                                   ssh -p $1 -i ~/.ssh/id_ed25519 $2 "$3"; }
+function zsh { ssh -p $1 -i ~/.ssh/id_ed25519 $2 "$3"; }
+
+function msh { echo -e "\n\e[5;32m${*^^}\e[0m";eval "$*"; }
 function esl { local p=$(dnz $1 $2);local s=$(dnn $1);echo -e "\nzsh $s:$p     ";zsh $p $s; }
 function erq { local q=${1:-meo.fruga.pt};msh resolvectl query $q; }
 

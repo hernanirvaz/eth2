@@ -554,13 +554,13 @@ function clk {
   fi
   m="$e $(nl4 3 $n) $dt $m"
 }
-function hch { clk h;if sht;then local e=$(snc $cunm);else local e=${cunm:0:2}${cunm: -2};fi;swn "$e${m:4}"; }
+function hch { clk h;if sht;then local e=$(sn2 $cunm);else local e=${cunm:0:2}${cunm: -2};fi;swn "$e${m:4}"; }
 function hca {
-  if n1t;then hch;else ssh $(snc $cun1) "$p53 hch";fi
-  if ndt;then if n2t;then hch;else ssh $(snc $cun2) "$p53 hch";fi;fi
-  if vst;then if vct;then hch;else ssh $(snc $cuvc) "$p53 hch";fi;fi
-  if mst;then if mct;then hch;else ssh $(snc $cumv) "$p53 hch";fi;fi
-  if zdt;then if z1t;then hch;else ssh $(snc $cut1) "$p53 hch";fi;zet && if z2t;then hch;else ssh $(snc $cut2) "$p53 hch";fi;fi
+  if n1t;then hch;else xsh $cun1 "$p53 hch";fi
+  if ndt;then if n2t;then hch;else xsh $cun2 "$p53 hch";fi;fi
+  if vst;then if vct;then hch;else xsh $cuvc "$p53 hch";fi;fi
+  if mst;then if mct;then hch;else xsh $cumv "$p53 hch";fi;fi
+  if zdt;then if z1t;then hch;else xsh $cut1 "$p53 hch";fi;zet && if z2t;then hch;else xsh $cut2 "$p53 hch";fi;fi
 }
 function si0 { printf '%s: erro_cml %i,used %s,spare %s; ' $(basename $1) $(($2+$3+$4)) $5% $6% 2>$p03; }
 function sif {
@@ -713,14 +713,14 @@ function hst { sso $s74 $s44; }
 function hsb { sso $s75 $s12; }
 function hsv { sso $s76 $s13; }
 function hsm { sso $s77 $s14; }
-function hss { echo -e "\n$1";if [[ $cunm = $1 ]];then hsg;hsu;hst;hsb;hsv;hsm;cpe;else ssh $(snc $1) "$p53 hse;$p53 hsc";fi; }
+function hss { echo -e "\n$1";if [[ $cunm = $1 ]];then hsg;hsu;hst;hsb;hsv;hsm;cpe;else xsh $1 "$p53 hse;$p53 hsc";fi; }
 function hhh { printf '\n%.0s' {1..4}; }
 function hs0 {
   hhh
   if n1t;then
     hss $cun1;if ndt;then hss $cun2;fi
-    if vst;then if vct;then hsv;cpe;else echo -e "\n$cuvc";ssh $(snc $cuvc) "$p53 hsv";fi;fi
-    if mst;then if mct;then hsm;cpe;else echo -e "\n$cumv";ssh $(snc $cumv) "$p53 hsm";fi;fi
+    if vst;then if vct;then hsv;cpe;else echo -e "\n$cuvc";xsh $cuvc "$p53 hsv";fi;fi
+    if mst;then if mct;then hsm;cpe;else echo -e "\n$cumv";xsh $cumv "$p53 hsm";fi;fi
     echo;epf;cpf
   else
     hss $cunm
@@ -735,10 +735,31 @@ function cce { sft $s12 || return;local s=$p04/$s12.service;cp $s $p02/$s12.sav;
 function vcc { sft $s13 || return;local s=$p04/$s13.service;cp $s $p02/$s13.sav;sef "$e16" $s13.sav > $s;cmw $s 644 eth;echo;diff $p02/$s13.sav $s;swb "troca vars cun1/cun2=$inm6/$inm5"; }
 function dpa { tsa $s20 && nex "$s02 $s20";nex "$s02 systemd-resolved";tse $s20 && nex "$s03 $s20";nex "$s03 systemd-resolved"; }                             # DNS stop/start
 function nrs { nex 'netplan apply';dpa; }                                                                                                                     # netplan/DNS restart
-function lcp { local f=$1;shift;[[ -x $f ]] && until [[ $# -lt 1 ]];do if [[ $1 = $(snc $cunm) ]];then lci $f;else ssh $1 "rm -rf $p02/$(basename $f)";scp $f $1:$p02;fi;shift;done; }
+function lcp {
+  local f=$1
+  shift
+  [[ -x $f ]] &&
+    until [[ $# -lt 1 ]]; do
+      if [[ $1 = $cunm ]]; then
+        lci $f
+      else
+        xsh $1 "rm -rf $p02/$(basename $f)"
+        xcp $1 $p02 $f 
+      fi
+      shift
+    done
+}
 function lci { [[ -x $1 && ! -d $1   ]] || return;sex "mv $p00/lighthouse $p00/lighthouse.sav";sex "cp $1 $p00"; }                                            # lighthouse binary install
 function lmd { [[ -x $p00/lighthouse ]] || return;cmw $p00/lighthouse 755 eth;swb 'LIGHT INSTALADO'; }                                                        # lighthouse set permissions
-function lpi { v1t && lcp $1 $vnd1;z4t && lcp $1 ztc4;i5t && lcp $1 int5 int6;i6t && lcp $1 int6 int5;lci $p02/lighthouse;sex "rm -f $p02/lighthouse $1";lmd; }
+function lpi {
+  v1t && lcp $1 $vnd1
+  z4t && lcp $1 $znm4
+  i5t && lcp $1 $inm5 $inm6
+  i6t && lcp $1 $inm6 $inm5
+  lci $p02/lighthouse
+  sex "rm -f $p02/lighthouse $1"
+  lmd
+}
 function luc {                                                                                                                                                # lighthouse upgrade/compile
   if fft $p06/lighthouse/README.md;then
     cd $p06/lighthouse;make clean;cargo clean                                                                                                                 # clean compile dirs
@@ -754,7 +775,7 @@ function tvc {
   swn "$s24"
   [[ $cuvc = $nxvc ]] && return
   if vct && tsa $s13; then
-    swn "TRANSFERIR VC -> $(snc $nxvc) (SIM/nao)?"
+    swn "TRANSFERIR VC -> $nxvc (SIM/nao)?"
   else
     return
   fi
@@ -763,7 +784,7 @@ function tvc {
   if [[ $rsp = SIM && ! -f $p05/vc_slash && ! -f $p05/vc_lock && -f $p05/vc_keys ]]; then
     vrs $1 $2 # stop    & vc_slash
     vd        # disable & vc_lock
-    f=$p02/$(basename $p18);sex "cp $p18 $p02";cmw $f 666 eth;mcp $f $(sn2 $nxvc);sex "rm $f";svc TRANSFERIDO
+    f=$p02/$(basename $p18);sex "cp $p18 $p02";cmw $f 666 eth;mcp $f $(dnn $nxvc);sex "rm $f";svc TRANSFERIDO
   fi
 }
 function nky { ls $p19/key*.json 2>$p03|wc -l; }
@@ -822,9 +843,9 @@ function tsh { local n=${1:-4};local s=$(ts1 $n);echo -e "${s^^}\t(eth*10^$n)"; 
 function lsr { sort -t: -k2n -k3n -k4n; }
 function wpf { if tsa $s44;then ll4 "$g43";fi;ll5 "$g42"|fln "$g39"; }
 function wpe { wpf|sef "$e52"|lsr; }
-function bba { if n1t;then wpe          ;else ssh $(snc $cun1) "$p53 bb"   ;fi;if ndt;then if n2t;then wpe          ;else ssh $(snc $cun2) "$p53 bb"   ;fi;fi;if vst;then if vct;then wpe          ;else ssh $(snc $cuvc) "$p53 bb"   ;fi;fi;if mst;then if mct;then wpe;else ssh $(snc $cumv) "$p53 bb";fi;fi; }
-function caa { if n1t;then cll "$e50" $1;else ssh $(snc $cun1) "$p53 cl $1";fi;if ndt;then if n2t;then cll "$e50" $1;else ssh $(snc $cun2) "$p53 cl $1";fi;fi;if vst;then if vct;then cll "$e50" $1;else ssh $(snc $cuvc) "$p53 cl $1";fi;fi;if mst;then if mct;then rll "$e51" $1;else ssh $(snc $cumv) "$p53 rl $1";fi;fi; }
-function eaa { if n1t;then ell "$e50" $1;else ssh $(snc $cun1) "$p53 el $1";fi;if ndt;then if n2t;then ell "$e50" $1;else ssh $(snc $cun2) "$p53 el $1";fi;fi; }
+function bba { if n1t;then wpe          ;else xsh $cun1 "$p53 bb"   ;fi;if ndt;then if n2t;then wpe          ;else xsh $cun2 "$p53 bb"   ;fi;fi;if vst;then if vct;then wpe          ;else xsh $cuvc "$p53 bb"   ;fi;fi;if mst;then if mct;then wpe          ;else xsh $cumv "$p53 bb"   ;fi;fi; }
+function caa { if n1t;then cll "$e50" $1;else xsh $cun1 "$p53 cl $1";fi;if ndt;then if n2t;then cll "$e50" $1;else xsh $cun2 "$p53 cl $1";fi;fi;if vst;then if vct;then cll "$e50" $1;else xsh $cuvc "$p53 cl $1";fi;fi;if mst;then if mct;then rll "$e51" $1;else xsh $cumv "$p53 rl $1";fi;fi; }
+function eaa { if n1t;then ell "$e50" $1;else xsh $cun1 "$p53 el $1";fi;if ndt;then if n2t;then ell "$e50" $1;else xsh $cun2 "$p53 el $1";fi;fi; }
 function laa { caa $1;eaa $1; }
 function fsp { local n=${1:-1};if [[ $n -gt 9 ]];then grep -v "$g31 *${n:0:1}[${n:1:1}-9][0-9]";else grep -v "$g31 *[$n-9][0-9]";fi|grep "$g31 *[0-${2:-7}]"|sort -k2n; }
 function esp { iet || return;if tsa $s44;then local e=$(ll4 "$g36.*$g30:"|sef "$e76");else local e=$(ll5 "$g11.*$g35"|sef "$e77");fi;local e=$(fsp $1 $2 <<< "$e");[[ $1$2 ]] || e=$(tail -n$n58 <<< "$e");[[ $e ]] && echo -e "\n$e"; }
@@ -851,7 +872,12 @@ function ulr { local s=$(ulg $1);uls "$g59" "$s";uls "$g62" "$s"; }
 [[ $1 = ulg ]] && { ulg $2; }
 [[ $1 = ulr ]] && { ulr $2; }
 
-function mcp { local s=${2:-v1};local f=${3:-~};if [[ ${s:0:1} = v ]];then local e="-P 2020 -i $p02/.ssh/id_ed25519";local n="scp $e $1 $(sns $s):$f";else local n="scp $1 $(sns $s):$f";fi;echo "$n";eval "$n"; }
+function mcp {
+  local s=${2:-v1}
+  local d=${3:-~}
+  echo "xcp $(sns $s):$d $1"
+  xcp $(sns $s) $d $1
+}
 [[ $1 = mcp ]] && { mcp $2 $3 $4; }
 
 function ipw { sex "ufw $s71";sex 'ufw default deny outgoing';sex 'ufw reload'; }
@@ -1262,6 +1288,7 @@ if [[ ! $1 ]];then
   m="$m\nn[sh|rs]\t\tnetwork show|reset"
   m="$m\nd[sh [url]|rs]\t\tdns show [url]|reset"
   m="$m\nh[sh|rs|ch|ca|rc]\t$s45 show|restart|check|check all|restart conditional"
+  m="$m\nhs[012ecvm]\t\tservices all|main|backup|execution|concensus|vc|mev"
   m="$m\nr[sh|rs|pt|lk]\t\trestart gap show|reset|print|lock"
   m="$m\ni[sh|ch]\t\texternal ip show|change"
   m="$m\nj[sh|rs]\t\tjournal logs show|reset"

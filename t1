@@ -1,9 +1,19 @@
 #!/bin/bash
 # shellcheck disable=SC2034
 
-meeu=$(whoami)
 cunm=$(hostname)
 cust=${cunm:0:3}
+function sht { [[ $cust = hrv ]]; }
+function dnn { local s=$1;[[ ${s%%.*} =~ ^[a-zA-Z]+ ]] && ! sht && s="$s.fruga.pt";[[ ${s%%.*} == hrv-zotac1 ]] && s="admin@$s";printf %s $s; }
+function dnp { local n=${1##*[!0-9]};local p=2020;[[ $1 =~ ^hrv-[a-z]{5}[0-9]$ ]] && p=$((p+n));printf %i $p; }
+function dnz { local p=$2;[[ $p ]] || p=$(dnp $1);printf %i $p; }
+function zsh { ssh -p $1 -i ~/.ssh/id_ed25519 $2 "$3"; }
+
+meeu=$(whoami)
+function xsh { zsh $(dnz $1) $(dnn $1) "$2"; }
+function zcp { local p=$1;local d=$2;shift;shift;scp -P $p -i ~/.ssh/id_ed25519 $@ "$d"; }
+function xcp { local p=$(dnz $1);local s=$(dnn $1);local d=$2;shift;shift;zcp $p $s:$d $@; }
+
 zip1='192.168.8.25' ;znm1='hrv-zotac1'
 zip2='192.168.8.28' ;znm2='hrv-zotac2'
 zip3='192.168.8.31' ;znm3='hrv-zotac3'
@@ -19,7 +29,6 @@ vnm1=${vnd1%%.*};vis1='127.0.0.1'
 vnm2=${vnd2%%.*};vis2='127.0.0.1'
 vnm3=${vnd3%%.*};vis3='127.0.0.1'
 
-function sht { [[ $cust = hrv ]]; }
 
 if sht;then
 cuvc=$znm4
@@ -216,64 +225,33 @@ function sni {
   esac
 }
 function sns {
+  local s=''
   if [[ ${#1} -gt 2 ]]; then
-    printf $1
+    printf %s "$1"
   else
     if [[ ${1:0:1} = z ]]; then
+      sht || s='.fruga.pt'
       if [[ ${1:1:1} -le 4 ]]; then
-        printf ${1/z/ztc}
+        printf %s "${1/z/hrv-zotac}$s"
       else
-        printf ${1/z/int}
+        printf %s "${1/z/hrv-intel}$s"
       fi
     else
       case $1 in
-      v1) printf $vnd1 ;;
-      v2) printf $vnd2 ;;
-      v3) printf $vnd3 ;;
-      *) printf $1 ;;
+      v1) printf %s "$vnd1" ;;
+      v2) printf %s "$vnd2" ;;
+      v3) printf %s "$vnd3" ;;
+       *) printf %s "$1" ;;
       esac
     fi
   fi
 }
-function snc {
-  if [[ ${1/-*/} = hrv ]]; then
-    if sht; then
-      local s=''
-    else
-      local s='.fruga.pt'
-    fi
-    local v=${1/*-/}
-    if [[ ${1:5:1} =~ [on] ]]; then
-      printf ${v//[aoel]/}$s
-    else
-      printf $v$s
-    fi
-  else
-    case $1 in
-      $vnm1) printf $vnd1 ;;
-      $vnm2) printf $vnd2 ;;
-      $vnm3) printf $vnd3 ;;
-      *) printf $1 ;;
-    esac
-  fi
-}
 function sn2 {
-  if [[ ${1/-*/} = hrv ]]; then
-    snc $1
+  local v=${1/*-/}
+  if [[ ${1:5:1} =~ [on] ]]; then
+    printf %s "${v//[aoel]/}"
   else
-    case $1 in
-    $vnm1) printf v1 ;;
-    $vnm2) printf v2 ;;
-    $vnm3) printf v3 ;;
-    *) printf $1 ;;
-    esac
-  fi
-}
-function spt {
-  if [[ ${1/-*/} = hrv ]]; then
-    printf 202${1##*[!0-9]}
-  else
-    printf 2020
+    printf %s "$v"
   fi
 }
 function sef { sed -E  "$1" $2 2>$p03; }
@@ -553,15 +531,7 @@ e13="s%^ *#*NTP=.*$%NTP=time.google.com time.cloudflare.com time.facebook.com%i;
 e14='s%--subscribe-all-subnets --import-all-attestations %%'
 e15='s%--validator-monitor-file%--subscribe-all-subnets --import-all-attestations --validator-monitor-file%'
 e16='s%--beacon-nodes *([^ ]*:5052),([^ ]*:5052)[^ ]*%--beacon-nodes \2,\1%'
-# removed for pfsense hosts config
-  # e17="s%hrv-zotac([0-9]).*%hrv-zotac\1 ztc\1%;s%hrv-intel([0-9]).*%hrv-intel\1 int\1%;/127.0.1.1/a \\"
-# [[ $cunm = $znm1 ]] && e17="$e17\n$zip2\t$znm2 $(snc $znm2)\n$zip3\t$znm3 $(snc $znm3)\n$zip4\t$znm4 $(snc $znm4)\n$iip5\t$inm5 $(snc $inm5)\n$iip6\t$inm6 $(snc $inm6)"
-# [[ $cunm = $znm2 ]] && e17="$e17\n$zip1\t$znm1 $(snc $znm1)\n$zip3\t$znm3 $(snc $znm3)\n$zip4\t$znm4 $(snc $znm4)\n$iip5\t$inm5 $(snc $inm5)\n$iip6\t$inm6 $(snc $inm6)"
-# [[ $cunm = $znm3 ]] && e17="$e17\n$zip1\t$znm1 $(snc $znm1)\n$zip2\t$znm2 $(snc $znm2)\n$zip4\t$znm4 $(snc $znm4)\n$iip5\t$inm5 $(snc $inm5)\n$iip6\t$inm6 $(snc $inm6)"
-# [[ $cunm = $znm4 ]] && e17="$e17\n$zip1\t$znm1 $(snc $znm1)\n$zip2\t$znm2 $(snc $znm2)\n$zip3\t$znm3 $(snc $znm3)\n$iip5\t$inm5 $(snc $inm5)\n$iip6\t$inm6 $(snc $inm6)"
-# [[ $cunm = $inm5 ]] && e17="$e17\n$zip1\t$znm1 $(snc $znm1)\n$zip2\t$znm2 $(snc $znm2)\n$zip3\t$znm3 $(snc $znm3)\n$zip4\t$znm4 $(snc $znm4)\n$iip6\t$inm6 $(snc $inm6)"
-# [[ $cunm = $inm6 ]] && e17="$e17\n$zip1\t$znm1 $(snc $znm1)\n$zip2\t$znm2 $(snc $znm2)\n$zip3\t$znm3 $(snc $znm3)\n$zip4\t$znm4 $(snc $znm4)\n$iip5\t$inm5 $(snc $inm5)"
-# sht                 && e17="$e17\n$pip1\t$pnm1 $(snc $pnm1)\n$pip2\t$pnm2 $(snc $pnm2)"
+e17=
 e18='s%.*fee_recipient"."([^"]*)".*pubkey":"([^"]*)".*%pubkey: \2, fee: \1%p'
 e19="s%^$g58 +[^ ]+([a-z1-9]{4}) +([^ ]{4}).*UFW BLOCK]%\4: \2\3 \U\5 ufw%"
 e19="$e19;s% MAC=[^ ]*%%"
