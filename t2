@@ -52,16 +52,12 @@ if sht;then
   sex "rm -f $(dirname $p22)/*.yaml";cc4 $p22 "$s41";cmw $p22 600 root                                                                                        # new netplan
   cc1 $p26 "$e06"              ;cmw $p26 755 root                                                                                                             # grub timeout
   cc1 $p48 "$e27"              ;cmw $p48 644 root                                                                                                             # grub no PCIe active state power management
-  # removed for pfsense hosts config
-  # cc1 $p67 "$e17"              ;cmw $p67 644 root                                                                                                           
-  cc4 $p35 "$s43"              ;cmw $p35 644 root                                                                                                             # ssh config
   cc1 $p65 "$e69"              ;cmw $p65 600 root                                                                                                             # ssh config
   cc1 $p37 "$e23"              ;cmw $p37 644 root                                                                                                             # no swap - bad for IOPS
   sex 'update-grub'
 else
   sex "$s07 set-timezone America/Toronto" # Europe/Berlin
   cc1 $p20 "$e13"                                                                                                                                             # general time servers
-  cc4 $p35 "$s43"              ;cmw $p35 644 root                                                                                                             # ssh config
   cc1 $p65 "$e69"              ;cmw $p65 600 root                                                                                                             # ssh config
   sex "mv -f /etc/motd $p02/motd.sav"                                                                                                                         # no contabo info
 fi                             ;cmw $p20 644 root;hrs                                                                                                         # timesyncd cmod & restart
