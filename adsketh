@@ -11,6 +11,7 @@ function zsh { ssh -p $1 -i ~/.ssh/id_ed25519 $2 "$3"; }
 function msh { echo -e "\n\e[5;32m${*^^}\e[0m";eval "$*"; }
 function esl { local p=$(dnz $1 $2);local s=$(dnn $1);echo -e "\nzsh $s:$p     ";zsh $p $s; }
 function erq { local q=${1:-meo.fruga.pt};msh resolvectl query $q; }
+function nrs { sudo netplan apply;sudo systemctl stop systemd-resolved;sleep 9;sudo systemctl start systemd-resolved;sleep 9;resolvectl status; }
 
 function zcp { local p=$1;local d=$2;shift;shift;scp -P $p -i ~/.ssh/id_ed25519 $@ "$d"; }
 function ecp { local p=$(dnz $1 $2);local s=$(dnn $1);echo -e "\nzcp $s:$p eth2";cc2 $1 $p; }
@@ -60,7 +61,6 @@ function z7z {
 }
 function ufz { echo "$B"|gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 -c $1; }
 function zfu { echo "$B"|gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 -d $1; }
-function nrs { sudo netplan apply;sleep 10;sudo systemctl restart systemd-resolved; }
 
 alias v1='esl ${N%%:*} ${N#*:}'
 alias v2='esl ns3238168.ip-57-129-52.eu 2020'
@@ -93,5 +93,5 @@ alias gv='cd;vi eth2/t[1-8] eth2/e[1-9]'
 alias ky='ssh-keygen -f ~/.ssh/id_ed25519 -t ed25519 -C "$(whoami)@$(hostname)";cat ~/.ssh/id_ed25519.pub'
 alias lk="ei0 \$H \$E \$R \$V \$(npt) >~/i0;ei1 \$H \$V \$K \$E \$B >~/i1;cc0 \$(nip) \$(npt)"
 alias fw='echo "export R=\"$(</dev/urandom tr -dc "A-Za-z0-9?%&_+=@~#\,.?/"|head -c50)\"";echo "export H=\"$(</dev/urandom tr -dc "A-Za-z0-9?%&_+=@~#\,.?/"|head -c30)\"";echo "export V=\"$(</dev/urandom tr -dc "A-Za-z0-9"|head -c8)\"";echo "export K=\"$(</dev/urandom tr -dc "A-Za-z0-9?%&_+=@~#\,.?/"|head -c60)\"";echo "export W=\"$(</dev/urandom tr -dc "A-Za-z0-9?%&_+=@~#\,.?/"|head -c60)\"";'
-alias rq='msh ip a;msh ip r;systemctl is-active --quiet systemd-networkd && msh networkctl status;msh resolvectl status;erq;erq github.com;erq changelogs.ubuntu.com'
 alias xx='exit'
+alias rq='msh ip a;msh ip r;systemctl is-active --quiet systemd-networkd && msh networkctl status;msh resolvectl status;erq;erq github.com;erq changelogs.ubuntu.com'
