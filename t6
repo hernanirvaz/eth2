@@ -733,7 +733,7 @@ function c0c { local e="$e11";[[ $(snf "$e12" $p04/$s12.service) = $iip6 ]] && e
 function ble { sft $s12 || return;local s=$p04/$s12.service;cp $s $p02/$s12.sav;sef "$1" $p02/$s12.sav > $s;dmr; }                                            # cc service edit
 function cce { sft $s12 || return;local s=$p04/$s12.service;cp $s $p02/$s12.sav;c0c;cmw $s 644 eth; }                                                         # cc change el server (merge)
 function vcc { sft $s13 || return;local s=$p04/$s13.service;cp $s $p02/$s13.sav;sef "$e16" $s13.sav > $s;cmw $s 644 eth;echo;diff $p02/$s13.sav $s;swb "troca vars cun1/cun2=$inm6/$inm5"; }
-function dpa { tsa $s20 && nex "$s02 $s20";nex "$s02 systemd-resolved";sleep 9;tse $s20 && nex "$s03 $s20";nex "$s03 systemd-resolved";sleep 9;next "resolvectl status"; }
+function dpa { tsa $s20 && nex "$s02 $s20";nex "$s02 systemd-resolved";sleep 9;tse $s20 && nex "$s03 $s20";nex "$s03 systemd-resolved";sleep 9;nex "resolvectl status"; }
 function nrs { nex 'netplan apply';dpa; }                                                                                                                     # netplan/DNS restart
 function lcp {
   local f=$1
