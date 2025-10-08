@@ -692,7 +692,7 @@ function hrs { if [[ -f $p68 ]];then sex "$s04 $s56";sex "$s06 $s56";local e=$s5
 function srv { if [[ $cunm = $1 ]];then cd $p02;return;else swb "TEM DE ESTAR $1";return 1;fi; }
 function swb { echo -e "\n\e[5m${1^^}\e[0m\n"; }
 function swr { echo -e "\e[5;31m${1^^}\e[0m"; }
-function swg { echo -e "\e[5;32m${1^^}\e[0m"; }
+function swg { echo -e "\e[32m${1^^}\e[0m"; }
 function swu { echo -e "${1^^}"; }
 function swn { echo -e "$1"; }
 function swl { echo -e "\n$1\n"; }
