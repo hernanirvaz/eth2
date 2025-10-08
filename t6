@@ -524,7 +524,7 @@ function cl2 { if [[ $1 =~ ^[0-9]+ ]];then cl1 $1;else cl0 $1;fi; }
 function cl3 { cl2 $2; }
 function cl4 { printf "dl $6\tos $4\tjt $8\tn0 $(cl2 $2)"                    2>$p03; }
 function cl5 { printf "dl ${8}ms\tos ${9}ms\tjt ${10}ms\tn$3 $(cl2 ${1:1})"  2>$p03; }
-function cl6 { printf "er $(clf $4) os $(clf $5) jt $(clf $3) n$2$(nl4 1 $6) $(cl2 $1)" 2>$p03; }
+function cl6 { local s=${6:-0};if [[ $s -eq 0 ]];then s=' ';elif [[ $s -eq 1 ]];then s=$(swg $s);else s=$(swr $s);fi;printf "er $(clf $4) os $(clf $5) jt $(clf $3) n$2$s $(cl2 $1)" 2>$p03; }
 function clk {
   local s;local n;local e;local l;local i
   m=''
