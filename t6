@@ -653,7 +653,7 @@ function sa  { tsa $s20 || cex "$s03 $s20"; }                                   
 function sp  { tsa $s20 && cex "$s02 $s20"; }                                                                                                                 # stop    named
 function sd  { cex "$s05 $s20";sco;sex 'ufw reload'; }                                                                                                        # disable named
 # el/cc/vc
-function nfw { if sht;then pai $1 192.168.8.0/24 $2 $3;else pai $1 192.168.8.0/24 $2 $3;fi; }
+function nfw { pai $1 192.168.8.0/24 $2 $3; }
 function eop { local e=30303;ndp || e=30304;pae $e elp2p;if n3t;then pde 8545 elapi delete;pde 8551 eljwt delete;pde 80   elweb delete;nfw 8545 elapi       ;nfw 8551 eljwt       ;nfw 80   elweb       ;fi; }
 function eco { local e=30303;ndp || e=30304;pde $e elp2p;if n3t;then pde 8545 elapi       ;pde 8551 eljwt       ;pde 80   eljwt       ;nfw 8545 elapi delete;nfw 8551 eljwt delete;nfw 80   elweb delete;fi; }
 function bop { local e=9004 ;ndp || e=9000 ;pae $e clp2p;if n3t;then pde 5052 clapi delete;pde 8551 cljwt delete;nfw 5052 clapi       ;nfw 8551 cljwt       ;fi;pae "$((e+1))/udp" clquic; }

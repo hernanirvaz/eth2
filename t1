@@ -3,7 +3,8 @@
 
 cunm=$(hostname)
 cust=${cunm:0:3}
-function sht { [[ $cust = hrv ]]; }
+
+function sht { [[ $(hostname -I|cut -d. -f1-3) = 192.168.8 ]]; }
 function dnn { local s=$1;[[ ${s%%.*} =~ ^[a-zA-Z]+ ]] && ! sht && s="$s.fruga.pt";[[ ${s%%.*} == hrv-zotac1 ]] && s="admin@$s";printf %s $s; }
 function dnp { local n=${1##*[!0-9]};local p=2020;[[ $1 =~ ^hrv-[a-z]{5}[0-9]$ ]] && p=$((p+n));printf %i $p; }
 function dnz { local p=$2;[[ $p ]] || p=$(dnp $1);printf %i $p; }
