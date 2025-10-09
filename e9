@@ -3,4 +3,4 @@
 LANG=C
 LC_ALL=C
 
-[ $(date +%M) -eq $(awk -v min=0 -v max=59 "BEGIN{srand(); print int(min+rand()*(max-min+1))}") ] && { date +"%Y-%m-%d %H:%M:%S";speedtest --simple|grep -Ei "Ping|Download|Upload";}|xargs
+[ $(printf %i $(date +%M)) -eq $(awk -v min=0 -v max=59 "BEGIN{srand(); print int(min+rand()*(max-min+1))}") ] && { date +"%Y-%m-%d %H:%M:%S";speedtest --simple|grep -Ei "Ping|Download|Upload";}|xargs
