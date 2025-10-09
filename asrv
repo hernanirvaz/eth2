@@ -10,7 +10,20 @@ function dnz { local p=$2;[[ $p ]] || p=$(dnp $1);printf %i $p; }
 function zsh { ssh -p $1 -i ~/.ssh/id_ed25519 $2 "$3"; }
 
 function msh { echo -e "\n\e[5;32m${*^^}\e[0m";eval "$*"; }
-function gsh { echo -e "\n\e[5;32m${*^^}\e[0m";eval "$*|grep $2"; }
+function dsh {
+  resolvectl flush-caches
+ (msh dig AAAA hrv-zotac1.home.arpa;msh dig AAAA hrv-zotac1.unknown.home.arpa
+  msh dig AAAA hrv-zotac2.home.arpa;msh dig AAAA hrv-zotac2.unknown.home.arpa
+  msh dig AAAA hrv-zotac3.home.arpa;msh dig AAAA hrv-zotac3.unknown.home.arpa
+  msh dig AAAA hrv-zotac4.home.arpa;msh dig AAAA hrv-zotac4.unknown.home.arpa
+  msh dig AAAA hrv-intel5.home.arpa;msh dig AAAA hrv-intel5.unknown.home.arpa
+  msh dig AAAA hrv-intel6.home.arpa;msh dig AAAA hrv-intel6.unknown.home.arpa
+  msh dig AAAA hrv-zen.home.arpa;msh dig AAAA hrv-zen.unknown.home.arpa
+  msh dig AAAA hrv-lenovo.home.arpaS;msh dig AAAA hrv-lenovo.unknown.home.arpaS
+  msh dig AAAA hrv-lgwebostv.home.arpa;msh dig AAAA hrv-lgwebostv.unknown.home.arpa
+  msh dig AAAA hrv-pixel-9-pro-xl.home.arpa;msh dig AAAA hrv-pixel-9-pro-xl.unknown.home.arpa
+  )|grep AAAA|grep '^hrv-'
+}
 function esl { local p=$(dnz $1 $2);local s=$(dnn $1);echo -e "\nzsh $s:$p     ";zsh $p $s; }
 function erq { local q=${1:-changelogs.ubuntu.com};msh resolvectl query $q; }
 
@@ -87,4 +100,3 @@ alias tt='t6 hsh'
 alias ky='ssh-keygen -f ~/.ssh/id_ed25519 -t ed25519 -C "$(whoami)@$(hostname)";cat ~/.ssh/id_ed25519.pub'
 alias xx='exit'
 alias rq='msh ip a;msh ip r;systemctl is-active --quiet systemd-networkd && msh networkctl status;msh resolvectl status;erq'
-alias rd='msh resolvectl flush-caches;gsh dig AAAA hrv-zen.home.arpa;gsh dig AAAA hrv-lenovo.home.arpa;gsh dig AAAA hrv-zotac3.home.arpa;gsh dig AAAA hrv-zotac3.unknown.home.arpa'
