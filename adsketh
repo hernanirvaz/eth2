@@ -11,7 +11,7 @@ function zsh { ssh -p $1 -i ~/.ssh/id_ed25519 $2 "$3"; }
 
 function msh { echo -e "\n\e[5;32m${*^^}\e[0m";eval "$*"; }
 function dsh {
-  resolvectl flush-caches
+  msh resolvectl flush-caches
  (msh dig AAAA hrv-zotac1.home.arpa;msh dig AAAA hrv-zotac1.unknown.home.arpa
   msh dig AAAA hrv-zotac2.home.arpa;msh dig AAAA hrv-zotac2.unknown.home.arpa
   msh dig AAAA hrv-zotac3.home.arpa;msh dig AAAA hrv-zotac3.unknown.home.arpa
@@ -109,4 +109,4 @@ alias ky='ssh-keygen -f ~/.ssh/id_ed25519 -t ed25519 -C "$(whoami)@$(hostname)";
 alias lk="ei0 \$H \$E \$R \$V \$(npt) >~/i0;ei1 \$H \$V \$K \$E \$B >~/i1;cc0 \$(nip) \$(npt)"
 alias fw='echo "export R=\"$(</dev/urandom tr -dc "A-Za-z0-9?%&_+=@~#\,.?/"|head -c50)\"";echo "export H=\"$(</dev/urandom tr -dc "A-Za-z0-9?%&_+=@~#\,.?/"|head -c30)\"";echo "export V=\"$(</dev/urandom tr -dc "A-Za-z0-9"|head -c8)\"";echo "export K=\"$(</dev/urandom tr -dc "A-Za-z0-9?%&_+=@~#\,.?/"|head -c60)\"";echo "export W=\"$(</dev/urandom tr -dc "A-Za-z0-9?%&_+=@~#\,.?/"|head -c60)\"";'
 alias xx='exit'
-alias rq='msh ip a;msh ip r;systemctl is-active --quiet systemd-networkd && msh networkctl status;msh resolvectl status;erq'
+alias rq='msh ip a;msh ip r;systemctl is-active --quiet systemd-networkd && msh networkctl status;msh resolvectl status;erq;sht && dsh'
