@@ -10,20 +10,8 @@ function dnz { local p=$2;[[ $p ]] || p=$(dnp $1);printf %i $p; }
 function zsh { ssh -p $1 -i ~/.ssh/id_ed25519 $2 "$3"; }
 
 function msh { echo -e "\n\e[5;32m${*^^}\e[0m";eval "$*"; }
-function dsh {
-  msh resolvectl flush-caches
- (msh dig AAAA hrv-zotac1.home.arpa;msh dig AAAA hrv-zotac1.unknown.home.arpa
-  msh dig AAAA hrv-zotac2.home.arpa;msh dig AAAA hrv-zotac2.unknown.home.arpa
-  msh dig AAAA hrv-zotac3.home.arpa;msh dig AAAA hrv-zotac3.unknown.home.arpa
-  msh dig AAAA hrv-zotac4.home.arpa;msh dig AAAA hrv-zotac4.unknown.home.arpa
-  msh dig AAAA hrv-intel5.home.arpa;msh dig AAAA hrv-intel5.unknown.home.arpa
-  msh dig AAAA hrv-intel6.home.arpa;msh dig AAAA hrv-intel6.unknown.home.arpa
-  msh dig AAAA hrv-zen.home.arpa;msh dig AAAA hrv-zen.unknown.home.arpa
-  msh dig AAAA hrv-lenovo.home.arpaS;msh dig AAAA hrv-lenovo.unknown.home.arpaS
-  msh dig AAAA hrv-lgwebostv.home.arpa;msh dig AAAA hrv-lgwebostv.unknown.home.arpa
-  msh dig AAAA hrv-pixel-9-pro-xl.home.arpa;msh dig AAAA hrv-pixel-9-pro-xl.unknown.home.arpa
-  )|grep AAAA|grep '^hrv-'
-}
+function icm { dig +domain=unknown.home.arpa AAAA $@;dig +domain=home.arpa AAAA $@;dig +domain=unknown.home.arpa A $@;dig +domain=home.arpa A $@; }
+function dsh { msh resolvectl flush-caches;icm hrv-zotac1 hrv-zotac2 hrv-zotac3 hrv-zotac4 hrv-intel5 hrv-intel6 hrv-zen hrv-lenovo lgwebostv lgwebostv0 dreamevacuumr2364a pixel-9-pro-xl|grep -E '^[a-z]{3}'|sort; }
 function esl { local p=$(dnz $1 $2);local s=$(dnn $1);echo -e "\nzsh $s:$p     ";zsh $p $s; }
 function erq { local q=${1:-github.com};msh resolvectl query $q; }
 function nrs { sudo netplan apply;sudo systemctl stop systemd-resolved;sleep 9;sudo systemctl start systemd-resolved;sleep 9;resolvectl status; }

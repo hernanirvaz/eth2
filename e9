@@ -2,5 +2,8 @@
 
 LANG=C
 LC_ALL=C
+mc=$(date +%M);[ $mc = 00 ] && mc=1
+mr=$(awk -v min=10 -v max=59 "BEGIN{srand(); print int(min+rand()*(max-min+1))}")
 
-[ $(printf %i $(date +%M)) -eq $(awk -v min=0 -v max=59 "BEGIN{srand(); print int(min+rand()*(max-min+1))}") ] && { date +"%Y-%m-%d %H:%M:%S";speedtest --simple|grep -Ei "Ping|Download|Upload";}|xargs
+[ $1 ] && mr=$mc
+[ ${mc##0} -eq ${mr##0} ] && { date +"%Y-%m-%d %H:%M:%S";speedtest --simple 2>/dev/null|grep -Ei "Ping|Download|Upload";}|xargs

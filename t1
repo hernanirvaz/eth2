@@ -712,12 +712,12 @@ function tps { sex "$s02 $s44"; }
 function bps { sex "$s02 $s12"; }
 function vps { sex "$s02 $s13";touch $p05/vc_slash 2>$p03; }
 function mps { sex "$s02 $s14"; }
-function gp  { cex "$s02 $s10"; }
-function up  { cex "$s02 $s11"; }
-function tp  { cex "$s02 $s44"; }
-function bp  { cex "$s02 $s12"; }
-function vp  { cex "$s02 $s13";touch $p05/vc_slash 2>$p03; }
-function mp  { cex "$s02 $s14"; }
+function gp  { if tsa $s10;then cex "$s02 $s10";else sex "$s02 $s10";fi; }
+function up  { if tsa $s11;then cex "$s02 $s11";else sex "$s02 $s11";fi; }
+function tp  { if tsa $s44;then cex "$s02 $s44";else sex "$s02 $s44";fi; }
+function bp  { if tsa $s12;then cex "$s02 $s12";else sex "$s02 $s12";fi; }
+function vp  { if tsa $s13;then cex "$s02 $s13";else sex "$s02 $s13";fi;touch $p05/vc_slash 2>$p03; }
+function mp  { if tsa $s14;then cex "$s02 $s14";else sex "$s02 $s14";fi; }
 function fft { [[ -f $1 ]]; }
 function shc { sha256sum $1 2>$p03|cut -d' ' -f1; }
 function srb { rm -f $1.* 2>$p03;if [[ $2 = RB ]];then if fft $p50.print;then gp;up;tp;bp;vp;mp;rm -f $p05/vc_slash $p50.print 2>$p03;cex reboot;else gps;ups;tps;bps;vps;mps;rm -f $p05/vc_slash 2>$p03;sex reboot;fi;else rm -f $p50.print 2>$p03;fi; }
