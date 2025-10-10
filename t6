@@ -675,7 +675,7 @@ function ve  {
 function pe  { pai 9090/tcp 192.168.8.0/24 $s16;sex 'ufw reload';cex "$s04 $s16"; }                                                                           # enable prometheus
 function ne  { sex 'ufw reload';cex "$s04 $s17"; }                                                                                                            # enable prometheus-node-exporter
 function fe  { pai 3000/tcp 192.168.8.0/24 grafana;sex 'ufw reload';cex "$s04 $s18"; }                                                                        # enable grafana-server
-function me  { if n3t;then nfw 18550 mev;fi;sex 'ufw reload';cex "$s04 $s14"; }                                                                                              # enable mev-boost
+function me  { if n3t;then nfw 18550 mev;fi;sex 'ufw reload';cex "$s04 $s14"; }                                                                               # enable mev-boost
 function ga  { tsa $s10 || cex "$s03 $s10"; }                                                                                                                 # start eth-geth
 function ua  { tsa $s11 || cex "$s03 $s11"; }                                                                                                                 # start eth-besu
 function ta  { tsa $s44 || cex "$s03 $s44"; }                                                                                                                 # start eth-nethermind
@@ -1039,6 +1039,7 @@ function cns {
 [[ $1 = sif ]] && { dts;sif s; }
 [[ $1 = tgp ]] && { touch $p50.print;trs PR ${2:-0}   ${3:-$n03}       ;rm -f $p50.print; }
 [[ $1 = bgp ]] && { touch $p50.print;brs PR ${2:-0} 0 ${3:-$n03}       ;rm -f $p50.print; }
+[[ $1 = apr ]] && { gp;up;tp;bp;vp;mp; }
 [[ $1 = grs ]] && { touch $p50.print;grs SR ${2:-0}   ${3:-$n03}       ;rm -f $p50.print; }
 [[ $1 = trs ]] && { touch $p50.print;trs SR ${2:-0}   ${3:-$n03}       ;rm -f $p50.print; }
 [[ $1 = urs ]] && { touch $p50.print;urs SR ${2:-0}   ${3:-$n03}       ;rm -f $p50.print; }
@@ -1261,8 +1262,9 @@ if [[ ! $1 ]];then
   m="$m\n[pr|ds|pd|pa|ea|ba|bp]\tpara|disable|para/disable|para/arranca|enable/arranca|[g|t|u]+beacon enable/arranca|[g|t|u]+beacon para/disable"
   m="$m\n"
   m="$m\n[g|t|u|b|c]rs [n] [g]\tgeth|nethermind|besu|cc|cc & vc\t\trestart\t\tn peers, mim gap"
-  m="$m\nvrs               [g]\tvc\t\t\t\t\trestart\t\tmim gap"
-  m="$m\n[g|t|u|b|v]rb     [g]\tgeth|nethermind|besu|cc|vc & sys\treboot\t\tmim gap"
+  m="$m\n          vrs     [g]\tvc\t\t\t\t\trestart\t\tmim gap"
+  m="$m\n[g|t|u|b|v]rb     [g]\tgeth|nethermind|besu|vc & sys\t\treboot\t\tmim gap"
+  m="$m\n[g|t|u|b|v|m|a]pr\tgeth|nethermind|besu|cc|vc|mev|all\tpara\t\timidiatly stop"
   m="$m\nirb               [h]\tsys (if needed)\t\t\t\treboot\t\tafter h hours"
   m="$m\nivk               [g]\timport validator keys\t\t\t\t\tmim gap"
   m="$m\ntvc               [g]\tvc transfer ($cuvc -> $nxvc)\t\t\tmim gap"
