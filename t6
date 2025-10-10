@@ -7,7 +7,8 @@ function nl0 { LC_NUMERIC=C printf '%+i'   $@         2>$p03; }
 function nl1 { LC_NUMERIC=C printf '%+f'   $@         2>$p03; }
 function nl2 { LC_NUMERIC=C printf '%+i^2' $@         2>$p03; }
 function nl3 { LC_NUMERIC=C printf '%i\n'  $@         2>$p03; }
-function nl4 { [[ $2 -eq 0 ]] && printf "%${1}s" || LC_NUMERIC=C printf "%${1}i" $2; }
+function nl4 { if [[ ${2:-0} -eq 0 ]];then printf "%s" $1;else LC_NUMERIC=C printf "%${2}i" $1;fi; }
+function nl5 { if [[ ${2:-0} -eq 0 ]];then printf "%s" $1;else if [[ $1 -gt 0 ]];then printf "%${2}s" $(swg $1);else LC_NUMERIC=C printf "%${2}i" $1;fi;fi; }
 function nu0 { LC_NUMERIC=C printf "$1"    ${2:-0}    2>$p03; }
 function nu1 { LC_NUMERIC=C printf '%i'    ${1:-0}    2>$p03; }
 function nu2 { nbc "0$(nl0 $@)"; }
@@ -345,7 +346,7 @@ function vlo {
 #    0  1   2          3     4       5   6     7    8    9  10 11  12 13  14  15  16   17   18   19      20   21   22   23 24    25  26   27
 # BEAC OK   0 2024-04-02 16:07 nod100: 107 rpab: 3023 2696 3978 0 er:  0  15  84  28    6  994   12 iearhp: 1083 4354 3218 17 66290  62 1473
 function blo {
-  m="$s75 $ok $(printf '%3i' $(bri) 2>$p03) $(npn $nr $nn) $(printf 'rpab: %4i %3i %3i %1i' $(b04 $z3 $b0) $(b02 $zk $zz $zx $zw) $z3 $b0 2>$p03)"
+  m="$s75 $ok $(printf '%3i' $(bri) 2>$p03) $(npn $nr $nn) $(printf 'rpab: %4i %3i %3i %s' $(b04 $z3 $b0) $(b02 $zk $zz $zx $zw) $z3 $(nl5 $b0 1) 2>$p03)"
   m="$m $(printf 'er: %1i %1i %2i %2i %3i %4i %4i iearhp: %4i %3i %4i %2i %2i %2i %4i' $zk $zz $zx $zw $z1 $z2 $(b06) $i0 $i1 $i4 $b1 $i2 $i3 $(b01) 2>$p03)"
 }
 #    0    1   2          3     4       5  6   7     8    9   10   11   12   13   14   15  16  17   18      19   20   21   22 23    24  25   26
@@ -409,10 +410,10 @@ function bh0 {
   fft $p12 || return
   tail -n${1:-$n12} $p12
   [[ $1 ]] && return
-  local e;boi;bl0;e=$(printf '%1i     9 5  1  0 err norm  idx' $b0 2>$p03)
+  local e;boi;bl0;e=$(printf '%s     9 5  1  0 err norm  idx' $(nl5 $b0 1) 2>$p03)
   swn "BO $(printf '%4i%4i%34s%14s' $b2 $(wc -l <<< "$l2") 2>$p03)$e";bo5
   swn "BL $(printf '%8i/%4i%34s%9s' $(llc $p12) $n14 2>$p03)$e\n$m";bm0;bmo
-  swn "BM $(printf '%8i%20i/%-2i%3i/%-2i     i4  i5  i6  i7%1i i8  i9 i10 avg%13i' $(llc $p13) $nm $(b05 $nr) $nz $n57 $b0 $n20 2>$p03)\n$m"
+  swn "BM $(printf '%8i%20i/%-2i%3i/%-2i     i4  i5  i6  i7%s i8  i9 i10 avg%13i' $(llc $p13) $nm $(b05 $nr) $nz $n57 $(nl5 $b0 1) $n20 2>$p03)\n$m"
 }
 function bwd { local n=$((($(date +%s)-n09)/(12*32)-0));for n in $n $((n+1));do curl -sH "$s28" $s67 -X POST -d"$(viv)" "$s32/sync/$n";curl -sH "$s28" $s67 -X GET "$s32/proposer/$n";done 2>$p03|jq -r $s35 2>$p03; }
 function bwc { bwd|grep -Ex "$(vix)" 2>$p03|wc -l; }
@@ -552,7 +553,7 @@ function clk {
     e="CSYS $s"
     m="$(printf '%-40s' "$(ss2 $s19)" 2>$p03) $(cl4 $(cls))"
   fi
-  m="$e $(nl4 3 $n) $dt $m"
+  m="$e $(nl4 $n 3) $dt $m"
 }
 function hch { clk h;if sht;then local e=$(sn2 $cunm);else local e=${cunm:0:2}${cunm: -2};fi;swn "$e${m:4}"; }
 function hca {
