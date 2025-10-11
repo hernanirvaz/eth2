@@ -38,7 +38,7 @@ function ll0 { local f=$(lfl $p16/logs beacon    2);[[ $f ]] || return;SUDO_ASKP
 function ll1 { local f=$(lfl $p17/logs validator 2);[[ $f ]] || return;SUDO_ASKPASS=$p82 sudo -A cat $f|tail -n$n15      ; }                                  # get vc intern lines
 function ll2 { local f=$(lfl $p16/logs beacon    2);[[ $f ]] || return;sgn "$1" $f|tail -n$n15      ; }                                                       # get cc intern lines (specific)
 function ll3 { local f=$(lfl $p17/logs validator 4);[[ $f ]] || return;sgn "$1" $f|tail -n$2        ; }                                                       # get vc intern lines (specific)
-function ll4 { local f=$(lfl $p61/logs mainnet   2);[[ $f ]] || return;sgn "$1" $f                  ; }                                                       # get neth intern lines
+function ll4 { local f=$(lfl $p07/logs mainnet   2);[[ $f ]] || return;sgn "$1" $f                  ; }                                                       # get neth intern lines
 function ll5 { sgn "$1"   $p01; }                                                                                                                             # get all eth syslog lines
 function ll6 { sgv "$g13" $p01; }                                                                                                                             # get not eth syslog lines
 function ln0 {                   snf "s%.*$1 *([0-9]+).*%\1%p" $2; }                                                                                          # get sed list of numbers (file)
