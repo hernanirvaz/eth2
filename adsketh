@@ -2,24 +2,24 @@
 
 source /home/eth/eth2/a2
 
+function cz1 { zcp $2 $(dnn $1):~/.bash_aliases ~/eth2/asrv                      ; }
+function cz2 { zcp $2 $(dnn $1):~/eth2          ~/eth2/t[1-9] ~/eth2/e? ~/eth2/a?; }
 function nrs { sudo netplan apply;sudo systemctl stop systemd-resolved;sleep 9;sudo systemctl start systemd-resolved;sleep 9;resolvectl status; }
-function ecp { local p=$(dnz $1 $2);local s=$(dnn $1);echo -e "\nzcp $s:$p eth2";cc2 $1 $p; }
-function ocp { local p=$(dnz $1 $2);local s=$(dnn $1);echo -e "\nzcp $s:$p ocp ";cc1 $1 $p;zcp $p $s:~/.ssh/authorized_keys ~/eth2/keth; }
+function ecp { local p=$(dnz $1 $2);local s=$(dnn $1);echo -e "\nzcp $s:$p eth2";cz2 $1 $p; }
+function ocp { local p=$(dnz $1 $2);local s=$(dnn $1);echo -e "\nzcp $s:$p ocp ";cz1 $1 $p;zcp $p $s:~/.ssh/authorized_keys ~/eth2/keth; }
 function ccp { local p=$(dnz $1 $2);local s=$(dnn $1);echo -e "\nzcp $s:$p ccp ";zcp $p $s: ~/eth2/cns.keys.gpg;zcp $p $s: ~/eth2/hernanirvaz-f2e8fb66dbc0.json.gpg; }
 function rcp { local p=$(dnz $1 $2);local s=$(dnn $1);echo -e "\nzcp $s:$p rcp ";zcp $p $s:~/.ssh/authorized_keys ~/eth2/keth;zcp $p $s: ~/eth2/rt-pfsense-wan-check.sh; }
-function cc1 { zcp $2 $(dnn $1):~/.bash_aliases ~/eth2/asrv            ; }
-function cc2 { zcp $2 $(dnn $1):~/eth2          ~/eth2/t[1-9] ~/eth2/e? ~/eth2/a?; }
 function ecv { local s='';for s in $@;do ecp $s;done; }
 function ocv { local s='';for s in $@;do ocp $s;done; }
 function ei0 { echo -e "export H=\"$1\"\nexport E=\"$2\"\nexport R=\"$3\"\nexport V=\"$4\"\npr=$5"; }
 function ei1 { echo -e "echo>>~/.bashrc\necho \"export PATH=\\\"\\\$PATH:/home/eth/eth2\\\"\">>~/.bashrc\necho \"export H=\\\"$1\\\"\">>~/.bashrc\necho \"export V=\\\"$2\\\"\">>~/.bashrc\necho \"export K=\\\"$3\\\"\">>~/.bashrc\necho \"export E=\\\"$4\\\"\">>~/.bashrc\necho \"export B=\\\"$5\\\"\">>~/.bashrc\necho \"PS1=\\\"\\\$H:\\\h: \\\"\">>~/.bashrc\nchmod 755 ~/eth2/t[1-9] ~/eth2/e?"; }
-function cc0 {
+function cz0 {
   if sdt $1;then local u=eu;else local u=ubuntu;fi;local s="$u@$1"
   scp -P 22 ~/eth2/s? ~/eth2/keth ~/i0 $s:~
   echo -e "\n\n\n\nsudo -i\nbash /home/$u/s0\n\n\n\n"
   ssh -p 22 $s
-  cc1 $1 $2
-  cc2 $1 $2
+  cz1 $1 $2
+  cz2 $1 $2
   zcp $2 $1: ~/i1
   zsh $2 $1 'sh i1'
   echo -e "\n\nky # gerar key & copiar para keth\nt2 # setup\n\n"
@@ -80,7 +80,7 @@ alias gt='cd ~/eth2;git status'
 alias gv='cd;vi eth2/t[1-8] eth2/e[1-9]'
 
 alias ky='ssh-keygen -f ~/.ssh/id_ed25519 -t ed25519 -C "$(whoami)@$(hostname)";cat ~/.ssh/id_ed25519.pub'
-alias lk="ei0 \$H \$E \$R \$V \$(npt) >~/i0;ei1 \$H \$V \$K \$E \$B >~/i1;cc0 \$(nip) \$(npt)"
+alias lk="ei0 \$H \$E \$R \$V \$(npt) >~/i0;ei1 \$H \$V \$K \$E \$B >~/i1;cz0 \$(nip) \$(npt)"
 alias fw='echo "export R=\"$(</dev/urandom tr -dc "A-Za-z0-9?%&_+=@~#\,.?/"|head -c50)\"";echo "export H=\"$(</dev/urandom tr -dc "A-Za-z0-9?%&_+=@~#\,.?/"|head -c30)\"";echo "export V=\"$(</dev/urandom tr -dc "A-Za-z0-9"|head -c8)\"";echo "export K=\"$(</dev/urandom tr -dc "A-Za-z0-9?%&_+=@~#\,.?/"|head -c60)\"";echo "export W=\"$(</dev/urandom tr -dc "A-Za-z0-9?%&_+=@~#\,.?/"|head -c60)\"";'
 alias xx='exit'
 alias rq='msh ip a;msh ip r;systemctl is-active --quiet systemd-networkd && msh networkctl status;msh resolvectl status;erq github.com;sht && dsh'
