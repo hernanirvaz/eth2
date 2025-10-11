@@ -11,7 +11,7 @@ if [[ $cunm = hrv-zotac2 ]];then
   mt2 () { id plex     &>>/dev/null; }
   mdi () { if mt1;then echo /media/mp4;elif mt2;then echo /var/lib/plexmediaserver/mp4;else echo /media/mp4;fi; }
   mus () { if mt1;then echo jellyfin  ;elif mt2;then echo plex                        ;else echo eth       ;fi; }
-  rsy () { echo rsync -p $3 $1 $2;rsync --ignore-existing --delete --numeric-ids -rv -e "ssh -p $3 -i ~/.ssh/id_ed25519" $1 $2; }
+  rsy () { echo -e "\n\nrsync $1 $2";rsync --ignore-existing --delete --numeric-ids -rv -e "ssh -p $3 -i ~/.ssh/id_ed25519" $1 $2; }
   smv () { local s=hrv-zotac3;local p=$(dnz $s);local d=$(mdi);rsy $d/movie  $(dnn $s): $p; }
   stv () { local s=hrv-zotac1;local p=$(dnz $s);local d=$(mdi);rsy $d/tv2    $(dnn $s): $p;rsy $d/tv  $(dnn $s): $p; }
   slt () { local s=hrv-zotac3;local p=$(dnz $s);local d=$(mdi);rsy $d/lust   $(dnn $s): $p; }
