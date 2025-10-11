@@ -3,9 +3,39 @@
 cunm=$(hostname)
 cust=${cunm:0:3}
 
-function sht { [[ $(hostname -I|cut -d. -f1-3) = 192.168.8 ]]; }
-function dnn { local s=$1;[[ ${s%%.*} =~ ^[a-zA-Z]+ ]] && ! sht && s="$s.fruga.pt";[[ ${s%%.*} == hrv-zotac1 ]] && s="admin@$s";printf %s $s; }
-function dnp { local n=${1##*[!0-9]};local p=2020;[[ $1 =~ ^hrv-[a-z]{5}[0-9]$ ]] && p=$((p+n));printf %i $p; }
+function sin {
+  case ${1%%.*} in
+  hrv-intel5) printf 192.168.8.37 ;;
+  hrv-intel6) printf 192.168.8.40 ;;
+  hrv-zotac1) printf 192.168.8.25 ;;
+  hrv-zotac2) printf 192.168.8.28 ;;
+  hrv-zotac3) printf 192.168.8.31 ;;
+  hrv-zotac4) printf 192.168.8.34 ;;
+  *) printf $1 ;;
+  esac
+}
+function spn {
+  local n
+  case ${1%%.*} in
+  hrv*) n=$((2020+${s##*[!0-9]})) ;;
+  hrv-intel5) n=2025 ;;
+  hrv-intel6) n=2026 ;;
+  hrv-zotac1) n=2021 ;;
+  hrv-zotac2) n=2022 ;;
+  hrv-zotac3) n=2023 ;;
+  hrv-zotac4) n=2024 ;;
+  *) n=2020 ;;
+  esac
+  printf %i $n
+}
+function sht { [[ $(hostname -I|cut -d. -f1-3) = 192.168.8 ]]; } # source in my lAN network
+function sot { nslookup $1 2>/dev/null 1>&2; } # DNS lookup exists
+function sit { [[ $1 = 192.168.8.* ]]; } # destination to my lAN IPs
+function snt { [[ $1 = hrv* ]]; } # destination to my lAN hostnames
+function sdt { sit $1 || snt $1; } # destination to my lAN network
+function srt { [[ $1 = 192.168.8.25 || $1 == hrv-zotac1* ]]; } # destination to my psSense router
+function dnn { local s=$1;sot $s || s=$(sin $1);snt $1 && ! sht && s="$s.fruga.pt";srt $s && s="admin@$s";printf %s $s; }
+function dnp { local s=$1;sot $s || s=$(sin $1);local n=${s##*[!0-9]};local p=2020;sdt $s && p=$((p+n));printf %i $p; }
 function dnz { local p=$2;[[ $p ]] || p=$(dnp $1);printf %i $p; }
 function zsh { ssh -p $1 -i ~/.ssh/id_ed25519 $2 "$3"; }
 
@@ -28,7 +58,7 @@ function ocv { local s='';for s in $@;do ocp $s;done; }
 function ei0 { echo -e "export H=\"$1\"\nexport E=\"$2\"\nexport R=\"$3\"\nexport V=\"$4\"\npr=$5"; }
 function ei1 { echo -e "echo>>~/.bashrc\necho \"export PATH=\\\"\\\$PATH:/home/eth/eth2\\\"\">>~/.bashrc\necho \"export H=\\\"$1\\\"\">>~/.bashrc\necho \"export V=\\\"$2\\\"\">>~/.bashrc\necho \"export K=\\\"$3\\\"\">>~/.bashrc\necho \"export E=\\\"$4\\\"\">>~/.bashrc\necho \"export B=\\\"$5\\\"\">>~/.bashrc\necho \"PS1=\\\"\\\$H:\\\h: \\\"\">>~/.bashrc\nchmod 755 ~/eth2/t[1-9] ~/eth2/e?"; }
 function cc0 {
-  if [[ $1 = 192.168.8.* || $1 = hrv* ]];then local u=eu;else local u=ubuntu;fi;local s="$u@$1"
+  if sdt $1;then local u=eu;else local u=ubuntu;fi;local s="$u@$1"
   scp -P 22 ~/eth2/s? ~/eth2/keth ~/i0 $s:~
   echo -e "\n\n\n\nsudo -i\nbash /home/$u/s0\n\n\n\n"
   ssh -p 22 $s

@@ -31,7 +31,7 @@ function nby {
 }
 function sgn { local g="$1";shift;SUDO_ASKPASS=$p82 sudo -A grep -Eah  "$g" $@ 2>$p03; }
 function sgv { local g="$1";shift;SUDO_ASKPASS=$p82 sudo -A grep -Eahv "$g" $@ 2>$p03; }
-function sin {                                              grep -Eai  "$1"    2>$p03; }
+function sip {                                              grep -Eai  "$1"    2>$p03; }
 function siv {                                              grep -Eaiv "$1"    2>$p03; }
 function lfl { SUDO_ASKPASS=$p82 sudo -A find $1 -name "$2*" -type f -printf "%T@\t%p\n" 2>$p03|sort -nr|head -n$3|sort -n|cut -f2; }
 function ll0 { local f=$(lfl $p16/logs beacon    2);[[ $f ]] || return;SUDO_ASKPASS=$p82 sudo -A cat $f|tail -n$((n15*2)); }                                  # get cc intern lines
@@ -49,9 +49,9 @@ function ln4 { if g0t $3;then l6=$(ll5 "$2.*$1"|tail -n$3);else l6=$(ll5 "$2.*$1
 function ln5 { l6=$(ll4 "$2.*$1");ln1 $1; }                                                                                                                       # get numbers all  syslog lines
 function fl0 { ll6|tail -n300|flp "Core.*temperature" $2|if [[ $1 ]];then sef "$1";else cat;fi; }                                                                                                   # get temp  cpu lines
 function fl1 { ll6           |flp "$g29" $2|grep -i usb |if [[ $1 ]];then sef "$1";else cat;fi; }                                                                                                    # get error usb lines
-function fln { if [[ $2 ]];then sin "^$g41$2";else siv "$1";fi; }                                                                                             # get negate re syslog lines
-function flp { if [[ $2 ]];then sin "^$g41$2";else sin "$1"|siv "$g38";fi; }                                                                                  # get posite re syslog lines
-function tln { if [[ $2 ]];then sin "^$g23$2";else siv "$1";fi; }                                                                                             # get negate re syslog lines
+function fln { if [[ $2 ]];then sip "^$g41$2";else siv "$1";fi; }                                                                                             # get negate re syslog lines
+function flp { if [[ $2 ]];then sip "^$g41$2";else sip "$1"|siv "$g38";fi; }                                                                                  # get posite re syslog lines
+function tln { if [[ $2 ]];then sip "^$g23$2";else siv "$1";fi; }                                                                                             # get negate re syslog lines
 function pt0 { until [[ $# -le 1 || $1 =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]];do shift;done;printf %s $1; }                                                       # yyyy-mm-dd test
 function pt1 { until [[ $# -le 1 || $1 =~ ^[0-9]{2}:[0-9]{2}$          ]];do shift;done;printf %s $1; }                                                       # hh:mm      test
 function pt2 { until [[ $# -le 1 || $1 =~ ^[0-9]+$                     ]];do shift;done;printf %i $1; }                                                       # integer    test
