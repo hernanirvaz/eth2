@@ -2,8 +2,6 @@
 
 source /home/eth/eth2/a2
 
-function erq { local q=${1:-changelogs.ubuntu.com};msh resolvectl query $q; }
-
 cunm=$(hostname)
 
 if [[ $cunm = hrv-zotac2 ]];then
@@ -78,4 +76,4 @@ alias hh='t6 hs0'
 alias tt='t6 hsh'
 alias ky='ssh-keygen -f ~/.ssh/id_ed25519 -t ed25519 -C "$(whoami)@$(hostname)";cat ~/.ssh/id_ed25519.pub'
 alias xx='exit'
-alias rq='msh ip a;msh ip r;systemctl is-active --quiet systemd-networkd && msh networkctl status;msh resolvectl status;erq;sht && dsh'
+alias rq='msh ip a;msh ip r;systemctl is-active --quiet systemd-networkd && msh networkctl status;msh resolvectl status;erq changelogs.ubuntu.com;sht && dsh'

@@ -2,7 +2,6 @@
 
 source /home/eth/eth2/a2
 
-function erq { local q=${1:-github.com};msh resolvectl query $q; }
 function nrs { sudo netplan apply;sudo systemctl stop systemd-resolved;sleep 9;sudo systemctl start systemd-resolved;sleep 9;resolvectl status; }
 function ecp { local p=$(dnz $1 $2);local s=$(dnn $1);echo -e "\nzcp $s:$p eth2";cc2 $1 $p; }
 function ocp { local p=$(dnz $1 $2);local s=$(dnn $1);echo -e "\nzcp $s:$p ocp ";cc1 $1 $p;zcp $p $s:~/.ssh/authorized_keys ~/eth2/keth; }
@@ -84,4 +83,4 @@ alias ky='ssh-keygen -f ~/.ssh/id_ed25519 -t ed25519 -C "$(whoami)@$(hostname)";
 alias lk="ei0 \$H \$E \$R \$V \$(npt) >~/i0;ei1 \$H \$V \$K \$E \$B >~/i1;cc0 \$(nip) \$(npt)"
 alias fw='echo "export R=\"$(</dev/urandom tr -dc "A-Za-z0-9?%&_+=@~#\,.?/"|head -c50)\"";echo "export H=\"$(</dev/urandom tr -dc "A-Za-z0-9?%&_+=@~#\,.?/"|head -c30)\"";echo "export V=\"$(</dev/urandom tr -dc "A-Za-z0-9"|head -c8)\"";echo "export K=\"$(</dev/urandom tr -dc "A-Za-z0-9?%&_+=@~#\,.?/"|head -c60)\"";echo "export W=\"$(</dev/urandom tr -dc "A-Za-z0-9?%&_+=@~#\,.?/"|head -c60)\"";'
 alias xx='exit'
-alias rq='msh ip a;msh ip r;systemctl is-active --quiet systemd-networkd && msh networkctl status;msh resolvectl status;erq;sht && dsh'
+alias rq='msh ip a;msh ip r;systemctl is-active --quiet systemd-networkd && msh networkctl status;msh resolvectl status;erq github.com;sht && dsh'
