@@ -1,0 +1,8 @@
+#!/usr/bin/bash
+
+source /home/eth/eth2/a0
+
+function msh { echo -e "\n\e[5;32m${*^^}\e[0m";eval "$*"; }
+function icm { dig +domain=unknown.home.arpa AAAA $@;dig +domain=home.arpa AAAA $@;dig +domain=unknown.home.arpa A $@;dig +domain=home.arpa A $@; }
+function dsh { msh resolvectl flush-caches;icm hrv-zotac1 hrv-zotac2 hrv-zotac3 hrv-zotac4 hrv-intel5 hrv-intel6 hrv-zen hrv-lenovo lgwebostv lgwebostv0 dreamevacuumr2364a pixel-9-pro-xl|grep -E '^[a-z]{3}'|sort; }
+function esl { local p=$(dnz $1 $2);local s=$(dnn $1);echo -e "\nzsh $s:$p     ";zsh $p $s; }
