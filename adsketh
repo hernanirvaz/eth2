@@ -1,58 +1,15 @@
 #!/usr/bin/bash
 
-cunm=$(hostname)
-cust=${cunm:0:3}
+source /home/eth/eth2/a2
 
-function sin {
-  case ${1%%.*} in
-  hrv-intel5) printf 192.168.8.37 ;;
-  hrv-intel6) printf 192.168.8.40 ;;
-  hrv-zotac1) printf 192.168.8.25 ;;
-  hrv-zotac2) printf 192.168.8.28 ;;
-  hrv-zotac3) printf 192.168.8.31 ;;
-  hrv-zotac4) printf 192.168.8.34 ;;
-  *) printf $1 ;;
-  esac
-}
-function spn {
-  local n
-  case ${1%%.*} in
-  hrv*) n=$((2020+${s##*[!0-9]})) ;;
-  hrv-intel5) n=2025 ;;
-  hrv-intel6) n=2026 ;;
-  hrv-zotac1) n=2021 ;;
-  hrv-zotac2) n=2022 ;;
-  hrv-zotac3) n=2023 ;;
-  hrv-zotac4) n=2024 ;;
-  *) n=2020 ;;
-  esac
-  printf %i $n
-}
-function sht { [[ $(hostname -I|cut -d. -f1-3) = 192.168.8 ]]; } # source in my lAN network
-function sot { nslookup $1 2>/dev/null 1>&2; } # DNS lookup exists
-function sit { [[ $1 = 192.168.8.* ]]; } # destination to my lAN IPs
-function snt { [[ $1 = hrv* ]]; } # destination to my lAN hostnames
-function sdt { sit $1 || snt $1; } # destination to my lAN network
-function srt { [[ $1 = 192.168.8.25 || $1 == hrv-zotac1* ]]; } # destination to my psSense router
-function dnn { local s=$1;sot $s || s=$(sin $1);snt $1 && ! sht && s="$s.fruga.pt";srt $s && s="admin@$s";printf %s $s; }
-function dnp { local s=$1;sot $s || s=$(sin $1);local n=${s##*[!0-9]};local p=2020;sdt $s && p=$((p+n));printf %i $p; }
-function dnz { local p=$2;[[ $p ]] || p=$(dnp $1);printf %i $p; }
-function zsh { ssh -p $1 -i ~/.ssh/id_ed25519 $2 "$3"; }
-
-function msh { echo -e "\n\e[5;32m${*^^}\e[0m";eval "$*"; }
-function icm { dig +domain=unknown.home.arpa AAAA $@;dig +domain=home.arpa AAAA $@;dig +domain=unknown.home.arpa A $@;dig +domain=home.arpa A $@; }
-function dsh { msh resolvectl flush-caches;icm hrv-zotac1 hrv-zotac2 hrv-zotac3 hrv-zotac4 hrv-intel5 hrv-intel6 hrv-zen hrv-lenovo lgwebostv lgwebostv0 dreamevacuumr2364a pixel-9-pro-xl|grep -E '^[a-z]{3}'|sort; }
-function esl { local p=$(dnz $1 $2);local s=$(dnn $1);echo -e "\nzsh $s:$p     ";zsh $p $s; }
 function erq { local q=${1:-github.com};msh resolvectl query $q; }
 function nrs { sudo netplan apply;sudo systemctl stop systemd-resolved;sleep 9;sudo systemctl start systemd-resolved;sleep 9;resolvectl status; }
-
-function zcp { local p=$1;local d=$2;shift;shift;scp -P $p -i ~/.ssh/id_ed25519 $@ "$d"; }
 function ecp { local p=$(dnz $1 $2);local s=$(dnn $1);echo -e "\nzcp $s:$p eth2";cc2 $1 $p; }
 function ocp { local p=$(dnz $1 $2);local s=$(dnn $1);echo -e "\nzcp $s:$p ocp ";cc1 $1 $p;zcp $p $s:~/.ssh/authorized_keys ~/eth2/keth; }
 function ccp { local p=$(dnz $1 $2);local s=$(dnn $1);echo -e "\nzcp $s:$p ccp ";zcp $p $s: ~/eth2/cns.keys.gpg;zcp $p $s: ~/eth2/hernanirvaz-f2e8fb66dbc0.json.gpg; }
 function rcp { local p=$(dnz $1 $2);local s=$(dnn $1);echo -e "\nzcp $s:$p rcp ";zcp $p $s:~/.ssh/authorized_keys ~/eth2/keth;zcp $p $s: ~/eth2/rt-pfsense-wan-check.sh; }
 function cc1 { zcp $2 $(dnn $1):~/.bash_aliases ~/eth2/asrv            ; }
-function cc2 { zcp $2 $(dnn $1):~/eth2          ~/eth2/t[1-9] ~/eth2/e?; }
+function cc2 { zcp $2 $(dnn $1):~/eth2          ~/eth2/t[1-9] ~/eth2/e? ~/eth2/a?; }
 function ecv { local s='';for s in $@;do ecp $s;done; }
 function ocv { local s='';for s in $@;do ocp $s;done; }
 function ei0 { echo -e "export H=\"$1\"\nexport E=\"$2\"\nexport R=\"$3\"\nexport V=\"$4\"\npr=$5"; }

@@ -1,35 +1,10 @@
 #!/usr/bin/bash
 
-cunm=$(hostname)
-cust=${cunm:0:3}
+source /home/eth/eth2/a2
 
-function sin {
-  case ${1%%.*} in
-  hrv-intel5) printf 192.168.8.37 ;;
-  hrv-intel6) printf 192.168.8.40 ;;
-  hrv-zotac1) printf 192.168.8.25 ;;
-  hrv-zotac2) printf 192.168.8.28 ;;
-  hrv-zotac3) printf 192.168.8.31 ;;
-  hrv-zotac4) printf 192.168.8.34 ;;
-  *) printf $1 ;;
-  esac
-}
-function sht { [[ $(hostname -I|cut -d. -f1-3) = 192.168.8 ]]; } # source in my lAN network
-function sot { nslookup $1 2>/dev/null 1>&2; } # DNS lookup exists
-function sit { [[ $1 = 192.168.8.* ]]; } # destination to my lAN IPs
-function snt { [[ $1 = hrv* ]]; } # destination to my lAN hostnames
-function sdt { sit $1 || snt $1; } # destination to my lAN network
-function srt { [[ $1 = 192.168.8.25 || $1 == hrv-zotac1* ]]; } # destination to my psSense router
-function dnn { local s=$1;sot $s || s=$(sin $1);snt $1 && ! sht && s="$s.fruga.pt";srt $s && s="admin@$s";printf %s $s; }
-function dnp { local s=$(sin $1);local n=${s##*[!0-9]};local p=2020;sdt $s && p=$((p+n));printf %i $p; }
-function dnz { local p=$2;[[ $p ]] || p=$(dnp $1);printf %i $p; }
-function zsh { ssh -p $1 -i ~/.ssh/id_ed25519 $2 "$3"; }
-
-function msh { echo -e "\n\e[5;32m${*^^}\e[0m";eval "$*"; }
-function icm { dig +domain=unknown.home.arpa AAAA $@;dig +domain=home.arpa AAAA $@;dig +domain=unknown.home.arpa A $@;dig +domain=home.arpa A $@; }
-function dsh { msh resolvectl flush-caches;icm hrv-zotac1 hrv-zotac2 hrv-zotac3 hrv-zotac4 hrv-intel5 hrv-intel6 hrv-zen hrv-lenovo lgwebostv lgwebostv0 dreamevacuumr2364a pixel-9-pro-xl|grep -E '^[a-z]{3}'|sort; }
-function esl { local p=$(dnz $1 $2);local s=$(dnn $1);echo -e "\nzsh $s:$p     ";zsh $p $s; }
 function erq { local q=${1:-changelogs.ubuntu.com};msh resolvectl query $q; }
+
+cunm=$(hostname)
 
 if [[ $cunm = hrv-zotac2 ]];then
   cuip=$(hostname -I)
