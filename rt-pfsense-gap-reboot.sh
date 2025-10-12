@@ -1,5 +1,3 @@
 #!/bin/sh
 
-LOG="/root/rt-pfsense-gap-reboot.log"
-
-{ date +'%Y-%m-%d %H:%M:%S';/etc/rc.reboot; } >> $LOG 2>&1
+{ date +'%Y-%m-%d %H:%M:%S';/etc/rc.reboot; } >> /root/rt-pfsense-gap-reboot.log 2>&1
