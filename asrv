@@ -56,7 +56,7 @@ fi
 
 alias z1='esl hrv-zotac1'
 alias zr='esl hrv-zotac1'
-alias zl="zsh 2021 $(dnn hrv-zotac1) 'tail -n20 ~/rt-pfsense-wan-check.log'"
+alias zl="pcm"
 
 alias z2="esl hrv-zotac2"
 alias z3="esl hrv-zotac3"
