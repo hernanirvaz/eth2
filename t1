@@ -43,9 +43,9 @@ p01='/var/log/syslog'
 p02='/home/eth'
 p03='/dev/null'
 p04='/etc/systemd/system'
-p05='/var/lib/lighthouse'  ;[[ $cunm = $inm6 ]] && p05='/cl/lighthouse'
+p05='/var/lib/lighthouse'  ;[[ $cunm = $inm5 || $cunm = $inm6 ]] && p05='/cl/lighthouse'
 p06=$p02
-p07='/var/lib/nethermind'  ;[[ $cunm = $inm6 ]] && p07='/el/nethermind'
+p07='/var/lib/nethermind'  ;[[ $cunm = $inm5 || $cunm = $inm6 ]] && p07='/el/nethermind'
 p08='/var/lib/goethereum'  ;[[ $cunm = $vnm1 || $cunm = $vnm2 ]] && p08='/el/goethereum'
 p09='/var/lib/javaethereum';[[ $cunm = $vnm1 || $cunm = $vnm2 ]] && p09='/el/javaethereum'
 p10="$p02/geth.log"
