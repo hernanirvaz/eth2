@@ -68,7 +68,7 @@ if [[ $cunm = $cun1 || $cunm = $cun2 || $cunm = $cuvc || $cunm = $cumv ]];then
 fi
 cc1 $p24 "$e04";cc2 $p24 "$s39";cmw $p24 755 root                                                                                                             # header add my motd
 cc1 $p25 "$e04"                ;cmw $p25 755 root                                                                                                             # help-text delete
-cc1 $p27 "$e53";cc2 $p27 "$s38";cmw $p27 644 root                                                                                                             # new logrotate add
+cc1 $p27 "$e53";cc2 $p27 "$s38";cmw $p27 644 root;cmw $(dirname $p01) 755                                                                                     # new logrotate & permissions
 [[ -x $p28 ]] && sex "chmod -x $p28"                                                                                                                          # motd overlayroot unexecute
 t6 uur                                                                                                                                                        # unattended-upgrades conf
 swb 'FINAL - reboot imperativo'
