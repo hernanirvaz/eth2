@@ -46,9 +46,9 @@ function ln1 { if [[ $l6 ]];then snf "s%.*$1 *\"?[+-]?([0-9]*\.?[0-9]+)\"?$2.*%\
 function ln2 { if [[ $l4 ]];then gawk "$1" <<< "$l4" 2>$p03;fi; }                                                                                             # get awk list of numbers (µs|ms|s)
 function ln3 { l6=$(ll5 "$2.*$1");ln1 $1; }                                                                                                                   # get numbers all  syslog lines
 function ln4 { if g0t $3;then l6=$(ll5 "$2.*$1"|tail -n$3);else l6=$(ll5 "$2.*$1");fi;ln1 $1; }                                                               # get numbers tail syslog lines
-function ln5 { l6=$(ll4 "$2.*$1");ln1 $1; }                                                                                                                       # get numbers all  syslog lines
-function fl0 { ll6|tail -n300|flp "Core.*temperature" $2|if [[ $1 ]];then sef "$1";else cat;fi; }                                                                                                   # get temp  cpu lines
-function fl1 { ll6           |flp "$g29" $2|grep -i usb |if [[ $1 ]];then sef "$1";else cat;fi; }                                                                                                    # get error usb lines
+function ln5 { l6=$(ll4 "$2.*$1");ln1 $1; }                                                                                                                   # get numbers all  syslog lines
+function fl0 { ll6|tail -n300|flp "Core.*temperature" $2|if [[ $1 ]];then sef "$1";else cat;fi; }                                                             # get temp  cpu lines
+function fl1 { ll6           |flp "$g29" $2|grep -i usb |if [[ $1 ]];then sef "$1";else cat;fi; }                                                             # get error usb lines
 function fln { if [[ $2 ]];then sip "^$g41$2";else siv "$1";fi; }                                                                                             # get negate re syslog lines
 function flp { if [[ $2 ]];then sip "^$g41$2";else sip "$1"|siv "$g38";fi; }                                                                                  # get posite re syslog lines
 function tln { if [[ $2 ]];then sip "^$g23$2";else siv "$1";fi; }                                                                                             # get negate re syslog lines
@@ -102,7 +102,7 @@ function pmt { [[ $1 -ge $(b05 $2) ]]; }
 function hat { [[ ${a[$nn]} -ge ${a[0]} ]]; }                                                                                                                 # function hat { [[ $b2 -gt $(b00) ]]; }
 function bdt { [[ $(b03 $zk $zz $zx $zw) -gt $n20 || $nz -ge $n57 ]]; }
 function sft { [[ -f $p04/$1.service ]]; }
-function bpt { ! fft $p50.lock && [[ $(era $p12 $n12) -eq 1 ]] && ( (pct && pmt $nm $nr && hat && ! bdt && ! fft $p45) || rbt $n06); }
+function bpt { ! fft $p50.lock && [[ $(era $p12 $n12) -le 1 ]] && ( (pct && pmt $nm $nr && hat && ! bdt && ! fft $p45) || rbt $n06); }
 function llc { if [[ -s  ${1:-$p03} ]];then grep -Ec "$s72|$s73|$s74|$s75|$s76|$s77" $1 2>$p03;else printf %i 0;fi; }                                         # get normal log line count
 function jrn { if [[ $2 ]];then local s="-g $2";else local s=;fi;cex "journalctl --no-hostname --no-full -f $1 $s"; }                                         # my journal   format
 function dmr { sex "$s00 daemon-reload"; }                                                                                                                    # daemon-reload
@@ -144,7 +144,7 @@ function sra { if fft $p45;then nu1 $(($(date +%s)-$(date -r $p45 +%s)));else pr
 function dts { read       d0 d1   <<< ${1:-$(date '+%F %H:%M')};dt="$d0 $d1"; }                                                                               # set date/time vars
 function dtl { read _ _ _ d0 d1 _ <<< $(bff|tail -n1)          ;dt="$d0 $d1"; }                                                                               # set date/time vars with last beacon log
 function tsy { if grep -q false <<< "$@";then printf SYC;else printf NSY;fi; }                                                                                # get el SYN/NSY text
-function era { tail -n${2:-$n13} $1 2>$p03|cut -d' ' -f1|sort -u|wc -l; }                                                                                     # get el/cc restart activity
+function era { if [[ -s $1 ]];then tail -n${2:-$n13} $1 2>$p03|cut -d' ' -f1|sort -u|wc -l;else printf 0;fi; }                                                # get el/cc restart ready
 function eh0 {
   local n=${1:-$n13}
   local i=${1:-0}
@@ -309,7 +309,7 @@ function bv0 { nn=$(ss5 $s12 target-peers); }                                   
 function bs0 { l0=$(ll5 "$g08.*$n31]"|tail -n1000); }                                                                                                         # set last cc log lines
 function bs3 { l3=$(ll5 "$g45"); }                                                                                                                            # set attesta log lines
 function bs5 { l5=$(snf "s%.+$(non $1)$g52%\1\t\2\t\3\t\4%p" <<< "$l1"); }                                                                                    # set penalty errors log lines
-function bb0 { bs0;bs3;bl1;bl2;[[ (1 -eq $(era $p12 $n12) && $(bri) -ge 1) || (1 -eq $(era $p12 5) && $(bri) -ge 5) ]] && ok=BK; }                            # set ok (OK/BK)
+function bb0 { bs0;bs3;bl1;bl2;[[ ($(era $p12 $n12) -le 1 && $(bri) -ge 1) || ($(era $p12 5) -le 1 && $(bri) -ge 5) ]] && ok=BK; }                            # set ok (OK/BK)
 function bfl { grep "$s75.*$1"      2>$p03; }                                                                                                                 # filter cc lines
 function bff { grep "$s75.*$1" $p12 2>$p03; }                                                                                                                 # filter cc log
 function bb1 { if [[ $(jq -r .data.is_syncing <<< $@ 2>$p03) = false ]];then printf 'synced ';else printf 's%06i' $(bsi $@);fi; }                             # get cl syncing distance remaining
