@@ -2,8 +2,13 @@
 
 LANG=C
 LC_ALL=C
-mc=$(date +%M);[ $mc = 00 ] && mc=1
-mr=$(awk -v min=1 -v max=59 "BEGIN{srand(); print int(min+rand()*(max-min+1))}")
 
-[ $1 ] && mr=$mc
-[ ${mc##0} -eq ${mr##0} ] && { date +"%Y-%m-%d %H:%M:%S";speedtest --simple 2>/dev/null|grep -Ei "Ping|Download|Upload";}|xargs
+stc () { { date +"%Y-%m-%d %H:%M:%S";speedtest --simple 2>/dev/null|grep -Ei "Ping|Download|Upload";}|xargs; }
+
+if [ $1 ];then
+    stc
+else
+    mc=$(date +%M);[ $mc = 00 ] && mc=1
+    mr=$(awk -v min=1 -v max=59 "BEGIN{srand(); print int(min+rand()*(max-min+1))}")
+    [ ${mc##0} -eq ${mr##0} ] && stc >> e9.log 2>&1
+fi
