@@ -199,10 +199,10 @@ function smn { local g=${1:-24}                  ;nu1 $((g>360?360:g<24?24:g)); 
 function sfn { local g=$(($(bss $1)-$(date +%s)));nu1 $((g>3?g:3))            ; }                                                                             # get min seconds to future
 function ssf { g0t $1 || return;local f=$2.s${4:-00}n${5:-00}s$(stg $1);touch $f;fft $p50.print && echo $(sf1) $(basename $f 2>$p03);sleep $1s; }
 function ssw { while :;do local t=$(sng);if [[ $(sf2 $t) -lt $1 || 24 -ge $(sfn $t) ]];then ssf $(smn $(sfn $t)) $2 $t $1;else break;fi;s1t $2 && break;done; }
-function non { printf 'nod%03i' $1 2>$p03; }
+function non { printf 'np%03i:' $1 2>$p03; }
 function csn { if g0t $#;then nr=${@:$#};nm=$(nu9 $@);nd=$(nu7 $@);nz=$(nu8 $@);else nr=0;nm=0;nd=0;nz=0;fi; }
 function esn { if g0t $#;then er=${@:$#};em=$(nu9 $@);ed=$(nu7 $@);ez=$(nu8 $@);else er=0;em=0;ed=0;ez=0;fi; }
-function npn { local n=${1:-0};local i=${2:-0};local s=$(non $i);if [[ $n -ge 100 ]];then printf '%10s %5s %s %3i' $dt $s $n 2>$p03;else printf '%10s %5s %s: %2i' $dt $s $n 2>$p03;fi; }
+function npn { printf '%10s %5s %s %3i' $dt $(non ${2:-0}) ${1:-0} 2>$p03; }
 function bnn { csn $(ln3 "$g50:") $(bpc $(bcl peer_count)); }                                                                                                 # set cur/min/std cc peers
 function szp {
   local e;local s;local i=${5:-999};local n=$2
@@ -413,7 +413,7 @@ function bh0 {
   local e;boi;bl0;e=$(printf '%s     9 5  1  0 err norm  idx' $(nl5 $b0 1) 2>$p03)
   swn "BO $(printf '%4i%4i%34s%14s' $b2 $(wc -l <<< "$l2") 2>$p03)$e";bo5
   swn "BL $(printf '%8i/%4i%34s%9s' $(llc $p12) $n14 2>$p03)$e\n$m";bm0;bmo
-  swn "BM $(printf '%8i%20i/%-2i%3i/%-2i     i4  i5  i6  i7%s i8  i9 i10 avg%13i' $(llc $p13) $nm $(b05 $nr) $nz $n57 $(nl5 $b0 1) $n20 2>$p03)\n$m"
+  swn "BM $(printf '%8i%20i/%-2i%3i/%-2i     i8  i0  i2  i4%s i6  i8  i2 avg%13i' $(llc $p13) $nm $(b05 $nr) $nz $n57 $(nl5 $b0 1) $n20 2>$p03)\n$m"
 }
 function bwd { local n=$((($(date +%s)-n09)/(12*32)-0));for n in $n $((n+1));do curl -sH "$s28" $s67 -X POST -d"$(viv)" "$s32/sync/$n";curl -sH "$s28" $s67 -X GET "$s32/proposer/$n";done 2>$p03|jq -r $s35 2>$p03; }
 function bwc { bwd|grep -Ex "$(vix)" 2>$p03|wc -l; }
