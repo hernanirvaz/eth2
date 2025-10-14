@@ -54,10 +54,10 @@ elif [[ $cunm = hrv-zotac3 || $cunm = hrv-zotac4 ]];then
   alias aa='t6 ch'
 fi
 
-alias z1='esl hrv-zotac1'
-alias zr='esl hrv-zotac1'
-alias zl="pcm"
+alias rr='t6 rrb' 
+alias rl='pcm'
 
+alias z1='esl hrv-zotac1'
 alias z2="esl hrv-zotac2"
 alias z3="esl hrv-zotac3"
 alias z4="esl hrv-zotac4"

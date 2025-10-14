@@ -1060,7 +1060,7 @@ function cns {
 [[ $1 = vrb ]] && { touch $p50.print;vrs RB           ${2:-$n01}       ;rm -f $p50.print; }
 [[ $1 = ivk ]] && { touch $p50.print;ivk              ${2:-$n02}       ;rm -f $p50.print; }
 [[ $1 = tvc ]] && { touch $p50.print;tvc TR           ${2:-$n00}       ;rm -f $p50.print; }
-[[ $1 = prb ]] && { touch $p50.print;prs RB           ${2:-$n00}       ;rm -f $p50.print; }
+[[ $1 = rrb ]] && { touch $p50.print;prs RB           ${2:-$n00}       ;rm -f $p50.print; }
 [[ $1 = vcc ]] && { vcc; }
 [[ $1 = ep  ]] && { epf; }
 [[ $1 = cp  ]] && { cpf; }
@@ -1271,7 +1271,7 @@ if [[ ! $1 ]];then
   m="$m\n"
   m="$m\n[g|t|u|b|c]rs [n] [g]\tgeth|nethermind|besu|cc|cc & vc\t\trestart\t\tn peers, mim gap"
   m="$m\n          vrs     [g]\tvc\t\t\t\t\trestart\t\tmim gap"
-  m="$m\n[g|t|u|b|v|p]rb   [g]\tgeth|nethermind|besu|vc|pfSense\t\treboot\t\tmim gap"
+  m="$m\n[g|t|u|b|v|r]rb   [g]\tgeth|nethermind|besu|vc|router\t\treboot\t\tmim gap"
   m="$m\n[g|t|u|b|v|m|a]pr\tgeth|nethermind|besu|cc|vc|mev|all\tpara\t\timidiatly stop"
   m="$m\nirb               [h]\tsys (if needed)\t\t\t\treboot\t\tafter h hours"
   m="$m\nivk               [g]\timport validator keys\t\t\t\t\tmim gap"
