@@ -100,7 +100,7 @@ function ipt { [[ $(date +%s) -ge $(bss $1 6) ]]; }
 function pct { [[ $b4 -ne 0 ]]; }
 function pmt { [[ $1 -ge $(b05 $2) ]]; }
 function hat { [[ ${a[$nn]} -ge ${a[0]} ]]; }                                                                                                                 # function hat { [[ $b2 -gt $(b00) ]]; }
-function bdt { [[ $(b03 $zk $zz $zx $zw) -gt $n20 || $nz -ge $n57 ]]; }
+function bdt { ! fft $p61.lock && [[ $(b03 $zk $zz $zx $zw) -gt $n20 || $nz -ge $n57 ]]; }
 function sft { [[ -f $p04/$1.service ]]; }
 function bpt { ! fft $p50.lock && [[ $(era $p12 $n12) -le 1 ]] && ( (pct && pmt $nm $nr && hat && ! bdt && ! fft $p45) || rbt $n06); }
 function llc { if [[ -s  ${1:-$p03} ]];then grep -Ec "$s72|$s73|$s74|$s75|$s76|$s77" $1 2>$p03;else printf %i 0;fi; }                                         # get normal log line count
@@ -1105,9 +1105,10 @@ function bml { [[ $d1 = 23:58 ]] || return;if bdt;then bdl $d0;else if [[ $(llc 
 [[ $1 = brl ]] && { brl; }
 [[ $1 = brm ]] && { brm; }
 [[ $1 = rsh ]] && { rsf Gg;echo $(sf1) $(sng); }
-[[ $1 = rrs ]] && { cd $p02;rm -f $p50.* *.rs.*; }
+[[ $1 = rrs ]] && { cd $p02;rm -f $p50.* $p61.* *.rs.*; }
 [[ $1 = rpt ]] && { touch $p50.print; }
 [[ $1 = rlk ]] && { touch $p50.lock; }
+[[ $1 = rld ]] && { touch $p61.lock; }
 [[ $1 = jsh ]] && { nex "journalctl --disk-usage"; }
 [[ $1 = jrs ]] && { nex "journalctl --vacuum-time=3days";nex "journalctl --verify"; }
 [[ $1 = uur ]] && { uur; }
@@ -1299,7 +1300,7 @@ if [[ ! $1 ]];then
   m="$m\nd[sh [url]|rs]\t\tdns show [url]|reset"
   m="$m\nh[sh|rs|ch|ca|rc]\t$s45 show|restart|check|check all|restart conditional"
   m="$m\nhs[012ecvm]\t\tservices all|main|backup|execution|concensus|vc|mev"
-  m="$m\nr[sh|rs|pt|lk]\t\trestart gap show|reset|print|lock"
+  m="$m\nr[sh|rs|pt|lk|ld]\trestart gap show|reset|print|lock restart|lock delete log"
   m="$m\ni[sh|ch]\t\texternal ip show|change"
   m="$m\nj[sh|rs]\t\tjournal logs show|reset"
   m="$m\nf[sh|rf|(ud|st) [d]]\tfirmware device show|refres|(hupdate|selftest-nvme) [id]|"
