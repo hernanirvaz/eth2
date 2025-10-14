@@ -37,4 +37,4 @@ function dnn { local s=$1;snt $s && ! sht && s="$s.fruga.pt";sot $s || s=$(sin $
 function dnz { local p=$2;[[ $p ]] || p=$(spn $1);printf %i $p; }
 function zsh { ssh -p $1 -i ~/.ssh/id_ed25519 $2 "$3"; }
 function zcp { local p=$1;local d=$2;shift;shift;scp -P $p -i ~/.ssh/id_ed25519 $@ "$d"; }
-function pcm { local s=hrv-zotac1;local n=$(dnn $s);local p=$(dnz $s);if [[ $1 = RB ]];then zsh $p $n "/root/rt-pfsense-gap-reboot.sh";else zsh $p $n 'tail -n20 /root/rt-pfsense-wan-check.log';fi; }
+function pcm { local s=hrv-zotac1;local n=$(dnn $s);local p=$(dnz $s);if [[ $1 = RB ]];then zsh $p $n "/etc/rc.reboot";else zsh $p $n 'tail -n20 /root/rt-pfsense-wan-check.log';fi; }

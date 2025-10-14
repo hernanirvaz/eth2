@@ -8,7 +8,7 @@ function nrs { sudo netplan apply;sudo systemctl stop systemd-resolved;sleep 9;s
 function ecp { local p=$(dnz $1 $2);local s=$(dnn $1);echo -e "\nzcp $s:$p eth2";cz2 $1 $p; }
 function ocp { local p=$(dnz $1 $2);local s=$(dnn $1);echo -e "\nzcp $s:$p ocp ";cz1 $1 $p;zcp $p $s:~/.ssh/authorized_keys ~/eth2/keth; }
 function ccp { local p=$(dnz $1 $2);local s=$(dnn $1);echo -e "\nzcp $s:$p ccp ";zcp $p $s: ~/eth2/cns.keys.gpg;zcp $p $s: ~/eth2/hernanirvaz-f2e8fb66dbc0.json.gpg; }
-function rcp { local p=$(dnz $1 $2);local s=$(dnn $1);echo -e "\nzcp $s:$p rcp ";zcp $p $s:/root/.ssh/authorized_keys ~/eth2/keth;zcp $p $s:/root ~/eth2/rt-pfsense-wan-check.sh ~/eth2/rt-pfsense-gap-reboot.sh; }
+function rcp { local p=$(dnz $1 $2);local s=$(dnn $1);echo -e "\nzcp $s:$p rcp ";zcp $p $s:/root/.ssh/authorized_keys ~/eth2/keth;zcp $p $s:/root ~/eth2/rt-pfsense-wan-check.sh; }
 function ecv { local s='';for s in $@;do ecp $s;done; }
 function ocv { local s='';for s in $@;do ocp $s;done; }
 function ei0 { echo -e "export H=\"$1\"\nexport E=\"$2\"\nexport R=\"$3\"\nexport V=\"$4\"\npr=$5"; }
