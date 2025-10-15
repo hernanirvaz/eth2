@@ -104,7 +104,7 @@ function bdt { ! fft $p61.lock && [[ $(b03 $zk $zz $zx $zw) -gt $n20 || $nz -ge 
 function sft { [[ -f $p04/$1.service ]]; }
 function bpt { ! fft $p50.lock && [[ $(era $p12 $n12) -le 1 ]] && ( (pct && pmt $nm $nr && hat && ! bdt && ! fft $p45) || rbt $n06); }
 function llc { if [[ -s  ${1:-$p03} ]];then grep -Ec "$s72|$s73|$s74|$s75|$s76|$s77" $1 2>$p03;else printf %i 0;fi; }                                         # get normal log line count
-function jrn { if [[ $2 ]];then local s="-g $2";else local s=;fi;cex "journalctl --no-hostname --no-full -f $1 $s"; }                                         # my journal   format
+function jrn { local s;if [[ $2 ]];then s="-g $2";else s=;fi;cex "journalctl --no-hostname --no-full -f $1 $s"; }                                             # my journal   format
 function dmr { sex "$s00 daemon-reload"; }                                                                                                                    # daemon-reload
 function si1 { local n=${1:-0};printf %i $((20*n))   2>$p03; }
 function si2 { local n=${1:-0};printf %i $((1000*n)) 2>$p03; }
@@ -206,7 +206,7 @@ function npn { printf '%10s %5s %s %3i' $dt $(non ${2:-0}) ${1:-0} 2>$p03; }
 function bnn { csn $(ln3 "$g50:") $(bpc $(bcl peer_count)); }                                                                                                 # set cur/min/std cc peers
 function szp {
   local e;local s;local i=${5:-999};local n=$2
-  if pmt $2 $1;then s=$(swg p);e=$(swg m);else s=$(swr p);e=$(swr m);fi
+  if pmt $2 $1;then s=$(swg p);else s=$(swr p);fi;e=$(swg m)
   if [[ $3 -gt 0 ]];then if [[ $3 -ge $i ]];then e=$(swr d);else e=$(swg z);fi;n=$3;fi
   printf '%s%03i %s%03i d%04i' $s $1 $e $n $4 2>$p03
 }
@@ -355,13 +355,14 @@ function bmo { m="$s75 $(printf '%2i %3i' $b2 $b3 2>$p03) $(npn $nr $nn) $(bma) 
 #    0    1   2          3     4       5  6   7   8   9  10  11   12      13   14  15  16  17 18 19   20   21  22  23  24   25       26   27
 # BEAC   75  25 2025-09-02 23:59 nod080: 88 mp:  32  33 p_:  10  205 iearhp: 1016  57 4037  0 24 23 2210 mev: 229 el: 106 116% peerstd: 2345
 function bms {
+  local e
   case $# in
-    5) local e=$(ts0 $2 $3 ${4%\%} $5) ;;
-    4) local e=$(ts0 $2 $3 ${4%\%}  0) ;;
-    1) local e= ;;
-    *) local e=$(ts1 4) ;;
+    5) e=$(ts0 $2 $3 ${4%\%} $5) ;;
+    4) e=$(ts0 $2 $3 ${4%\%}  0) ;;
+    1) e= ;;
+    *) e=$(ts1 4) ;;
   esac
-  [[ $e ]] && local e=" $e"
+  [[ $e ]] && e=" $e"
   m="$s75 $(printf '%2i %3i' $b2 $b3 2>$p03) $(npn $nr $nn) mp: $(nu0 %3i ${a[$nn]}) $(bmp)$e"
 }
 #    0   1          2     3    4 5 6 7 8 9 10 11   12 13 14 15 16 17 18 19   20 21 22 23 24 25 26 27   28 29 30 31 32 33 34 35   36 37 38 39 40 41 42 43
@@ -383,14 +384,14 @@ function bkm { local g=${1:-$n16};((k[g]+=$((0$(printf '+%i' $(cut -f1 <<< "$l5"
 function bzm { local g=${1:-$n16};((z[g]+=$((0$(printf '+%i' $(cut -f2 <<< "$l5") 2>$p03))))); }                                                              # sum failed target err array
 function bxm { local g=${1:-$n16};((x[g]+=$((0$(printf '+%i' $(cut -f3 <<< "$l5") 2>$p03))))); }                                                              # sum failed head   err array
 function bwm { local g=${1:-$n16};((w[g]+=$((0$(printf '+%i' $(cut -f4 <<< "$l5") 2>$p03))))); }                                                              # sum delay         err array
-function bma { local g=${1:-$n16};local s='mp:';while ((g<=n17));do local s+=" $(nu0 %3i ${a[$g]})";local g=$((g+n18));done;printf %s "$s"; }                 # sum recursively penalty       avg array
+function bma { local g=${1:-$n16};local s='mp:';while ((g<=n17));do s+=" $(nu0 %3i ${a[$g]})";g=$((g+n18));done;printf %s "$s"; }                             # sum recursively penalty       avg array
 function bnc { local g=${3:-$n16};if ((g<=n17));then bnc "${1:-0}${2:-+}${c[$g]}" "$2" $((g+n18));else printf "$1";fi; }                                      # sum recursively               cnt array
 function bnk { local g=${3:-$n16};if ((g<=n17));then bnk "${1:-0}${2:-+}${k[$g]}" "$2" $((g+n18));else printf "$1";fi; }                                      # sum recursively missing       err array
 function bnz { local g=${3:-$n16};if ((g<=n17));then bnz "${1:-0}${2:-+}${z[$g]}" "$2" $((g+n18));else printf "$1";fi; }                                      # sum recursively failed target err array
 function bnx { local g=${3:-$n16};if ((g<=n17));then bnx "${1:-0}${2:-+}${x[$g]}" "$2" $((g+n18));else printf "$1";fi; }                                      # sum recursively failed head   err array
 function bnw { local g=${3:-$n16};if ((g<=n17));then bnw "${1:-0}${2:-+}${w[$g]}" "$2" $((g+n18));else printf "$1";fi; }                                      # sum recursively delay         err array
 function boi {
-  unset v;read -a v <<< $(bff|tail -n1);local n=0;local t=${1:-${v[4]}};b6=0;while :;do l2=$(bff $t);if [[ $l2 ]];then break;else local t=${v[4]};fi;done     # set homologous lines
+  unset v;read -a v <<< $(bff|tail -n1);local n=0;local t=${1:-${v[4]}};b6=0;while :;do l2=$(bff $t);if [[ $l2 ]];then break;else t=${v[4]};fi;done           # set homologous lines
   while :;do bo2 ${v[3]};if e0t $b2 && [[ $n -lt 99 ]];then ((n+=1));v[3]=$(date -d "$n days ago $t" +%F);else break;fi;done                                  # set homologous position
 }
 function bo0 { sort -k10n -k4r <<< "$l2"; }                                                                                                                   # get homologous lines sorted
@@ -402,9 +403,9 @@ function bo5 { bo0|head -n$((b6>b2?b6:b2<5?5:b2))|tail -n$((b6>0?b6:b2>n12?n12:b
 function boa { local g=${1:-$n16};local e=$(bo4 $g);printf 'BO%5i %3i\n' $(wc -l <<< "$e") $g 2>$p03;echo "$e";((g<n17)) && boa $((g+n18)); }                 # recursively show homologous nodes report
 function bsm { brm;[[ -s $p13.r ]] && cp $p13.r $p13; }
 function bdd {
-  fft $p12 || return;l2=$(bff 23:58);if [[ $1 = o ]];then local s=$(bo1);else local s=$(bo0);fi;local e='';while read -a v;do
-    if [[ ${v[9]} -ge $2 && $(grep -c ${v[5]} <<< "$l2") -gt $3 ]];then local e="$e|${v[3]}";l2=$(grep -v ${v[3]} <<< "$l2");fi                               # gather delete info
-  done <<< "$s";if [[ $e ]];then local e=${e:1};bdw $p12 "$e";bdw $p13 "$e";fi;bsm
+  fft $p12 || return;local s;local e;l2=$(bff 23:58);if [[ $1 = o ]];then s=$(bo1);else s=$(bo0);fi;e='';while read -a v;do
+    if [[ ${v[9]} -ge $2 && $(grep -c ${v[5]} <<< "$l2") -gt $3 ]];then e="$e|${v[3]}";l2=$(grep -v ${v[3]} <<< "$l2");fi                                     # gather delete info
+  done <<< "$s";if [[ $e ]];then e=${e:1};bdw $p12 "$e";bdw $p13 "$e";fi;bsm
 }
 function bh0 {
   fft $p12 || return
@@ -526,7 +527,7 @@ function cly { $s07             2>$p03|snf "$e54"; }
 function clo { if [[ $(cly) = yes ]];then printf OK;else printf NO;fi                             2>$p03; }
 function clf { local n=${1:-0};if [[ $(nu1 $n) -ne 0 ]];then printf %s $(nu6 6 $n)s;elif [[ $(nbi "$n*10^3") -ne 0 ]];then printf %6s $(nu6 0 "$n*10^3")ms;elif [[ $(nbi "$n*10^6") -ne 0 ]];then printf %6s $(nu6 0 "$n*10^6")us;elif [[ $(nbi "$n*10^9") -ne 0 ]];then printf %6s $(nu6 0 "$n*10^9")ns;else printf %s $n;fi; }
 function cl0 { printf "${1%.}"                                                                    2>$p03; }
-function cl1 { local n=0;while :;do local s=$(clq $1);if [[ $s ]];then break;else if [[ $n -lt 2 ]];then ((n++));else local s=$1;break;fi;fi;done;cl0 $s; }
+function cl1 { local n=0;local s;while :;do s=$(clq $1);if [[ $s ]];then break;else if [[ $n -lt 2 ]];then ((n++));else s=$1;break;fi;fi;done;cl0 $s; }
 function cl2 { if [[ $1 =~ ^[0-9]+ ]];then cl1 $1;else cl0 $1;fi; }
 function cl3 { cl2 $2; }
 function cl4 { printf "dl $6\tos $4\tjt $8\tn0 $(cl2 $2)"                    2>$p03; }
@@ -561,7 +562,7 @@ function clk {
   fi
   m="$e $(nl4 $n 3) $dt $m"
 }
-function hch { clk h;if sht;then local e=$(sn2 $cunm);else local e=${cunm:0:2}${cunm: -2};fi;swn "$e${m:4}"; }
+function hch { local e;clk h;if sht;then e=$(sn2 $cunm);else e=${cunm:0:2}${cunm: -2};fi;swn "$e${m:4}"; }
 function hca {
   if n1t;then hch;else xsh $cun1 "$p53 hch";fi
   if ndt;then if n2t;then hch;else xsh $cun2 "$p53 hch";fi;fi
@@ -571,11 +572,12 @@ function hca {
 }
 function si0 { printf '%s: erro_cml %i,used %s,spare %s; ' $(basename $1) $(($2+$3+$4)) $5% $6% 2>$p03; }
 function sif {
-  if [[ $(cat $p44 2>$p03) -eq 0 ]];then local e=off;else local e=on;fi;local i=$(fl0|wc -l)
-  if [[ $(cat $p43 2>$p03) -eq 1 ]];then local d=off;else local d=on;fi;local n=$(fl1|wc -l)
+  local e;local d;local n;local i;local g;local f
+  if [[ $(cat $p44 2>$p03) -eq 0 ]];then e=off;else e=on;fi;i=$(fl0|wc -l)
+  if [[ $(cat $p43 2>$p03) -eq 1 ]];then d=off;else d=on;fi;n=$(fl1|wc -l)
   [[ $1 ]] || g0t $i || g0t $n && swn "INFO$(printf '%3i %3i %10s %5s' $n $i $dt 2>$p03) usb $e, turbo $d, ufw $(wif $(pex 'ufw status'|grep Status:)), uptime:$(uptime|sef "$e55")"
-  [[ $(ls $p66 2>$p03) ]] || return;local n=$(sm5);g0t $n || return
-  local g=$(printf '%6i %10s %5s ' $n $dt 2>$p03);local f='';for f in $(ls $p66 2>$p03);do local g="$g$(si0 $f $(sm1 $f))";done;swn "NVME ${g%;*}"
+  [[ $(ls $p66 2>$p03) ]] || return;n=$(sm5);g0t $n || return
+  g=$(printf '%6i %10s %5s ' $n $dt 2>$p03);f='';for f in $(ls $p66 2>$p03);do g="$g$(si0 $f $(sm1 $f))";done;swn "NVME ${g%;*}"
 }
 function tg1 { ll4 "$g36"|tln "$g25" $1; }
 function tg2 { if tsa $s44;then tg1 $1;else ll5 "$g11"|fln "$g25" $1;fi; }
@@ -591,12 +593,13 @@ function rll { ll5 "$g09"|fln "$g47" $2|if [[ $1 ]];then sef "$1";else cat;fi; }
 function rlr { ll5 "$g48"|sef "$e51"; }
 function upl { local e=$(apt list --upgradable 2>$p03|sed 's%/.*%%'|grep -v Listing);if [[ $e ]];then echo;pr -ta${1:-6} -w ${2:-180} <<< "$e";fi; }
 function cpe {
+  local e;local i;local n;local d;local l
   clk $1;[[ $m ]] && swn "$m";[[ $1 = h ]] && return;tmp;[[ $1 = p ]] && return;sif
-  m=$(sll "$e74"|sef "$e30");if [[ $m ]];then local i=$(wc -l <<< "$m");local e=$(tail -n1 <<< "$m");else local i=0;local e=;fi;m=;local n=0;local d=;local l=ou
-  if [[ ! $m ]];then if ict;then m=$(cll "$e50;$e31");local l=cl;fi;fi
-  if [[ ! $m ]];then if iet;then m=$(ell "$e50;$e31");local l=el;fi;fi
-  if [[ ! $m ]];then if irt;then m=$(rll "$e51;$e31");local l=rl;fi;fi
-  if [[ ! $m ]];then local n=0;local d=;else local n=$(lll|wc -l);local d=$(tail -n1 <<< "$m");fi
+  m=$(sll "$e74"|sef "$e30");if [[ $m ]];then i=$(wc -l <<< "$m");e=$(tail -n1 <<< "$m");else i=0;e=;fi;m=;n=0;d=;l=ou
+  if [[ ! $m ]];then if ict;then m=$(cll "$e50;$e31");l=cl;fi;fi
+  if [[ ! $m ]];then if iet;then m=$(ell "$e50;$e31");l=el;fi;fi
+  if [[ ! $m ]];then if irt;then m=$(rll "$e51;$e31");l=rl;fi;fi
+  if [[ ! $m ]];then n=0;d=;else n=$(lll|wc -l);d=$(tail -n1 <<< "$m");fi
   m="ERRO$(printf '%3i%4i %10s %5s' $i $n $dt 2>$p03)"
   if g0t $i;then if g0t $n;then m="$m sl: ${e:0:53}";m="$m $l: ${d:0:54}";else m="$m sl: ${e:0:112}";fi;else if g0t $n;then m="$m $l: ${d:0:112}";fi;fi
   (( i+n )) && swn "$m"
@@ -815,7 +818,7 @@ function ivk {
 function viv { printf %s "[\"$(sed 's% %","%g' <<< ${!b[@]})\"]" 2>$p03; }
 function vix { printf %s "$(sed 's% %|%g' <<< ${!b[@]})" 2>$p03; }
 function slt { local n=$((($1-n04)/32));for n in $n $((n+1));do curl -sH "$s28" -X POST -d"$(viv)" "$s32/attester/$n"|jq -r $s34;done 2>$p03;echo $(((n+1)*32)); }
-function sng { local t=$(((($(date +%s)-n09)/12)+n04));local e=0;local i=0;local s=0;for s in $(slt $t|sort -nu);do if ((s<t));then continue;else if (((s-t)>e));then local e=$((s-t));local i=$t;fi;fi;local t=$((s+1));done;printf '%s %i' $(date -d@$((n09+i*12)) +%T) $((e*12)); }
+function sng { local t=$(((($(date +%s)-n09)/12)+n04));local e=0;local i=0;local s=0;for s in $(slt $t|sort -nu);do if ((s<t));then continue;else if (((s-t)>e));then e=$((s-t));i=$t;fi;fi;t=$((s+1));done;printf '%s %i' $(date -d@$((n09+i*12)) +%T) $((e*12)); }
 function bcc { printf p;if n1t;then if bpt;then if rbt $n06;then printf r;else printf c;fi;else if bdt;then printf d;else printf _;fi;fi;else if rbt;then printf r;else if bdt;then printf d;else printf _;fi;fi;fi;printf :; }
 function btn { if n1t;then printf $1;else printf $n03;fi; }
 function hrc { ztt || return;chronyc -c sources 2>$p03|grep -Eq "$g65,1,$g66" && return;sex "$s04 $s56";sex "$s06 $s56"; }
@@ -855,7 +858,7 @@ function caa { if n1t;then cll "$e50" $1;else xsh $cun1 "$p53 cl $1";fi;if ndt;t
 function eaa { if n1t;then ell "$e50" $1;else xsh $cun1 "$p53 el $1";fi;if ndt;then if n2t;then ell "$e50" $1;else xsh $cun2 "$p53 el $1";fi;fi; }
 function laa { caa $1;eaa $1; }
 function fsp { local n=${1:-1};if [[ $n -gt 9 ]];then grep -v "$g31 *${n:0:1}[${n:1:1}-9][0-9]";else grep -v "$g31 *[$n-9][0-9]";fi|grep "$g31 *[0-${2:-7}]"|sort -k2n; }
-function esp { iet || return;if tsa $s44;then local e=$(ll4 "$g36.*$g30:"|sef "$e76");else local e=$(ll5 "$g11.*$g35"|sef "$e77");fi;local e=$(fsp $1 $2 <<< "$e");[[ $1$2 ]] || e=$(tail -n$n58 <<< "$e");[[ $e ]] && echo -e "\n$e"; }
+function esp { iet || return;local e;if tsa $s44;then e=$(ll4 "$g36.*$g30:"|sef "$e76");else e=$(ll5 "$g11.*$g35"|sef "$e77");fi;e=$(fsp $1 $2 <<< "$e");[[ $1$2 ]] || e=$(tail -n$n58 <<< "$e");[[ $e ]] && echo -e "\n$e"; }
 function csp { ict || return;local e=$(ll5 "$g50:"|sef "$e78"|fsp $1 $2);[[ $1$2 ]] || e=$(tail -n$n58 <<< "$e");[[ $e ]] && echo -e "\n$e"; }
 function mre { mct || return;local s=n;local e=$(for s in $(rlr|snf "$e09"|sort -u);do printf '%3i %s\n' $(rlr|grep -co $s) $s;done|sort -n);[[ $e ]] && echo -e "\n$e"; }
 function epf { if tsa $s10;then gl0;swn "$m";fi;if tsa $s11;then ul0;swn "$m";fi;if tsa $s44;then tl0;swn "$m";fi; }
@@ -903,7 +906,7 @@ function vcs {
 }
 function vwd {
   srv hrv-zotac4 && rlt || return
-  local n=${1:-1};[[ $n =~ ^[0-9]*\.?[0-9]+$ ]] && local n=${n}eth
+  local n=${1:-1};[[ $n =~ ^[0-9]*\.?[0-9]+$ ]] && n=${n}eth
   ipw
   $p00/ethereal validator withdraw $s68 --from="$s70" --validator="${b[-1]}" --withdrawal-amount=$n --verbose
 }
