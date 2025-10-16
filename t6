@@ -8,13 +8,13 @@ function nl1 { LC_NUMERIC=C printf '%+f'   $@         2>$p03; }
 function nl2 { LC_NUMERIC=C printf '%+i^2' $@         2>$p03; }
 function nl3 { LC_NUMERIC=C printf '%i\n'  $@         2>$p03; }
 function nl4 { if [[ ${2:-0} -eq 0 ]];then printf "%s" $1;else LC_NUMERIC=C printf "%${2}i" $1;fi; }
-function nl5 { if [[ ${2:-0} -eq 0 ]];then printf "%s" $1;else if [[ $1 -gt 0 ]];then printf "%${2}s" $(swg $1);else LC_NUMERIC=C printf "%${2}i" $1;fi;fi; }
+function nl5 { if [[ ${2:-0} -eq 0 ]];then printf "%s" $1;elif [[ $1 -gt 0 ]];then printf "%${2}s" $(swg $1);else LC_NUMERIC=C printf "%${2}i" $1;fi; }
 function nu0 { LC_NUMERIC=C printf "$1"    ${2:-0}    2>$p03; }
 function nu1 { LC_NUMERIC=C printf '%i'    ${1:-0}    2>$p03; }
 function nu2 { nbc "0$(nl0 $@)"; }
 function nu3 { local s=${2:-0};nu0 %.0f $(nbc "$1" $((s+1))); }
-function nu4 { local s=$1;shift;if [[ $# -gt 0 ]];then nu0 %.0f $(nbc "((0$(nl1 $@))/$#)*10^$s" $((s+1)));else printf %i;fi; }
-function nu5 { local s=$1;shift;if [[ $# -gt 0 ]];then nu0 %.0f $(nbc "((0$(nl1 $@))/$#)"       $((s+1)));else printf %i;fi; }
+function nu4 { local s=$1;shift;if [[ $# -gt 0 ]];then nu0 %.0f $(nbc "((0$(nl1 $@))/$#)*10^$s" $((s+1)));else printf %i 0;fi; }
+function nu5 { local s=$1;shift;if [[ $# -gt 0 ]];then nu0 %.0f $(nbc "((0$(nl1 $@))/$#)"       $((s+1)));else printf %i 0;fi; }
 function nu6 { local s=$1;nu0 %.${s}f $(nbc $2 9); }
 function nbi { local s=$1;nu1         $(nbc $1 9); }
 function nu7 { nu3 "sqrt(((0$(nl2 $@))-(0$(nl0 $@))^2/$#)/$#)*1000" 4; }                                                                                      # get std list numbers
@@ -60,10 +60,10 @@ function ss1 { $s01 $1 2>$p03|snf "s%.*$2[ =](${3:-.}+).*%\1%p"; }              
 function ss2 { $s01 $1 2>$p03|snf "$e57"|sef "$e58"|cut -c1-40; }                                                                                             # systemctl status 2 extraction
 function ss3 { if tsa $1;then ss1 $1 Memory: '[^ ]'         ;else printf 0.0K   ;fi; }                                                                        # systemctl status Memory extraction
 function ss4 { if tsa $1;then ss1 $1 $3      '[^ ]'|sef "$2";else printf 00:0000;fi; }                                                                        # systemctl status ip/port extraction
-function ss5 { if tsa $1;then ss1 $1 $2      '[0-9]'        ;else printf %i     ;fi; }                                                                        # systemctl status number extraction
+function ss5 { if tsa $1;then ss1 $1 $2      '[0-9]'        ;else printf %i 0   ;fi; }                                                                        # systemctl status number extraction
 function e0t { [[ $1 -eq 0 ]]; }
 function g0t { [[ $1 -gt 0 ]]; }
-function llt { [[ $(grep '\-all-' $p04/$s12.service 2>$p03) ]]; }                                                                                             # cc long-lived test
+function llt { grep -q '\-all-' $p04/$s12.service 2>$p03; }                                                                                                   # cc long-lived test
 function t0t { [[ $(cat $p43 2>$p03) -eq 0 && $(fl0|wc -l) -gt 20 ]]; }                                                                                       # cpu no turbo recomended test
 function t1t { [[ $(cat $p43 2>$p03) -eq 1 && $(fl0|wc -l) -le 10 ]]; }                                                                                       # cpu    turbo recomended test
 function t2t { [[ $(cat $p44 2>$p03) -eq 1 && $(fl1|wc -l) -gt 10 ]]; }                                                                                       # usb messages            test
@@ -89,8 +89,8 @@ function irt { [[ $cunm = $cumv || $cunm = $vnm1 || $cunm = $vnm2 ]]; }
 function v1t { [[ $cunm = $vnm1 ]]; }
 function vst { [[ $cun1 != $cuvc && $cun2 != $cuvc ]]; }
 function mst { [[ $cun1 != $cumv && $cun2 != $cumv ]]; }
-function s1t {                  e0t $(ls $1.* 2>$p03|wc -l); }
-function s2t { fft $p50.lock || g0t $(ls $1.* 2>$p03|wc -l); }
+function s1t {                  e0t $(find $1.* 2>$p03|wc -l); }
+function s2t { fft $p50.lock || g0t $(find $1.* 2>$p03|wc -l); }
 function s3t { s2t $1 || g0t $(bwc); }
 function s4t { s1t $1 || g0t $(bwc); }
 function s5t { ict    && g0t $(bwc); }
@@ -140,7 +140,7 @@ function svv {
 function smm { m0=$(nu4 3 $(ln4 "$g34" "$g09" $1));m1=$(rlr|wc -l); }
 function spc { nn=$2;cp $p04/$1.service $p02/$1.sav;sef "$e65$2%" $p02/$1.sav > $p04/$1.service; }                                                            # service configuration change/reload
 function snp { sft $1 || return;local n=$(($2+$5));(($2!=0&&n>=$3&&n<=$4)) && spc $1 $n;tsa $1 && sex "$s02 $1";dmr; }                                        # service peers change/stop
-function sra { if fft $p45;then nu1 $(($(date +%s)-$(date -r $p45 +%s)));else printf %i;fi }                                                                  # system reboot age (secounds)
+function sra { if fft $p45;then nu1 $(($(date +%s)-$(date -r $p45 +%s)));else printf %i 0;fi }                                                                # system reboot age (secounds)
 function dts { read       d0 d1   <<< ${1:-$(date '+%F %H:%M')};dt="$d0 $d1"; }                                                                               # set date/time vars
 function dtl { read _ _ _ d0 d1 _ <<< $(bff|tail -n1)          ;dt="$d0 $d1"; }                                                                               # set date/time vars with last beacon log
 function tsy { if grep -q false <<< "$@";then printf SYC;else printf NSY;fi; }                                                                                # get el SYN/NSY text
@@ -190,18 +190,18 @@ function eb0 {
     ok=BK
   fi
 }
-function stg { local n=${1:-0};if ((n>3599));then printf %s $(($(date -d@$n +%H)-1))h;fi;if ((n>0));then printf %s $(date -d@$n +%Mm%Ss);fi;printf %s .$(date -d@$(($(date +%s)+$n)) +%H%M%S); }
+function stg { local n=${1:-0};if ((n>3599));then printf %s $(($(date -d@$n +%H)-1))h;fi;if ((n>0));then printf %s $(date -d@$n +%Mm%Ss);fi;printf %s .$(date -d@$(($(date +%s)+n)) +%H%M%S); }
 function sf1 { printf %s ${1:-$(date +%H:%M:%S)} 2>$p03; }                                                                                                    # get filterd t7 parm 1
 function sf2 { printf %i ${2:-24} 2>$p03; }                                                                                                                   # get filterd t7 parm 2
-function rsf { cd $p02;ls -rt$1 *.rs.* $(basename $p50).* 2>$p03; }                                                                                           # get list restart files
+function rsf { cd $p02 || return;ls -rt$1 ./*.rs.* ./$(basename $p50).* 2>$p03; }                                                                             # get list restart files
 function bss { nu1 $((${2:-0}+$(date -d$(sf1 $1) +%s))); }                                                                                                    # get sum secounds + time
 function smn { local g=${1:-24}                  ;nu1 $((g>360?360:g<24?24:g)); }                                                                             # get max/min seconds to future (12x30/24)
 function sfn { local g=$(($(bss $1)-$(date +%s)));nu1 $((g>3?g:3))            ; }                                                                             # get min seconds to future
 function ssf { g0t $1 || return;local f=$2.s${4:-00}n${5:-00}s$(stg $1);touch $f;fft $p50.print && echo $(sf1) $(basename $f 2>$p03);sleep $1s; }
 function ssw { while :;do local t=$(sng);if [[ $(sf2 $t) -lt $1 || 24 -ge $(sfn $t) ]];then ssf $(smn $(sfn $t)) $2 $t $1;else break;fi;s1t $2 && break;done; }
 function non { printf 'np%03i:' $1 2>$p03; }
-function csn { if g0t $#;then nr=${@:$#};nm=$(nu9 $@);nd=$(nu7 $@);nz=$(nu8 $@);else nr=0;nm=0;nd=0;nz=0;fi; }
-function esn { if g0t $#;then er=${@:$#};em=$(nu9 $@);ed=$(nu7 $@);ez=$(nu8 $@);else er=0;em=0;ed=0;ez=0;fi; }
+function csn { if g0t $#;then nr=${*:$#};nm=$(nu9 $@);nd=$(nu7 $@);nz=$(nu8 $@);else nr=0;nm=0;nd=0;nz=0;fi; }
+function esn { if g0t $#;then er=${*:$#};em=$(nu9 $@);ed=$(nu7 $@);ez=$(nu8 $@);else er=0;em=0;ed=0;ez=0;fi; }
 function npn { printf '%10s %5s %s %3i' $dt $(non ${2:-0}) ${1:-0} 2>$p03; }
 function bnn { csn $(ln3 "$g50:") $(bpc $(bcl peer_count)); }                                                                                                 # set cur/min/std cc peers
 function szp {
@@ -378,9 +378,9 @@ function bm0 {                                                                  
 function bm1 { local g=${1:-$n16};while :;do bs5 $g;if [[ $l5 ]];then bkm $g;bzm $g;bxm $g;bwm $g;bcm $g;fi ;g=$((g+n18));((g>n17)) && break;done; }          # recursively sum penalty errors arrays
 function bm2 { k[0]=$(($(bnk)));z[0]=$(($(bnz)));x[0]=$(($(bnx)));w[0]=$(($(bnw)));c[0]=$(($(bnc)));a[0]=$(bm3 0);bm7; }                                      # tot err/cnt/penalty arrays
 function bm3 { b02 ${k[$1]} ${z[$1]} ${x[$1]} ${w[$1]} ${c[$1]}  ; }                                                                                          # get penalty from paid err arrays
-function bm5 { local g=${1:-$n16};local n=${a[0]};while :;do if ((a[g]<n));then b4=$((g-nn));n=${a[$g]};fi  ;g=$((g+n18));((g>n17)) && break;done; }          # set recursively peer change <- min penalties
-function bm6 { local g=${1:-$n16};                while :;do k[$g]=0;z[$g]=0;x[$g]=0;w[$g]=0;c[$g]=0;a[$g]=0;g=$((g+n18));((g>n17)) && break;done; }          # ini recursively penalty arrays
-function bm7 { local g=${1:-$n16};                while :;do a[$g]=$(bm3 $g)                                ;g=$((g+n18));((g>n17)) && break;done; }          # avg recursively penalty arrays
+function bm5 { local g=${1:-$n16};local n=${a[0]};while :;do if ((a[g]<n));then b4=$((g-nn));n=${a[$g]};fi;g=$((g+n18));((g>n17)) && break;done; }            # set recursively peer change <- min penalties
+function bm6 { local g=${1:-$n16};                while :;do k[g]=0;z[g]=0;x[g]=0;w[g]=0;c[g]=0;a[g]=0    ;g=$((g+n18));((g>n17)) && break;done; }            # ini recursively penalty arrays
+function bm7 { local g=${1:-$n16};                while :;do a[g]=$(bm3 $g)                               ;g=$((g+n18));((g>n17)) && break;done; }            # avg recursively penalty arrays
 function bcm { local g=${1:-$n16};((c[g]+=$(wc -l <<< "$l5" 2>$p03)                        )); }                                                              # sum               cnt array
 function bkm { local g=${1:-$n16};((k[g]+=$((0$(printf '+%i' $(cut -f1 <<< "$l5") 2>$p03))))); }                                                              # sum missing       err array
 function bzm { local g=${1:-$n16};((z[g]+=$((0$(printf '+%i' $(cut -f2 <<< "$l5") 2>$p03))))); }                                                              # sum failed target err array
@@ -419,7 +419,7 @@ function bh0 {
   swn "BM $(printf '%8i                 %7s%5s     i8  i0  i2  i4%s i6  i8  i2 avg%13i' $(llc $p13) "$(szl $nm $(b05 $nr))" "$(szi $nz $n57)" $(nl5 $b0 1) $n20 2>$p03)\n$m"
 }
 function bwd { local n=$((($(date +%s)-n09)/(12*32)-0));for n in $n $((n+1));do curl -sH "$s28" $s67 -X POST -d"$(viv)" "$s32/sync/$n";curl -sH "$s28" $s67 -X GET "$s32/proposer/$n";done 2>$p03|jq -r $s35 2>$p03; }
-function bwc { bwd|grep -Ex "$(vix)" 2>$p03|wc -l; }
+function bwc { bwd|grep -Exc "$(vix)" 2>$p03; }
 function ero { dts;swn "$(printf 'R%03i %2s SRV'      $2 $1     2>$p03) $(npn $er $en)" >> $3  ; }
 function vro { dts;swn "$(printf 'VL%2s %6i %10s %5s' $1 $2 $dt 2>$p03)"                >> $p49; }
 function bro { if fft $p12;then dts;bnn;bb0;swn "$(printf 'R%03i %2s %3i' $2 $1 $(bri) 2>$p03) $(npn $nr $nn)" >> $p12;else vro $1 $2;fi; }
@@ -491,7 +491,7 @@ function sm1 { pex "smartctl --json=c -x $1"|jq -r "$j4" 2>$p03; }
 function sm2 { pex "smartctl --json=c -x $1"|jq -r "$j5" 2>$p03; }
 function sm3 { (sensors 2>$p03;sleep 1;sensors 2>$p03)|snf "$e20"; }
 function sm4 { local s=$(pex "smartctl --json=c -x $1");jq -r "$j1" <<< $s 2>$p03;jq -r "$j0" <<< $s 2>$p03; }
-function sm5 { local g='';local f='';for f in $(ls $p66 2>$p03);do local g="$g+$(sm2 $f)";done;printf %i $(($g)); }
+function sm5 { local g='';local f='';for f in $p66;do [[ -e $f ]] || break;g="$g+$(sm2 $f)";done;printf %i $((g)); }
 function tmp {
   local g;local d;local e;local f;local l;local i;local n
   # cpu temp & throttling
@@ -501,10 +501,7 @@ function tmp {
     e=$(grep normal    <<< "$g" | tail -n1 | sef "$e21")
   fi
   # nvme & sata temps
-  g=''
-  for f in $(ls $p66 2>$p03); do
-    g="$g $(sm0 $f)"
-  done
+  g='';for f in $p66;do [[ -e $f ]] || break;g="$g $(sm0 $f)";done
   l=$(nu5 1 $g)
   g=''
   f='/dev/sda'
@@ -529,7 +526,7 @@ function cly { $s07             2>$p03|snf "$e54"; }
 function clo { if [[ $(cly) = yes ]];then printf OK;else printf NO;fi                             2>$p03; }
 function clf { local n=${1:-0};if [[ $(nu1 $n) -ne 0 ]];then printf %s $(nu6 6 $n)s;elif [[ $(nbi "$n*10^3") -ne 0 ]];then printf %6s $(nu6 0 "$n*10^3")ms;elif [[ $(nbi "$n*10^6") -ne 0 ]];then printf %6s $(nu6 0 "$n*10^6")us;elif [[ $(nbi "$n*10^9") -ne 0 ]];then printf %6s $(nu6 0 "$n*10^9")ns;else printf %s $n;fi; }
 function cl0 { printf "${1%.}"                                                                    2>$p03; }
-function cl1 { local n=0;local s;while :;do s=$(clq $1);if [[ $s ]];then break;else if [[ $n -lt 2 ]];then ((n++));else s=$1;break;fi;fi;done;cl0 $s; }
+function cl1 { local n=0;local s;while :;do s=$(clq $1);if [[ $s ]];then break;elif [[ $n -lt 2 ]];then ((n++));else s=$1;break;fi;done;cl0 $s; }
 function cl2 { if [[ $1 =~ ^[0-9]+ ]];then cl1 $1;else cl0 $1;fi; }
 function cl3 { cl2 $2; }
 function cl4 { printf "dl $6\tos $4\tjt $8\tn0 $(cl2 $2)"                    2>$p03; }
@@ -579,7 +576,7 @@ function sif {
   if [[ $(cat $p43 2>$p03) -eq 1 ]];then d=off;else d=on;fi;n=$(fl1|wc -l)
   [[ $1 ]] || g0t $i || g0t $n && swn "INFO$(printf '%3i %3i %10s %5s' $n $i $dt 2>$p03) usb $e, turbo $d, ufw $(wif $(pex 'ufw status'|grep Status:)), uptime:$(uptime|sef "$e55")"
   [[ $(ls $p66 2>$p03) ]] || return;n=$(sm5);g0t $n || return
-  g=$(printf '%6i %10s %5s ' $n $dt 2>$p03);f='';for f in $(ls $p66 2>$p03);do g="$g$(si0 $f $(sm1 $f))";done;swn "NVME ${g%;*}"
+  g=$(printf '%6i %10s %5s ' $n $dt 2>$p03);f='';for f in $p66;do [[ -e $f ]] || break;g="$g$(si0 $f $(sm1 $f))";done;swn "NVME ${g%;*}"
 }
 function tg1 { ll4 "$g36"|tln "$g25" $1; }
 function tg2 { if tsa $s44;then tg1 $1;else ll5 "$g11"|fln "$g25" $1;fi; }
@@ -603,7 +600,11 @@ function cpe {
   if [[ ! $m ]];then if irt;then m=$(rll "$e51;$e31");l=rl;fi;fi
   if [[ ! $m ]];then n=0;d=;else n=$(lll|wc -l);d=$(tail -n1 <<< "$m");fi
   m="ERRO$(printf '%3i%4i %10s %5s' $i $n $dt 2>$p03)"
-  if g0t $i;then if g0t $n;then m="$m sl: ${e:0:53}";m="$m $l: ${d:0:54}";else m="$m sl: ${e:0:112}";fi;else if g0t $n;then m="$m $l: ${d:0:112}";fi;fi
+  if g0t $i;then 
+    if g0t $n;then m="$m sl: ${e:0:53}";m="$m $l: ${d:0:54}";else m="$m sl: ${e:0:112}";fi
+  else
+    if g0t $n;then m="$m $l: ${d:0:112}";fi
+  fi
   (( i+n )) && swn "$m"
   m=;fft $p45 && m="$(echo $m), reboot $(($(sra)/60/60)) hours ago $(rsf|tail -n1)";s5t && m="$(echo $m), sync/propose duties on"
   [[ $m ]] && swn "INFO        $dt${m#*,}";upl;csp;mre
@@ -703,7 +704,7 @@ function pa  { tsa $s16 || cex "$s03 $s16"; }                                   
 function na  { tsa $s17 || cex "$s03 $s17"; }                                                                                                                 # start prometheus-node-exporter
 function fa  { tsa $s18 || cex "$s03 $s18"; }                                                                                                                 # start grafana-server
 function ma  { tsa $s14 || cex "$s03 $s14"; }                                                                                                                 # start mev-boost
-function wa  { if [[ $(pex 'ufw status'|grep -i inactive) ]];then yex 'ufw enable';else swu 'FIREWALL ALREADY ACTIVE';fi;cex 'ufw reload'; }                  # enable ufw : Proceed with operation (y|n)?
+function wa  { if pex 'ufw status'|grep -iq inactive;then yex 'ufw enable';else swu 'FIREWALL ALREADY ACTIVE';fi;cex 'ufw reload'; }                          # enable ufw : Proceed with operation (y|n)?
 # stop/disable eth-geth eth-beacon eth-validator prometheus prometheus-node-exporter grafana-server mev-boost
 function pp  { cex "$s02 $s16"; }                                                                                                                             # stop prometheus
 function np  { cex "$s02 $s17"; }                                                                                                                             # stop prometheus-node-exporter
@@ -778,7 +779,7 @@ function luc {                                                                  
   else
     cd $p06;sex "rm -rf $p06/lighthouse";git clone https://github.com/sigp/lighthouse.git;cd $p06/lighthouse                                                  # get new git
   fi
-  git fetch;if [[ $(grep -E 'v[0-9]+\.[0-9]+\.[0-9]+' <<< $2) ]];then m=$2;else m=$(git describe --tags $(git rev-list --tags --max-count=1));fi              # fetch (vX.X.X/last) version
+  git fetch;if grep -Eq 'v[0-9]+\.[0-9]+\.[0-9]+' <<< $2;then m=$2;else m=$(git describe --tags $(git rev-list --tags --max-count=1));fi                      # fetch (vX.X.X/last) version
   git checkout $m;swb "VAI COMPILAR LIGHTHOUSE $m";FEATURES=modern PROFILE=maxperf make;[[ $? -eq 0 && -x $1 ]] || swb "ERRO COMPILAR $m"                     # checkout stable version & compile
 }
 function ruv { if [[ $1 ]];then swn "RUST OVERRIDE SET $1";rustup override set $1;else swn 'RUST UPDATE';rustup update stable;fi; }                           # set/update rust version
@@ -799,9 +800,9 @@ function tvc {
     f=$p02/$(basename $p18);sex "cp $p18 $p02";cmw $f 666 eth;mcp $f $(dnn $nxvc);sex "rm $f";svc TRANSFERIDO
   fi
 }
-function nky { ls $p19/key*.json 2>$p03|wc -l; }
+function nky { find $p19/key*.json 2>$p03|wc -l; }
 function svr { local t='';for t in $(printf '%s\n' $@|sort -u);do curl -sX GET "$s47=$t"|snf "$e18";done; }                                                   # show mev validator registration
-function mvr { if [[ $(nky) -gt 0 ]];then svr $(for k in $(ls $p19/key*.json);do snf "$e22" $k;done);else svr ${b[@]};fi; }                                   # choose validator keys
+function mvr { if [[ $(nky) -gt 0 ]];then svr $(for k in $p19/key*.json;do [[ -f $k ]] || break;snf "$e22" $k;done);else svr ${b[@]};fi; }                    # choose validator keys
 function vko { if fft $p49;then         swn "$(printf 'KADD OK %3i %10s %5s' $1 $dt 2>$p03)"                >> $p49;fi; }
 function bko { if fft $p12;then bv0;bnn;swn "$(printf 'KADD OK %3i'          $1     2>$p03) $(npn $nr $nn)" >> $p12;fi; }
 function ibk {
@@ -817,17 +818,17 @@ function ivk {
     fft $p05/vc_lock || cex "$s03 $s13";vko $n
   fi
 }
-function viv { printf %s "[\"$(sed 's% %","%g' <<< ${!b[@]})\"]" 2>$p03; }
-function vix { printf %s "$(sed 's% %|%g' <<< ${!b[@]})" 2>$p03; }
+function viv { local s=${!b[@]};printf %s "[\"${s// /\",\"}\"]" 2>$p03; }
+function vix { local s=${!b[@]};printf %s "${s// /|}"           2>$p03; }
 function slt { local n=$((($1-n04)/32));for n in $n $((n+1));do curl -sH "$s28" -X POST -d"$(viv)" "$s32/attester/$n"|jq -r $s34;done 2>$p03;echo $(((n+1)*32)); }
-function sng { local t=$(((($(date +%s)-n09)/12)+n04));local e=0;local i=0;local s=0;for s in $(slt $t|sort -nu);do if ((s<t));then continue;else if (((s-t)>e));then e=$((s-t));i=$t;fi;fi;t=$((s+1));done;printf '%s %i' $(date -d@$((n09+i*12)) +%T) $((e*12)); }
+function sng { local t=$(((($(date +%s)-n09)/12)+n04));local e=0;local i=0;local s=0;for s in $(slt $t|sort -nu);do if ((s<t));then continue;elif (((s-t)>e));then e=$((s-t));i=$t;fi;t=$((s+1));done;printf '%s %i' $(date -d@$((n09+i*12)) +%T) $((e*12)); }
 function bcc { 
   printf p
   if n1t;then 
     if bpt;then
       if rbt $n06;then printf r;else printf c;fi
     else 
-      if bdt;then printf d;elif ! pmt $nm $nr;then printf m;else printf _;fi
+      if bdt;then printf d;else printf _;fi
     fi
   else
     if rbt;then printf r;elif bdt;then printf d;else printf _;fi
@@ -836,7 +837,14 @@ function bcc {
 }
 function btn { if n1t;then printf $1;else printf $n03;fi; }
 function hrc { ztt || return;chronyc -c sources 2>$p03|grep -Eq "$g65,1,$g66" && return;sex "$s04 $s56";sex "$s06 $s56"; }
-function irb { rm -f $p39.*;s2t $p39 && return;if rbt $1;then if vct;then brs RB 0 0 $n02;else srb $p39 RB;fi;else if fft $p45;then touch $p39.$1.hours;else hrc;fi;fi; }
+function irb {
+  rm -f $p39.*;s2t $p39 && return
+  if rbt $1;then 
+    if vct;then brs RB 0 0 $n02;else srb $p39 RB;fi
+  else 
+    if fft $p45;then touch $p39.$1.hours;else hrc;fi
+  fi
+}
 # ntpq -p output
 # when   The time after the last poll event. When when reaches the value of poll then the next polling action occurs. (s)
 # poll   The current polling interval. (s)
@@ -888,7 +896,7 @@ function uur {
 }
 function fdv { [[ $1         ]] || return;printf "\nDevice\tUsed\tSerialNumber\tFirmware\tModel\n";local d;local u;local f;local n;local m;while IFS=$'\t' read d u m f n;do printf "%s\t%s\t%s\t%s\t%s\n" $(basename $d) $(nby $u) $n $f "$m";done <<< "$1"; }
 function fmd { [[ -b /dev/$1 ]] || return;printf "\n";pex "mdadm --detail /dev/$1"; }
-function fst { local s="nvme smart-log";if [[ $1 ]];then cex "$s /dev/$1";else local f='';for f in $(ls $p66 2>$p03|sort);do swl "$s $f";pex "$s $f";done|grep -Eiv "$s54"|sef "$e08";fi;fdv "$(pex 'nvme list -o json'|jq -r "$j6"|sort)";fmd $(cat $p89|snf "$e82"); }
+function fst { local s="nvme smart-log";if [[ $1 ]];then cex "$s /dev/$1";else local f='';for f in $(find $p66 2>$p03|sort);do swl "$s $f";pex "$s $f";done|grep -Eiv "$s54"|sef "$e08";fi;fdv "$(pex 'nvme list -o json'|jq -r "$j6"|sort)";fmd $(cat $p89|snf "$e82"); }
 
 function ulg { local d=${1:-$(date +%F)};nex "cat $p69"|snf "/$g60$d/,/$g61$d/p"; }
 function uls { local e=$(snf "/$1/,/^ *$/p" <<< "$2"|grep -Ev "$1|^ *$"|sort -u);if [[ $e ]];then echo -e "\n$1\n$e";fi; }
@@ -1010,8 +1018,8 @@ function smb {
 function rvm { [[ -f $p70 ]] && return;swu 'RVM INSTALL';cex 'apt-add-repository -y ppa:rael-gc/rvm';cex 'apt update';cex 'apt install rvm -y';cex "usermod -a -G rvm $USER";echo "source $p70" >> $p71;sex "reboot"; }
 function cns {
   if [[ -f $p70 ]];then swu 'CNS INSTALL';else echo "needs rvm installed";return;fi;local s=$(rvm list)
-  if [[ $(grep ruby-3.3.0 <<< "$s") ]];then echo "$s";else rvm install ruby-3.3.0;fi
-  if [[ $(gem list cns|grep cns) ]];then echo "cns ja instalada";else sex "apt install libcurl4-openssl-dev -y";gem install cns --no-document;fi
+  if grep -q ruby-3.3.0 <<< "$s";then echo "$s";else rvm install ruby-3.3.0;fi
+  if gem list cns|grep -q cns   ;then echo "cns ja instalada";else sex "apt install libcurl4-openssl-dev -y";gem install cns --no-document;fi
   if [[ -f $p02/$p72.gpg ]];then gpg --batch --yes --passphrase "$B" -d $p02/$p72.gpg >> $p71      ;rm -f $p02/$p72.gpg;else echo "needs $p02/$p72.gpg";fi
   if [[ -f $p02/$p73.gpg ]];then gpg --batch --yes --passphrase "$B" -d $p02/$p73.gpg  > $p02/.$p73;rm -f $p02/$p73.gpg;else echo "needs $p02/$p73.gpg";fi
 }
@@ -1090,7 +1098,7 @@ function cns {
 [[ $1 = tpf ]] && { tl0;swn "$m" >> $p62;[[ $ok != OK ]] && trs $ok 0 $n03; }
 [[ $1 = bp  ]] && { bl0;swn "$m"; }
 [[ $1 = bps ]] && { bl5;swn "$m"; }
-function bml { [[ $d1 = 23:58 ]] || return;if bdt;then bdl $d0;else if [[ $(llc $p12) -gt $n14 ]];then bdd o 0 5;fi;fi; }
+function bml { [[ $d1 = 23:58 ]] || return;if bdt;then bdl $d0;elif [[ $(llc $p12) -gt $n14 ]];then bdd o 0 5;fi; }
 [[ $1 = bpf ]] && { bl0;swn "$m" >> $p12;bml;[[ $ok != OK ]] && brs $ok 0 0 $(btn $n02);pas; }
 [[ $1 = vp  ]] && { vl0;swn "$m"; }
 [[ $1 = vpf ]] && { vl0;swn "$m" >> $p49; }
@@ -1122,7 +1130,7 @@ function bml { [[ $d1 = 23:58 ]] || return;if bdt;then bdl $d0;else if [[ $(llc 
 [[ $1 = brl ]] && { brl; }
 [[ $1 = brm ]] && { brm; }
 [[ $1 = rsh ]] && { rsf Gg;echo -e "\n$(sf1) $(sng)"; }
-[[ $1 = rrs ]] && { cd $p02;rm -f $p50.* $p61.* *.rs.*; }
+[[ $1 = rrs ]] && { cd $p02;rm -f $p50.* $p61.* ./*.rs.*; }
 [[ $1 = rpt ]] && { touch $p50.print; }
 [[ $1 = rlk ]] && { touch $p50.lock; }
 [[ $1 = rld ]] && { touch $p61.lock; }
@@ -1162,7 +1170,7 @@ function bml { [[ $d1 = 23:58 ]] || return;if bdt;then bdl $d0;else if [[ $(llc 
 [[ $1 = viz ]] && { vgi $2                                                              ; }
 [[ $1 = vi1 ]] && { ll3 "$g16" ${2:-$n22}|grep $(sni $cun1)                  |sef "$e50"; }
 [[ $1 = vi2 ]] && { ll3 "$g16" ${2:-$n22}|grep $(sni $cun2)                  |sef "$e50"; }
-[[ $1 = vic ]] && { ll3 "$g17" ${2:-$(($n22/2))}                             |sef "$e50"; }
+[[ $1 = vic ]] && { ll3 "$g17" ${2:-$((n22/2))}                              |sef "$e50"; }
 [[ $1 = csp ]] && { csp $2 $3; }
 [[ $1 = esp ]] && { esp $2 $3; }
 [[ $1 = tsh ]] && { tsh $2; }
