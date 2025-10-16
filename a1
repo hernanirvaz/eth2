@@ -2,29 +2,29 @@
 
 source /home/eth/eth2/a0
 
-function xsh { zsh $(dnz $1) $(dnn $1) "$2"; }
-function xcp { local p=$(dnz $1);local s=$(dnn $1);local d=$2;shift;shift;zcp $p $s:$d $@; }
+function xsh { zsh "$(dnz "$1")" "$(dnn "$1")" "$2"; }
+function xcp { local p;local s;p=$(dnz "$1");s=$(dnn "$1");local d=$2;shift;shift;zcp "$p" "$s:$d" "$@"; }
 
 # source /home/eth/eth2/a3
 function snx {
   if [[ ${#1} -le 8 ]]; then
-    printf $1
+    printf %s "$1"
   else
     local s=bn${1#*-}
-    printf ${s: -8}
+    printf %s "${s: -8}"
   fi
 }
 function sni {
   case $1 in
-  $inm5) printf $iip5 ;;
-  $inm6) printf $iip6 ;;
-  $znm1) printf $zip1 ;;
-  $znm2) printf $zip2 ;;
-  $znm3) printf $zip3 ;;
-  $znm4) printf $zip4 ;;
-  $vnm1) printf $vis1 ;;
-  $vnm2) printf $vis2 ;;
-  $vnm3) printf $vis3 ;;
+  $inm5) printf %s "$iip5" ;;
+  $inm6) printf %s "$iip6" ;;
+  $znm1) printf %s "$zip1" ;;
+  $znm2) printf %s "$zip2" ;;
+  $znm3) printf %s "$zip3" ;;
+  $znm4) printf %s "$zip4" ;;
+  $vnm1) printf %s "$vis1" ;;
+  $vnm2) printf %s "$vis2" ;;
+  $vnm3) printf %s "$vis3" ;;
   esac
 }
 function sns {

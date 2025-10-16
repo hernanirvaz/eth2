@@ -905,12 +905,12 @@ function ulr { local s=$(ulg $1);uls "$g59" "$s";uls "$g62" "$s"; }
 [[ $1 = ulr ]] && { ulr $2; }
 
 function mcp {
-  local s=${2:-v1}
-  local d=${3:-~}
-  echo "xcp $(sns $s):$d $1"
-  xcp $(sns $s) $d $1
+  local s=${3:-v1}
+  local d=${4:-~}
+  echo "xcp $(sns $s):$d $2"
+  xcp "$(sns $s)" "$d" "$2"
 }
-[[ $1 = mcp ]] && { mcp $2 $3 $4; }
+[[ $1 = mcp ]] && { mcp "$@"; }
 
 function ipw { sex "ufw $s71";sex 'ufw default deny outgoing';sex 'ufw reload'; }
 function iaw { sex 'ufw default allow outgoing';sex "ufw delete $s71";sex 'ufw reload'; }
@@ -1341,7 +1341,7 @@ if [[ ! $1 ]];then
   m="$m\neip\t\t\tset dynamic DNS"
   m="$m\nulg [d]\t\t\tshow update logs d($(date +%F)) on $(basename $p69)"
   m="$m\nulr [d]\t\t\tshow restartings d($(date +%F)) on $(basename $p69)"
-  m="$m\nmcp <f> [s:v1] [d:~]\tscp <f>ile [s]erver:[d]estination"
+  m="$m\nmcp <f> [s:v1] [d:~]\tscp <f>ile(s) [s]erver:[d]estination"
   m="$m\nplx [s]\t\t\tinstalar $s60/[$s22] servers"
   m="$m\njly\t\t\tinstalar $s64"
   m="$m\ntms\t\t\tinstalar $s15"
