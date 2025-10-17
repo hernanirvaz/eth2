@@ -928,7 +928,6 @@ function ulr { local s=$(ulg $1);uls "$g59" "$s";uls "$g62" "$s"; }
 function mcp {
   local s=${3:-v1}
   local d=${4:-~}
-  echo "xcp $(sns $s):$d $2"
   xcp "$(sns $s)" "$d" "$2"
 }
 [[ $1 = mcp ]] && { mcp "$@"; }

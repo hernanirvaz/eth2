@@ -3,9 +3,8 @@
 source /home/eth/eth2/a0
 
 function xsh { zsh "$(dnz "$1")" "$(dnn "$1")" "$2"; }
-function xcp { local p;local s;p=$(dnz "$1");s=$(dnn "$1");local d=$2;shift;shift;zcp "$p" "$s:$d" "$@"; }
+function xcp { local p;local s;p=$(dnz "$1");s=$(dnn "$1");local d=$2;shift;shift;echo "scp -P $p $@ $s:$d";zcp "$p" "$s:$d" "$@"; }
 
-# source /home/eth/eth2/a3
 function snx {
   if [[ ${#1} -le 8 ]]; then
     printf %s "$1"
