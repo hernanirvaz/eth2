@@ -70,7 +70,7 @@ function swg { echo -e "\e[32m${1^^}\e[0m"; }
 function swu { echo -e "${1^^}"; }
 function swn { echo -e "$1"; }
 function swl { echo -e "\n$1\n"; }
-function sau { id $1 &>$p03 || sex "useradd --no-create-home --shell /bin/false $1"; }
+function sau { id "$1" &>$p03 || sex "useradd --no-create-home --shell /bin/false $1"; }
 function cmw { [[ $2 ]] && sex "chmod $2 $1";[[ $3 ]] && sex "chown $3:${4:-$3} $1"; }
 function svd { sex "chown -R eth3:eth3 $p17";cmw $p17 700 eth3; }
 function cex { swb "$1";SUDO_ASKPASS=$p82 sudo -A $1       2>$p03; }
@@ -85,12 +85,12 @@ function tps { sex "$s02 $s44"; }
 function bps { sex "$s02 $s12"; }
 function vps { sex "$s02 $s13";touch $p05/vc_slash 2>$p03; }
 function mps { sex "$s02 $s14"; }
-function gp  { if tsa $s10;then cex "$s02 $s10";else sex "$s02 $s10";fi; }
-function up  { if tsa $s11;then cex "$s02 $s11";else sex "$s02 $s11";fi; }
-function tp  { if tsa $s44;then cex "$s02 $s44";else sex "$s02 $s44";fi; }
-function bp  { if tsa $s12;then cex "$s02 $s12";else sex "$s02 $s12";fi; }
-function vp  { if tsa $s13;then cex "$s02 $s13";else sex "$s02 $s13";fi;touch $p05/vc_slash 2>$p03; }
-function mp  { if tsa $s14;then cex "$s02 $s14";else sex "$s02 $s14";fi; }
+function gp  { if tsa "$s10";then cex "$s02 $s10";else sex "$s02 $s10";fi; }
+function up  { if tsa "$s11";then cex "$s02 $s11";else sex "$s02 $s11";fi; }
+function tp  { if tsa "$s44";then cex "$s02 $s44";else sex "$s02 $s44";fi; }
+function bp  { if tsa "$s12";then cex "$s02 $s12";else sex "$s02 $s12";fi; }
+function vp  { if tsa "$s13";then cex "$s02 $s13";else sex "$s02 $s13";fi;touch $p05/vc_slash 2>$p03; }
+function mp  { if tsa "$s14";then cex "$s02 $s14";else sex "$s02 $s14";fi; }
 function fft { [[ -f $1 ]]; }
 function shc { sha256sum $1 2>$p03|cut -d' ' -f1; }
 function srb { rm -f $1.* 2>$p03;if [[ $2 = RB ]];then if fft $p50.print;then gp;up;tp;bp;vp;mp;rm -f $p05/vc_slash $p50.print 2>$p03;cex reboot;else gps;ups;tps;bps;vps;mps;rm -f $p05/vc_slash 2>$p03;sex reboot;fi;else rm -f $p50.print 2>$p03;fi; }
@@ -100,7 +100,12 @@ function pai { local e="allow from $2 to any port ${1/\// proto }";if [[ $4 ]];t
 function pae { local e="allow $1"                                 ;if [[ $3 ]];then nex "ufw $3 $e";else nex "ufw $e comment $2";fi; }
 function ple { local e="limit $1"                                 ;if [[ $3 ]];then nex "ufw $3 $e";else nex "ufw $e comment $2";fi; }
 function sis { local f=$(basename $1);if [[ -s $1 ]];then swg "NEW $f";sex "mv $1 $p17";touch $p05/vc_slash 2>$p03;cmw $p18 600 eth3;else swr "NO $f";fi; }
-function sjw { [[ $cunm = $inm5 || $cunm = $inm6 || $cunm = $vnm1 || $cunm = $vnm2 ]] || return;if [[ -d $p58 ]];then swn "JA EXISTE $p58/";else sex "mkdir -p $p58";cmw $p58 755 eth;fi;if [[ -f $p58/jwt ]];then swn "JA EXISTE $p58/jwt";else openssl rand -hex 32|tr -d '\n'|tee $p58/jwt 1>$p03;cmw $p58/jwt 444;fi;if [[ -f $p58/pubkeys ]];then swn "JA EXISTE $p58/pubkeys";else tr ' ' ',' <<< ${b[@]} > $p58/pubkeys;cmw $p58/pubkeys 400 eth2;fi; }
+function sjw { 
+  [[ $cunm = $inm5 || $cunm = $inm6 || $cunm = $vnm1 || $cunm = $vnm2 ]] || return;local s=${b[*]}
+  if [[ -d $p58 ]]        ;then swn "JA EXISTE $p58/"       ;else sex "mkdir -p $p58";cmw "$p58" 755 eth                         ;fi
+  if [[ -s $p58/jwt ]]    ;then swn "JA EXISTE $p58/jwt"    ;else openssl rand -hex 32|tr -d '\n' > "$p58/jwt";cmw "$p58/jwt" 444;fi
+  if [[ -s $p58/pubkeys ]];then swn "JA EXISTE $p58/pubkeys";else echo "${s// /,}" > "$p58/pubkeys";cmw "$p58/pubkeys" 444 eth2  ;fi
+}
 function svc { swb "$s76 $1 check slash,srv,dirs";pex "ls -l $p17";pex "cat $p04/$s13.service"; }
 function unv { local v=${1:-23.1.0};curl -LO https://hyperledger.jfrog.io/artifactory/besu-binaries/besu/$v/besu-$v.tar.gz;shc besu-$v.tar.gz;swn "INSTALAR $s73 $v (SIM/nao)?";local rsp=nao;read rsp;if [[ $rsp = SIM ]];then tar xvf besu-$v.tar.gz;sex "cp -a besu-$v $p00/besu";sex "chown eth1:eth1 -R $p00/besu";cmw $p00/besu 755 eth1;fi; }
 function gnv { local v=${1:-go1.25.1};local f="$v.linux-amd64.tar.gz";local l='/usr/local/go/bin';local s=$(dirname $l);cd $p02;if [[ $($l/go version 2>$p03|cut -d' ' -f3) = $v ]];then return;else swu "INSTALAR $v EM $s";cd $p02;sex "rm -f $f";wget -q https://go.dev/dl/$f;sex "rm -rf $s";sex "tar -C $(dirname $s) -xzf $f";if ! grep -q $l $p02/.profile;then echo "if [ -d \"$l\" ] && ! echo \$PATH|grep -q \"(^|:)$l(:|$)\";then PATH=\"\$PATH:$l\";fi" >> $p02/.profile;fi;fi; }
@@ -145,9 +150,9 @@ function nnv {
     t6 ta
   fi
 }
-function gtv { local f="geth-linux-amd64-${1:-1.13.14}-${2:-2bd6bd01}";rm -rf $f*;curl -LO https://gethstore.blob.core.windows.net/builds/$f.tar.gz;local s=$(md5sum $f.tar.gz|cut -d' ' -f1);swn "\nINSTALAR $f ($s)?";local rsp=nao;read rsp;if [[ $rsp = $s ]];then tar xf $f.tar.gz;sex "cp $f/geth $p00";cmw $p00/geth 755 eth;fi; }
-function imk { local f="$p02/key.txt";echo $K > $f;$p00/lighthouse --datadir $p05 account validator import --network mainnet --reuse-password --password-file $f --directory $p19;rm -f $f; }
-function cc1 { local f=$(basename $1);sex "cp $1 $f.sav";cmw $f.sav 644 eth      ;sef "$2" $f.sav > $f.new;sex "cp $f.new $1"; }                              # edit             file
-function cc2 { local f=$(basename $1);sex "cp $1 $f.sav";cp $1 $f.new            ;echo -e "$2"   >> $f.new;sex "cp $f.new $1"; }                              # add lines to end file
-function cc3 { local f=$(basename $1);sex "cp $1 $f.sav";sef "$2" $f.sav > $f.new;echo -e "$3"   >> $f.new;sex "cp $f.new $1"; }                              # add lines to pos file
-function cc4 { local f=$(basename $1);sex "cp $1 $f.sav"                         ;echo -e "$2"    > $f.new;sex "cp $f.new $1"; }                              # replace lines of file
+function gtv { local f="geth-linux-amd64-${1:-1.13.14}-${2:-2bd6bd01}";rm -rf $f*;curl -LO https://gethstore.blob.core.windows.net/builds/$f.tar.gz;local s=$(md5sum "$f.tar.gz"|cut -d' ' -f1);swn "\nINSTALAR $f ($s)?";local rsp=nao;read rsp;if [[ $rsp = $s ]];then tar xf "$f.tar.gz";sex "cp $f/geth $p00";cmw "$p00/geth" 755 eth;fi; }
+function imk { local f="$p02/key.txt";echo "$K" > "$f";$p00/lighthouse --datadir "$p05" account validator import --network mainnet --reuse-password --password-file "$f" --directory $p19;rm -f "$f"; }
+function cc1 { local f=$(basename "$1");sex "cp $1 $f.sav";cmw "$f.sav" 644 eth        ;sef "$2" "$f.sav" > "$f.new";sex "cp $f.new $1"; }                    # edit             file
+function cc2 { local f=$(basename "$1");sex "cp $1 $f.sav";cp  "$1" "$f.new"           ;echo -e "$2"     >> "$f.new";sex "cp $f.new $1"; }                    # add lines to end file
+function cc3 { local f=$(basename "$1");sex "cp $1 $f.sav";sef "$2" "$f.sav" > "$f.new";echo -e "$3"     >> "$f.new";sex "cp $f.new $1"; }                    # add lines to pos file
+function cc4 { local f=$(basename "$1");sex "cp $1 $f.sav"                             ;echo -e "$2"      > "$f.new";sex "cp $f.new $1"; }                    # replace lines of file
