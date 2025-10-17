@@ -811,7 +811,7 @@ function tvc {
   if [[ $rsp = SIM && ! -f $p05/vc_slash && ! -f $p05/vc_lock && -f $p05/vc_keys ]]; then
     vrs $1 $2 # stop    & vc_slash
     vd        # disable & vc_lock
-    f=$p02/$(basename $p18);sex "cp $p18 $p02";cmw $f 666 eth;mcp $f $(dnn $nxvc);sex "rm $f";svc TRANSFERIDO
+    f=$p02/$(basename $p18);sex "cp $p18 $p02";cmw $f 666 eth;mcp $f $nxvc;sex "rm $f";svc TRANSFERIDO
   fi
 }
 function nky { find $p19/key*.json 2>$p03|wc -l; }
@@ -926,11 +926,11 @@ function ulr { local s=$(ulg $1);uls "$g59" "$s";uls "$g62" "$s"; }
 [[ $1 = ulr ]] && { ulr $2; }
 
 function mcp {
-  local s=${3:-v1}
-  local d=${4:-~}
-  xcp "$(sns $s)" "$d" "$2"
+  local s=${2:-v1}
+  local d=${3:-~}
+  xcp "$(sns $s)" "$d" "$1"
 }
-[[ $1 = mcp ]] && { mcp "$@"; }
+[[ $1 = mcp ]] && { shift;mcp "$@"; }
 
 function ipw { sex "ufw $s71";sex 'ufw default deny outgoing';sex 'ufw reload'; }
 function iaw { sex 'ufw default allow outgoing';sex "ufw delete $s71";sex 'ufw reload'; }
