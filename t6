@@ -148,9 +148,9 @@ function era { if [[ -s $1 ]];then tail -n${2:-$n13} $1 2>$p03|cut -d' ' -f1|sor
 function eh0 {
   local n=${1:-$n13}
   local i=${1:-0}
-  if fft $p10;then tail -n$n $p10;fi;if [[ $i -eq 0 ]] && tsa $s10;then gl0;swn "GL $(printf '%8i                 %7s%5s' $(llc $p10) "$(szl $em $(b05 $er))" "$(szi $ez $n57)" 2>$p03)\n$m";fi
-  if fft $p11;then tail -n$n $p11;fi;if [[ $i -eq 0 ]] && tsa $s11;then ul0;swn "UL $(printf '%8i                 %7s%5s' $(llc $p11) "$(szl $em $(b05 $er))" "$(szi $ez $n57)" 2>$p03)\n$m";fi
-  if fft $p62;then tail -n$n $p62;fi;if [[ $i -eq 0 ]] && tsa $s44;then tl0;swn "NL $(printf '%8i                 %7s%5s' $(llc $p62) "$(szl $em $(b05 $er))" "$(szi $ez $n57)" 2>$p03)\n$m";fi
+  if fft $p10;then tail -n$n $p10;fi;if [[ $i -eq 0 ]] && tsa $s10;then gl0;swn "GL $(printf '%8i                 %7s%5s' $(llc $p10) "$(szl $em $er)" "$(szi $ez $n57)" 2>$p03)\n$m";fi
+  if fft $p11;then tail -n$n $p11;fi;if [[ $i -eq 0 ]] && tsa $s11;then ul0;swn "UL $(printf '%8i                 %7s%5s' $(llc $p11) "$(szl $em $er)" "$(szi $ez $n57)" 2>$p03)\n$m";fi
+  if fft $p62;then tail -n$n $p62;fi;if [[ $i -eq 0 ]] && tsa $s44;then tl0;swn "NL $(printf '%8i                 %7s%5s' $(llc $p62) "$(szl $em $er)" "$(szi $ez $n57)" 2>$p03)\n$m";fi
 }
 function ch0 {
   local s=$1
@@ -206,12 +206,12 @@ function npn { printf '%10s %5s %s %3i' $dt $(non ${2:-0}) ${1:-0} 2>$p03; }
 function bnn { csn $(ln3 "$g50:") $(bpc $(bcl peer_count)); }                                                                                                 # set cur/min/std cc peers
 function szp {
   local e;local s;local i=${5:-999};local n=$2
-  if pmt $2 $1;then s=$(swg p);else s=$(swr p);fi;e=$(swg m)
+  if pmt "$2" "$1";then s=$(swg p);else s=$(swr p);fi;e=$(swg m)
   if [[ $3 -gt 0 ]];then if [[ $3 -ge $i ]];then e=$(swr d);else e=$(swg z);fi;n=$3;fi
   printf '%s%03i %s%03i d%04i' $s $1 $e $n $4 2>$p03
 }
-function szl { if pmt $1 $2;then printf '\e[32m%3i/%-3i\e[0m'   $1 $2 2>$p03;else printf '\e[5;31m%3i/%-3i\e[0m' $1 $2 2>$p03;fi; }
-function szi { if pmt $1 $2;then printf '\e[5;31m%2i/%-2i\e[0m' $1 $2 2>$p03;else printf '\e[32m%2i/%-2i\e[0m'   $1 $2 2>$p03;fi; }
+function szl { if pmt "$1" "$2"  ;then printf '\e[32m%3i/%-3i\e[0m'   $1 $(b05 $2) 2>$p03;else printf '\e[5;31m%3i/%-3i\e[0m' $1 $(b05 $2) 2>$p03;fi; }
+function szi { if [[ $1 -ge $2 ]];then printf '\e[5;31m%2i/%-2i\e[0m' $1       $2  2>$p03;else printf '\e[32m%2i/%-2i\e[0m'   $1       $2  2>$p03;fi; }
 function sz0 {         gv0;gnn 0;printf 'el%04i %s p2p %05i %s     iu: %4i %5i %4i'                 $(tg2|wc -l) "$(szp $er $em $ez $ed     )" $(ss5 $1 port    ) "$(gb1 $(gcl eth.syncing))" $e1 $e2 $(ei0)                 2>$p03; }
 function sz1 {         uv0;unn 0;printf 'el%04i %s p2p %05i %s      i: %4i'                         $(tg2|wc -l) "$(szp $er $em $ez $ed     )" $(ss5 $1 p2p-port) "$(ub1 $(ucl eth_syncing))" $e1                            2>$p03; }
 function sz5 {         tv0;tnn 0;printf 'el%04i %s p2p %05i %s     ps: %4i %5i %4i'                 $(tg2|wc -l) "$(szp $er $em $ez $ed $n57)" $(ss5 $1 p2pport ) "$(tb1 $(tcl eth_syncing))" $e1 $e2 $(ei0)                 2>$p03; }
@@ -325,7 +325,7 @@ function bl5 {
   dts
   if tsa $s12; then
     bv0;bnn
-    m="$s75        $dt $(non $nn) $(szp $nr $nm $nz $nd $n57) limits: $(szl $nm $(b05 $nr)) $(szi $nz $n57)"
+    m="$s75        $dt $(non $nn) $(szp $nr $nm $nz $nd $n57) limits: $(szl $nm $nr) $(szi $nz $n57)"
   else
     m="BSRV NOT ON $dt"
   fi
@@ -416,7 +416,7 @@ function bh0 {
   local e;boi;bl0;e=$(printf '%s     9 5  1  0 err norm  idx' $(nl5 $b0 1) 2>$p03)
   swn "BO $(printf '%4i%4i%34s%14s' $b2 $(wc -l <<< "$l2") 2>$p03)$e";bo5
   swn "BL $(printf '%8i/%4i%34s%9s' $(llc $p12) $n14 2>$p03)$e\n$m";bm0;bmo
-  swn "BM $(printf '%8i                 %7s%5s     i8  i0  i2  i4%s i6  i8  i2 avg%13i' $(llc $p13) "$(szl $nm $(b05 $nr))" "$(szi $nz $n57)" $(nl5 $b0 1) $n20 2>$p03)\n$m"
+  swn "BM $(printf '%8i                 %7s%5s     i8  i0  i2  i4%s i6  i8  i2 avg%13i' $(llc $p13) "$(szl $nm $nr)" "$(szi $nz $n57)" $(nl5 $b0 1) $n20 2>$p03)\n$m"
 }
 function bwd { local n=$((($(date +%s)-n09)/(12*32)-0));for n in $n $((n+1));do curl -sH "$s28" $s67 -X POST -d"$(viv)" "$s32/sync/$n";curl -sH "$s28" $s67 -X GET "$s32/proposer/$n";done 2>$p03|jq -r $s35 2>$p03; }
 function bwc { bwd|grep -Exc "$(vix)" 2>$p03; }
