@@ -47,3 +47,7 @@ function pcm {
     zsh "$p" "$n" 'tail -n20 /root/rt-pfsense-wan-check.log'
   fi
 }
+function tcm {
+  local s=hrv-zotac1;echo $s pfSense;pcm NTP
+  s=hrv-zotac2;echo $s chronyc;zsh $(dnz $s) $(dnn $s) "chronyc sources"
+}
