@@ -98,8 +98,8 @@ function s6t { [[ -e $1 && -b $1 ]]; }
 function rbt { [[ $(sra) -ge $((60*60*${1:-9})) ]]; }
 function ipt { [[ $(date +%s) -ge $(bss "$1" 6) ]]; }
 function pct { [[ $b4 -ne 0 ]]; }
-function pmt { [[ $1 -ge $(b05 "$2") ]]; }
-function hat { [[ ${a[$nn]} -ge ${a[0]} ]]; }                                                                                                                 # function hat { [[ $b2 -gt $(b00) ]]; }
+function pmt { fft $p50.force || [[ $1 -ge $(b05 "$2") ]]; }
+function hat { fft $p50.force || [[ ${a[$nn]} -ge ${a[0]} ]]; }
 function bdt { ! fft $p61.lock && [[ $(b03 "$zk" "$zz" "$zx" "$zw") -gt $n20 || $nz -ge $n57 ]]; }
 function sft { [[ -f $p04/$1.service ]]; }
 function bpt { ! fft $p50.lock && [[ $(era $p12 $n12) -le 1 ]] && ( (pct && pmt "$nm" "$nr" && hat && ! bdt && ! fft $p45) || rbt $n06); }
@@ -178,7 +178,8 @@ function ch0 {
     fi
   fi
 }
-function ah0 { eh0 $3|tail -n$1;bh0 $3|tail -n$2; }
+function ah0 { eh0 $2|tail -n$1;bh0 $2; }
+function ah9 { hhh;ah0 $1 $2;tsa $s13 && ch0 VL $2|tail -n$1;tsa $s14 && ch0 ML $2|tail -n$1; }
 function eb0 {
   e0=$(ll5 "$g12" | wc -l)
   ok=OK
@@ -405,13 +406,11 @@ function bo5 { bo0|head -n$((b6>b2?b6:b2<5?5:b2))|tail -n$((b6>0?b6:b2>n12?n12:b
 function boa { local g=${1:-$n16};local e=$(bo4 $g);printf 'BO%5i %3i\n' $(wc -l <<< "$e") $g 2>$p03;echo "$e";((g<n17)) && boa $((g+n18)); }                 # recursively show homologous nodes report
 function bof { 
   rm -f $p12.r
-  local n=${1:-0};local g=$((n16+n18*n));local i;local d;n=0
-  i=$(echo $(head -n1 $p12 2>$p03)|cut -d' ' -f4)
-  d=$(printf %i $(((($(date '+%s')-$(date -d "${i:-$(date '+%F')}" '+%s'))/86400)+${2:-1})))
-  dts "$(date -d"$d days ago" '+%F') 23:58"
+  local n=0;local g=$((n16+n18*n));local i;local d
+  i=$(echo $(head -n1 $p12 2>$p03)|cut -d' ' -f4);i=${i:-$(date '+%F')}                                          # set start date
+  d=$(printf %i $(((($(date '+%s')-$(date -d "$i" '+%s'))/86400)+1)));dts "$(date -d"$d days ago" '+%F') 23:58"  # set date/time of fake logs
   while ((g<=n17));do
-    nn=$g;nr=$g
-    bl1 0 1000 0 OK;bl2 0 0 1 $n;bl3 0 0 0 0 0 0 0;blo;swn "$m" >> $p12.r
+    nn=$g;nr=$g;bl1 0 1000 0 OK;bl2 0 0 $n $((${1:-0}*n));bl3 0 0 0 0 0 0 0;blo;swn "$m" >> $p12.r
     n=$((n+1));g=$((g+n18))
   done
   [[ -s $p12.r ]] || return
@@ -1127,7 +1126,7 @@ function bml { [[ $d1 = 23:58 ]] || return;if bdt;then bdl $d0;elif [[ $(llc $p1
 [[ $1 = bn  ]] && { bm0;bno;swn "$m"; }
 [[ $1 = bm  ]] && { bm0;bmo;swn "$m"; }
 [[ $1 = bmf ]] && { bm0;[[ $2 ]] && b4=$2;bms;v0t && swn "$m" >> $p13;if n1t;then if fft $p45;then bpt && brs RB 0 $((n05*7)) $n00;else bpt && brs PE $b4 $n05 $n02;fi;else rbt && brs RB 0 $n05 $n03;fi; }
-[[ $1 = ah  ]] && { hhh;if tsa $s13;then ah0 4 30 $2;ch0 VL $2|tail -n4;else ah0 5 45 $2;fi;if tsa $s14;then ch0 ML $2|tail -n4;fi; }
+[[ $1 = ah  ]] && { ah9 7 $2; }
 [[ $1 = eh  ]] && { eh0 $2; }
 [[ $1 = ch  ]] && { ch0 CL $2; }
 [[ $1 = vh  ]] && { ch0 VL $2; }
@@ -1144,7 +1143,7 @@ function bml { [[ $d1 = 23:58 ]] || return;if bdt;then bdl $d0;elif [[ $(llc $p1
 [[ $1 = bo  && -f $p12 ]] && { boi $(pt1 $@ 00:00);if [[ $(pt3 $@ s) = n ]];then b6=$b2;else b6=$(pt2 $@ 0);fi;bo5; }
 [[ $1 = boc && -f $p12 ]] && { unset v;read -a v <<< $(bff|tail -n1);l2=$(bff $(pt1 $2 ${v[4]}));boa; }
 [[ $1 = bol && -f $p12 ]] && { l2=$(bff 23:58);boa; }
-[[ $1 = bof && -f $p12 ]] && { bof $2 $3; }
+[[ $1 = bof && -f $p12 ]] && { bof $2; }
 [[ $1 = bod ]] && { bdd o ${2:-0} ${3:-5}; }
 [[ $1 = brd ]] && { bdd r ${2:-0} ${3:-5}; }
 [[ $1 = bdl ]] && { bdl $2; }
@@ -1154,6 +1153,7 @@ function bml { [[ $d1 = 23:58 ]] || return;if bdt;then bdl $d0;elif [[ $(llc $p1
 [[ $1 = rrs ]] && { cd $p02;rm -f $p50.* $p61.* ./*.rs.*; }
 [[ $1 = rpt ]] && { touch $p50.print; }
 [[ $1 = rlk ]] && { touch $p50.lock; }
+[[ $1 = rfr ]] && { touch $p50.force; }
 [[ $1 = rld ]] && { touch $p61.lock; }
 [[ $1 = jsh ]] && { nex "journalctl --disk-usage"; }
 [[ $1 = jrs ]] && { nex "journalctl --vacuum-time=3days";nex "journalctl --verify"; }
@@ -1334,7 +1334,7 @@ if [[ ! $1 ]];then
   m="$m\nbo  [lines]\t\thomologous\tlogs [with max lines]"
   m="$m\nbo[cl]\t\t\thomologous\tlogs report at [current|last(23:58)] time"
   m="$m\nb[or]d [p] [n]\t\tdelete\t\tlogs for last penalty >= p(0) && node days > n(5) in [o]rder or [r]everse"
-  m="$m\nbof [i] [d]\t\tfake\t\tlogs for index peers i(0)($n16) until $n17 by $n18, date=first-d(1)"
+  m="$m\nbof [m]\t\t\tfake\t\tlogs with delay penalties multipliar m(0) for peers $n16 until $n17, date=first-1"
   m="$m\nbp[fsio]\t\tcc-minutes\treport [file|peers {summary|incoming|outgoing}]"
   m="$m\nbm[f]\t\t\tcc-daily\treport [file & $s12 nodes change/restart]"
   m="$m\nhs[012ecgubvm]\t\thistoric summary report [0-both|1-main|2-backup|el|cc|geth|besu|beacon|vc|mev]"
@@ -1347,7 +1347,7 @@ if [[ ! $1 ]];then
   m="$m\nd[sh [url]|rs]\t\tdns show [url]|reset"
   m="$m\nh[sh|rs|ch|ca|rc]\t$s45 show|restart|check|check all|restart conditional"
   m="$m\nhs[012ecvm]\t\tservices all|main|backup|execution|concensus|vc|mev"
-  m="$m\nr[sh|rs|pt|lk|ld]\trestart gap show|reset|print|lock restart|lock delete log"
+  m="$m\nr[sh|rs|pt|lk|ld|fr]\trestart gap show|reset|print|lock restart|lock delete log|force restart"
   m="$m\ni[sh|ch]\t\texternal ip show|change"
   m="$m\nj[sh|rs]\t\tjournal logs show|reset"
   m="$m\nf[sh|rf|(ud|st) [d]]\tfirmware device show|refres|(hupdate|selftest-nvme) [id]|"
