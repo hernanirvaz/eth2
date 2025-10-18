@@ -4,4 +4,4 @@ LANG=C
 LC_ALL=C
 
 grep -E '[0-9.]+ *ms.+[0-9.]+ *Mbit/s.+[0-9.]+*Mbit/s' e9.log | \
-awk '{ps+=$4;ds+=$7;us+=$10;cn++} END {print "avg ping: " ps/cn " ms";print "avg download: " ds/cn " Mbit/s";print "avg upload: " us/cn " Mbit/s"}'
+awk '{dt=$1;tm=$2;ps+=$4;ds+=$7;us+=$10;cn++} END {printf "%s %s MPing: %.0f ms MDownload: %.0f Mbit/s MUpload: %.0f Mbit/s\n", dt, tm, ps/cn, ds/cn, us/cn}'
