@@ -3,7 +3,7 @@
 source /home/eth/eth2/a0
 
 function xsh { zsh "$(dnz "$1")" "$(dnn "$1")" "$2"; }
-function xcp { local p;local s;p=$(dnz "$1");s=$(dnn "$1");local d=$2;shift;shift;echo "scp -P $p $@ $s:$d";zcp "$p" "$s:$d" "$@"; }
+function xcp { local p;local s;p=$(dnz "$1");s=$(dnn "$1");local d=$2;shift;shift;echo "scp -rP $p $@ $s:$d";zcp "$p" "$s:$d" "$@"; }
 
 function snx {
   if [[ ${#1} -le 8 ]]; then
@@ -57,7 +57,6 @@ function sn2 {
 function sef { sed -E  "$1" $2 2>$p03; }
 function snf { sed -En "$1" $2 2>$p03; }
 
-# source /home/eth/eth2/a4
 function ndp { [[ $cunm = $inm5 || $cunm = $vnm2 ]]; }
 function tsa { $s00 is-active  --quiet $1 2>$p03; }
 function tse { $s00 is-enabled --quiet $1 2>$p03; }
