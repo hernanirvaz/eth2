@@ -55,6 +55,7 @@ alias v1='esl ${N%%:*} ${N#*:}'
 alias v2='esl ns3238168.ip-57-129-52.eu 2020'
 
 alias rr='pcm RB'
+alias rt='pcm NTP'
 alias rl='pcm'
 alias mr='echo meo:$V ;telnet meo'
 
