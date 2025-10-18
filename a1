@@ -107,14 +107,32 @@ function sjw {
 }
 function svc { swb "$s76 $1 check slash,srv,dirs";pex "ls -l $p17";pex "cat $p04/$s13.service"; }
 function unv { local v=${1:-23.1.0};curl -LO https://hyperledger.jfrog.io/artifactory/besu-binaries/besu/$v/besu-$v.tar.gz;shc besu-$v.tar.gz;swn "INSTALAR $s73 $v (SIM/nao)?";local rsp=nao;read rsp;if [[ $rsp = SIM ]];then tar xvf besu-$v.tar.gz;sex "cp -a besu-$v $p00/besu";sex "chown eth1:eth1 -R $p00/besu";cmw $p00/besu 755 eth1;fi; }
-function gnv { local v=${1:-go1.25.1};local f="$v.linux-amd64.tar.gz";local l='/usr/local/go/bin';local s=$(dirname $l);cd $p02;if [[ $($l/go version 2>$p03|cut -d' ' -f3) = $v ]];then return;else swu "INSTALAR $v EM $s";cd $p02;sex "rm -f $f";wget -q https://go.dev/dl/$f;sex "rm -rf $s";sex "tar -C $(dirname $s) -xzf $f";if ! grep -q $l $p02/.profile;then echo "if [ -d \"$l\" ] && ! echo \$PATH|grep -q \"(^|:)$l(:|$)\";then PATH=\"\$PATH:$l\";fi" >> $p02/.profile;fi;fi; }
-function mn0 { cd $p02;sex 'rm -rf go';sex "rm -rf $1"; }
+function gnv {
+  local v=${1:-go1.25.3};local f="$v.linux-amd64.tar.gz";local l='/usr/local/go/bin';local s;s=$(dirname $l)
+  cd "$p02" || return
+  if [[ $($l/go version 2>$p03|cut -d' ' -f3) = $v ]];then 
+    return
+  else 
+    swu "INSTALAR $v EM $s"
+    sex "rm -f $f"
+    wget -q https://go.dev/dl/$f
+    sex "rm -rf $s"
+    sex "tar -C $(dirname $s) -xzf $f"
+    if ! grep -q $l "$p02/.profile";then echo "if [ -d \"$l\" ] && ! echo \$PATH|grep -q \"(^|:)$l(:|$)\";then PATH=\"\$PATH:$l\";fi" >> "$p02/.profile";fi
+  fi
+}
+function mn0 { cd "$p02" || return;sex 'rm -rf go';sex "rm -rf $1"; }
 function mn1 { CGO_CFLAGS="-O -D__BLST_PORTABLE__" /usr/local/go/bin/go install github.com/flashbots/$2@$1; }
 function mn2 { git clone https://github.com/flashbots/$2.git;cd $2;git checkout tags/$1;make build; }
 function mnv { local v=${1:-v1.9};local e='mev-boost';if [[ $($p00/$e --version 2>&1|sef "$e73") = $v ]];then swu "$e $v EXISTE";else mn0 $e;local f="$p02/$e/$e";mn2 $v $e;if [[ ! -x $f ]];then local f="$p02/go/bin/$e";mn1 $v $e;fi;if [[ -x $f ]];then swu "INSTALAR $v $e";sex "mv $f $p00";mn0 $e;fi;cmw $p00/$e 755 eth4;fi; }
 function snv { local v=${1:-v2.8.0};local f="staking_deposit-cli-${2:-948d3fc}-linux-amd64.tar.gz";rm -f $f;curl -LO https://github.com/ethereum/staking-deposit-cli/releases/download/$v/$f;local s=$(shc $f);swn "INSTALAR $f ($s)?";local rsp=nao;read rsp;if [[ $rsp = $s ]];then tar xf $f --strip-components 2;fi; }
 function esv { local v=${1:-v1.2.0};local f="ethstaker_deposit-cli-${2:-18b7608}-linux-amd64.tar.gz";local e='deposit';if [[ $($p00/$e --version 2>&1|snf "$e83") = $v ]];then swu "$e $v EXISTE";else sex "rm -f $f $p00/$e";curl -LO https://github.com/eth-educators/ethstaker-deposit-cli/releases/download/$v/$f;local s=$(shc $f);swn "INSTALAR $f ($s)?";local rsp=nao;read rsp;if [[ $rsp = $s ]];then sex "tar -C $p00 -xf $f --strip-components 2";cmw $p00/$e 755 eth;fi;fi; }
-function dnv { local v=${1:-1.33.2};local f="ethdo-$v-linux-amd64.tar.gz";local e="https://github.com/wealdtech/ethdo/releases/download/v$v";rm -f $f $f.sha256;curl -LO $e/$f -LO $e/$f.sha256;local s=$(shc $f);local r=$(cat $f.sha256);if [[ $r = $s ]];then tar xf $f;swb "INSTALADO $f";fi; }
+function dnv { 
+  local v=${1:-1.39.0};local s;local r;local f="ethdo-$v-linux-amd64.tar.gz";local e="https://github.com/wealdtech/ethdo/releases/download/v$v"
+  rm -f $f $f.sha256;curl -LO $e/$f -LO $e/$f.sha256
+  s=$(shc $f);r=$(cat $f.sha256)
+  if [[ $r = $s ]];then tar xf $f;swb "INSTALADO $f";fi
+}
 function dlv { local v=latest;local f="go/bin/ethdo"   ;local l='/usr/local/go/bin';cd $p02;sex "rm -rf go";$l/go install github.com/wealdtech/ethdo@$v      ;if [[ -f $f ]];then swu "INSTALAR $v ETHDO"  ;sex "cp $f $p00";fi;cmw $p00/ethdo    755 eth; }
 function rlv { local v=latest;local f="go/bin/ethereal";local l='/usr/local/go/bin';cd $p02;sex "rm -rf go";$l/go install github.com/wealdtech/ethereal/v2@$v;if [[ -f $f ]];then swu "INSTALAR $v ETHREAL";sex "cp $f $p00";fi;cmw $p00/ethereal 755 eth; }
 function rlt { gnv;[[ -x $p00/ethereal ]] || rlv;if [[ -x $p00/ethereal ]];then return 0;else swb 'TEM DE TER ETHEREAL';return 1;fi; }
