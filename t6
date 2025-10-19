@@ -404,13 +404,12 @@ function bo3 { b3=$(nu5 0 $b2 $(ln0 $s75 $p13)); }                              
 function bo4 { bo0|grep $(non $1); }                                                                                                                          # get homologous node lines sorted
 function bo5 { bo0|head -n$((b6>b2?b6:b2<5?5:b2))|tail -n$((b6>0?b6:b2>n12?n12:b2<5?5:b2)); }                                                                 # homologous report
 function boa { local g=${1:-$n16};local e=$(bo4 $g);printf 'BO%5i %3i\n' $(wc -l <<< "$e") $g 2>$p03;echo "$e";((g<n17)) && boa $((g+n18)); }                 # recursively show homologous nodes report
-function bof { 
-  rm -f $p12.r
-  local n=0;local g=$((n16+n18*n));local i;local d
-  i=$(echo $(head -n1 $p12 2>$p03)|cut -d' ' -f4);i=${i:-$(date '+%F')}                                          # set start date
-  d=$(printf %i $(((($(date '+%s')-$(date -d "$i" '+%s'))/86400)+1)));dts "$(date -d"$d days ago" '+%F') 23:58"  # set date/time of fake logs
+function bof {
+  [[ -f $p12 ]] || return;rm -f $p12.r;local i;local d;local n=0;local g=$((n16+n18*n))
+  i=$(echo $(head -n1 $p12 2>$p03)|cut -d' ' -f4);i=${i:-$(date '+%F')}                                        # start date
+  d=$(printf %i $(((($(date '+%s')-$(date -d "$i" '+%s'))/86400)+1)));dts "$(date -d"$d days ago" '+%F') $s43" # date/time for fake logs
   while ((g<=n17));do
-    nn=$g;nr=$g;bl1 0 1000 0 OK;bl2 0 0 $n $((${1:-0}*n));bl3 0 0 0 0 0 0 0;blo;swn "$m" >> $p12.r
+    nn=$g;nr=$g;bl1 0 1000 0 OK;bl2 0 0 $((${1:-1}*n)) $((${2:-0}*n));bl3 0 0 0 0 0 0 0;blo;swn "$m" >> $p12.r
     n=$((n+1));g=$((g+n18))
   done
   [[ -s $p12.r ]] || return
@@ -418,7 +417,7 @@ function bof {
 }
 function bsm { brm;[[ -s $p13.r ]] && cp $p13.r $p13; }
 function bdd {
-  fft $p12 || return;local s;local e;l2=$(bff 23:58);if [[ $1 = o ]];then s=$(bo1);else s=$(bo0);fi;e='';while read -a v;do
+  fft $p12 || return;local s;local e;l2=$(bff $s43);if [[ $1 = o ]];then s=$(bo1);else s=$(bo0);fi;e='';while read -a v;do
     if [[ ${v[9]} -ge $2 && $(grep -c ${v[5]} <<< "$l2") -gt $3 ]];then e="$e|${v[3]}";l2=$(grep -v ${v[3]} <<< "$l2");fi                                     # gather delete info
   done <<< "$s";if [[ $e ]];then e=${e:1};bdw $p12 "$e";bdw $p13 "$e";fi;bsm
 }
@@ -473,12 +472,12 @@ function brm { # recalculate cc-daily logs
   while read -a v; do
     d=${v[3]}
     h=$g
-    g=$(grep -n "$d 23:58" $p12 | cut -d: -f1)
+    g=$(grep -n "$d $s43" $p12 | cut -d: -f1)
     [[ ${g:=$h} -le $h ]] && continue
     dts $d\ ${v[4]}
     nn=$((10#${v[5]//[!0-9]/}))
     nr=${v[6]}
-    l2=$(brh $g | bfl 23:58)
+    l2=$(brh $g | bfl $s43)
     bo2 $d
     ((l += b2))
     ((n += 1))
@@ -1117,7 +1116,7 @@ function cns {
 [[ $1 = tpf ]] && { tl0;swn "$m" >> $p62;[[ $ok != OK ]] && trs $ok 0 $n03; }
 [[ $1 = bp  ]] && { bl0;swn "$m"; }
 [[ $1 = bps ]] && { bl5;swn "$m"; }
-function bml { [[ $d1 = 23:58 ]] || return;if bdt;then bdl $d0;elif [[ $(llc $p12) -gt $n14 ]];then bdd o 0 5;fi; }
+function bml { [[ $d1 = $s43 ]] || return;if bdt;then bdl $d0;elif [[ $(llc $p12) -gt $n14 ]];then bdd o 0 5;fi; }
 [[ $1 = bpf ]] && { bl0;swn "$m" >> $p12;bml;[[ $ok != OK ]] && brs $ok 0 0 $(btn $n02);pas; }
 [[ $1 = vp  ]] && { vl0;swn "$m"; }
 [[ $1 = vpf ]] && { vl0;swn "$m" >> $p49; }
@@ -1142,8 +1141,8 @@ function bml { [[ $d1 = 23:58 ]] || return;if bdt;then bdl $d0;elif [[ $(llc $p1
 [[ $1 = cpe ]] && { cpe $2; }
 [[ $1 = bo  && -f $p12 ]] && { boi $(pt1 $@ 00:00);if [[ $(pt3 $@ s) = n ]];then b6=$b2;else b6=$(pt2 $@ 0);fi;bo5; }
 [[ $1 = boc && -f $p12 ]] && { unset v;read -a v <<< $(bff|tail -n1);l2=$(bff $(pt1 $2 ${v[4]}));boa; }
-[[ $1 = bol && -f $p12 ]] && { l2=$(bff 23:58);boa; }
-[[ $1 = bof && -f $p12 ]] && { bof $2; }
+[[ $1 = bol && -f $p12 ]] && { l2=$(bff $s43);boa; }
+[[ $1 = bof ]] && { bof $2 $3; }
 [[ $1 = bod ]] && { bdd o ${2:-0} ${3:-5}; }
 [[ $1 = brd ]] && { bdd r ${2:-0} ${3:-5}; }
 [[ $1 = bdl ]] && { bdl $2; }
@@ -1332,9 +1331,9 @@ if [[ ! $1 ]];then
   m="$m\nbr[l|m]\t\t\trecalculate cc minute|daily logs"
   m="$m\nbdl yyyy-mm-dd\t\tdelete cc log day"
   m="$m\nbo  [lines]\t\thomologous\tlogs [with max lines]"
-  m="$m\nbo[cl]\t\t\thomologous\tlogs report at [current|last(23:58)] time"
+  m="$m\nbo[cl]\t\t\thomologous\tlogs report at [current|last($s43)] time"
   m="$m\nb[or]d [p] [n]\t\tdelete\t\tlogs for last penalty >= p(0) && node days > n(5) in [o]rder or [r]everse"
-  m="$m\nbof [m]\t\t\tfake\t\tlogs with delay penalties multipliar m(0) for peers $n16 until $n17, date=first-1"
+  m="$m\nbof [h] [d]\t\tfake\t\tlogs with head h(1) & delay d(0) penalties multipliar for peers $n16 until $n17, date=first-1"
   m="$m\nbp[fsio]\t\tcc-minutes\treport [file|peers {summary|incoming|outgoing}]"
   m="$m\nbm[f]\t\t\tcc-daily\treport [file & $s12 nodes change/restart]"
   m="$m\nhs[012ecgubvm]\t\thistoric summary report [0-both|1-main|2-backup|el|cc|geth|besu|beacon|vc|mev]"
