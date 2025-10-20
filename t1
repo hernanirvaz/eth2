@@ -391,13 +391,13 @@ s49=').client.agent_string'
 s50='https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=ETH&convert=EUR&CMC_PRO_API_KEY=3ae5f3df-bd71-489d-a9dd-b626995fba31'
 s51='debian-transmission'
 if [[ $cunm = $vnm1 ]];then
-  s52='pool 0.ca.pool.ntp.org iburst maxsources 3'
-  s52="${s52}\npool 1.ca.pool.ntp.org iburst maxsources 3"
-  s52="${s52}\npool 2.ca.pool.ntp.org iburst maxsources 3"
+  s52='pool 0.ca.pool.ntp.org iburst maxsources 2'
+  s52="${s52}\npool 1.ca.pool.ntp.org iburst maxsources 2"
+  s52="${s52}\npool 2.ca.pool.ntp.org iburst maxsources 2"
  else
-  s52='pool 0.europe.pool.ntp.org iburst maxsources 3'
-  s52="${s52}\npool 1.europe.pool.ntp.org iburst maxsources 3"
-  s52="${s52}\npool 2.europe.pool.ntp.org iburst maxsources 3"
+  s52='pool 0.europe.pool.ntp.org iburst maxsources 2'
+  s52="${s52}\npool 1.europe.pool.ntp.org iburst maxsources 2"
+  s52="${s52}\npool 2.europe.pool.ntp.org iburst maxsources 2"
 fi
 s53='sgms:'
 s54='threshold|read|write|written|namespace|temperature|thermal|power|shutdowns|controller|endurance'
@@ -456,7 +456,7 @@ e13="s%^ *#*NTP=.*$%NTP=time.google.com time.cloudflare.com time.facebook.com%i;
 e14='s%--subscribe-all-subnets --import-all-attestations %%'
 e15='s%--validator-monitor-file%--subscribe-all-subnets --import-all-attestations --validator-monitor-file%'
 e16='s%--beacon-nodes *([^ ]*:5052),([^ ]*:5052)[^ ]*%--beacon-nodes \2,\1%'
-e17='s%^(.. )[^ ]+([^ ]{27,} *)( [0-9] +)%\1\2\3%i'
+e17='s%[^: ]*: *%%g;s%inactive%off%;s%active%on%'
 e18='s%.*fee_recipient"."([^"]*)".*pubkey":"([^"]*)".*%pubkey: \2, fee: \1%p'
 e19="s%^$g58 +[^ ]+([a-z1-9]{4}) +([^ ]{4}).*UFW BLOCK]%\4: \2\3 \U\5 ufw%"
 e19="$e19;s% MAC=[^ ]*%%"
@@ -548,9 +548,9 @@ e54='s%.*synchronized: *([a-z]*) *%\1%p'
 e55="s%$g03%%;s%[0-9]* users*,%%;s% average([^,]*).*%\1%;s%  *% %g"
 e56='s%.*result" *: *"0x([^"]+)".*%\1%ip'
 e57='s%^ +Active: +(.*) *$%\1%p'
+e58='[^ ]+([^ ]{26,})( +[0-9]+ +[0-9])%\1';e59="s%^(.. )${e58}<\2\3%i"
+e58='[^ ]+([^ ]{25,})( +[0-9]+ +[0-9])%\1';e60="s%^${e58}\2%i"
 e58='s% +since +[^;]+;%%'
-e59='s%[^: ]*: *%%g;s%inactive%off%;s%active%on%'
-e60='s%^[^ ]+([^ ]{25,} *)( [0-9]+ +)%\1\2%i'
 e61='s%.*highestBlock: *([0-9]+).*%\1%ip'
 e62='s%.*currentBlock: *([0-9]+).*%\1%ip'
 e63='s%.*highestBlock" *: *"0x([^"]+)".*%\1%ip'

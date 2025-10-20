@@ -497,7 +497,7 @@ function brm { # recalculate cc-daily logs
 }
 function bdw { fft $1 || return;cp $1 $1.o;grep -Eahv "$2" $1.o > $1;grep -Eah "$2" $1.o > $1.d; }                                                            # work to delete cc log day
 function bdl { local d=$(pt0 $1 sai);[[ $d = sai ]] && return;bdw $p12 $d;bdw $p13 $d;bsm; }                                                                  #         delete cc log day
-function wif { sef "$e59" <<< $@; }                                                                                                                           # get ufw info
+function wif { sef "$e17" <<< $@; }                                                                                                                           # get ufw info
 function sm0 { pex "smartctl --json=c -x $1"|jq -r "$j3" 2>$p03; }
 function sm1 { pex "smartctl --json=c -x $1"|jq -r "$j4" 2>$p03; }
 function sm2 { pex "smartctl --json=c -x $1"|jq -r "$j5" 2>$p03; }
@@ -866,7 +866,7 @@ function irb {
 function hi6 { chronyc -n $1|sef "$2"; }
 function hsh { 
   if tsa $s56;then 
-    swb "$s07 & $s56 sources/sourcestats/tracking";pex "$s07";echo;paste <(hi6 sources "$e17") <(hi6 sourcestats "$e60"|cut -c28-);echo;chronyc -n tracking|grep -Ev "$g63"
+    swb "$s07 & $s56 sources/sourcestats/tracking";pex "$s07";echo;paste <(hi6 sources "$e59") <(hi6 sourcestats "$e60"|cut -c28-);echo;chronyc -n tracking|grep -Ev "$g63"
   elif tsa ntp;then 
     swb "$s07 & ntp";pex "$s07";echo;ntpq -p;else swb "$s07 & $s45 status/show";pex "$s07";pex "$s07 $s45-status";pex "$s07 show-$s45";fi
 }
