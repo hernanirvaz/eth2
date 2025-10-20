@@ -391,13 +391,11 @@ s49=').client.agent_string'
 s50='https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=ETH&convert=EUR&CMC_PRO_API_KEY=3ae5f3df-bd71-489d-a9dd-b626995fba31'
 s51='debian-transmission'
 if [[ $cunm = $vnm1 ]];then
-  s52='pool 0.ca.pool.ntp.org iburst maxsources 2'
-  s52="${s52}\npool 1.ca.pool.ntp.org iburst maxsources 2"
-  s52="${s52}\npool 2.ca.pool.ntp.org iburst maxsources 2"
+  s52='pool 0.ca.pool.ntp.org iburst maxsources 4'
+  s52="${s52}\npool 1.ca.pool.ntp.org iburst maxsources 4"
  else
-  s52='pool 0.europe.pool.ntp.org iburst maxsources 2'
-  s52="${s52}\npool 1.europe.pool.ntp.org iburst maxsources 2"
-  s52="${s52}\npool 2.europe.pool.ntp.org iburst maxsources 2"
+  s52='pool 0.europe.pool.ntp.org iburst maxsources 4'
+  s52="${s52}\npool 1.europe.pool.ntp.org iburst maxsources 4"
 fi
 s53='sgms:'
 s54='threshold|read|write|written|namespace|temperature|thermal|power|shutdowns|controller|endurance'
