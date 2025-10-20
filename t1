@@ -432,6 +432,7 @@ s74='NETH'
 s75='BEAC'
 s76='VALI'
 s77='MEVB'
+s78='.[].peer_info.seen_multiaddrs.[]'
 
 e01='PollIntervalMinSec'
 e02='PollIntervalMaxSec'
