@@ -58,12 +58,12 @@ function pcm {
   if [[ $1 = RB ]];then 
     zsh "$p" "$n" "/etc/rc.reboot"
   elif [[ $1 = NTP ]];then 
-    zsh "$p" "$n" "ntpq -p"
+    zsh "$p" "$n" "ntpq -np"
   else 
     zsh "$p" "$n" 'tail -n20 /root/rt-pfsense-wan-check.log'
   fi
 }
 function tcm {
   local s=hrv-zotac1;echo -e "\n\e[32m$s pfSense\e[0m";pcm NTP
-  s=hrv-zotac2;echo -e "\n\e[32m$s chronyc\e[0m";zsh $(dnz $s) $(dnn $s) "chronyc sources"
+  s=hrv-zotac2;echo -e "\n\e[32m$s chronyc\e[0m";zsh $(dnz $s) $(dnn $s) "chronyc -n sources"
 }

@@ -391,17 +391,20 @@ s49=').client.agent_string'
 s50='https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=ETH&convert=EUR&CMC_PRO_API_KEY=3ae5f3df-bd71-489d-a9dd-b626995fba31'
 s51='debian-transmission'
 if [[ $cunm = $vnm1 ]];then
-  s52='pool ca.pool.ntp.org iburst maxsources 6'
+  s52='pool 0.ca.pool.ntp.org iburst maxsources 3'
+  s52="${s52}\npool 1.ca.pool.ntp.org iburst maxsources 3"
+  s52="${s52}\npool 2.ca.pool.ntp.org iburst maxsources 3"
  else
-  s52='pool europe.pool.ntp.org iburst maxsources 6'
+  s52='pool 0.europe.pool.ntp.org iburst maxsources 3'
+  s52="${s52}\npool 1.europe.pool.ntp.org iburst maxsources 3"
+  s52="${s52}\npool 2.europe.pool.ntp.org iburst maxsources 3"
 fi
 s53='sgms:'
 s54='threshold|read|write|written|namespace|temperature|thermal|power|shutdowns|controller|endurance'
 s55='net_peerCount'
 s56='chrony'
-s57="server $zip1 iburst minpoll 3 maxpoll 6"
-s57="${s57}\nserver $(si6 $znm1) iburst minpoll 3 maxpoll 6"
-s57="${s57}\nserver $zip2 iburst minpoll 3 maxpoll 6" # IPv6 address for zotac2 does not work, pfSense DNS resolver problem with unknown.home.arpa registration
+s57="server $znm1.home.arpa iburst minpoll 3 maxpoll 6"
+s57="${s57}\nserver $znm2.home.arpa iburst minpoll 3 maxpoll 6"
 s58='nfs-kernel-server'
 if [[ -d $p60 ]];then s59="$p60 192.168.8.0/24(rw,sync,no_subtree_check)";else s59="$p80 192.168.8.0/24(rw,sync,no_subtree_check)";fi
 s60='plex'
@@ -453,7 +456,7 @@ e13="s%^ *#*NTP=.*$%NTP=time.google.com time.cloudflare.com time.facebook.com%i;
 e14='s%--subscribe-all-subnets --import-all-attestations %%'
 e15='s%--validator-monitor-file%--subscribe-all-subnets --import-all-attestations --validator-monitor-file%'
 e16='s%--beacon-nodes *([^ ]*:5052),([^ ]*:5052)[^ ]*%--beacon-nodes \2,\1%'
-e17='s%([ :])([a-z0-9]{1}:)%\1000\2%ig;s%([ :])([a-z0-9]{2}:)%\100\2%ig;s%([ :])([a-z0-9]{3}:)%\10\2%ig;s%\<[a-z0-9]{4}:[a-z0-9]{4}:[a-z0-9]{4}:[a-z0-9]{4}:([a-z0-9]{4}:[a-z0-9]{4}:[a-z0-9]{4}:[a-z0-9]{4})%myPD:\1'
+e17='s%^(.. )[^ ]+([^ ]{27,} *)( [0-9] +)%\1\2\3%i'
 e18='s%.*fee_recipient"."([^"]*)".*pubkey":"([^"]*)".*%pubkey: \2, fee: \1%p'
 e19="s%^$g58 +[^ ]+([a-z1-9]{4}) +([^ ]{4}).*UFW BLOCK]%\4: \2\3 \U\5 ufw%"
 e19="$e19;s% MAC=[^ ]*%%"
@@ -547,7 +550,7 @@ e56='s%.*result" *: *"0x([^"]+)".*%\1%ip'
 e57='s%^ +Active: +(.*) *$%\1%p'
 e58='s% +since +[^;]+;%%'
 e59='s%[^: ]*: *%%g;s%inactive%off%;s%active%on%'
-e60=
+e60='s%^[^ ]+([^ ]{25,} *)( [0-9]+ +)%\1\2%i'
 e61='s%.*highestBlock: *([0-9]+).*%\1%ip'
 e62='s%.*currentBlock: *([0-9]+).*%\1%ip'
 e63='s%.*highestBlock" *: *"0x([^"]+)".*%\1%ip'
