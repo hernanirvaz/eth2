@@ -863,7 +863,13 @@ function irb {
 # offset The mean time offset. (ms)
 # delay  This is the mean execution time required to send a request to the time source, and receive the reply from that source. (ms)
 # jitter This indicates how much packet delays from individual pollings vary from the mean packet delay. (ms)
-function hsh { if tsa $s56;then swb "$s07 & $s56 sources/sourcestats/tracking";pex "$s07";echo;paste <(chronyc sources) <(chronyc sourcestats|cut -c28-);echo;chronyc tracking|grep -Ev "$g63";elif tsa ntp;then swb "$s07 & ntp";pex "$s07";echo;ntpq -p;else swb "$s07 & $s45 status/show";pex "$s07";pex "$s07 $s45-status";pex "$s07 show-$s45";fi; }
+function hc6 { chronyc -n $1|sef "$e17$2"; }
+function hsh { 
+  if tsa $s56;then 
+    swb "$s07 & $s56 sources/sourcestats/tracking";pex "$s07";echo;paste <(hc6 sources '   %i') <(hc6 sourcestats ' %i'|cut -c28-);echo;chronyc -n tracking|grep -Ev "$g63"
+  elif tsa ntp;then 
+    swb "$s07 & ntp";pex "$s07";echo;ntpq -p;else swb "$s07 & $s45 status/show";pex "$s07";pex "$s07 $s45-status";pex "$s07 show-$s45";fi
+}
 function ts0 {
   if [[ $4 -gt 0 ]]; then
     printf 'mev: %i el: %i %i%% peerstd: %i' $1 $2 $3 $4 2>$p03

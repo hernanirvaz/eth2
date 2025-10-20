@@ -1,5 +1,7 @@
 #!/usr/bin/bash
 
+pfpd='2001:8a0:fcdc:3600'
+
 function sin {
   case $1 in
   hrv-zotac1*) printf 192.168.8.25 ;;
@@ -13,6 +15,20 @@ function sin {
   *) printf %s "$1" ;;
   esac
 }
+function si6 {
+  case $1 in
+  hrv-zotac1*) printf %s $pfpd:201:2eff:fea0:88d4 ;;
+  hrv-zotac2*) printf %s $pfpd::1002 ;;
+  hrv-zotac3*) printf %s $pfpd::1003 ;;
+  hrv-zotac4*) printf %s $pfpd::1004 ;;
+  hrv-intel5*) printf %s $pfpd::1005 ;;
+  hrv-intel6*) printf %s $pfpd::1006 ;;
+  hrv-zen*   ) printf %s $pfpd::1100 ;;
+  hrv-lenovo*) printf %s $pfpd::1101 ;;
+  *) printf %s "$1" ;;
+  esac
+}
+
 function spn {
   local n=2020
   local s=${1%%.*}
