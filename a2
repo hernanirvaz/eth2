@@ -8,7 +8,7 @@ function dsh { msh resolvectl flush-caches;icm hrv-zotac1 hrv-zotac2 hrv-zotac3 
 function esl { local p;local s;p=$(dnz "$1" "$2");s=$(dnn "$1");echo -e "\nzsh $s:$p";zsh "$p" "$s"; }
 function erq { local q=${*:-changelogs.ubuntu.com};msh resolvectl query "$q"; }
 
-alias rr='pcm RB'
+alias rr='pcm PRB'
 alias rt='tcm'
 alias rl='pcm LRB'
 
