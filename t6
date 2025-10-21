@@ -808,15 +808,14 @@ function tvc {
   swn "$s24"
   [[ $cuvc = $nxvc ]] && return
   if vct && tsa $s13; then
-    swn "TRANSFERIR VC -> $nxvc (SIM/nao)?"
+    swn "TRANSFERIR VC $cuvc -> $nxvc (SIM/nao)?"
   else
     return
   fi
   rsp=nao
   read rsp
   if [[ $rsp = SIM && ! -f $p05/vc_slash && ! -f $p05/vc_lock && -f $p05/vc_keys ]]; then
-    vrs $1 $2 # stop    & vc_slash
-    vd        # disable & vc_lock
+    vrs $1 $2;vd  # VC stop & disable -> creats vc_slash & vc_lock
     f=$p02/$(basename $p18);sex "cp $p18 $p02";cmw $f 666 eth;mcp $f $nxvc;sex "rm $f";svc TRANSFERIDO
   fi
 }
