@@ -55,7 +55,7 @@ function zsh { ssh -p "$1" -i ~/.ssh/id_ed25519 "$2" "$3"; }
 function zcp { local p=$1;local d=$2;shift;shift;scp -rP "$p" -i ~/.ssh/id_ed25519 $@ "$d"; }
 function pcm { 
   local n;local p;local e=${1^^};local s=hrv-zotac1;n=$(dnn $s);p=$(dnz $s)
-  if [[ $e = RB ]];then 
+  if [[ $e = PRB ]];then 
     zsh "$p" "$n" "/etc/rc.reboot"
   elif [[ $e = NTP ]];then 
     zsh "$p" "$n" "ntpq -np"
