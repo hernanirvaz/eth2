@@ -139,11 +139,11 @@ g12="($g06|$g07|$g10).*(Imported|Processed)"
 g13="($g06|$g07|$g10|$g08|$g09)"
 g14="($g06|$g07|$g08|$g09)"
 g15='score:'
-g16='DEBU?G Measured BN latency'
-g17='DEBU?G Computed attestation selection proofs'
-g18='DEBU?G Delayed head block'
-g19='DEBU?G Processed HTTP API request'
-g20="DEBU?G Peer.*$g15 +[+-]?([0-9]|[0-9][0-9]|100)\."
+g16='DEBU?G +Measured BN latency'
+g17='DEBU?G +Computed attestation selection proofs'
+g18='DEBU?G +Delayed head block'
+g19='DEBU?G +Processed HTTP API request'
+g20="DEBU?G +Peer.*$g15 +[+-]?([0-9]|[0-9][0-9]|100)\."
 g21='Block arrived early'
 g22='Beacon chain re-org'
 g23="$(date +%F) +"
@@ -192,6 +192,7 @@ g65='^\^,[\*\+],[^,]+'
 g66='[^,]+,[0-3][1357]7' # Reach of last 8 polls NTP requests binary ?? ??1 111
 g67="^$g23$g03$g04[0-9]*\|INFO\|Consensus.Processing.ProcessingStats\|[0-9]+\| *Block.+ETH"
 g68='elapsed_ms:'
+g69='DEBU?G +Session established'
 
 # source /home/eth/eth2/a3
 # slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168,180,192,204,216,228,240,252,264,276,288,300
