@@ -54,16 +54,19 @@ function dnz { local p=$2;[[ $p ]] || p=$(spn "$1");printf %i "$p"; }
 function zsh { ssh -p "$1" -i ~/.ssh/id_ed25519 "$2" "$3"; }
 function zcp { local p=$1;local d=$2;shift;shift;scp -rP "$p" -i ~/.ssh/id_ed25519 $@ "$d"; }
 function pcm { 
-  local n;local p;local s=hrv-zotac1;n=$(dnn $s);p=$(dnz $s)
-  if [[ $1 = RB ]];then 
+  local n;local p;local e=${1^^};local s=hrv-zotac1;n=$(dnn $s);p=$(dnz $s)
+  if [[ $e = RB ]];then 
     zsh "$p" "$n" "/etc/rc.reboot"
-  elif [[ $1 = NTP ]];then 
+  elif [[ $e = NTP ]];then 
     zsh "$p" "$n" "ntpq -np"
+  elif [[ $e = LRB ]];then 
+    zsh "$p" "$n" "last reboot|head -n2;date"
   else 
     zsh "$p" "$n" 'tail -n20 /root/rt-pfsense-wan-check.log'
   fi
 }
 function tcm {
-  local s=hrv-zotac1;echo -e "\n\e[32m$s pfSense\e[0m";pcm NTP
+  local s
+  s=hrv-zotac1;echo -e "\n\e[32m$s pfSense\e[0m";pcm NTP
   s=hrv-zotac2;echo -e "\n\e[32m$s chronyc\e[0m";zsh $(dnz $s) $(dnn $s) "chronyc -n sources"
 }
