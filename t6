@@ -546,7 +546,7 @@ function cly { $s07             2>$p03|snf "$e54"; }
 function clo { if [[ $(cly) = yes ]];then printf OK;else printf NO;fi                             2>$p03; }
 function clf { local n=${1:-0};if [[ $(nu1 $n) -ne 0 ]];then printf %s $(nu6 6 $n)s;elif [[ $(nbi "$n*10^3") -ne 0 ]];then printf %6s $(nu6 0 "$n*10^3")ms;elif [[ $(nbi "$n*10^6") -ne 0 ]];then printf %6s $(nu6 0 "$n*10^6")us;elif [[ $(nbi "$n*10^9") -ne 0 ]];then printf %6s $(nu6 0 "$n*10^9")ns;else printf %s $n;fi; }
 function cl0 { printf "${1%.}"                                                                    2>$p03; }
-function cl1 { local n=0;local s;while :;do s=$(clq $1);if [[ $s ]];then break;elif [[ $n -lt 2 ]];then ((n++));else s=$1;break;fi;done;cl0 $s; }
+function cl1 { local n=0;local s;while :;do s=$(clq $1);if [[ $s ]];then break;elif [[ $n -lt 0 ]];then ((n++));else s=$1;break;fi;done;cl0 $s; }
 function cl2 { if [[ $1 =~ ^[0-9]+ ]];then cl1 $1;else cl0 $1;fi; }
 function cl3 { cl2 $2; }
 function cl4 { printf "dl $6\tos $4\tjt $8\tn0 $(cl2 $2)"                    2>$p03; }
