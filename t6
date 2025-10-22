@@ -7,8 +7,8 @@ function nl0 { LC_NUMERIC=C printf '%+i'   $@         2>$p03; }
 function nl1 { LC_NUMERIC=C printf '%+f'   $@         2>$p03; }
 function nl2 { LC_NUMERIC=C printf '%+i^2' $@         2>$p03; }
 function nl3 { LC_NUMERIC=C printf '%i\n'  $@         2>$p03; }
-function nl4 { if [[ ${2:-0} -eq 0 ]];then printf "%s" $1;else LC_NUMERIC=C printf "%${2}i" $1;fi; }
-function nl5 { if [[ ${2:-0} -eq 0 ]];then printf "%s" $1;elif [[ $1 -gt 0 ]];then printf "%${2}s" $(swg $1);else LC_NUMERIC=C printf "%${2}i" $1;fi; }
+function nl4 { if [[ ${2:-0} -eq 0 ]];then printf "%s" $1 2>$p03;else LC_NUMERIC=C printf "%${2}i" $1 2>$p03;fi; }
+function nl5 { if [[ ${2:-0} -eq 0 ]];then printf "%s" $1 2>$p03;elif [[ $1 -gt 0 ]];then printf "%${2}s" $(swg $1) 2>$p03;else LC_NUMERIC=C printf "%${2}i" $1 2>$p03;fi; }
 function nu0 { LC_NUMERIC=C printf "$1"    ${2:-0}    2>$p03; }
 function nu1 { LC_NUMERIC=C printf '%i'    ${1:-0}    2>$p03; }
 function nu2 { nbc "0$(nl0 $@)"; }
@@ -433,7 +433,7 @@ function bh0 {
   fft $p12 || return
   tail -n${1:-$n12} $p12
   [[ $1 ]] && return
-  local e;boi;bl0;e=$(printf '%s     9 5  1  0 err norm  idx' $(nl5 $b0 1) 2>$p03)
+  local e;boi;bl0;e=$(printf '%s' $(nl5 $b0 1) 2>$p03)
   swn "BO $(printf '%4i%4i%34s%14s' $b2 $(wc -l <<< "$l2") 2>$p03)$e";bo5
   swn "BL $(printf '%8i/%4i%34s%9s' $(llc $p12) $n14 2>$p03)$e\n$m";bm0;bmo
   swn "BM $(printf '%8i                 %7s%5s     i8  i0  i2  i4%s i6  i8  i2 avg%13i' $(llc $p13) "$(szl $nm $nr)" "$(szi $nz)" $(nl5 $b0 1) $n20 2>$p03)\n$m"
