@@ -785,7 +785,7 @@ function lcp {
 function lci { [[ -x $1 && ! -d $1   ]] || return;sex "mv $p00/lighthouse $p00/lighthouse.sav";sex "cp $1 $p00"; }                                            # lighthouse binary install
 function lmd { [[ -x $p00/lighthouse ]] || return;cmw $p00/lighthouse 755 eth;swb 'LIGHT INSTALADO'; }                                                        # lighthouse set permissions
 function lpi {
-  v1t && lcp $1 $vnd1
+  v1t && lcp $1 $vnm1
   z4t && lcp $1 $znm4
   i5t && lcp $1 $inm5 $inm6
   i6t && lcp $1 $inm6 $inm5
