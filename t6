@@ -324,7 +324,7 @@ function bb0 { bs0;bs3;bl1;bl2;[[ ($(era $p12 $n12) -le 1 && $(bri) -ge 1) || ($
 function bfl { grep "$s75.*$1"      2>$p03; }                                                                                                                 # filter cc lines
 function bff { grep "$s75.*$1" $p12 2>$p03; }                                                                                                                 # filter cc log
 function bb1 { if [[ $(jq -r .data.is_syncing <<< $@ 2>$p03) = false ]];then printf 'synced ';else printf 's%06i' $(bsi $@);fi; }                             # get cl syncing distance remaining
-function bmp { printf '%3i %3s %3i %4i iearhp: %4i %3i %4i %2i %2i %2i %4i' ${a[0]} $b5 $b4 $(b03 $zk $zz $zx $zw) $i0 $i1 $i4 $b1 $i2 $i3 $(b01) 2>$p03; }
+function bmp { printf '%3i %2s %4i %4i iearhp: %4i %3i %4i %2i %2i %2i %4i' ${a[0]} $b5 $b4 $(b03 $zk $zz $zx $zw) $i0 $i1 $i4 $b1 $i2 $i3 $(b01) 2>$p03; }
 function bl0 { dts;ok=OK;if tsa $s12;then bl3;bv0;bnn;bb0;blo;else m="BSRV NOT ON $dt";fi; }                                                                  # cc report
 function bl1 { z1=${1:-$(grep -cv "$g27" <<< "$l0")};z2=${2:-$(grep -c "$g27" <<< "$l0")};z3=${3:-$(bl4 success)};ok=${4:-OK}; }                              # set info lines,success activities
 function bl2 { zk=${1:-$(bl4 missing)};zz=${2:-$(bl4 target)};zx=${3:-$(bl4 head)};zw=${4:-$(bl4 had)}; }                                                     # set missing/target/head/had activities
@@ -852,7 +852,6 @@ function bcc {
   else
     if rbt;then printf r;elif bdt;then printf d;else printf _;fi
   fi
-  printf :
 }
 function btn { if n1t;then printf $1;else printf $n03;fi; }
 function hrc { ztt || return;chronyc -c sources 2>$p03|grep -Eq "$g65,[12],$g66" && return;sex "$s04 $s56";sex "$s06 $s56"; }
