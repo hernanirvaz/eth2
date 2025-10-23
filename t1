@@ -226,7 +226,7 @@ n26=90
 n27=19000
 n28=10000
 n29=18800
-n30=4000;[[ $n30 -eq 0 ]] && n30=$(curl -sX GET "$s50" 2>$p03|snf "$e70")
+n30=4000
 n31=$($s01 $s12 2>$p03|snf "$e71")
 n32=4
 n33=30
@@ -389,7 +389,7 @@ s46='change-operations'
 s47='https://boost-relay.flashbots.net/relay/v1/data/validator_registration?pubkey'
 s48='.[].peer_info|select(.connection_direction=='
 s49=').client.agent_string'
-s50='https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=ETH&convert=EUR&CMC_PRO_API_KEY=3ae5f3df-bd71-489d-a9dd-b626995fba31'
+s50=
 s51='debian-transmission'
 if [[ $cunm = $vnm1 ]];then
   s52='pool 0.ca.pool.ntp.org iburst maxsources 4'
