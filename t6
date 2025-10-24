@@ -1078,12 +1078,14 @@ function bpn { bnq peers/connected|jq -r "$s78"|if [[ $1 ]];then grep -Ei "$1";e
 [[ $1 = bpl ]] && { ll5 "$g69.*$2"; }
 [[ $1 = bp6 ]] && { ll5 "$g69.*:[a-z0-9]{1,4}:"|tail -n${2:-2};bpn ip6|tail -n${2:-2};date +'%Y-%m-%d %H:%M:%S'; }
 function bci { 
-  local s;local n;local i;local e
-  s=$(bcl identity|jq -r "$s79"|sef "$e85")
-  n=$(echo "$s"|snf "$e87")
-  i=$(ip -6 a|snf "$e86")
-  if [[ $n == ${i%/*} ]];then e=$(swg EQ);else e=$(swr ER);fi
-  echo BEAC ip6 $e $(date +'%Y-%m-%d %H:%M') $s $i
+  local s;local n;local i;local e;local t;t=$(date +'%Y-%m-%d %H:%M')
+  s=$(bcl identity|jq -r "$s79")
+  echo BEAC p2pIP4 $t $(echo "$s"|grep -i ip4)
+  echo BEAC p2pIP6 $t $(echo "$s"|grep -i ip6)
+  n=$(echo "$s"|snf "$e85")
+  i=$(ip -6 a  |snf "$e86")
+  if [[ $n == ${i%/*} ]];then e=$(swg OK);else e=$(swr NO);fi
+  echo BEAC $e IP6 $t $n ${i%/*}
 }
 [[ $1 = bps ]] && { bl5;swn "$m";bci; }
 [[ $1 = mvr ]] && { mvr; }
