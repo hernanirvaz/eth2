@@ -580,6 +580,7 @@ e83='s%^.*version +([0-9]+\.[0-9]+\.[0-9]+).*$%v\1%p'
 e84='([0-9]+\.[0-9]+) *ETH.*%\1%p'
 e85='s%^/ip6/([^ ]+)/tcp/.*$%\1%p'
 e86='s%^.*inet6 +([^ ]+) +scope global.*$%\1%p'
+e87='s%^([0-9]{4}-[0-9]{2}-[0-9]{2}) +([0-9]{2}:[0-9]{2}):[0-9]{2} +'
 
 j0='.ata_sct_temperature_history.table|join(" ")'
 j1='.temperature.current'

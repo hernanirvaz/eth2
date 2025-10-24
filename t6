@@ -330,15 +330,6 @@ function bl1 { z1=${1:-$(grep -cv "$g27" <<< "$l0")};z2=${2:-$(grep -c "$g27" <<
 function bl2 { zk=${1:-$(bl4 missing)};zz=${2:-$(bl4 target)};zx=${3:-$(bl4 head)};zw=${4:-$(bl4 had)}; }                                                     # set missing/target/head/had activities
 function bl3 { b0=${1:-$(ll6 "$g08.*$g53"|wc -l)};if [[ $2$3$4$5$6$7 ]];then i0=$2;i1=$3;i4=$4;b1=$5;i2=$6;i3=$7;else svi $n21;fi; }                          # set pub-blocks & imported/observed delays
 function bl4 { snf "s%.*$1.*validators: *\[(.*)\].*%\1%p" <<< "$l3"|wc -w; }                                                                                  # get number of paid activities
-function bl5 {
-  dts
-  if tsa $s12; then
-    bv0;bnn
-    m="$s75        $dt $(non $nn) $(sxl $nr $nm $nz $nd) limits: $(szl $nm $nr) $(szi $nz)"
-  else
-    m="BSRV NOT ON $dt"
-  fi
-}
 function ml0 { dts;if tsa $s14;then smm $n32;mlo;else m="MSRV NOT ON $dt";fi; }
 function vl0 { dts;if tsa $s13;then svv $n22;vlo;else m="VSRV NOT ON $dt";fi; }
 #    0  1              2     3       4  5         6  7
@@ -1071,23 +1062,29 @@ function cns {
 [[ $1 = eip ]] && { if [[ $2 && $3 ]];then curl -s4 "https://$2:$3@dyn.dns.he.net/nic/update?hostname=$2" &>$p03;fi;pas; }
 [[ $1 = eiz ]] && { if [[ $2 && $3 ]];then curl -s4 "https://$2:$3@dyn.dns.he.net/nic/update?hostname=$2"       ;fi;echo; }
 [[ $1 = snr ]] && { cex "$s37 lxd";cex "$s37 core20";cex "$s37 snapd";cex 'apt remove --autoremove snapd -y';echo -e "$s36" > nosnap.pref;cex "mv nosnap.pref $p47";cmw $p47/nosnap.pref 644 root;cex 'apt update'; }
+function bps { 
+  local s;local n;local i;local e;dts
+  ll5 "$g69.*:[^:]{1,4}:"|tail -n${1:-4}|sef "$e87%$s75 dscvI6 \1 \2 %"
+  bpn ip6                |tail -n${1:-4}|sef "s%^%$s75 connI6 $dt %"
+  s=$(bcl identity|jq -r "$s79")
+  echo $s75 p2p I4 $dt $(echo "$s"|grep -i ip4)
+  echo $s75 p2p I6 $dt $(echo "$s"|grep -i ip6)
+  n=$(echo "$s"|snf "$e85")
+  i=$(ip -6 a  |snf "$e86")
+  if [[ $n == ${i%/*} ]];then e=$(swg OK);else e=$(swr NO);fi
+  echo $s75 "$e  I6" $dt $n ${i%/*}
+  if tsa $s12; then bv0;bnn
+    echo $s75 SUMARY $dt $(non $nn) $(sxl $nr $nm $nz $nd) limits: $(szl $nm $nr) $(szi $nz)
+  else
+    echo $s75 NOT ON $dt
+  fi
+}
+[[ $1 = bps ]] && { bps $2; }
 [[ $1 = bpi ]] && { bnq peers/connected|jq -r "$s48\"Incoming\"$s49"; }
 [[ $1 = bpo ]] && { bnq peers/connected|jq -r "$s48\"Outgoing\"$s49"; }
 function bpn { bnq peers/connected|jq -r "$s78"|if [[ $1 ]];then grep -Ei "$1";else cat;fi; }
 [[ $1 = bpn ]] && { bpn $2; }
 [[ $1 = bpl ]] && { ll5 "$g69.*$2"; }
-[[ $1 = bp6 ]] && { ll5 "$g69.*:[a-z0-9]{1,4}:"|tail -n${2:-2};bpn ip6|tail -n${2:-2};date +'%Y-%m-%d %H:%M:%S'; }
-function bci { 
-  local s;local n;local i;local e;local t;t=$(date +'%Y-%m-%d %H:%M')
-  s=$(bcl identity|jq -r "$s79")
-  echo BEAC p2pIP4 $t $(echo "$s"|grep -i ip4)
-  echo BEAC p2pIP6 $t $(echo "$s"|grep -i ip6)
-  n=$(echo "$s"|snf "$e85")
-  i=$(ip -6 a  |snf "$e86")
-  if [[ $n == ${i%/*} ]];then e=$(swg OK);else e=$(swr NO);fi
-  echo BEAC $e IP6 $t $n ${i%/*}
-}
-[[ $1 = bps ]] && { bl5;swn "$m";bci; }
 [[ $1 = mvr ]] && { mvr; }
 [[ $1 = mre ]] && { mre; }
 [[ $1 = jwt ]] && { sjw; }
@@ -1361,7 +1358,7 @@ if [[ ! $1 ]];then
   m="$m\nbo[cl]\t\t\thomologous\tlogs report at [current|last($s43)] time"
   m="$m\nb[or]d [p] [n]\t\tdelete\t\tlogs for last penalty >= p(0) && node days > n(5) in [o]rder or [r]everse"
   m="$m\nbof [h] [d]\t\tfake\t\tlogs with head h(1) & delay d(0) penalties multipliar for peers $n16 until $n17, date=first-1"
-  m="$m\nbp[fsionl6]\t\tcc-minutes\treport [file|peers {summary|incoming|outgoing|network|logs|logs6}]"
+  m="$m\nbp[fsionl]\t\tcc-minutes\treport [file|peers {summary|incoming|outgoing|network|logs}]"
   m="$m\nbm[f]\t\t\tcc-daily\treport [file & $s12 nodes change/restart]"
   m="$m\nhs[012ecgubvm]\t\thistoric summary report [0-both|1-main|2-backup|el|cc|geth|besu|beacon|vc|mev]"
   m="$m\n[ec]sp [i] [n]\t\tel|cc show peers exclude [i(1)-9][0-9]|include [0-n(9)]"
