@@ -531,7 +531,7 @@ function tmp {
   g="$g $(printf '%s %s' "$d" "$e" 2>$p03)"
   swn "TEMP $g"
 }
-function clq { timeout 2s $s09 query $1 2>$p03|snf "$e05"; }
+function clq { timeout 3s $s09 query $1 2>$p03|snf "$e05"; }
 function cls { $s07 $s45-status 2>$p03|snf "$e48"; }
 function cly { $s07             2>$p03|snf "$e54"; }
 function clo { if [[ $(cly) = yes ]];then printf OK;else printf NO;fi                             2>$p03; }
