@@ -24,6 +24,7 @@ if [[ $cunm = $znm1 || $cunm = $znm2 || $cunm = $znm3 || $cunm = $znm4 || -f $p0
 else
   if [[ $cunm = $inm5 ]];then apip="$iip5";tarp=80;elif [[ $cunm = $inm6 ]];then apip="$iip6";tarp=80;else apip='127.0.0.1';tarp=80;fi
   othe=''
+  sht && othe="$othe --enr-address $(si6 $cunm)"
   othe="$othe --execution-endpoint http://$apip:8551 --execution-jwt $p58/jwt"
   othe="$othe --suggested-fee-recipient $s26"                                                                                                                 # bn level fees
   othe="$othe --validator-monitor-file $p58/pubkeys"                                                                                                          # monitor validators

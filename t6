@@ -1076,7 +1076,7 @@ function cns {
 function bpn { bnq peers/connected|jq -r "$s78"|if [[ $1 ]];then grep -Ei "$1";else cat;fi; }
 [[ $1 = bpn ]] && { bpn $2; }
 [[ $1 = bpl ]] && { ll5 "$g69.*$2"; }
-[[ $1 = bp6 ]] && { ll5 "$g69.*$2.*:[a-z0-9]{1,4}:"; }
+[[ $1 = bp6 ]] && { ll5 "$g69.*:[a-z0-9]{1,4}:"|tail -n${2:-2};bpn ip6|tail -n${2:-2};date +'%Y-%m-%d %H:%M:%S'; }
 [[ $1 = mvr ]] && { mvr; }
 [[ $1 = mre ]] && { mre; }
 [[ $1 = jwt ]] && { sjw; }
