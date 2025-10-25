@@ -1075,7 +1075,7 @@ function bps {
   if [[ $n == ${i%/*} ]];then e=$(swg OK);else e=$(swr NO);fi
   echo $s75 "$e  I6" $dt $n ${i%/*}
   if tsa $s12; then bv0;bnn
-    echo $s75 SUMARY $dt $(non $nn) $(sxl $nr $nm $nz $nd) limits: $(szl $nm $nr) $(szi $nz)
+    echo $s75 SUMARY $dt $(non $nn) $(sxl $nr $nm $nz $nd) limits:$(szl $nm $nr)$(szi $nz)
   else
     echo $s75 NOT ON $dt
   fi
