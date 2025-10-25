@@ -101,7 +101,7 @@ function ipt { [[ $(date +%s) -ge $(bss "$1" 6) ]]; }
 function pct { [[ $b4 -ne 0 ]]; }
 function pmt { fft $p50.force || [[ $1 -ge $(b05 "$2") ]]; }
 function hat { fft $p50.force || [[ ${a[$nn]} -ge ${a[0]} ]]; }
-function bdt { ! fft $p61.lock && [[ $(b03 "$zk" "$zz" "$zx" "$zw") -gt $n20 || $nz -ge $n57 ]]; }
+function bdt { ! fft $p61.lock && ( szt $nz || [[ $(b03 "$zk" "$zz" "$zx" "$zw") -gt $n20 ]] ); }
 function sft { [[ -f $p04/$1.service ]]; }
 function bpt { ! fft $p50.lock && [[ $(era $p12 $n12) -le 1 ]] && ( (pct && pmt "$nm" "$nr" && hat && ! bdt && ! fft $p45) || rbt $n06); }
 function llc { if [[ -s  ${1:-$p03} ]];then grep -Ec "$s72|$s73|$s74|$s75|$s76|$s77" $1 2>$p03;else printf %i 0;fi; }                                         # get normal log line count
@@ -186,7 +186,7 @@ function eb0 {
   ok=OK
   fft $1 || return
   [[ $(era $1) -gt 1 ]] && return
-  if [[ $ez -ge $n57 ]]; then
+  if szt $ez; then
     ok=BK
   elif grep -q false <<< "$@" && [[ ($e0 -eq $(ln0 $s53 $1 | tail -n1) || $(ei0) -gt $n24) ]]; then
     ok=BK
@@ -206,21 +206,22 @@ function csn { if g0t $#;then nr=${*:$#};nm=$(nu9 $@);nd=$(nu7 $@);nz=$(nu8 $@);
 function esn { if g0t $#;then er=${*:$#};em=$(nu9 $@);ed=$(nu7 $@);ez=$(nu8 $@);else er=0;em=0;ed=0;ez=0;fi; }
 function npn { printf '%10s %5s %s %3i' $dt $(non ${2:-0}) ${1:-0} 2>$p03; }
 function bnn { csn $(ln3 "$g50:") $(bpc $(bcl peer_count)); }                                                                                                 # set cur/min/std cc peers
-function skt { fft $p61.lock || [[ $1 -lt $n57 ]]; }
+function szt { [[ $1 -ge $n57 ]]; }
+function skt { ! fft $p61.lock && szt $1; }
 function sxl {
   local e;local s;local n=$2
-  if pmt "$2" "$1";then s=$(swg p);else s=$(swr p);fi;e=$(swg m)
-  if [[ $3 -gt 0 ]];then if bdt;then e=$(swr d);else e=$(swg z);fi;n=$3;fi
+  if pmt "$2" "$1";then s=$(swg p);else s=$(swr p);fi;  e=$(swg m)
+  if [[ $3 -gt 0 ]];then if bdt   ;then e=$(swr d);else e=$(swg z);fi;n=$3;fi
   printf '%s%03i %s%03i d%04i' $s $1 $e $n $4 2>$p03
 }
 function sxi {
   local e;local s;local n=$2
-  if pmt "$2" "$1";then s=$(swg p);else s=$(swr p);fi;e=$(swg m)
-  if [[ $3 -gt 0 ]];then if skt $3;then e=$(swg z);else e=$(swr k);fi;n=$3;fi
+  if pmt "$2" "$1";then s=$(swg p);else s=$(swr p);fi;  e=$(swg m)
+  if [[ $3 -gt 0 ]];then if skt $3;then e=$(swr k);else e=$(swg z);fi;n=$3;fi
   printf '%s%03i %s%03i d%04i' $s $1 $e $n $4 2>$p03
 }
-function szl { if pmt "$1" "$2";then printf '\e[32m%3i/%-3i\e[0m' $1 $(b05 $2) 2>$p03;else printf '\e[5;31m%3i/%-3i\e[0m' $1 $(b05 $2) 2>$p03;fi; }
-function szi { if skt $1       ;then printf '\e[32m%2i/%-2i\e[0m' $1 $n57      2>$p03;else printf '\e[5;31m%2i/%-2i\e[0m' $1 $n57      2>$p03;fi; }
+function szl { if pmt "$1" "$2";then printf '\e[32m%3i/%-3i\e[0m'   $1 $(b05 $2) 2>$p03;else printf '\e[5;31m%3i/%-3i\e[0m' $1 $(b05 $2) 2>$p03;fi; }
+function szi { if skt $1       ;then printf '\e[5;31m%2i/%-2i\e[0m' $1 $n57      2>$p03;else printf '\e[32m%2i/%-2i\e[0m'   $1 $n57      2>$p03;fi; }
 function sz0 {         gv0;gnn 0;printf 'el%04i %s p2p %05i %s     iu: %4i %5i %4i'                 $(tg2|wc -l) "$(sxi $er $em $ez $ed)" $(ss5 $1 port    ) "$(gb1 $(gcl eth.syncing))" $e1 $e2 $(ei0)                 2>$p03; }
 function sz1 {         uv0;unn 0;printf 'el%04i %s p2p %05i %s      i: %4i'                         $(tg2|wc -l) "$(sxi $er $em $ez $ed)" $(ss5 $1 p2p-port) "$(ub1 $(ucl eth_syncing))" $e1                            2>$p03; }
 function sz5 {         tv0;tnn 0;printf 'el%04i %s p2p %05i %s     ps: %4i %5i %4i'                 $(tg2|wc -l) "$(sxi $er $em $ez $ed)" $(ss5 $1 p2pport ) "$(tb1 $(tcl eth_syncing))" $e1 $e2 $(ei0)                 2>$p03; }
@@ -1066,7 +1067,7 @@ function bpn { bnq peers/connected|jq -r "$s78"|if [[ $1 ]];then grep -Ei "$1";e
 function bps { 
   local s;local n;local i;local e;dts
   ll5 "$g69.*:[^:]{1,4}:"|tail -n${1:-4}|sef "$e87%$s75 dscvI6 \1 \2 %"
-  bpn ip6                |tail -n${1:-4}|sef "s%^%$s75 connI6 $dt %"
+  bpn ip6                |tail -n${1:-4}|sef "s%^%$s75 seenI6 $dt %"
   s=$(bcl identity|jq -r "$s79")
   echo $s75 p2p I4 $dt $(echo "$s"|grep -i ip4)
   echo $s75 p2p I6 $dt $(echo "$s"|grep -i ip6)
