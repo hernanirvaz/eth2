@@ -44,7 +44,7 @@ else
     t6 pe;t6 ne;t6 fe
     t6 pa;t6 na;t6 fa
   fi
-  swn "\nConfigure Grafana Login admin:admin http://$(hostname):3000 & Change password $V & DATASOURCE URL http://127.0.0.1:9090\n"
+  swn "\nConfigure Grafana Login admin:admin http://$cunm:3000 & Change password $V & DATASOURCE URL http://127.0.0.1:9090\n"
   swn 'Import some dashboards from the dashboards directory in https://github.com/sigp/lighthouse-metrics'
   swn 'In the Grafana UI, go to Dashboards -> Manage -> Import -> Upload .json file.'
   swn 'The Summary.json dashboard is a good place to start.\n'

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ip=$(hostname -I);if [[ ${ip%%.*} -eq 192 ]];then iu=eu;else iu=ubuntu;echo -e "\nvip1='$(hostname -I|cut -d' ' -f1)';vnd1='$(hostname).$(hostname -d)'\n\e[5mALTERAR\e[25m ~/eth2/t1\n";fi
+ip=$(hostname -I);ip=${ip%% *};if [[ $ip = 192.168.8.* ]];then iu=eu;else iu=ubuntu;echo -e "\nvip1='$ip';vnd1='$(hostname).$(hostname -d)'\n\e[5mALTERAR\e[25m ~/eth2/t1\n";fi
 source /home/$iu/i0
 
 sc='/etc/ssh/sshd_config'

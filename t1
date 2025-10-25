@@ -2,7 +2,6 @@
 
 source /home/eth/eth2/a1
 
-cunm=$(hostname)
 meeu=$(whoami)
 
 znm1='hrv-zotac1';zip1=$(sin $znm1)

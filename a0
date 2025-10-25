@@ -1,6 +1,8 @@
 #!/usr/bin/bash
 
 pfpd='2001:8a0:fcdc:3600'
+cunm=$(hostname)
+cuip=$(hostname -I);cuip=${cuip%% *}
 
 function sin {
   case $1 in
@@ -43,13 +45,11 @@ function spn {
   esac
   printf %i $n
 }
-function sht { [[ $(hostname -I|cut -d. -f1-3) = 192.168.8 ]]; }
-function sot { nslookup "$1" 2>/dev/null 1>&2; }
-function sit { [[ $1 = 192.168.8.* ]]; }
+function sht { [[ ${1:-$cuip} = 192.168.8.* ]]; }
 function snt { [[ $1 = hrv* ]]; }
-function sdt { sit "$1" || snt "$1"; }
-function srt { [[ $1 = 192.168.8.25 || $1 = hrv-zotac1* ]]; }
-function dnn { local s=$1;snt "$s" && ! sht && s="$s.fruga.pt";sot "$s" || s=$(sin "$1");srt "$s" && s="admin@$s";printf %s "$s"; }
+function smt { sht "$1" || snt "$1"; }
+function sst { local s=${1:-$cunm};[[ $s = hrv-zotac? || $s = hrv-intel? ]]; }
+function dnn { local s=$1;snt "$s" && ! sht && s="$s.fruga.pt";nslookup "$s" 2>/dev/null 1>&2 || s=$(sin "$1");[[ "$s" = 192.168.8.25 || "$s" = hrv-zotac1* ]] && s="admin@$s";printf %s "$s"; }
 function dnz { local p=$2;[[ $p ]] || p=$(spn "$1");printf %i "$p"; }
 function zsh { ssh -p "$1" -i ~/.ssh/id_ed25519 "$2" "$3"; }
 function zcp { local p=$1;local d=$2;shift;shift;scp -rP "$p" -i ~/.ssh/id_ed25519 $@ "$d"; }
