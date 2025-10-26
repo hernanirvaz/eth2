@@ -3,6 +3,8 @@
 source /home/eth/eth2/a1
 
 meeu=$(whoami)
+meui=$(id -u)
+megi=$(id -g)
 
 znm1='hrv-zotac1';zip1=$(sin $znm1)
 znm2='hrv-zotac2';zip2=$(sin $znm2)
@@ -51,7 +53,7 @@ p10="$p02/geth.log"
 p11="$p02/besu.log"
 p12="$p02/beacon.log"
 p13="$p02/bmedias.log"
-p14=
+p14='/etc/apt'
 p15=
 p16="$p05/beacon"
 p17="$p05/validators"
@@ -60,7 +62,7 @@ p19="$p02/validator_keys"
 p20="$(dirname $p04)/timesyncd.conf"
 p21='/etc/default/motd-news'
 p22='/etc/netplan/00-installer-config.yaml'
-p23='/etc/apt/apt.conf.d/50unattended-upgrades'
+p23="$p14/apt.conf.d/50unattended-upgrades"
 p24='/etc/update-motd.d/00-header'
 p25='/etc/update-motd.d/10-help-text'
 p26='/etc/grub.d/00_header'
@@ -84,11 +86,11 @@ p43='/sys/devices/system/cpu/intel_pstate/no_turbo'
 p44='/sys/bus/usb/devices/1-0:1.0/authorized'
 p45='/var/run/reboot-required'
 p46="$p02/vc.rs"
-p47='/etc/apt/preferences.d'
+p47="$p14/preferences.d"
 p48='/etc/default/grub'
 p49="$p02/validator.log"
 p50="$p02/restart"
-p51='/etc/apt/apt.conf.d/20auto-upgrades'
+p51="$p14/apt.conf.d/20auto-upgrades"
 p52="$p02/mev.log"
 p53="export H=$H;$p02/eth2/t6"
 p54="$p02/eth2/t5"
@@ -115,8 +117,8 @@ p74='/etc/exports'
 p75='/etc/nfs.conf'
 p76='/etc/samba/smb.conf'
 p77='/etc/os-release'
-p78='/etc/apt/trusted.gpg.d/jellyfin.gpg'
-p79='/etc/apt/sources.list.d/jellyfin.list'
+p78="$p14/trusted.gpg.d/jellyfin.gpg"
+p79="$p14/sources.list.d/jellyfin.list"
 p80="/media/mp4"
 p81='/etc/needrestart/needrestart.conf'
 p82="$p02/eth2/e0"
@@ -250,10 +252,18 @@ n51=445   # SMB
 n52=137   # NetBIOS Name Service
 n53=138   # NetBIOS Datagram Service
 n54=139   # SMB traffic over NetBIOS
-n55=8096  # Jellyfin Software Media System
+n55=1
 n56=45    # Gas Block Limit - Max gas allowed in a block current default 36
 n57=9     # max number of zero peers in order to trigger EL block/CL delete log
-n58=1
+n58=8096  # Jellyfin http port
+n59=8920  # Jellyfin https port
+n60=7359  # Jellyfin Discovery port
+n61=1900  # Jellyfin DLNA/SSDP port
+n62=8989  # Sonarr default port
+n63=7878  # Radarr default port
+n64=9696  # Prowlarr default port
+n65=9091  # Transmission default web port
+n66=51413 # Transmission default torrent port
 
 s00='systemctl'
 s01="$s00 status"
@@ -434,6 +444,91 @@ s76='VALI'
 s77='MEVB'
 s78='.[].peer_info.seen_multiaddrs.[]'
 s79='.data.p2p_addresses.[]'
+s80='docker'
+s81=''
+s81="${s81}\nservices:"
+s81="${s81}\n  prowlarr:"
+s81="${s81}\n    image: lscr.io/linuxserver/prowlarr:latest"
+s81="${s81}\n    container_name: prowlarr"
+s81="${s81}\n    environment:"
+s81="${s81}\n      - PUID=$meui"
+s81="${s81}\n      - PGID=$megi"
+s81="${s81}\n      - TZ=Europe/Lisbon"
+s81="${s81}\n    volumes:"
+s81="${s81}\n      - /opt/appdata/prowlarr:/config"
+s81="${s81}\n    ports:"
+s81="${s81}\n      - $n64:$n64"
+s81="${s81}\n    restart: unless-stopped"
+s81="${s81}\n"
+s81="${s81}\n  sonarr:"
+s81="${s81}\n    image: lscr.io/linuxserver/sonarr:latest"
+s81="${s81}\n    container_name: sonarr"
+s81="${s81}\n    environment:"
+s81="${s81}\n      - PUID=$meui"
+s81="${s81}\n      - PGID=$megi"
+s81="${s81}\n      - TZ=Europe/Lisbon"
+s81="${s81}\n    volumes:"
+s81="${s81}\n      - /opt/appdata/sonarr:/config"
+s81="${s81}\n      - /media/mp4/tv:/tv/0"
+s81="${s81}\n      - /media/mp4/tv2:/tv/2"
+s81="${s81}\n      - /mnt/data/downloads:/downloads"
+s81="${s81}\n    ports:"
+s81="${s81}\n      - $n62:$n62"
+s81="${s81}\n    restart: unless-stopped"
+s81="${s81}\n"
+s81="${s81}\n  radarr:"
+s81="${s81}\n    image: lscr.io/linuxserver/radarr:latest"
+s81="${s81}\n    container_name: radarr"
+s81="${s81}\n    environment:"
+s81="${s81}\n      - PUID=$meui"
+s81="${s81}\n      - PGID=$megi"
+s81="${s81}\n      - TZ=Europe/Lisbon"
+s81="${s81}\n    volumes:"
+s81="${s81}\n      - /opt/appdata/radarr:/config"
+s81="${s81}\n      - /media/mp4/movie:/movies"
+s81="${s81}\n      - /mnt/data/downloads:/downloads"
+s81="${s81}\n    ports:"
+s81="${s81}\n      - $n63:$n63"
+s81="${s81}\n    restart: unless-stopped"
+s81="${s81}\n"
+s81="${s81}\n  transmission:"
+s81="${s81}\n    image: lscr.io/linuxserver/transmission:latest"
+s81="${s81}\n    container_name: transmission"
+s81="${s81}\n    environment:"
+s81="${s81}\n      - PUID=$meui"
+s81="${s81}\n      - PGID=$megi"
+s81="${s81}\n      - TZ=Europe/Lisbon"
+s81="${s81}\n      - TRANSMISSION_WEB_HOME=/"
+s81="${s81}\n    volumes:"
+s81="${s81}\n      - /opt/appdata/transmission:/config"
+s81="${s81}\n      - /mnt/data/downloads:/downloads"
+s81="${s81}\n    ports:"
+s81="${s81}\n      - $n66:$n66/tcp"
+s81="${s81}\n      - $n66:$n66/udp"
+s81="${s81}\n      - $n65:$n65"
+s81="${s81}\n    restart: unless-stopped"
+s81="${s81}\n"
+s81="${s81}\n  jellyfin:"
+s81="${s81}\n    image: ghcr.io/linuxserver/jellyfin:latest"
+s81="${s81}\n    container_name: jellyfin"
+s81="${s81}\n    environment:"
+s81="${s81}\n      - PUID=$meui"
+s81="${s81}\n      - PGID=$megi"
+s81="${s81}\n      - TZ=Europe/Lisbon"
+s81="${s81}\n    volumes:"
+s81="${s81}\n      - /opt/appdata/jellyfin:/config"
+s81="${s81}\n      - /media/mp4/tv:/data/tvshows/0"
+s81="${s81}\n      - /media/mp4/tv2:/data/tvshows/2"
+s81="${s81}\n      - /media/mp4/movie:/data/movies"
+s81="${s81}\n      - /media/mp4/lust:/data/lust"
+s81="${s81}\n    devices:"
+s81="${s81}\n      - /dev/dri:/dev/dri"
+s81="${s81}\n    ports:"
+s81="${s81}\n      - $n58:$n58"
+s81="${s81}\n      - $n59:$n59"
+s81="${s81}\n      - $n60:$n60/udp"
+s81="${s81}\n      - $n61:$n61/udp"
+s81="${s81}\n    restart: unless-stopped"
 
 e01='PollIntervalMinSec'
 e02='PollIntervalMaxSec'

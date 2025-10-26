@@ -626,10 +626,10 @@ function pop { pde $1 $2 delete;pai $1 192.168.8.0/24 $2; }
 function pco { pde $1 $2;pai $1 192.168.8.0/24 $2 delete; }
 
 # Jellyfin Software Media System
-function je  { pop $n55 $s64;pop 80 ${s22}-web;pop 443 ${s22}-ssl;sex 'ufw reload';cex "$s04 $s22";cex "$s04 $s64";cex "$s04 $s62 $s63"; }
+function je  { pop $n58 $s64;pop 80 ${s22}-web;pop 443 ${s22}-ssl;sex 'ufw reload';cex "$s04 $s22";cex "$s04 $s64";cex "$s04 $s62 $s63"; }
 function ja  { tse $s22 && cex "$s03 $s22";tsa $s64 || cex "$s03 $s64";tse $s62 && cex "$s03 $s62 $s63"; }
 function jp  { tse $s22 && cex "$s02 $s22";tsa $s64 && cex "$s02 $s64";tse $s62 && cex "$s02 $s62 $s63"; }
-function jd  { cex "$s05 $s64";cex "$s05 $s22";cex "$s05 $s62 $s63";pco $n55 $s64;pco 80 ${s22}-web;pco 443 ${s22}-ssl;sex 'ufw reload'; }
+function jd  { cex "$s05 $s64";cex "$s05 $s22";cex "$s05 $s62 $s63";pco $n58 $s64;pco 80 ${s22}-web;pco 443 ${s22}-ssl;sex 'ufw reload'; }
 # Plex Media Server
 function xop {
   pop $n41 ${s60}
@@ -664,8 +664,8 @@ function xa  { tse $s22 && cex "$s03 $s22";tsa $s21 || cex "$s03 $s21";tse $s58 
 function xp  { tse $s22 && cex "$s02 $s22";tsa $s21 && cex "$s02 $s21";tse $s58 && cex "$s02 $s58";tse $s62 && cex "$s02 $s62 $s63"; }
 function xd  { cex "$s05 $s21";cex "$s05 $s22";cex "$s05 $s58";cex "$s05 $s62 $s63";xco;sex 'ufw reload'; }
 # Transmission BitTorrent Daemon
-function rop { pae 51413 torrent;pop 9091 torrent; }
-function rco { pde 51413 torrent;pco 9091 torrent; }
+function rop { pae $n66 torrent;pop $n65 torrent; }
+function rco { pde $n66 torrent;pco $n65 torrent; }
 function re  { rop;sex 'ufw reload';cex "$s04 $s15"; }                                                                                                        # enable  transmission-daemon
 function ra  { tsa $s15 || cex "$s03 $s15"; }                                                                                                                 # start   transmission-daemon
 function rp  { tsa $s15 && cex "$s02 $s15"; }                                                                                                                 # stop    transmission-daemon
@@ -903,7 +903,7 @@ function fsp {
     grep -v "$g31 *[$n-9][0-9]"
   fi|grep "$g31 *[0-${2:-7}]"|sort -k2n
 }
-function esp { iet || return;local e;if tsa $s44;then e=$(ll4 "$g36.*$g30:"|sef "$e76");else e=$(ll6 "$g11.*$g35"|sef "$e77");fi;e=$(fsp $1 $2 <<< "$e");[[ $1$2 ]] || e=$(tail -n$n58 <<< "$e");[[ $e ]] && echo -e "\n$e"; }
+function esp { iet || return;local e;if tsa $s44;then e=$(ll4 "$g36.*$g30:"|sef "$e76");else e=$(ll6 "$g11.*$g35"|sef "$e77");fi;e=$(fsp $1 $2 <<< "$e");[[ $1$2 ]] || e=$(tail -n$n55 <<< "$e");[[ $e ]] && echo -e "\n$e"; }
 function csp { iet || return;local e;e=$(ll6 "$g50:"|sef "$e78"|fsp $1 $2);[[ $1$2 ]] || e=$(tail -n$n58 <<< "$e");[[ $e ]] && echo -e "\n$e"; }
 function mre { mct || return;local s=n;local e=$(for s in $(rlr|snf "$e09"|sort -u);do printf '%3i %s\n' $(rlr|grep -co $s) $s;done|sort -n);[[ $e ]] && echo -e "\n$e"; }
 function epf { if tsa $s10;then gl0;swn "$m";fi;if tsa $s11;then ul0;swn "$m";fi;if tsa $s44;then tl0;swn "$m";fi; }
@@ -972,7 +972,7 @@ function ngx { sex "apt install $s22 -y";cc4 $p32 "$s42";cmw $p32 644 root;sex "
 function plx {
   local k=/usr/share/keyrings/plex.gpg
   local u=downloads.plex.tv
-  local o=/etc/apt/sources.list.d/plexmediaserver.list
+  local o=$p14/sources.list.d/plexmediaserver.list
   swu 'PLEX SERVER';sex 'apt install dirmngr ca-certificates apt-transport-https -y'
   # curl -fsSL https://$u/plex-keys/PlexSign.key | sudo gpg --dearmor | sudo tee $k
   # echo deb [signed-by=$k] https://$u/repo/deb public main | sudo tee $o
@@ -1005,7 +1005,7 @@ function jly {
   cex "chown -R $s64:adm /etc/$s64";cex "usermod -aG $s64 $meeu";sex "usermod -aG render $s64"
   sex "mkdir -p $p80";cmw $p80 750 $s64;sex "chown -R $s64:$s64 $p80"
   jp;jd;je;dmr;ja
-  echo http://$zip2:$n55
+  echo http://$zip2:$n58
 }
 function tms {
   swu 'TRANSMISSION SERVER';sex "apt install transmission-cli transmission-common $s15 -y"
@@ -1052,6 +1052,34 @@ function cns {
 [[ $1 = tms ]] && { if [[ $cunm = $znm2 ]];then tms;fi; }
 [[ $1 = rvm ]] && { rvm; }
 [[ $1 = cns ]] && { cns; }
+
+function idk {
+  local s;local a;local c
+  s="$p14/keyrings/$s80.gpg";[[ -a $s ]] && { swb "$s80 JA INSTALADO";return; }
+  a=$(dpkg --print-architecture);c=$(snf "$e80" $p77)
+  sex "install -m 0755 -d $(dirname $s)"
+  curl -fsSL https://download.$s80.com/linux/ubuntu/gpg | sudo gpg --dearmor -o $s;sex "chmod a+r $s"
+  echo "deb [arch=$a signed-by=$s] https://download.$s80.com/linux/ubuntu $c stable" | sudo tee $p14/sources.list.d/$s80.list >$p03
+  sudo apt update                                                -y 2>&1 | sudo tee -a $p02/$s80.out >$p03
+  sudo apt install --reinstall ca-certificates gnupg lsb-release -y 2>&1 | sudo tee -a $p02/$s80.out >$p03
+  sudo update-ca-certificates                                       2>&1 | sudo tee -a $p02/$s80.out >$p03
+  sex "apt install $s80-ce $s80-ce-cli containerd.io $s80-buildx-plugin $s80-compose-plugin -y"
+  sex "usermod -aG docker $USER" 
+  swb "REQUIRES LOGOUT/LOGIN after execution"
+}
+function im2 {
+  srv hrv-zotac2 || return
+  pop $n58 $s64-http;pop $n59 $s64-https;pop $n60/udp $s64-discovery;pop $n61/udp $s64-DLNA
+  pop $n62 sonarr;pop $n63 radarr;pop $n64 prowlarr;pop $n65 torrent
+  sex 'ufw reload'
+  sex 'mkdir -p /opt/appdata/{prowlarr,sonarr,radarr,transmission,jellyfin}';sex "chown -R $meui:$megi /opt/appdata"
+  sex 'mkdir -p /mnt/data/downloads/{complete,incomplete}';sex "chown -R $meui:$megi /mnt/data";sex 'chmod -R 775 /mnt/data'
+  sex 'mkdir -p /media/mp4';sex "chown -R $meui:$megi /media/mp4";sex 'chmod -R 775 /media/mp4'
+  mkdir $p02/media-stack && cd $p02/media-stack;echo "$s81" > docker-compose.yml
+  docker compose up -d
+ }
+[[ $1 = idk ]] && { idk; }
+[[ $1 = im2 ]] && { im2; }
 
 [[ $1 = bb  ]] && { wpe; }
 [[ $1 = bbz ]] && { wpf; }
