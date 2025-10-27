@@ -38,9 +38,9 @@ r[ll|rm]           list|remove done transmissions
 f[tm][12v]         ftv names first|second|mv command
 EOF
   }
-  alias rcd='cd /var/lib/transmission-daemon/downloads;hlp'
-  alias rp='t6 rpd'
-  alias ra='t6 rea'
+  alias rcd="cd $p82;hlp"
+  alias rp='cd ~/media-stack;docker compose stop transmission;cd'
+  alias ra='cd ~/media-stack;docker compose up -d transmission;cd'
   alias ce='cns ceth'
   alias ct='tail -n10 cns.log'
   alias ca='cns ceth;tail -n10 cns.log'

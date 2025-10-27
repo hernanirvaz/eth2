@@ -29,13 +29,13 @@ function nby {
   else                nu0 %.0fB $1
   fi
 }
-function sgn { local g="$1";shift;SUDO_ASKPASS=$p82 sudo -A grep -Eah  "$g" $@ 2>$p03; }
-function sgv { local g="$1";shift;SUDO_ASKPASS=$p82 sudo -A grep -Eahv "$g" $@ 2>$p03; }
+function sgn { local g="$1";shift;SUDO_ASKPASS=$p84 sudo -A grep -Eah  "$g" $@ 2>$p03; }
+function sgv { local g="$1";shift;SUDO_ASKPASS=$p84 sudo -A grep -Eahv "$g" $@ 2>$p03; }
 function sip {                                              grep -Eai  "$1"    2>$p03; }
 function siv {                                              grep -Eaiv "$1"    2>$p03; }
-function lfl { SUDO_ASKPASS=$p82 sudo -A find $1 -name "$2*" -type f -printf "%T@\t%p\n" 2>$p03|sort -nr|head -n$3|sort -n|cut -f2; }
-function ll0 { local f=$(lfl $p16/logs beacon    2);[[ $f ]] || return;SUDO_ASKPASS=$p82 sudo -A cat $f|tail -n$((n15*2)); }                                  # get cc intern lines
-function ll1 { local f=$(lfl $p17/logs validator 2);[[ $f ]] || return;SUDO_ASKPASS=$p82 sudo -A cat $f|tail -n$n15      ; }                                  # get vc intern lines
+function lfl { SUDO_ASKPASS=$p84 sudo -A find $1 -name "$2*" -type f -printf "%T@\t%p\n" 2>$p03|sort -nr|head -n$3|sort -n|cut -f2; }
+function ll0 { local f=$(lfl $p16/logs beacon    2);[[ $f ]] || return;SUDO_ASKPASS=$p84 sudo -A cat $f|tail -n$((n15*2)); }                                  # get cc intern lines
+function ll1 { local f=$(lfl $p17/logs validator 2);[[ $f ]] || return;SUDO_ASKPASS=$p84 sudo -A cat $f|tail -n$n15      ; }                                  # get vc intern lines
 function ll2 { local f=$(lfl $p16/logs beacon    2);[[ $f ]] || return;sgn "$1" $f|tail -n$n15      ; }                                                       # get cc intern lines (specific)
 function ll3 { local f=$(lfl $p17/logs validator 4);[[ $f ]] || return;sgn "$1" $f|tail -n$2        ; }                                                       # get vc intern lines (specific)
 function ll4 { local f=$(lfl $p07/logs mainnet   2);[[ $f ]] || return;sgn "$1" $f                  ; }                                                       # get neth intern lines
@@ -923,7 +923,7 @@ function uur {
 }
 function fdv { [[ $1         ]] || return;printf "\nDevice\tUsed\tSerialNumber\tFirmware\tModel\n";local d;local u;local f;local n;local m;while IFS=$'\t' read d u m f n;do printf "%s\t%s\t%s\t%s\t%s\n" $(basename $d) $(nby $u) $n $f "$m";done <<< "$1"; }
 function fmd { [[ -b /dev/$1 ]] || return;printf "\n";pex "mdadm --detail /dev/$1"; }
-function fst { local s="nvme smart-log";if [[ $1 ]];then cex "$s /dev/$1";else local f='';for f in $(find $p66 2>$p03|sort);do swl "$s $f";pex "$s $f";done|grep -Eiv "$s54"|sef "$e08";fi;fdv "$(pex 'nvme list -o json'|jq -r "$j6"|sort)";fmd $(cat $p89|snf "$e82"); }
+function fst { local s="nvme smart-log";if [[ $1 ]];then cex "$s /dev/$1";else local f='';for f in $(find $p66 2>$p03|sort);do swl "$s $f";pex "$s $f";done|grep -Eiv "$s54"|sef "$e08";fi;fdv "$(pex 'nvme list -o json'|jq -r "$j6"|sort)";fmd $(cat $p85|snf "$e82"); }
 
 function ulg { local d=${1:-$(date +%F)};nex "cat $p69"|snf "/$g60$d/,/$g61$d/p"; }
 function uls { local e=$(snf "/$1/,/^ *$/p" <<< "$2"|grep -Ev "$1|^ *$"|sort -u);if [[ $e ]];then echo -e "\n$1\n$e";fi; }
@@ -1076,10 +1076,10 @@ function im2 {
   pop $n58 $s64-http;pop $n59 $s64-https;pop $n60/udp $s64-discovery;pop $n61/udp $s64-DLNA
   pop $n62 sonarr;pop $n63 radarr;pop $n64 prowlarr;pop $n65 torrent
   sex 'ufw reload'
-  sex 'mkdir -p /opt/appdata/{prowlarr,sonarr,radarr,transmission,jellyfin}';sex "chown -R $meui:$megi /opt/appdata"
-  sex 'mkdir -p /mnt/data/downloads/{complete,incomplete}';sex "chown -R $meui:$megi /mnt/data";sex 'chmod -R 775 /mnt/data'
-  sex 'mkdir -p /media/mp4/{tv,tv2,movie,lust}';sex "chown -R $meui:$megi /media/mp4";sex 'chmod -R 775 /media/mp4'
-  mkdir $p02/media-stack && cd $p02/media-stack;echo -e "$s81" > docker-compose.yml
+  mkdir -p $p80/{tv,tv2,movie,lust}                           ;sex "chown -R $meui:$megi $p80";sex "chmod -R 775 $p80"
+  mkdir -p $p81/{prowlarr,sonarr,radarr,transmission,jellyfin};sex "chown -R $meui:$megi $p81"
+  mkdir -p $p82/{complete,incomplete}                         ;sex "chown -R $meui:$megi $p82";sex "chmod -R 775 $p82"
+  mkdir -p $p02/media-stack;cd $p02/media-stack;echo -e "$s81" > docker-compose.yml
   docker compose up -d
  }
 [[ $1 = idk ]] && { idk; }
