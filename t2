@@ -72,5 +72,5 @@ cc1 $p27 "$e53";cc2 $p27 "$s38";cmw $p27 644 root;cmw $(dirname $p01) 755       
 [[ -x $p28 ]] && sex "chmod -x $p28"                                                                                                                          # motd overlayroot unexecute
 t6 uur                                                                                                                                                        # unattended-upgrades conf
 swb 'FINAL - reboot imperativo'
-sht && swn 'sudo netplan apply'
+sht && swn 't6 nrs'
 swn 'sudo reboot'
