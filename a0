@@ -60,7 +60,7 @@ function pcm {
   elif [[ $e = NTP ]];then 
     zsh "$p" "$n" "ntpq -np"
   elif [[ $e = LRB ]];then
-    zsh "$p" "$n" "echo;echo last reboot;last reboot|head -n5|sed 's%  *% %g'|sort -n;echo;echo wan check log;tail -n5 /root/rt-pfsense-wan-check.log;echo;date +'%Y-%m-%d %H:%M:%S'"
+    zsh "$p" "$n" "echo df;df -h /;echo;echo last reboot;last reboot|head -n5|sed 's%  *% %g'|sort -n;echo;echo wan check log;tail -n5 /root/rt-pfsense-wan-check.log;echo;date +'%Y-%m-%d %H:%M:%S'"
   else 
     zsh "$p" "$n" 'cat /root/rt-pfsense-wan-check.log'
   fi
