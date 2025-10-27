@@ -1074,16 +1074,18 @@ function idk {
 function im2 {
   srv hrv-zotac2 || return
   pop $n58 $s64-http;pop $n59 $s64-https;pop $n60/udp $s64-discovery;pop $n61/udp $s64-DLNA
-  pop $n62 sonarr;pop $n63 radarr;pop $n64 prowlarr;pop $n65 torrent
+  pop $n62 sonarr;pop $n63 radarr;pop $n64 prowlarr;rop
   sex 'ufw reload'
-  mkdir -p $p80/{tv,tv2,movie,lust}                           ;sex "chown -R $meui:$megi $p80";sex "chmod -R 775 $p80"
-  mkdir -p $p81/{prowlarr,sonarr,radarr,transmission,jellyfin};sex "chown -R $meui:$megi $p81"
-  mkdir -p $p82/{complete,incomplete}                         ;sex "chown -R $meui:$megi $p82";sex "chmod -R 775 $p82"
+  mkdir -p $p80/{tv,tv2,movie,lust}                                    ;sex "chown -R $meui:$megi $p80";sex "chmod -R 775 $p80"
+  mkdir -p $p81/{prowlarr,sonarr,radarr,transmission,jellyfin}         ;sex "chown -R $meui:$megi $p81"
+  mkdir -p $p82/{complete,incomplete};mkdir -p $p82/complete/{tv,movie};sex "chown -R $meui:$megi $p82";sex "chmod -R 775 $p82"
   mkdir -p $p02/media-stack;cd $p02/media-stack;echo -e "$s81" > docker-compose.yml
   docker compose up -d
  }
 [[ $1 = idk ]] && { idk; }
 [[ $1 = im2 ]] && { im2; }
+[[ $1 = rco ]] && { rco; }
+[[ $1 = rop ]] && { rop; }
 
 [[ $1 = bb  ]] && { wpe; }
 [[ $1 = bbz ]] && { wpf; }
