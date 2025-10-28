@@ -3,6 +3,8 @@
 pfpd='2001:8a0:fcdc:3600'
 cunm=$(hostname)
 cuip=$(hostname -I);cuip=${cuip%% *}
+trdi='/mnt/data/downloads'
+mddi='/media/mp4'
 
 function sin {
   case $1 in

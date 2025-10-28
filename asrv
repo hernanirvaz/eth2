@@ -36,11 +36,11 @@ f[tm][12v]              ftv names first|second|mv command
 {ufz|zfu} file          encrypt|decrypt file
 EOF
   }
-  alias rcd="cd $p82;hlp"
+  alias rcd="cd $trdi;pwd;hlp"
   alias rpr='cd ~/media-stack && docker compose stop  transmission;t6 rco'
   alias rar='cd ~/media-stack && docker compose start transmission;t6 rop'
   alias rll='docker exec transmission transmission-remote -l'
-  alias mcd='cd ~/media-stack'
+  alias mcd="cd $mddi;pwd;du -hs \$(ls)|sort -h"
   alias mup='cd ~/media-stack && docker compose up -d'
   alias mdw='cd ~/media-stack && docker compose down'
   alias mrs='cd ~/media-stack && docker compose restart'
