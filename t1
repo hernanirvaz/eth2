@@ -267,6 +267,7 @@ n64=9696  # Prowlarr default port
 n65=9091  # Transmission default web port
 n66=51413 # Transmission default torrent port
 n67=9117  # Jackett Web UI port
+n68=6767  # Bazarr default port
 
 s00='systemctl'
 s01="$s00 status"
@@ -491,6 +492,20 @@ s81="${s81}\n      - $p80:/media"
 s81="${s81}\n      - $p82:/downloads"
 s81="${s81}\n    ports:"
 s81="${s81}\n      - $n63:$n63"
+s81="${s81}\n    restart: unless-stopped"
+s81="${s81}\n"
+s81="${s81}\n  bazarr:"
+s81="${s81}\n    image: lscr.io/linuxserver/bazarr:latest"
+s81="${s81}\n    container_name: bazarr"
+s81="${s81}\n    environment:"
+s81="${s81}\n      - PUID=$meui"
+s81="${s81}\n      - PGID=$megi"
+s81="${s81}\n      - TZ=Europe/Lisbon"
+s81="${s81}\n    volumes:"
+s81="${s81}\n      - $p81/bazarr:/config"
+s81="${s81}\n      - $p80:/media"
+s81="${s81}\n    ports:"
+s81="${s81}\n      - $n68:$n68"
 s81="${s81}\n    restart: unless-stopped"
 s81="${s81}\n"
 s81="${s81}\n  transmission:"
