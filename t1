@@ -472,7 +472,7 @@ s81="${s81}\n      - PGID=$megi"
 s81="${s81}\n      - TZ=Europe/Lisbon"
 s81="${s81}\n    volumes:"
 s81="${s81}\n      - $p81/sonarr:/config"
-s81="${s81}\n      - /media/mp4:/media"
+s81="${s81}\n      - $p80:/media"
 s81="${s81}\n      - $p82:/downloads"
 s81="${s81}\n    ports:"
 s81="${s81}\n      - $n62:$n62"
@@ -487,7 +487,7 @@ s81="${s81}\n      - PGID=$megi"
 s81="${s81}\n      - TZ=Europe/Lisbon"
 s81="${s81}\n    volumes:"
 s81="${s81}\n      - $p81/radarr:/config"
-s81="${s81}\n      - /media/mp4:/media"
+s81="${s81}\n      - $p80:/media"
 s81="${s81}\n      - $p82:/downloads"
 s81="${s81}\n    ports:"
 s81="${s81}\n      - $n63:$n63"
@@ -541,6 +541,7 @@ s81="${s81}\n      - 80:80"    # Standard HTTP
 s81="${s81}\n      - 443:443"  # Standard HTTPS
 s81="${s81}\n      - 81:81"    # NPM Admin UI
 s81="${s81}\n    restart: unless-stopped"
+s82='zpool'
 
 e01='PollIntervalMinSec'
 e02='PollIntervalMaxSec'

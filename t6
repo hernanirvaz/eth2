@@ -1065,7 +1065,7 @@ function idk {
   sex "install -m 0755 -d $(dirname $s)"
   curl -fsSL https://download.$s80.com/linux/ubuntu/gpg | sudo gpg --dearmor -o $s;sex "chmod a+r $s"
   echo "deb [arch=$a signed-by=$s] https://download.$s80.com/linux/ubuntu $c stable" | sudo tee $p14/sources.list.d/$s80.list >$p03
-  sudo apt update                                                -y 2>&1 | sudo tee -a $p02/$s80.out >$p03
+  sex 'apt update'
   sudo apt install --reinstall ca-certificates gnupg lsb-release -y 2>&1 | sudo tee -a $p02/$s80.out >$p03
   sudo update-ca-certificates                                       2>&1 | sudo tee -a $p02/$s80.out >$p03
   sex "apt install $s80-ce $s80-ce-cli containerd.io $s80-buildx-plugin $s80-compose-plugin -y"
@@ -1083,8 +1083,30 @@ function im2 {
   mkdir -p $p02/media-stack;cd $p02/media-stack;echo -e "$s81" > docker-compose.yml
   docker compose up -d
  }
+function iz2 {
+  srv hrv-zotac2 || return
+  if zpool version 2>$p03;then
+    swb 'ZFS JA INSTALADO'
+  else
+    swb 'INSTALAR ZFS';sex 'apt update';sudo apt install zfsutils-linux -y 2>&1 | sudo tee -a $p02/$s82.out >$p03
+  fi
+  local i='/dev/disk/by-id';local s="$i/scsi-SSanDisk_SSD_PLUS_2000GB_61E203010290 $i/scsi-SSamsung_SSD_870_QVO_1TB_E41703010290 $i/scsi-SSamsung_SSD_870_QVO_1TB_0000000000000000"
+  local f='/media/bk1';local e='bk1_pool'
+  if zpool status $e 2>$p03;then
+    swb "POOL $e JA EXISTE"
+  else 
+    nex "zpool create -m $f $e $s"
+    nex "zfs set atime=off $e"
+    nex "zfs set aclmode=passthrough $e"
+    nex "zfs set mountpoint=$f $e"
+    nex "chown -R $meeu:$meeu $f"
+    nex "chmod -R 775 $f"
+   fi
+  zpool list
+ }
 [[ $1 = idk ]] && { idk; }
 [[ $1 = im2 ]] && { im2; }
+[[ $1 = iz2 ]] && { iz2; }
 [[ $1 = rco ]] && { rco; }
 [[ $1 = rop ]] && { rop; }
 
