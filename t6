@@ -1158,6 +1158,7 @@ function bps {
 [[ $1 = drs ]] && { dpa; }
 [[ $1 = nsh ]] && { nsh; }
 [[ $1 = nrs ]] && { nrs; }
+[[ $1 = nnp ]] && { echo -e "$s41"; }
 [[ $1 = hsh ]] && { hhh;hsh;echo;if n1t;then hca;else hch;fi; }
 [[ $1 = hch ]] && { hch; }
 [[ $1 = hca ]] && { hca; }
@@ -1425,7 +1426,7 @@ if [[ ! $1 ]];then
   m="$m\ncpe [hp]\t\thours & temperature & errors status"
   m="$m\nm[vr|re]\t\tmev validator registration|relay erros"
   m="$m\nw[a|pr|s|l [e]]\t\tfirewall arranca|para|status|logs [exclude]"
-  m="$m\nn[sh|rs|gr]\t\tnetwork show|reset|gap reset"
+  m="$m\nn[sh|rs|gr|np]\t\tnetwork show|reset|gap reset|netplan show"
   m="$m\nd[sh [url]|rs]\t\tdns show [url]|reset"
   m="$m\nh[sh|rs|ch|ca|rc]\t$s45 show|restart|check|check all|restart conditional"
   m="$m\nhs[012ecvm]\t\tservices all|main|backup|execution|concensus|vc|mev"
