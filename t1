@@ -355,13 +355,22 @@ s40="$s40\n};"
 s41=''
 s41="$s41\nnetwork:"
 s41="$s41\n  ethernets:"
-for m in $(ip -j link|jq -r '.[]|select(.operstate=="UP").ifname');do
+for m in $(ip -j link|jq -r '.[]|select(.operstate=="UP").ifname'|grep -E '^en');do
   s41="$s41\n    $m:"
   s41="$s41\n      dhcp4: true"
-  s41="$s41\n      dhcp6: true"
+  if [[ $cunm = $znm2 ]];then
+    s41="$s41\n      dhcp6: false"
+    s41="$s41\n      accept-ra: false"
+    s41="$s41\n      addresses: [$(si6 $znm2)/64]"
+    s41="$s41\n      routes: [{to: default, via: fe80::201:2eff:fea0:88d4}]"
+    s41="$s41\n      nameservers:"
+    s41="$s41\n        addresses: [$zip1, $(si6 $znm1)]"
+  else
+    s41="$s41\n      dhcp6: true"
+  fi
   s41="$s41\n      critical: true"
 done
-for m in $(ip -j link|jq -r '.[]|select(.operstate=="DOWN").ifname');do
+for m in $(ip -j link|jq -r '.[]|select(.operstate=="DOWN").ifname'|grep -Ev '^docker');do
   s41="$s41\n    $m:"
   s41="$s41\n      dhcp4: true"
   s41="$s41\n      activation-mode: off"
