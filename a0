@@ -40,7 +40,7 @@ function sl6 {
   hrv-zotac4*) printf %s fe80::201:2eff:fea4:f04c ;;
   hrv-intel5*) printf %s fe80::4a21:bff:fe55:4076 ;;
   hrv-intel6*) printf %s fe80::4a21:bff:fe52:6c5e ;;
-  hrv-zen*   ) printf %s $pfpd::1100 ;;
+  hrv-zen*   ) printf %s fe80::9fa6:2019:3db8:d1b6 ;;
   hrv-lenovo*) printf %s fe80::c988:b438:1645:2e90 ;;
   *) printf %s "$1" ;;
   esac
