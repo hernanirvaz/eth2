@@ -32,7 +32,19 @@ function si6 {
   *) printf %s "$1" ;;
   esac
 }
-
+function sl6 {
+  case $1 in
+  hrv-zotac1*) printf %s fe80::201:2eff:fea0:88d4 ;;
+  hrv-zotac2*) printf %s fe80::201:2eff:fea0:e06f ;;
+  hrv-zotac3*) printf %s fe80::201:2eff:fea0:88ea ;;
+  hrv-zotac4*) printf %s fe80::201:2eff:fea4:f04c ;;
+  hrv-intel5*) printf %s fe80::4a21:bff:fe55:4076 ;;
+  hrv-intel6*) printf %s fe80::4a21:bff:fe52:6c5e ;;
+  hrv-zen*   ) printf %s $pfpd::1100 ;;
+  hrv-lenovo*) printf %s fe80::c988:b438:1645:2e90 ;;
+  *) printf %s "$1" ;;
+  esac
+}
 function spn {
   local n=2020
   local s=${1%%.*}
@@ -53,8 +65,8 @@ function smt { sht "$1" || snt "$1"; }
 function sst { local s=${1:-$cunm};[[ $s != hrv-zen && $s != hrv-lenovo ]]; }
 function dnn { local s=$1;snt "$s" && ! sht && s="$s.fruga.pt";nslookup "$s" 2>/dev/null 1>&2 || s=$(sin "$1");[[ "$s" = 192.168.8.25 || "$s" = hrv-zotac1* ]] && s="admin@$s";printf %s "$s"; }
 function dnz { local p=$2;[[ $p ]] || p=$(spn "$1");printf %i "$p"; }
-function zsh { ssh -p "$1" -i ~/.ssh/id_ed25519 "$2" "$3"; }
-function zcp { local p=$1;local d=$2;shift;shift;scp -rP "$p" -i ~/.ssh/id_ed25519 $@ "$d"; }
+function zsh { ssh -4p "$1" -i ~/.ssh/id_ed25519 "$2" "$3"; }
+function zcp { local p=$1;local d=$2;shift;shift;scp -4rP "$p" -i ~/.ssh/id_ed25519 $@ "$d"; }
 function pcm { 
   local n;local p;local e=${1^^};local s=hrv-zotac1;n=$(dnn $s);p=$(dnz $s)
   if [[ $e = PRB ]];then 
@@ -72,3 +84,4 @@ function tcm {
   s=hrv-zotac1;echo -e "\n\e[32m$s pfSense\e[0m";pcm NTP
   s=hrv-zotac2;echo -e "\n\e[32m$s chronyc\e[0m";zsh $(dnz $s) $(dnn $s) "chronyc -n sources"
 }
+function slk { local s=${1:-UP};ip -j link|jq -r ".[]|select(.operstate==\"${s^^}\").ifname"|grep -E '^(en|wl)'; }
