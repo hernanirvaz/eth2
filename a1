@@ -123,7 +123,26 @@ function gnv {
 function mn0 { cd "$p02" || return;sex 'rm -rf go';sex "rm -rf $1"; }
 function mn1 { CGO_CFLAGS="-O -D__BLST_PORTABLE__" /usr/local/go/bin/go install github.com/flashbots/$2@$1; }
 function mn2 { git clone https://github.com/flashbots/$2.git;cd $2;git checkout tags/$1;make build; }
-function mnv { local v=${1:-v1.9};local e='mev-boost';if [[ $($p00/$e --version 2>&1|sef "$e73") = $v ]];then swu "$e $v EXISTE";else mn0 $e;local f="$p02/$e/$e";mn2 $v $e;if [[ ! -x $f ]];then local f="$p02/go/bin/$e";mn1 $v $e;fi;if [[ -x $f ]];then swu "INSTALAR $v $e";sex "mv $f $p00";mn0 $e;fi;cmw $p00/$e 755 eth4;fi; }
+function mnv {
+  local v=${1:-v1.10.0}
+  local e='mev-boost';local f="$p02/$e/$e"
+  if [[ $($p00/$e --version 2>&1|sef "$e73") = $v ]]; then
+    swu "$e $v EXISTE"
+  else
+    mn0 $e
+    mn2 $v $e
+    if [[ ! -x $f ]]; then
+      f="$p02/go/bin/$e"
+      mn1 $v $e
+    fi
+    if [[ -x $f ]]; then
+      swu "INSTALAR $v $e"
+      sex "mv $f $p00"
+      mn0 $e
+    fi
+    cmw $p00/$e 755 eth4
+  fi
+}
 function snv { local v=${1:-v2.8.0};local f="staking_deposit-cli-${2:-948d3fc}-linux-amd64.tar.gz";rm -f $f;curl -LO https://github.com/ethereum/staking-deposit-cli/releases/download/$v/$f;local s=$(shc $f);swn "INSTALAR $f ($s)?";local rsp=nao;read rsp;if [[ $rsp = $s ]];then tar xf $f --strip-components 2;fi; }
 function esv { local v=${1:-v1.2.0};local f="ethstaker_deposit-cli-${2:-18b7608}-linux-amd64.tar.gz";local e='deposit';if [[ $($p00/$e --version 2>&1|snf "$e83") = $v ]];then swu "$e $v EXISTE";else sex "rm -f $f $p00/$e";curl -LO https://github.com/eth-educators/ethstaker-deposit-cli/releases/download/$v/$f;local s=$(shc $f);swn "INSTALAR $f ($s)?";local rsp=nao;read rsp;if [[ $rsp = $s ]];then sex "tar -C $p00 -xf $f --strip-components 2";cmw $p00/$e 755 eth;fi;fi; }
 function dnv { 
