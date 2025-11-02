@@ -1,21 +1,37 @@
 #!/bin/bash
 
 hlp() {
-    echo "Usage: $0 [-oip] [extension]"
+    echo "Usage: $0 [-orip] [extension]"
     echo "  Converts video files to a compatible MP4 format."
     echo "  -o          Force delete of the output file."
+    echo "  -r          Force remux  of the output file if it exists."
     echo "  -i          Force delete of the input  file if output exists."
     echo "  -p          Print work."
     echo "  extension   File extension to convert (default: avi)."
     exit 1
 }
+rmx() {
+    [[ "$fro" == "true" && -s "$ofl" ]] || return
+
+    [[ "$fpt" == "true" ]] && echo "Remuxing: '$ofl' to '$rfl'"
+    ffmpeg -nostdin -i "$ofl" -loglevel error -c copy -movflags +faststart "$rfl"
+    if [[ $? -eq 0 && -s "$rfl" ]]; then
+        echo "SUCCESS: '$ofl' has been remuxed to '$rfl'."
+        mv "$rfl" "$ofl"
+    else
+        echo "ERROR: Remuxing failed for '$ofl'. Proceeding to convert."
+        rm -f "$ofl"
+    fi
+}
 
 fdo=false
+fro=false
 fdi=false
 fpt=false
-while getopts ":oip" opt; do
+while getopts ":orip" opt; do
   case ${opt} in
     o) fdo=true;;
+    r) fro=true;;
     i) fdi=true;;
     p) fpt=true;;
     \?)
@@ -28,14 +44,15 @@ shift $((OPTIND -1))
 
 find . -type f -iname "*.${1:-avi}" | while read -r ifl; do
     ofl="${ifl%.*}.mp4"
-    [[ "$fdo" == "true"              ]] && rm -f "$ofl"
+    rfl="${ifl%.*}-remux.mp4"
+    [[ "$fdo" == "true"              ]] && rm -f "$ofl";rmx
     [[ "$fdi" == "true" && -f "$ofl" ]] && rm -f "$ifl"
     [[ -f "$ofl"                     ]] && continue
     [[ "$fpt" == "true"              ]] && echo "Converting: '$ifl' to '$ofl'"
 
-    ffmpeg -nostdin -i "$ifl" -loglevel error -map 0:v:0 -c:v libx264 -preset medium -crf 23 -pix_fmt yuv420p -movflags +faststart "$ofl"
+    ffmpeg -nostdin -i "$ifl" -loglevel error -map 0:v:0 -c:v libx264 -preset medium -crf 23 -pix_fmt yuv420p "$ofl"
     if [[ $? -eq 0 && -s "$ofl" ]]; then
-        echo "SUCCESS: '$ifl' has been converted to '$ofl'."
+        echo "SUCCESS: '$ifl' has been converted to '$ofl'.";rmx
     else
         echo "ERROR: Conversion failed for '$ifl'.";rm -f "$ofl"
     fi
