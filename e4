@@ -1,27 +1,38 @@
 #!/bin/bash
 
+hlp() {
+    echo "Usage: $0 [-d] [-p] [extension]"
+    echo "  Converts video files to a compatible MP4 format."
+    echo "  -d          Force delete of the output file if it already exists."
+    echo "  -p          Print work."
+    echo "  extension   File extension to convert (default: avi)."
+    exit 1
+}
+
+fdl=false
+fpt=false
+while getopts ":dp" opt; do
+  case ${opt} in
+    d) fdl=true;;
+    p) fpt=true;;
+    \?)
+      echo "Invalid Option: -$OPTARG" 1>&2
+      hlp
+      ;;
+  esac
+done
+shift $((OPTIND -1))
+
 find . -type f -iname "*.${1:-avi}" | while read -r ifl; do
     ofl="${ifl%.*}.mp4"
-    if [[ -s "$ofl" ]]; then
-        rm -f "$ofl"
-        continue
-    fi
+    [[ "$fdl" == "true" ]] && rm -f "$ofl"
+    [[ "$fpt" == "true" ]] && echo "Converting: '$ifl' to '$ofl'"
+    [[ -f "$ofl"        ]] && continue
 
-    # echo "Converting: '$ifl' to '$ofl'"
-    # -map 0:v:0        -> Select the first video stream from the input
-    # -map 0:a:0        -> Select the first audio stream from the input
-    # -c:v libx264      -> Use the H.264 video codec
-    # -preset medium    -> A good balance of encoding speed and file size
-    # -crf 23           -> Quality setting (18 is near-lossless, 28 is lower quality). 23 is a great default.
-    # -pix_fmt yuv420p  -> Ensures maximum compatibility with players
-    # -c:a aac          -> Re-encode the audio to the AAC codec
-    # -b:a 192k         -> Set the audio bitrate to 192kbps (high quality for stereo)
-    # -movflags +faststart -> Optimizes MP4 for web streaming (playback can start sooner)
     ffmpeg -nostdin -i "$ifl" -loglevel error -map 0:v:0 -c:v libx264 -preset medium -crf 23 -pix_fmt yuv420p -movflags +faststart "$ofl"
     if [[ $? -eq 0 && -s "$ofl" ]]; then
         echo "SUCCESS: '$ifl' has been converted to '$ofl'."
     else
-        echo "ERROR: Conversion failed AGAIN for '$ifl'."
-        rm -f "$ofl"
+        echo "ERROR: Conversion failed for '$ifl'.";rm -f "$ofl"
     fi
 done
