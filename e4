@@ -1,19 +1,22 @@
 #!/bin/bash
 
 hlp() {
-    echo "Usage: $0 [-d] [-p] [extension]"
+    echo "Usage: $0 [-oip] [extension]"
     echo "  Converts video files to a compatible MP4 format."
-    echo "  -d          Force delete of the output file if it already exists."
+    echo "  -o          Force delete of the output file."
+    echo "  -i          Force delete of the input  file if output exists."
     echo "  -p          Print work."
     echo "  extension   File extension to convert (default: avi)."
     exit 1
 }
 
-fdl=false
+fdo=false
+fdi=false
 fpt=false
-while getopts ":dp" opt; do
+while getopts ":oip" opt; do
   case ${opt} in
-    d) fdl=true;;
+    o) fdo=true;;
+    i) fdi=true;;
     p) fpt=true;;
     \?)
       echo "Invalid Option: -$OPTARG" 1>&2
@@ -25,9 +28,10 @@ shift $((OPTIND -1))
 
 find . -type f -iname "*.${1:-avi}" | while read -r ifl; do
     ofl="${ifl%.*}.mp4"
-    [[ "$fdl" == "true" ]] && rm -f "$ofl"
-    [[ "$fpt" == "true" ]] && echo "Converting: '$ifl' to '$ofl'"
-    [[ -f "$ofl"        ]] && continue
+    [[ "$fdo" == "true"              ]] && rm -f "$ofl"
+    [[ "$fdi" == "true" && -f "$ofl" ]] && rm -f "$ifl"
+    [[ -f "$ofl"                     ]] && continue
+    [[ "$fpt" == "true"              ]] && echo "Converting: '$ifl' to '$ofl'"
 
     ffmpeg -nostdin -i "$ifl" -loglevel error -map 0:v:0 -c:v libx264 -preset medium -crf 23 -pix_fmt yuv420p -movflags +faststart "$ofl"
     if [[ $? -eq 0 && -s "$ofl" ]]; then
