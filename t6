@@ -1123,18 +1123,23 @@ function iz2 {
 function bpn { bnq peers/connected|jq -r "$s78"|if [[ $1 ]];then grep -Ei "$1";else cat;fi; }
 function bps { 
   iet || return
-  local s;dts
+  local s;local n;local i;local e;dts
   s=$(ll5 "$g69.*:[^:]{1,4}:")
   echo "$s75 p2p v6 $dt sessions in/out: $(echo "$s"|grep -ic Incoming)/$(echo "$s"|grep -ic Outgoing) seen: $(bpn ip6|wc -l)"
   s=$(bcl identity|jq -r "$s79")
   echo $s75 add v4 $dt $(echo "$s"|grep -i ip4)
   echo $s75 add v6 $dt $(echo "$s"|grep -i ip6)
+  n=$(echo "$s"|snf "$e85"|cut -d: -f1-4)
+  i=$(pcm IP6             |cut -d: -f1-4)
+  if [[ $n == ${i%/*} ]];then e=$(swg OK);else e=$(swr NO);fi
+  echo $s75 "$e  I6" $dt $n ${i%/*}
   if tsa $s12; then bv0;bnn
     echo $s75 SUMARY $dt $(non $nn) $(sxl $nr $nm $nz $nd) limits:$(szl $nm $nr)$(szi $nz)
   else
     echo $s75 NOT ON $dt
   fi
 }
+
 [[ $1 = bps ]] && { bps; }
 [[ $1 = bpi ]] && { bnq peers/connected|jq -r "$s48\"Incoming\"$s49"; }
 [[ $1 = bpo ]] && { bnq peers/connected|jq -r "$s48\"Outgoing\"$s49"; }
