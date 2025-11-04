@@ -796,7 +796,7 @@ function luc {                                                                  
     cd $p06;sex "rm -rf $p06/lighthouse";git clone https://github.com/sigp/lighthouse.git;cd $p06/lighthouse                                                  # get new git
   fi
   git fetch;if grep -Eq 'v[0-9]+\.[0-9]+\.[0-9]+' <<< $2;then m=$2;else m=$(git describe --tags $(git rev-list --tags --max-count=1));fi                      # fetch (vX.X.X/last) version
-  git checkout $m;swb "VAI COMPILAR LIGHTHOUSE $m";FEATURES=modern PROFILE=maxperf make;[[ $? -eq 0 && -x $1 ]] || swb "ERRO COMPILAR $m"                     # checkout stable version & compile
+  git checkout $m;swb "VAI COMPILAR LIGHTHOUSE $m";PROFILE=maxperf make;[[ $? -eq 0 && -x $1 ]] || swb "ERRO COMPILAR $m"                                     # checkout stable version & compile
 }
 function ruv { if [[ $1 ]];then swn "RUST OVERRIDE SET $1";rustup override set $1;else swn 'RUST UPDATE';rustup update stable;fi; }                           # set/update rust version
 function tvc {
@@ -1148,7 +1148,7 @@ function bps {
 [[ $1 = mre ]] && { mre; }
 [[ $1 = jwt ]] && { sjw; }
 [[ $1 = lpi ]] && { lpi $p02/.cargo/bin/lighthouse; }
-[[ $1 = luc ]] && { luc $p02/.cargo/bin/lighthouse ${2:-v7.1.0}; }
+[[ $1 = luc ]] && { luc $p02/.cargo/bin/lighthouse ${2:-v8.0.0}; }
 [[ $1 = ruv ]] && { ruv $2; }
 [[ $1 = ccr ]] && { llt && ble "$e14"; }
 [[ $1 = cca ]] && { llt || ble "$e15"; }
