@@ -1124,11 +1124,11 @@ function bpn { bnq peers/connected|jq -r "$s78"|if [[ $1 ]];then grep -Ei "$1";e
 function bps { 
   iet || return
   local s;local n;local i;local e;dts
-  ll5 "$g69.*:[^:]{1,4}:"|tail -n${1:-4}|sef "$e87%$s75 dscvI6 \1 \2 %"
-  bpn ip6                |tail -n${1:-4}|sef "s%^%$s75 seenI6 $dt %"
+  s=$(ll5 "$g69.*:[^:]{1,4}:")
+  echo "$s75 p2p I6 $dt sessions in/out: $(echo "$s"|grep -ic Incoming)/$(echo "$s"|grep -ic Outgoing) seen: $(bpn ip6|wc -l)"
   s=$(bcl identity|jq -r "$s79")
-  echo $s75 p2p I4 $dt $(echo "$s"|grep -i ip4)
-  echo $s75 p2p I6 $dt $(echo "$s"|grep -i ip6)
+  echo $s75 add I4 $dt $(echo "$s"|grep -i ip4)
+  echo $s75 add I6 $dt $(echo "$s"|grep -i ip6)
   n=$(echo "$s"|snf "$e85")
   i=$(ip -6 a  |snf "$e86")
   if [[ $n == ${i%/*} ]];then e=$(swg OK);else e=$(swr NO);fi
@@ -1139,7 +1139,7 @@ function bps {
     echo $s75 NOT ON $dt
   fi
 }
-[[ $1 = bps ]] && { bps $2; }
+[[ $1 = bps ]] && { bps; }
 [[ $1 = bpi ]] && { bnq peers/connected|jq -r "$s48\"Incoming\"$s49"; }
 [[ $1 = bpo ]] && { bnq peers/connected|jq -r "$s48\"Outgoing\"$s49"; }
 [[ $1 = bpn ]] && { bpn $2; }
