@@ -2,8 +2,8 @@
 # 15,35,55 * * * * root /root/rt-pfsense-wan-check.sh
 
 WAN="re1"
-PG1="8.8.8.8"  # Google DNS
-PG2="1.1.1.1"  # Cloudflare DNS
+PG1="8.8.8.8"        # Google DNS
+PG2="1.1.1.1"        # Cloudflare DNS
 PG3="208.67.222.222" # OpenDNS resolver by IP
 LOG="/root/rt-pfsense-wan-check.log"
 LCK="/root/rt-pfsense-wan-check.lock"
