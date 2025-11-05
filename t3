@@ -24,23 +24,20 @@ if [[ $cunm = $znm1 || $cunm = $znm2 || $cunm = $znm3 || $cunm = $znm4 || -f $p0
 else
   if [[ $cunm = $inm5 ]];then apip="$iip5";tarp=80;elif [[ $cunm = $inm6 ]];then apip="$iip6";tarp=80;else apip='127.0.0.1';tarp=80;fi
   othe=''
-  sht && othe="$othe --enr-address $(si6 $cunm)"
   othe="$othe --execution-endpoint http://$apip:8551 --execution-jwt $p58/jwt"
-  othe="$othe --suggested-fee-recipient $s26"                                                                                                                 # bn level fees
+  [[ $cunm = $cun1 ]] && othe="$othe --prune-payloads false"                                                                                                  # keep EL payloads (less EC work) default true
+  othe="$othe --suggested-fee-recipient $s26"                                                                                                                 # EL fees
   othe="$othe --validator-monitor-file $p58/pubkeys"                                                                                                          # monitor validators
-  othe="$othe --prune-payloads false"                                                                                                                         # fetch/keep execution payloads default true
-  if sht;then othe="$othe --builder http://$zip3:18550";else othe="$othe --builder http://$apip:18550";fi
-  othe="$othe --subscribe-all-subnets --import-all-attestations"                                                                                              # better income
+    if sht;then othe="$othe --builder http://$zip3:18550";else othe="$othe --builder http://$apip:18550";fi
+  [[ $cunm = $cun1 ]] && othe="$othe --subscribe-all-subnets --import-all-attestations"                                                                       # better income more bandwith
   othe="$othe --disable-upnp"                                                                                                                                 # disable UPnP support
   if [[ $cunm = $inm5 ]];then othe="$othe --checkpoint-sync-url http://$iip6:5052";elif [[ $cunm = $inm6 ]];then othe="$othe --checkpoint-sync-url http://$iip5:5052";else othe="$othe --checkpoint-sync-url https://beaconstate.info";fi
+  # sht && othe="$othe --enr-address $(si6 $cunm)"                                                                                                            # advertise public IPv6 address
   # othe="$othe --state-cache-size 128 --beacon-processor-work-queue-len 32768"                                                                               # keep memory constrained during non-finality
   # othe="$othe --disable-duplicate-warn-logs"                                                                                                                # no logs on duplicate gossip messages
   # othe="$othe --execution-timeout-multiplier 1"                                                                                                             # multiply default execution timeouts
-  # othe="$othe --slasher --slasher-broadcast false"                                                                                                          # only the proposer who includes proof of offenses in blocks earn rewards, not the identifier of offenses
   # othe="$othe --disable-backfill-rate-limiting"                                                                                                             # disable the backfill sync rate-limiting
   # othe="$othe --checkpoint-sync-url https://mainnet.checkpoint.sigp.io"
-  # othe="$othe --purge-db"                                                                                                                                   # clean & checkpoint DB
-  # othe="$othe --disable-lock-timeouts"                                                                                                                      # disable timeouts on internal locks
   swu "CONFIGURE $s75";sex "mkdir -p $p16";cmw $p05 755 $meeu;sau eth2;sjw
   cmw $p16 700 eth2;touch $p05/vc_lock;cd $p02 || exit                                                                                                        # IMPORTANTE LOCK vc
   pp2p=9004;ndp || pp2p=9000

@@ -850,7 +850,7 @@ function bcc {
   fi
 }
 function btn { if n1t;then printf $1;else printf $n03;fi; }
-function hrc { ztt || return;chronyc -c sources 2>$p03|grep -Eq "$g65,[1],$g66" && return;sex "$s04 $s56";sex "$s06 $s56"; }
+function hrc { ztt || return;chronyc -c sources 2>$p03|grep -Eq "$g65,1,$g66" && return;sex "$s04 $s56";sex "$s06 $s56"; }
 function irb {
   rm -f $p39.*;s2t $p39 && return
   if rbt $1;then 
