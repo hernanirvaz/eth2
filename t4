@@ -26,8 +26,8 @@ fi
 if [[ $1 = besu ]];then sex "rm -fr $p00/besu.sav"      ;sex "mv $p00/besu      $p00/besu.sav"       ;unv $2    ;fi
 if [[ $1 = geth ]];then sex "rm -f  $p00/geth.sav"      ;sex "mv $p00/geth      $p00/geth.sav"       ;gtv $2 $3 ;fi
 if [[ $1 = netv ]];then nnv D $2 $3;nnv S $2 $3;fi
-if [[ $1 = netd ]];then t6 tgp;nex "rm -rf $p07/nethermind_db/mainnet";nex "rm -rf $p07/logs";t6 tea;touch $p50.lock;fi
-if [[ $1 = ligd ]];then t6 bgp;nex "rm -rf $p16";nex "mkdir -p $p16";cmw $p16 700 eth2;bck $s12     ;touch $p50.lock;fi
+if [[ $1 = netd ]];then t6 tgp;nex "rm -rf $p07/nethermind_db/mainnet";nex "rm -rf $p07/logs"  ;t6 tea;touch $p50.lock;fi
+if [[ $1 = ligd ]];then t6 bgp;nex "rm -rf $p16";nex "mkdir -p $p16";cmw $p16 700 eth2;bck $s12;t6 bea;touch $p50.lock;fi
 if [[ $1 = mev  ]];then sex "rm -f  $p00/mev-boost.sav" ;sex "cp $p00/mev-boost $p00/mev-boost.sav"  ;gnv $2;mnv $3;fi
 [[ $1 = ligv || $1 = cp ]] || { [[ $1 ]] || hlp;exit; }
 if [[ $1 = ligv && ($cunm = $znm4 || $cunm = $inm5 || $cunm = $vnm1) ]];then [[ -x $p02/.cargo/bin/rustup ]] && t6 ruv $3;t6 luc $2;fi
