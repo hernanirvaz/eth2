@@ -155,9 +155,9 @@ function dlv { local v=latest;local f="go/bin/ethdo"   ;local l='/usr/local/go/b
 function rlv { local v=latest;local f="go/bin/ethereal";local l='/usr/local/go/bin';cd $p02;sex "rm -rf go";$l/go install github.com/wealdtech/ethereal/v2@$v;if [[ -f $f ]];then swu "INSTALAR $v ETHREAL";sex "cp $f $p00";fi;cmw $p00/ethereal 755 eth; }
 function rlt { gnv;[[ -x $p00/ethereal ]] || rlv;if [[ -x $p00/ethereal ]];then return 0;else swb 'TEM DE TER ETHEREAL';return 1;fi; }
 function nnv {
-  local v=${2:-1.35.1}
+  local v=${2:-1.35.2}
   local s=nethermind
-  local f="$s-$v-${3:-58f06cd0}-linux-x64.zip"
+  local f="$s-$v-${3:-faa9b9e6}-linux-x64.zip"
   local e=nada
   local rsp=nao
   if [[ $1 != S ]]; then
