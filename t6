@@ -306,6 +306,7 @@ function ul0 {                                                                  
 # cc control commands
 function bcl { curl -sX GET "$s31/$1" -H "accept: application/json" 2>$p03; }                                                                                 # exec node  RPC HTTP
 function bnq { curl -sX GET "$s33/$1" -H "accept: application/json" 2>$p03; }                                                                                 # exec light RPC HTTP
+function bnp { bnq peers/connected; }
 function ei0 { nu3 "(0.823*$e1+0.177*$e2)"                                        ; }                                                                         # get imported/updated/rejected data
 function b00 { nu3 "(0.10*$b3+0.90*$nn)"                                          ; }                                                                         # get change peers limit
 function b01 { nu3 "(0.300*$i0+0.200*$i1+0.469*$i4+0.001*$b1+0.010*$i2+0.020*$i3)"; }                                                                         # get imported/execution/attestable/reorgs/http/pscore index
@@ -1120,11 +1121,11 @@ function iz2 {
 [[ $1 = eip ]] && { if [[ $2 && $3 ]];then curl -s4 "https://$2:$3@dyn.dns.he.net/nic/update?hostname=$2" &>$p03;fi;pas; }
 [[ $1 = eiz ]] && { if [[ $2 && $3 ]];then curl -s4 "https://$2:$3@dyn.dns.he.net/nic/update?hostname=$2"       ;fi;echo; }
 [[ $1 = snr ]] && { cex "$s37 lxd";cex "$s37 core20";cex "$s37 snapd";cex 'apt remove --autoremove snapd -y';echo -e "$s36" > nosnap.pref;cex "mv nosnap.pref $p47";cmw $p47/nosnap.pref 644 root;cex 'apt update'; }
-function bpn { bnq peers/connected|jq -r "$s78"|if [[ $1 ]];then grep -Ei "$1";else cat;fi; }
+function bpn { bnp|jq -r "$s78"|if [[ $1 ]];then grep -Ei "$1";else cat;fi; }
 function bps { 
   iet || return
   local s;local n;local i;local e;dts
-  s=$(ll5 "$g69.*:[^:]{1,4}:")
+  s=$(ll5 "$g69.*:[a-f0-9]{1,4}:")
   echo "$s75 p2p v6 $dt sessions in/out: $(echo "$s"|grep -ic Incoming)/$(echo "$s"|grep -ic Outgoing) seen: $(bpn ip6|wc -l)"
   s=$(bcl identity|jq -r "$s79")
   echo $s75 add v4 $dt $(echo "$s"|grep -i ip4)
@@ -1133,16 +1134,16 @@ function bps {
   i=$(pcm IP6             |cut -d: -f1-4)
   if [[ $n == ${i%/*} ]];then e=$(swg OK);else e=$(swr NO);fi
   echo $s75 "$e  I6" $dt $n ${i%/*}
-  if tsa $s12; then bv0;bnn
-    echo $s75 SUMARY $dt $(non $nn) $(sxl $nr $nm $nz $nd) limits:$(szl $nm $nr)$(szi $nz)
+  if tsa $s12; then bv0;bnn;s=$(bnp)
+    echo $s75 SUMARY $dt $(non $nn) $(sxl $nr $nm $nz $nd) limits:$(szl $nm $nr)$(szi $nz) peers in/out: $(echo $s|jq -r "$s48\"Incoming\"$s49"|wc -l)/$(echo $s|jq -r "$s48\"Outgoing\"$s49"|wc -l)
   else
     echo $s75 NOT ON $dt
   fi
 }
 
 [[ $1 = bps ]] && { bps; }
-[[ $1 = bpi ]] && { bnq peers/connected|jq -r "$s48\"Incoming\"$s49"; }
-[[ $1 = bpo ]] && { bnq peers/connected|jq -r "$s48\"Outgoing\"$s49"; }
+[[ $1 = bpi ]] && { bnp|jq -r "$s48\"Incoming\"$s49"; }
+[[ $1 = bpo ]] && { bnp|jq -r "$s48\"Outgoing\"$s49"; }
 [[ $1 = bpn ]] && { bpn $2; }
 [[ $1 = bpl ]] && { ll5 "$g69.*$2"; }
 [[ $1 = mvr ]] && { mvr; }
