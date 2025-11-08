@@ -359,7 +359,7 @@ s40="$s40\n};"
 s41=''
 s41="$s41\nnetwork:"
 s41="$s41\n  ethernets:"
-for m in $(slk up);do
+for m in $(san up);do
   s41="$s41\n    $m:"
   s41="$s41\n      dhcp4: false"
   s41="$s41\n      dhcp6: false"
@@ -370,7 +370,7 @@ for m in $(slk up);do
   s41="$s41\n        addresses: [$zip1, $(si6 $znm1)]"
   s41="$s41\n      critical: true"
 done
-for m in $(slk down);do
+for m in $(san down);do
   s41="$s41\n    $m:"
   s41="$s41\n      dhcp4: true"
   s41="$s41\n      activation-mode: off"
