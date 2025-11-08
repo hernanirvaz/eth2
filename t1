@@ -14,7 +14,7 @@ inm5='hrv-intel5';iip5=$(sin $inm5)
 inm6='hrv-intel6';iip6=$(sin $inm6)
 pnm1='hrv-zen'   ;pip1=$(sin $pnm1)
 pnm2='hrv-lenovo';pip2=$(sin $pnm2)
-vip1='51.161.15.34' ;vnd1='ns570623.ip-51-161-15.net'
+vip1='51.89.64.205';vnd1='ns3168040.ip-51-89-64.eu'
 vip2='57.129.28.225';vnd2='ns3053175.ip-57-129-28.eu'
 vip3='161.97.85.32' ;vnd3='vmi1007895.contaboserver.net'
 vnm1=${vnd1%%.*};vis1='127.0.0.1'
@@ -414,8 +414,8 @@ s49=').client.agent_string'
 s50=
 s51='debian-transmission'
 if [[ $cunm = $vnm1 ]];then
-  s52='pool 0.ca.pool.ntp.org iburst maxsources 4'
-  s52="${s52}\npool 1.ca.pool.ntp.org iburst maxsources 4"
+  s52='pool 0.de.pool.ntp.org iburst maxsources 4'         # OVH 0.de.pool.ntp.org 0.ca.pool.ntp.org
+  s52="${s52}\npool 1.de.pool.ntp.org iburst maxsources 4" # OVH 1.de.pool.ntp.org 1.ca.pool.ntp.org
  else
   s52='pool 0.europe.pool.ntp.org iburst maxsources 4'
   s52="${s52}\npool 1.europe.pool.ntp.org iburst maxsources 4"

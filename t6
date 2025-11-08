@@ -1123,7 +1123,7 @@ function iz2 {
 [[ $1 = snr ]] && { cex "$s37 lxd";cex "$s37 core20";cex "$s37 snapd";cex 'apt remove --autoremove snapd -y';echo -e "$s36" > nosnap.pref;cex "mv nosnap.pref $p47";cmw $p47/nosnap.pref 644 root;cex 'apt update'; }
 function bpn { bnp|jq -r "$s78"|if [[ $1 ]];then grep -Ei "$1";else cat;fi; }
 function bps { 
-  iet || return
+  iet && sht || return
   local s;local n;local i;local e;dts
   s=$(ll5 "$g69.*:[a-f0-9]{1,4}:")
   echo "$s75 p2p v6 $dt sessions in/out: $(echo "$s"|grep -ic Incoming)/$(echo "$s"|grep -ic Outgoing) seen: $(bpn ip6|wc -l)"

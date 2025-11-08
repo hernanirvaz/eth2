@@ -56,7 +56,7 @@ if sht;then
   cc1 $p37 "$e23"              ;cmw $p37 644 root                                                                                                             # no swap - bad for IOPS
   sex 'update-grub'
 else
-  sex "$s07 set-timezone America/Toronto" # Europe/Berlin
+  sex "$s07 set-timezone Europe/Berlin" # OVH Europe/Berlin America/Toronto
   cc1 $p20 "$e13"                                                                                                                                             # general time servers
   cc1 $p65 "$e69"              ;cmw $p65 600 root                                                                                                             # ssh config
   sex "mv -f /etc/motd $p02/motd.sav"                                                                                                                         # no contabo info
