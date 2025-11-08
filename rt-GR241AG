@@ -5,42 +5,30 @@
 +------------------------------+------------------------------+------------------------------+
 |                              | Fri Feb 28 00:22:00 2025     |Power down/up                 |
 |Fri Feb 28 00:22:55 2025      | Fri Feb 28 00:22:58 2025     |Upgrade Software by TR69      |
-|                              | Fri Feb 28 00:27:09 2025     |Power down/up                 |
 |Mon Mar 3 03:30:53 2025       | Mon Mar  3 03:33:33 2025     |Watchdog-mdmLock              |
 |Mon Mar 3 16:07:04 2025       | Mon Mar  3 16:09:36 2025     |Watchdog-mdmLock              |
 |Tue Mar 4 04:43:17 2025       | Tue Mar  4 04:45:58 2025     |Watchdog-mdmLock              |
 |Tue Mar 4 17:19:34 2025       | Tue Mar  4 17:22:11 2025     |Watchdog-mdmLock              |
 |Wed Mar 5 05:55:47 2025       | Wed Mar  5 05:58:17 2025     |Watchdog-mdmLock              |
 |Wed Mar 5 18:32:01 2025       | Wed Mar  5 18:34:39 2025     |Watchdog-mdmLock              |
-|                              | Sat Mar  8 01:13:43 2025     |Power down/up                 |
 |Sat Mar 8 13:47:25 2025       | Sat Mar  8 13:50:07 2025     |Watchdog-mdmLock              |
-|                              | Sun Mar  9 14:00:45 2025     |Power down/up                 |
 |Sun Mar 16 21:04:53 2025      | Sun Mar 16 21:07:20 2025     |Watchdog-smd                  |
 |Sun Mar 23 15:41:18 2025      | Sun Mar 23 15:43:51 2025     |Watchdog-smd                  |
 |Mon Mar 24 04:17:28 2025      | Mon Mar 24 04:20:07 2025     |Watchdog-mdmLock              |
 |Tue Mar 25 05:23:55 2025      | Tue Mar 25 05:26:28 2025     |Watchdog-smd                  |
-|                              | Sun Mar 30 15:41:09 2025     |Power down/up                 |
 |Tue Apr 1 05:14:45 2025       | Tue Apr  1 05:17:31 2025     |Watchdog-mdmLock              |
 |Mon Apr 7 11:21:18 2025       | Mon Apr  7 11:23:52 2025     |Watchdog-mdmLock              |
-|                              | Wed Apr  9 06:29:38 2025     |Power down/up                 |
 |Wed Apr 9 19:03:13 2025       | Wed Apr  9 19:05:53 2025     |Watchdog-mdmLock              |
-|                              | Sat Apr 12 13:43:09 2025     |Power down/up                 |
-|                              | Sun Apr 13 12:45:25 2025     |Power down/up                 |
-|                              | Mon Apr 14 13:54:13 2025     |Power down/up                 |
 |Sat Apr 19 06:27:57 2025      | Sat Apr 19 06:30:35 2025     |Watchdog-mdmLock              |
 |Mon Apr 21 21:04:23 2025      |                              |Watchdog-mdmLock              |
-|                              | Sat Apr 26 12:04:43 2025     |Power down/up                 |
 |Wed Apr 30 00:15:01 2025      | Wed Apr 30 00:17:41 2025     |Watchdog-mdmLock              |
 |Sat May 3 05:00:42 2025       | Sat May  3 05:03:13 2025     |Watchdog-mdmLock              |
 |Fri May 23 00:07:54 2025      | Fri May 23 00:10:25 2025     |Watchdog-mdmLock              |
 |Sat May 24 13:44:11 2025      | Sat May 24 13:46:40 2025     |Watchdog-mdmLock              |
 |Sat May 31 08:20:45 2025      | Sat May 31 08:23:22 2025     |Watchdog-mdmLock              |
-|                              | Sun Jun  1 08:13:10 2025     |Power down/up                 |
 |Wed Jun 4 23:46:59 2025       | Wed Jun  4 23:49:32 2025     |Watchdog-mdmLock              |
-|                              | Tue Jun 10 09:41:49 2025     |Power down/up hrv             |
 |Fri Jun 13 00:15:39 2025      | Fri Jun 13 00:18:16 2025     |Watchdog-mdmLock              |
 |Sun Jun 15 02:22:06 2025      | Sun Jun 15 02:24:47 2025     |Watchdog-mdmLock              |
-|                              | Wed Jun 18 22:05:29 2025     |Power down/up hrv             |
 |Sat Jun 21 00:09:15 2025      | Sat Jun 21 00:11:58 2025     |Watchdog-mdmLock              |
 |Tue Jul 1 21:51:36 2025       | Tue Jul  1 21:54:15 2025     |Watchdog-mdmLock              |
 |Thu Jul 3 11:27:56 2025       | Thu Jul  3 11:30:44 2025     |Watchdog-mdmLock              |
@@ -51,7 +39,6 @@
 |Mon Aug  4 10:30:41 2025      | Mon Aug  4 10:33:19 2025     |Watchdog-omcI                 |
 |Mon Aug 4 23:06:53 2025       | Mon Aug  4 23:09:39 2025     |Watchdog-mdmLock              |
 |Tue Aug 5 11:43:18 2025       | Tue Aug  5 11:46:00 2025     |Watchdog-mdmLock              |
-|                              | Wed Aug  6 01:34:01 2025     |Power down/up                 |
 |Wed Aug 6 14:07:41 2025       | Wed Aug  6 14:10:20 2025     |Watchdog-mdmLock              |
 |Thu Aug  7 15:14:09 2025      | Thu Aug  7 15:16:40 2025     |Watchdog-smd                  |
 |Fri Aug 8 03:50:19 2025       | Fri Aug  8 03:53:02 2025     |Watchdog-mdmLock              |
@@ -91,7 +78,6 @@
 |Sat Sep 6 19:49:41 2025       | Sat Sep  6 19:52:17 2025     |Watchdog-mdmLock              |
 |Sun Sep  7 08:26:04 2025      | Sun Sep  7 08:28:31 2025     |Watchdog-smd                  |
 |Sun Sep  7 21:02:29 2025      | Sun Sep  7 21:05:02 2025     |Watchdog-smd                  |
-|                              | Wed Sep 10 11:38:52 2025     |Power down/up                 |
 |Thu Sep 11 00:12:39 2025      | Thu Sep 11 00:15:11 2025     |Watchdog-mdmLock              |
 |Thu Sep 11 12:48:49 2025      | Thu Sep 11 12:51:15 2025     |Watchdog-mdmLock              |
 |Fri Sep 12 13:55:16 2025      | Fri Sep 12 14:10:15 2025     |Watchdog-mdmLock              |
@@ -108,11 +94,7 @@
 |Thu Sep 25 02:18:06 2025      | Thu Sep 25 02:20:50 2025     |Watchdog-mdmLock              |
 |Thu Sep 25 14:54:33 2025      | Thu Sep 25 14:57:14 2025     |Watchdog-mdmLock              |
 |Sat Sep 27 17:00:58 2025      | Sat Sep 27 17:03:26 2025     |Watchdog-mdmLock              |
-|                              | Sat Sep 27 20:09:32 2025     |Power down/up                 |
-|                              | Thu Jan  1 00:03:04 1970     |Power down/up                 |
 |Mon Sep 29 23:26:50 2025      | Mon Sep 29 23:29:38 2025     |Watchdog-mdmLock              |
-|                              | Tue Sep 30 10:32:08 2025     |Power down/up                 |
-|                              | Tue Sep 30 19:01:03 2025     |Power down/up                 |
 |Wed Oct 1 20:04:47 2025       | Wed Oct  1 20:07:22 2025     |Watchdog-mdmLock              |
 |Thu Oct  2 21:11:35 2025      | Thu Oct  2 21:14:29 2025     |Watchdog-omcI                 |
 |Tue Oct 7 11:38:15 2025       | Tue Oct  7 11:40:44 2025     |Watchdog-mdmLock              |
@@ -121,7 +103,6 @@
 |Sun Oct 12 04:27:18 2025      | Sun Oct 12 04:29:48 2025     |Watchdog-mdmLock              |
 |Mon Oct 13 05:33:44 2025      | Mon Oct 13 05:36:19 2025     |Watchdog-mdmLock              |
 |Tue Oct 14 19:10:19 2025      | Tue Oct 14 19:12:53 2025     |Watchdog-mdmLock              |
-|                              | Thu Oct 16 14:55:37 2025     |Power down/up                 |
 |Fri Oct 17 03:29:17 2025      | Fri Oct 17 03:31:57 2025     |Watchdog-mdmLock              |
 |Mon Oct 20 06:35:48 2025      | Mon Oct 20 06:38:21 2025     |Watchdog-mdmLock              |
 |Wed Oct 22 08:42:10 2025      | Wed Oct 22 08:44:28 2025     |Watchdog-mdmLock              |
@@ -135,5 +116,6 @@
 |Tue Nov 4 08:56:27 2025       | Tue Nov  4 08:58:58 2025     |Watchdog-mdmLock              |
 |Mon Nov 3 20:20:10 2025       | Mon Nov  3 20:22:47 2025     |Watchdog-mdmLock              |
 |Tue Nov 4 08:56:27 2025       | Tue Nov  4 08:58:58 2025     |Watchdog-mdmLock              |
-|                              | Wed Nov  5 20:12:26 2025     |Power down/up                 |
+|Fri Nov 7 09:46:22 2025       | Fri Nov  7 09:49:04 2025     |Watchdog-mdmLock              |
+|Fri Nov 7 22:22:50 2025       | Fri Nov  7 22:25:16 2025     |Watchdog-mdmLock              |
 +------------------------------+------------------------------+------------------------------+
