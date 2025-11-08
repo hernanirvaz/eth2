@@ -1324,7 +1324,8 @@ function bml { [[ $d1 = $s43 ]] || return;if bdt;then bdl $d0;elif [[ $(llc $p12
 # [[ $1 = bpa ]] && { bp;dmr;ba;jrn "-u $s12" "$2"; } # use brs
 # [[ $1 = vpa ]] && { vp;dmr;va;jrn "-u $s13" "$2"; } # use vrs
 [[ $1 = spa ]] && { sp;sa; }
-[[ $1 = mpa ]] && { mp;dmr;ma;jrn "-u $s14" "$2"; }
+function mdr { sed -E 's%^.+relays +%%' $p04/$s14.service|sed -En 's%http[^@]+@([^,]+),?% \1%gp'; }
+[[ $1 = mpa ]] && { mp;dmr;resolvectl query $(mdr);ma;jrn "-u $s14" "$2"; }
 [[ $1 = jpa ]] && { jp;dmr;ja; }
 [[ $1 = gpd ]] && { gp;gd; }
 [[ $1 = upd ]] && { up;ud; }
@@ -1347,7 +1348,7 @@ function bml { [[ $d1 = $s43 ]] || return;if bdt;then bdl $d0;elif [[ $(llc $p12
 [[ $1 = sea ]] && { se;dmr;sa; }
 [[ $1 = xea ]] && { xe;dmr;xa; }
 [[ $1 = jea ]] && { je;dmr;ja; }
-[[ $1 = mea ]] && { me;dmr;ma; }
+[[ $1 = mea ]] && { me;dmr;resolvectl query $(mdr);ma; }
 # enable
 [[ $1 = ge  ]] && { ge; }
 [[ $1 = ue  ]] && { ue; }
