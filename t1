@@ -28,7 +28,7 @@ cun1=$inm6
 cun2=$inm5
 cumv=$cun1;[[ $cunm = $cun2 ]] && cumv=$cun2
 cut1=$znm2
-cut2=$znm2
+cut2=$znm3
 else
 cuvc=$vnm1
 nxvc=$vnm1
@@ -413,7 +413,7 @@ s48='.[].peer_info|select(.connection_direction=='
 s49=').client.agent_string'
 s50=
 s51='debian-transmission'
-if [[ $cunm = $vnm1 ]];then
+if [[ $cunm = $cut1 ]];then
   s52='pool 0.de.pool.ntp.org iburst maxsources 4'         # OVH 0.de.pool.ntp.org 0.ca.pool.ntp.org
   s52="${s52}\npool 1.de.pool.ntp.org iburst maxsources 4" # OVH 1.de.pool.ntp.org 1.ca.pool.ntp.org
  else
@@ -424,8 +424,8 @@ s53='sgms:'
 s54='threshold|read|write|written|namespace|temperature|thermal|power|shutdowns|controller|endurance'
 s55='net_peerCount'
 s56='chrony'
-s57="server $znm1.home.arpa iburst minpoll 3 maxpoll 6"
-s57="${s57}\nserver $znm2.home.arpa iburst minpoll 3 maxpoll 6"
+s57="server $(sin $cut1) iburst minpoll 3 maxpoll 6"
+stt && s57="${s57}\nserver $(sin $cut2) iburst minpoll 3 maxpoll 6"
 s58='nfs-kernel-server'
 if [[ -d $p60 ]];then s59="$p60 192.168.8.0/24(rw,sync,no_subtree_check)";else s59="$p80 192.168.8.0/24(rw,sync,no_subtree_check)";fi
 s60='plex'

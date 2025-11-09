@@ -23,5 +23,5 @@ alias ky='ssh-keygen -f ~/.ssh/id_ed25519 -t ed25519 -C "$(whoami)@$(hostname)";
 alias rq='msh "ip a s $(san);ip r;ip -6 r";systemctl is-active --quiet systemd-networkd && msh networkctl status;msh resolvectl status $(san);erq github.com changelogs.ubuntu.com'
 alias xx='exit'
 
-export N='192.168.8.252:2023'
+export N='192.168.8.111:2023'
 export N='ns3168040.ip-51-89-64.eu:2020'

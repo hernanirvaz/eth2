@@ -59,6 +59,8 @@ function spn {
   esac
   printf %i $n
 }
+function stt { [[ $cut1 != $cut2 ]]; }
+function sxt { [[ $cunm = $cut1 || $cunm = $cut2 ]]; }
 function sht { [[ ${1:-$cuip} = 192.168.8.* ]]; }
 function snt { [[ $1 = hrv* ]]; }
 function smt { sht "$1" || snt "$1"; }

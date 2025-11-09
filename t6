@@ -72,9 +72,7 @@ function t3t { [[ $(cat $p43 2>$p03) -eq 1 ]]; }                                
 function v0t { g0t $(grep -c $d0 $p12 2>$p03); }                                                                                                              # cc  log day             test
 function z1t { [[ $cunm = $cut1 ]]; }                                                                                                                         # main ntp                test
 function z2t { [[ $cunm = $cut2 ]]; }                                                                                                                         # auxi ntp                test
-function zet { [[ $cut1 != $cut2 ]]; }                                                                                                                        # 2 ntp                   test
-function zdt { zet || [[ $cun1 != $cut1 ]]; }                                                                                                                 # 2 or external ntp       test
-function ztt { [[ $cunm = $cut1 || $cunm = $cut2 ]]; }                                                                                                        # external ntp            test
+function zdt { stt || [[ $cun1 != $cut1 ]]; }                                                                                                                 # 2 or external ntp       test
 function z4t { [[ $cunm = $znm4 ]]; }                                                                                                                         # best zotac              test
 function n1t { [[ $cunm = $cun1 ]]; }
 function n2t { [[ $cunm = $cun2 ]]; }
@@ -559,7 +557,7 @@ function clk {
   if tsa $s56; then
     e="CHRY $s"
     l=$(chronyc -c sources 2>$p03)
-    if ztt; then
+    if sxt; then
       i=$(grep -E "$g65,[1-9],$g66" <<< "$l" | cut -d, -f4 | sort | head -n1) # get best appropriate stratum
     else
       i=0
@@ -580,7 +578,7 @@ function hca {
   if ndt;then if n2t;then hch;else xsh $cun2 "$p53 hch";fi;fi
   if vst;then if vct;then hch;else xsh $cuvc "$p53 hch";fi;fi
   if mst;then if mct;then hch;else xsh $cumv "$p53 hch";fi;fi
-  if zdt;then if z1t;then hch;else xsh $cut1 "$p53 hch";fi;zet && if z2t;then hch;else xsh $cut2 "$p53 hch";fi;fi
+  if zdt;then if z1t;then hch;else xsh $cut1 "$p53 hch";fi;stt && if z2t;then hch;else xsh $cut2 "$p53 hch";fi;fi
 }
 function si0 { printf '%s: erro_cml %i,used %s,spare %s; ' $(basename $1) $(($2+$3+$4)) $5% $6% 2>$p03; }
 function sif {
@@ -751,7 +749,7 @@ function hs0 {
   else
     hss $cunm
   fi
-  if ztt;then hsh;echo;hch;fi
+  if sxt;then hsh;echo;hch;fi
 }
 function nsh { $s08 list;$s08 status;$s09 status|snf "$e26"; }                                                                                                # network/dns info
 function wlp { local e="$1";shift;until [[ $# -lt 1 ]];do e="$e|$1";shift;done;ll7|grep 'UFW BLOCK'|if [[ $e ]];then grep -Ev "$e";else cat;fi; }
@@ -851,7 +849,7 @@ function bcc {
   fi
 }
 function btn { if n1t;then printf $1;else printf $n03;fi; }
-function hrc { ztt || return;chronyc -c sources 2>$p03|grep -Eq "$g65,1,$g66" && return;sex "$s04 $s56";sex "$s06 $s56"; }
+function hrc { sxt || return;chronyc -c sources 2>$p03|grep -Eq "$g65,1,$g66" && return;sex "$s04 $s56";sex "$s06 $s56"; }
 function irb {
   rm -f $p39.*;s2t $p39 && return
   if rbt $1;then 
