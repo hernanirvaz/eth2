@@ -334,9 +334,9 @@ function bl3 { b0=${1:-$(ll6 "$g08.*$g53"|wc -l)};if [[ $2$3$4$5$6$7 ]];then i0=
 function bl4 { snf "s%.*$1.*validators: *\[(.*)\].*%\1%p" <<< "$l3"|wc -w; }                                                                                  # get number of paid activities
 function ml0 { dts;if tsa $s14;then smm $n32;mlo;else m="MSRV NOT ON $dt";fi; }
 function vl0 { dts;if tsa $s13;then svv $n22;vlo;else m="VSRV NOT ON $dt";fi; }
-#    0  1              2     3       4  5         6  7
-# MEVB      0 2025-10-06 12:02 htavg:  0 error_rv:  0
-function mlo { m="$s77 $(printf '%6i' $(rll|wc -l) 2>$p03) $dt $(printf 'htavg: %3i error_rv: %2i' $m0 $m1 2>$p03)"; }
+#    0  1              2     3     4   5         6  7
+# MEVB      0 2025-10-06 12:02 havg:   0 error_rv:  0
+function mlo { m="$s77 $(printf '%6i' $(rll|wc -l) 2>$p03) $dt $(printf 'havg: %4i error_rv: %2i' $m0 $m1 2>$p03)"; }
 #    0      1          2     3       4  5         6  7         8  9
 # VALI      0 2025-10-06 06:08 coasp: 20 bnintel6:  7 bnintel5:  9
 # VALI      0 2025-10-06 06:59 coasp: 20 ns570623:  6
