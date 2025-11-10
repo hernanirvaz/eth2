@@ -370,6 +370,7 @@ for m in $(san up);do
   s41="$s41\n      routes: [{to: default, via: $(sin $znm1)}, {to: default, via: $(sl6 $znm1), scope: link}]"
   s41="$s41\n      nameservers:"
   s41="$s41\n        addresses: [$zip1, $(si6 $znm1)]"
+  s41="$s41\n        search: [home.arpa]"
   s41="$s41\n      critical: true"
 done
 for m in $(san down);do
