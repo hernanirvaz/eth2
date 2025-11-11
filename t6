@@ -1193,7 +1193,7 @@ function bps {
 [[ $1 = ivk ]] && { touch $p50.print;ivk              ${2:-$n02}       ;rm -f $p50.print; }
 [[ $1 = tvc ]] && { touch $p50.print;tvc TR           ${2:-$n00}       ;rm -f $p50.print; }
 [[ $1 = rrb ]] && { touch $p50.print;ars PRB          ${2:-$n01}       ;rm -f $p50.print; }
-[[ $1 = ngr ]] && { touch $p50.print;ars NGR          ${2:-$n03}       ;rm -f $p50.print; }
+[[ $1 = ngr ]] && { touch $p50.print;ars NGR          ${2:-$n01}       ;rm -f $p50.print; }
 [[ $1 = vcc ]] && { vcc; }
 [[ $1 = ep  ]] && { epf; }
 [[ $1 = cp  ]] && { cpf; }
