@@ -122,4 +122,7 @@
 |Mon Nov 10 11:33:29 2025      | Mon Nov 10 11:35:52 2025     |Reboot by GPON                |
 |                              | Mon Nov 10 11:56:22 2025     |Power down/up                 |
 |Tue Nov 11 00:30:10 2025      | Tue Nov 11 00:32:45 2025     |Watchdog-mdmLock              |
+|Tue Nov 11 09:40:01 2025      | Tue Nov 11 09:42:29 2025     |Factory Reset by TR69         |
+|Tue Nov 11 09:49:30 2025      | Tue Nov 11 09:51:34 2025     |Watchdog-mdmLock              |
+|Tue Nov 11 09:59:16 2025      | Tue Nov 11 10:01:09 2025     |Watchdog-smd                  |
 +------------------------------+------------------------------+------------------------------+
