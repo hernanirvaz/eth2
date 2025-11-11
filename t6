@@ -905,7 +905,7 @@ function fsp {
     grep -v "$g31 *${n:0:1}[${n:1:1}-9][0-9]"
   else
     grep -v "$g31 *[$n-9][0-9]"
-  fi|grep "$g31 *[0-${2:-7}]"|sort -k2n
+  fi |grep "$g31 *[0-${2:-7}]"|sort -k2n
 }
 function esp { iet || return;local e;if tsa $s44;then e=$(ll4 "$g36.*$g30:"|sef "$e76");else e=$(ll6 "$g11.*$g35"|sef "$e77");fi;e=$(fsp $1 $2 <<< "$e");[[ $1$2 ]] || e=$(tail -n$n55 <<< "$e");[[ $e ]] && echo -e "\n$e"; }
 function csp { iet || return;local e;e=$(ll6 "$g50:"|sef "$e78"|fsp $1 $2);[[ $1$2 ]] || e=$(tail -n$n55 <<< "$e");[[ $e ]] && echo -e "\n$e"; }
