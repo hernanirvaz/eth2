@@ -1192,7 +1192,7 @@ function bps {
 [[ $1 = vrb ]] && { touch $p50.print;vrs RB           ${2:-$n01}       ;rm -f $p50.print; }
 [[ $1 = ivk ]] && { touch $p50.print;ivk              ${2:-$n02}       ;rm -f $p50.print; }
 [[ $1 = tvc ]] && { touch $p50.print;tvc TR           ${2:-$n00}       ;rm -f $p50.print; }
-[[ $1 = rrb ]] && { touch $p50.print;ars PRB          ${2:-$n00}       ;rm -f $p50.print; }
+[[ $1 = rrb ]] && { touch $p50.print;ars PRB          ${2:-$n01}       ;rm -f $p50.print; }
 [[ $1 = ngr ]] && { touch $p50.print;ars NGR          ${2:-$n03}       ;rm -f $p50.print; }
 [[ $1 = vcc ]] && { vcc; }
 [[ $1 = ep  ]] && { epf; }
@@ -1436,7 +1436,7 @@ if [[ ! $1 ]];then
   m="$m\nd[sh [url]|rs]\t\tdns show [url]|reset"
   m="$m\nh[sh|rs|ch|ca|rc]\t$s45 show|restart|check|check all|restart conditional"
   m="$m\nhs[012ecvm]\t\tservices all|main|backup|execution|concensus|vc|mev"
-  m="$m\nr[sh|rs|pt|lk|ld|fr]\trestart gap show|reset|print|lock restart|lock delete log|force restart"
+  m="$m\nr[sh|rs|pt|lk|ld|fr|rb]\trestart gap show|reset|print|lock {restart|delete}|force restart|router reboot"
   m="$m\ni[sh|ch]\t\texternal ip show|change"
   m="$m\nj[sh|rs]\t\tjournal logs show|reset"
   m="$m\nf[sh|rf|(ud|st) [d]]\tfirmware device show|refres|(hupdate|selftest-nvme) [id]|"
