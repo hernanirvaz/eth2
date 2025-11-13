@@ -125,7 +125,7 @@ function mn0 { cd "$p02" || return;sex 'rm -rf go';sex "rm -rf $1"; }
 function mn1 { CGO_CFLAGS="-O -D__BLST_PORTABLE__" /usr/local/go/bin/go install github.com/flashbots/$2@$1; }
 function mn2 { git clone https://github.com/flashbots/$2.git;cd $2;git checkout tags/$1;make build; }
 function mnv {
-  local v=${1:-v1.10.0}
+  local v=${1:-v1.10.1}
   local e='mev-boost';local f="$p02/$e/$e"
   if [[ $($p00/$e --version 2>&1|sef "$e73") = $v ]]; then
     swu "$e $v EXISTE"
