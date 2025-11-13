@@ -713,6 +713,7 @@ e82='s%^([a-z]+[0-9]+)[ :]+active +(raid[01564]).+$%\1 \2%p'
 e83='s%^.*version +([0-9]+\.[0-9]+\.[0-9]+).*$%v\1%p'
 e84='([0-9]+\.[0-9]+) *ETH.*%\1%p'
 e85='s%^/ip6/([^ ]+)/tcp/.*$%\1%p'
+e86='s%^pool +0.([a-z]{2}).*$%\1%p'
 
 j0='.ata_sct_temperature_history.table|join(" ")'
 j1='.temperature.current'

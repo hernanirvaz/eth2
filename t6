@@ -572,7 +572,19 @@ function clk {
   fi
   m="$e $(nl4 $n 3) $dt $m"
 }
-function hch { local e;clk h;if sht;then e=$(sn2 $cunm);else e=${cunm:0:2}${cunm: -2};fi;swn "$e${m:4}"; }
+function hch { 
+  local e;clk h
+  if sht;then
+    if sxt;then
+      e=$(sn2 $cunm)$(snf "$e86" $p68)
+    else
+      e=$(sn4 $cunm)
+    fi
+  else
+    e=${cunm:0:2}${cunm: -2}
+  fi
+  swn "$e${m:4}"
+}
 function hca {
   if n1t;then hch;else xsh $cun1 "$p53 hch";fi
   if ndt;then if n2t;then hch;else xsh $cun2 "$p53 hch";fi;fi
@@ -870,7 +882,10 @@ function hsh {
   if tsa $s56;then 
     swb "$s07 & $s56 sources/sourcestats/tracking";pex "$s07";echo;paste <(hi6 sources "$e59") <(hi6 sourcestats "$e60"|cut -c28-);echo;chronyc -n tracking|grep -Ev "$g63"
   elif tsa ntp;then 
-    swb "$s07 & ntp";pex "$s07";echo;ntpq -p;else swb "$s07 & $s45 status/show";pex "$s07";pex "$s07 $s45-status";pex "$s07 show-$s45";fi
+    swb "$s07 & ntp";pex "$s07";echo;ntpq -p
+  else
+    swb "$s07 & $s45 status/show";pex "$s07";pex "$s07 $s45-status";pex "$s07 show-$s45"
+  fi
 }
 function ts0 {
   if [[ $4 -gt 0 ]]; then

@@ -46,7 +46,8 @@ function sns {
     printf %s "$1"
   fi
 }
-function sn2 {
+function sn2 { local v=${1/*-/};printf %s "${v:0:1}${v: -1}"; }
+function sn4 {
   local v=${1/*-/}
   if [[ ${1:5:1} =~ [on] ]]; then
     printf %s "${v//[aoel]/}"
