@@ -581,7 +581,11 @@ function hch {
       e=$(sn4 $cunm)
     fi
   else
-    e=${cunm:0:2}${cunm: -2}
+    if sxt;then
+      e=${cunm:0:2}$(snf "$e86" $p68)
+    else
+      e=${cunm:0:2}${cunm: -2}
+    fi
   fi
   swn "$e${m:4}"
 }
