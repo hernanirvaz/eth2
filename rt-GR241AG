@@ -125,6 +125,7 @@
 |Tue Nov 11 09:40:01 2025      | Tue Nov 11 09:42:29 2025     |Factory Reset by TR69         |
 |Tue Nov 11 09:49:30 2025      | Tue Nov 11 09:51:34 2025     |Watchdog-mdmLock              |
 |Tue Nov 11 09:59:16 2025      | Tue Nov 11 10:01:09 2025     |Watchdog-smd                  |
+|Thu Jan  1 00:00:23 1970      | Thu Jan  1 00:03:06 1970     |Factory Reset by Button       |
 |Thu Jan  1 00:08:16 1970      |                              |Reboot                        |
 |                              | Tue Nov 11 16:12:29 2025     |Power down/up                 |
 |                              | Tue Nov 11 16:46:18 2025     |Power down/up                 |
