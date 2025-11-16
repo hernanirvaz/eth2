@@ -10,7 +10,7 @@ LCK="/root/rt-pfsense-wan-check.lock"
 
 lgm() { echo "$(date +'%Y-%m-%d %H:%M:%S') $1" >> $LOG 2>&1; }
 pig() { /sbin/ping -c 5 -W 2 $1 > /dev/null 2>&1;e=$?;[ $e -ne 0 ] && lgm "Server $1 unreachable (ping exit status: $e).";return $e; }
-pit() { pig $PG1 || pig $PG2 || pig $PG3;return $?; }
+pit() { pig $PG1 || pig $PG2;return $?; }
 dhr() { /sbin/dhclient -r $WAN      > /dev/null 2>&1;f=$?;[ $f -ne 0 ] && lgm "Failed release DHCP $WAN." ;return $f; }
 dhn() { /sbin/dhclient    $WAN      > /dev/null 2>&1;g=$?;[ $g -ne 0 ] && lgm "Failed renew DHCP $WAN."   ;return $g; }
 ifd() { /sbin/ifconfig    $WAN down > /dev/null 2>&1;h=$?;[ $h -ne 0 ] && lgm "Failed to bring $WAN down.";return $h; }  
