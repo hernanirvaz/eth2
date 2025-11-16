@@ -16,7 +16,8 @@ dhn() { /sbin/dhclient    $WAN      > /dev/null 2>&1;g=$?;[ $g -ne 0 ] && lgm "F
 ifd() { /sbin/ifconfig    $WAN down > /dev/null 2>&1;h=$?;[ $h -ne 0 ] && lgm "Failed to bring $WAN down.";return $h; }  
 ifu() { /sbin/ifconfig    $WAN up   > /dev/null 2>&1;i=$?;[ $i -ne 0 ] && lgm "Failed to bring $WAN up."  ;return $i; }  
 
-if [ -f $LCK ];then PID=$(cat $LCK);if ps -p $PID > /dev/null 2>&1;then lgm "Another instance is running ($PID). Exiting.";exit 0;else rm -f $LCK;fi;fi;echo $$ > $LCK;trap "rm -f $LCK" EXIT
+if [ -f $LCK ];then PID=$(cat $LCK);if ps -p $PID > /dev/null 2>&1;then lgm "Another instance is running ($PID). Exiting.";exit 0;else rm -f $LCK;fi;fi
+echo $$ > $LCK;trap "rm -f $LCK" EXIT
 
 pit && exit 0
 dhr;sleep 5;dhn;sleep 30;if pit;then lgm "WAN recovered after DHCP renewal.";exit 0;fi
