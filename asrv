@@ -56,12 +56,7 @@ elif [[ $cunm = hrv-zotac3 || $cunm = hrv-zotac4 ]];then
   alias aa='t6 ch'
 fi
 
-if sht;then
-  alias mr='echo meo:$V ;telnet 192.168.8.1'
-else
-  alias aa='t6 ah'
-fi
-
+sht || alias aa='t6 ah'
 alias st='e9 force'
 alias hh='t6 hs0'
 alias tt='t6 hsh'

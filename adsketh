@@ -54,7 +54,7 @@ function rcf { local f;f=$(ls ~/Downloads/config-hrv-zotac1.home.arpa*.xml|sort 
 
 alias v1='esl ${N%%:*} ${N#*:}'
 alias v2='esl ns3238168.ip-57-129-52.eu 2020'
-alias mr='echo meo:$V ;telnet meo'
+alias mr='echo 192.168.1.254:$V ;telnet 192.168.1.254'
 
 alias zp="ecv hrv-intel6 hrv-intel5 hrv-zotac4 hrv-zotac3 hrv-zotac2"
 alias zo="ocv hrv-intel6 hrv-intel5 hrv-zotac4 hrv-zotac3 hrv-zotac2;rcp hrv-zotac1"
