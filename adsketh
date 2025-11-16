@@ -50,11 +50,7 @@ function z7z {
 }
 function ufz { echo "$B"|gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 -c $1; }
 function zfu { echo "$B"|gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 -d $1; }
-function rcf {
-  local f;f=$(ls ~/Downloads/config-hrv-zotac1.home.arpa*.xml|sort -t. -k3n|tail -n1)
-  ufz $f
-  cd ~/eth2;mv $f.gpg rt-pfsense.xml.gpg;git commit -am "cleanup";git push;cd
-}
+function rcf { local f;f=$(ls ~/Downloads/config-hrv-zotac1.home.arpa*.xml|sort -t. -k3n|tail -n1);ufz $f;mv $f.gpg ~/eth2/rt-pfsense.xml.gpg;rm $f; }
 
 alias v1='esl ${N%%:*} ${N#*:}'
 alias v2='esl ns3238168.ip-57-129-52.eu 2020'
@@ -72,7 +68,7 @@ alias gp='cd ~/eth2;git pull;cd'
 alias gc='cd ~/eth2;git commit -am "cleanup";git push;cd'
 alias gd='cd ~/eth2;git diff'
 alias gt='cd ~/eth2;git status'
-alias gv='cd;vi eth2/t[1-8] eth2/e[1-9]'
+alias gr='rcf'
 
 alias lk="ei0 \$H \$E \$R \$V \$(npt) >~/i0;ei1 \$H \$V \$K \$E \$B >~/i1;cz0 \$(nip) \$(npt)"
 alias fw='echo "export R=\"$(</dev/urandom tr -dc "A-Za-z0-9?%&_+=@~#\,.?/"|head -c50)\"";echo "export H=\"$(</dev/urandom tr -dc "A-Za-z0-9?%&_+=@~#\,.?/"|head -c30)\"";echo "export V=\"$(</dev/urandom tr -dc "A-Za-z0-9"|head -c8)\"";echo "export K=\"$(</dev/urandom tr -dc "A-Za-z0-9?%&_+=@~#\,.?/"|head -c60)\"";echo "export W=\"$(</dev/urandom tr -dc "A-Za-z0-9?%&_+=@~#\,.?/"|head -c60)\"";'
