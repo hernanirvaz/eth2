@@ -1,5 +1,5 @@
 #!/bin/sh
-# */7 * * * * root /root/rt-pfsense-wan-check.sh
+# */5 * * * * root /root/rt-pfsense-wan-check.sh
 
 WAN="re1"
 PG1="8.8.8.8"        # Google DNS
