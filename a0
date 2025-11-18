@@ -73,7 +73,7 @@ function pcm {
   local n;local p;local e=${1^^};local s=hrv-zotac1;n=$(dnn $s);p=$(dnz $s)
   if   [[ $e = PRB ]];then zsh "$p" "$n" "/etc/rc.reboot"
   elif [[ $e = NTP ]];then zsh "$p" "$n" "ntpq -np"
-  elif [[ $e = LRB ]];then zsh "$p" "$n" "echo df;df -h /;echo;echo last reboot;last reboot|head -n5|sed 's%  *% %g'|sort -k5n;echo;echo wan check log;tail -n5 /root/rt-pfsense-wan-check.log;echo;date +'%Y-%m-%d %H:%M:%S'"
+  elif [[ $e = LRB ]];then zsh "$p" "$n" "echo df;df -h /;echo;echo last reboot;last reboot|head -n5|sed 's%  *% %g'|sort -k5n;echo;echo wan check log;tail -n5 /root/wan-check.log;echo;date +'%Y-%m-%d %H:%M:%S'"
   elif [[ $e = IP6 ]];then zsh "$p" "$n" "ifconfig re0|grep inet6|grep -v fe80|awk '{print \$2}'"
   else                     zsh "$p" "$n" 'cat /root/wan-check.log'
   fi
