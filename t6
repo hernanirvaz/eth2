@@ -86,6 +86,7 @@ function ict { [[ $cunm = $cuvc || $cunm = $cun1 || $cunm = $cun2 ]]; }
 function iet { [[ $cunm = $cun1 || $cunm = $cun2 ]]; }
 function irt { [[ $cunm = $cumv || $cunm = $vnm1 || $cunm = $vnm2 ]]; }
 function v1t { [[ $cunm = $vnm1 ]]; }
+function v2t { [[ $cunm = $vnm2 ]]; }
 function vst { [[ $cun1 != $cuvc && $cun2 != $cuvc ]]; }
 function mst { [[ $cun1 != $cumv && $cun2 != $cumv ]]; }
 function s1t {                  e0t $(find $1.* 2>$p03|wc -l); }
@@ -797,6 +798,7 @@ function lci { [[ -x $1 && ! -d $1   ]] || return;sex "mv $p00/lighthouse $p00/l
 function lmd { [[ -x $p00/lighthouse ]] || return;cmw $p00/lighthouse 755 eth;swb 'LIGHT INSTALADO'; }                                                        # lighthouse set permissions
 function lpi {
   v1t && lcp $1 $vnm1
+  v2t && lcp $1 $vnm2
   z4t && lcp $1 $znm4
   i5t && lcp $1 $inm5 $inm6
   i6t && lcp $1 $inm6 $inm5
@@ -815,11 +817,11 @@ function luc {                                                                  
 }
 function ruv { if [[ $1 ]];then swn "RUST OVERRIDE SET $1";rustup override set $1;else swn 'RUST UPDATE';rustup update stable;fi; }                           # set/update rust version
 function tvc {
-  local rsp;local f
+  local rsp;local f;local c=${cuvc%%.*};local n=${nxvc%%.*}
   swn "$s24"
-  [[ $cuvc = $nxvc ]] && return
+  [[ $c = $n ]] && return
   if vct && tsa $s13; then
-    swn "TRANSFERIR VC ${cuvc%%.*} -> ${nxvc%%.*} (SIM/nao)?"
+    swn "TRANSFERIR VC $c -> $n (SIM/nao)?"
   else
     return
   fi
@@ -828,7 +830,7 @@ function tvc {
   if [[ $rsp = SIM && ! -f $p05/vc_slash && ! -f $p05/vc_lock && -f $p05/vc_keys ]]; then
     vrs $1 $2 # VC stop    -> vc_slash
     vd        # VC disable -> vc_lock
-    f=$p02/$(basename $p18);sex "cp $p18 $p02";cmw $f 666 eth;mcp $f $nxvc;sex "rm $f";svc TRANSFERIDO
+    f=$p02/$(basename $p18);sex "cp $p18 $p02";cmw $f 666 eth;mcp $f $(snd $n);sex "rm $f";svc TRANSFERIDO
   fi
 }
 function nky { find $p19/key*.json 2>$p03|wc -l; }

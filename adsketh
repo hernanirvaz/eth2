@@ -25,8 +25,6 @@ function cz0 {
   echo -e "\n\nky # gerar key & copiar para keth\nt2 # setup\n\n"
   zsh $2 $1
 }
-function nip { echo ${N%%:*}; }
-function npt { echo ${N#*:}; }
 function nfc {
   local d='/mnt/mp4'
   if ! systemctl is-active --quiet nfs-client.target;then
@@ -51,24 +49,38 @@ function z7z {
 function ufz { echo "$B"|gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 -c $1; }
 function zfu { echo "$B"|gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 -d $1; }
 function rcf { local f;f=$(ls ~/Downloads/config-hrv-zotac1.home.arpa*.xml|sort -t. -k3n|tail -n1);ufz $f;mv $f.gpg ~/eth2/rt-pfsense.xml.gpg;rm $f; }
+function vls {
+  [[ $# -eq 0 ]] && return;local s='';local c=1;local p=2020 
+  for s in $@;do 
+    alias v$c="esl $s $p"
+    alias p$c="ping $s"
+    alias vk$c="ei0 \$H \$E \$R \$V $p >~/i0;ei1 \$H \$V \$K \$E \$B >~/i1;cz0 $s $p"
+    ((c++))
+  done
+  alias vp="ecv $@"
+  alias vo="ocv $@"
+}
+function zls {
+  [[ $# -eq 0 ]] && return;local s='';local c=2;local p=2020 
+  for s in $@;do 
+    p=$(spn $s)
+    alias zk$c="ei0 \$H \$E \$R \$V $p >~/i0;ei1 \$H \$V \$K \$E \$B >~/i1;cz0 $(sin $s) $p"
+    ((c++))
+  done
+}
 
-alias v1='esl ${N%%:*} ${N#*:}'
-alias v2='esl ns3238168.ip-57-129-52.eu 2020'
+zls hrv-zotac2 hrv-zotac3 hrv-zotac4 hrv-intel5 hrv-intel6
+vls ns3168040.ip-51-89-64.eu ns31198432.ip-51-89-64.eu
+
 alias mr='echo 192.168.1.254:$V ;telnet 192.168.1.254'
-
 alias zp="ecv hrv-intel6 hrv-intel5 hrv-zotac4 hrv-zotac3 hrv-zotac2"
 alias zo="ocv hrv-intel6 hrv-intel5 hrv-zotac4 hrv-zotac3 hrv-zotac2;rcp hrv-zotac1"
 alias zk="ccp hrv-zotac2"
-alias vp='ecp ${N%%:*} ${N#*:}'
-alias vo='ocp ${N%%:*} ${N#*:}'
-alias vk='ccp ${N%%:*} ${N#*:}'
 
-alias pi="ping \$(nip)"
 alias gp='cd ~/eth2;git pull;cd'
 alias gc='cd ~/eth2;git commit -am "cleanup";git push;cd'
 alias gd='cd ~/eth2;git diff'
 alias gt='cd ~/eth2;git status'
 alias gr='rcf'
 
-alias lk="ei0 \$H \$E \$R \$V \$(npt) >~/i0;ei1 \$H \$V \$K \$E \$B >~/i1;cz0 \$(nip) \$(npt)"
 alias fw='echo "export R=\"$(</dev/urandom tr -dc "A-Za-z0-9?%&_+=@~#\,.?/"|head -c50)\"";echo "export H=\"$(</dev/urandom tr -dc "A-Za-z0-9?%&_+=@~#\,.?/"|head -c30)\"";echo "export V=\"$(</dev/urandom tr -dc "A-Za-z0-9"|head -c8)\"";echo "export K=\"$(</dev/urandom tr -dc "A-Za-z0-9?%&_+=@~#\,.?/"|head -c60)\"";echo "export W=\"$(</dev/urandom tr -dc "A-Za-z0-9?%&_+=@~#\,.?/"|head -c60)\"";'

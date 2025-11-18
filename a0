@@ -19,6 +19,14 @@ function sin {
   *) printf %s "$1" ;;
   esac
 }
+function snd {
+  case $1 in
+  $vnm1) printf $vnd1 ;;
+  $vnm2) printf $vnd2 ;;
+  $vnm3) printf $vnd3 ;;
+  *) printf %s "$1" ;;
+  esac
+}
 function si6 {
   case $1 in
   hrv-zotac1*) printf %s $pfpd:201:2eff:fea0:88d4 ;;
@@ -65,7 +73,7 @@ function sht { [[ ${1:-$cuip} = 192.168.8.* ]]; }
 function snt { [[ $1 = hrv* ]]; }
 function smt { sht "$1" || snt "$1"; }
 function sst { local s=${1:-$cunm};[[ $s != hrv-zen && $s != hrv-lenovo ]]; }
-function dnn { local s=$1;snt "$s" && ! sht && s="$s.fruga.pt";nslookup "$s" 2>/dev/null 1>&2 || s=$(sin "$1");[[ "$s" = 192.168.8.25 || "$s" = hrv-zotac1* ]] && s="admin@$s";printf %s "$s"; }
+function dnn { local s=$1;if snt "$s";then sht || s="$s.fruga.pt";else s=$(snd $s);fi;nslookup "$s" 2>/dev/null 1>&2 || s=$(sin "$1");[[ "$s" = 192.168.8.25 || "$s" = hrv-zotac1* ]] && s="admin@$s";printf %s "$s"; }
 function dnz { local p=$2;[[ $p ]] || p=$(spn "$1");printf %i "$p"; }
 function zsh { ssh -4p "$1" -i ~/.ssh/id_ed25519 "$2" "$3"; }
 function zcp { local p=$1;local d=$2;shift;shift;scp -4rP "$p" -i ~/.ssh/id_ed25519 $@ "$d"; }

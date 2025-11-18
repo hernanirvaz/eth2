@@ -15,8 +15,8 @@ inm6='hrv-intel6';iip6=$(sin $inm6)
 pnm1='hrv-zen'   ;pip1=$(sin $pnm1)
 pnm2='hrv-lenovo';pip2=$(sin $pnm2)
 vip1='51.89.64.205';vnd1='ns3168040.ip-51-89-64.eu'
-vip2='57.129.28.225';vnd2='ns3053175.ip-57-129-28.eu'
-vip3='161.97.85.32' ;vnd3='vmi1007895.contaboserver.net'
+vip2='51.89.64.77' ;vnd2='ns31198432.ip-51-89-64.eu'
+vip3='161.97.85.32';vnd3='vmi1007895.contaboserver.net'
 vnm1=${vnd1%%.*};vis1='127.0.0.1'
 vnm2=${vnd2%%.*};vis2='127.0.0.1'
 vnm3=${vnd3%%.*};vis3='127.0.0.1'
@@ -31,12 +31,12 @@ cut1=$znm2
 cut2=$znm3
 else
 cuvc=$vnm1
-nxvc=$vnm1
-cun1=$vnm1
-cun2=$vnm1
-cumv=$vnm1
-cut1=$vnm1
-cut2=$vnm1
+nxvc=$vnm2
+cun1=$cunm
+cun2=$cunm
+cumv=$cunm
+cut1=$cunm
+cut2=$cunm
 fi
 
 p00='/usr/local/bin'
