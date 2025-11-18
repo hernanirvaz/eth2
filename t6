@@ -591,7 +591,7 @@ function hch {
   swn "$e${m:4}"
 }
 function hca {
-  if n1t;then hch;else xsh $cun1 "$p53 hch";fi
+              if n1t;then hch;else xsh $cun1 "$p53 hch";fi
   if ndt;then if n2t;then hch;else xsh $cun2 "$p53 hch";fi;fi
   if vst;then if vct;then hch;else xsh $cuvc "$p53 hch";fi;fi
   if mst;then if mct;then hch;else xsh $cumv "$p53 hch";fi;fi

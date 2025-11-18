@@ -30,8 +30,8 @@ cumv=$cun1;[[ $cunm = $cun2 ]] && cumv=$cun2
 cut1=$znm2
 cut2=$znm3
 else
-cuvc=$vnm1
-nxvc=$vnm2
+cuvc=$cunm
+nxvc=$cunm
 cun1=$cunm
 cun2=$cunm
 cumv=$cunm
