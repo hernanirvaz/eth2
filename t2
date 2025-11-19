@@ -27,12 +27,8 @@ sex 'apt install unattended-upgrades update-notifier-common -y'
 t4 linux
 sex "$s07 set-ntp false"                                                                                                                                      # chrony (sophisticated)
 sex "apt install $s56 -y"
-if [[ $cunm = $znm2 || $cunm = $znm3 || $cunm = $vnm1 ]];then
-  if [[ $cunm = $vnm1 ]];then 
-    cc3 $p68 "$e72" "\n$s52"
-  else 
-    cc3 $p68 "$e72" "\nallow 192.168.8.0/24\n$s52"
-  fi
+if sxt;then
+  cc3 $p68 "$e72" "\n$s52"
 else
   cc3 $p68 "$e72" "\n$s57"
 fi

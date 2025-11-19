@@ -416,11 +416,12 @@ s48='.[].peer_info|select(.connection_direction=='
 s49=').client.agent_string'
 s50=
 s51='debian-transmission'
+s52='';sht && sxt && s52='allow 192.168.8.0/24'
 if [[ $cunm = $cut1 ]];then
-  s52='pool 0.de.pool.ntp.org iburst maxsources 4'         # OVH 0.de.pool.ntp.org 0.ca.pool.ntp.org
+  s52="${s52}\npool 0.de.pool.ntp.org iburst maxsources 4" # OVH 0.de.pool.ntp.org 0.ca.pool.ntp.org
   s52="${s52}\npool 1.de.pool.ntp.org iburst maxsources 4" # OVH 1.de.pool.ntp.org 1.ca.pool.ntp.org
  else
-  s52='pool 0.europe.pool.ntp.org iburst maxsources 4'
+  s52="${s52}\npool 0.europe.pool.ntp.org iburst maxsources 4"
   s52="${s52}\npool 1.europe.pool.ntp.org iburst maxsources 4"
 fi
 s53='sgms:'
