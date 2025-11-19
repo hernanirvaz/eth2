@@ -155,6 +155,8 @@ function dnv {
 function dlv { local v=latest;local f="go/bin/ethdo"   ;local l='/usr/local/go/bin';cd $p02;sex "rm -rf go";$l/go install github.com/wealdtech/ethdo@$v      ;if [[ -f $f ]];then swu "INSTALAR $v ETHDO"  ;sex "cp $f $p00";fi;cmw $p00/ethdo    755 eth; }
 function rlv { local v=latest;local f="go/bin/ethereal";local l='/usr/local/go/bin';cd $p02;sex "rm -rf go";$l/go install github.com/wealdtech/ethereal/v2@$v;if [[ -f $f ]];then swu "INSTALAR $v ETHREAL";sex "cp $f $p00";fi;cmw $p00/ethereal 755 eth; }
 function rlt { gnv;[[ -x $p00/ethereal ]] || rlv;if [[ -x $p00/ethereal ]];then return 0;else swb 'TEM DE TER ETHEREAL';return 1;fi; }
+function rcm { local s="$1 $2 $s68";shift;shift;printf '%s %s %s\n' ethereal $s;printf '%s\n' $@;echo;$p00/ethereal $s $@; }
+function rcl { local s="$1 $2"     ;shift;shift;printf '%s %s %s\n' ethereal $s;printf '%s\n' $@;echo;$p00/ethereal $s $@; }
 function nnv {
   local v=${2:-1.35.2}
   local s=nethermind
