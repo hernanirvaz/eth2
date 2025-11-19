@@ -972,12 +972,18 @@ function vcs {
   [[ $K ]] || { swb 'TEM DE TER K    ';return; }
   ipw;rcm validator consolidate --source-validator="${b[$1]}" --target-validator="${b[-1]}" --from="$s25" --privatekey="$K" --verbose
 }
-function vwd {
+function vwk { # validator withdraw with key for testing
   rlt || return
   [[ $K ]] || { swb 'TEM DE TER K    ';return; }
   local n=${1:-1};[[ $n =~ ^[0-9]*\.?[0-9]+$ ]] && n=${n}eth
   swn "Withdrawal-amount $n (SIM/nao)?";local rsp=nao;read rsp
-  [[ $rsp = SIM ]] && { ipw;rcm validator withdraw --withdrawal-amount=$n --validator="${b[-1]}" --from="$s70" --privatekey="$K" --verbose; }
+  [[ $rsp = SIM ]] && { ipw;rcm validator withdraw --withdrawal-amount=$n --validator="${b[-1]}" --from="$s70" --privatekey="$K" --verbose --debug; }
+}
+function vwd {
+  rlt || return
+  local n=${1:-1};[[ $n =~ ^[0-9]*\.?[0-9]+$ ]] && n=${n}eth
+  swn "Withdrawal-amount $n (SIM/nao)?";local rsp=nao;read rsp
+  [[ $rsp = SIM ]] && rcm validator withdraw --withdrawal-amount=$n --validator="${b[-1]}" --from="$s70" --verbose --debug
 }
 function wbl {
   rlt || return
