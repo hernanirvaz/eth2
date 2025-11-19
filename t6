@@ -964,7 +964,7 @@ function iaw { sex 'ufw default allow outgoing';sex "ufw delete $s71";sex 'ufw r
 function ksh {
   srv hrv-zotac4 && rlt || return
   [[ $M ]] || { swb 'TEM DE TER M    ';return; }
-  ipw;rcl hd keys --seed="$M" --path="$s69/${1:-0}"
+  ipw;$p00/ethereal hd keys --seed="$M" --path="$s69/${1:-0}"
 }
 function vcs {
   srv hrv-zotac4 && rlt || return
@@ -974,9 +974,10 @@ function vcs {
 }
 function vwd {
   rlt || return
+  [[ $K ]] || { swb 'TEM DE TER K    ';return; }
   local n=${1:-1};[[ $n =~ ^[0-9]*\.?[0-9]+$ ]] && n=${n}eth
   swn "Withdrawal-amount $n (SIM/nao)?";local rsp=nao;read rsp
-  [[ $rsp = SIM ]] && rcm validator withdraw --withdrawal-amount=$n --validator="${b[-1]}" --from="$s70" --verbose
+  [[ $rsp = SIM ]] && { ipw;rcm validator withdraw --withdrawal-amount=$n --validator="${b[-1]}" --from="$s70" --privatekey="$K" --verbose; }
 }
 function wbl {
   rlt || return
