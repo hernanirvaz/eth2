@@ -53,8 +53,8 @@ function vls {
   [[ $# -eq 0 ]] && return;local s='';local c=1;local p=2020 
   for s in $@;do 
     alias v$c="esl $s $p"
-    alias p$c="ping $s"
-    alias vk$c="ei0 \$H \$E \$R \$V $p >~/i0;ei1 \$H \$V \$K \$E \$B >~/i1;cz0 $s $p"
+    alias pv$c="ping $s"
+    alias kv$c="ei0 \$H \$E \$R \$V $p >~/i0;ei1 \$H \$V \$K \$E \$B >~/i1;cz0 $s $p"
     ((c++))
   done
   alias vp="ecv $@"
@@ -64,7 +64,8 @@ function zls {
   [[ $# -eq 0 ]] && return;local s='';local c=2;local p=2020 
   for s in $@;do 
     p=$(spn $s)
-    alias zk$c="ei0 \$H \$E \$R \$V $p >~/i0;ei1 \$H \$V \$K \$E \$B >~/i1;cz0 $(sin $s) $p"
+    alias pz$c="ping $(sin $s)"
+    alias kz$c="ei0 \$H \$E \$R \$V $p >~/i0;ei1 \$H \$V \$K \$E \$B >~/i1;cz0 $(sin $s) $p"
     ((c++))
   done
 }
