@@ -3,6 +3,11 @@
 pfpd='2001:8a0:fcdc:3600'
 cunm=$(hostname)
 cuip=$(hostname -I);cuip=${cuip%% *}
+vip1='51.89.64.205';vnd1='ns3168040.ip-51-89-64.eu'    ;vnm1=${vnd1%%.*};vis1='127.0.0.1'
+vip2='51.89.64.77' ;vnd2='ns31198432.ip-51-89-64.eu'   ;vnm2=${vnd2%%.*};vis2='127.0.0.1'
+vip3='161.97.85.32';vnd3='vmi1007895.contaboserver.net';vnm3=${vnd3%%.*};vis3='127.0.0.1'
+trdi='/mnt/data/downloads'
+mddi='/media/mp4'
 
 function sin {
   case $1 in
@@ -17,24 +22,6 @@ function sin {
   *) printf %s "$1" ;;
   esac
 }
-
-znm1='hrv-zotac1';zip1=$(sin $znm1)
-znm2='hrv-zotac2';zip2=$(sin $znm2)
-znm3='hrv-zotac3';zip3=$(sin $znm3)
-znm4='hrv-zotac4';zip4=$(sin $znm4)
-inm5='hrv-intel5';iip5=$(sin $inm5)
-inm6='hrv-intel6';iip6=$(sin $inm6)
-pnm1='hrv-zen'   ;pip1=$(sin $pnm1)
-pnm2='hrv-lenovo';pip2=$(sin $pnm2)
-vip1='51.89.64.205';vnd1='ns3168040.ip-51-89-64.eu'
-vip2='51.89.64.77' ;vnd2='ns31198432.ip-51-89-64.eu'
-vip3='161.97.85.32';vnd3='vmi1007895.contaboserver.net'
-vnm1=${vnd1%%.*};vis1='127.0.0.1'
-vnm2=${vnd2%%.*};vis2='127.0.0.1'
-vnm3=${vnd3%%.*};vis3='127.0.0.1'
-trdi='/mnt/data/downloads'
-mddi='/media/mp4'
-
 function snd {
   case $1 in
   $vnm1) printf $vnd1 ;;

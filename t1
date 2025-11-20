@@ -6,6 +6,15 @@ meeu=$(whoami)
 meui=$(id -u)
 megi=$(id -g)
 
+znm1='hrv-zotac1';zip1=$(sin $znm1)
+znm2='hrv-zotac2';zip2=$(sin $znm2)
+znm3='hrv-zotac3';zip3=$(sin $znm3)
+znm4='hrv-zotac4';zip4=$(sin $znm4)
+inm5='hrv-intel5';iip5=$(sin $inm5)
+inm6='hrv-intel6';iip6=$(sin $inm6)
+pnm1='hrv-zen'   ;pip1=$(sin $pnm1)
+pnm2='hrv-lenovo';pip2=$(sin $pnm2)
+
 if sht;then
 cuvc=$znm4
 nxvc=$znm4
