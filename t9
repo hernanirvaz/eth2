@@ -2,9 +2,7 @@
 
 source /home/eth/eth2/t1
 
-if [[ $cunm != "$cuvc" ]];then
-  swn "MONITOR NAO DEVE SER INSTALADO AQUI - DEVE FICAR EM $cuvc"
-else
+if vct;then
   if [[ -f $p38/$s16.yml ]];then
     swu 'PROMETHEUS JA INSTALADO'
   else
@@ -48,4 +46,6 @@ else
   swn 'Import some dashboards from the dashboards directory in https://github.com/sigp/lighthouse-metrics'
   swn 'In the Grafana UI, go to Dashboards -> Manage -> Import -> Upload .json file.'
   swn 'The Summary.json dashboard is a good place to start.\n'
+else
+  swn "MONITOR NAO DEVE SER INSTALADO AQUI - DEVE FICAR EM $cuvc"
 fi

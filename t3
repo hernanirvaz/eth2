@@ -5,7 +5,7 @@ source /home/eth/eth2/t1
 
 function hlp { swb "install consencus client with lighthouse-${1:-stable} source using rust-${2:-stable}"; }
 
-if [[ $cunm = $znm4 || $cunm = $inm5 || $cunm = $inm6 || $cunm = $vnm1 || $cunm = $vnm2 ]];then
+if ict;then
   hlp $1 $2
   if [[ -x $p02/.cargo/bin/rustup ]];then
     t6 ruv $2
@@ -19,7 +19,7 @@ if [[ $cunm = $znm4 || $cunm = $inm5 || $cunm = $inm6 || $cunm = $vnm1 || $cunm 
   [[ -f $p00/lighthouse || -f $p02/.cargo/bin/lighthouse ]] || t6 luc $1
 fi
 t6 lpi
-if [[ $cunm = $znm1 || $cunm = $znm2 || $cunm = $znm3 || $cunm = $znm4 || -f $p04/$s12.service ]];then
+if ! ict || [[ -f $p04/$s12.service ]];then
   if [[ -f $p04/$s12.service ]];then swu "cc ja instalado";else swu 'cc NAO DEVE SER INSTALADO AQUI';fi
 else
   if [[ $cunm = $inm5 ]];then apip="$iip5";tarp=80;elif [[ $cunm = $inm6 ]];then apip="$iip6";tarp=80;else apip='127.0.0.1';tarp=80;fi
@@ -62,7 +62,7 @@ else
 	EOF
   sex "mv $s12.service $p04";cmw $p04/$s12.service 644
 fi
-if [[ $cunm = $znm1 || $cunm = $znm2 || $cunm = $znm3 || $cunm = $inm5 || $cunm = $inm6 || $cunm = $vnm2 || -f $p04/$s13.service ]];then
+if ! vct || [[ -f $p04/$s13.service ]];then
   if [[ -f $p04/$s13.service ]];then swu "vc ja instalado";else swu 'vc NAO PODE SER INSTALADO AQUI';fi
 else
   othe=''
