@@ -3,7 +3,6 @@
 source /home/eth/eth2/a0
 
 function xsh { zsh "$(dnz "$1")" "$(dnn "$1")" "$2"; }
-function xcp { local p;local s;p=$(dnz "$1");s=$(dnn "$1");local d=$2;shift;shift;echo "scp -4rP $p \$@ $s:$d";zcp "$p" "$s:$d" "$@"; }
 
 function snx {
   if [[ ${#1} -le 8 ]]; then
@@ -25,26 +24,6 @@ function sni {
   $vnm2) printf %s "$vis2" ;;
   $vnm3) printf %s "$vis3" ;;
   esac
-}
-function sns {
-  if [[ ${#1} -eq 2 ]]; then
-    if [[ ${1:0:1} = z ]]; then
-      if [[ ${1:1:1} -le 4 ]]; then
-        printf %s "${1/z/hrv-zotac}"
-      else
-        printf %s "${1/z/hrv-intel}"
-      fi
-    else
-      case $1 in
-      v1) printf %s "$vnd1" ;;
-      v2) printf %s "$vnd2" ;;
-      v3) printf %s "$vnd3" ;;
-       *) printf %s "$1" ;;
-      esac
-    fi
-  else
-    printf %s "$1"
-  fi
 }
 function sn2 { local v=${1/*-/};printf %s "${v:0:1}${v: -1}"; }
 function sn4 {

@@ -3,8 +3,6 @@
 pfpd='2001:8a0:fcdc:3600'
 cunm=$(hostname)
 cuip=$(hostname -I);cuip=${cuip%% *}
-trdi='/mnt/data/downloads'
-mddi='/media/mp4'
 
 function sin {
   case $1 in
@@ -19,6 +17,24 @@ function sin {
   *) printf %s "$1" ;;
   esac
 }
+
+znm1='hrv-zotac1';zip1=$(sin $znm1)
+znm2='hrv-zotac2';zip2=$(sin $znm2)
+znm3='hrv-zotac3';zip3=$(sin $znm3)
+znm4='hrv-zotac4';zip4=$(sin $znm4)
+inm5='hrv-intel5';iip5=$(sin $inm5)
+inm6='hrv-intel6';iip6=$(sin $inm6)
+pnm1='hrv-zen'   ;pip1=$(sin $pnm1)
+pnm2='hrv-lenovo';pip2=$(sin $pnm2)
+vip1='51.89.64.205';vnd1='ns3168040.ip-51-89-64.eu'
+vip2='51.89.64.77' ;vnd2='ns31198432.ip-51-89-64.eu'
+vip3='161.97.85.32';vnd3='vmi1007895.contaboserver.net'
+vnm1=${vnd1%%.*};vis1='127.0.0.1'
+vnm2=${vnd2%%.*};vis2='127.0.0.1'
+vnm3=${vnd3%%.*};vis3='127.0.0.1'
+trdi='/mnt/data/downloads'
+mddi='/media/mp4'
+
 function snd {
   case $1 in
   $vnm1) printf $vnd1 ;;
@@ -67,6 +83,26 @@ function spn {
   esac
   printf %i $n
 }
+function sns {
+  if [[ ${#1} -eq 2 ]]; then
+    if [[ ${1:0:1} = z ]]; then
+      if [[ ${1:1:1} -le 4 ]]; then
+        printf %s "${1/z/hrv-zotac}"
+      else
+        printf %s "${1/z/hrv-intel}"
+      fi
+    else
+      case $1 in
+      v1) printf %s "$vnd1" ;;
+      v2) printf %s "$vnd2" ;;
+      v3) printf %s "$vnd3" ;;
+       *) printf %s "$1" ;;
+      esac
+    fi
+  else
+    printf %s "$1"
+  fi
+}
 function stt { [[ $cut1 != $cut2 ]]; }
 function sxt { [[ $cunm = $cut1 || $cunm = $cut2 ]]; }
 function sht { [[ ${1:-$cuip} = 192.168.8.* ]]; }
@@ -77,6 +113,16 @@ function dnn { local s=$1;if snt "$s";then sht || s="$s.fruga.pt";else s=$(snd $
 function dnz { local p=$2;[[ $p ]] || p=$(spn "$1");printf %i "$p"; }
 function zsh { ssh -4p "$1" -i ~/.ssh/id_ed25519 "$2" "$3"; }
 function zcp { local p=$1;local d=$2;shift;shift;scp -4rP "$p" -i ~/.ssh/id_ed25519 $@ "$d"; }
+function xcp { local p;local s;p=$(dnz "$1");s=$(dnn "$1");local d=$2;shift;shift;echo "scp -4rP $p \$@ $s:$d";zcp "$p" "$s:$d" "$@"; }
+function mcp {
+    if [[ $# -lt 1 ]];then
+    echo -e "mcp <f> [s:v1] [d:~]\tscp <f>ile(s) [s]erver:[d]estination"
+    return
+  fi
+  local s=${2:-v1}
+  local d=${3:-~}
+  xcp "$(sns $s)" "$d" "$1"
+}
 function pcm { 
   local n;local p;local e=${1^^};local s=hrv-zotac1;n=$(dnn $s);p=$(dnz $s)
   if   [[ $e = PRB ]];then zsh "$p" "$n" "/etc/rc.reboot"
