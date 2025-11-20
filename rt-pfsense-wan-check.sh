@@ -8,7 +8,7 @@ DNS="8.8.8.8 8.8.4.4 1.1.1.1 1.0.0.1 9.9.9.9 149.112.112.112 208.67.222.222 208.
 grn() { set -- $DNS;r=$(/usr/bin/awk -v m=1 -v x=$# -v s=$(/bin/date +%s%N) "BEGIN{srand(s);print int(m+rand()*(x-m+1))}");c=1;for s in $DNS;do if [ $c -eq $r ];then echo $s;return;fi;c=$((c+1));done;echo "8.8.8.8"; }
 lgm() { echo "$(date +'%Y-%m-%d %H:%M:%S') $1" >> $FIL.log 2>&1; }
 pig() { /sbin/ping -c $2 -W 2 $1 > /dev/null 2>&1;e=$?;[ $e -ne 0 ] && lgm "ping -c$2 -W2 $1 unreachable ($e)";return $e; }
-pit() { pig $(grn) 2 || pig $(grn) 3; }
+pit() { pig $(grn) 3 || pig $(grn) 4; }
 dhr() { /sbin/dhclient -r $WAN           > /dev/null 2>&1;f=$?;[ $f -ne 0 ] && lgm "Failed release DHCP $WAN." ;return $f; }
 dhn() { /sbin/dhclient    $WAN           > /dev/null 2>&1;g=$?;[ $g -ne 0 ] && lgm "Failed renew DHCP $WAN."   ;return $g; }
 ifd() { /sbin/ifconfig    $WAN down      > /dev/null 2>&1;h=$?;[ $h -ne 0 ] && lgm "Failed to bring $WAN down.";return $h; }  
