@@ -14,10 +14,18 @@ dhn() { /sbin/dhclient    $WAN           > /dev/null 2>&1;g=$?;[ $g -ne 0 ] && l
 ifd() { /sbin/ifconfig    $WAN down      > /dev/null 2>&1;h=$?;[ $h -ne 0 ] && lgm "Failed to bring $WAN down.";return $h; }  
 ifu() { /sbin/ifconfig    $WAN up        > /dev/null 2>&1;i=$?;[ $i -ne 0 ] && lgm "Failed to bring $WAN up."  ;return $i; }  
 
-if [ -f $FIL.lk ];then PID=$(cat $FIL.lk);if ps -p $PID > /dev/null 2>&1;then lgm "Another instance is running ($PID). Exiting.";exit 0;else rm -f $FIL.lk;fi;fi
-echo $$ > $FIL.lk;trap "rm -f $FIL.lk" EXIT
+# if [ -f $FIL.lk ];then PID=$(cat $FIL.lk);if ps -p $PID > /dev/null 2>&1;then lgm "Another instance is running ($PID). Exiting.";exit 0;else rm -f $FIL.lk;fi;fi
+if [ -f $FIL.lk ];then
+    PID=$(cat $FIL.lk);/bin/rm -f $FIL.lk
+    if /bin/ps -p $PID > /dev/null 2>&1;then
+        lgm "Another instance is running ($PID), reboot as last resort."
+        /etc/rc.reboot > /dev/null 2>&1
+        exit 1
+    fi
+fi
+echo $$ > $FIL.lk;trap "/bin/rm -f $FIL.lk" EXIT
 
-                         if pit;then                                   exit 0;fi
-dhr;sleep 5;dhn;sleep 30;if pit;then lgm "WAN recovered after DHCP."  ;exit 0;fi
-ifd;sleep 5;ifu;sleep 30;if pit;then lgm "WAN recovered after bounce.";exit 0;fi
-lgm "Performing pfSense reboot as last resort.";/etc/rc.reboot > /dev/null 2>&1;exit 1
+                                   if pit;then                                   exit 0;fi
+dhr;/bin/sleep 5;dhn;/bin/sleep 30;if pit;then lgm "WAN recovered after DHCP."  ;exit 0;fi
+ifd;/bin/sleep 5;ifu;/bin/sleep 30;if pit;then lgm "WAN recovered after bounce.";exit 0;fi
+lgm "Performing pfSense reboot as last resort.";/etc/rc.reboot > /dev/null 2>&1 ;exit 1
