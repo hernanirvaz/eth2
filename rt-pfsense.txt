@@ -1,0 +1,76 @@
+In my home network setup, having several wired ubuntu servers doing important ethereum node validation, had to install latest pfSense 2.8.1 RELEASE, because my ISPs GR241AG Fiber Gateway was struggling and doing several unexpected and disruptive reboots a day.
+hrv-intel6 - main NUC13RNGi9; i9-13900K 64GB RAM; nvme 990 PRO 2TB x3; running Nethermind execution client (EC) & Lighthouse consensus client (CC).
+hrv-intel5 - backup NUC13RNGi9; i9-13900K 64GB RAM; nvme 990 PRO 2TB x3; running Nethermind execution client (EC) & Lighthouse consensus client (CC).
+hrv-zotac2 - chrony ZBOX-CI662NANO; i7-10510U 32GB RAM; SSD 870 QVO 8TB; with ntp pool from germany and also a Arr stack: Sonarr (TV), Radarr (Movies), Prowlarr (Indexers), and Transmission - all running as secure, isolated containers.
+hrv-zotac3 - chrony ZBOX-CI662NANO; i7-10510U 32GB RAM; SSD 870 EVO 4TB; with ntp pool from europe
+hrv-zotac1 - pfSense ZBOX-CI662NANO; i7-10510U 32GB RAM; SSD 870 QVO 4TB; with these configurations:
+
+Static IPv4
+192.168.8.25	hrv-zotac1
+192.168.8.28	hrv-zotac2
+192.168.8.31	hrv-zotac3
+192.168.8.37	hrv-intel5
+192.168.8.40	hrv-intel6
+Static IPv6
+2001:8a0:fcdc:3600:201:2eff:fea0:88d4	hrv-zotac1
+2001:8a0:fcdc:3600::1002		hrv-zotac2
+2001:8a0:fcdc:3600::1003		hrv-zotac3
+2001:8a0:fcdc:3600::1005		hrv-intel5
+2001:8a0:fcdc:3600::1006		hrv-intel6
+
+Firewall NAT Port Forward
+Action	Int.	Proto 	Src Add.	Src Ports	Dst Add.	Dst Ports	NAT IP		NAT Ports
+Pass	WAN	TCP/UDP	*		*		WAN address	eth40		192.168.8.40	eth40
+Pass	WAN	TCP/UDP	*		*		WAN address	eth37		192.168.8.37	eth37
+Pass	WAN	TCP	*		*		WAN address	2026		192.168.8.40	2026
+Pass	WAN	TCP	*		*		WAN address	2025		192.168.8.37	2025
+Pass	WAN	TCP	*		*		WAN address	2023		192.168.8.31	2023
+Pass	WAN	TCP	*		*		WAN address	2022		192.168.8.28	2022
+Pass	WAN	TCP	*		*		WAN address	2021		192.168.8.25	2021
+Firewall NAT Outbound set to Hybrid Outbound NAT rule generation. (Automatic Outbound NAT + rules below)
+Action	Int.	Src		Src Port	Dst	Dst Port	NAT Address	NAT Port
+Pass	WAN	192.168.8.40/32	tcp/udp/ eth40	*	tcp/udp/ *	WAN address	* Static Port
+Pass	WAN	192.168.8.37/32	tcp/udp/ eth37	*	tcp/udp/ *	WAN address	* Static Port
+Firewall Rules WAN (IPv6 were manually created, all IPv4 are automatically created from previous NAT rules)
+Action	Protocol	Src	Port	Destination	Port	Gateway	Description
+Pass	IPv4 TCP/UDP	*	*	192.168.8.40	eth40	*	NAT hrv-intel6
+Pass	IPv6 TCP/UDP	*	*	IPv6z6		eth40	*	IPv6 hrv-intel6
+Pass	IPv4 TCP/UDP	*	*	192.168.8.37	eth37	*	NAT hrv-intel5
+Pass	IPv6 TCP/UDP	*	*	IPv6z5		eth37	*	IPv6 hrv-intel5
+Pass	IPv4 TCP/UDP	*	*	192.168.8.28	51413	*	NAT torrent
+Pass	IPv6 TCP/UDP	*	*	IPv6z2		51413	*	IPv6 torrent
+Firewall Rules LAN
+Action	Proto.	Source		Port	Dest.	Port	Gateway	Queue	Description
+Pass	IPv4 *	LAN subnets	*	*	*	*	none	Default allow LAN to any rule	     
+Pass	IPv6 *	LAN subnets	*	*	*	*	none	Default allow LAN IPv6 to any rule	     
+Firewall Rules Floating
+Action	Int.	Quick	Pipe	Dir.	Protocol	Source	Port	Dest.	Port	Gateway
+Match	LAN	yes	qupt1	in	IPv4+6 *	IPz6	*	*	*	*
+Match	LAN	yes	qdwt1	out	IPv4+6 *	*	*	IPz6	*	*
+Match	LAN	yes	qupt2	in	IPv4+6 *	IPz5	*	*	*	*
+Match	LAN	yes	qdwt2	out	IPv4+6 *	*	*	IPz5	*	*
+Match	LAN	yes	qupt3	in	IPv4+6 *	*	*	*	*	*
+Match	LAN	yes	qdwt3	out	IPv4+6 *	*	*	*	*	*
+
+Firewall Traffic Shaper Limiters
+Name	Active queue management		Weight	BWidth	Scheduler
+WANup0	CoDel (target 5, interval 100)		300Mbps	WF2Q+
+  qupt1	CoDel (target 5, interval 100)	100
+  qupt2	CoDel (target 5, interval 100)	50
+  qupt3	CoDel (target 5, interval 100)	10
+WANdw0	CoDel (target 5, interval 100)		800Mbps	WF2Q+
+  qdwt1	CoDel (target 5, interval 100)	100
+  qdwt2	CoDel (target 5, interval 100)	50
+  qdwt3	CoDel (target 5, interval 100)	10
+
+Firewall Aliases IP
+IPv6z2	Host(s)	2001:8a0:fcdc:3600::1002
+IPv6z5	Host(s)	2001:8a0:fcdc:3600::1005
+IPv6z6	Host(s)	2001:8a0:fcdc:3600::1006
+IPz2	Host(s)	2001:8a0:fcdc:3600::1002, 192.168.8.28	 	  
+IPz5	Host(s)	2001:8a0:fcdc:3600::1005, 192.168.8.37	 	  
+IPz6	Host(s)	2001:8a0:fcdc:3600::1006, 192.168.8.40	 	  
+Firewall Aliases Ports
+eth37	Port(s)	9004, 30303, 9005	Ethereum hrv-intel5, these are non-standard ports
+eth40	Port(s)	9000, 30304, 9001	Ethereum hrv-intel6, these are non-standard ports
+
