@@ -48,7 +48,21 @@ function z7z {
 }
 function ufz { echo "$B"|gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 -c $1; }
 function zfu { echo "$B"|gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 -d $1; }
-function rcf { local f;f=$(ls ~/Downloads/config-hrv-zotac1.home.arpa*.xml|sort -t. -k3n|tail -n1);ufz $f;mv $f.gpg ~/eth2/rt-pfsense.xml.gpg;rm $f; }
+function rcf { 
+  local f;local s
+  s='Downloads/config-hrv-zotac1.home.arpa';f=$(find ~/$s*.xml 2>/dev/null|sort -t. -k3n|tail -n1)
+  if [[ -s $f ]];then 
+    ufz $f;mv $f.gpg ~/eth2/rt-pfsense.xml.gpg;rm $f
+  else
+    echo "No $s*.xml config files found"
+  fi
+  s='rt-pfsense';f=$(find ~/$s*.txt 2>/dev/null|tail -n1)
+  if [[ -s $f ]];then 
+    ufz $f;mv $f.gpg ~/eth2;rm $f
+  else
+    echo "No $s*.txt config files found"
+  fi
+}
 function vls {
   [[ $# -eq 0 ]] && return;local s='';local c=1;local p=2020 
   for s in $@;do 
