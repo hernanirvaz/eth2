@@ -2,7 +2,7 @@
 
 source /home/eth/eth2/t1
 
-if vct;then
+if svt;then
   if [[ -f $p38/$s16.yml ]];then
     swu 'PROMETHEUS JA INSTALADO'
   else

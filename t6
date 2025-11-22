@@ -29,13 +29,13 @@ function nby {
   else                nu0 %.0fB $1
   fi
 }
-function sgn { local g="$1";shift;SUDO_ASKPASS=$p84 sudo -A grep -Eah  "$g" $@ 2>$p03; }
-function sgv { local g="$1";shift;SUDO_ASKPASS=$p84 sudo -A grep -Eahv "$g" $@ 2>$p03; }
+function sgn { local g="$1";shift;echo $H|sudo -S grep -Eah  "$g" $@ 2>$p03; }
+function sgv { local g="$1";shift;echo $H|sudo -S grep -Eahv "$g" $@ 2>$p03; }
 function sip {                                              grep -Eai  "$1"    2>$p03; }
 function siv {                                              grep -Eaiv "$1"    2>$p03; }
-function lfl { SUDO_ASKPASS=$p84 sudo -A find $1 -name "$2*" -type f -printf "%T@\t%p\n" 2>$p03|sort -nr|head -n$3|sort -n|cut -f2; }
-function ll0 { local f=$(lfl $p16/logs beacon    2);[[ $f ]] || return;SUDO_ASKPASS=$p84 sudo -A cat $f|tail -n$((n15*2)); }                                  # get cc intern lines
-function ll1 { local f=$(lfl $p17/logs validator 2);[[ $f ]] || return;SUDO_ASKPASS=$p84 sudo -A cat $f|tail -n$n15      ; }                                  # get vc intern lines
+function lfl { echo $H|sudo -S find $1 -name "$2*" -type f -printf "%T@\t%p\n" 2>$p03|sort -nr|head -n$3|sort -n|cut -f2; }
+function ll0 { local f=$(lfl $p16/logs beacon    2);[[ $f ]] || return;echo $H|sudo -S cat $f|tail -n$((n15*2)); }                                  # get cc intern lines
+function ll1 { local f=$(lfl $p17/logs validator 2);[[ $f ]] || return;echo $H|sudo -S cat $f|tail -n$n15      ; }                                  # get vc intern lines
 function ll2 { local f=$(lfl $p16/logs beacon    2);[[ $f ]] || return;sgn "$1" $f|tail -n$n15      ; }                                                       # get cc intern lines (specific)
 function ll3 { local f=$(lfl $p17/logs validator 4);[[ $f ]] || return;sgn "$1" $f|tail -n$2        ; }                                                       # get vc intern lines (specific)
 function ll4 { local f=$(lfl $p07/logs mainnet   2);[[ $f ]] || return;sgn "$1" $f                  ; }                                                       # get neth intern lines
@@ -78,11 +78,9 @@ function n1t { [[ $cunm = $cun1 ]]; }
 function n2t { [[ $cunm = $cun2 ]]; }
 function n3t { [[ $cun1 != $cun2 || $cun1 != $cumv ]]; }
 function ndt { [[ $cun1 != $cun2 ]]; }
-function vct { [[ $cunm = $cuvc ]]; }
 function mct { [[ $cunm = $cumv ]]; }
 function i5t { [[ $cunm = $inm5 ]]; }
 function i6t { [[ $cunm = $inm6 ]]; }
-function ict { [[ $cunm = $cuvc || $cunm = $cun1 || $cunm = $cun2 ]]; }
 function iet { [[ $cunm = $cun1 || $cunm = $cun2 ]]; }
 function irt { [[ $cunm = $cumv || $cunm = $vnm1 || $cunm = $vnm2 ]]; }
 function v1t { [[ $cunm = $vnm1 ]]; }
@@ -93,7 +91,7 @@ function s1t {                  e0t $(find $1.* 2>$p03|wc -l); }
 function s2t { fft $p50.lock || g0t $(find $1.* 2>$p03|wc -l); }
 function s3t { s2t "$1" || g0t $(bwc); }
 function s4t { s1t "$1" || g0t $(bwc); }
-function s5t { ict    && g0t $(bwc); }
+function s5t { sct    && g0t $(bwc); }
 function s6t { [[ -e $1 && -b $1 ]]; }
 function rbt { [[ $(sra) -ge $((60*60*${1:-9})) ]]; }
 function ipt { [[ $(date +%s) -ge $(bss "$1" 6) ]]; }
@@ -593,7 +591,7 @@ function hch {
 function hca {
               if n1t;then hch;else xsh $cun1 "$p53 hch";fi
   if ndt;then if n2t;then hch;else xsh $cun2 "$p53 hch";fi;fi
-  if vst;then if vct;then hch;else xsh $cuvc "$p53 hch";fi;fi
+  if vst;then if svt;then hch;else xsh $cuvc "$p53 hch";fi;fi
   if mst;then if mct;then hch;else xsh $cumv "$p53 hch";fi;fi
   if zdt;then if z1t;then hch;else xsh $cut1 "$p53 hch";fi;stt && if z2t;then hch;else xsh $cut2 "$p53 hch";fi;fi
 }
@@ -623,7 +621,7 @@ function cpe {
   local e;local i;local n;local d;local l
   clk $1;[[ $m ]] && swn "$m";[[ $1 = h ]] && return;tmp;[[ $1 = p ]] && return;sif
   m=$(sll "$e74"|sef "$e30");if [[ $m ]];then i=$(wc -l <<< "$m");e=$(tail -n1 <<< "$m");else i=0;e=;fi;m=;n=0;d=;l=ou
-  if [[ ! $m ]];then if ict;then m=$(cll "$e50;$e31");l=cl;fi;fi
+  if [[ ! $m ]];then if sct;then m=$(cll "$e50;$e31");l=cl;fi;fi
   if [[ ! $m ]];then if iet;then m=$(ell "$e50;$e31");l=el;fi;fi
   if [[ ! $m ]];then if irt;then m=$(rll "$e51;$e31");l=rl;fi;fi
   if [[ ! $m ]];then n=0;d=;else n=$(lll|wc -l);d=$(tail -n1 <<< "$m");fi
@@ -707,7 +705,7 @@ function ue  { eop;sex 'ufw reload';cex "$s04 $s11"; }                          
 function te  { eop;sex 'ufw reload';cex "$s04 $s44"; }                                                                                                        # enable eth-nethermind
 function be  { bop;sex 'ufw reload';cex "$s04 $s12"; }                                                                                                        # enable eth-beacon
 function ve  {
-  vct                   || return
+  svt                   || return
   fft $p04/$s13.service || return
   fft $p05/vc_keys      || return
   fft $p05/vc_lock      && return
@@ -722,7 +720,7 @@ function ua  { tsa $s11 || cex "$s03 $s11"; }                                   
 function ta  { tsa $s44 || cex "$s03 $s44"; }                                                                                                                 # start eth-nethermind
 function ba  { tsa $s12 || cex "$s03 $s12"; }                                                                                                                 # start eth-beacon
 function va  {
-  vct                   || return
+  svt                   || return
   fft $p04/$s13.service || return
   fft $p05/vc_keys      || return
   tsa $s13              && return
@@ -760,7 +758,7 @@ function hs0 {
   hhh
   if n1t;then
     hss $cun1;if ndt;then hss $cun2;fi
-    if vst;then if vct;then hsv;cpe;else echo -e "\n$cuvc";xsh $cuvc "$p53 hsv";fi;fi
+    if vst;then if svt;then hsv;cpe;else echo -e "\n$cuvc";xsh $cuvc "$p53 hsv";fi;fi
     if mst;then if mct;then hsm;cpe;else echo -e "\n$cumv";xsh $cumv "$p53 hsm";fi;fi
     echo;epf;cpf
   else
@@ -821,7 +819,7 @@ function tvc {
   swn "$s24"
   [[ $c = $n ]] && return
   if [[ $2 = e ]];then e='EXECUTE';else e='DRY-RUN';fi
-  if vct && tsa $s13; then
+  if svt && tsa $s13; then
     swn "$e TRANSFER VC $c -> $n (SIM/nao)?"
   else
     return
@@ -848,7 +846,7 @@ function ibk {
   local f="$p58/pubkeys"    ;sex "cp $p02/pubkeys.new $f";cmw $f 444 eth
 }
 function ivk {
-  local n=$(nky);vct && [[ $n -gt 0 ]] || return;brs PV 0 0 $1;ibk;dmr;cex "$s03 $s12";bko $n
+  local n=$(nky);svt && [[ $n -gt 0 ]] || return;brs PV 0 0 $1;ibk;dmr;cex "$s03 $s12";bko $n
   if ! tsa $s13;then
     swb 'IMPORTAR CHAVES';sex "chown -R $meeu:$meeu $p17";cmw $p17 755;imk;svd
     fft $p05/vc_lock || cex "$s03 $s13";vko $n
@@ -875,7 +873,7 @@ function hrc { sxt || return;chronyc -c sources 2>$p03|grep -Eq "$g65,1,$g66" &&
 function irb {
   rm -f $p39.*;s2t $p39 && return
   if rbt $1;then 
-    if vct;then brs RB 0 0 $n02;else srb $p39 RB;fi
+    if svt;then brs RB 0 0 $n02;else srb $p39 RB;fi
   else 
     if fft $p45;then touch $p39.$1.hours;else hrc;fi
   fi
@@ -919,8 +917,8 @@ function tsh { local n=${1:-4};local s=$(ts1 $n);echo -e "${s^^}\t(eth*10^$n)"; 
 function lsr { sort -t: -k2n -k3n -k4n; }
 function wpf { if tsa $s44;then ll4 "$g43";fi;ll6 "$g42"|fln "$g39"; }
 function wpe { wpf|sef "$e52"|lsr; }
-function bba { if n1t;then wpe          ;else xsh $cun1 "$p53 bb"   ;fi;if ndt;then if n2t;then wpe          ;else xsh $cun2 "$p53 bb"   ;fi;fi;if vst;then if vct;then wpe          ;else xsh $cuvc "$p53 bb"   ;fi;fi;if mst;then if mct;then wpe          ;else xsh $cumv "$p53 bb"   ;fi;fi; }
-function caa { if n1t;then cll "$e50" $1;else xsh $cun1 "$p53 cl $1";fi;if ndt;then if n2t;then cll "$e50" $1;else xsh $cun2 "$p53 cl $1";fi;fi;if vst;then if vct;then cll "$e50" $1;else xsh $cuvc "$p53 cl $1";fi;fi;if mst;then if mct;then rll "$e51" $1;else xsh $cumv "$p53 rl $1";fi;fi; }
+function bba { if n1t;then wpe          ;else xsh $cun1 "$p53 bb"   ;fi;if ndt;then if n2t;then wpe          ;else xsh $cun2 "$p53 bb"   ;fi;fi;if vst;then if svt;then wpe          ;else xsh $cuvc "$p53 bb"   ;fi;fi;if mst;then if mct;then wpe          ;else xsh $cumv "$p53 bb"   ;fi;fi; }
+function caa { if n1t;then cll "$e50" $1;else xsh $cun1 "$p53 cl $1";fi;if ndt;then if n2t;then cll "$e50" $1;else xsh $cun2 "$p53 cl $1";fi;fi;if vst;then if svt;then cll "$e50" $1;else xsh $cuvc "$p53 cl $1";fi;fi;if mst;then if mct;then rll "$e51" $1;else xsh $cumv "$p53 rl $1";fi;fi; }
 function eaa { if n1t;then ell "$e50" $1;else xsh $cun1 "$p53 el $1";fi;if ndt;then if n2t;then ell "$e50" $1;else xsh $cun2 "$p53 el $1";fi;fi; }
 function laa { caa $1;eaa $1; }
 function fsp { 
@@ -947,7 +945,7 @@ function uur {
 }
 function fdv { [[ $1         ]] || return;printf "\nDevice\tUsed\tSerialNumber\tFirmware\tModel\n";local d;local u;local f;local n;local m;while IFS=$'\t' read d u m f n;do printf "%s\t%s\t%s\t%s\t%s\n" $(basename $d) $(nby $u) $n $f "$m";done <<< "$1"; }
 function fmd { [[ -b /dev/$1 ]] || return;printf "\n";pex "mdadm --detail /dev/$1"; }
-function fst { local s="nvme smart-log";if [[ $1 ]];then cex "$s /dev/$1";else local f='';for f in $(find $p66 2>$p03|sort);do swl "$s $f";pex "$s $f";done|grep -Eiv "$s54"|sef "$e08";fi;fdv "$(pex 'nvme list -o json'|jq -r "$j6"|sort)";fmd $(cat $p85|snf "$e82"); }
+function fst { local s="nvme smart-log";if [[ $1 ]];then cex "$s /dev/$1";else local f='';for f in $(find $p66 2>$p03|sort);do swl "$s $f";pex "$s $f";done|grep -Eiv "$s54"|sef "$e08";fi;fdv "$(pex 'nvme list -o json'|jq -r "$j6"|sort)";fmd $(cat $p84|snf "$e82"); }
 
 function ulg { local d=${1:-$(date +%F)};nex "cat $p69"|snf "/$g60$d/,/$g61$d/p"; }
 function uls { local e=$(snf "/$1/,/^ *$/p" <<< "$2"|grep -Ev "$1|^ *$"|sort -u);if [[ $e ]];then echo -e "\n$1\n$e";fi; }
