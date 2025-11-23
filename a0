@@ -19,6 +19,9 @@ function sin {
   hrv-intel6*) printf 192.168.8.40 ;;
   hrv-zen*   ) printf 192.168.8.100 ;;
   hrv-lenovo*) printf 192.168.8.101 ;;
+  $vnm1*) printf $vip1 ;;
+  $vnm2*) printf $vip2 ;;
+  $vnm3*) printf $vip3 ;;
   *) printf %s "$1" ;;
   esac
 }
