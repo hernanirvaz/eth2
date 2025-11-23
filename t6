@@ -74,7 +74,6 @@ function z1t { [[ $cunm = $cut1 ]]; }                                           
 function z2t { [[ $cunm = $cut2 ]]; }                                                                                                                         # auxi ntp                test
 function zdt { stt || [[ $cun1 != $cut1 ]]; }                                                                                                                 # 2 or external ntp       test
 function z4t { [[ $cunm = $znm4 ]]; }                                                                                                                         # best zotac              test
-function n1t { [[ $cunm = $cun1 ]]; }
 function n2t { [[ $cunm = $cun2 ]]; }
 function n3t { [[ $cun1 != $cun2 || $cun1 != $cumv ]]; }
 function ndt { [[ $cun1 != $cun2 ]]; }

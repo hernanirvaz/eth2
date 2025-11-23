@@ -37,6 +37,7 @@ function sn4 {
 function sef { sed -E  "$1" $2 2>$p03; }
 function snf { sed -En "$1" $2 2>$p03; }
 
+function n1t { [[ $cunm = $cun1 ]]; }
 function sct { [[ $cunm = $cuvc || $cunm = $cun1 || $cunm = $cun2 ]]; }
 function svt { [[ $cunm = $cuvc ]]; }
 function ndp { [[ $cunm = $inm5 || $cunm = $vnm2 ]]; }
