@@ -85,6 +85,12 @@ function zls {
 zls hrv-zotac2 hrv-zotac3 hrv-zotac4 hrv-intel5 hrv-intel6
 vls ns3168040.ip-51-89-64.eu ns31198432.ip-51-89-64.eu
 
+alias wgp='sudo wg-quick down wg0'
+alias wga='sudo wg-quick up   wg0'
+# alias wge='sudo systemctl enable  wg-quick@wg0'
+# alias wgd='sudo systemctl disable wg-quick@wg0'
+alias wgs='sudo wg show'
+
 alias mr='echo 192.168.1.254:$V ;telnet 192.168.1.254'
 alias zp="ecv hrv-intel6 hrv-intel5 hrv-zotac4 hrv-zotac3 hrv-zotac2"
 alias zo="ocv hrv-intel6 hrv-intel5 hrv-zotac4 hrv-zotac3 hrv-zotac2;rcp hrv-zotac1"
