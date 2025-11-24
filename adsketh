@@ -46,22 +46,20 @@ function z7z {
   sudo 7z a -p$W -mhe=on "$f" "$d"
   sudo chown "$u:$u" "$f"
 }
-function ufz { echo "$B"|gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 -c $1; }
-function zfu { echo "$B"|gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 -d $1; }
+function ufz { echo "$B"|gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 -c "$1"; }
+function zfu { echo "$B"|gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 -d "$1"; }
+function rcz {
+  if [[ -s $1 ]];then 
+    ufz "$1";mv "$1.gpg" ~/eth2/"$3";rm "$1";echo Found $(basename "$1")
+  else
+    echo Not found $(basename "$2")
+  fi
+} 
 function rcf { 
   local f;local s
-  s='Downloads/config-hrv-zotac1.home.arpa';f=$(find ~/$s*.xml 2>/dev/null|sort -t. -k3n|tail -n1)
-  if [[ -s $f ]];then 
-    ufz $f;mv $f.gpg ~/eth2/rt-pfsense.xml.gpg;rm $f
-  else
-    echo "No $s*.xml config files found"
-  fi
-  s='rt-pfsense';f=$(find ~/$s*.txt 2>/dev/null|tail -n1)
-  if [[ -s $f ]];then 
-    ufz $f;mv $f.gpg ~/eth2;rm $f
-  else
-    echo "No $s*.txt config files found"
-  fi
+  s='Downloads/config-hrv-zotac1.home.arpa';f=$(find ~/$s*.xml 2>/dev/null|sort -t. -k3n|tail -n1);rcz "$f" "$s" rt-pfsense.xml.gpg
+  s='Downloads/ArcherC6v220220613137n'     ;f=$(find ~/$s*.bin 2>/dev/null|tail -n1)              ;rcz "$f" "$s" rt-tplink.bin.gpg
+  s='rt-pfsense'                           ;f=$(find ~/$s*.txt 2>/dev/null|tail -n1)              ;rcz "$f" "$s"
 }
 function vls {
   [[ $# -eq 0 ]] && return;local s='';local c=1;local p=2020 
