@@ -3,7 +3,7 @@
 LANG=C
 LC_ALL=C
 
-stc () { s='Ping|Download|Upload';e=$(speedtest --simple 2>/dev/null|grep -E "$s");[ "$e" ] || return;echo $(date +"%Y-%m-%d %H:%M:%S") $e|sed -E "s% +($s):%\t\1:%g"; }
+stc () { s='Ping|Download|Upload';e=$(speedtest --simple 2>/dev/null|grep -E "$s");[ "$e" ] || return;echo $(date +"%Y-%m-%d %H:%M:%S") $e; }
 
 if [ $1 ];then
     stc
