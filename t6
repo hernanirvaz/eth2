@@ -34,8 +34,8 @@ function sgv { local g="$1";shift;echo $H|sudo -S grep -Eahv "$g" $@ 2>$p03; }
 function sip {                                              grep -Eai  "$1"    2>$p03; }
 function siv {                                              grep -Eaiv "$1"    2>$p03; }
 function lfl { echo $H|sudo -S find $1 -name "$2*" -type f -printf "%T@\t%p\n" 2>$p03|sort -nr|head -n$3|sort -n|cut -f2; }
-function ll0 { local f=$(lfl $p16/logs beacon    2);[[ $f ]] || return;echo $H|sudo -S cat $f|tail -n$((n15*2)); }                                  # get cc intern lines
-function ll1 { local f=$(lfl $p17/logs validator 2);[[ $f ]] || return;echo $H|sudo -S cat $f|tail -n$n15      ; }                                  # get vc intern lines
+function ll0 { local f=$(lfl $p16/logs beacon    2);[[ $f ]] || return;echo $H|sudo -S cat $f|tail -n$((n15*2)); }                                            # get cc intern lines
+function ll1 { local f=$(lfl $p17/logs validator 2);[[ $f ]] || return;echo $H|sudo -S cat $f|tail -n$n15      ; }                                            # get vc intern lines
 function ll2 { local f=$(lfl $p16/logs beacon    2);[[ $f ]] || return;sgn "$1" $f|tail -n$n15      ; }                                                       # get cc intern lines (specific)
 function ll3 { local f=$(lfl $p17/logs validator 4);[[ $f ]] || return;sgn "$1" $f|tail -n$2        ; }                                                       # get vc intern lines (specific)
 function ll4 { local f=$(lfl $p07/logs mainnet   2);[[ $f ]] || return;sgn "$1" $f                  ; }                                                       # get neth intern lines
