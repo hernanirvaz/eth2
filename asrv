@@ -3,28 +3,35 @@
 source /home/eth/eth2/a2
 
 if [[ $cunm = hrv-zotac2 ]];then
-  mt1 () { id jellyfin &>>/dev/null; }
-  mt2 () { id plex     &>>/dev/null; }
-  mdi () { if mt2;then echo /var/lib/plexmediaserver/mp4;else echo /media/mp4;fi; }
-  mus () { if mt2;then echo plex                        ;else echo eth       ;fi; }
-  rsy () { echo -e "\n\nrsync $1 $2";rsync --ignore-existing --delete --numeric-ids -avh -e "ssh -p $3 -i ~/.ssh/id_ed25519" $1 $2; }
-  rsl () { echo -e "\n\nrsync $1 $2";rsync --ignore-existing --delete --numeric-ids -avh                                     $1 $2; }
-  smv () { local s=hrv-zotac3;local p=$(dnz $s);local d=$(mdi);rsy $d/movie  $(dnn $s): $p;rsl $d/tv /media/bk1; }
-  stv () { local s=hrv-zotac1;local p=$(dnz $s);local d=$(mdi);rsy $d/tv2    $(dnn $s): $p; }
-  slt () { local s=hrv-zotac3;local p=$(dnz $s);local d=$(mdi);rsy $d/lust   $(dnn $s): $p; }
-  sal () { smv;sleep 10;stv;sleep 10;slt; }
-  pmv () { local s=hrv-zotac3;local p=$(dnz $s);rsy $(dnn $s):~/movie /media/mp4 $p;rsl /media/bk1/tv /media/mp4; }
-  ptv () { local s=hrv-zotac1;local p=$(dnz $s);rsy $(dnn $s):~/tv2   /media/mp4 $p; }
-  plt () { local s=hrv-zotac3;local p=$(dnz $s);rsy $(dnn $s):~/lust  /media/mp4 $p; }
-  pal () { pmv;ptv;plt; }
-  fi0 () { local d=$(mdi);echo findls $1 $d;find $d -name "*.$1" -print; }
-  fi1 () { local d=$(mdi);echo findrm $1 $d;find $d -name "*.$1" -exec sudo rm {} \;; }
-  fll () { if [[ $1 ]];then fi0 $1;else fi0 txt;fi0 jpg;fi; }
-  frm () { if [[ $1 ]];then fi1 $1;else fi1 txt;fi1 jpg;fi; }
-  fom () { local d=$(mdi);echo "ch[own|mod] $meui:$megi $d";sudo chown $meui:$megi -R $d;sudo find $d -type d -exec chmod 755 {} \;;sudo find $d -type f -exec chmod 644 {} \;; }
-  ft1 () { local d=${1:-$(mdi)/lust/ftv};find $d \( -iname "*.mp4" -or -iname "*.mkv" -or -iname "*.avi" \) -printf "%f\n"|grep -Po '\.[0-9]{2}\.\K[a-zA-Z]+'           |sort -u; }
-  ft2 () { local d=${1:-$(mdi)/lust/ftv};find $d \( -iname "*.mp4" -or -iname "*.mkv" -or -iname "*.avi" \) -printf "%f\n"|grep -Po '\.[0-9]{2}\.\K[a-zA-Z]+\.[a-zA-Z]+'|sort -u; }
-  fmv () { local d=${1:-$(mdi)/lust/ftv};find $d \( -iname "*.mp4" -or -iname "*.mkv" -or -iname "*.avi" \) -printf "%f\n"|sed -En "s%^(ftv.+)(\.[0-9]{2}\.[0-9]{2}\.[0-9]{2}\.)([a-z]+\.)([a-z]+\.)([a-z]+)(.*)([a-z0-9]{3})$%mv $d/\1\2\3\4\5\6\7 $d/\3\4\5\2\7%ip"; }
+  mt1() { id jellyfin &>>/dev/null; }
+  mt2() { id plex     &>>/dev/null; }
+  mdi() { if mt2;then echo /var/lib/plexmediaserver/mp4;else echo /media/mp4;fi; }
+  mus() { if mt2;then echo plex                        ;else echo eth       ;fi; }
+  rsy() { echo -e "\n\nrsync $1 $2";rsync --ignore-existing --delete --numeric-ids -avh -e "ssh -p $3 -i ~/.ssh/id_ed25519" $1 $2; }
+  rsl() { echo -e "\n\nrsync $1 $2";rsync --ignore-existing --delete --numeric-ids -avh                                     $1 $2; }
+  smv() { local s=hrv-zotac3;local p=$(dnz $s);local d=$(mdi);rsy $d/movie  $(dnn $s): $p;rsl $d/tv /media/bk1; }
+  stv() { local s=hrv-zotac1;local p=$(dnz $s);local d=$(mdi);rsy $d/tv2    $(dnn $s): $p; }
+  slt() { local s=hrv-zotac3;local p=$(dnz $s);local d=$(mdi);rsy $d/lust   $(dnn $s): $p; }
+  sal() { smv;sleep 10;stv;sleep 10;slt; }
+  pmv() { local s=hrv-zotac3;local p=$(dnz $s);rsy $(dnn $s):~/movie /media/mp4 $p;rsl /media/bk1/tv /media/mp4; }
+  ptv() { local s=hrv-zotac1;local p=$(dnz $s);rsy $(dnn $s):~/tv2   /media/mp4 $p; }
+  plt() { local s=hrv-zotac3;local p=$(dnz $s);rsy $(dnn $s):~/lust  /media/mp4 $p; }
+  pal() { pmv;ptv;plt; }
+  fi0() { local d=$(mdi);echo findls $1 $d;find $d -name "*.$1" -print; }
+  fi1() { local d=$(mdi);echo findrm $1 $d;find $d -name "*.$1" -exec sudo rm {} \;; }
+  fll() { if [[ $1 ]];then fi0 $1;else fi0 txt;fi0 jpg;fi; }
+  frm() { if [[ $1 ]];then fi1 $1;else fi1 txt;fi1 jpg;fi; }
+  fom() { local d=$(mdi);echo "ch[own|mod] $meui:$megi $d";sudo chown $meui:$megi -R $d;sudo find $d -type d -exec chmod 755 {} \;;sudo find $d -type f -exec chmod 644 {} \;; }
+  ftf() { find "$1" \( -path "$1/movie" -o -path "$1/tv" \) -prune -o \( -iname "*.mp4" -or -iname "*.mkv" -or -iname "*.avi" \) -printf  "$2\n"; }
+  ftr() { find "$1" \( -path "$1/movie" -o -path "$1/tv" \) -prune -o \( -iname "*.mp4" -or -iname "*.mkv" -or -iname "*.avi" \) -exec e5 "$2" {} \;; }
+  ft1() { local o=${1:-/mnt/data/downloads/complete};ftf "$o" %h|grep -Po '\.[0-9]{2}\.\K[a-zA-Z]+'           |sort -u; }
+  ft2() { local o=${1:-/mnt/data/downloads/complete};ftf "$o" %f|grep -Po '\.[0-9]{2}\.\K[a-zA-Z]+\.[a-zA-Z]+'|sort -u; }
+  ftv() {
+    local o=${1:-/mnt/data/downloads/complete}
+    local d=${2:-/media/mp4/lust/ftv}
+    ftr "$o" "$d"
+    ftf "$o" 'rm -rf "%h"'
+  }
   ufz () { echo "$B"|gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 -c $1; }
   zfu () { echo "$B"|gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 -d $1; }
   hlp () {
@@ -33,7 +40,7 @@ if [[ $cunm = hrv-zotac2 ]];then
 f{ll|rm|om}             list|remove|permission files
 r{ll|cd|pr|ar}          list|dir|para|arranca transmissions
 m{cd|up|dw|rs|st|ud|lg} media dir|up|down|restart|status|update|logs
-f[tm][12v]              ftv names first|second|mv command
+ft{12v} [o] [d]         ft[1|2] names [o]rigin|ftv mv [o]rigin [d]desino command 
 {ufz|zfu} file          encrypt|decrypt file
 EOF
   }
