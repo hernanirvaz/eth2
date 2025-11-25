@@ -195,7 +195,6 @@ g67="^$g23$g03$g04[0-9]*\|INFO\|Consensus.Processing.ProcessingStats\|[0-9]+\| *
 g68='elapsed_ms:'
 g69='DEBU?G +Session established'
 
-# source /home/eth/eth2/a3
 # slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168,180,192,204,216,228,240,252,264,276,288,300
 n00=300
 n01=180
@@ -754,5 +753,3 @@ unset b
 # b[590907]='0x82b93acde57a8c5ef6da79e79a8aca4438e035ec890f1bd7db7c356de4926841ab649e3d25c67e7714c976bc49e5a034'
 # b[1027307]='0x83c7c2d579df3b6f00513730e1bd2acb8c1515ecd0d158535d9e6c37dadbfbff20d9abd442527fdce970c3dd2818e710'
 b[1922417]='0xb41924d002745858fbbd7a728a8baf2f9d5ab9a49409809d0fb37319ba9d464fe9e5235c357a240a8eceef3fda442e1f'
-
-# source /home/eth/eth2/a4
