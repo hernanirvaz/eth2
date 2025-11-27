@@ -19,7 +19,7 @@ function nu6 { local s=$1;nu0 %.${s}f $(nbc $2 9); }
 function nbi { local s=$1;nu1         $(nbc $1 9); }
 function nu7 { nu3 "sqrt(((0$(nl2 $@))-(0$(nl0 $@))^2/$#)/$#)*1000" 4; }                                                                                      # get std list numbers
 function nu8 { nl3 $@|grep -c '^0$'; }                                                                                                                        # get # zeros list numbers
-function nu9 { nl3 $@|sort -n|head -n1; }                                                                                                                     # get min list numbers
+function nu9 { nl3 $@|awk 'NR==1{m=$1} $1<m{m=$1} END{print m}'; }                                                                                   # get min list numbers
 function nby {
   local k=1024;local m=$((k*1024));local g=$((m*1024));local t=$((g*1024))
   if   (($1>=t));then nu0 %.1fT $(nbc "$1/$t" 2)
@@ -615,7 +615,7 @@ function ell { tg2 $2|if [[ $1 ]];then sef "$1";else cat;fi; }
 function lll { tg3 $2|if [[ $1 ]];then sef "$1"|sort -t: -k2n -k3n -k4n;else cat;fi; }
 function rll { ll6 "$g09"|fln "$g47" $2|if [[ $1 ]];then sef "$1";else cat;fi; }
 function rlr { ll6 "$g48"|sef "$e51"; }
-function upl { local e=$(apt list --upgradable 2>$p03|sed 's%/.*%%'|grep -v Listing);if [[ $e ]];then echo;pr -ta${1:-6} -w ${2:-180} <<< "$e";fi; }
+function upl { local e=$(apt list --upgradable 2>$p03|sed 's%/.*%%'|grep -v Listing);if [[ $e ]];then echo;column -x  <<< "$e";fi; }
 function cpe {
   local e;local i;local n;local d;local l
   clk $1;[[ $m ]] && swn "$m";[[ $1 = h ]] && return;tmp;[[ $1 = p ]] && return;sif
