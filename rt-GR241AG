@@ -141,4 +141,11 @@
 |Sat Nov 22 16:05:47 2025      | Sat Nov 22 16:08:00 2025     |Watchdog-ssk                  |
 |Mon Nov 24 18:12:10 2025      | Mon Nov 24 18:14:08 2025     |Watchdog-smd                  |
 |Wed Nov 26 07:48:02 2025      | Wed Nov 26 07:50:36 2025     |Watchdog-mdmLock              |
+|Mon Nov 24 18:12:10 2025      | Mon Nov 24 18:14:08 2025     |Watchdog-smd                  |
+|Wed Nov 26 07:48:02 2025      | Wed Nov 26 07:50:36 2025     |Watchdog-mdmLock              |
+|                              | Thu Nov 27 10:21:21 2025     |Power down/up                 |
+|                              | Thu Nov 27 11:03:44 2025     |Power down/up                 |
+|                              | Thu Nov 27 15:33:09 2025     |Power down/up                 |
+|                              | Thu Nov 27 17:52:24 2025     |Power down/up                 |
+|Fri Nov 28 06:26:07 2025      | Fri Nov 28 06:28:43 2025     |Watchdog-mdmLock              |
 +------------------------------+------------------------------+------------------------------+
