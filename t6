@@ -920,16 +920,9 @@ function bba { if n1t;then wpe          ;else xsh $cun1 "$p53 bb"   ;fi;if ndt;t
 function caa { if n1t;then cll "$e50" $1;else xsh $cun1 "$p53 cl $1";fi;if ndt;then if n2t;then cll "$e50" $1;else xsh $cun2 "$p53 cl $1";fi;fi;if vst;then if svt;then cll "$e50" $1;else xsh $cuvc "$p53 cl $1";fi;fi;if mst;then if mct;then rll "$e51" $1;else xsh $cumv "$p53 rl $1";fi;fi; }
 function eaa { if n1t;then ell "$e50" $1;else xsh $cun1 "$p53 el $1";fi;if ndt;then if n2t;then ell "$e50" $1;else xsh $cun2 "$p53 el $1";fi;fi; }
 function laa { caa $1;eaa $1; }
-function fsp { 
-  local n=${1:-1}
-  if [[ $n -gt 9 ]];then
-    grep -v "$g31 *${n:0:1}[${n:1:1}-9][0-9]"
-  else
-    grep -v "$g31 *[$n-9][0-9]"
-  fi |grep "$g31 *[0-${2:-7}]"|sort -k2n
-}
-function esp { iet || return;local e;if tsa $s44;then e=$(ll4 "$g36.*$g30:"|sef "$e76");else e=$(ll6 "$g11.*$g35"|sef "$e77");fi;e=$(fsp $1 $2 <<< "$e");[[ $1$2 ]] || e=$(tail -n$n55 <<< "$e");[[ $e ]] && echo -e "\n$e"; }
-function csp { iet || return;local e;e=$(ll6 "$g50:"|sef "$e78"|fsp $1 $2);[[ $1$2 ]] || e=$(tail -n$n55 <<< "$e");[[ $e ]] && echo -e "\n$e"; }
+function fsp { awk -v l="${1:-0}" -v f="$g31" '$4 ~ f && $5 <= l'|sort -k2n; }
+function esp { iet || return;local e;if tsa $s44;then e=$(ll4 "$g36.*$g30:"|sef "$e76");else e=$(ll6 "$g11.*$g35"|sef "$e77");fi;e=$(fsp $1 <<< "$e");[[ $1 ]] || e=$(tail -n$n55 <<< "$e");[[ $e ]] && echo -e "\n$e"; }
+function csp { iet || return;local e;e=$(ll6 "$g50:"|sef "$e78"|fsp $1);[[ $1 ]] || e=$(tail -n$n55 <<< "$e");[[ $e ]] && echo -e "\n$e"; }
 function mre { mct || return;local s=n;local e=$(for s in $(rlr|snf "$e09"|sort -u);do printf '%3i %s\n' $(rlr|grep -co $s) $s;done|sort -n);[[ $e ]] && echo -e "\n$e"; }
 function epf { if tsa $s10;then gl0;swn "$m";fi;if tsa $s11;then ul0;swn "$m";fi;if tsa $s44;then tl0;swn "$m";fi; }
 function cpf { if tsa $s12;then bl0;swn "$m";fi;if tsa $s13;then vl0;swn "$m";fi;if tsa $s14;then ml0;swn "$m";fi; }
@@ -1299,8 +1292,8 @@ function bml { [[ $d1 = $s43 ]] || return;if bdt;then bdl $d0;elif [[ $(llc $p12
 [[ $1 = vi1 ]] && { ll3 "$g16" ${2:-$n22}|grep $(sni $cun1)                  |sef "$e50"; }
 [[ $1 = vi2 ]] && { ll3 "$g16" ${2:-$n22}|grep $(sni $cun2)                  |sef "$e50"; }
 [[ $1 = vic ]] && { ll3 "$g17" ${2:-$((n22/2))}                              |sef "$e50"; }
-[[ $1 = csp ]] && { csp $2 $3; }
-[[ $1 = esp ]] && { esp $2 $3; }
+[[ $1 = csp ]] && { csp $2; }
+[[ $1 = esp ]] && { esp $2; }
 [[ $1 = tsh ]] && { tsh $2; }
 [[ $1 = wa  ]] && { wa; }
 [[ $1 = we  ]] && { yex 'ufw enable'; }
@@ -1446,7 +1439,7 @@ if [[ $# -lt 1 ]];then
   m="$m\nbp[fsionl]\t\tcc-minutes\treport [file|peers {summary|incoming|outgoing|network|logs}]"
   m="$m\nbm[f]\t\t\tcc-daily\treport [file & $s12 nodes change/restart]"
   m="$m\nhs[012ecgubvm]\t\thistoric summary report [0-both|1-main|2-backup|el|cc|geth|besu|beacon|vc|mev]"
-  m="$m\n[ec]sp [i] [n]\t\tel|cc show peers exclude [i(1)-9][0-9]|include [0-n(9)]"
+  m="$m\n[ec]sp [m]\t\tel|cc show logged $g31 <= m(0)"
   m="$m\ncc[a|r|e]\t\tcc [a]dd/[r]emove long-lived parms|toggle what [e]l to connect to ($inm6|$inm5)"
   m="$m\ncpe [hp]\t\thours & temperature & errors status"
   m="$m\nm[vr|re]\t\tmev validator registration|relay erros"
