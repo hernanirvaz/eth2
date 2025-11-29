@@ -85,34 +85,16 @@ function zls {
 }
 function kz {
   if [[ $# -eq 0 ]];then
-    echo -e "kz port|ip (ip_last_octet)\n\nDefaults port=2020, ip_last_octet=111"
+    echo -e "kz (port|ip) [ip|port]\n\nip=last octet; Defaults port=2020, ip_last_octet=111"
     return
   fi 
   local p=$(spn 192.168.8.$1);local s=$(sio $1)
   if [[ $s -eq 111 ]];then
-    # $1 NOT [2021-2026] 
-    if [[ $p -eq 2020 ]];then
-      # $1 NOT [25-40]
-      p=$1;
-    else
-      # $1 [25-40]
-      s=$(sio $p)
-    fi
+    p=${2:-$p};if [[ $1 -le 255 ]];then s=$1;else p=$1;fi
   else 
-    # $1 [2021-2026] 
-    if [[ $p -eq 2020 ]];then
-      # $1 NOT [25-40]
-      p=$1
-    else
-      s=$(sio $p)
-    fi
-    p=$(spn 192.168.8.$s)
+    p=$1;s=${2:-111}
   fi
-  echo $1 $p $s
-  # if [[ $1 -eq $(spn 192.168.8.$1) ]];then p=$(spn 192.168.8.$1);s=$(sio $p);fi
-  # if [[ $s -ne 111 ]];then s=$(sio $p);fi
   s="192.168.8.$s";echo "Setup ubuntu server: $s:$p"
-  return
   ei0 $H $E $R $V $p >~/i0;ei1 $H $V $K $E $B >~/i1;cz0 $s $p
 } 
 
