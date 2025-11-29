@@ -14,7 +14,7 @@ dhn() { dhclient    $WAN           > /dev/null 2>&1;g=$?;[ $g -ne 0 ] && lgm "Fa
 ifd() { ifconfig    $WAN down      > /dev/null 2>&1;h=$?;[ $h -ne 0 ] && lgm "Failed to bring $WAN down.";return $h; }  
 ifu() { ifconfig    $WAN up        > /dev/null 2>&1;i=$?;[ $i -ne 0 ] && lgm "Failed to bring $WAN up."  ;return $i; }
 rex() { lgm "$1";/etc/rc.reboot    > /dev/null 2>&1;exit 1; }  
-pit() { pig $(grn) 4 || pig $(grn) 5; }
+pit() { pig $(grn) 5 || pig $(grn) 6; }
 
 if [ -f $FIL.lck ];then
     PID=$(cat $FIL.lck);rm -f $FIL.lck
