@@ -300,8 +300,8 @@ function ul0 {                                                                  
   fi
 }
 # cc control commands
-function bcl { curl -sX GET "$s31/$1" -H "accept: application/json" 2>$p03; }                                                                                 # exec node  RPC HTTP
-function bnq { curl -sX GET "$s33/$1" -H "accept: application/json" 2>$p03; }                                                                                 # exec light RPC HTTP
+function bcl { curl -sX GET "$s31/$1" -H "accept: application/json" 2>$p03; }
+function bnq { curl -sX GET "$s33/$1" -H "accept: application/json" 2>$p03; }
 function bnp { bnq peers/connected; }
 function ei0 { nu3 "(0.823*$e1+0.177*$e2)"                                        ; }                                                                         # get imported/updated/rejected data
 function b00 { nu3 "(0.10*$b3+0.90*$nn)"                                          ; }                                                                         # get change peers limit
