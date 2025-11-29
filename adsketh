@@ -86,7 +86,7 @@ function zls {
 }
 
 zls hrv-zotac2 hrv-zotac3 hrv-zotac4 hrv-intel5 hrv-intel6
-vls ns3168040.ip-51-89-64.eu ns31198432.ip-51-89-64.eu
+vls ns31198432.ip-51-89-64.eu
 
 alias wgp='sudo wg-quick down wg0'
 alias wga='sudo wg-quick up   wg0'
