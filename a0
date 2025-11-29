@@ -60,8 +60,8 @@ function sl6 {
   esac
 }
 function spn {
-  local n=2020
   local s=${1%%.*}
+  local n=2020
   case $1 in
   hrv*) n=$((n+${s##*[!0-9]})) ;;
   192.168.8.25) n=2021 ;;
@@ -72,6 +72,19 @@ function spn {
   192.168.8.40) n=2026 ;;
   esac
   printf %i $n
+}
+function sio {
+  local i=111
+  case $1 in
+  2021) i=25 ;;
+  2022) i=28 ;;
+  2023) i=31 ;;
+  2024) i=34 ;;
+  2025) i=37 ;;
+  2026) i=40 ;;
+  esac
+  printf %i $i
+ 
 }
 function sns {
   if [[ ${#1} -eq 2 ]]; then

@@ -76,14 +76,45 @@ function vls {
   alias vo="ocv $@"
 }
 function zls {
-  [[ $# -eq 0 ]] && return;local s='';local c=2;local p=2020 
+  [[ $# -eq 0 ]] && return;local s='';local c=2;local p=2020
   for s in $@;do 
     p=$(spn $s)
     alias pz$c="ping $(sin $s)"
-    alias kz$c="ei0 \$H \$E \$R \$V $p >~/i0;ei1 \$H \$V \$K \$E \$B >~/i1;cz0 $(sin $s) $p"
     ((c++))
   done
 }
+function kz {
+  if [[ $# -eq 0 ]];then
+    echo -e "kz port|ip (ip_last_octet)\n\nDefaults port=2020, ip_last_octet=111"
+    return
+  fi 
+  local p=$(spn 192.168.8.$1);local s=$(sio $1)
+  if [[ $s -eq 111 ]];then
+    # $1 NOT [2021-2026] 
+    if [[ $p -eq 2020 ]];then
+      # $1 NOT [25-40]
+      p=$1;
+    else
+      # $1 [25-40]
+      s=$(sio $p)
+    fi
+  else 
+    # $1 [2021-2026] 
+    if [[ $p -eq 2020 ]];then
+      # $1 NOT [25-40]
+      p=$1
+    else
+      s=$(sio $p)
+    fi
+    p=$(spn 192.168.8.$s)
+  fi
+  echo $1 $p $s
+  # if [[ $1 -eq $(spn 192.168.8.$1) ]];then p=$(spn 192.168.8.$1);s=$(sio $p);fi
+  # if [[ $s -ne 111 ]];then s=$(sio $p);fi
+  s="192.168.8.$s";echo "Setup ubuntu server: $s:$p"
+  return
+  ei0 $H $E $R $V $p >~/i0;ei1 $H $V $K $E $B >~/i1;cz0 $s $p
+} 
 
 zls hrv-zotac2 hrv-zotac3 hrv-zotac4 hrv-intel5 hrv-intel6
 vls ns31198432.ip-51-89-64.eu
