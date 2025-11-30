@@ -104,7 +104,7 @@ function bdt { ! fft $p61.lock && ( szt $nz || [[ $(b03 "$zk" "$zz" "$zx" "$zw")
 function sft { [[ -f $p04/$1.service ]]; }
 function bpt { ! fft $p50.lock && [[ $(era $p12 $n12) -le 1 ]] && ( (pct && pmt "$nm" "$nr" && hat && ! bdt && ! fft $p45) || rbt $n06); }
 function llc { if [[ -s  ${1:-$p03} ]];then grep -Ec "$s72|$s73|$s74|$s75|$s76|$s77" $1 2>$p03;else printf %i 0;fi; }                                         # get normal log line count
-function jrn { local s;if [[ $2 ]];then s="-g $2";else s=;fi;cex "journalctl --no-hostname --no-full -f $1 $s"; }                                             # my journal   format
+function jrn { local s;if [[ $2 ]];then s="-g $2";else s=;fi;cex journalctl --no-hostname --no-full -f $1 $s; }                                               # my journal   format
 function dmr { sex "$s00 daemon-reload"; }                                                                                                                    # daemon-reload
 function si1 { local n=${1:-0};printf %i $((20*n))   2>$p03; }
 function si2 { local n=${1:-0};printf %i $((1000*n)) 2>$p03; }
@@ -642,10 +642,10 @@ function pop { pde $1 $2 delete;pai $1 192.168.8.0/24 $2; }
 function pco { pde $1 $2;pai $1 192.168.8.0/24 $2 delete; }
 
 # Jellyfin Software Media System
-function je  { pop $n58 $s64;pop 80 ${s22}-web;pop 443 ${s22}-ssl;sex 'ufw reload';cex "$s04 $s22";cex "$s04 $s64";cex "$s04 $s62 $s63"; }
-function ja  { tse $s22 && cex "$s03 $s22";tsa $s64 || cex "$s03 $s64";tse $s62 && cex "$s03 $s62 $s63"; }
-function jp  { tse $s22 && cex "$s02 $s22";tsa $s64 && cex "$s02 $s64";tse $s62 && cex "$s02 $s62 $s63"; }
-function jd  { cex "$s05 $s64";cex "$s05 $s22";cex "$s05 $s62 $s63";pco $n58 $s64;pco 80 ${s22}-web;pco 443 ${s22}-ssl;sex 'ufw reload'; }
+function je  { pop $n58 $s64;pop 80 ${s22}-web;pop 443 ${s22}-ssl;sex 'ufw reload';cex $s04 $s22;cex $s04 $s64;cex $s04 $s62 $s63; }
+function ja  { tse $s22 && cex $s03 $s22;tsa $s64 || cex $s03 $s64;tse $s62 && cex $s03 $s62 $s63; }
+function jp  { tse $s22 && cex $s02 $s22;tsa $s64 && cex $s02 $s64;tse $s62 && cex $s02 $s62 $s63; }
+function jd  { cex $s05 $s64;cex $s05 $s22;cex $s05 $s62 $s63;pco $n58 $s64;pco 80 ${s22}-web;pco 443 ${s22}-ssl;sex 'ufw reload'; }
 # Plex Media Server
 function xop {
   pop $n41 ${s60}
@@ -675,24 +675,24 @@ function xco {
   pco 80   ${s22}-web
   pco 443  ${s22}-ssl
 }
-function xe  { xop;sex 'ufw reload';cex "$s04 $s22";cex "$s04 $s21";cex "$s04 $s58";cex "$s04 $s62 $s63"; }
-function xa  { tse $s22 && cex "$s03 $s22";tsa $s21 || cex "$s03 $s21";tse $s58 && cex "$s03 $s58";tse $s62 && cex "$s03 $s62 $s63"; }
-function xp  { tse $s22 && cex "$s02 $s22";tsa $s21 && cex "$s02 $s21";tse $s58 && cex "$s02 $s58";tse $s62 && cex "$s02 $s62 $s63"; }
-function xd  { cex "$s05 $s21";cex "$s05 $s22";cex "$s05 $s58";cex "$s05 $s62 $s63";xco;sex 'ufw reload'; }
+function xe  { xop;sex 'ufw reload';cex $s04 $s22;cex $s04 $s21;cex $s04 $s58;cex $s04 $s62 $s63; }
+function xa  { tse $s22 && cex $s03 $s22;tsa $s21 || cex $s03 $s21;tse $s58 && cex $s03 $s58;tse $s62 && cex $s03 $s62 $s63; }
+function xp  { tse $s22 && cex $s02 $s22;tsa $s21 && cex $s02 $s21;tse $s58 && cex $s02 $s58;tse $s62 && cex $s02 $s62 $s63; }
+function xd  { cex $s05 $s21;cex $s05 $s22;cex $s05 $s58;cex $s05 $s62 $s63;xco;sex 'ufw reload'; }
 # Transmission BitTorrent Daemon
 function rop { pae $n66 torrent;pop $n65 torrent; }
 function rco { pde $n66 torrent;pco $n65 torrent; }
-function re  { rop;sex 'ufw reload';cex "$s04 $s15"; }                                                                                                        # enable  transmission-daemon
-function ra  { tsa $s15 || cex "$s03 $s15"; }                                                                                                                 # start   transmission-daemon
-function rp  { tsa $s15 && cex "$s02 $s15"; }                                                                                                                 # stop    transmission-daemon
-function rd  { cex "$s05 $s15";rco;sex 'ufw reload'; }                                                                                                        # disable transmission-daemon
+function re  { rop;sex 'ufw reload';cex $s04 $s15; }                                                                                                          # enable  transmission-daemon
+function ra  { tsa $s15 || cex $s03 $s15; }                                                                                                                   # start   transmission-daemon
+function rp  { tsa $s15 && cex $s02 $s15; }                                                                                                                   # stop    transmission-daemon
+function rd  { cex $s05 $s15;rco;sex 'ufw reload'; }                                                                                                          # disable transmission-daemon
 # Bind9
 function sop { pai 53 192.168.8.0/24 dns       ; }
 function sco { pai 53 192.168.8.0/24 dns delete; }
-function se  { sop;sex 'ufw reload';cex "$s04 $s20"; }                                                                                                        # enable  named
-function sa  { tsa $s20 || cex "$s03 $s20"; }                                                                                                                 # start   named
-function sp  { tsa $s20 && cex "$s02 $s20"; }                                                                                                                 # stop    named
-function sd  { cex "$s05 $s20";sco;sex 'ufw reload'; }                                                                                                        # disable named
+function se  { sop;sex 'ufw reload';cex $s04 $s20; }
+function sa  { tsa $s20 || cex $s03 $s20; }
+function sp  { tsa $s20 && cex $s02 $s20; }
+function sd  { cex $s05 $s20;sco;sex 'ufw reload'; }
 # el/cc/vc
 function nfw { sht && pai $1 192.168.8.0/24 $2 $3; }
 function eop { local e=30303;ndp || e=30304;pae $e elp2p;if n3t;then pde 8545 elapi delete;pde 8551 eljwt delete;pde 80   elweb delete;nfw 8545 elapi       ;nfw 8551 eljwt       ;nfw 80   elweb       ;fi; }
@@ -702,50 +702,49 @@ function bco { local e=9004 ;ndp || e=9000 ;pde $e clp2p;if n3t;then pde 5052 cl
 function vop { nfw 5064 vcapi       ;pde 5064 vcapi delete; }
 function vco { nfw 5064 vcapi delete;pde 5064 vcapi       ; }
 # enable/start eth-geth eth-beacon eth-validator prometheus prometheus-node-exporter grafana-server mev-boost
-function ge  { eop;sex 'ufw reload';cex "$s04 $s10"; }                                                                                                        # enable eth-geth
-function ue  { eop;sex 'ufw reload';cex "$s04 $s11"; }                                                                                                        # enable eth-besu
-function te  { eop;sex 'ufw reload';cex "$s04 $s44"; }                                                                                                        # enable eth-nethermind
-function be  { bop;sex 'ufw reload';cex "$s04 $s12"; }                                                                                                        # enable eth-beacon
+function ge  { eop;sex 'ufw reload';cex $s04 $s10; }                                                                                                          # enable eth-geth
+function ue  { eop;sex 'ufw reload';cex $s04 $s11; }                                                                                                          # enable eth-besu
+function te  { eop;sex 'ufw reload';cex $s04 $s44; }                                                                                                          # enable eth-nethermind
+function be  { bop;sex 'ufw reload';cex $s04 $s12; }                                                                                                          # enable eth-beacon
 function ve  {
   svt                   || return
   fft $p04/$s13.service || return
   fft $p05/vc_keys      || return
   fft $p05/vc_lock      && return
-  vop;sex 'ufw reload';cex "$s04 $s13"
+  vop;sex 'ufw reload';cex $s04 $s13
 }                                                                                                                                                             # enable eth-validator
-function pe  { pai 9090/tcp 192.168.8.0/24 $s16;sex 'ufw reload';cex "$s04 $s16"; }                                                                           # enable prometheus
-function ne  { sex 'ufw reload';cex "$s04 $s17"; }                                                                                                            # enable prometheus-node-exporter
-function fe  { pai 3000/tcp 192.168.8.0/24 grafana;sex 'ufw reload';cex "$s04 $s18"; }                                                                        # enable grafana-server
-function me  { if n3t;then nfw 18550 mev;fi;sex 'ufw reload';cex "$s04 $s14"; }                                                                               # enable mev-boost
-function ga  { tsa $s10 || cex "$s03 $s10"; }                                                                                                                 # start eth-geth
-function ua  { tsa $s11 || cex "$s03 $s11"; }                                                                                                                 # start eth-besu
-function ta  { tsa $s44 || cex "$s03 $s44"; }                                                                                                                 # start eth-nethermind
-function ba  { tsa $s12 || cex "$s03 $s12"; }                                                                                                                 # start eth-beacon
+function pe  { pai 9090/tcp 192.168.8.0/24 $s16;sex 'ufw reload';cex $s04 $s16; }                                                                             # enable prometheus
+function ne  { sex 'ufw reload';cex $s04 $s17; }                                                                                                              # enable prometheus-node-exporter
+function fe  { pai 3000/tcp 192.168.8.0/24 grafana;sex 'ufw reload';cex $s04 $s18; }                                                                          # enable grafana-server
+function me  { if n3t;then nfw 18550 mev;fi;sex 'ufw reload';cex $s04 $s14; }                                                                                 # enable mev-boost
+function ga  { tsa $s10 || cex $s03 $s10; }                                                                                                                   # start eth-geth
+function ua  { tsa $s11 || cex $s03 $s11; }                                                                                                                   # start eth-besu
+function ta  { tsa $s44 || cex $s03 $s44; }                                                                                                                   # start eth-nethermind
+function ba  { tsa $s12 || cex $s03 $s12; }                                                                                                                   # start eth-beacon
 function va  {
   svt                   || return
   fft $p04/$s13.service || return
   fft $p05/vc_keys      || return
   tsa $s13              && return
-  if fft $p05/vc_lock;then sis $p02/$(basename $p18);else cex "$s03 $s13";rm -f $p05/vc_slash 2>$p03;fi                                                       # start eth-validator
+  if fft $p05/vc_lock;then sis $p02/$(basename $p18);else cex $s03 $s13;rm -f $p05/vc_slash 2>$p03;fi                                                         # start eth-validator
 }
-function pa  { tsa $s16 || cex "$s03 $s16"; }                                                                                                                 # start prometheus
-function na  { tsa $s17 || cex "$s03 $s17"; }                                                                                                                 # start prometheus-node-exporter
-function fa  { tsa $s18 || cex "$s03 $s18"; }                                                                                                                 # start grafana-server
-function ma  { tsa $s14 || cex "$s03 $s14"; }                                                                                                                 # start mev-boost
-function wa  { if pex ufw status|grep -iq inactive;then nex ufw --force enable;else swu 'FIREWALL ALREADY ACTIVE';fi;cex 'ufw reload'; }                          # enable ufw : Proceed with operation (y|n)?
+function pa  { tsa $s16 || cex $s03 $s16; }                                                                                                                   # start prometheus
+function na  { tsa $s17 || cex $s03 $s17; }                                                                                                                   # start prometheus-node-exporter
+function fa  { tsa $s18 || cex $s03 $s18; }                                                                                                                   # start grafana-server
+function ma  { tsa $s14 || cex $s03 $s14; }                                                                                                                   # start mev-boost
 # stop/disable eth-geth eth-beacon eth-validator prometheus prometheus-node-exporter grafana-server mev-boost
-function pp  { cex "$s02 $s16"; }                                                                                                                             # stop prometheus
-function np  { cex "$s02 $s17"; }                                                                                                                             # stop prometheus-node-exporter
-function fp  { cex "$s02 $s18"; }                                                                                                                             # stop grafana-server
-function gd  { cex "$s05 $s10";eco;sex 'ufw reload'; }                                                                                                        # disable eth-geth
-function ud  { cex "$s05 $s11";eco;sex 'ufw reload'; }                                                                                                        # disable eth-besu
-function td  { cex "$s05 $s44";eco;sex 'ufw reload'; }                                                                                                        # disable eth-nethermind
-function bd  { cex "$s05 $s12";bco;sex 'ufw reload'; }                                                                                                        # disable eth-beacon
-function vd  { cex "$s05 $s13";vco;sex 'ufw reload';touch $p05/vc_lock 2>$p03; }                                                                              # disable eth-validator
-function pd  { cex "$s05 $s16";pai 9090/tcp 192.168.8.0/24 $s16 delete;sex 'ufw reload'; }                                                                    # disable prometheus
-function nd  { cex "$s05 $s17"; }                                                                                                                             # disable prometheus-node-exporter
-function fd  { cex "$s05 $s18";pai 3000/tcp 192.168.8.0/24 grafana delete;sex 'ufw reload'; }                                                                 # disable grafana-server
-function md  { cex "$s05 $s14";if n3t;then nfw 18550 mev delete;fi;sex 'ufw reload'; }                                                                        # disable mev-boost
+function pp  { cex $s02 $s16; }                                                                                                                               # stop prometheus
+function np  { cex $s02 $s17; }                                                                                                                               # stop prometheus-node-exporter
+function fp  { cex $s02 $s18; }                                                                                                                               # stop grafana-server
+function gd  { cex $s05 $s10;eco;sex 'ufw reload'; }                                                                                                          # disable eth-geth
+function ud  { cex $s05 $s11;eco;sex 'ufw reload'; }                                                                                                          # disable eth-besu
+function td  { cex $s05 $s44;eco;sex 'ufw reload'; }                                                                                                          # disable eth-nethermind
+function bd  { cex $s05 $s12;bco;sex 'ufw reload'; }                                                                                                          # disable eth-beacon
+function vd  { cex $s05 $s13;vco;sex 'ufw reload';touch $p05/vc_lock 2>$p03; }                                                                                # disable eth-validator
+function pd  { cex $s05 $s16;pai 9090/tcp 192.168.8.0/24 $s16 delete;sex 'ufw reload'; }                                                                      # disable prometheus
+function nd  { cex $s05 $s17; }                                                                                                                               # disable prometheus-node-exporter
+function fd  { cex $s05 $s18;pai 3000/tcp 192.168.8.0/24 grafana delete;sex 'ufw reload'; }                                                                   # disable grafana-server
+function md  { cex $s05 $s14;if n3t;then nfw 18550 mev delete;fi;sex 'ufw reload'; }                                                                          # disable mev-boost
 function pas { t2t && sex "$p54 usbstop";t1t && sex "$p54 cputurbo";t0t && sex "$p54 cpunoturbo"; }                                                           # set usb/cpu parameters
 function paf { t3t && sex "$p54 cputurbo"; }                                                                                                                  # set turbo   parameter
 function hsg { sso $s72 $s10; }
@@ -848,10 +847,10 @@ function ibk {
   local f="$p58/pubkeys"    ;sex "cp $p02/pubkeys.new $f";cmw $f 444 eth
 }
 function ivk {
-  local n=$(nky);svt && [[ $n -gt 0 ]] || return;brs PV 0 0 $1;ibk;dmr;cex "$s03 $s12";bko $n
+  local n=$(nky);svt && [[ $n -gt 0 ]] || return;brs PV 0 0 $1;ibk;dmr;cex $s03 $s12;bko $n
   if ! tsa $s13;then
     swb 'IMPORTAR CHAVES';sex "chown -R $meeu:$meeu $p17";cmw $p17 755;imk;svd
-    fft $p05/vc_lock || cex "$s03 $s13";vko $n
+    fft $p05/vc_lock || cex $s03 $s13;vko $n
   fi
 }
 function viv { local s=${!b[@]};printf %s "[\"${s// /\",\"}\"]" 2>$p03; }
@@ -940,7 +939,7 @@ function uur {
 }
 function fdv { [[ $1         ]] || return;printf "\nDevice\tUsed\tSerialNumber\tFirmware\tModel\n";local d;local u;local f;local n;local m;while IFS=$'\t' read d u m f n;do printf "%s\t%s\t%s\t%s\t%s\n" $(basename $d) $(nby $u) $n $f "$m";done <<< "$1"; }
 function fmd { [[ -b /dev/$1 ]] || return;printf "\n";pex mdadm --detail /dev/$1; }
-function fst { local s="nvme smart-log";if [[ $1 ]];then cex "$s /dev/$1";else local f='';for f in $(find $p66 2>$p03|sort);do swl "$s $f";pex $s $f;done|grep -Eiv "$s54"|sef "$e08";fi;fdv "$(pex nvme list -o json|jq -r "$j6"|sort)";fmd $(cat $p84|snf "$e82"); }
+function fst { local s="nvme smart-log";if [[ $1 ]];then cex $s /dev/$1;else local f='';for f in $(find $p66 2>$p03|sort);do swl "$s $f";pex $s $f;done|grep -Eiv "$s54"|sef "$e08";fi;fdv "$(pex nvme list -o json|jq -r "$j6"|sort)";fmd $(cat $p84|snf "$e82"); }
 
 function ulg { local d=${1:-$(date +%F)};nex cat $p69|snf "/$g60$d/,/$g61$d/p"; }
 function uls { local e=$(snf "/$1/,/^ *$/p" <<< "$2"|grep -Ev "$1|^ *$"|sort -u);if [[ $e ]];then echo -e "\n$1\n$e";fi; }
@@ -1021,7 +1020,7 @@ function jly {
   sudo update-ca-certificates                     2>&1 | sudo tee -a $p02/$s64.out >$p03
   sudo apt install $s64                        -y 2>&1 | sudo tee -a $p02/$s64.out >$p03
   sex "chown $meeu:$meeu $p02/$s64.out"
-  cex "chown -R $s64:adm /etc/$s64";cex "usermod -aG $s64 $meeu";sex "usermod -aG render $s64"
+  cex chown -R $s64:adm /etc/$s64;cex usermod -aG $s64 $meeu;sex "usermod -aG render $s64"
   sex "mkdir -p $p80";cmw $p80 750 $s64;sex "chown -R $s64:$s64 $p80"
   jp;jd;je;dmr;ja
   echo http://$zip2:$n58
@@ -1056,7 +1055,7 @@ function smb {
   if [[ -d $p60 ]];then sex "smbpasswd -n $s60";else sex "smbpasswd -n $s64";fi
   sex "$s00 restart $s62 $s63"
 }
-function irv { [[ -f $p70 ]] && return;swu 'RVM INSTALL';cex 'apt-add-repository -y ppa:rael-gc/rvm';cex 'apt update';cex 'apt install rvm -y';cex "usermod -a -G rvm $USER";echo "source $p70" >> $p71;sex "reboot"; }
+function irv { [[ -f $p70 ]] && return;swu 'RVM INSTALL';cex apt-add-repository -y ppa:rael-gc/rvm;cex apt update;cex apt install rvm -y;cex usermod -a -G rvm $USER;echo source $p70 >> $p71;sex "reboot"; }
 function cns {
   [[ -f $p70 ]] || { echo -e "needs rvm installed\nrun t6 irv";return; }
   local s;local v;source /etc/profile.d/rvm.sh;s=$(rvm list);v='ruby-3.3.0'
@@ -1134,7 +1133,7 @@ function iz2 {
 [[ $1 = irb ]] && { irb $2;pas; }
 [[ $1 = eip ]] && { if [[ $2 && $3 ]];then curl -s4 "https://$2:$3@dyn.dns.he.net/nic/update?hostname=$2" &>$p03;fi;pas; }
 [[ $1 = eiz ]] && { if [[ $2 && $3 ]];then curl -s4 "https://$2:$3@dyn.dns.he.net/nic/update?hostname=$2"       ;fi;echo; }
-[[ $1 = snr ]] && { cex "$s37 lxd";cex "$s37 core20";cex "$s37 snapd";cex 'apt remove --autoremove snapd -y';echo -e "$s36" > nosnap.pref;cex "mv nosnap.pref $p47";cmw $p47/nosnap.pref 644 root;cex 'apt update'; }
+[[ $1 = snr ]] && { cex $s37 lxd;cex $s37 core20;cex $s37 snapd;cex apt remove --autoremove snapd -y;echo -e "$s36" > nosnap.pref;cex mv nosnap.pref $p47;cmw $p47/nosnap.pref 644 root;cex apt update; }
 function bpn { bnp|jq -r "$s78"|grep -Ei "${1:-ip6}"; }
 function bps { 
   iet || return
@@ -1173,7 +1172,7 @@ function bps {
 [[ $1 = ccr ]] && { llt && ble "$e14"; }
 [[ $1 = cca ]] && { llt || ble "$e15"; }
 [[ $1 = cce ]] && { cce; }
-[[ $1 = chk ]] && { cex 'chkrootkit'; }
+[[ $1 = chk ]] && { cex chkrootkit; }
 [[ $1 = dsh ]] && { $s09 query ${2:-smtp.gmail.com}; }
 [[ $1 = drs ]] && { dpa; }
 [[ $1 = nsh ]] && { nsh; }
@@ -1298,13 +1297,14 @@ function bml { [[ $d1 = $s43 ]] || return;if bdt;then bdl $d0;elif [[ $(llc $p12
 [[ $1 = csp ]] && { csp $2; }
 [[ $1 = esp ]] && { esp $2; }
 [[ $1 = tsh ]] && { tsh $2; }
+function wa { if pex ufw status|grep -iq inactive;then cex ufw --force enable;else swb 'FIREWALL ALREADY ACTIVE';fi;cex ufw reload; }  
 [[ $1 = wa  ]] && { wa; }
-[[ $1 = we  ]] && { nex ufw --force enable; }
-[[ $1 = wpr ]] && { cex 'ufw disable'; }
-[[ $1 = wds ]] && { cex 'ufw disable'; }
-[[ $1 = ws  ]] && { cex 'ufw status verbose'; }
-[[ $1 = ipw ]] && { ipw;pex ufw status verbose; }
-[[ $1 = iaw ]] && { iaw;pex ufw status verbose; }
+[[ $1 = we  ]] && { cex ufw --force enable; }
+[[ $1 = wpr ]] && { cex ufw disable; }
+[[ $1 = wds ]] && { cex ufw disable; }
+[[ $1 = ws  ]] && { cex ufw status verbose; }
+[[ $1 = ipw ]] && { ipw;cex ufw status verbose; }
+[[ $1 = iaw ]] && { iaw;cex ufw status verbose; }
 [[ $1 = wl  ]] && { wlp ${@:2:$#}|sef "$e19"; }
 [[ $1 = wlz ]] && { wlp ${@:2:$#}; }
 # journal
