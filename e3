@@ -2,10 +2,10 @@
 
 source /home/eth/eth2/t1
 
-function jva { local f=$(basename $1);cp $1 $f.sav;cp $1 $f.new;echo -e "$2" >> $f.new;sex "cp $f.new $1"; }                                                  # add lines to end file
+function jva { local f=$(basename $1);cp $1 $f.sav;cp $1 $f.new;echo -e "$2" >> $f.new;sex cp $f.new $1; }                                                    # add lines to end file
 
-swu "INSTALAR $s73";sex 'apt install default-jdk libjemalloc-dev -y';jva $p36 "$s23";cmw $p36 644 root                                                        # besu execution client needs
-sex "mkdir -p $p09/data";sau eth1;sjw;cmw $p09 755 eth1;cmw $p09/data 700 eth1                                                                                # create dir & user for ec
+swu "INSTALAR $s73";sex apt install default-jdk libjemalloc-dev -y;jva $p36 "$s23";cmw $p36 644 root                                                          # besu execution client needs
+sex mkdir -p $p09/data;sau eth1;sjw;cmw $p09 755 eth1;cmw $p09/data 700 eth1                                                                                  # create dir & user for ec
 unv $1                                                                                                                                                        # download/install besu binaries
 maxp=25
 pp2p=30303;ndp || pp2p=30304
@@ -39,4 +39,4 @@ ExecStopPost=+$p02/eth2/t7 ${s73}STP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 [Install]
 WantedBy=multi-user.target
 EOF
-sex "mv $s11.service $p04";cmw $p04/$s11.service 644
+sex mv $s11.service $p04;cmw $p04/$s11.service 644

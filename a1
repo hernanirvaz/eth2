@@ -43,7 +43,7 @@ function svt { [[ $cunm = $cuvc ]]; }
 function ndp { [[ $cunm = $inm5 || $cunm = $vnm2 ]]; }
 function tsa { echo "$H"|sudo -S -p '' $s00 is-active  --quiet "$1" &>$p03; }
 function tse { echo "$H"|sudo -S -p '' $s00 is-enabled --quiet "$1" &>$p03; }
-function hrs { if [[ -f $p68 ]];then sex "$s04 $s56";sex "$s06 $s56";local e=$s56;elif tsa ntp;then sex "$s06 ntp";local e=ntp;else sex "$s06 $s19";local e=$s19;fi;swb "CLOCK RESET ($e)"; }
+function hrs { if [[ -f $p68 ]];then sex $s04 $s56;sex $s06 $s56;local e=$s56;elif tsa ntp;then sex $s06 ntp;local e=ntp;else sex $s06 $s19;local e=$s19;fi;swb "CLOCK RESET ($e)"; }
 function srv { if [[ $cunm = $1 ]];then cd $p02;return;else swb "TEM DE ESTAR $1";return 1;fi; }
 function swb { echo -e "\n\e[5m${*^^}\e[0m\n"; }
 function swr { echo -e "\e[5;31m${*^^}\e[0m"; }
@@ -51,27 +51,30 @@ function swg { echo -e "\e[32m${*^^}\e[0m"; }
 function swu { echo -e "${*^^}"; }
 function swn { echo -e "$*"; }
 function swl { echo -e "\n$1\n"; }
-function sau { id "$1" &>$p03 || sex "useradd --no-create-home --shell /bin/false $1"; }
-function cmw { [[ $2 ]] && sex "chmod $2 $1";[[ $3 ]] && sex "chown $3:${4:-$3} $1"; }
-function svd { sex "chown -R eth3:eth3 $p17";cmw $p17 700 eth3; }
+function sau { id "$1" &>$p03 || sex useradd --no-create-home --shell /bin/false $1; }
+function cmw { [[ $2 ]] && sex chmod $2 $1;[[ $3 ]] && sex chown $3:${4:-$3} $1; }
 # unused function yex { swb $@;echo "$H"|sudo -S -p '' -v &>$p03;yes|sudo -n "$@" &>$p03; }
+function aex {        echo "$H"|sudo -S -p '' -v   &>$p03; } # keep sudo alive
 function cex { swb $@;echo "$H"|sudo -S -p '' "$@" 2>$p03; }
 function nex { swn $@;echo "$H"|sudo -S -p '' "$@" 2>$p03; }
 function sex {        echo "$H"|sudo -S -p '' $1 &>$p03; }
 function pex {        echo "$H"|sudo -S -p '' "$@" 2>$p03; }
 function dex { [[ $@ ]] || return;swl $@;$@; }
-function gps { sex "$s02 $s10"; }
-function ups { sex "$s02 $s11"; }
-function tps { sex "$s02 $s44"; }
-function bps { sex "$s02 $s12"; }
-function vps { sex "$s02 $s13";touch $p05/vc_slash 2>$p03; }
-function mps { sex "$s02 $s14"; }
-function gp  { if tsa "$s10";then cex $s02 $s10;else sex "$s02 $s10";fi; }
-function up  { if tsa "$s11";then cex $s02 $s11;else sex "$s02 $s11";fi; }
-function tp  { if tsa "$s44";then cex $s02 $s44;else sex "$s02 $s44";fi; }
-function bp  { if tsa "$s12";then cex $s02 $s12;else sex "$s02 $s12";fi; }
-function vp  { if tsa "$s13";then cex $s02 $s13;else sex "$s02 $s13";fi;touch $p05/vc_slash 2>$p03; }
-function mp  { if tsa "$s14";then cex $s02 $s14;else sex "$s02 $s14";fi; }
+function svd { sex chown -R eth3:eth3 $p17;cmw $p17 700 eth3; }
+function wsr { sex ufw reload; }
+function wcr { cex ufw reload; }
+function gps { sex $s02 $s10; }
+function ups { sex $s02 $s11; }
+function tps { sex $s02 $s44; }
+function bps { sex $s02 $s12; }
+function vps { sex $s02 $s13;touch $p05/vc_slash 2>$p03; }
+function mps { sex $s02 $s14; }
+function gp  { if tsa "$s10";then cex $s02 $s10;else sex $s02 $s10;fi; }
+function up  { if tsa "$s11";then cex $s02 $s11;else sex $s02 $s11;fi; }
+function tp  { if tsa "$s44";then cex $s02 $s44;else sex $s02 $s44;fi; }
+function bp  { if tsa "$s12";then cex $s02 $s12;else sex $s02 $s12;fi; }
+function vp  { if tsa "$s13";then cex $s02 $s13;else sex $s02 $s13;fi;touch $p05/vc_slash 2>$p03; }
+function mp  { if tsa "$s14";then cex $s02 $s14;else sex $s02 $s14;fi; }
 function fft { [[ -f $1 ]]; }
 function shc { sha256sum $1 2>$p03|cut -d' ' -f1; }
 function srb { rm -f $1.* 2>$p03;if [[ $2 = RB ]];then if fft $p50.print;then gp;up;tp;bp;vp;mp;rm -f $p05/vc_slash $p50.print 2>$p03;cex reboot;else gps;ups;tps;bps;vps;mps;rm -f $p05/vc_slash 2>$p03;sex reboot;fi;else rm -f $p50.print 2>$p03;fi; }
@@ -80,15 +83,15 @@ function pde { local e="deny $1"                                  ;if [[ $3 ]];t
 function pai { local e="allow from $2 to any port ${1/\// proto }";if [[ $4 ]];then nex ufw $4 $e;else nex ufw $e comment $3;fi; }
 function pae { local e="allow $1"                                 ;if [[ $3 ]];then nex ufw $3 $e;else nex ufw $e comment $2;fi; }
 function ple { local e="limit $1"                                 ;if [[ $3 ]];then nex ufw $3 $e;else nex ufw $e comment $2;fi; }
-function sis { local f=$(basename $1);if [[ -s $1 ]];then swg "NEW $f";sex "mv $1 $p17";touch $p05/vc_slash 2>$p03;cmw $p18 600 eth3;else swr "NO $f";fi; }
+function sis { local f=$(basename $1);if [[ -s $1 ]];then swg "NEW $f";sex mv $1 $p17;touch $p05/vc_slash 2>$p03;cmw $p18 600 eth3;else swr "NO $f";fi; }
 function sjw { 
   [[ $cunm = $inm5 || $cunm = $inm6 || $cunm = $vnm1 || $cunm = $vnm2 ]] || return;local s=${b[*]}
-  if [[ -d $p58 ]]        ;then swn "JA EXISTE $p58/"       ;else sex "mkdir -p $p58";cmw "$p58" 755 eth                         ;fi
+  if [[ -d $p58 ]]        ;then swn "JA EXISTE $p58/"       ;else sex mkdir -p $p58;cmw "$p58" 755 eth                         ;fi
   if [[ -s $p58/jwt ]]    ;then swn "JA EXISTE $p58/jwt"    ;else openssl rand -hex 32|tr -d '\n' > "$p58/jwt";cmw "$p58/jwt" 444;fi
   if [[ -s $p58/pubkeys ]];then swn "JA EXISTE $p58/pubkeys";else echo "${s// /,}" > "$p58/pubkeys";cmw "$p58/pubkeys" 444 eth2  ;fi
 }
 function svc { swb "$s76 $1 check slash,srv,dirs";pex ls -l $p17;pex cat $p04/$s13.service; }
-function unv { local v=${1:-23.1.0};curl -LO https://hyperledger.jfrog.io/artifactory/besu-binaries/besu/$v/besu-$v.tar.gz;shc besu-$v.tar.gz;swn "INSTALAR $s73 $v (SIM/nao)?";local rsp=nao;read rsp;if [[ $rsp = SIM ]];then tar xvf besu-$v.tar.gz;sex "cp -a besu-$v $p00/besu";sex "chown eth1:eth1 -R $p00/besu";cmw $p00/besu 755 eth1;fi; }
+function unv { local v=${1:-23.1.0};curl -LO https://hyperledger.jfrog.io/artifactory/besu-binaries/besu/$v/besu-$v.tar.gz;shc besu-$v.tar.gz;swn "INSTALAR $s73 $v (SIM/nao)?";local rsp=nao;read rsp;if [[ $rsp = SIM ]];then tar xvf besu-$v.tar.gz;sex cp -a besu-$v $p00/besu;sex chown eth1:eth1 -R $p00/besu;cmw $p00/besu 755 eth1;fi; }
 function gnv {
   local v=${1:-go1.25.4};local f="$v.linux-amd64.tar.gz";local l='/usr/local/go/bin';local s;s=$(dirname $l)
   cd "$p02" || return
@@ -96,14 +99,14 @@ function gnv {
     return
   else 
     swu "INSTALAR $v EM $s"
-    sex "rm -f $f"
+    sex rm -f $f
     wget -q https://go.dev/dl/$f
-    sex "rm -rf $s"
-    sex "tar -C $(dirname $s) -xzf $f"
+    sex rm -rf $s
+    sex tar -C $(dirname $s) -xzf $f
     if ! grep -q $l "$p02/.profile";then echo "if [ -d \"$l\" ] && ! echo \$PATH|grep -q \"(^|:)$l(:|$)\";then PATH=\"\$PATH:$l\";fi" >> "$p02/.profile";fi
   fi
 }
-function mn0 { cd "$p02" || return;sex 'rm -rf go';sex "rm -rf $1"; }
+function mn0 { cd "$p02" || return;sex rm -rf go;sex rm -rf $1; }
 function mn1 { CGO_CFLAGS="-O -D__BLST_PORTABLE__" /usr/local/go/bin/go install github.com/flashbots/$2@$1; }
 function mn2 { git clone https://github.com/flashbots/$2.git;cd $2;git checkout tags/$1;make build; }
 function mnv {
@@ -120,22 +123,22 @@ function mnv {
     fi
     if [[ -x $f ]]; then
       swu "INSTALAR $v $e"
-      sex "mv $f $p00"
+      sex mv $f $p00
       mn0 $e
     fi
     cmw $p00/$e 755 eth4
   fi
 }
 function snv { local v=${1:-v2.8.0};local f="staking_deposit-cli-${2:-948d3fc}-linux-amd64.tar.gz";rm -f $f;curl -LO https://github.com/ethereum/staking-deposit-cli/releases/download/$v/$f;local s=$(shc $f);swn "INSTALAR $f ($s)?";local rsp=nao;read rsp;if [[ $rsp = $s ]];then tar xf $f --strip-components 2;fi; }
-function esv { local v=${1:-v1.2.0};local f="ethstaker_deposit-cli-${2:-18b7608}-linux-amd64.tar.gz";local e='deposit';if [[ $($p00/$e --version 2>&1|snf "$e83") = $v ]];then swu "$e $v EXISTE";else sex "rm -f $f $p00/$e";curl -LO https://github.com/eth-educators/ethstaker-deposit-cli/releases/download/$v/$f;local s=$(shc $f);swn "INSTALAR $f ($s)?";local rsp=nao;read rsp;if [[ $rsp = $s ]];then sex "tar -C $p00 -xf $f --strip-components 2";cmw $p00/$e 755 eth;fi;fi; }
+function esv { local v=${1:-v1.2.0};local f="ethstaker_deposit-cli-${2:-18b7608}-linux-amd64.tar.gz";local e='deposit';if [[ $($p00/$e --version 2>&1|snf "$e83") = $v ]];then swu "$e $v EXISTE";else sex rm -f $f $p00/$e;curl -LO https://github.com/eth-educators/ethstaker-deposit-cli/releases/download/$v/$f;local s=$(shc $f);swn "INSTALAR $f ($s)?";local rsp=nao;read rsp;if [[ $rsp = $s ]];then sex tar -C $p00 -xf $f --strip-components 2;cmw $p00/$e 755 eth;fi;fi; }
 function dnv { 
   local v=${1:-1.39.0};local s;local r;local f="ethdo-$v-linux-amd64.tar.gz";local e="https://github.com/wealdtech/ethdo/releases/download/v$v"
   rm -f $f $f.sha256;curl -LO $e/$f -LO $e/$f.sha256
   s=$(shc $f);r=$(cat $f.sha256)
   if [[ $r = $s ]];then tar xf $f;swb "INSTALADO $f";fi
 }
-function dlv { local v=latest;local f="go/bin/ethdo"   ;local l='/usr/local/go/bin';cd $p02;sex "rm -rf go";$l/go install github.com/wealdtech/ethdo@$v      ;if [[ -f $f ]];then swu "INSTALAR $v ETHDO"  ;sex "cp $f $p00";fi;cmw $p00/ethdo    755 eth; }
-function rlv { local v=latest;local f="go/bin/ethereal";local l='/usr/local/go/bin';cd $p02;sex "rm -rf go";$l/go install github.com/wealdtech/ethereal/v2@$v;if [[ -f $f ]];then swu "INSTALAR $v ETHREAL";sex "cp $f $p00";fi;cmw $p00/ethereal 755 eth; }
+function dlv { local v=latest;local f="go/bin/ethdo"   ;local l='/usr/local/go/bin';cd $p02;sex rm -rf go;$l/go install github.com/wealdtech/ethdo@$v      ;if [[ -f $f ]];then swu "INSTALAR $v ETHDO"  ;sex cp $f $p00;fi;cmw $p00/ethdo    755 eth; }
+function rlv { local v=latest;local f="go/bin/ethereal";local l='/usr/local/go/bin';cd $p02;sex rm -rf go;$l/go install github.com/wealdtech/ethereal/v2@$v;if [[ -f $f ]];then swu "INSTALAR $v ETHREAL";sex cp $f $p00;fi;cmw $p00/ethereal 755 eth; }
 function rlt { gnv;[[ -x $p00/ethereal ]] || rlv;if [[ -x $p00/ethereal ]];then return 0;else swb 'TEM DE TER ETHEREAL';return 1;fi; }
 function rcm { local s="$1 $2 $s68";shift;shift;printf '%s %s %s\n' ethereal $s;printf '%s\n' $@;echo;$p00/ethereal $s $@; }
 function nnv {
@@ -160,18 +163,18 @@ function nnv {
   if [[ $rsp = "sha256:$e" ]]; then
     tsa $s44 && t6 tgp
     unzip "$f" -d "$s"
-    sex "rm -fr $p00/$s.sav"
+    sex rm -fr $p00/$s.sav
     cex mv $p00/$s $p00/$s.sav
-    sex "rm -rf $p00/$s"
-    sex "cp -a $s $p00/$s"
-    sex "chown eth1:eth1 -R $p00/$s"
+    sex rm -rf $p00/$s
+    sex cp -a $s $p00/$s
+    sex chown eth1:eth1 -R $p00/$s
     cmw "$p00/$s" 755 eth1
     t6 ta
   fi
 }
-function gtv { local f="geth-linux-amd64-${1:-1.13.14}-${2:-2bd6bd01}";rm -rf $f*;curl -LO https://gethstore.blob.core.windows.net/builds/$f.tar.gz;local s=$(md5sum "$f.tar.gz"|cut -d' ' -f1);swn "\nINSTALAR $f ($s)?";local rsp=nao;read rsp;if [[ $rsp = $s ]];then tar xf "$f.tar.gz";sex "cp $f/geth $p00";cmw "$p00/geth" 755 eth;fi; }
+function gtv { local f="geth-linux-amd64-${1:-1.13.14}-${2:-2bd6bd01}";rm -rf $f*;curl -LO https://gethstore.blob.core.windows.net/builds/$f.tar.gz;local s=$(md5sum "$f.tar.gz"|cut -d' ' -f1);swn "\nINSTALAR $f ($s)?";local rsp=nao;read rsp;if [[ $rsp = $s ]];then tar xf "$f.tar.gz";sex cp $f/geth $p00;cmw "$p00/geth" 755 eth;fi; }
 function imk { local f="$p02/key.txt";echo "$K" > "$f";$p00/lighthouse --datadir "$p05" account validator import --network mainnet --reuse-password --password-file "$f" --directory $p19;rm -f "$f"; }
-function cc1 { local f=$(basename "$1");sex "cp $1 $f.sav";cmw "$f.sav" 644 eth        ;sef "$2" "$f.sav" > "$f.new";sex "cp $f.new $1"; }                    # edit             file
-function cc2 { local f=$(basename "$1");sex "cp $1 $f.sav";cp  "$1" "$f.new"           ;echo -e "$2"     >> "$f.new";sex "cp $f.new $1"; }                    # add lines to end file
-function cc3 { local f=$(basename "$1");sex "cp $1 $f.sav";sef "$2" "$f.sav" > "$f.new";echo -e "$3"     >> "$f.new";sex "cp $f.new $1"; }                    # add lines to pos file
-function cc4 { local f=$(basename "$1");sex "cp $1 $f.sav"                             ;echo -e "$2"      > "$f.new";sex "cp $f.new $1"; }                    # replace lines of file
+function cc1 { local f=$(basename "$1");sex cp $1 $f.sav;cmw "$f.sav" 644 eth        ;sef "$2" "$f.sav" > "$f.new";sex cp $f.new $1; }                        # edit             file
+function cc2 { local f=$(basename "$1");sex cp $1 $f.sav;cp  "$1" "$f.new"           ;echo -e "$2"     >> "$f.new";sex cp $f.new $1; }                        # add lines to end file
+function cc3 { local f=$(basename "$1");sex cp $1 $f.sav;sef "$2" "$f.sav" > "$f.new";echo -e "$3"     >> "$f.new";sex cp $f.new $1; }                        # add lines to pos file
+function cc4 { local f=$(basename "$1");sex cp $1 $f.sav                             ;echo -e "$2"      > "$f.new";sex cp $f.new $1; }                        # replace lines of file

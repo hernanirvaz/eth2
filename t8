@@ -45,5 +45,5 @@ ExecStopPost=+$p02/eth2/t7 ${s77}STP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 [Install]
 WantedBy=multi-user.target
 EOF
-sex "mv $s14.service $p04";cmw $p04/$s14.service 644
+sex mv $s14.service $p04;cmw $p04/$s14.service 644
 swn 'para iniciar mev-boost: t mea'

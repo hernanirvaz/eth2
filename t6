@@ -105,7 +105,7 @@ function sft { [[ -f $p04/$1.service ]]; }
 function bpt { ! fft $p50.lock && [[ $(era $p12 $n12) -le 1 ]] && ( (pct && pmt "$nm" "$nr" && hat && ! bdt && ! fft $p45) || rbt $n06); }
 function llc { if [[ -s  ${1:-$p03} ]];then grep -Ec "$s72|$s73|$s74|$s75|$s76|$s77" $1 2>$p03;else printf %i 0;fi; }                                         # get normal log line count
 function jrn { local s;if [[ $2 ]];then s="-g $2";else s=;fi;cex journalctl --no-hostname --no-full -f $1 $s; }                                               # my journal   format
-function dmr { sex "$s00 daemon-reload"; }                                                                                                                    # daemon-reload
+function dmr { sex $s00 daemon-reload; }                                                                                                                    # daemon-reload
 function si1 { local n=${1:-0};printf %i $((20*n))   2>$p03; }
 function si2 { local n=${1:-0};printf %i $((1000*n)) 2>$p03; }
 function svi {
@@ -139,7 +139,7 @@ function svv {
 }
 function smm { m0=$(nu4 3 $(ln4 "$g34" "$g09" $1));m1=$(rlr|wc -l); }
 function spc { nn=$2;cp $p04/$1.service $p02/$1.sav;sef "$e65$2%" $p02/$1.sav > $p04/$1.service; }                                                            # service configuration change/reload
-function snp { sft $1 || return;local n=$(($2+$5));(($2!=0&&n>=$3&&n<=$4)) && spc $1 $n;tsa $1 && sex "$s02 $1";dmr; }                                        # service peers change/stop
+function snp { sft $1 || return;local n=$(($2+$5));(($2!=0&&n>=$3&&n<=$4)) && spc $1 $n;tsa $1 && sex $s02 $1;dmr; }                                          # service peers change/stop
 function sra { if fft $p45;then nu1 $(($(date +%s)-$(date -r $p45 +%s)));else printf %i 0;fi }                                                                # system reboot age (secounds)
 function dts { read       d0 d1   <<< ${1:-$(date '+%F %H:%M')};dt="$d0 $d1"; }                                                                               # set date/time vars
 function dtl { read _ _ _ d0 d1 _ <<< $(bff|tail -n1)          ;dt="$d0 $d1"; }                                                                               # set date/time vars with last beacon log
@@ -233,7 +233,7 @@ function grs {
   s2t $p40 && return;gv0;gq0;touch $p40.a$(stg);ssw $3 $p40;s1t $p40 && return
   local t=$(sng);local f=$p40.i$(stg);touch $f;local n=0;paf;while fft $f;do ((n+=$(sfn $t)));ssf $(sfn $t) $p40 $t
   if ipt $t;then rm $f;snp $s10 $2 $n34 $n25 $en
-    if [[ $1 = RB ]];then ero $1 $n $p10;srb $p40 $1;else sex "$s03 $s10";ssf $n26 $p40;gq0;ero $1 $n $p10;fi
+    if [[ $1 = RB ]];then ero $1 $n $p10;srb $p40 $1;else sex $s03 $s10;ssf $n26 $p40;gq0;ero $1 $n $p10;fi
   fi;done;srb $p40
 }
 function gdi { if g0t $1;then l4=$(ll6 "$g12"|tail -n$1);else l4=$(ll6 "$g12");fi;e1=$(nu5 3 $(ln2 "${w0}elapsed= *$w2")); }
@@ -254,7 +254,7 @@ function gl0 {                                                                  
     m="GSRV NOT ON $dt"
   fi
 }
-function tfa { sex "$s03 $s44";ssf $n26 $p63;tq0;ero $1 $2 $p62; }
+function tfa { sex $s03 $s44;ssf $n26 $p63;tq0;ero $1 $2 $p62; }
 function trs {
   s2t $p63 && return;tv0;tq0;touch $p63.a$(stg);ssw $3 $p63;s1t $p63 && return
   local t=$(sng);local f=$p63.i$(stg);touch $f;local n=0;paf;while fft $f;do ((n+=$(sfn $t)));ssf $(sfn $t) $p63 $t
@@ -281,7 +281,7 @@ function urs {
   s2t $p41 && return;uv0;uq0;touch $p41.a$(stg);ssw $3 $p41;s1t $p41 && return
   local t=$(sng);local f=$p41.i$(stg);touch $f;local n=0;paf;while fft $f;do ((n+=$(sfn $t)));ssf $(sfn $t) $p41 $t
   if ipt $t;then rm $f;snp $s11 $2 $n34 $n25 $en
-    if [[ $1 = RB ]];then ero $1 $n $p11;srb $p41 $1;else sex "$s03 $s11";ssf $n26 $p41;uq0;ero $1 $n $p11;fi
+    if [[ $1 = RB ]];then ero $1 $n $p11;srb $p41 $1;else sex $s03 $s11;ssf $n26 $p41;uq0;ero $1 $n $p11;fi
   fi;done;srb $p41
 }
 function udi { if g0t $1;then l4=$(ll6 "$g12"|tail -n$1);else l4=$(ll6 "$g12");fi;e1=$(nu5 3 $(ln2 "${w0} in $w2")); }
@@ -435,10 +435,10 @@ function bwc { bwd|grep -Exc "$(vix)" 2>$p03; }
 function ero { dts;swn "$(printf 'R%03i %2s SRV'      $2 $1     2>$p03) $(npn $er $en)" >> $3  ; }
 function vro { dts;swn "$(printf 'VL%2s %6i %10s %5s' $1 $2 $dt 2>$p03)"                >> $p49; }
 function bro { if fft $p12;then dts;bnn;bb0;swn "$(printf 'R%03i %2s %3i' $2 $1 $(bri) 2>$p03) $(npn $nr $nn)" >> $p12;else vro $1 $2;fi; }
-function cpr { snp $s12 $2 $n16 $n17 $nn;[[ $1 = VC || $1 = PV ]] && sex "$s02 $s13"; }
-function car { sex "$s03 $s12"          ;[[ $1 = VC            ]] && sex "$s03 $s13"; }
+function cpr { snp $s12 $2 $n16 $n17 $nn;[[ $1 = VC || $1 = PV ]] && sex $s02 $s13; }
+function car { sex $s03 $s12            ;[[ $1 = VC            ]] && sex $s03 $s13; }
 function cfb { if [[ $1 = RB  ]];then bro $1 $3;cpr $1 $2;srb $p42 $1;elif [[ $1 = PR || $1 = PV ]];then bro $1 $3;cpr $1 $2;else cpr $1 $2;car $1;ssf $n26 $p42;bro $1 $3;fi; }
-function vfb { if [[ $1 = TR  ]];then sleep 24s;fi;sex "$s02 $s13";touch $p05/vc_slash 2>$p03;dmr;vro $1 $2;if [[ $1 = RS ]];then sex "$s03 $s13";rm -f $p05/vc_slash 2>$p03;elif [[ $1 = RB ]];then srb $p46 $1;fi; }
+function vfb { if [[ $1 = TR  ]];then sleep 24s;fi;sex $s02 $s13;touch $p05/vc_slash 2>$p03;dmr;vro $1 $2;if [[ $1 = RS ]];then sex $s03 $s13;rm -f $p05/vc_slash 2>$p03;elif [[ $1 = RB ]];then srb $p46 $1;fi; }
 function afb { if [[ $1 = PRB ]];then if fft $p50.print;then swr "pfsense reboot (gap $2)";fi;pcm $1;elif [[ $1 = NGR ]];then if fft $p50.print;then swr "netplan/DNS restart (gap $2)";fi;nrs;fi;rm -f $p35.* $p50.print 2>$p03; }
 # PV RB PR BN VC PE BK
 function brs {
@@ -642,10 +642,10 @@ function pop { pde $1 $2 delete;pai $1 192.168.8.0/24 $2; }
 function pco { pde $1 $2;pai $1 192.168.8.0/24 $2 delete; }
 
 # Jellyfin Software Media System
-function je  { pop $n58 $s64;pop 80 ${s22}-web;pop 443 ${s22}-ssl;sex 'ufw reload';cex $s04 $s22;cex $s04 $s64;cex $s04 $s62 $s63; }
+function je  { pop $n58 $s64;pop 80 ${s22}-web;pop 443 ${s22}-ssl;wsr;cex $s04 $s22;cex $s04 $s64;cex $s04 $s62 $s63; }
 function ja  { tse $s22 && cex $s03 $s22;tsa $s64 || cex $s03 $s64;tse $s62 && cex $s03 $s62 $s63; }
 function jp  { tse $s22 && cex $s02 $s22;tsa $s64 && cex $s02 $s64;tse $s62 && cex $s02 $s62 $s63; }
-function jd  { cex $s05 $s64;cex $s05 $s22;cex $s05 $s62 $s63;pco $n58 $s64;pco 80 ${s22}-web;pco 443 ${s22}-ssl;sex 'ufw reload'; }
+function jd  { cex $s05 $s64;cex $s05 $s22;cex $s05 $s62 $s63;pco $n58 $s64;pco 80 ${s22}-web;pco 443 ${s22}-ssl;wsr; }
 # Plex Media Server
 function xop {
   pop $n41 ${s60}
@@ -675,24 +675,24 @@ function xco {
   pco 80   ${s22}-web
   pco 443  ${s22}-ssl
 }
-function xe  { xop;sex 'ufw reload';cex $s04 $s22;cex $s04 $s21;cex $s04 $s58;cex $s04 $s62 $s63; }
+function xe  { xop;wsr;cex $s04 $s22;cex $s04 $s21;cex $s04 $s58;cex $s04 $s62 $s63; }
 function xa  { tse $s22 && cex $s03 $s22;tsa $s21 || cex $s03 $s21;tse $s58 && cex $s03 $s58;tse $s62 && cex $s03 $s62 $s63; }
 function xp  { tse $s22 && cex $s02 $s22;tsa $s21 && cex $s02 $s21;tse $s58 && cex $s02 $s58;tse $s62 && cex $s02 $s62 $s63; }
-function xd  { cex $s05 $s21;cex $s05 $s22;cex $s05 $s58;cex $s05 $s62 $s63;xco;sex 'ufw reload'; }
+function xd  { cex $s05 $s21;cex $s05 $s22;cex $s05 $s58;cex $s05 $s62 $s63;xco;wsr; }
 # Transmission BitTorrent Daemon
 function rop { pae $n66 torrent;pop $n65 torrent; }
 function rco { pde $n66 torrent;pco $n65 torrent; }
-function re  { rop;sex 'ufw reload';cex $s04 $s15; }                                                                                                          # enable  transmission-daemon
+function re  { rop;wsr;cex $s04 $s15; }                                                                                                                       # enable  transmission-daemon
 function ra  { tsa $s15 || cex $s03 $s15; }                                                                                                                   # start   transmission-daemon
 function rp  { tsa $s15 && cex $s02 $s15; }                                                                                                                   # stop    transmission-daemon
-function rd  { cex $s05 $s15;rco;sex 'ufw reload'; }                                                                                                          # disable transmission-daemon
+function rd  { cex $s05 $s15;rco;wsr; }                                                                                                                       # disable transmission-daemon
 # Bind9
 function sop { pai 53 192.168.8.0/24 dns       ; }
 function sco { pai 53 192.168.8.0/24 dns delete; }
-function se  { sop;sex 'ufw reload';cex $s04 $s20; }
+function se  { sop;wsr;cex $s04 $s20; }
 function sa  { tsa $s20 || cex $s03 $s20; }
 function sp  { tsa $s20 && cex $s02 $s20; }
-function sd  { cex $s05 $s20;sco;sex 'ufw reload'; }
+function sd  { cex $s05 $s20;sco;wsr; }
 # el/cc/vc
 function nfw { sht && pai $1 192.168.8.0/24 $2 $3; }
 function eop { local e=30303;ndp || e=30304;pae $e elp2p;if n3t;then pde 8545 elapi delete;pde 8551 eljwt delete;pde 80   elweb delete;nfw 8545 elapi       ;nfw 8551 eljwt       ;nfw 80   elweb       ;fi; }
@@ -702,21 +702,21 @@ function bco { local e=9004 ;ndp || e=9000 ;pde $e clp2p;if n3t;then pde 5052 cl
 function vop { nfw 5064 vcapi       ;pde 5064 vcapi delete; }
 function vco { nfw 5064 vcapi delete;pde 5064 vcapi       ; }
 # enable/start eth-geth eth-beacon eth-validator prometheus prometheus-node-exporter grafana-server mev-boost
-function ge  { eop;sex 'ufw reload';cex $s04 $s10; }                                                                                                          # enable eth-geth
-function ue  { eop;sex 'ufw reload';cex $s04 $s11; }                                                                                                          # enable eth-besu
-function te  { eop;sex 'ufw reload';cex $s04 $s44; }                                                                                                          # enable eth-nethermind
-function be  { bop;sex 'ufw reload';cex $s04 $s12; }                                                                                                          # enable eth-beacon
+function ge  { eop;wsr;cex $s04 $s10; }                                                                                                                       # enable eth-geth
+function ue  { eop;wsr;cex $s04 $s11; }                                                                                                                       # enable eth-besu
+function te  { eop;wsr;cex $s04 $s44; }                                                                                                                       # enable eth-nethermind
+function be  { bop;wsr;cex $s04 $s12; }                                                                                                                       # enable eth-beacon
 function ve  {
   svt                   || return
   fft $p04/$s13.service || return
   fft $p05/vc_keys      || return
   fft $p05/vc_lock      && return
-  vop;sex 'ufw reload';cex $s04 $s13
+  vop;wsr;cex $s04 $s13
 }                                                                                                                                                             # enable eth-validator
-function pe  { pai 9090/tcp 192.168.8.0/24 $s16;sex 'ufw reload';cex $s04 $s16; }                                                                             # enable prometheus
-function ne  { sex 'ufw reload';cex $s04 $s17; }                                                                                                              # enable prometheus-node-exporter
-function fe  { pai 3000/tcp 192.168.8.0/24 grafana;sex 'ufw reload';cex $s04 $s18; }                                                                          # enable grafana-server
-function me  { if n3t;then nfw 18550 mev;fi;sex 'ufw reload';cex $s04 $s14; }                                                                                 # enable mev-boost
+function pe  { pai 9090/tcp 192.168.8.0/24 $s16;wsr;cex $s04 $s16; }                                                                                          # enable prometheus
+function ne  { wsr;cex $s04 $s17; }                                                                                                                           # enable prometheus-node-exporter
+function fe  { pai 3000/tcp 192.168.8.0/24 grafana;wsr;cex $s04 $s18; }                                                                                       # enable grafana-server
+function me  { if n3t;then nfw 18550 mev;fi;wsr;cex $s04 $s14; }                                                                                              # enable mev-boost
 function ga  { tsa $s10 || cex $s03 $s10; }                                                                                                                   # start eth-geth
 function ua  { tsa $s11 || cex $s03 $s11; }                                                                                                                   # start eth-besu
 function ta  { tsa $s44 || cex $s03 $s44; }                                                                                                                   # start eth-nethermind
@@ -736,17 +736,17 @@ function ma  { tsa $s14 || cex $s03 $s14; }                                     
 function pp  { cex $s02 $s16; }                                                                                                                               # stop prometheus
 function np  { cex $s02 $s17; }                                                                                                                               # stop prometheus-node-exporter
 function fp  { cex $s02 $s18; }                                                                                                                               # stop grafana-server
-function gd  { cex $s05 $s10;eco;sex 'ufw reload'; }                                                                                                          # disable eth-geth
-function ud  { cex $s05 $s11;eco;sex 'ufw reload'; }                                                                                                          # disable eth-besu
-function td  { cex $s05 $s44;eco;sex 'ufw reload'; }                                                                                                          # disable eth-nethermind
-function bd  { cex $s05 $s12;bco;sex 'ufw reload'; }                                                                                                          # disable eth-beacon
-function vd  { cex $s05 $s13;vco;sex 'ufw reload';touch $p05/vc_lock 2>$p03; }                                                                                # disable eth-validator
-function pd  { cex $s05 $s16;pai 9090/tcp 192.168.8.0/24 $s16 delete;sex 'ufw reload'; }                                                                      # disable prometheus
+function gd  { cex $s05 $s10;eco;wsr; }                                                                                                                       # disable eth-geth
+function ud  { cex $s05 $s11;eco;wsr; }                                                                                                                       # disable eth-besu
+function td  { cex $s05 $s44;eco;wsr; }                                                                                                                       # disable eth-nethermind
+function bd  { cex $s05 $s12;bco;wsr; }                                                                                                                       # disable eth-beacon
+function vd  { cex $s05 $s13;vco;wsr;touch $p05/vc_lock 2>$p03; }                                                                                             # disable eth-validator
+function pd  { cex $s05 $s16;pai 9090/tcp 192.168.8.0/24 $s16 delete;wsr; }                                                                                   # disable prometheus
 function nd  { cex $s05 $s17; }                                                                                                                               # disable prometheus-node-exporter
-function fd  { cex $s05 $s18;pai 3000/tcp 192.168.8.0/24 grafana delete;sex 'ufw reload'; }                                                                   # disable grafana-server
-function md  { cex $s05 $s14;if n3t;then nfw 18550 mev delete;fi;sex 'ufw reload'; }                                                                          # disable mev-boost
-function pas { t2t && sex "$p54 usbstop";t1t && sex "$p54 cputurbo";t0t && sex "$p54 cpunoturbo"; }                                                           # set usb/cpu parameters
-function paf { t3t && sex "$p54 cputurbo"; }                                                                                                                  # set turbo   parameter
+function fd  { cex $s05 $s18;pai 3000/tcp 192.168.8.0/24 grafana delete;wsr; }                                                                                # disable grafana-server
+function md  { cex $s05 $s14;if n3t;then nfw 18550 mev delete;fi;wsr; }                                                                                       # disable mev-boost
+function pas { t2t && sex $p54 usbstop;t1t && sex $p54 cputurbo;t0t && sex $p54 cpunoturbo; }                                                                 # set usb/cpu parameters
+function paf { t3t && sex $p54 cputurbo; }                                                                                                                    # set turbo   parameter
 function hsg { sso $s72 $s10; }
 function hsu { sso $s73 $s11; }
 function hst { sso $s74 $s44; }
@@ -793,7 +793,7 @@ function lcp {
       shift
     done
 }
-function lci { [[ -x $1 && ! -d $1   ]] || return;sex "mv $p00/lighthouse $p00/lighthouse.sav";sex "cp $1 $p00"; }                                            # lighthouse binary install
+function lci { [[ -x $1 && ! -d $1   ]] || return;sex mv $p00/lighthouse $p00/lighthouse.sav;sex cp $1 $p00; }                                                # lighthouse binary install
 function lmd { [[ -x $p00/lighthouse ]] || return;cmw $p00/lighthouse 755 eth;swb 'LIGHT INSTALADO'; }                                                        # lighthouse set permissions
 function lpi {
   v1t && lcp $1 $vnm1
@@ -802,14 +802,14 @@ function lpi {
   i5t && lcp $1 $inm5 $inm6
   i6t && lcp $1 $inm6 $inm5
   lci $p02/lighthouse
-  sex "rm -f $p02/lighthouse $1"
+  sex rm -f $p02/lighthouse $1
   lmd
 }
 function luc {                                                                                                                                                # lighthouse upgrade/compile
   if fft $p06/lighthouse/README.md;then
     cd $p06/lighthouse;make clean;cargo clean                                                                                                                 # clean compile dirs
   else
-    cd $p06;sex "rm -rf $p06/lighthouse";git clone https://github.com/sigp/lighthouse.git;cd $p06/lighthouse                                                  # get new git
+    cd $p06;sex rm -rf $p06/lighthouse;git clone https://github.com/sigp/lighthouse.git;cd $p06/lighthouse                                                    # get new git
   fi
   git fetch;if grep -Eq 'v[0-9]+\.[0-9]+\.[0-9]+' <<< $2;then m=$2;else m=$(git describe --tags $(git rev-list --tags --max-count=1));fi                      # fetch (vX.X.X/last) version
   git checkout $m;swb "VAI COMPILAR LIGHTHOUSE $m";PROFILE=maxperf make;[[ $? -eq 0 && -x $1 ]] || swb "ERRO COMPILAR $m"                                     # checkout stable version & compile
@@ -832,7 +832,7 @@ function tvc {
       vrs $1 $3 # VC stop    -> vc_slash
       vd        # VC disable -> vc_lock
     fi
-    f=$p02/$(basename $p18);sex "cp $p18 $p02";cmw $f 666 eth;mcp $f $(snd $n);sex "rm $f";svc TRANSFERIDO
+    f=$p02/$(basename $p18);sex cp $p18 $p02;cmw $f 666 eth;mcp $f $(snd $n);sex rm $f;svc TRANSFERIDO
   fi
 }
 function nky { find $p19/key*.json 2>$p03|wc -l; }
@@ -842,14 +842,14 @@ function vko { if fft $p49;then         swn "$(printf 'KADD OK %3i %10s %5s' $1 
 function bko { if fft $p12;then bv0;bnn;swn "$(printf 'KADD OK %3i'          $1     2>$p03) $(npn $nr $nn)" >> $p12;fi; }
 function ibk {
   if [[ -f $p58/pubkeys ]];then swn "\nADICIONAR KEYS pubkeys @($cunm)";else swn "\nADICIONAR KEYS pubkeys @($cun1, $cun2)";return;fi
-  local f="$p02/pubkeys.old";sex "cp $p58/pubkeys     $f";cmw $f 644 eth
+  local f="$p02/pubkeys.old";sex cp $p58/pubkeys     $f;cmw $f 644 eth
   echo "$(cat $f)$(for f in $(jq -r .pubkey $p19/key*.json 2>$p03);do printf %s ",0x$f";done)" > $p02/pubkeys.new
-  local f="$p58/pubkeys"    ;sex "cp $p02/pubkeys.new $f";cmw $f 444 eth
+  local f="$p58/pubkeys"    ;sex cp $p02/pubkeys.new $f;cmw $f 444 eth
 }
 function ivk {
   local n=$(nky);svt && [[ $n -gt 0 ]] || return;brs PV 0 0 $1;ibk;dmr;cex $s03 $s12;bko $n
   if ! tsa $s13;then
-    swb 'IMPORTAR CHAVES';sex "chown -R $meeu:$meeu $p17";cmw $p17 755;imk;svd
+    swb 'IMPORTAR CHAVES';sex chown -R $meeu:$meeu $p17;cmw $p17 755;imk;svd
     fft $p05/vc_lock || cex $s03 $s13;vko $n
   fi
 }
@@ -870,7 +870,7 @@ function bcc {
   fi
 }
 function btn { if n1t;then printf $1;else printf $n03;fi; }
-function hrc { sxt || return;chronyc -c sources 2>$p03|grep -Eq "$g65,1,$g66" && return;sex "$s04 $s56";sex "$s06 $s56"; }
+function hrc { sxt || return;chronyc -c sources 2>$p03|grep -Eq "$g65,1,$g66" && return;sex $s04 $s56;sex $s06 $s56; }
 function irb {
   rm -f $p39.*;s2t $p39 && return
   if rbt $1;then 
@@ -930,12 +930,12 @@ function epf { if tsa $s10;then gl0;swn "$m";fi;if tsa $s11;then ul0;swn "$m";fi
 function cpf { if tsa $s12;then bl0;swn "$m";fi;if tsa $s13;then vl0;swn "$m";fi;if tsa $s14;then ml0;swn "$m";fi; }
 function uur {
   swb 'UNATTENDED UPGRADE RESTART >> ~/apt-uur.out'
-  sex "$s00 daemon-reload"
+  sex $s00 daemon-reload
   echo 'unattended-upgrades unattended-upgrades/enable_auto_updates boolean true' | sudo debconf-set-selections
   sudo DEBIAN_FRONTEND=noninteractive dpkg-reconfigure -plow unattended-upgrades
   sudo $s06 unattended-upgrades 2>&1 | sudo tee -a $p02/apt-uur.out >$p03
   sudo unattended-upgrade -d    2>&1 | sudo tee -a $p02/apt-uur.out >$p03
-  sex "chown $meeu:$meeu $p02/apt-uur.out"
+  sex chown $meeu:$meeu $p02/apt-uur.out
 }
 function fdv { [[ $1         ]] || return;printf "\nDevice\tUsed\tSerialNumber\tFirmware\tModel\n";local d;local u;local f;local n;local m;while IFS=$'\t' read d u m f n;do printf "%s\t%s\t%s\t%s\t%s\n" $(basename $d) $(nby $u) $n $f "$m";done <<< "$1"; }
 function fmd { [[ -b /dev/$1 ]] || return;printf "\n";pex mdadm --detail /dev/$1; }
@@ -947,8 +947,8 @@ function ulr { local s=$(ulg $1);uls "$g59" "$s";uls "$g62" "$s"; }
 [[ $1 = ulg ]] && { ulg $2; }
 [[ $1 = ulr ]] && { ulr $2; }
 
-function ipw { sex "ufw $s71";sex 'ufw default deny outgoing';sex 'ufw reload'; }
-function iaw { sex 'ufw default allow outgoing';sex "ufw delete $s71";sex 'ufw reload'; }
+function ipw { sex ufw $s71;sex ufw default deny outgoing;wsr; }
+function iaw { sex ufw default allow outgoing;sex ufw delete $s71;wsr; }
 function ksh {
   srv hrv-zotac4 && rlt || return
   [[ $M ]] || { swb 'TEM DE TER M    ';return; }
@@ -986,12 +986,12 @@ function wsp {
   ipw;rcm ether sweep --from="$1" --privatekey="$K" --to="$2" --verbose
 }
 
-function ngx { sex "apt install $s22 -y";cc4 $p32 "$s42";cmw $p32 644 root;sex "$s00 reload $s22";sudo nginx -t &>> $p02/$s60.out; }
+function ngx { sex apt install $s22 -y;cc4 $p32 "$s42";cmw $p32 644 root;sex $s00 reload $s22;sudo nginx -t &>> $p02/$s60.out; }
 function plx {
   local k=/usr/share/keyrings/plex.gpg
   local u=downloads.plex.tv
   local o=$p14/sources.list.d/plexmediaserver.list
-  swu 'PLEX SERVER';sex 'apt install dirmngr ca-certificates apt-transport-https -y'
+  swu 'PLEX SERVER';sex apt install dirmngr ca-certificates apt-transport-https -y
   # curl -fsSL https://$u/plex-keys/PlexSign.key | sudo gpg --dearmor | sudo tee $k
   # echo deb [signed-by=$k] https://$u/repo/deb public main | sudo tee $o
   # alternative commands to add keyrings
@@ -1002,16 +1002,16 @@ function plx {
   sudo apt install --reinstall ca-certificates -y 2>&1 | sudo tee -a $p02/$s60.out >$p03
   sudo update-ca-certificates                     2>&1 | sudo tee -a $p02/$s60.out >$p03
   sudo apt install plexmediaserver             -y 2>&1 | sudo tee -a $p02/$s60.out >$p03
-  sex "chown $meeu:$meeu $p02/$s60.out"
-  sex "usermod -aG $s60 $meeu";sex "mkdir -p $p60";cmw $p60 775 $s60
-  sex "mkdir -p $p60/movie";sex "mkdir -p $p60/tv";sex "mkdir -p $p60/tv2";sex "mkdir -p $p60/lust"
-  sex "chown -R $s60:$s60 $p60"
+  sex chown $meeu:$meeu $p02/$s60.out
+  sex usermod -aG $s60 $meeu;sex mkdir -p $p60;cmw $p60 775 $s60
+  sex mkdir -p $p60/movie;sex mkdir -p $p60/tv;sex mkdir -p $p60/tv2;sex mkdir -p $p60/lust
+  sex chown -R $s60:$s60 $p60
   [[ $1 ]] && ngx
   xp;xd;xe;dmr;xa
   # $zip2:32400/web/index.html#!/setup
 }
 function jly {
-  swu 'JELLYFIN SERVER';sex 'apt install ca-certificates apt-transport-https intel-opencl-icd -y'
+  swu 'JELLYFIN SERVER';sex apt install ca-certificates apt-transport-https intel-opencl-icd -y
   curl -fsSL $s65/jellyfin_team.gpg.key | sudo gpg --dearmor -o $p78
   echo "deb [arch=$(dpkg --print-architecture)] $s65 $(snf "$e80" $p77) main" | sudo tee $p79
   sudo apt update                              -y 2>&1 | sudo tee -a $p02/$s64.out >$p03
@@ -1019,48 +1019,48 @@ function jly {
   sudo apt install --reinstall ca-certificates -y 2>&1 | sudo tee -a $p02/$s64.out >$p03
   sudo update-ca-certificates                     2>&1 | sudo tee -a $p02/$s64.out >$p03
   sudo apt install $s64                        -y 2>&1 | sudo tee -a $p02/$s64.out >$p03
-  sex "chown $meeu:$meeu $p02/$s64.out"
-  cex chown -R $s64:adm /etc/$s64;cex usermod -aG $s64 $meeu;sex "usermod -aG render $s64"
-  sex "mkdir -p $p80";cmw $p80 750 $s64;sex "chown -R $s64:$s64 $p80"
+  sex chown $meeu:$meeu $p02/$s64.out
+  cex chown -R $s64:adm /etc/$s64;cex usermod -aG $s64 $meeu;sex usermod -aG render $s64
+  sex mkdir -p $p80;cmw $p80 750 $s64;sex chown -R $s64:$s64 $p80
   jp;jd;je;dmr;ja
   echo http://$zip2:$n58
 }
 function tms {
-  swu 'TRANSMISSION SERVER';sex "apt install transmission-cli transmission-common $s15 -y"
-  sex "usermod -aG $s51 $meeu";sex "mkdir -p $p59";cmw $p59 775 $s51;cc1 $p33 "$e24";cc1 $p34 "$e25";cmw $p33 600 $s51;sex "$s00 reload $s15"
+  swu 'TRANSMISSION SERVER';sex apt install transmission-cli transmission-common $s15 -y
+  sex usermod -aG $s51 $meeu;sex mkdir -p $p59;cmw $p59 775 $s51;cc1 $p33 "$e24";cc1 $p34 "$e25";cmw $p33 600 $s51;sex $s00 reload $s15
   if [[ -d $p60 ]];then
-    sex "ln -s $p60/movie $p59/lmv";sex "ln -s $p60/tv $p59/ltv";sex "ln -s $p60/tv2 $p59/lt2";sex "ln -s $p60/lust $p59/llt"
+    sex ln -s $p60/movie $p59/lmv;sex ln -s $p60/tv $p59/ltv;sex ln -s $p60/tv2 $p59/lt2;sex ln -s $p60/lust $p59/llt
   else
-    sex "ln -s $p80/movie $p59/lmv";sex "ln -s $p80/tv $p59/ltv";sex "ln -s $p80/tv2 $p59/lt2";sex "ln -s $p80/lust $p59/llt"
+    sex ln -s $p80/movie $p59/lmv;sex ln -s $p80/tv $p59/ltv;sex ln -s $p80/tv2 $p59/lt2;sex ln -s $p80/lust $p59/llt
   fi
   rp;rd;re;dmr;ra
 }
 function nfs {
-  swu 'NFS SERVER';sex "apt install $s58 -y";cc2 $p74 "$s59";cc2 $p75 "$s61"
+  swu 'NFS SERVER';sex apt install $s58 -y;cc2 $p74 "$s59";cc2 $p75 "$s61"
   pai $n35 192.168.8.0/24 nfs-mountd
   pai $n36 192.168.8.0/24 nfs-statd
   pai $n37 192.168.8.0/24 nfs-lockd
   pai $n38 192.168.8.0/24 nfs-rquotad
   pai $n39 192.168.8.0/24 nfs-rpcbind
   pai $n40 192.168.8.0/24 nfs
-  sex 'ufw reload';sex "$s00 restart $s58"
+  wsr;sex $s00 restart $s58
 }
 function smb {
-  swu 'SMB SERVER';sex "apt install samba -y";cc2 $p76 "$s66"
+  swu 'SMB SERVER';sex apt install samba -y;cc2 $p76 "$s66"
   pai $n51/tcp 192.168.8.0/24 ${s62}-SMB
   pai $n52/udp 192.168.8.0/24 ${s62}-NBNS
   pai $n53/udp 192.168.8.0/24 ${s62}-NBDS
   pai $n54/tcp 192.168.8.0/24 ${s62}-NetBIOS
-  sex 'ufw reload'
-  if [[ -d $p60 ]];then sex "smbpasswd -n $s60";else sex "smbpasswd -n $s64";fi
-  sex "$s00 restart $s62 $s63"
+  wsr
+  if [[ -d $p60 ]];then sex smbpasswd -n $s60;else sex smbpasswd -n $s64;fi
+  sex $s00 restart $s62 $s63
 }
-function irv { [[ -f $p70 ]] && return;swu 'RVM INSTALL';cex apt-add-repository -y ppa:rael-gc/rvm;cex apt update;cex apt install rvm -y;cex usermod -a -G rvm $USER;echo source $p70 >> $p71;sex "reboot"; }
+function irv { [[ -f $p70 ]] && return;swu 'RVM INSTALL';cex apt-add-repository -y ppa:rael-gc/rvm;cex apt update;cex apt install rvm -y;cex usermod -a -G rvm $USER;echo source $p70 >> $p71;sex reboot; }
 function cns {
   [[ -f $p70 ]] || { echo -e "needs rvm installed\nrun t6 irv";return; }
   local s;local v;source /etc/profile.d/rvm.sh;s=$(rvm list);v='ruby-3.3.0'
   if grep -q $v <<< "$s"     ;then echo "$v is installado";else rvm install $v;fi;rvm use $v --default
-  if gem list cns|grep -q cns;then echo "cns ja instalada";else sex "apt install libcurl4-openssl-dev -y";gem install cns --no-document;fi
+  if gem list cns|grep -q cns;then echo "cns ja instalada";else sex apt install libcurl4-openssl-dev -y;gem install cns --no-document;fi
   if [[ -f $p02/$p72.gpg ]];then gpg --batch --yes --passphrase "$B" -d $p02/$p72.gpg >> $p71      ;rm -f $p02/$p72.gpg;else echo "needs $p02/$p72.gpg";fi
   if [[ -f $p02/$p73.gpg ]];then gpg --batch --yes --passphrase "$B" -d $p02/$p73.gpg  > $p02/.$p73;rm -f $p02/$p73.gpg;else echo "needs $p02/$p73.gpg";fi
 }
@@ -1076,24 +1076,24 @@ function idk {
   local s;local a;local c
   s="$p14/keyrings/$s80.gpg";[[ -a $s ]] && { swb "$s80 JA INSTALADO";return; }
   a=$(dpkg --print-architecture);c=$(snf "$e80" $p77)
-  sex "install -m 0755 -d $(dirname $s)"
-  curl -fsSL https://download.$s80.com/linux/ubuntu/gpg | sudo gpg --dearmor -o $s;sex "chmod a+r $s"
+  sex install -m 0755 -d $(dirname $s)
+  curl -fsSL https://download.$s80.com/linux/ubuntu/gpg | sudo gpg --dearmor -o $s;sex chmod a+r $s
   echo "deb [arch=$a signed-by=$s] https://download.$s80.com/linux/ubuntu $c stable" | sudo tee $p14/sources.list.d/$s80.list >$p03
-  sex 'apt update'
+  sex apt update
   sudo apt install --reinstall ca-certificates gnupg lsb-release -y 2>&1 | sudo tee -a $p02/$s80.out >$p03
   sudo update-ca-certificates                                       2>&1 | sudo tee -a $p02/$s80.out >$p03
-  sex "apt install $s80-ce $s80-ce-cli containerd.io $s80-buildx-plugin $s80-compose-plugin -y"
-  sex "usermod -aG docker $USER" 
+  sex apt install $s80-ce $s80-ce-cli containerd.io $s80-buildx-plugin $s80-compose-plugin -y
+  sex usermod -aG docker $USER
   swb "REQUIRES LOGOUT/LOGIN after execution"
 }
 function im2 {
   srv hrv-zotac2 || return
   pop $n58 $s64-http;pop $n59 $s64-https;pop $n60/udp $s64-discovery;pop $n61/udp $s64-DLNA
   pop $n62 sonarr;pop $n63 radarr;pop $n64 prowlarr;rop
-  sex 'ufw reload'
-  mkdir -p $p80/{tv,tv2,movie,lust}                                    ;sex "chown -R $meui:$megi $p80";sex "chmod -R 775 $p80"
-  mkdir -p $p81/{prowlarr,sonarr,radarr,transmission,jellyfin}         ;sex "chown -R $meui:$megi $p81"
-  mkdir -p $p82/{complete,incomplete};mkdir -p $p82/complete/{tv,movie};sex "chown -R $meui:$megi $p82";sex "chmod -R 775 $p82"
+  wsr
+  mkdir -p $p80/{tv,tv2,movie,lust}                                    ;sex chown -R $meui:$megi $p80;sex chmod -R 775 $p80
+  mkdir -p $p81/{prowlarr,sonarr,radarr,transmission,jellyfin}         ;sex chown -R $meui:$megi $p81
+  mkdir -p $p82/{complete,incomplete};mkdir -p $p82/complete/{tv,movie};sex chown -R $meui:$megi $p82;sex chmod -R 775 $p82
   mkdir -p $p02/media-stack;cd $p02/media-stack;echo -e "$s81" > docker-compose.yml
   docker compose up -d
  }
@@ -1102,7 +1102,7 @@ function iz2 {
   if zpool version 2>$p03;then
     swb 'ZFS JA INSTALADO'
   else
-    swb 'INSTALAR ZFS';sex 'apt update';sudo apt install zfsutils-linux -y 2>&1 | sudo tee -a $p02/$s82.out >$p03
+    swb 'INSTALAR ZFS';sex apt update;sudo apt install zfsutils-linux -y 2>&1 | sudo tee -a $p02/$s82.out >$p03
   fi
   local i='/dev/disk/by-id';local s="$i/scsi-SSanDisk_SSD_PLUS_2000GB_61E203010290 $i/scsi-SSamsung_SSD_870_QVO_1TB_E41703010290 $i/scsi-SSamsung_SSD_870_QVO_1TB_0000000000000000"
   local f='/media/bk1';local e='bk1_pool'
@@ -1297,7 +1297,7 @@ function bml { [[ $d1 = $s43 ]] || return;if bdt;then bdl $d0;elif [[ $(llc $p12
 [[ $1 = csp ]] && { csp $2; }
 [[ $1 = esp ]] && { esp $2; }
 [[ $1 = tsh ]] && { tsh $2; }
-function wa { if pex ufw status|grep -iq inactive;then cex ufw --force enable;else swb 'FIREWALL ALREADY ACTIVE';fi;cex ufw reload; }  
+function wa { if pex ufw status|grep -iq inactive;then cex ufw --force enable;else swb 'FIREWALL ALREADY ACTIVE';fi;wcr; }  
 [[ $1 = wa  ]] && { wa; }
 [[ $1 = we  ]] && { cex ufw --force enable; }
 [[ $1 = wpr ]] && { cex ufw disable; }

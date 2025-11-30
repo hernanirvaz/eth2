@@ -2,7 +2,7 @@
 
 source /home/eth/eth2/t1
 
-swu "INSTALAR $s72";sex "mkdir -p $p08/geth";sau eth1;sjw;cmw $p08 755 eth1;cmw $p08/geth 700 eth1
+swu "INSTALAR $s72";sex mkdir -p $p08/geth;sau eth1;sjw;cmw $p08 755 eth1;cmw $p08/geth 700 eth1
 gtv $1 $2
 maxp=10
 pp2p=30303;ndp || pp2p=30304
@@ -31,4 +31,4 @@ ExecStopPost=+$p02/eth2/t7 ${s72}STP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 [Install]
 WantedBy=multi-user.target
 EOF
-sex "mv $s10.service $p04";cmw $p04/$s10.service 644
+sex mv $s10.service $p04;cmw $p04/$s10.service 644

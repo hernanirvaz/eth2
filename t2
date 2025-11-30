@@ -5,7 +5,7 @@ source /home/eth/eth2/t1
 
 [[ -x $p02/eth2/t ]] || ln -s $p02/eth2/t6 $p02/eth2/t                                                                                                        # link base commands
 if pex ufw status|grep -qi inactive;then
-  swb 'INIT FIREWALL';sex 'ufw default deny incoming';sex 'ufw default allow outgoing'                                                                        # base ufw
+  swb 'INIT FIREWALL';sex ufw default deny incoming;sex ufw default allow outgoing                                                                            # base ufw
   pde 22/tcp ossh
   [[ $cunm = $vnm1 || $cunm = $vnm2 || $cunm = $vnm3 ]] && ple 2020/tcp nssh
   [[ $cunm = $znm1                                   ]] && ple 2021/tcp nssh
@@ -15,46 +15,46 @@ if pex ufw status|grep -qi inactive;then
   [[ $cunm = $inm5                                   ]] && ple 2025/tcp nssh
   [[ $cunm = $inm6                                   ]] && ple 2026/tcp nssh
   sht && sxt && { pai 123/udp 192.168.8.0/24 ntp;pai 323/udp 192.168.8.0/24 ptp; }
-  sex 'ufw reload';nex ufw --force enable
+  wsr;nex ufw --force enable
 else
   swb 'script ja executou'
   exit
 fi
 [[ -f $p04/$s10.service || -f $p04/$s11.service || -f $p04/$s44.service || -f $p04/$s12.service || -f $p04/$s13.service ]] && exit
 
-sex 'apt install python3-pip net-tools apt-listchanges landscape-common software-properties-common smartmontools lm-sensors nvme-cli curl -y'
-sex 'apt install unattended-upgrades update-notifier-common -y'
+sex apt install python3-pip net-tools apt-listchanges landscape-common software-properties-common smartmontools lm-sensors nvme-cli curl -y
+sex apt install unattended-upgrades update-notifier-common -y
 t4 linux
-sex "$s07 set-ntp false"                                                                                                                                      # chrony (sophisticated)
-sex "apt install $s56 -y"
+sex $s07 set-ntp false                                                                                                                                        # chrony (sophisticated)
+sex apt install $s56 -y
 if sxt;then
   cc3 $p68 "$e72" "$s52"
 else
   cc3 $p68 "$e72" "$s57"
 fi
-cmw $p68 644 root;sex "$s06 $s56"
+cmw $p68 644 root;sex $s06 $s56
 if sht;then
   if false;then                                                                                                                                               # use gateway not bind9
-    sex 'apt install bind9 bind9utils -y'                                                                                                                     # install bind
+    sex apt install bind9 bind9utils -y                                                                                                                       # install bind
     cc3 $p29 "$e07" "$s40"       ;cmw $p29 644 root bind                                                                                                      # named my options
     cc1 $p30 "$e02"              ;cmw $p30 644 root                                                                                                           # use only ipv4
-    t6 spd;t6 sea;sex "$s02 systemd-resolved";sex "$s03 systemd-resolved"                                                                                     # DNS stop & start
+    t6 spd;t6 sea;sex $s02 systemd-resolved;sex $s03 systemd-resolved                                                                                         # DNS stop & start
   fi
-  sex 'apt install chkrootkit -y';cex chkrootkit
-  sex "$s07 set-timezone Europe/Lisbon"
+  sex apt install chkrootkit -y;cex chkrootkit
+  sex $s07 set-timezone Europe/Lisbon
   cc1 $p20 "$e00"                                                                                                                                             # my time servers
   cc1 $p21 "$e01"              ;cmw $p21 644 root                                                                                                             # motd-news disable
-  sex "rm -f $(dirname $p22)/*.yaml";cc4 $p22 "$s41";cmw $p22 600 root                                                                                        # new netplan
+  sex rm -f $(dirname $p22)/*.yaml;cc4 $p22 "$s41";cmw $p22 600 root                                                                                          # new netplan
   cc1 $p26 "$e06"              ;cmw $p26 755 root                                                                                                             # grub timeout
   cc1 $p48 "$e27"              ;cmw $p48 644 root                                                                                                             # grub no PCIe active state power management
   cc1 $p65 "$e69"              ;cmw $p65 600 root                                                                                                             # ssh config
   cc1 $p37 "$e23"              ;cmw $p37 644 root                                                                                                             # no swap - bad for IOPS
-  sex 'update-grub'
+  sex update-grub
 else
-  sex "$s07 set-timezone Europe/Berlin" # OVH Europe/Berlin America/Toronto
+  sex $s07 set-timezone Europe/Berlin # OVH Europe/Berlin America/Toronto
   cc1 $p20 "$e13"                                                                                                                                             # general time servers
   cc1 $p65 "$e69"              ;cmw $p65 600 root                                                                                                             # ssh
-  sex "mv -f /etc/motd $p02/motd.sav"                                                                                                                         # no contabo info
+  sex mv -f /etc/motd $p02/motd.sav                                                                                                                           # no contabo info
 fi                             ;cmw $p20 644 root;hrs                                                                                                         # timesyncd cmod & restart
 cc1 $p23 "$e03"                ;cmw $p23 644 root                                                                                                             # unattended-upgrades base
 cc1 $p51 "$e28"                ;cmw $p51 644 root                                                                                                             # unattended-upgrades period
@@ -62,8 +62,8 @@ cc1 $p51 "$e28"                ;cmw $p51 644 root                               
 [[ $cunm = $cun1 || $cunm = $cun2 || $cunm = $znm2 ]] && sht           && cc1 $p85 "$e87";cmw $p85 644 root                                                   # ipv6 privacy extension
 cc1 $p24 "$e04";cc2 $p24 "$s39";cmw $p24 755 root                                                                                                             # header add my motd
 cc1 $p25 "$e04"                ;cmw $p25 755 root                                                                                                             # help-text delete
-cc1 $p27 "$e53";cc2 $p27 "$s38";cmw $p27 644 root;cmw "$(dirname $p01)" 755                                                                                     # new logrotate & permissions
-[[ -x $p28 ]] && sex "chmod -x $p28"                                                                                                                          # motd overlayroot unexecute
+cc1 $p27 "$e53";cc2 $p27 "$s38";cmw $p27 644 root;cmw "$(dirname $p01)" 755                                                                                   # new logrotate & permissions
+[[ -x $p28 ]] && sex chmod -x $p28                                                                                                                            # motd overlayroot unexecute
 t6 uur                                                                                                                                                        # unattended-upgrades
 swb 'FINAL - reboot imperativo'
 sht && swn 't6 nrs'
