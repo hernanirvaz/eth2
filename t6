@@ -19,7 +19,7 @@ function nu6 { local s=$1;nu0 %.${s}f $(nbc $2 9); }
 function nbi { local s=$1;nu1         $(nbc $1 9); }
 function nu7 { nu3 "sqrt(((0$(nl2 $@))-(0$(nl0 $@))^2/$#)/$#)*1000" 4; }                                                                                      # get std list numbers
 function nu8 { nl3 $@|grep -c '^0$'; }                                                                                                                        # get # zeros list numbers
-function nu9 { nl3 $@|awk 'NR==1{m=$1} $1<m{m=$1} END{print m}'; }                                                                                   # get min list numbers
+function nu9 { nl3 $@|awk 'NR==1{m=$1} $1<m{m=$1} END{print m}'; }                                                                                            # get min list numbers
 function nby {
   local k=1024;local m=$((k*1024));local g=$((m*1024));local t=$((g*1024))
   if   (($1>=t));then nu0 %.1fT $(nbc "$1/$t" 2)
@@ -29,17 +29,20 @@ function nby {
   else                nu0 %.0fB $1
   fi
 }
-function sgn { local g="$1";shift;echo $H|sudo -S grep -Eah  "$g" $@ 2>$p03; }
-function sgv { local g="$1";shift;echo $H|sudo -S grep -Eahv "$g" $@ 2>$p03; }
-function sip {                                              grep -Eai  "$1"    2>$p03; }
-function siv {                                              grep -Eaiv "$1"    2>$p03; }
+function sgn { local g="$1";shift;pex grep -Eah  "$g" "$@"; }
+function sgv { local g="$1";shift;pex grep -Eahv "$g" "$@"; }
+# function sgn { local g="$1";shift;echo $H|sudo -S grep -Eah  "$g" $@ 2>$p03; }
+# function sgv { local g="$1";shift;echo $H|sudo -S grep -Eahv "$g" $@ 2>$p03; }
+
+function sip {                                    grep -Eai  "$1" 2>$p03; }
+function siv {                                    grep -Eaiv "$1" 2>$p03; }
 function lfl { echo $H|sudo -S find $1 -name "$2*" -type f -printf "%T@\t%p\n" 2>$p03|sort -nr|head -n$3|sort -n|cut -f2; }
-function ll0 { local f=$(lfl $p16/logs beacon    2);[[ $f ]] || return;echo $H|sudo -S cat $f|tail -n$((n15*2)); }                                            # get cc intern lines
-function ll1 { local f=$(lfl $p17/logs validator 2);[[ $f ]] || return;echo $H|sudo -S cat $f|tail -n$n15      ; }                                            # get vc intern lines
-function ll2 { local f=$(lfl $p16/logs beacon    2);[[ $f ]] || return;sgn "$1" $f|tail -n$n15      ; }                                                       # get cc intern lines (specific)
-function ll3 { local f=$(lfl $p17/logs validator 4);[[ $f ]] || return;sgn "$1" $f|tail -n$2        ; }                                                       # get vc intern lines (specific)
-function ll4 { local f=$(lfl $p07/logs mainnet   2);[[ $f ]] || return;sgn "$1" $f                  ; }                                                       # get neth intern lines
-function ll5 { local f=$(lfl $p16/logs discv5    2);[[ $f ]] || return;sgn "$1" $f                  ; }                                                       # get cc discv5 lines (specific)
+function ll0 { local f=$(lfl $p16/logs beacon    2);[[ $f ]] || return;pex cat "$f"|tail -n$((n15*2)); }                                                      # get cc intern lines
+function ll1 { local f=$(lfl $p17/logs validator 2);[[ $f ]] || return;pex cat "$f"|tail -n$n15      ; }                                                      # get vc intern lines
+function ll2 { local f=$(lfl $p16/logs beacon    2);[[ $f ]] || return;sgn "$1" $f |tail -n$n15      ; }                                                      # get cc intern lines (specific)
+function ll3 { local f=$(lfl $p17/logs validator 4);[[ $f ]] || return;sgn "$1" $f |tail -n$2        ; }                                                      # get vc intern lines (specific)
+function ll4 { local f=$(lfl $p07/logs mainnet   2);[[ $f ]] || return;sgn "$1" $f                   ; }                                                      # get neth intern lines
+function ll5 { local f=$(lfl $p16/logs discv5    2);[[ $f ]] || return;sgn "$1" $f                   ; }                                                      # get cc discv5 lines (specific)
 function ll6 { sgn "$1"   $p01; }                                                                                                                             # get all eth syslog lines
 function ll7 { sgv "$g13" $p01; }                                                                                                                             # get not eth syslog lines
 function ln0 {                   snf "s%.*$1 *([0-9]+).*%\1%p" $2; }                                                                                          # get sed list of numbers (file)
@@ -495,11 +498,11 @@ function brm { # recalculate cc-daily logs
 function bdw { fft $1 || return;cp $1 $1.o;grep -Eahv "$2" $1.o > $1;grep -Eah "$2" $1.o > $1.d; }                                                            # work to delete cc log day
 function bdl { local d=$(pt0 $1 sai);[[ $d = sai ]] && return;bdw $p12 $d;bdw $p13 $d;bsm; }                                                                  #         delete cc log day
 function wif { sef "$e17" <<< $@; }                                                                                                                           # get ufw info
-function sm0 { pex "smartctl --json=c -x $1"|jq -r "$j3" 2>$p03; }
-function sm1 { pex "smartctl --json=c -x $1"|jq -r "$j4" 2>$p03; }
-function sm2 { pex "smartctl --json=c -x $1"|jq -r "$j5" 2>$p03; }
+function sm0 { pex smartctl --json=c -x "$1"|jq -r "$j3" 2>$p03; }
+function sm1 { pex smartctl --json=c -x "$1"|jq -r "$j4" 2>$p03; }
+function sm2 { pex smartctl --json=c -x "$1"|jq -r "$j5" 2>$p03; }
 function sm3 { (sensors 2>$p03;sleep 1;sensors 2>$p03)|snf "$e20"; }
-function sm4 { local s=$(pex "smartctl --json=c -x $1");jq -r "$j1" <<< $s 2>$p03;jq -r "$j0" <<< $s 2>$p03; }
+function sm4 { local s=$(pex smartctl --json=c -x "$1");jq -r "$j1" <<< $s 2>$p03;jq -r "$j0" <<< $s 2>$p03; }
 function sm5 { local g='';local f='';for f in $p66;do [[ -e $f ]] || break;g="$g+$(sm2 $f)";done;printf %i $((g)); }
 function tmp {
   local g;local d;local e;local f;local l;local i;local n
@@ -599,7 +602,7 @@ function sif {
   local e;local d;local n;local i;local g;local f
   if [[ $(cat $p44 2>$p03) -eq 0 ]];then e=off;else e=on;fi;i=$(fl0|wc -l)
   if [[ $(cat $p43 2>$p03) -eq 1 ]];then d=off;else d=on;fi;n=$(fl1|wc -l)
-  [[ $1 ]] || g0t $i || g0t $n && swn "INFO$(printf '%3i %3i %10s %5s' $n $i $dt 2>$p03) usb $e, turbo $d, ufw $(wif $(pex 'ufw status'|grep Status:)), uptime:$(uptime|sef "$e55")"
+  [[ $1 ]] || g0t $i || g0t $n && swn "INFO$(printf '%3i %3i %10s %5s' $n $i $dt 2>$p03) usb $e, turbo $d, ufw $(wif $(pex ufw status|grep Status:)), uptime:$(uptime|sef "$e55")"
   [[ $(ls $p66 2>$p03) ]] || return;n=$(sm5);g0t $n || return
   g=$(printf '%6i %10s %5s ' $n $dt 2>$p03);f='';for f in $p66;do [[ -e $f ]] || break;g="$g$(si0 $f $(sm1 $f))";done;swn "NVME ${g%;*}"
 }
@@ -729,7 +732,7 @@ function pa  { tsa $s16 || cex "$s03 $s16"; }                                   
 function na  { tsa $s17 || cex "$s03 $s17"; }                                                                                                                 # start prometheus-node-exporter
 function fa  { tsa $s18 || cex "$s03 $s18"; }                                                                                                                 # start grafana-server
 function ma  { tsa $s14 || cex "$s03 $s14"; }                                                                                                                 # start mev-boost
-function wa  { if pex 'ufw status'|grep -iq inactive;then yex 'ufw enable';else swu 'FIREWALL ALREADY ACTIVE';fi;cex 'ufw reload'; }                          # enable ufw : Proceed with operation (y|n)?
+function wa  { if pex ufw status|grep -iq inactive;then yex 'ufw enable';else swu 'FIREWALL ALREADY ACTIVE';fi;cex 'ufw reload'; }                          # enable ufw : Proceed with operation (y|n)?
 # stop/disable eth-geth eth-beacon eth-validator prometheus prometheus-node-exporter grafana-server mev-boost
 function pp  { cex "$s02 $s16"; }                                                                                                                             # stop prometheus
 function np  { cex "$s02 $s17"; }                                                                                                                             # stop prometheus-node-exporter
@@ -886,11 +889,11 @@ function irb {
 function hi6 { chronyc -n $1|sef "$2"; }
 function hsh { 
   if tsa $s56;then 
-    swb "$s07 & $s56 sources/sourcestats/tracking";pex "$s07";echo;paste <(hi6 sources "$e59") <(hi6 sourcestats "$e60"|cut -c28-);echo;chronyc -n tracking|grep -Ev "$g63"
+    swb "$s07 & $s56 sources/sourcestats/tracking";pex $s07;echo;paste <(hi6 sources "$e59") <(hi6 sourcestats "$e60"|cut -c28-);echo;chronyc -n tracking|grep -Ev "$g63"
   elif tsa ntp;then 
-    swb "$s07 & ntp";pex "$s07";echo;ntpq -p
+    swb "$s07 & ntp";pex $s07;echo;ntpq -p
   else
-    swb "$s07 & $s45 status/show";pex "$s07";pex "$s07 $s45-status";pex "$s07 show-$s45"
+    swb "$s07 & $s45 status/show";pex $s07;pex $s07 $s45-status;pex $s07 show-$s45
   fi
 }
 function ts0 {
@@ -936,8 +939,8 @@ function uur {
   sex "chown $meeu:$meeu $p02/apt-uur.out"
 }
 function fdv { [[ $1         ]] || return;printf "\nDevice\tUsed\tSerialNumber\tFirmware\tModel\n";local d;local u;local f;local n;local m;while IFS=$'\t' read d u m f n;do printf "%s\t%s\t%s\t%s\t%s\n" $(basename $d) $(nby $u) $n $f "$m";done <<< "$1"; }
-function fmd { [[ -b /dev/$1 ]] || return;printf "\n";pex "mdadm --detail /dev/$1"; }
-function fst { local s="nvme smart-log";if [[ $1 ]];then cex "$s /dev/$1";else local f='';for f in $(find $p66 2>$p03|sort);do swl "$s $f";pex "$s $f";done|grep -Eiv "$s54"|sef "$e08";fi;fdv "$(pex 'nvme list -o json'|jq -r "$j6"|sort)";fmd $(cat $p84|snf "$e82"); }
+function fmd { [[ -b /dev/$1 ]] || return;printf "\n";pex mdadm --detail /dev/$1; }
+function fst { local s="nvme smart-log";if [[ $1 ]];then cex "$s /dev/$1";else local f='';for f in $(find $p66 2>$p03|sort);do swl "$s $f";pex $s $f;done|grep -Eiv "$s54"|sef "$e08";fi;fdv "$(pex nvme list -o json|jq -r "$j6"|sort)";fmd $(cat $p84|snf "$e82"); }
 
 function ulg { local d=${1:-$(date +%F)};nex "cat $p69"|snf "/$g60$d/,/$g61$d/p"; }
 function uls { local e=$(snf "/$1/,/^ *$/p" <<< "$2"|grep -Ev "$1|^ *$"|sort -u);if [[ $e ]];then echo -e "\n$1\n$e";fi; }
@@ -1258,8 +1261,8 @@ function bml { [[ $d1 = $s43 ]] || return;if bdt;then bdl $d0;elif [[ $(llc $p12
 [[ $1 = jsh ]] && { nex "journalctl --disk-usage"; }
 [[ $1 = jrs ]] && { nex "journalctl --vacuum-time=3days";nex "journalctl --verify"; }
 [[ $1 = uur ]] && { uur; }
-[[ $1 = lp  ]] && { pex 'ss -tunlp'; }
-[[ $1 = lc  ]] && { pex 'lsof -i -P -n'; }
+[[ $1 = lp  ]] && { pex ss -tunlp; }
+[[ $1 = lc  ]] && { pex lsof -i -P -n; }
 [[ $1 = ish ]] && { curl -s https://ipinfo.io/ip;echo; }
 [[ $1 = ich ]] && { ll6 "$g57"|sef "$e50"; }
 # outros journal system/lighthouse
@@ -1300,8 +1303,8 @@ function bml { [[ $d1 = $s43 ]] || return;if bdt;then bdl $d0;elif [[ $(llc $p12
 [[ $1 = wpr ]] && { cex 'ufw disable'; }
 [[ $1 = wds ]] && { cex 'ufw disable'; }
 [[ $1 = ws  ]] && { cex 'ufw status verbose'; }
-[[ $1 = ipw ]] && { ipw;pex 'ufw status verbose'; }
-[[ $1 = iaw ]] && { iaw;pex 'ufw status verbose'; }
+[[ $1 = ipw ]] && { ipw;pex ufw status verbose; }
+[[ $1 = iaw ]] && { iaw;pex ufw status verbose; }
 [[ $1 = wl  ]] && { wlp ${@:2:$#}|sef "$e19"; }
 [[ $1 = wlz ]] && { wlp ${@:2:$#}; }
 # journal

@@ -41,8 +41,8 @@ function n1t { [[ $cunm = $cun1 ]]; }
 function sct { [[ $cunm = $cuvc || $cunm = $cun1 || $cunm = $cun2 ]]; }
 function svt { [[ $cunm = $cuvc ]]; }
 function ndp { [[ $cunm = $inm5 || $cunm = $vnm2 ]]; }
-function tsa { $s00 is-active  --quiet $1 2>$p03; }
-function tse { $s00 is-enabled --quiet $1 2>$p03; }
+function tsa { echo "$H"|sudo -S -p '' $s00 is-active  --quiet "$1" &>$p03; }
+function tse { echo "$H"|sudo -S -p '' $s00 is-enabled --quiet "$1" &>$p03; }
 function hrs { if [[ -f $p68 ]];then sex "$s04 $s56";sex "$s06 $s56";local e=$s56;elif tsa ntp;then sex "$s06 ntp";local e=ntp;else sex "$s06 $s19";local e=$s19;fi;swb "CLOCK RESET ($e)"; }
 function srv { if [[ $cunm = $1 ]];then cd $p02;return;else swb "TEM DE ESTAR $1";return 1;fi; }
 function swb { echo -e "\n\e[5m${1^^}\e[0m\n"; }
@@ -54,11 +54,11 @@ function swl { echo -e "\n$1\n"; }
 function sau { id "$1" &>$p03 || sex "useradd --no-create-home --shell /bin/false $1"; }
 function cmw { [[ $2 ]] && sex "chmod $2 $1";[[ $3 ]] && sex "chown $3:${4:-$3} $1"; }
 function svd { sex "chown -R eth3:eth3 $p17";cmw $p17 700 eth3; }
-function cex { swb "$1";echo $H|sudo -S $1       2>$p03; }
-function nex { swn "$1";echo $H|sudo -S $1       2>$p03; }
-function yex { swb "$1";echo $H|sudo -S $1 <<< y &>$p03; }
-function pex {          echo $H|sudo -S $1       2>$p03; }
-function sex {          echo $H|sudo -S $1       &>$p03; }
+function yex { swb "$1";printf "%s\ny\n" "$H" | sudo -S -p '' $1 &>$p03; }
+function cex { swb "$1";echo "$H"|sudo -S -p '' $1 2>$p03; }
+function nex { swn "$1";echo "$H"|sudo -S -p '' $1 2>$p03; }
+function sex {          echo "$H"|sudo -S -p '' $1 &>$p03; }
+function pex {          echo "$H"|sudo -S -p '' "$@" 2>$p03; }
 function dex { swl "$1";$1; }
 function gps { sex "$s02 $s10"; }
 function ups { sex "$s02 $s11"; }
@@ -87,7 +87,7 @@ function sjw {
   if [[ -s $p58/jwt ]]    ;then swn "JA EXISTE $p58/jwt"    ;else openssl rand -hex 32|tr -d '\n' > "$p58/jwt";cmw "$p58/jwt" 444;fi
   if [[ -s $p58/pubkeys ]];then swn "JA EXISTE $p58/pubkeys";else echo "${s// /,}" > "$p58/pubkeys";cmw "$p58/pubkeys" 444 eth2  ;fi
 }
-function svc { swb "$s76 $1 check slash,srv,dirs";pex "ls -l $p17";pex "cat $p04/$s13.service"; }
+function svc { swb "$s76 $1 check slash,srv,dirs";pex ls -l $p17;pex cat $p04/$s13.service; }
 function unv { local v=${1:-23.1.0};curl -LO https://hyperledger.jfrog.io/artifactory/besu-binaries/besu/$v/besu-$v.tar.gz;shc besu-$v.tar.gz;swn "INSTALAR $s73 $v (SIM/nao)?";local rsp=nao;read rsp;if [[ $rsp = SIM ]];then tar xvf besu-$v.tar.gz;sex "cp -a besu-$v $p00/besu";sex "chown eth1:eth1 -R $p00/besu";cmw $p00/besu 755 eth1;fi; }
 function gnv {
   local v=${1:-go1.25.4};local f="$v.linux-amd64.tar.gz";local l='/usr/local/go/bin';local s;s=$(dirname $l)
