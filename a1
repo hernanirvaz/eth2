@@ -56,7 +56,7 @@ function cmw { [[ $2 ]] && sex "chmod $2 $1";[[ $3 ]] && sex "chown $3:${4:-$3} 
 function svd { sex "chown -R eth3:eth3 $p17";cmw $p17 700 eth3; }
 function yex { swb $@;echo "$H"|sudo -S -p '' -v &>$p03;yes|sudo -n "$@" &>$p03; }
 function cex { swb $@;echo "$H"|sudo -S -p '' $1 2>$p03; }
-function nex { swn $@;echo "$H"|sudo -S -p '' $1 2>$p03; }
+function nex { swn $@;echo "$H"|sudo -S -p '' "$@" 2>$p03; }
 function sex {        echo "$H"|sudo -S -p '' $1 &>$p03; }
 function pex {        echo "$H"|sudo -S -p '' "$@" 2>$p03; }
 function dex { swl "$1";$1; }
@@ -75,11 +75,11 @@ function mp  { if tsa "$s14";then cex "$s02 $s14";else sex "$s02 $s14";fi; }
 function fft { [[ -f $1 ]]; }
 function shc { sha256sum $1 2>$p03|cut -d' ' -f1; }
 function srb { rm -f $1.* 2>$p03;if [[ $2 = RB ]];then if fft $p50.print;then gp;up;tp;bp;vp;mp;rm -f $p05/vc_slash $p50.print 2>$p03;cex reboot;else gps;ups;tps;bps;vps;mps;rm -f $p05/vc_slash 2>$p03;sex reboot;fi;else rm -f $p50.print 2>$p03;fi; }
-function idi { local e="deny from $1 to $2"                       ;if [[ $4 ]];then nex "ufw $4 $e";else nex "ufw $e comment $3";fi; }
-function pde { local e="deny $1"                                  ;if [[ $3 ]];then nex "ufw $3 $e";else nex "ufw $e comment $2";fi; }
-function pai { local e="allow from $2 to any port ${1/\// proto }";if [[ $4 ]];then nex "ufw $4 $e";else nex "ufw $e comment $3";fi; }
-function pae { local e="allow $1"                                 ;if [[ $3 ]];then nex "ufw $3 $e";else nex "ufw $e comment $2";fi; }
-function ple { local e="limit $1"                                 ;if [[ $3 ]];then nex "ufw $3 $e";else nex "ufw $e comment $2";fi; }
+function idi { local e="deny from $1 to $2"                       ;if [[ $4 ]];then nex ufw $4 $e;else nex ufw $e comment $3;fi; }
+function pde { local e="deny $1"                                  ;if [[ $3 ]];then nex ufw $3 $e;else nex ufw $e comment $2;fi; }
+function pai { local e="allow from $2 to any port ${1/\// proto }";if [[ $4 ]];then nex ufw $4 $e;else nex ufw $e comment $3;fi; }
+function pae { local e="allow $1"                                 ;if [[ $3 ]];then nex ufw $3 $e;else nex ufw $e comment $2;fi; }
+function ple { local e="limit $1"                                 ;if [[ $3 ]];then nex ufw $3 $e;else nex ufw $e comment $2;fi; }
 function sis { local f=$(basename $1);if [[ -s $1 ]];then swg "NEW $f";sex "mv $1 $p17";touch $p05/vc_slash 2>$p03;cmw $p18 600 eth3;else swr "NO $f";fi; }
 function sjw { 
   [[ $cunm = $inm5 || $cunm = $inm6 || $cunm = $vnm1 || $cunm = $vnm2 ]] || return;local s=${b[*]}
