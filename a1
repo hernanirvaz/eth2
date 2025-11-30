@@ -45,20 +45,20 @@ function tsa { echo "$H"|sudo -S -p '' $s00 is-active  --quiet "$1" &>$p03; }
 function tse { echo "$H"|sudo -S -p '' $s00 is-enabled --quiet "$1" &>$p03; }
 function hrs { if [[ -f $p68 ]];then sex "$s04 $s56";sex "$s06 $s56";local e=$s56;elif tsa ntp;then sex "$s06 ntp";local e=ntp;else sex "$s06 $s19";local e=$s19;fi;swb "CLOCK RESET ($e)"; }
 function srv { if [[ $cunm = $1 ]];then cd $p02;return;else swb "TEM DE ESTAR $1";return 1;fi; }
-function swb { echo -e "\n\e[5m${1^^}\e[0m\n"; }
-function swr { echo -e "\e[5;31m${1^^}\e[0m"; }
-function swg { echo -e "\e[32m${1^^}\e[0m"; }
-function swu { echo -e "${1^^}"; }
-function swn { echo -e "$1"; }
+function swb { echo -e "\n\e[5m${*^^}\e[0m\n"; }
+function swr { echo -e "\e[5;31m${*^^}\e[0m"; }
+function swg { echo -e "\e[32m${*^^}\e[0m"; }
+function swu { echo -e "${*^^}"; }
+function swn { echo -e "$*"; }
 function swl { echo -e "\n$1\n"; }
 function sau { id "$1" &>$p03 || sex "useradd --no-create-home --shell /bin/false $1"; }
 function cmw { [[ $2 ]] && sex "chmod $2 $1";[[ $3 ]] && sex "chown $3:${4:-$3} $1"; }
 function svd { sex "chown -R eth3:eth3 $p17";cmw $p17 700 eth3; }
-function yex { swb "$1";printf "%s\ny\n" "$H" | sudo -S -p '' $1 &>$p03; }
-function cex { swb "$1";echo "$H"|sudo -S -p '' $1 2>$p03; }
-function nex { swn "$1";echo "$H"|sudo -S -p '' $1 2>$p03; }
-function sex {          echo "$H"|sudo -S -p '' $1 &>$p03; }
-function pex {          echo "$H"|sudo -S -p '' "$@" 2>$p03; }
+function yex { swb $@;echo "$H"|sudo -S -p '' -v &>$p03;yes|sudo -n "$@" &>$p03; }
+function cex { swb $@;echo "$H"|sudo -S -p '' $1 2>$p03; }
+function nex { swn $@;echo "$H"|sudo -S -p '' $1 2>$p03; }
+function sex {        echo "$H"|sudo -S -p '' $1 &>$p03; }
+function pex {        echo "$H"|sudo -S -p '' "$@" 2>$p03; }
 function dex { swl "$1";$1; }
 function gps { sex "$s02 $s10"; }
 function ups { sex "$s02 $s11"; }
