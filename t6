@@ -732,7 +732,7 @@ function pa  { tsa $s16 || cex "$s03 $s16"; }                                   
 function na  { tsa $s17 || cex "$s03 $s17"; }                                                                                                                 # start prometheus-node-exporter
 function fa  { tsa $s18 || cex "$s03 $s18"; }                                                                                                                 # start grafana-server
 function ma  { tsa $s14 || cex "$s03 $s14"; }                                                                                                                 # start mev-boost
-function wa  { if pex ufw status|grep -iq inactive;then yex ufw enable;else swu 'FIREWALL ALREADY ACTIVE';fi;cex 'ufw reload'; }                          # enable ufw : Proceed with operation (y|n)?
+function wa  { if pex ufw status|grep -iq inactive;then nex ufw --force enable;else swu 'FIREWALL ALREADY ACTIVE';fi;cex 'ufw reload'; }                          # enable ufw : Proceed with operation (y|n)?
 # stop/disable eth-geth eth-beacon eth-validator prometheus prometheus-node-exporter grafana-server mev-boost
 function pp  { cex "$s02 $s16"; }                                                                                                                             # stop prometheus
 function np  { cex "$s02 $s17"; }                                                                                                                             # stop prometheus-node-exporter
@@ -1185,9 +1185,9 @@ function bps {
 [[ $1 = hrs ]] && { hrs; }
 [[ $1 = hrc ]] && { hrc; }
 [[ $1 = dmr ]] && { dmr; }
-[[ $1 = fsh ]] && { dex 'fwupdmgr get-devices'; }
-[[ $1 = frf ]] && { dex 'fwupdmgr refresh --force';dex 'fwupdmgr get-updates'; }
-[[ $1 = fud ]] && { dex "fwupdmgr update $2"; }
+[[ $1 = fsh ]] && { dex fwupdmgr get-devices; }
+[[ $1 = frf ]] && { dex fwupdmgr refresh --force;dex fwupdmgr get-updates; }
+[[ $1 = fud ]] && { dex fwupdmgr update $2; }
 [[ $1 = fst ]] && { fst $2; }
 [[ $1 = tmp ]] && { dts;tmp s; }
 [[ $1 = sif ]] && { dts;sif s; }
@@ -1299,7 +1299,7 @@ function bml { [[ $d1 = $s43 ]] || return;if bdt;then bdl $d0;elif [[ $(llc $p12
 [[ $1 = esp ]] && { esp $2; }
 [[ $1 = tsh ]] && { tsh $2; }
 [[ $1 = wa  ]] && { wa; }
-[[ $1 = we  ]] && { yex ufw enable; }
+[[ $1 = we  ]] && { nex ufw --force enable; }
 [[ $1 = wpr ]] && { cex 'ufw disable'; }
 [[ $1 = wds ]] && { cex 'ufw disable'; }
 [[ $1 = ws  ]] && { cex 'ufw status verbose'; }

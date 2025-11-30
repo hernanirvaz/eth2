@@ -4,7 +4,7 @@
 source /home/eth/eth2/t1
 
 [[ -x $p02/eth2/t ]] || ln -s $p02/eth2/t6 $p02/eth2/t                                                                                                        # link base commands
-if pex 'ufw status'|grep -qi inactive;then
+if pex ufw status|grep -qi inactive;then
   swb 'INIT FIREWALL';sex 'ufw default deny incoming';sex 'ufw default allow outgoing'                                                                        # base ufw
   pde 22/tcp ossh
   [[ $cunm = $vnm1 || $cunm = $vnm2 || $cunm = $vnm3 ]] && ple 2020/tcp nssh
@@ -15,7 +15,7 @@ if pex 'ufw status'|grep -qi inactive;then
   [[ $cunm = $inm5                                   ]] && ple 2025/tcp nssh
   [[ $cunm = $inm6                                   ]] && ple 2026/tcp nssh
   sht && sxt && { pai 123/udp 192.168.8.0/24 ntp;pai 323/udp 192.168.8.0/24 ptp; }
-  sex 'ufw reload';yex ufw enable
+  sex 'ufw reload';nex ufw --force enable
 else
   swb 'script ja executou'
   exit
