@@ -2,5 +2,6 @@
 
 f=e9.log
 [[ -f $f ]] || { echo "$f nao existe"; exit 1; }
-l=$(grep -Ei '[0-9.]+ *ms.+[0-9.]+ *Mbit/s.+[0-9.]+*Mbit/s' $f);echo -e "$l\n\nAverage:" 
-awk '{dt=$1;tm=$2;ps+=$4;ds+=$7;us+=$10;cn++} END {printf "%s %s Ping: %.0f ms Download: %.0f Mbit/s Upload: %.0f Mbit/s\n", dt, tm, ps/cn, ds/cn, us/cn}' <<< "$l"
+l=$(grep -Ei '[0-9.]+ *ms.+[0-9.]+ *Mbit/s.+[0-9.]+*Mbit/s' $f)
+e=$(awk '{ps+=$4;ds+=$7;us+=$10;cn++} END {printf "Ping: %.0f ms Download: %.0f Mbit/s Upload: %.0f Mbit/s\n", ps/cn, ds/cn, us/cn}' <<< "$l")
+echo -e "$l\n\nAverage:";echo $(date +"%Y-%m-%d %H:%M:%S") $e 
