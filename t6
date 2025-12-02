@@ -83,7 +83,6 @@ function ndt { [[ $cun1 != $cun2 ]]; }
 function mct { [[ $cunm = $cumv ]]; }
 function i5t { [[ $cunm = $inm5 ]]; }
 function i6t { [[ $cunm = $inm6 ]]; }
-function iet { [[ $cunm = $cun1 || $cunm = $cun2 ]]; }
 function irt { [[ $cunm = $cumv || $cunm = $vnm1 || $cunm = $vnm2 ]]; }
 function v1t { [[ $cunm = $vnm1 ]]; }
 function v2t { [[ $cunm = $vnm2 ]]; }
@@ -624,7 +623,7 @@ function cpe {
   clk $1;[[ $m ]] && swn "$m";[[ $1 = h ]] && return;tmp;[[ $1 = p ]] && return;sif
   m=$(sll "$e74"|sef "$e30");if [[ $m ]];then i=$(wc -l <<< "$m");e=$(tail -n1 <<< "$m");else i=0;e=;fi;m=;n=0;d=;l=ou
   if [[ ! $m ]];then if sct;then m=$(cll "$e50;$e31");l=cl;fi;fi
-  if [[ ! $m ]];then if iet;then m=$(ell "$e50;$e31");l=el;fi;fi
+  if [[ ! $m ]];then if sbt;then m=$(ell "$e50;$e31");l=el;fi;fi
   if [[ ! $m ]];then if irt;then m=$(rll "$e51;$e31");l=rl;fi;fi
   if [[ ! $m ]];then n=0;d=;else n=$(lll|wc -l);d=$(tail -n1 <<< "$m");fi
   m="ERRO$(printf '%3i%4i %10s %5s' $i $n $dt 2>$p03)"
@@ -777,7 +776,7 @@ function dpa { tsa $s20 && nex $s02 $s20;nex $s02 systemd-resolved;sleep 9;tse $
 function nrs { 
   local e;e=$(ip -br addr|grep -v lo|grep -E 'en.+UP'|awk '{printf $1}')
   nex ip link set $e down;nex ip addr flush dev $e
-  nex netplan apply;sleep 9;ifconfig;dpa
+  nex netplan apply;sleep 9;ip a;dpa
 }
 function lcp {
   local f=$1
@@ -923,8 +922,8 @@ function caa { if n1t;then cll "$e50" $1;else xsh $cun1 "$p53 cl $1";fi;if ndt;t
 function eaa { if n1t;then ell "$e50" $1;else xsh $cun1 "$p53 el $1";fi;if ndt;then if n2t;then ell "$e50" $1;else xsh $cun2 "$p53 el $1";fi;fi; }
 function laa { caa $1;eaa $1; }
 function fsp { awk -v l="${1:-0}" -v f="$g31" '$4 ~ f && $5 <= l'|sort -k2n; }
-function esp { iet || return;local e;if tsa $s44;then e=$(ll4 "$g36.*$g30:"|sef "$e76");else e=$(ll6 "$g11.*$g35"|sef "$e77");fi;e=$(fsp $1 <<< "$e");[[ $1 ]] || e=$(tail -n$n55 <<< "$e");[[ $e ]] && echo -e "\n$e"; }
-function csp { iet || return;local e;e=$(ll6 "$g50:"|sef "$e78"|fsp $1);[[ $1 ]] || e=$(tail -n$n55 <<< "$e");[[ $e ]] && echo -e "\n$e"; }
+function esp { sbt || return;local e;if tsa $s44;then e=$(ll4 "$g36.*$g30:"|sef "$e76");else e=$(ll6 "$g11.*$g35"|sef "$e77");fi;e=$(fsp $1 <<< "$e");[[ $1 ]] || e=$(tail -n$n55 <<< "$e");[[ $e ]] && echo -e "\n$e"; }
+function csp { sbt || return;local e;e=$(ll6 "$g50:"|sef "$e78"|fsp $1);[[ $1 ]] || e=$(tail -n$n55 <<< "$e");[[ $e ]] && echo -e "\n$e"; }
 function mre { mct || return;local s=n;local e=$(for s in $(rlr|snf "$e09"|sort -u);do printf '%3i %s\n' $(rlr|grep -co $s) $s;done|sort -n);[[ $e ]] && echo -e "\n$e"; }
 function epf { if tsa $s10;then gl0;swn "$m";fi;if tsa $s11;then ul0;swn "$m";fi;if tsa $s44;then tl0;swn "$m";fi; }
 function cpf { if tsa $s12;then bl0;swn "$m";fi;if tsa $s13;then vl0;swn "$m";fi;if tsa $s14;then ml0;swn "$m";fi; }
@@ -1055,17 +1054,42 @@ function smb {
   if [[ -d $p60 ]];then sex smbpasswd -n $s60;else sex smbpasswd -n $s64;fi
   sex $s00 restart $s62 $s63
 }
-function irv { if [[ -f $p70 ]];then swu rvm ja instalado;else swu 'RVM INSTALL';cex apt-add-repository -y ppa:rael-gc/rvm;cex apt update;cex apt install rvm -y;cex usermod -a -G rvm $USER;swb needs reboot;fi; }
+function irc {
+  local v;local s
+  v=${1:-$s83};s=$(rvm list 2>$p03)
+  if grep -q $v <<< "$s";then
+    swu $v ja instalado
+  else
+    swn rvm install $v;rvm install $v;swn rvm use $v --default;rvm use $v --default;rvm list
+  fi
+}
+function irv {
+  local v;local s
+  if [[ -f $p70 ]]; then
+    swu rvm ja instalado
+  else
+    swu instalar rvm
+    nex apt-add-repository -y ppa:rael-gc/rvm
+    sex apt update
+    nex apt install rvm -y
+    nex usermod -a -G rvm $USER
+    swb logout/login and t6 irv again
+    return
+  fi
+  irc $1
+  swb needs reboot
+}
 function cns {
-  [[ -f $p70 ]] || { echo -e "needs rvm installed\nt6 irv";return; }
-  local s;local v;s=$(rvm list);v='ruby-3.4.7'
-  if grep -q $v <<< "$s"     ;then swu $v ja instalado ;else rvm install $v;fi;rvm use $v --default
-  if gem list cns|grep -q cns;then swu cns ja instalada;else cex apt install libcurl4-openssl-dev -y;gem install cns --no-document;fi
+  [[ -f $p70 ]]   || { swu needs rvm installed;swn t6 irv                 ;return; }
+  gem list &>$p03 || { swu needs gem installed;swn logout/login and t6 irv;return; }
+  irc
+  if gem list cns 2>$p03|grep -q cns;then swu cns ja instalada;else sex apt install libcurl4-openssl-dev -y;gem install cns --no-document;fi
   local e=$(grep GOOGLE_APPLICATION_CREDENTIALS $p02/.bashrc);echo $e
   if [[ -n $e && -s $p02/.$p73 ]];then 
     swn CNS ENV VARS E .$p73 JA EXISTEM
   else
-    [[ -s $p02/$p72.gpg && -s $p02/$p73.gpg ]] || swu "Executar num desktop, para trazer chaves:"
+    [[ -s $p02/$p72.gpg && -s $p02/$p73.gpg ]] || swu Desktop run these and t6 cns again
+    local B;B=$(snf "$e85" $p77)
     if [[ -s $p02/$p72.gpg && -z $e ]];then
       gpg --batch --yes --passphrase "$B" -d $p02/$p72.gpg >> $p71;rm -f $p02/$p72.gpg
     elif [[ -z $e ]];then
@@ -1083,7 +1107,7 @@ function cns {
 [[ $1 = nfs ]] && { if [[ $cunm = $znm2 ]];then nfs;fi; }
 [[ $1 = smb ]] && { if [[ $cunm = $znm2 ]];then smb;fi; }
 [[ $1 = tms ]] && { if [[ $cunm = $znm2 ]];then tms;fi; }
-[[ $1 = irv ]] && { irv; }
+[[ $1 = irv ]] && { irv $2; }
 [[ $1 = cns ]] && { cns; }
 
 function idk {
@@ -1150,7 +1174,7 @@ function iz2 {
 [[ $1 = snr ]] && { cex $s37 lxd;cex $s37 core20;cex $s37 snapd;cex apt remove --autoremove snapd -y;echo -e "$s36" > nosnap.pref;cex mv nosnap.pref $p47;cmw $p47/nosnap.pref 644 root;cex apt update; }
 function bpn { bnp|jq -r "$s78"|grep -Ei "${1:-ip6}"; }
 function bps { 
-  iet || return
+  sbt || return
   local s;local n;local i;local e;dts
   s=$(ll5 "$g69.*:[a-f0-9]{1,4}:")
   e=$(bpn);n=0
@@ -1489,7 +1513,7 @@ if [[ $# -lt 1 ]];then
   m="$m\ntms\t\t\tinstalar $s15"
   m="$m\nnfs\t\t\tinstalar $s58"
   m="$m\nsmb\t\t\tinstalar $s62/$s63 servers"
-  m="$m\nirv\t\t\tinstalar rvm"
+  m="$m\nirv [v]\t\t\tinstalar rvm & ruby [$s83]"
   m="$m\ncns\t\t\tinstalar cns ruby gem"
   swn "\n$m\n"
 fi

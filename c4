@@ -2,5 +2,5 @@ PATH=
 MAILTO=
 H=
 
-      59 11 * * * t6 irb 24
 14,34,54  * * * * t6 vpf
+      59 11 * * * t6 irb 24

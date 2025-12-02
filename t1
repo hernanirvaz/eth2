@@ -563,6 +563,7 @@ s81="${s81}\n      - 443:443"  # Standard HTTPS
 s81="${s81}\n      - 81:81"    # NPM Admin UI
 s81="${s81}\n    restart: unless-stopped"
 s82='zpool'
+s83='ruby-3.4.7'
 
 e01='PollIntervalMinSec'
 e02='PollIntervalMaxSec'

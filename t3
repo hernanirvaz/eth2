@@ -19,7 +19,7 @@ if sct;then
   [[ -f $p00/lighthouse || -f $p02/.cargo/bin/lighthouse ]] || t6 luc $1
 fi
 t6 lpi
-if ! sct || [[ -f $p04/$s12.service ]];then
+if ! sbt || [[ -f $p04/$s12.service ]];then
   if [[ -f $p04/$s12.service ]];then swu "cc ja instalado";else swu 'cc NAO DEVE SER INSTALADO AQUI';fi
 else
   if [[ $cunm = $inm5 ]];then apip="$iip5";tarp=80;elif [[ $cunm = $inm6 ]];then apip="$iip6";tarp=80;else apip='127.0.0.1';tarp=80;fi
