@@ -1139,7 +1139,10 @@ function bps {
   iet || return
   local s;local n;local i;local e;dts
   s=$(ll5 "$g69.*:[a-f0-9]{1,4}:")
-  echo "$s75 p2p v6 $dt sessions in/out: $(echo "$s"|grep -ic Incoming)/$(echo "$s"|grep -ic Outgoing) seen: $(bpn ip6|wc -l)"
+  e=$(bpn);n=0
+  [[ $e ]] && n=$(wc -l <<< "$e")
+  echo "$s75 p2p v6 $dt sessions in/out: $(echo "$s"|grep -ic Incoming)/$(echo "$s"|grep -ic Outgoing) seen: $n"
+  [[ $e ]] && echo "SEEN ${e//$'\n'/$'\n'"SEEN "}"
   s=$(bcl identity|jq -r "$s79")
   echo $s75 add v4 $dt $(echo "$s"|grep -i ip4)
   echo $s75 add v6 $dt $(echo "$s"|grep -i ip6)
