@@ -103,7 +103,24 @@ function sns {
       esac
     fi
   else
-    printf %s "$1"
+    local s=$1
+    if [[ $1 = hrv* ]]; then
+      case ${1%%.*} in
+        hrv-zotac1) s=z1 ;;
+        hrv-zotac2) s=z2 ;;
+        hrv-zotac3) s=z3 ;;
+        hrv-zotac4) s=z4 ;;
+        hrv-intel5) s=z5 ;;
+        hrv-intel6) s=z6 ;;
+      esac
+    else
+      case ${1%%.*} in
+        $vnm1) s=v1 ;;
+        $vnm2) s=v2 ;;
+        $vnm3) s=v3 ;;
+      esac
+    fi
+    printf %s "$s"
   fi
 }
 function stt { [[ $cut1 != $cut2 ]]; }

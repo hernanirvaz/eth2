@@ -1055,14 +1055,28 @@ function smb {
   if [[ -d $p60 ]];then sex smbpasswd -n $s60;else sex smbpasswd -n $s64;fi
   sex $s00 restart $s62 $s63
 }
-function irv { [[ -f $p70 ]] && return;swu 'RVM INSTALL';cex apt-add-repository -y ppa:rael-gc/rvm;cex apt update;cex apt install rvm -y;cex usermod -a -G rvm $USER;echo source $p70 >> $p71;sex reboot; }
+function irv { if [[ -f $p70 ]];then swu rvm ja instalado;else swu 'RVM INSTALL';cex apt-add-repository -y ppa:rael-gc/rvm;cex apt update;cex apt install rvm -y;cex usermod -a -G rvm $USER;swb needs reboot;fi; }
 function cns {
-  [[ -f $p70 ]] || { echo -e "needs rvm installed\nrun t6 irv";return; }
-  local s;local v;source /etc/profile.d/rvm.sh;s=$(rvm list);v='ruby-3.3.0'
-  if grep -q $v <<< "$s"     ;then echo "$v is installado";else rvm install $v;fi;rvm use $v --default
-  if gem list cns|grep -q cns;then echo "cns ja instalada";else sex apt install libcurl4-openssl-dev -y;gem install cns --no-document;fi
-  if [[ -f $p02/$p72.gpg ]];then gpg --batch --yes --passphrase "$B" -d $p02/$p72.gpg >> $p71      ;rm -f $p02/$p72.gpg;else echo "needs $p02/$p72.gpg";fi
-  if [[ -f $p02/$p73.gpg ]];then gpg --batch --yes --passphrase "$B" -d $p02/$p73.gpg  > $p02/.$p73;rm -f $p02/$p73.gpg;else echo "needs $p02/$p73.gpg";fi
+  [[ -f $p70 ]] || { echo -e "needs rvm installed\nt6 irv";return; }
+  local s;local v;s=$(rvm list);v='ruby-3.4.7'
+  if grep -q $v <<< "$s"     ;then swu $v ja instalado ;else rvm install $v;fi;rvm use $v --default
+  if gem list cns|grep -q cns;then swu cns ja instalada;else cex apt install libcurl4-openssl-dev -y;gem install cns --no-document;fi
+  local e=$(grep GOOGLE_APPLICATION_CREDENTIALS $p02/.bashrc);echo $e
+  if [[ -n $e && -s $p02/.$p73 ]];then 
+    swn CNS ENV VARS E .$p73 JA EXISTEM
+  else
+    [[ -s $p02/$p72.gpg && -s $p02/$p73.gpg ]] || swu "Executar num desktop, para trazer chaves:"
+    if [[ -s $p02/$p72.gpg && -z $e ]];then
+      gpg --batch --yes --passphrase "$B" -d $p02/$p72.gpg >> $p71;rm -f $p02/$p72.gpg
+    elif [[ -z $e ]];then
+      swn mcp $p02/eth2/$p72.gpg $(sns $cunm)
+    fi
+    if [[ -s $p02/$p73.gpg && ! -s $p02/.$p73 ]];then
+      gpg --batch --yes --passphrase "$B" -d $p02/$p73.gpg  > $p02/.$p73;rm -f $p02/$p73.gpg
+    elif [[ ! -s $p02/$p73.gpg ]];then
+      swn mcp $p02/eth2/$p73.gpg $(sns $cunm)
+    fi
+  fi
 }
 [[ $1 = plx ]] && { if [[ $cunm = $znm2 ]];then plx $2;fi; }
 [[ $1 = jly ]] && { if [[ $cunm = $znm2 ]];then jly;fi; }
