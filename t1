@@ -411,11 +411,11 @@ s50=
 s51='debian-transmission'
 s52='';sht && sxt && s52='allow 192.168.8.0/24'
 if [[ $cunm = $cut1 ]];then
-  s52="${s52}\npool 0.de.pool.ntp.org iburst maxsources 4" # OVH 0.de.pool.ntp.org 0.ca.pool.ntp.org
-  s52="${s52}\npool 1.de.pool.ntp.org iburst maxsources 4" # OVH 1.de.pool.ntp.org 1.ca.pool.ntp.org
+  s52="${s52}\npool 0.europe.pool.ntp.org iburst maxsources 4" # OVH 0.[de|ca|us].pool.ntp.org
+  s52="${s52}\npool 1.europe.pool.ntp.org iburst maxsources 4" # OVH 1.[de|ca|us].pool.ntp.org
  else
-  s52="${s52}\npool 0.europe.pool.ntp.org iburst maxsources 4"
-  s52="${s52}\npool 1.europe.pool.ntp.org iburst maxsources 4"
+  s52="${s52}\npool 0.us.pool.ntp.org iburst maxsources 4"
+  s52="${s52}\npool 1.us.pool.ntp.org iburst maxsources 4"
 fi
 s53='sgms:'
 s54='threshold|read|write|written|namespace|temperature|thermal|power|shutdowns|controller|endurance'
@@ -694,7 +694,7 @@ e68='s%^.,\*,([^,]+),([^,]+),([^,]+,){3}([^,]+),[^,]+,([^,]+).*$%\1 \2 \4 \5%p'
 e69="s%^ *#* *PasswordAuthentication  *.*$%PasswordAuthentication no%i"
 e70='s%.*price": *([0-9]*\.?[0-9]+).*%\1%p'
 e71='s%.*PID: *([0-9]+).*%\1%p'
-e72='s%^ *sourcedir +/etc/chrony/sources.d%# sourcedir /etc/chrony/sources.d%;s%^ *pool  *%# pool %'
+e72='s%^ *sourcedir +%# sourcedir %;s%^ *pool  *%# pool %'
 e73='s%^.*mev-boost +(v[0-9]+\.[0-9]+)(\.[0-9]+)?.*$%\1\2%'
 e75="s%^$g58 +[^ ]+([a-z1-9]{4}) +([^ ]{4})[^ ]+ +"
 e74="$e75%\U\5 %"
@@ -710,7 +710,7 @@ e82='s%^([a-z]+[0-9]+)[ :]+active +(raid[01564]).+$%\1 \2%p'
 e83='s%^.*version +([0-9]+\.[0-9]+\.[0-9]+).*$%v\1%p'
 e84='([0-9]+\.[0-9]+) *ETH.*%\1%p'
 e85='s%^/ip6/([^ ]+)/tcp/.*$%\1%p'
-e86='s%^pool +0.([a-z]{2}).*$%\1%p'
+e86='s%^pool +0.([a-z]{2}).*maxsources +[2-4]$%\1%p'
 e87='s%^(net.ipv6.conf.(all|default).use_tempaddr) *= *[0-9]+%\1 = 0%'
 
 j0='.ata_sct_temperature_history.table|join(" ")'

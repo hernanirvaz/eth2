@@ -1,10 +1,10 @@
 #!/bin/bash
 
-stc () { s='Ping|Download|Upload';e=$(speedtest --simple 2>/dev/null|grep -E "$s");[[ "$e" ]] || return;echo $(date +"%Y-%m-%d %H:%M:%S") $e; }
+stc () { local e;e=$(speedtest --simple 2>/dev/null|grep -Ei 'Ping|Download|Upload');[[ "$e" ]] || return;echo $(date +"%Y-%m-%d %H:%M:%S") $e; }
 
 if [[ $1 ]];then
     stc
 else
-    mc=$(date +%M);mr=$(awk -v m=0 -v x=59 "BEGIN{srand();print int(m+rand()*(x-m+1))}")
-    [[ "$mc" -eq "$mr" ]] && stc >> e9.log 2>&1
+    mc=$(date +%M);nr=$(date +%s%N);mr=$(awk -v m=0 -v x=59 -v s="$nr" "BEGIN{srand(s);print int(m+rand()*(x-m+1))}")
+    if [[ "$mc" -eq "$mr" ]];then stc >> e9.log 2>/dev/null;fi
 fi
