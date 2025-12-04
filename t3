@@ -37,7 +37,8 @@ else
     othe="$othe --checkpoint-sync-url https://mainnet.checkpoint.sigp.io"
     # othe="$othe --checkpoint-sync-url https://beaconstate.info"
   fi
-  # othe="$othe --state-cache-size 128 --beacon-processor-work-queue-len 32768"                                                                               # keep memory constrained during non-finality
+  # othe="$othe --shuffling-cache-size 128"                                     # fusaka attestation queue full & missig attestations
+  # othe="$othe --state-cache-size 128 --beacon-processor-work-queue-len 32768" # keep memory constrained during non-finality
   # othe="$othe --disable-duplicate-warn-logs"                                                                                                                # no logs on duplicate gossip messages
   # othe="$othe --execution-timeout-multiplier 1"                                                                                                             # multiply default execution timeouts
   # othe="$othe --disable-backfill-rate-limiting"                                                                                                             # disable the backfill sync rate-limiting
