@@ -725,6 +725,7 @@ e84='([0-9]+\.[0-9]+) *ETH.*%\1%p'
 e85='s%^/ip6/([^ ]+)/tcp/.*$%\1%p'
 e86='s%^pool +0.([a-z]{2}).*maxsources +[2-4]$%\1%p'
 e87='s%^(net.ipv6.conf.(all|default).use_tempaddr) *= *[0-9]+%\1 = 0%'
+e88="s%^.* +([0-9]{2}:[0-9]{2}):[0-9]{2}$g04 +(INFO +peers) +%\1 \2 %"
 
 j0='.ata_sct_temperature_history.table|join(" ")'
 j1='.temperature.current'
