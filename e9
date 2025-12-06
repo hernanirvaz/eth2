@@ -1,10 +1,13 @@
 #!/bin/bash
+# */2 1,9,17 * * * e9
 
-stc () { local e;e=$(speedtest --simple 2>/dev/null|grep -Ei 'Ping|Download|Upload');[[ "$e" ]] || return;echo $(date +"%Y-%m-%d %H:%M:%S") $e; }
+DNL='/dev/null'
+
+stc () { local e;e=$(speedtest --simple 2>$DNL | grep -Ei 'Ping|Download|Upload' 2>$DNL);[[ "$e" ]] || return;echo $(date +"%Y-%m-%d %H:%M:%S" 2>$DNL) $e; }
 
 if [[ $1 ]];then
     stc
 else
-    mc=$(date +%M);nr=$(date +%s%N);mr=$(awk -v m=0 -v x=59 -v s="$nr" "BEGIN{srand(s);print int(m+rand()*(x-m+1))}")
-    if [[ "$mc" -eq "$mr" ]];then stc >> e9.log 2>/dev/null;fi
+    mc=$(date +%M 2>$DNL);nr=$(date +%s%N 2>$DNL);mr=$(awk -v m=0 -v x=59 -v s="$nr" "BEGIN{srand(s);print int(m+rand()*(x-m+1))}" 2>$DNL)
+    if [[ "$mc" -eq "$mr" ]];then stc >> $HOME/e9.log 2>$DNL;fi
 fi
