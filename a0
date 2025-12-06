@@ -152,8 +152,9 @@ function pcm {
   local n;local p;local e=${1^^};local s=hrv-zotac1;n=$(dnn $s);p=$(dnz $s);local m='eth2/rt-GR241AG'
   if   [[ $e = PRB ]];then zsh "$p" "$n" "/etc/rc.reboot"
   elif [[ $e = NTP ]];then zsh "$p" "$n" "ntpq -np"
-  elif [[ $e = LRB ]];then echo;if [[ -f ~/$m ]]; then echo meo reboot log;tail -n5 ~/$m;fi;zsh "$p" "$n" "echo last reboot;last reboot|head -n5|sed 's%  *% %g'|sort -k5n;echo wan check log;tail -n15 /root/wan-check.log;echo;date +'%Y-%m-%d %H:%M:%S'"
+  elif [[ $e = LRB ]];then echo;if [[ -f ~/$m ]]; then echo meo reboot log;tail -n5 ~/$m;fi;zsh "$p" "$n" 'echo last reboot;last reboot|head -n5|sed "s%  *% %g"|sort -k5n;echo wan check log;tail -n15 /root/wan-check.log;echo last hour system log;grep "`date "+%b %e %H"`" /var/log/system.log;echo;date +"%Y-%m-%d %H:%M:%S"'
   elif [[ $e = IP6 ]];then zsh "$p" "$n" "ifconfig re0|grep inet6|grep -v fe80|awk '{print \$2}'"
+  elif [[ $e = SYL ]];then zsh "$p" "$n" 'grep "`date "+%b %e"`" /var/log/system.log'
   else                     zsh "$p" "$n" 'cat /root/wan-check.log'
   fi
 }
