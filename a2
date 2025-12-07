@@ -10,7 +10,8 @@ function erq { local q=${*:-changelogs.ubuntu.com};msh resolvectl query "$q"; }
 
 alias rr='pcm PRB'
 alias rt='tcm'
-alias rl='pcm LRB'
+# alias rl='pcm LRB'
+function rl { pcm LRB $1; }
 
 alias z1='esl hrv-zotac1'
 alias z2="esl hrv-zotac2"
