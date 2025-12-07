@@ -23,6 +23,6 @@ sto () { local e;e=$(stc 2>$DNL);if [[ "$e" ]];then echo $e >> $FIL.log;[[ $1 ]]
 if [[ $1 ]];then
     sto $1
 else
-    mc=$(date +%M 2>$DNL);nr=$(date +%s%N 2>$DNL);mr=$(awk -v m=0 -v x=59 -v s="$nr" "BEGIN{srand(s);print int(m+rand()*(x-m+1))}" 2>$DNL)
-    if [[ "$mc" -eq "$mr" ]];then sto;fi
+    mc=$(date +%-M);nr=$(date +%s%N);mr=$(awk -v m=0 -v x=59 -v s="$nr" "BEGIN{srand(s);print int(m+rand()*(x-m+1))}")
+    if [[ "$mc" = "$mr" ]];then sto;fi
 fi
