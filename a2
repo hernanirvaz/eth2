@@ -8,10 +8,13 @@ function msh { echo -e "\n\e[5;32m${*^^}\e[0m";eval "$*"; }
 function esl { local p;local s;p=$(dnz "$1" "$2");s=$(dnn "$1");echo -e "\nssh -4p $p $s:";zsh "$p" "$s"; }
 function erq { local q=${*:-changelogs.ubuntu.com};msh resolvectl query "$q"; }
 
-alias rr='pcm PRB'
-alias rt='tcm'
-# alias rl='pcm LRB'
+function rr { pcm PRB; }
 function rl { pcm LRB $1; }
+function rt {
+  local s
+  s=hrv-zotac2;echo -e "\n\e[32m$s chronyc\e[0m";zsh $(dnz $s) $(dnn $s) "chronyc -n sources"
+  s=hrv-zotac3;echo -e "\n\e[32m$s chronyc\e[0m";zsh $(dnz $s) $(dnn $s) "chronyc -n sources"
+}
 
 alias z1='esl hrv-zotac1'
 alias z2="esl hrv-zotac2"
@@ -21,5 +24,5 @@ alias z5="esl hrv-intel5"
 alias z6="esl hrv-intel6"
 
 alias ky='ssh-keygen -f ~/.ssh/id_ed25519 -t ed25519 -C "$(whoami)@$(hostname)";cat ~/.ssh/id_ed25519.pub'
-alias rq='msh "ip a s $(san);ip r;ip -6 r";systemctl is-active --quiet systemd-networkd && msh networkctl status;msh resolvectl status $(san);erq github.com changelogs.ubuntu.com'
+alias iq='msh "ip a s $(san);ip r;ip -6 r";systemctl is-active --quiet systemd-networkd && msh networkctl status;msh resolvectl status $(san);erq github.com changelogs.ubuntu.com'
 alias xx='exit'
