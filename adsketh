@@ -54,8 +54,6 @@ function gcf {
     ufz "$1";mv "$1.gpg" ~/eth2/"$3"  ;echo Found $(basename "$1")
     if [[ -d $4 ]];then cp "$1" "$4$u";echo Found "$4$u";fi
     rm "$1"
-  else
-    echo Not found $(basename "$2")
   fi
 } 
 function gcr { 
