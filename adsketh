@@ -64,9 +64,9 @@ function gcr {
 }
 function rfu {
   local s;cd $HOME
-  s='rt-pfsense'      ;[[ -s $s.txt ]] || zfu eth2/$s.txt.gpg > $s.txt
-  s='rt-MEO'          ;[[ -s $s.txt ]] || zfu eth2/$s.txt.gpg > $s.txt
-  s='rt-MEO-protectli';[[ -s $s.txt ]] || zfu eth2/$s.txt.gpg > $s.txt
+  s='rt-pfsense'      ;[[ -s $s.txt ]] || { zfu eth2/$s.txt.gpg > $s.txt;[[ -s $s.txt ]] && echo Restored $s.txt; }
+  s='rt-MEO'          ;[[ -s $s.txt ]] || { zfu eth2/$s.txt.gpg > $s.txt;[[ -s $s.txt ]] && echo Restored $s.txt; }
+  s='rt-MEO-protectli';[[ -s $s.txt ]] || { zfu eth2/$s.txt.gpg > $s.txt;[[ -s $s.txt ]] && echo Restored $s.txt; }
 }
 
 function vls {
