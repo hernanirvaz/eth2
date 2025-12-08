@@ -32,8 +32,6 @@ if [[ $cunm = hrv-zotac2 ]];then
     ftr "$o" "$d"
     ftf "$o" 'rm -rf "%h"'
   }
-  ufz () { echo "$B"|gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 -c $1; }
-  zfu () { echo "$B"|gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 -d $1; }
   hlp () {
     cat <<'EOF'
 {ps}{mv|tv|lt|al}       pull|sync movie|tv|lt|all

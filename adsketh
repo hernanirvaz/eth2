@@ -46,8 +46,6 @@ function z7z {
   sudo 7z a -p$W -mhe=on "$f" "$d"
   sudo chown "$u:$u" "$f"
 }
-function ufz { echo "$B"|gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 -c "$1"; }
-function zfu { echo "$B"|gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 -d "$1"; }
 function gcf {
   local u='/conf/config.xml'
   if [[ -s $1 ]];then 
@@ -103,6 +101,17 @@ function kz {
   s="192.168.8.$s";echo "Setup ubuntu server: $s:$p"
   ei0 $H $E $R $V $p >~/i0;ei1 $H $V $K $E $B >~/i1;cz0 $s $p
 } 
+hlp () {
+  cat <<'EOF'
+z7z [1|2]               archive media cs1|cs2 encripted with 7z
+ufz file                encrypt file
+zfu file                decrypt file
+rfu                     decrypt router config files
+gcr                     git commit recent router config files
+kz  (port|ip) [ip|port] setup server at ip last octet or port
+EOF
+}
+
 
 zls hrv-zotac1 hrv-zotac2 hrv-zotac3 hrv-zotac4 hrv-intel5 hrv-intel6
 vls ns31198432.ip-51-89-64.eu

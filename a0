@@ -161,3 +161,5 @@ function pcm {
 }
 function san { local s=${1:-UP};ip -j addr|jq -r ".[]|select(.operstate==\"${s^^}\").ifname"|grep '^en'; }
 function sa6 { local s=${1:-UP};ip -j addr|jq -r ".[]|select(.operstate==\"${s^^}\").addr_info.[]|select(.family==\"inet6\" and .scope==\"global\").local"; }
+function ufz { echo "$B"|gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 -c $1; }
+function zfu { echo "$B"|gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 -d $1; }
