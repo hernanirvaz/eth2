@@ -64,6 +64,6 @@ elif [[ $cunm = hrv-zotac3 || $cunm = hrv-zotac4 ]];then
 fi
 
 sht || alias aa='t6 ah'
-alias st='e9 force'
+alias pp='t6 bps'
 alias hh='t6 hs0'
 alias tt='t6 hsh'
