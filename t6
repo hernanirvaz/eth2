@@ -404,12 +404,12 @@ function bo4 { bo0|grep $(non $1); }                                            
 function bo5 { bo0|head -n$((b6>b2?b6:b2<5?5:b2))|tail -n$((b6>0?b6:b2>n12?n12:b2<5?5:b2)); }                                                                 # homologous report
 function boa { local g=${1:-$n16};local e=$(bo4 $g);printf 'BO%5i %3i\n' $(wc -l <<< "$e") $g 2>$p03;echo "$e";((g<n17)) && boa $((g+n18)); }                 # recursively show homologous nodes report
 function bof {
-  [[ -f $p12 ]] || return;rm -f $p12.r;local i;local d;local n=6;local g=$n16
+  [[ -f $p12 ]] || return;rm -f $p12.r;local i;local d;local o=${3:-a};local n;if [[ $o = a ]];then n=0;else n=6;fi;local g=$n16
   i=$(echo $(head -n1 $p12 2>$p03)|cut -d' ' -f4);i=${i:-$(date '+%F')}                                        # start date
   d=$(printf %i $(((($(date '+%s')-$(date -d "$i" '+%s'))/86400)+1)));dts "$(date -d"$d days ago" '+%F') $s43" # date/time for fake logs
   while ((g<=n17));do
     nn=$g;nr=$g;bl1 0 1000 0 OK;bl2 0 0 $((${1:-1}*n)) $((${2:-0}*n));bl3 0 0 0 0 0 0 0;blo;swn "$m" >> $p12.r
-    n=$((n-1));g=$((g+n18))
+    if [[ $o = a ]];then n=$((n+1));else n=$((n-1));fi;g=$((g+n18))
   done
   [[ -s $p12.r ]] || return
   cp $p12 $p12.o;cat $p12.r;cat $p12.o >> $p12.r
@@ -1482,7 +1482,7 @@ if [[ $# -lt 1 ]];then
   m="$m\nbo  [lines]\t\thomologous\tlogs [with max lines]"
   m="$m\nbo[cl]\t\t\thomologous\tlogs report at [current|last($s43)] time"
   m="$m\nb[or]d [p] [n]\t\tdelete\t\tlogs for last penalty >= p(0) && node days > n(5) in [o]rder or [r]everse"
-  m="$m\nbof [h] [d]\t\tfake\t\tlogs with head h(1) & delay d(0) penalties multipliar for peers $n16 until $n17, date=first-1"
+  m="$m\nbof [h] [d] [a|d]\tfake\t\tlogs with head h(1) & delay d(0) penalties multipliar in (a)scending|descending order for peers $n16 until $n17, date=first-1"
   m="$m\nbp[fsionl]\t\tcc-minutes\treport [file|peers {summary|incoming|outgoing|network|logs}]"
   m="$m\nbm[f]\t\t\tcc-daily\treport [file & $s12 nodes change/restart]"
   m="$m\nhs[012ecgubvm]\t\thistoric summary report [0-both|1-main|2-backup|el|cc|geth|besu|beacon|vc|mev]"
