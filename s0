@@ -5,7 +5,8 @@ source /home/$iu/i0
 
 sc='/etc/ssh/sshd_config'
 ss='/lib/systemd/system/ssh.socket'
-sm='/etc/ssmtp/ssmtp.conf'
+m1='/etc/msmtprc'
+m2='/etc/aliases'
 un=eth
 sh=ssh
 uh="/home/$un"
@@ -15,24 +16,36 @@ s1="$s1;s%^ *#* *PasswordAuthentication  *.*$%PasswordAuthentication no%i"
 s1="$s1;s%^ *#* *PermitEmptyPasswords  *.*$%PermitEmptyPasswords no%i"
 s1="$s1;s%^ *#* *KbdInteractiveAuthentication  *.*$%KbdInteractiveAuthentication no%i"
 s1="$s1;s%^ *#* *UsePAM  *.*$%UsePAM no%i"
-s2="s%^ *#* *root *=.*$%root=hernanilr@gmail.com%i"
-s2="$s2;s%^ *#* *mailhub *=.*$%mailhub=mail.smtp2go.com:587\nAuthUser=fruga.pt\nAuthPass=$E\nUseSTARTTLS=YES%i"
-s2="$s2;s%^ *#* *rewriteDomain *=.*$%rewriteDomain=fruga.pt%i"
-s2="$s2;s%^ *#* *FromLineOverride *=.*$%FromLineOverride=YES%i"
-s3="s%^ *ListenStream *=(.*):[0-9]+$%ListenStream=\1:$pr%i"
+s2='defaults' # treats from: msmtp config
+s2="$s2\nauth on"
+s2="$s2\ntls on"
+s2="$s2\ntls_trust_file /etc/ssl/certs/ca-certificates.crt"
+s2="$s2\nsyslog on"
+s2="$s2\naliases /etc/aliases"
+s2="$s2\nauto_from on"
+s2="$s2\nmaildomain fruga.pt"
+s2="$s2\naccount smtp2go"
+s2="$s2\nhost mail.smtp2go.com"
+s2="$s2\nport 587"
+s2="$s2\nuser fruga.pt"
+s2="$s2\npassword $V$E"
+s2="$s2\naccount default : smtp2go"
+s3='default: hernanilr@gmail.com' # treats to: aliases config
+s4="s%^ *ListenStream *=(.*):[0-9]+$%ListenStream=\1:$pr%i"
 
-function sse { local f=$(basename $1);cp $1 $f.sav;sed -E "$2" $f.sav > $1;cp $1 $f.new;chmod $3 $1;chown $4 $1; }
+function sse { local f=$(basename $1);[[ -s $1 ]] && cp $1 $f.sav;sed -E "$2" $f.sav > $1;cp $1 $f.new;chmod $3 $1;chown $4 $1; }
+function ssa { local f=$(basename $1);[[ -s $1 ]] && cp $1 $f.sav;echo -e "$2"       > $1;cp $1 $f.new;chmod $3 $1;chown $4 $1; }
 function ssp { echo -e "\n\e[5mchange passwd\e[25m ${2:-root}:\t$1\n";echo -e "$1\n$1"|passwd $2; }
 
 echo -e "\napt update"
-apt update -y           &>> apt.out
-apt full-upgrade -y     &>> apt.out
-apt dist-upgrade -y     &>> apt.out
-apt autoremove          &>> apt.out
-apt autoclean           &>> apt.out
-sse $sc "$s1" 644 root:root;if [[ ${ip%%.*} -ne 192 ]];then sse $ss "$s3" 644 root:root;ssp $V $iu;fi;systemctl daemon-reload;systemctl reload $sh;systemctl restart $sh
-apt install ssmtp jq -y &>> apt.out
-sse $sm "$s2" 640 root:mail
+apt update -y                               &>> apt.out
+apt full-upgrade -y                         &>> apt.out
+apt dist-upgrade -y                         &>> apt.out
+apt autoremove                              &>> apt.out
+apt autoclean                               &>> apt.out
+apt install msmtp msmtp-mta bsd-mailx jq -y &>> apt.out
+sse $sc "$s1" 644 root:root;if [[ ${ip%%.*} -ne 192 ]];then sse $ss "$s4" 644 root:root;ssp $V $iu;fi;systemctl daemon-reload;systemctl reload $sh;systemctl restart $sh
+ssa $m1 "$s2" 644 root:root;ssa $m2 "$s3" 644 root:root
 adduser --disabled-password --comment "" $un
 ssp $H $un
 usermod -aG sudo $un
