@@ -119,6 +119,7 @@ p82=$trdi
 p83='/etc/needrestart/needrestart.conf'
 p84='/proc/mdstat'
 p85='/etc/sysctl.d/10-ipv6-privacy.conf'
+p86='/etc/wireguard'
 
 g00='(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) +'
 g01='[0-9]{1,2} +'

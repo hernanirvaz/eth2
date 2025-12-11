@@ -1202,6 +1202,22 @@ function bps {
     echo $s75 NOT ON $dt
   fi
 }
+function iwg {
+  local s
+  sex apt update;sex apt-get install wireguard -y
+  cd $p86;umask 077;wg genkey | tee privatekey | wg pubkey > publickey
+  s='[Interface]'
+  s="$s\nPrivateKey = $(cat privatekey)"
+  s="$s\nAddress = 192.168.9.100/24"
+  s="$s\nDNS = 8.8.8.8"
+  s="$s\n"
+  s="$s\n[Peer]"
+  s="$s\nPublicKey = ajyxST3OpjDxI2sG8id8zqzemzQW7/uMm2D1eh+Wljc="
+  s="$s\n"
+  s="$s\nEndpoint = meo.fruga.pt:51888"
+  s="$s\nAllowedIPs = 192.168.8.0/24, 192.168.9.0/24"
+  s="$s\nPersistentKeepalive = 25"
+}
 
 [[ $1 = bps ]] && { bps; }
 [[ $1 = bpi ]] && { bnp|jq -r "$s48\"Incoming\"$s49"; }
