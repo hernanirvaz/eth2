@@ -912,7 +912,7 @@ function ts1 {
     ts0 $i $s $(nu3 "($s-$i)/$i*100" 3) $nd
   fi
 }
-function tsh { local n=${1:-4};local s=$(ts1 $n);echo -e "${s^^}\t(eth*10^$n)"; }
+function tsh { sbt || return;local n=${1:-4};local s=$(ts1 $n);echo -e "${s^^}\t(eth*10^$n)"; }
 
 function lsr { sort -t: -k2n -k3n -k4n; }
 function wpf { if tsa $s44;then ll4 "$g43";fi;ll6 "$g42"|fln "$g39"; }
@@ -985,22 +985,22 @@ function wsp {
   ipw;rcm ether sweep --from="$1" --privatekey="$K" --to="$2" --verbose
 }
 
-function ngx { sex apt install $s22 -y;cc4 $p32 "$s42";cmw $p32 644 root;sex $s00 reload $s22;sudo nginx -t &>> $p02/$s60.out; }
+function ngx { sex apt-get install $s22 -y;cc4 $p32 "$s42";cmw $p32 644 root;sex $s00 reload $s22;sudo nginx -t &>> $p02/$s60.out; }
 function plx {
   local k=/usr/share/keyrings/plex.gpg
   local u=downloads.plex.tv
   local o=$p14/sources.list.d/plexmediaserver.list
-  swu 'PLEX SERVER';sex apt install dirmngr ca-certificates apt-transport-https -y
+  swu 'PLEX SERVER';sex apt-get install dirmngr ca-certificates apt-transport-https -y
   # curl -fsSL https://$u/plex-keys/PlexSign.key | sudo gpg --dearmor | sudo tee $k
   # echo deb [signed-by=$k] https://$u/repo/deb public main | sudo tee $o
   # alternative commands to add keyrings
   curl https://$u/plex-keys/PlexSign.key   | sudo apt-key add -
   echo deb https://$u/repo/deb public main | sudo tee $o
-  sudo apt update                              -y 2>&1 | sudo tee -a $p02/$s60.out >$p03
-  sudo apt upgrade                             -y 2>&1 | sudo tee -a $p02/$s60.out >$p03
-  sudo apt install --reinstall ca-certificates -y 2>&1 | sudo tee -a $p02/$s60.out >$p03
-  sudo update-ca-certificates                     2>&1 | sudo tee -a $p02/$s60.out >$p03
-  sudo apt install plexmediaserver             -y 2>&1 | sudo tee -a $p02/$s60.out >$p03
+  sudo apt-get update                              -y 2>&1 | sudo tee -a $p02/$s60.out >$p03
+  sudo apt-get upgrade                             -y 2>&1 | sudo tee -a $p02/$s60.out >$p03
+  sudo apt-get install --reinstall ca-certificates -y 2>&1 | sudo tee -a $p02/$s60.out >$p03
+  sudo update-ca-certificates                         2>&1 | sudo tee -a $p02/$s60.out >$p03
+  sudo apt-get install plexmediaserver             -y 2>&1 | sudo tee -a $p02/$s60.out >$p03
   sex chown $meeu:$meeu $p02/$s60.out
   sex usermod -aG $s60 $meeu;sex mkdir -p $p60;cmw $p60 775 $s60
   sex mkdir -p $p60/movie;sex mkdir -p $p60/tv;sex mkdir -p $p60/tv2;sex mkdir -p $p60/lust
@@ -1010,14 +1010,14 @@ function plx {
   # $zip2:32400/web/index.html#!/setup
 }
 function jly {
-  swu 'JELLYFIN SERVER';sex apt install ca-certificates apt-transport-https intel-opencl-icd -y
+  swu 'JELLYFIN SERVER';sex apt-get install ca-certificates apt-transport-https intel-opencl-icd -y
   curl -fsSL $s65/jellyfin_team.gpg.key | sudo gpg --dearmor -o $p78
   echo "deb [arch=$(dpkg --print-architecture)] $s65 $(snf "$e80" $p77) main" | sudo tee $p79
-  sudo apt update                              -y 2>&1 | sudo tee -a $p02/$s64.out >$p03
-  sudo apt upgrade                             -y 2>&1 | sudo tee -a $p02/$s64.out >$p03
-  sudo apt install --reinstall ca-certificates -y 2>&1 | sudo tee -a $p02/$s64.out >$p03
-  sudo update-ca-certificates                     2>&1 | sudo tee -a $p02/$s64.out >$p03
-  sudo apt install $s64                        -y 2>&1 | sudo tee -a $p02/$s64.out >$p03
+  sudo apt-get update                              -y 2>&1 | sudo tee -a $p02/$s64.out >$p03
+  sudo apt-get upgrade                             -y 2>&1 | sudo tee -a $p02/$s64.out >$p03
+  sudo apt-get install --reinstall ca-certificates -y 2>&1 | sudo tee -a $p02/$s64.out >$p03
+  sudo update-ca-certificates                         2>&1 | sudo tee -a $p02/$s64.out >$p03
+  sudo apt-get install $s64                        -y 2>&1 | sudo tee -a $p02/$s64.out >$p03
   sex chown $meeu:$meeu $p02/$s64.out
   cex chown -R $s64:adm /etc/$s64;cex usermod -aG $s64 $meeu;sex usermod -aG render $s64
   sex mkdir -p $p80;cmw $p80 750 $s64;sex chown -R $s64:$s64 $p80
@@ -1025,7 +1025,7 @@ function jly {
   echo http://$zip2:$n58
 }
 function tms {
-  swu 'TRANSMISSION SERVER';sex apt install transmission-cli transmission-common $s15 -y
+  swu 'TRANSMISSION SERVER';sex apt-get install transmission-cli transmission-common $s15 -y
   sex usermod -aG $s51 $meeu;sex mkdir -p $p59;cmw $p59 775 $s51;cc1 $p33 "$e24";cc1 $p34 "$e25";cmw $p33 600 $s51;sex $s00 reload $s15
   if [[ -d $p60 ]];then
     sex ln -s $p60/movie $p59/lmv;sex ln -s $p60/tv $p59/ltv;sex ln -s $p60/tv2 $p59/lt2;sex ln -s $p60/lust $p59/llt
@@ -1035,7 +1035,7 @@ function tms {
   rp;rd;re;dmr;ra
 }
 function nfs {
-  swu 'NFS SERVER';sex apt install $s58 -y;cc2 $p74 "$s59";cc2 $p75 "$s61"
+  swu 'NFS SERVER';sex apt-get install $s58 -y;cc2 $p74 "$s59";cc2 $p75 "$s61"
   pai $n35 192.168.8.0/24 nfs-mountd
   pai $n36 192.168.8.0/24 nfs-statd
   pai $n37 192.168.8.0/24 nfs-lockd
@@ -1045,7 +1045,7 @@ function nfs {
   wsr;sex $s00 restart $s58
 }
 function smb {
-  swu 'SMB SERVER';sex apt install samba -y;cc2 $p76 "$s66"
+  swu 'SMB SERVER';sex apt-get install samba -y;cc2 $p76 "$s66"
   pai $n51/tcp 192.168.8.0/24 ${s62}-SMB
   pai $n52/udp 192.168.8.0/24 ${s62}-NBNS
   pai $n53/udp 192.168.8.0/24 ${s62}-NBDS
@@ -1054,6 +1054,11 @@ function smb {
   if [[ -d $p60 ]];then sex smbpasswd -n $s60;else sex smbpasswd -n $s64;fi
   sex $s00 restart $s62 $s63
 }
+# [[ $1 = plx ]] && { if [[ $cunm = $znm2 ]];then plx $2;fi; }
+# [[ $1 = jly ]] && { if [[ $cunm = $znm2 ]];then jly;fi; }
+# [[ $1 = tms ]] && { if [[ $cunm = $znm2 ]];then tms;fi; }
+# [[ $1 = nfs ]] && { if [[ $cunm = $znm2 ]];then nfs;fi; }
+# [[ $1 = smb ]] && { if [[ $cunm = $znm2 ]];then smb;fi; }
 function irc {
   local v;local s
   v=${1:-$s83};s=$(rvm list 2>$p03)
@@ -1070,8 +1075,8 @@ function irv {
   else
     swu instalar rvm
     nex apt-add-repository -y ppa:rael-gc/rvm
-    sex apt update
-    nex apt install rvm -y
+    sex apt-get update
+    nex apt-get install rvm -y
     nex usermod -a -G rvm $USER
     swb logout/login and t6 irv again
     return
@@ -1083,7 +1088,7 @@ function cns {
   [[ -f $p70 ]]   || { swu needs rvm installed;swn t6 irv                 ;return; }
   gem list &>$p03 || { swu needs gem installed;swn logout/login and t6 irv;return; }
   irc
-  if gem list cns 2>$p03|grep -q cns;then swu cns ja instalada;else sex apt install libcurl4-openssl-dev -y;gem install cns --no-document;fi
+  if gem list cns 2>$p03|grep -q cns;then swu cns ja instalada;else sex apt-get install libcurl4-openssl-dev -y;gem install cns --no-document;fi
   local e=$(grep GOOGLE_APPLICATION_CREDENTIALS $p02/.bashrc);echo $e
   if [[ -n $e && -s $p02/.$p73 ]];then 
     swn CNS ENV VARS E .$p73 JA EXISTEM
@@ -1102,29 +1107,25 @@ function cns {
     fi
   fi
 }
-[[ $1 = plx ]] && { if [[ $cunm = $znm2 ]];then plx $2;fi; }
-[[ $1 = jly ]] && { if [[ $cunm = $znm2 ]];then jly;fi; }
-[[ $1 = nfs ]] && { if [[ $cunm = $znm2 ]];then nfs;fi; }
-[[ $1 = smb ]] && { if [[ $cunm = $znm2 ]];then smb;fi; }
-[[ $1 = tms ]] && { if [[ $cunm = $znm2 ]];then tms;fi; }
 [[ $1 = irv ]] && { irv $2; }
 [[ $1 = cns ]] && { cns; }
 
 function idk {
+  srv hrv-zotac2 || return
   local s;local a;local c
   s="$p14/keyrings/$s80.gpg";[[ -a $s ]] && { swb "$s80 JA INSTALADO";return; }
   a=$(dpkg --print-architecture);c=$(snf "$e80" $p77)
   sex install -m 0755 -d $(dirname $s)
   curl -fsSL https://download.$s80.com/linux/ubuntu/gpg | sudo gpg --dearmor -o $s;sex chmod a+r $s
   echo "deb [arch=$a signed-by=$s] https://download.$s80.com/linux/ubuntu $c stable" | sudo tee $p14/sources.list.d/$s80.list >$p03
-  sex apt update
-  sudo apt install --reinstall ca-certificates gnupg lsb-release -y 2>&1 | sudo tee -a $p02/$s80.out >$p03
-  sudo update-ca-certificates                                       2>&1 | sudo tee -a $p02/$s80.out >$p03
-  sex apt install $s80-ce $s80-ce-cli containerd.io $s80-buildx-plugin $s80-compose-plugin -y
+  sex apt-get update
+  sudo apt-get install --reinstall ca-certificates gnupg lsb-release -y 2>&1 | sudo tee -a $p02/$s80.out >$p03
+  sudo update-ca-certificates                                           2>&1 | sudo tee -a $p02/$s80.out >$p03
+  sex apt-get install $s80-ce $s80-ce-cli containerd.io $s80-buildx-plugin $s80-compose-plugin -y
   sex usermod -aG docker $USER
   swb "REQUIRES LOGOUT/LOGIN after execution"
 }
-function im2 {
+function ick {
   srv hrv-zotac2 || return
   pop $n58 $s64-http;pop $n59 $s64-https;pop $n60/udp $s64-discovery;pop $n61/udp $s64-DLNA
   pop $n62 sonarr;pop $n63 radarr;pop $n64 prowlarr;rop
@@ -1133,14 +1134,15 @@ function im2 {
   mkdir -p $p81/{prowlarr,sonarr,radarr,transmission,jellyfin}         ;sex chown -R $meui:$megi $p81
   mkdir -p $p82/{complete,incomplete};mkdir -p $p82/complete/{tv,movie};sex chown -R $meui:$megi $p82;sex chmod -R 775 $p82
   mkdir -p $p02/media-stack;cd $p02/media-stack;echo -e "$s81" > docker-compose.yml
+  rco
   docker compose up -d
  }
-function iz2 {
+function izk {
   srv hrv-zotac2 || return
   if zpool version 2>$p03;then
     swb 'ZFS JA INSTALADO'
   else
-    swb 'INSTALAR ZFS';sex apt update;sudo apt install zfsutils-linux -y 2>&1 | sudo tee -a $p02/$s82.out >$p03
+    swb 'INSTALAR ZFS';sex apt-get update;sudo apt-get install zfsutils-linux -y 2>&1 | sudo tee -a $p02/$s82.out >$p03
   fi
   local i='/dev/disk/by-id';local s="$i/scsi-SSanDisk_SSD_PLUS_2000GB_61E203010290 $i/scsi-SSamsung_SSD_870_QVO_1TB_E41703010290 $i/scsi-SSamsung_SSD_870_QVO_1TB_0000000000000000"
   local f='/media/bk1';local e='bk1_pool'
@@ -1157,8 +1159,8 @@ function iz2 {
   zpool list
  }
 [[ $1 = idk ]] && { idk; }
-[[ $1 = im2 ]] && { im2; }
-[[ $1 = iz2 ]] && { iz2; }
+[[ $1 = ick ]] && { ick; }
+[[ $1 = izk ]] && { izk; }
 [[ $1 = rco ]] && { rco; }
 [[ $1 = rop ]] && { rop; }
 
@@ -1171,7 +1173,6 @@ function iz2 {
 [[ $1 = irb ]] && { irb $2;pas; }
 [[ $1 = eip ]] && { if [[ $2 && $3 ]];then curl -s4 "https://$2:$3@dyn.dns.he.net/nic/update?hostname=$2" &>$p03;fi;pas; }
 [[ $1 = eiz ]] && { if [[ $2 && $3 ]];then curl -s4 "https://$2:$3@dyn.dns.he.net/nic/update?hostname=$2"       ;fi;echo; }
-[[ $1 = snr ]] && { cex $s37 lxd;cex $s37 core20;cex $s37 snapd;cex apt remove --autoremove snapd -y;echo -e "$s36" > nosnap.pref;cex mv nosnap.pref $p47;cmw $p47/nosnap.pref 644 root;cex apt update; }
 function bpn { bnp|jq -r "$s78"|grep -Ei "${1:-ip6}"; }
 function bps { 
   sbt || return
@@ -1216,7 +1217,6 @@ function bps {
 [[ $1 = ccr ]] && { llt && ble "$e14"; }
 [[ $1 = cca ]] && { llt || ble "$e15"; }
 [[ $1 = cce ]] && { cce; }
-[[ $1 = chk ]] && { cex chkrootkit; }
 [[ $1 = dsh ]] && { $s09 query ${2:-smtp.gmail.com}; }
 [[ $1 = drs ]] && { dpa; }
 [[ $1 = nsh ]] && { nsh; }
@@ -1505,17 +1505,12 @@ if [[ $# -lt 1 ]];then
   m="$m\ntsh [p]\t\t\tshow avg MEV/EL block rewards in eth*10^[n] precision from nethermind logs today"
   m="$m\ntmp\t\t\ttemperature show"
   m="$m\nsif\t\t\tsystem info show"
-  m="$m\nchk\t\t\tcheck server with chkrootkit"
-  m="$m\nsnr\t\t\tremove snapd"
   m="$m\nl[p|c]\t\t\tlista portas|connections"
   m="$m\neip\t\t\tset dynamic DNS"
   m="$m\nulg [d]\t\t\tshow update logs d($(date +%F)) on $(basename $p69)"
   m="$m\nulr [d]\t\t\tshow restartings d($(date +%F)) on $(basename $p69)"
-  m="$m\nplx [s]\t\t\tinstalar $s60/[$s22] servers"
-  m="$m\njly\t\t\tinstalar $s64"
-  m="$m\ntms\t\t\tinstalar $s15"
-  m="$m\nnfs\t\t\tinstalar $s58"
-  m="$m\nsmb\t\t\tinstalar $s62/$s63 servers"
+  m="$m\ni{d|c|z}k\t\tinstalar $s80|containers|ZFS media center on $znm2"
+  m="$m\nr{op|co}\t\topen/close ports ($n65/$n66) for torrent"
   m="$m\nirv [v]\t\t\tinstalar rvm & ruby [$s83]"
   m="$m\ncns\t\t\tinstalar cns ruby gem"
   swn "\n$m\n"

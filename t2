@@ -24,11 +24,11 @@ fi
 
 function lrs { local d=$(dirname $p01);local f="$d/mail";cmw $d 755;sex touch $f.log $f.err;cmw $f.log 640 syslog adm;cmw $f.err 640 syslog adm;cmw $p27 644 root;sex $s06 $(basename $p27); }
 
-sex apt install python3-pip net-tools apt-listchanges landscape-common software-properties-common smartmontools lm-sensors nvme-cli curl -y
-sex apt install unattended-upgrades update-notifier-common -y
+sex apt-get install python3-pip net-tools apt-listchanges landscape-common software-properties-common smartmontools lm-sensors nvme-cli curl -y
+sex apt-get install unattended-upgrades update-notifier-common -y
 t4 linux
 sex $s07 set-ntp false                                                                                                                                        # chrony (sophisticated)
-sex apt install $s56 -y
+sex apt-get install $s56 -y
 if sxt;then
   cc3 $p68 "$e72" "$s52"
 else
@@ -37,12 +37,12 @@ fi
 cmw $p68 644 root;sex $s06 $s56
 if sht;then
   if false;then                                                                                                                                               # use gateway not bind9
-    sex apt install bind9 bind9utils -y                                                                                                                       # install bind
+    sex apt-get install bind9 bind9utils -y                                                                                                                       # install bind
     cc3 $p29 "$e07" "$s40"       ;cmw $p29 644 root bind                                                                                                      # named my options
     cc1 $p30 "$e02"              ;cmw $p30 644 root                                                                                                           # use only ipv4
     t6 spd;t6 sea;sex $s02 systemd-resolved;sex $s03 systemd-resolved                                                                                         # DNS stop & start
   fi
-  sex apt install chkrootkit -y;cex chkrootkit
+  sex apt-get install chkrootkit -y;cex chkrootkit
   sex $s07 set-timezone Europe/Lisbon
   cc1 $p20 "$e00"                                                                                                                                             # my time servers
   cc1 $p21 "$e01"              ;cmw $p21 644 root                                                                                                             # motd-news disable

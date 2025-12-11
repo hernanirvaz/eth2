@@ -28,8 +28,8 @@ function cz0 {
 function nfc {
   local d='/mnt/mp4'
   if ! systemctl is-active --quiet nfs-client.target;then
-    sudo apt update                &>> nfc.out
-    sudo apt install nfs-common -y &>> nfc.out
+    sudo apt-get update                &>> nfc.out
+    sudo apt-get install nfs-common -y &>> nfc.out
   fi
   [[ -d $d        ]] || sudo mkdir -p $d
   [[ -d $d/movie/ ]] || sudo mount 192.168.8.28:$1 $d

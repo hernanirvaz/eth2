@@ -24,6 +24,7 @@ s2="$s2\nsyslog on"
 s2="$s2\naliases /etc/aliases"
 s2="$s2\nauto_from on"
 s2="$s2\nmaildomain fruga.pt"
+s2="$s2\nset_from_header on"
 s2="$s2\naccount smtp2go"
 s2="$s2\nhost mail.smtp2go.com"
 s2="$s2\nport 587"
@@ -37,13 +38,12 @@ function sse { local f=$(basename $1);[[ -s $1 ]] && cp $1 $f.sav;sed -E "$2" $f
 function ssa { local f=$(basename $1);[[ -s $1 ]] && cp $1 $f.sav;echo -e "$2"       > $1;cp $1 $f.new;chmod $3 $1;chown $4 $1; }
 function ssp { echo -e "\n\e[5mchange passwd\e[25m ${2:-root}:\t$1\n";echo -e "$1\n$1"|passwd $2; }
 
-echo -e "\napt update"
-apt update -y                               &>> apt.out
-apt full-upgrade -y                         &>> apt.out
-apt dist-upgrade -y                         &>> apt.out
-apt autoremove                              &>> apt.out
-apt autoclean                               &>> apt.out
-apt install msmtp msmtp-mta bsd-mailx jq -y &>> apt.out
+export DEBIAN_FRONTEND=noninteractive # no GUI questions
+echo "apt-get update"      ;apt-get update -y                               &>> apt.out
+echo "apt-get dist-upgrade";apt-get dist-upgrade -y                         &>> apt.out
+echo "apt-get autoremove"  ;apt-get autoremove                              &>> apt.out
+echo "apt-get autoclean"   ;apt-get autoclean                               &>> apt.out
+echo "apt-get msmtp"       ;apt-get install msmtp msmtp-mta bsd-mailx jq -y &>> apt.out
 sse $sc "$s1" 644 root:root;if [[ ${ip%%.*} -ne 192 ]];then sse $ss "$s4" 644 root:root;ssp $V $iu;fi;systemctl daemon-reload;systemctl reload $sh;systemctl restart $sh
 ssa $m1 "$s2" 644 root:root;ssa $m2 "$s3" 644 root:root
 adduser --disabled-password --comment "" $un

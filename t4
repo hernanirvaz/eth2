@@ -15,11 +15,10 @@ function bck { [[ -f $p04/$1.service ]] || return;grep -q checkpoint-sync-url $p
 
 if [[ $1 = linux || $1 = reboot ]];then
   swb "FULL-UPGRADE >> ~/apt-t4$1.out";aex
-  sudo apt update -y       2>&1 | sudo tee -a $p02/apt-t4$1.out >$p03
-  sudo apt full-upgrade -y 2>&1 | sudo tee -a $p02/apt-t4$1.out >$p03
-  sudo apt dist-upgrade -y 2>&1 | sudo tee -a $p02/apt-t4$1.out >$p03
-  sudo apt autoremove   -y 2>&1 | sudo tee -a $p02/apt-t4$1.out >$p03
-  sudo apt autoclean       2>&1 | sudo tee -a $p02/apt-t4$1.out >$p03
+  sudo apt-get update -y       2>&1 | sudo tee -a $p02/apt-t4$1.out >$p03
+  sudo apt-get dist-upgrade -y 2>&1 | sudo tee -a $p02/apt-t4$1.out >$p03
+  sudo apt-get autoremove   -y 2>&1 | sudo tee -a $p02/apt-t4$1.out >$p03
+  sudo apt-get autoclean       2>&1 | sudo tee -a $p02/apt-t4$1.out >$p03
   sex chown $meeu:$meeu $p02/apt-t4$1.out
   [[ $1 = reboot ]] && { srb $p39 RB; }
 fi

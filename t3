@@ -11,8 +11,8 @@ if sct;then
     t6 ruv $2
   else
     swn 'BASE/RUST NEEDS >> ~/apt-rust.out';aex
-    sudo apt install curl build-essential libssl-dev libudev-dev perl yasm -y                           2>&1 | sudo tee -a $p02/apt-rust.out >$p03
-    sudo apt install git gcc g++ make cmake pkg-config llvm-dev libclang-dev clang protobuf-compiler -y 2>&1 | sudo tee -a $p02/apt-rust.out >$p03
+    sudo apt-get install curl build-essential libssl-dev libudev-dev perl yasm -y                           2>&1 | sudo tee -a $p02/apt-rust.out >$p03
+    sudo apt-get install git gcc g++ make cmake pkg-config llvm-dev libclang-dev clang protobuf-compiler -y 2>&1 | sudo tee -a $p02/apt-rust.out >$p03
     sex chown $meeu:$meeu $p02/apt-rust.out
     swn 'RUST INSTALL';cd $p02 || exit;curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs|sh;source "$HOME/.cargo/env"
   fi
