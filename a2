@@ -5,15 +5,16 @@ source /home/eth/eth2/a0
 function msh { echo -e "\n\e[5;32m${*^^}\e[0m";eval "$*"; }
 # function icm { dig +domain=unknown.home.arpa AAAA "$@";dig +domain=home.arpa AAAA "$@";dig +domain=unknown.home.arpa A "$@";dig +domain=home.arpa A "$@"; }
 # function dsh { msh resolvectl flush-caches;icm hrv-zotac1 hrv-zotac2 hrv-zotac3 hrv-zotac4 hrv-intel5 hrv-intel6 hrv-zen hrv-lenovo lgwebostv lgwebostv0 dreamevacuumr2364a pixel-9-pro-xl|grep -E '^[a-z]{3}'|sort; }
-function esl { local p;local s;p=$(dnz "$1" "$2");s=$(dnn "$1");echo -e "\nssh -4p $p $s:";zsh "$p" "$s"; }
+# eutodo review dnz "$1" "$2" -> spn "$1"
+function esl { local p;local s;p=$(spn "$1");s=$(dnn "$1");echo -e "\nssh -4p $p $s:";zsh "$p" "$s"; }
 function erq { local q=${*:-changelogs.ubuntu.com};msh resolvectl query "$q"; }
 
 function rr { pcm PRB; }
 function rl { pcm LRB $1; }
 function rt {
   local s
-  s=hrv-zotac2;echo -e "\n\e[32m$s chronyc\e[0m";zsh $(dnz $s) $(dnn $s) "chronyc -n sources"
-  s=hrv-zotac3;echo -e "\n\e[32m$s chronyc\e[0m";zsh $(dnz $s) $(dnn $s) "chronyc -n sources"
+  s=hrv-zotac2;echo -e "\n\e[32m$s chronyc\e[0m";zsh $(spn $s) $(dnn $s) "chronyc -n sources"
+  s=hrv-zotac3;echo -e "\n\e[32m$s chronyc\e[0m";zsh $(spn $s) $(dnn $s) "chronyc -n sources"
 }
 
 alias z1='esl hrv-zotac1'

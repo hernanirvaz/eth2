@@ -2,25 +2,25 @@
 
 source /home/eth/eth2/a2
 
-function cz1 { zcp $2 $(dnn $1):~/.bash_aliases ~/eth2/asrv; }
-function cz2 { zcp $2 $(dnn $1):~/eth2 ~/eth2/t[1-9] ~/eth2/e? ~/eth2/a?; }
+# function cz1 { zcp $2 $(dnn $1):~/.bash_aliases ~/eth2/asrv; }
+# function cz2 { zcp $2 $(dnn $1):~/eth2 ~/eth2/t[1-9] ~/eth2/e? ~/eth2/a?; }
 function nrs { sudo netplan apply;sudo systemctl stop systemd-resolved;sleep 9;sudo systemctl start systemd-resolved;sleep 9;resolvectl status; }
-function ecp { local p=$(dnz $1 $2);local s=$(dnn $1);echo "scp -4rP $p \$@ $s:~/eth2";cz2 $1 $p; }
-function ocp { echo "scp $1:";qcp ~/eth2/asrv $1:~/.bash_aliases;qcp ~/eth2/keth $1:~/.ssh/authorized_keys; }
-function ccp { echo "scp $1:";qcp ~/eth2/cns.keys.gpg $1:;qcp ~/eth2/hernanirvaz-f2e8fb66dbc0.json.gpg $1:; }
-function pcp { echo "scp $1:";qcp ~/eth2/keth $1:/root/.ssh/authorized_keys;qcp ~/eth2/rt-pfsense-wan-check.sh $1:/root;qcp ~/eth2/rt-pfsense-log-check.sh $1:/root; }
-function ecv { local s='';for s in $@;do ecp $s;done; }
-function ocv { local s='';for s in $@;do ocp $s;done; }
+function ecp { echo "scp $1:~/eth2";mcp -q ~/eth2/t[1-9] ~/eth2/e? ~/eth2/a? $1:~/eth2; }
+function ocp { echo "scp $1:"      ;mcp -q ~/eth2/asrv $1:~/.bash_aliases;mcp -q ~/eth2/keth $1:~/.ssh/authorized_keys; }
+function ccp { echo "scp $1:"      ;mcp -q ~/eth2/cns.keys.gpg ~/eth2/hernanirvaz-f2e8fb66dbc0.json.gpg $1:; }
+function pcp { echo "scp $1:/root" ;mcp -q ~/eth2/keth $1:/root/.ssh/authorized_keys;mcp -q ~/eth2/rt-pfsense-wan-check.sh ~/eth2/rt-pfsense-log-check.sh $1:/root; }
+function ecv { local s='';for s in "$@";do ecp $s;done; }
+function ocv { local s='';for s in "$@";do ocp $s;done; }
 function ei0 { echo -e "export H=\"$1\"\nexport E=\"$2\"\nexport R=\"$3\"\nexport V=\"$4\"\npr=$5"; }
 function ei1 { echo -e "echo>>~/.bashrc\necho \"export PATH=\\\"\\\$PATH:/home/eth/eth2\\\"\">>~/.bashrc\necho \"export H=\\\"$1\\\"\">>~/.bashrc\necho \"export V=\\\"$2\\\"\">>~/.bashrc\necho \"export K=\\\"$3\\\"\">>~/.bashrc\necho \"export E=\\\"$4\\\"\">>~/.bashrc\necho \"export B=\\\"$5\\\"\">>~/.bashrc\necho \"PS1=\\\"\\\$H:\\\h: \\\"\">>~/.bashrc\nchmod 755 ~/eth2/t[1-9] ~/eth2/e?"; }
 function cz0 {
-  if smt $1;then local u=eu;else local u=ubuntu;fi;local s="$u@$1"
-  scp -P 22 ~/eth2/s? ~/eth2/keth ~/i0 $s:~
+  local u;if smt $1;then u=eu;else u=ubuntu;fi;local s="$u@$1"
+  mcp -q -P 22 ~/eth2/s? ~/eth2/keth ~/i0 $s:~
   echo -e "\n\n\n\nsudo -i\nbash /home/$u/s0\n\n\n\n"
   ssh -p 22 $s
-  cz1 $1 $2
-  cz2 $1 $2
-  zcp $2 $1: ~/i1
+  mcp -q -P $2 ~/eth2/asrv                       $1:~/.bash_aliases # cz1 $1 $2
+  mcp -q -P $2 ~/eth2/t[1-9] ~/eth2/e? ~/eth2/a? $1:~/eth2          # cz2 $1 $2
+  mcp -q -P $2 ~/i1                              $1:                # zcp $2 $1: ~/i1
   zsh $2 $1 'sh i1'
   echo -e "\n\nky # gerar key & copiar para keth\nt2 # setup\n\n"
   zsh $2 $1
@@ -125,7 +125,6 @@ alias wgs='sudo wg show'
 alias mr='echo 192.168.1.254:$V ;telnet 192.168.1.254'
 alias zp="ecv hrv-intel6 hrv-intel5 hrv-zotac4 hrv-zotac3 hrv-zotac2"
 alias zo="ocv hrv-intel6 hrv-intel5 hrv-zotac4 hrv-zotac3 hrv-zotac2;pcp hrv-zotac1"
-alias zz="ocv hrv-zotac4"
 alias zk="ccp hrv-zotac3"
 
 alias gp='cd ~/eth2;git pull;cd'
