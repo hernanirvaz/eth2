@@ -590,11 +590,11 @@ function hch {
   swn "$e${m:4}"
 }
 function hca {
-              if n1t;then hch;else xsh $cun1 "$p53 hch";fi
-  if ndt;then if n2t;then hch;else xsh $cun2 "$p53 hch";fi;fi
-  if vst;then if svt;then hch;else xsh $cuvc "$p53 hch";fi;fi
-  if mst;then if mct;then hch;else xsh $cumv "$p53 hch";fi;fi
-  if zdt;then if z1t;then hch;else xsh $cut1 "$p53 hch";fi;stt && if z2t;then hch;else xsh $cut2 "$p53 hch";fi;fi
+              if n1t;then hch;else msh $cun1 "$p53 hch";fi
+  if ndt;then if n2t;then hch;else msh $cun2 "$p53 hch";fi;fi
+  if vst;then if svt;then hch;else msh $cuvc "$p53 hch";fi;fi
+  if mst;then if mct;then hch;else msh $cumv "$p53 hch";fi;fi
+  if zdt;then if z1t;then hch;else msh $cut1 "$p53 hch";fi;stt && if z2t;then hch;else msh $cut2 "$p53 hch";fi;fi
 }
 function si0 { printf '%s: erro_cml %i,used %s,spare %s; ' $(basename $1) $(($2+$3+$4)) $5% $6% 2>$p03; }
 function sif {
@@ -752,14 +752,14 @@ function hst { sso $s74 $s44; }
 function hsb { sso $s75 $s12; }
 function hsv { sso $s76 $s13; }
 function hsm { sso $s77 $s14; }
-function hss { echo -e "\n$1";if [[ $cunm = $1 ]];then hsg;hsu;hst;hsb;hsv;hsm;cpe;else xsh $1 "$p53 hse;$p53 hsc";fi; }
+function hss { echo -e "\n$1";if [[ $cunm = $1 ]];then hsg;hsu;hst;hsb;hsv;hsm;cpe;else msh $1 "$p53 hse;$p53 hsc";fi; }
 function hhh { printf '\n%.0s' {1..4}; }
 function hs0 {
   hhh
   if n1t;then
     hss $cun1;if ndt;then hss $cun2;fi
-    if vst;then if svt;then hsv;cpe;else echo -e "\n$cuvc";xsh $cuvc "$p53 hsv";fi;fi
-    if mst;then if mct;then hsm;cpe;else echo -e "\n$cumv";xsh $cumv "$p53 hsm";fi;fi
+    if vst;then if svt;then hsv;cpe;else echo -e "\n$cuvc";msh $cuvc "$p53 hsv";fi;fi
+    if mst;then if mct;then hsm;cpe;else echo -e "\n$cumv";msh $cumv "$p53 hsm";fi;fi
     echo;epf;cpf
   else
     hss $cunm
@@ -786,7 +786,7 @@ function lcp {
       if [[ $1 = $cunm ]]; then
         lci $f
       else
-        xsh $1 "rm -rf $p02/$(basename $f)"
+        msh $1 "rm -rf $p02/$(basename $f)"
         mcp $f $1:$p02
       fi
       shift
@@ -917,9 +917,9 @@ function tsh { sbt || return;local n=${1:-4};local s=$(ts1 $n);echo -e "${s^^}\t
 function lsr { sort -t: -k2n -k3n -k4n; }
 function wpf { if tsa $s44;then ll4 "$g43";fi;ll6 "$g42"|fln "$g39"; }
 function wpe { wpf|sef "$e52"|lsr; }
-function bba { if n1t;then wpe          ;else xsh $cun1 "$p53 bb"   ;fi;if ndt;then if n2t;then wpe          ;else xsh $cun2 "$p53 bb"   ;fi;fi;if vst;then if svt;then wpe          ;else xsh $cuvc "$p53 bb"   ;fi;fi;if mst;then if mct;then wpe          ;else xsh $cumv "$p53 bb"   ;fi;fi; }
-function caa { if n1t;then cll "$e50" $1;else xsh $cun1 "$p53 cl $1";fi;if ndt;then if n2t;then cll "$e50" $1;else xsh $cun2 "$p53 cl $1";fi;fi;if vst;then if svt;then cll "$e50" $1;else xsh $cuvc "$p53 cl $1";fi;fi;if mst;then if mct;then rll "$e51" $1;else xsh $cumv "$p53 rl $1";fi;fi; }
-function eaa { if n1t;then ell "$e50" $1;else xsh $cun1 "$p53 el $1";fi;if ndt;then if n2t;then ell "$e50" $1;else xsh $cun2 "$p53 el $1";fi;fi; }
+function bba { if n1t;then wpe          ;else msh $cun1 "$p53 bb"   ;fi;if ndt;then if n2t;then wpe          ;else msh $cun2 "$p53 bb"   ;fi;fi;if vst;then if svt;then wpe          ;else msh $cuvc "$p53 bb"   ;fi;fi;if mst;then if mct;then wpe          ;else msh $cumv "$p53 bb"   ;fi;fi; }
+function caa { if n1t;then cll "$e50" $1;else msh $cun1 "$p53 cl $1";fi;if ndt;then if n2t;then cll "$e50" $1;else msh $cun2 "$p53 cl $1";fi;fi;if vst;then if svt;then cll "$e50" $1;else msh $cuvc "$p53 cl $1";fi;fi;if mst;then if mct;then rll "$e51" $1;else msh $cumv "$p53 rl $1";fi;fi; }
+function eaa { if n1t;then ell "$e50" $1;else msh $cun1 "$p53 el $1";fi;if ndt;then if n2t;then ell "$e50" $1;else msh $cun2 "$p53 el $1";fi;fi; }
 function laa { caa $1;eaa $1; }
 function fsp { awk -v l="${1:-0}" -v f="$g31" '$4 ~ f && $5 <= l'|sort -k2n; }
 function esp { sbt || return;local e;if tsa $s44;then e=$(ll4 "$g36.*$g30:"|sef "$e76");else e=$(ll6 "$g11.*$g35"|sef "$e77");fi;e=$(fsp $1 <<< "$e");[[ $1 ]] || e="\n$(tail -n$n55 <<< "$e")";[[ ${e:2} ]] && echo -e "$e"; }

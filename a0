@@ -113,11 +113,11 @@ function sns {
 function stt { [[ $cut1 != $cut2 ]]; }
 function sxt { [[ $cunm = $cut1 || $cunm = $cut2 ]]; }
 function sst { local s=${1:-$cunm};[[ $s != hrv-zen && $s != hrv-lenovo ]]; }
-# eutodo function dnz { printf %i "$(spn "$1")"; }
-function zsh { ssh -4p "$1" -i ~/.ssh/id_ed25519 "$2" "$3"; }
 # function xcr { echo scp -4rP $@;scp -4rP $1 "$2" "$3"; }
 # function qcr { scp -4rP $1 "$2" "$3"; }
 # function zcp { local p=$1;local d=$2;shift;shift;scp -4rP "$p" -i ~/.ssh/id_ed25519 $@ "$d"; }
+# eutodo function dnz { printf %i "$(spn "$1")"; }
+function msh { local p=$(spn $1);local s=$(dnn $1);[[ $2 ]] || echo -e "\nssh -4p $p $s:";ssh -4p $p $s "$2"; }
 function mcp {
     if [[ $# -lt 1 ]];then 
       echo -e "mcp {zv}{123456}:{file|dir} [d:~]\t\tscp -4rP <port> <server>:{file|dir} <destination>"
@@ -139,14 +139,14 @@ function mcp {
     [[ $w ]] || echo scp -4rP $p "${a[@]}";scp -4rP $p "${a[@]}"
 }
 function pcm { 
-  local n;local p;local e=${1^^};local s=hrv-zotac1;n=$(dnn $s);p=$(spn $s);local m='eth2/rt-GR241AG'
-  if   [[ $e = PRB ]];then zsh "$p" "$n" "/etc/rc.reboot"
-  elif [[ $e = NTP ]];then zsh "$p" "$n" "ntpq -np"
-  elif [[ $e = LRB ]];then echo;if [[ -f ~/$m ]]; then echo meo reboot log;tail -n5 ~/$m;fi;zsh "$p" "$n" "/root/rt-pfsense-log-check.sh $2"
-  elif [[ $e = IP4 ]];then zsh "$p" "$n" "ifconfig re0|grep inet|grep -v inet6|awk '{print \$2}'"
-  elif [[ $e = IP6 ]];then zsh "$p" "$n" "ifconfig re0|grep inet6|grep -v fe80|awk '{print \$2}'"
-  elif [[ $e = SYL ]];then zsh "$p" "$n" 'grep "`date "+%b %e"`" /var/log/system.log'
-  else                     zsh "$p" "$n" 'cat /root/wan-check.log'
+  local e=${1^^};local s=hrv-zotac1;local m='eth2/rt-GR241AG'
+  if   [[ $e = PRB ]];then msh $s "/etc/rc.reboot"
+  elif [[ $e = NTP ]];then msh $s "ntpq -np"
+  elif [[ $e = LRB ]];then echo;if [[ -f ~/$m ]]; then echo meo reboot log;tail -n5 ~/$m;fi;msh $s "/root/rt-pfsense-log-check.sh $2"
+  elif [[ $e = IP4 ]];then msh $s "ifconfig re0|grep inet|grep -v inet6|awk '{print \$2}'"
+  elif [[ $e = IP6 ]];then msh $s "ifconfig re0|grep inet6|grep -v fe80|awk '{print \$2}'"
+  elif [[ $e = SYL ]];then msh $s "/root/rt-pfsense-log-check.sh $(date +%H)"
+  else                     msh $s 'cat /root/wan-check.log'
   fi
 }
 function san { local s=${1:-UP};ip -j addr|jq -r ".[]|select(.operstate==\"${s^^}\").ifname"|grep '^en'; }

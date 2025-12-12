@@ -2,28 +2,27 @@
 
 source /home/eth/eth2/a0
 
-function msh { echo -e "\n\e[5;32m${*^^}\e[0m";eval "$*"; }
+function ecm { echo -e "\n\e[5;32m${*^^}\e[0m";eval "$*"; }
 # function icm { dig +domain=unknown.home.arpa AAAA "$@";dig +domain=home.arpa AAAA "$@";dig +domain=unknown.home.arpa A "$@";dig +domain=home.arpa A "$@"; }
-# function dsh { msh resolvectl flush-caches;icm hrv-zotac1 hrv-zotac2 hrv-zotac3 hrv-zotac4 hrv-intel5 hrv-intel6 hrv-zen hrv-lenovo lgwebostv lgwebostv0 dreamevacuumr2364a pixel-9-pro-xl|grep -E '^[a-z]{3}'|sort; }
+# function dsh { ecm resolvectl flush-caches;icm hrv-zotac1 hrv-zotac2 hrv-zotac3 hrv-zotac4 hrv-intel5 hrv-intel6 hrv-zen hrv-lenovo lgwebostv lgwebostv0 dreamevacuumr2364a pixel-9-pro-xl|grep -E '^[a-z]{3}'|sort; }
 # eutodo review dnz "$1" "$2" -> spn "$1"
-function esl { local p;local s;p=$(spn "$1");s=$(dnn "$1");echo -e "\nssh -4p $p $s:";zsh "$p" "$s"; }
-function erq { local q=${*:-changelogs.ubuntu.com};msh resolvectl query "$q"; }
+function erq { local q=${*:-changelogs.ubuntu.com};ecm resolvectl query "$q"; }
 
 function rr { pcm PRB; }
 function rl { pcm LRB $1; }
 function rt {
   local s
-  s=hrv-zotac2;echo -e "\n\e[32m$s chronyc\e[0m";zsh $(spn $s) $(dnn $s) "chronyc -n sources"
-  s=hrv-zotac3;echo -e "\n\e[32m$s chronyc\e[0m";zsh $(spn $s) $(dnn $s) "chronyc -n sources"
+  s=hrv-zotac2;echo -e "\n\e[32m$s chronyc\e[0m";msh $s "chronyc -n sources"
+  s=hrv-zotac3;echo -e "\n\e[32m$s chronyc\e[0m";msh $s "chronyc -n sources"
 }
 
-alias z1='esl hrv-zotac1'
-alias z2="esl hrv-zotac2"
-alias z3="esl hrv-zotac3"
-alias z4="esl hrv-zotac4"
-alias z5="esl hrv-intel5"
-alias z6="esl hrv-intel6"
+alias z1='msh hrv-zotac1'
+alias z2="msh hrv-zotac2"
+alias z3="msh hrv-zotac3"
+alias z4="msh hrv-zotac4"
+alias z5="msh hrv-intel5"
+alias z6="msh hrv-intel6"
 
 alias ky='ssh-keygen -f ~/.ssh/id_ed25519 -t ed25519 -C "$(whoami)@$(hostname)";cat ~/.ssh/id_ed25519.pub'
-alias iq='msh "ip a s $(san);ip r;ip -6 r";systemctl is-active --quiet systemd-networkd && msh networkctl status;msh resolvectl status $(san);erq github.com changelogs.ubuntu.com'
+alias iq='ecm "ip a s $(san);ip r;ip -6 r";systemctl is-active --quiet systemd-networkd && ecm networkctl status;ecm resolvectl status $(san);erq github.com changelogs.ubuntu.com'
 alias xx='exit'

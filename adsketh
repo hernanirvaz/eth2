@@ -21,9 +21,9 @@ function cz0 {
   mcp -q -P $2 ~/eth2/asrv                       $1:~/.bash_aliases # cz1 $1 $2
   mcp -q -P $2 ~/eth2/t[1-9] ~/eth2/e? ~/eth2/a? $1:~/eth2          # cz2 $1 $2
   mcp -q -P $2 ~/i1                              $1:                # zcp $2 $1: ~/i1
-  zsh $2 $1 'sh i1'
+  msh $1 'sh i1'
   echo -e "\n\nky # gerar key & copiar para keth\nt2 # setup\n\n"
-  zsh $2 $1
+  msh $1
 }
 function nfc {
   local d='/mnt/mp4'
@@ -72,7 +72,7 @@ function rfu {
 function vls {
   [[ $# -eq 0 ]] && return;local s='';local c=1;local p=2020 
   for s in $@;do 
-    alias v$c="esl $s $p"
+    alias v$c="msh $s"
     alias pv$c="ping $s"
     alias kv$c="ei0 \$H \$E \$R \$V $p >~/i0;ei1 \$H \$V \$K \$E \$B >~/i1;cz0 $s $p"
     ((c++))
