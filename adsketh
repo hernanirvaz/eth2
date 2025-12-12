@@ -16,9 +16,9 @@ function cz0 {
   mcp -q -P 22 ~/eth2/s? ~/eth2/keth ~/i0 $s:~
   echo -e "\n\n\n\nsudo -i\nbash /home/$u/s0\n\n\n\n"
   ssh -p 22 $s
-  mcp -q -P $2 ~/eth2/asrv                       $1:~/.bash_aliases # cz1 $1 $2
-  mcp -q -P $2 ~/eth2/t[1-9] ~/eth2/e? ~/eth2/a? $1:~/eth2          # cz2 $1 $2
-  mcp -q -P $2 ~/i1                              $1:                # zcp $2 $1: ~/i1
+  mcp -q -P $2 ~/eth2/asrv                       $1:~/.bash_aliases
+  mcp -q -P $2 ~/eth2/t[1-9] ~/eth2/e? ~/eth2/a? $1:~/eth2
+  mcp -q -P $2 ~/i1                              $1:
   msh $1 'sh i1'
   echo -e "\n\nky # gerar key & copiar para keth\nt2 # setup\n\n"
   msh $1

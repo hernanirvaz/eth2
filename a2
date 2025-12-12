@@ -3,9 +3,6 @@
 source /home/eth/eth2/a0
 
 function ecm { echo -e "\n\e[5;32m${*^^}\e[0m";eval "$*"; }
-# function icm { dig +domain=unknown.home.arpa AAAA "$@";dig +domain=home.arpa AAAA "$@";dig +domain=unknown.home.arpa A "$@";dig +domain=home.arpa A "$@"; }
-# function dsh { ecm resolvectl flush-caches;icm hrv-zotac1 hrv-zotac2 hrv-zotac3 hrv-zotac4 hrv-intel5 hrv-intel6 hrv-zen hrv-lenovo lgwebostv lgwebostv0 dreamevacuumr2364a pixel-9-pro-xl|grep -E '^[a-z]{3}'|sort; }
-# eutodo review dnz "$1" "$2" -> spn "$1"
 function erq { local q=${*:-changelogs.ubuntu.com};ecm resolvectl query "$q"; }
 
 function rr { pcm PRB; }

@@ -116,10 +116,6 @@ function sns {
 function stt { [[ $cut1 != $cut2 ]]; }
 function sxt { [[ $cunm = $cut1 || $cunm = $cut2 ]]; }
 function sst { local s=${1:-$cunm};[[ $s != hrv-zen && $s != hrv-lenovo ]]; }
-# function xcr { echo scp -4rP $@;scp -4rP $1 "$2" "$3"; }
-# function qcr { scp -4rP $1 "$2" "$3"; }
-# function zcp { local p=$1;local d=$2;shift;shift;scp -4rP "$p" -i ~/.ssh/id_ed25519 $@ "$d"; }
-# eutodo function dnz { printf %i "$(spn "$1")"; }
 function msh { local p=$(spn $1);local s=$(sin $1);[[ $2 ]] || echo -e "\nssh -4p $p $s:";ssh -4p $p $s "$2"; }
 function mcp {
     if [[ $# -lt 1 ]];then 
