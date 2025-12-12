@@ -787,7 +787,7 @@ function lcp {
         lci $f
       else
         xsh $1 "rm -rf $p02/$(basename $f)"
-        xcp $1 $p02 $f 
+        mcp $f $1:$p02
       fi
       shift
     done
@@ -1098,12 +1098,12 @@ function cns {
     if [[ -s $p02/$p72.gpg && -z $e ]];then
       gpg --batch --yes --passphrase "$B" -d $p02/$p72.gpg >> $p71;rm -f $p02/$p72.gpg
     elif [[ -z $e ]];then
-      swn mcp $p02/eth2/$p72.gpg $(sns $cunm)
+      swn mcp $p02/eth2/$p72.gpg $cunm:
     fi
     if [[ -s $p02/$p73.gpg && ! -s $p02/.$p73 ]];then
       gpg --batch --yes --passphrase "$B" -d $p02/$p73.gpg  > $p02/.$p73;rm -f $p02/$p73.gpg
     elif [[ ! -s $p02/$p73.gpg ]];then
-      swn mcp $p02/eth2/$p73.gpg $(sns $cunm)
+      swn mcp $p02/eth2/$p73.gpg $cunm:
     fi
   fi
 }

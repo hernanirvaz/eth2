@@ -63,9 +63,9 @@ function sl6 {
   esac
 }
 function spn {
-  local s=${1%%.*}
+  local s=${1%%.*};s=${s##*@}
   local n=2020
-  case $1 in
+  case $s in
   hrv*) n=$((n+${s##*[!0-9]})) ;;
   192.168.8.25) n=2021 ;;
   192.168.8.28) n=2022 ;;
@@ -87,44 +87,27 @@ function sio {
   2026) i=40 ;;
   esac
   printf %i $i
- 
-}
+ }
+function snu { local s=$1;[[ "$s" = "192.168.8.25" || "$s" = hrv-zotac1* ]] && s="admin@$s";printf %s "$s"; }
 function sns {
+  local s=$1
   if [[ ${#1} -eq 2 ]]; then
     if [[ ${1:0:1} = z ]]; then
       if [[ ${1:1:1} -le 4 ]]; then
-        printf %s "${1/z/hrv-zotac}"
+        s=${1/z/hrv-zotac}
       else
-        printf %s "${1/z/hrv-intel}"
+        s=${1/z/hrv-intel}
       fi
     else
       case $1 in
-      v1) printf %s "$vnd1" ;;
-      v2) printf %s "$vnd2" ;;
-      v3) printf %s "$vnd3" ;;
-       *) printf %s "$1" ;;
+      v1) s=$vnd1 ;;
+      v2) s=$vnd2 ;;
+      v3) s=$vnd3 ;;
+       *) s=$1 ;;
       esac
     fi
-  else
-    local s=$1
-    if [[ $1 = hrv* ]]; then
-      case ${1%%.*} in
-        hrv-zotac1) s=z1 ;;
-        hrv-zotac2) s=z2 ;;
-        hrv-zotac3) s=z3 ;;
-        hrv-zotac4) s=z4 ;;
-        hrv-intel5) s=z5 ;;
-        hrv-intel6) s=z6 ;;
-      esac
-    else
-      case ${1%%.*} in
-        $vnm1) s=v1 ;;
-        $vnm2) s=v2 ;;
-        $vnm3) s=v3 ;;
-      esac
-    fi
-    printf %s "$s"
   fi
+  snu $s
 }
 function stt { [[ $cut1 != $cut2 ]]; }
 function sxt { [[ $cunm = $cut1 || $cunm = $cut2 ]]; }
@@ -132,31 +115,38 @@ function sst { local s=${1:-$cunm};[[ $s != hrv-zen && $s != hrv-lenovo ]]; }
 function dnn {
   local s=$(snd "$1")
   nslookup "$s" > /dev/null 2>&1 || s=$(sin "$1")
-  [[ "$s" = "192.168.8.25" || "$s" = hrv-zotac1* ]] && s="admin@$s"
-  printf %s "$s"
-}
-function dnz { local p=$2;[[ $p ]] || p=$(spn "$1");printf %i "$p"; }
+  snu $s
+ }
+function dnz { printf %i "$(spn "$1")"; }
 function zsh { ssh -4p "$1" -i ~/.ssh/id_ed25519 "$2" "$3"; }
-function xcr { local p;local s;p=$(dnz "$1");s=$(dnn "$1");local d=$2;shift;shift;echo "scp -4rP $p $s:$1 $d" ;scp -4rP "$p" -i ~/.ssh/id_ed25519 "$s:$1" "$d"; }
+function xcr { echo scp -4rP $@;scp -4rP $1 "$2" "$3"; }
+function qcr { scp -4rP $1 "$2" "$3"; }
 function zcp { local p=$1;local d=$2;shift;shift;scp -4rP "$p" -i ~/.ssh/id_ed25519 $@ "$d"; }
-function xcp { local p;local s;p=$(dnz "$1");s=$(dnn "$1");local d=$2;shift;shift;echo "scp -4rP $p \$@ $s:$d";zcp "$p" "$s:$d" "$@"; }
-function mcp {
-    if [[ $# -lt 1 ]];then
-    echo -e "mcp <f> [s:v1] [d:~]\tscp <f>ile(s) [s]erver:[d]estination"
-    return
-  fi
-  local s=${2:-v1}
-  local d=${3:-~}
-  xcp "$(sns $s)" "$d" "$1"
+function mch {
+    echo -e "mcp {zv}{123456}:{file|dir} [d:~]\t\tscp -4rP <port> <server>:{file|dir} <destination>"
+    echo -e "mcp {file|dir} {zv}{123456}:[d:~]\t\tscp -4rP <port> {file|dir} <server>:<destination>"
 }
-function rcp {
-    if [[ $# -lt 1 ]];then
-    echo -e "rcp <f> [s:v1] [d:~]\tscp [s]erver:<f>ile [d]estination"
-    return
+function qcp {
+  if [[ $# -lt 1 ]];then mch;return;fi
+  local a=$1;local b=$2;local s;local f;shift;shift
+  if [[ "$a" == *:* ]]; then
+    s=$(sns ${a%:*});f=${a##*:};qcr $(dnz "$s") "$s:${f:-nada}" "$b"
+  elif [[ "$b" == *:* ]]; then
+    s=$(sns ${b%:*});f=${b##*:};qcr $(dnz "$s") "$a" "$s:$f"
+  else
+    echo "mcp error: missing ':' in source or destination";mch
   fi
-  local s=${2:-v1}
-  local d=${3:-~}
-  xcr "$(sns $s)" "$d" "$1"
+}
+function mcp {
+  if [[ $# -lt 1 ]];then mch;return;fi
+  local a=$1;local b=$2;local s;local f;shift;shift
+  if [[ "$a" == *:* ]]; then
+    s=$(sns ${a%:*});f=${a##*:};xcr $(dnz "$s") "$s:${f:-nada}" "$b"
+  elif [[ "$b" == *:* ]]; then
+    s=$(sns ${b%:*});f=${b##*:};xcr $(dnz "$s") "$a" "$s:$f"
+  else
+    echo "mcp error: missing ':' in source or destination";mch
+  fi
 }
 
 function pcm { 
