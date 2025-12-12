@@ -12,22 +12,27 @@ mddi='/media/mp4'
 function sht { [[ ${1:-$cuip} = 192.168.8.* ]]; }
 function snt { [[ $1 = hrv* ]]; }
 function smt { sht "$1" || snt "$1"; }
+function snu { local s=$1;[[ "$s" = "192.168.8.25" || "$s" = hrv-zotac1* ]] && s="admin@$s";printf %s "$s"; }
 function sin {
+  local s=$1
   case $1 in
-  hrv-zotac1*) printf 192.168.8.25 ;;
-  hrv-zotac2*) printf 192.168.8.28 ;;
-  hrv-zotac3*) printf 192.168.8.31 ;;
-  hrv-zotac4*) printf 192.168.8.34 ;;
-  hrv-intel5*) printf 192.168.8.37 ;;
-  hrv-intel6*) printf 192.168.8.40 ;;
-  hrv-zen*   ) printf 192.168.8.100 ;;
-  hrv-lenovo*) printf 192.168.8.101 ;;
-  $vnm1*) printf $vip1 ;;
-  $vnm2*) printf $vip2 ;;
-  $vnm3*) printf $vip3 ;;
-  *) printf %s "$1" ;;
+  hrv-zotac1*) s=192.168.8.25 ;;
+  hrv-zotac2*) s=192.168.8.28 ;;
+  hrv-zotac3*) s=192.168.8.31 ;;
+  hrv-zotac4*) s=192.168.8.34 ;;
+  hrv-intel5*) s=192.168.8.37 ;;
+  hrv-intel6*) s=192.168.8.40 ;;
+  hrv-zen*   ) s=192.168.8.100 ;;
+  hrv-lenovo*) s=192.168.8.101 ;;
+  $vnm1*) s=$vip1 ;;
+  $vnm2*) s=$vip2 ;;
+  $vnm3*) s=$vip3 ;;
+  $vnd1*) s=$vip1 ;;
+  $vnd2*) s=$vip2 ;;
+  $vnd3*) s=$vip3 ;;
   esac
-}
+  printf %s "$(snu $s)"
+ }
 function snd {
   case $1 in
   $vnm1) printf $vnd1 ;;
@@ -88,8 +93,6 @@ function sio {
   esac
   printf %i $i
  }
-function snu { local s=$1;[[ "$s" = "192.168.8.25" || "$s" = hrv-zotac1* ]] && s="admin@$s";printf %s "$s"; }
-function dnn { local s=$(snd "$1");nslookup "$s" > /dev/null 2>&1 || s=$(sin "$1");snu $s; }
 function sns {
   local s=$1
   if [[ ${#1} -eq 2 ]]; then
@@ -108,7 +111,7 @@ function sns {
       esac
     fi
   fi
-  dnn $s
+  snu $(sin "$2")
 }
 function stt { [[ $cut1 != $cut2 ]]; }
 function sxt { [[ $cunm = $cut1 || $cunm = $cut2 ]]; }
@@ -117,7 +120,7 @@ function sst { local s=${1:-$cunm};[[ $s != hrv-zen && $s != hrv-lenovo ]]; }
 # function qcr { scp -4rP $1 "$2" "$3"; }
 # function zcp { local p=$1;local d=$2;shift;shift;scp -4rP "$p" -i ~/.ssh/id_ed25519 $@ "$d"; }
 # eutodo function dnz { printf %i "$(spn "$1")"; }
-function msh { local p=$(spn $1);local s=$(dnn $1);[[ $2 ]] || echo -e "\nssh -4p $p $s:";ssh -4p $p $s "$2"; }
+function msh { local p=$(spn $1);local s=$(sin $1);[[ $2 ]] || echo -e "\nssh -4p $p $s:";ssh -4p $p $s "$2"; }
 function mcp {
     if [[ $# -lt 1 ]];then 
       echo -e "mcp {zv}{123456}:{file|dir} [d:~]\t\tscp -4rP <port> <server>:{file|dir} <destination>"

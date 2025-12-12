@@ -2,8 +2,6 @@
 
 source /home/eth/eth2/a2
 
-# function cz1 { zcp $2 $(dnn $1):~/.bash_aliases ~/eth2/asrv; }
-# function cz2 { zcp $2 $(dnn $1):~/eth2 ~/eth2/t[1-9] ~/eth2/e? ~/eth2/a?; }
 function nrs { sudo netplan apply;sudo systemctl stop systemd-resolved;sleep 9;sudo systemctl start systemd-resolved;sleep 9;resolvectl status; }
 function ecp { echo "scp $1:~/eth2";mcp -q ~/eth2/t[1-9] ~/eth2/e? ~/eth2/a? $1:~/eth2; }
 function ocp { echo "scp $1:"      ;mcp -q ~/eth2/asrv $1:~/.bash_aliases;mcp -q ~/eth2/keth $1:~/.ssh/authorized_keys; }
