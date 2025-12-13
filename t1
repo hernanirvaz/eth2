@@ -587,7 +587,11 @@ e00="s%^ *#* *NTP *=.*$%NTP=$zip1 $zip2 time.google.com time.cloudflare.com time
 e01='s%^ *ENABLED=.*$%ENABLED=0%i'
 e02='s%bind[^"]*"%bind -4"%'
 e04='false';[[ ${cunm:4:5} = zotac ]] && e04='true' # intel NUCs erradamente give battery power to unattended upgrades
-e03="s%^ */*(.*codename}-updates.*$)%\1%i;s%^ */* *Unattended-Upgrade::Mail .*$%Unattended-Upgrade::Mail \"hernanilr@gmail.com\";%i;s%^ */* *Unattended-Upgrade::OnlyOnACPower.*$%Unattended-Upgrade::OnlyOnACPower \"$e04\";%i;/Unattended-Upgrade::Package-Blacklist/i\Unattended-Upgrade::Services-Blacklist { \"$s10.service\"; \"$s11.service\"; \"$s44.service\"; \"$s12.service\"; \"$s13.service\"; \"$s14.service\"; };"
+e03="s%^ */*(.*codename}-updates.*$)%\1%i"
+e03="$e03;s%^ */* *Unattended-Upgrade::Mail .*$%Unattended-Upgrade::Mail \"hernanilr@gmail.com\";%i"
+e03="$e03;s%^ */* *Unattended-Upgrade::MailReport .*$%Unattended-Upgrade::MailReport \"only-on-error\";%i"
+e03="$e03;s%^ */* *Unattended-Upgrade::OnlyOnACPower.*$%Unattended-Upgrade::OnlyOnACPower \"$e04\";%i"
+e03="$e03;/Unattended-Upgrade::Package-Blacklist/i\Unattended-Upgrade::Services-Blacklist { \"$s10.service\"; \"$s11.service\"; \"$s44.service\"; \"$s12.service\"; \"$s13.service\"; \"$s14.service\"; };"
 e04='s%^ *printf%# printf%i'
 e05='s%^[^ ]+: +([^ ]+).*$%\1%p'
 e06='/if.*grub_platform += +efi.*/,/EOF/{s%set +timeout *=.*%set timeout=0%;s%set +timeout_style *=.*%set timeout_style=hidden%}'

@@ -14,6 +14,6 @@ BITCOINDE_API_KEY=
 BITCOINDE_API_SECRET=
 
  30  *     * * * t6 irb 6
- 40  *     * * * t6 eip meo.fruga.pt <key>
+ 40  *     * * * t6 eic meo.fruga.pt <key>
  55 11     * * * cns ceth -d=1 
 */5 1,9,17 * * * e9

@@ -1176,8 +1176,9 @@ function izk {
 [[ $1 = ea  ]] && { eaa $2|lsr; }
 [[ $1 = la  ]] && { laa $2|lsr; }
 [[ $1 = irb ]] && { irb $2;pas; }
-[[ $1 = eip ]] && { if [[ $2 && $3 ]];then curl -s4 "https://$2:$3@dyn.dns.he.net/nic/update?hostname=$2" &>$p03;fi;pas; }
-[[ $1 = eiz ]] && { if [[ $2 && $3 ]];then curl -s4 "https://$2:$3@dyn.dns.he.net/nic/update?hostname=$2"       ;fi;echo; }
+function eis { [[ $1 && $2 ]] && curl -s4 "https://$1:$2@dyn.dns.he.net/nic/update?hostname=$1"; }
+[[ $1 = eic ]] && { eis $2 $3 &>$p03;pas ; }
+[[ $1 = eio ]] && { eis $2 $3       ;echo; }
 function bpn { bnp|jq -r "$s78"|grep -Ei "${1:-ip6}"; }
 function bps { 
   sbt || return
@@ -1528,7 +1529,7 @@ if [[ $# -lt 1 ]];then
   m="$m\ntmp\t\t\ttemperature show"
   m="$m\nsif\t\t\tsystem info show"
   m="$m\nl[p|c]\t\t\tlista portas|connections"
-  m="$m\neip\t\t\tset dynamic DNS"
+  m="$m\nei[c|o]\t\t\tset dynamic DNS [c]ron|[o]utput"
   m="$m\nulg [d]\t\t\tshow update logs d($(date +%F)) on $(basename $p69)"
   m="$m\nulr [d]\t\t\tshow restartings d($(date +%F)) on $(basename $p69)"
   m="$m\ni{d|c|z}k\t\tinstalar $s80|containers|ZFS media center on $znm2"
