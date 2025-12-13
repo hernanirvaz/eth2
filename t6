@@ -814,6 +814,11 @@ function luc {                                                                  
   git checkout $m;swb "VAI COMPILAR LIGHTHOUSE $m";PROFILE=maxperf make;[[ $? -eq 0 && -x $1 ]] || swb "ERRO COMPILAR $m"                                     # checkout stable version & compile
 }
 function ruv { if [[ $1 ]];then swn "RUST OVERRIDE SET $1";rustup override set $1;else swn 'RUST UPDATE';rustup update stable;fi; }                           # set/update rust version
+function tbd {
+  local f=$p02/$(basename $p18)
+  mcp $(snd ${cuvc%%.*}):$f $p02
+}
+[[ $1 = tbd ]] && { tbd; }
 function tvc {
   local rsp;local f;local e;local c=${cuvc%%.*};local n=${nxvc%%.*}
   swn "$s24"
@@ -831,7 +836,7 @@ function tvc {
       vrs $1 $3 # VC stop    -> vc_slash
       vd        # VC disable -> vc_lock
     fi
-    f=$p02/$(basename $p18);sex cp $p18 $p02;cmw $f 666 eth;mcp $f $(snd $n);sex rm $f;svc TRANSFERIDO
+    f=$p02/$(basename $p18);sex cp $p18 $p02;cmw $f 666 eth # mcp $f $(snd $n);sex rm $f;svc TRANSFERIDO
   fi
 }
 function nky { find $p19/key*.json 2>$p03|wc -l; }
@@ -1487,6 +1492,7 @@ if [[ $# -lt 1 ]];then
   m="$m\nirb               [h]\tsys (if needed)\t\t\t\treboot\t\tafter h hours"
   m="$m\nivk               [g]\timport validator keys\t\t\t\t\tmim gap"
   m="$m\ntvc         [d|e] [g]\tdry run|execute\t\t\t\tvc transfer\tmim gap (${cuvc%%.*} -> ${nxvc%%.*})"
+  m="$m\ntbd                  \tslash-db transfer (${cuvc%%.*} -> ${nxvc%%.*})"
   m="$m\nvcc\t\t\tvc switch cc order"
   m="$m\nyj\t\t\tsystem journal"
   m="$m\nbb[a]\t\t\t[all] produced block\t\t\t\tlog lines"
