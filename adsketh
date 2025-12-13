@@ -13,12 +13,12 @@ function ei0 { echo -e "export H=\"$1\"\nexport E=\"$2\"\nexport R=\"$3\"\nexpor
 function ei1 { echo -e "echo>>~/.bashrc\necho \"export PATH=\\\"\\\$PATH:/home/eth/eth2\\\"\">>~/.bashrc\necho \"export H=\\\"$1\\\"\">>~/.bashrc\necho \"export V=\\\"$2\\\"\">>~/.bashrc\necho \"export K=\\\"$3\\\"\">>~/.bashrc\necho \"export E=\\\"$4\\\"\">>~/.bashrc\necho \"export B=\\\"$5\\\"\">>~/.bashrc\necho \"PS1=\\\"\\\$H:\\\h: \\\"\">>~/.bashrc\nchmod 755 ~/eth2/t[1-9] ~/eth2/e?"; }
 function cz0 {
   local u;if smt $1;then u=eu;else u=ubuntu;fi;local s="$u@$1"
-  mcp -q -P 22 ~/eth2/s? ~/eth2/keth ~/i0 $s:~
+  mcp -q 22 ~/eth2/s? ~/eth2/keth ~/i0 $s:~
   echo -e "\n\n\n\nsudo -i\nbash /home/$u/s0\n\n\n\n"
   msh $s 22
-  mcp -q -P $2 ~/eth2/asrv                       $1:~/.bash_aliases
-  mcp -q -P $2 ~/eth2/t[1-9] ~/eth2/e? ~/eth2/a? $1:~/eth2
-  mcp -q -P $2 ~/i1                              $1:
+  mcp -q $2 ~/eth2/asrv                       $1:~/.bash_aliases
+  mcp -q $2 ~/eth2/t[1-9] ~/eth2/e? ~/eth2/a? $1:~/eth2
+  mcp -q $2 ~/i1                              $1:
   msh $1 $2 'sh i1'
   echo -e "\n\nky # gerar key & copiar para keth\nt2 # setup\n\n"
   msh $1 $2

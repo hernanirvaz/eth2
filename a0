@@ -9,6 +9,7 @@ vip3='161.97.85.32';vnd3='vmi1007895.contaboserver.net';vnm3=${vnd3%%.*};vis3='1
 trdi='/mnt/data/downloads'
 mddi='/media/mp4'
 
+function sit { ! [[ $1 =~ ^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$ ]]; }
 function sht { [[ ${1:-$cuip} = 192.168.8.* ]]; }
 function snt { [[ $1 = hrv* ]]; }
 function smt { sht "$1" || snt "$1"; }
@@ -68,7 +69,7 @@ function sl6 {
   esac
 }
 function spn {
-  local s=${1##*@};[[ $s =~ ^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$ ]] || local s=${1%%.*}
+  local s=${1##*@};sit $s && local s=${1%%.*}
   local n=2020
   case $s in
   hrv*) n=$((n+${s##*[!0-9]})) ;;
@@ -117,34 +118,44 @@ function stt { [[ $cut1 != $cut2 ]]; }
 function sxt { [[ $cunm = $cut1 || $cunm = $cut2 ]]; }
 function sst { local s=${1:-$cunm};[[ $s != hrv-zen && $s != hrv-lenovo ]]; }
 function msh { 
-  local s=$(sns $1);local p
-  if [[ "$2" =~ ^-?[0-9]+$ ]];then
-    p=$2;shift
-  else
-    p=$(spn $s)
+  if [[ $# -lt 1 ]];then 
+    echo -e "msh [user@]{server} [port] [command]\t\tssh -4p <port> <server> '<command>'"
+    return
   fi
-  [[ $2 ]] && echo -e "\nssh -4p $p $s $2"
-  ssh -4p $p $s "$2"
+  local s;local p;local e;local i;local u
+  while [[ $# -gt 0 ]];do i=$(sns "${1#*@}");[[ "$1" == *'@'* ]] && u=${1%@*};[[ $u ]] || if [[ "$i" == *'@'* ]];then u=${i%@*};fi
+      if [[ "$1" =~ ^[0-9]+$ ]]; then
+        p=$1
+      elif sit "${i#*@}"; then
+        e="$1"
+      else
+       [[ $u ]] && u=$u@;s="$u${i#*@}";[[ $p ]] || p=$(spn $s)
+      fi
+      shift
+  done
+  [[ $e ]] && echo -e "\nssh -4p $p $s $e"
+  ssh -4p $p $s "$e"
 }
 function mcp {
-    if [[ $# -lt 1 ]];then 
-      echo -e "mcp {zv}{123456}:{file|dir} [d:~]\t\tscp -4rP <port> <server>:{file|dir} <destination>"
-      echo -e "mcp {file|dir} {zv}{123456}:[d:~]\t\tscp -4rP <port> {file|dir} <server>:<destination>"
-      return
-    fi
-    local a=();local s;local f;local p;local w
-    while [[ $# -gt 0 ]];do s="$1"
-        if [[ "$s" == *:* ]] && [[ "$s" != -* ]] && [[ ! "$s" =~ ^(\.|/) ]]; then
-          f=${s##*:};[[ $p ]] || p=$(spn "${s%:*}");s=$(sns "${s%:*}");a+=("$s:$f");shift
-        elif [[ "$s" == -q ]]; then
-          w=nooutput;shift
-        elif [[ "$s" == -P ]]; then
-          p=$2;shift 2
-        else
-          a+=("$s");shift
-        fi
-    done
-    [[ $w ]] || echo scp -4rP $p "${a[@]}";scp -4rP $p "${a[@]}"
+  if [[ $# -lt 1 ]];then 
+    echo -e "mcp [port] {zv}{123456}:{file|dir} [d:~]\t\tscp -4rP <port> <server>:{file|dir} <destination>"
+    echo -e "mcp [port] {file|dir} {zv}{123456}:[d:~]\t\tscp -4rP <port> {file|dir} <server>:<destination>"
+    return
+  fi
+  local a=();local s;local f;local p;local w
+  while [[ $# -gt 0 ]];do s="$1"
+      if [[ "$s" == *:* ]] && [[ "$s" != -* ]] && [[ ! "$s" =~ ^(\.|/) ]]; then
+        f=${s##*:};[[ $p ]] || p=$(spn "${s%:*}");s=$(sns "${s%:*}");a+=("$s:$f")
+      elif [[ "$s" == -q ]]; then
+        w=nooutput
+      elif [[ "$s" =~ ^[0-9]+$ ]]; then
+        p=$s
+      else
+        a+=("$s")
+      fi
+      shift
+  done
+  [[ $w ]] || echo scp -4rP $p "${a[@]}";scp -4rP $p "${a[@]}"
 }
 function pcm { 
   local e=${1^^};local s=hrv-zotac1;local m='eth2/rt-GR241AG'
