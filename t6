@@ -104,7 +104,7 @@ function sft { [[ -f $p04/$1.service ]]; }
 function bpt { ! fft $p50.lock && [[ $(era $p12 $n12) -le 1 ]] && ( (pct && pmt "$nm" "$nr" && hat && ! bdt && ! fft $p45) || rbt $n06); }
 function llc { if [[ -s  ${1:-$p03} ]];then grep -Ec "$s72|$s73|$s74|$s75|$s76|$s77" $1 2>$p03;else printf %i 0;fi; }                                         # get normal log line count
 function jrn { local s;if [[ $2 ]];then s="-g $2";else s=;fi;cex journalctl --no-hostname --no-full -f $1 $s; }                                               # my journal   format
-function dmr { sex $s00 daemon-reload; }                                                                                                                    # daemon-reload
+function dmr { sex $s00 daemon-reload; }                                                                                                                      # daemon-reload
 function si1 { local n=${1:-0};printf %i $((20*n))   2>$p03; }
 function si2 { local n=${1:-0};printf %i $((1000*n)) 2>$p03; }
 function svi {
@@ -752,14 +752,14 @@ function hst { sso $s74 $s44; }
 function hsb { sso $s75 $s12; }
 function hsv { sso $s76 $s13; }
 function hsm { sso $s77 $s14; }
-function hss { echo -e "\n$1";if [[ $cunm = $1 ]];then hsg;hsu;hst;hsb;hsv;hsm;cpe;else msh $1 "$p53 hse;$p53 hsc";fi; }
+function hss { echo -e "\n$1";if [[ $cunm = $1 ]];then hsg;hsu;hst;hsb;hsv;hsm;cpe;else msh -q $1 "$p53 hse;$p53 hsc";fi; }
 function hhh { printf '\n%.0s' {1..4}; }
 function hs0 {
   hhh
   if n1t;then
     hss $cun1;if ndt;then hss $cun2;fi
-    if vst;then if svt;then hsv;cpe;else echo -e "\n$cuvc";msh $cuvc "$p53 hsv";fi;fi
-    if mst;then if mct;then hsm;cpe;else echo -e "\n$cumv";msh $cumv "$p53 hsm";fi;fi
+    if vst;then if svt;then hsv;cpe;else echo -e "\n$cuvc";msh -q $cuvc "$p53 hsv";fi;fi
+    if mst;then if mct;then hsm;cpe;else echo -e "\n$cumv";msh -q $cumv "$p53 hsm";fi;fi
     echo;epf;cpf
   else
     hss $cunm
@@ -867,7 +867,7 @@ function bcc {
     if bpt;then
       if rbt $n06;then printf r;else printf c;fi
     else 
-      if bdt;then printf d;else printf _;fi
+      if bdt     ;then printf d;else printf _;fi
     fi
   else
     if rbt;then printf r;elif bdt;then printf d;else printf _;fi

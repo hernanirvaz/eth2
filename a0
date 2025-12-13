@@ -122,19 +122,20 @@ function msh {
     echo -e "msh [user@]{server} [port] [command]\t\tssh -4p <port> <server> '<command>'"
     return
   fi
-  local s;local p;local e;local i;local u
+  local s;local p;local e;local i;local u;local w
   while [[ $# -gt 0 ]];do i=$(sns "${1#*@}");[[ "$1" == *'@'* ]] && u=${1%@*};[[ $u ]] || if [[ "$i" == *'@'* ]];then u=${i%@*};fi
       if [[ "$1" =~ ^[0-9]+$ ]]; then
         p=$1
+      elif [[ "$1" == -q ]]; then
+        w=no
       elif sit "${i#*@}"; then
-        e="$1"
+        e="$1";[[ $w = no ]] || w=''
       else
        [[ $u ]] && u=$u@;s="$u${i#*@}";[[ $p ]] || p=$(spn $s)
       fi
       shift
   done
-  [[ $e ]] && echo -e "\nssh -4p $p $s $e"
-  ssh -4p $p $s "$e"
+  [[ $w ]] || echo ssh -4p $p $s $e;ssh -4p $p $s "$e"
 }
 function mcp {
   if [[ $# -lt 1 ]];then 
@@ -147,7 +148,7 @@ function mcp {
       if [[ "$s" == *:* ]] && [[ "$s" != -* ]] && [[ ! "$s" =~ ^(\.|/) ]]; then
         f=${s##*:};[[ $p ]] || p=$(spn "${s%:*}");s=$(sns "${s%:*}");a+=("$s:$f")
       elif [[ "$s" == -q ]]; then
-        w=nooutput
+        w=no
       elif [[ "$s" =~ ^[0-9]+$ ]]; then
         p=$s
       else
@@ -155,17 +156,17 @@ function mcp {
       fi
       shift
   done
-  [[ $w ]] || echo scp -4rP $p "${a[@]}";scp -4rP $p "${a[@]}"
+  [[ $w ]] || echo scp -4rP $p ${a[@]};scp -4rP $p "${a[@]}"
 }
 function pcm { 
   local e=${1^^};local s=hrv-zotac1;local m='eth2/rt-GR241AG'
-  if   [[ $e = PRB ]];then msh $s "/etc/rc.reboot"
-  elif [[ $e = NTP ]];then msh $s "ntpq -np"
-  elif [[ $e = LRB ]];then echo;if [[ -f ~/$m ]]; then echo meo reboot log;tail -n5 ~/$m;fi;msh $s "/root/rt-pfsense-log-check.sh $2"
-  elif [[ $e = IP4 ]];then msh $s "ifconfig re0|grep inet|grep -v inet6|awk '{print \$2}'"
-  elif [[ $e = IP6 ]];then msh $s "ifconfig re0|grep inet6|grep -v fe80|awk '{print \$2}'"
-  elif [[ $e = SYL ]];then msh $s "/root/rt-pfsense-log-check.sh $(date +%H)"
-  else                     msh $s 'cat /root/wan-check.log'
+  if   [[ $e = PRB ]];then msh -q $s "/etc/rc.reboot"
+  elif [[ $e = NTP ]];then msh -q $s "ntpq -np"
+  elif [[ $e = LRB ]];then echo;if [[ -f ~/$m ]]; then echo meo reboot log;tail -n5 ~/$m;fi;msh -q $s "/root/rt-pfsense-log-check.sh $2"
+  elif [[ $e = IP4 ]];then msh -q $s "ifconfig re0|grep inet|grep -v inet6|awk '{print \$2}'"
+  elif [[ $e = IP6 ]];then msh -q $s "ifconfig re0|grep inet6|grep -v fe80|awk '{print \$2}'"
+  elif [[ $e = SYL ]];then msh -q $s "/root/rt-pfsense-log-check.sh $(date +%H)"
+  else                     msh -q $s "cat /root/wan-check.log"
   fi
 }
 function san { local s=${1:-UP};ip -j addr|jq -r ".[]|select(.operstate==\"${s^^}\").ifname"|grep '^en'; }

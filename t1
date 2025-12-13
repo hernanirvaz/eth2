@@ -20,7 +20,7 @@ cuvc=$znm4
 nxvc=$znm4
 cun1=$inm6
 cun2=$inm5
-cumv=$cun1;[[ $cunm = $cun2 ]] && cumv=$cun2
+cumv=$znm3
 cut1=$znm3
 cut2=$znm2
 else
