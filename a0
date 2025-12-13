@@ -32,7 +32,7 @@ function sin {
   $vnd2*) s=$vip2 ;;
   $vnd3*) s=$vip3 ;;
   esac
-  printf %s "$(snu $s)"
+  printf %s "$s"
  }
 function snd {
   case $1 in
@@ -112,7 +112,7 @@ function sns {
       esac
     fi
   fi
-  sin "$s"
+  snu $(sin "$s")
 }
 function stt { [[ $cut1 != $cut2 ]]; }
 function sxt { [[ $cunm = $cut1 || $cunm = $cut2 ]]; }
