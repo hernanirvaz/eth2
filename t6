@@ -75,6 +75,7 @@ function t3t { [[ $(cat $p43 2>$p03) -eq 1 ]]; }                                
 function v0t { g0t $(grep -c $d0 $p12 2>$p03); }                                                                                                              # cc  log day             test
 function z1t { [[ $cunm = $cut1 ]]; }                                                                                                                         # main ntp                test
 function z2t { [[ $cunm = $cut2 ]]; }                                                                                                                         # auxi ntp                test
+function z3t { [[ $cunm = $cut1 && $cut1 != $cumv ]]; }                                                                                                                         # main ntp                test
 function zdt { stt || [[ $cun1 != $cut1 ]]; }                                                                                                                 # 2 or external ntp       test
 function z4t { [[ $cunm = $znm4 ]]; }                                                                                                                         # best zotac              test
 function n2t { [[ $cunm = $cun2 ]]; }
@@ -590,11 +591,11 @@ function hch {
   swn "$e${m:4}"
 }
 function hca {
-              if n1t;then hch;else msh $cun1 "$p53 hch";fi
-  if ndt;then if n2t;then hch;else msh $cun2 "$p53 hch";fi;fi
-  if vst;then if svt;then hch;else msh $cuvc "$p53 hch";fi;fi
-  if mst;then if mct;then hch;else msh $cumv "$p53 hch";fi;fi
-  if zdt;then if z1t;then hch;else msh $cut1 "$p53 hch";fi;stt && if z2t;then hch;else msh $cut2 "$p53 hch";fi;fi
+              if n1t;then hch;else msh -q $cun1 "$p53 hch";fi
+  if ndt;then if n2t;then hch;else msh -q $cun2 "$p53 hch";fi;fi
+  if vst;then if svt;then hch;else msh -q $cuvc "$p53 hch";fi;fi
+  if mst;then if mct;then hch;else msh -q $cumv "$p53 hch";fi;fi
+  if zdt;then z3t && if z1t;then hch;else msh -q $cut1 "$p53 hch";fi;stt && if z2t;then hch;else msh -q $cut2 "$p53 hch";fi;fi
 }
 function si0 { printf '%s: erro_cml %i,used %s,spare %s; ' $(basename $1) $(($2+$3+$4)) $5% $6% 2>$p03; }
 function sif {
