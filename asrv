@@ -10,11 +10,13 @@ if [[ $cunm = hrv-zotac2 ]];then
   rsy() { echo -e "\n\nrsync -4p $3 $1 $2";rsync --ignore-existing --delete --numeric-ids -avh -e "ssh -4p $3 -i ~/.ssh/id_ed25519" $1 $2; }
   rsl() { echo -e "\n\nrsync local  $1 $2";rsync --ignore-existing --delete --numeric-ids -avh                                      $1 $2; }
   smv() { local s=hrv-zotac3;local p=$(spn $s);local d=$(mdi);rsy $d/movie  $(sin $s): $p; }
-  stv() { local s=hrv-zotac3;local p=$(spn $s);local d=$(mdi);rsy $d/tv2    $(sin $s): $p;rsl $d/tv /media/bk1; }
+  #stv() { local s=hrv-zotac3;local p=$(spn $s);local d=$(mdi);rsy $d/tv2    $(sin $s): $p;rsl $d/tv /media/bk1; }
+  stv() { local s=hrv-zotac3;local p=$(spn $s);local d=$(mdi);rsy $d/tv2    $(sin $s): $p;s=hrv-zotac4;p=$(spn $s);rsy $d/tv $(sin $s): $p; }
   slt() { local s=hrv-zotac3;local p=$(spn $s);local d=$(mdi);rsy $d/lust   $(sin $s): $p; }
   sal() { smv;sleep 10;stv;sleep 10;slt; }
   pmv() { local s=hrv-zotac3;local p=$(spn $s);rsy $(sin $s):~/movie /media/mp4 $p; }
-  ptv() { local s=hrv-zotac3;local p=$(spn $s);rsy $(sin $s):~/tv2   /media/mp4 $p;rsl /media/bk1/tv /media/mp4; }
+  #ptv() { local s=hrv-zotac3;local p=$(spn $s);rsy $(sin $s):~/tv2   /media/mp4 $p;rsl /media/bk1/tv /media/mp4; }
+  ptv() { local s=hrv-zotac3;local p=$(spn $s);rsy $(sin $s):~/tv2   /media/mp4 $p;s=hrv-zotac4;p=$(spn $s);rsy $(sin $s):~/tv /media/mp4 $p; }
   plt() { local s=hrv-zotac3;local p=$(spn $s);rsy $(sin $s):~/lust  /media/mp4 $p; }
   pal() { pmv;ptv;plt; }
   fi0() { local d=$(mdi);echo findls $1 $d;find $d -name "*.$1" -print; }
