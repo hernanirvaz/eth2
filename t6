@@ -857,16 +857,16 @@ function svr { local t='';for t in $(printf '%s\n' $@|sort -u);do curl -sX GET "
 function mvr { if [[ $(nky) -gt 0 ]];then svr $(for k in $p19/key*.json;do [[ -f $k ]] || break;snf "$e22" $k;done);else svr ${b[@]};fi; }                    # choose validator keys
 function vko { if fft $p49;then         swn "$(printf 'KADD OK %3i %10s %5s' $1 $dt 2>$p03)"                >> $p49;fi; }
 function bko { if fft $p12;then bv0;bnn;swn "$(printf 'KADD OK %3i'          $1     2>$p03) $(npn $nr $nn)" >> $p12;fi; }
-function ibk {
+function i1k {
   if [[ -f $p58/pubkeys ]];then swn "\nADICIONAR KEYS pubkeys @($cunm)";else swn "\nADICIONAR KEYS pubkeys @($cun1, $cun2)";return;fi
   local f="$p02/pubkeys.old";sex cp $p58/pubkeys     $f;cmw $f 644 eth
   echo "$(cat $f)$(for f in $(jq -r .pubkey $p19/key*.json 2>$p03);do printf %s ",0x$f";done)" > $p02/pubkeys.new
   local f="$p58/pubkeys"    ;sex cp $p02/pubkeys.new $f;cmw $f 444 eth
 }
 function ivk {
-  local n=$(nky);svt && [[ $n -gt 0 ]] || return;brs PV 0 0 $1;ibk;dmr;cex $s03 $s12;bko $n
+  local n=$(nky);svt && [[ $n -gt 0 ]] || return;brs PV 0 0 $1;i1k;dmr;cex $s03 $s12;bko $n
   if ! tsa $s13;then
-    swb 'IMPORTAR CHAVES';sex chown -R $meeu:$meeu $p17;cmw $p17 755;imk;svd
+    swb 'IMPORTAR CHAVES';sex chown -R $meeu:$meeu $p17;cmw $p17 755;i0k;svd
     fft $p05/vc_lock || cex $s03 $s13;vko $n
   fi
 }
@@ -1079,7 +1079,7 @@ function smb {
 # [[ $1 = smb ]] && { if [[ $cunm = $znm2 ]];then smb;fi; }
 function irc {
   local v;local s
-  v=${1:-$s83};s=$(rvm list 2>$p03)
+  v=${1:-$s82};s=$(rvm list 2>$p03)
   if grep -q $v <<< "$s";then
     swu $v ja instalado
   else
@@ -1160,7 +1160,7 @@ function izk {
   if zpool version 2>$p03;then
     swb 'ZFS JA INSTALADO'
   else
-    swb 'INSTALAR ZFS';sex apt-get update;sudo apt-get install zfsutils-linux -y 2>&1 | sudo tee -a $p02/$s82.out >$p03
+    swb 'INSTALAR ZFS';sex apt-get update;sudo apt-get install zfsutils-linux -y 2>&1 | sudo tee -a $p02/zpool.out >$p03
   fi
   local i='/dev/disk/by-id';local s="$i/scsi-SSanDisk_SSD_PLUS_2000GB_61E203010290 $i/scsi-SSamsung_SSD_870_QVO_1TB_E41703010290 $i/scsi-SSamsung_SSD_870_QVO_1TB_0000000000000000"
   local f='/media/bk1';local e='bk1_pool'
@@ -1175,10 +1175,46 @@ function izk {
     nex chmod -R 775 $f
    fi
   zpool list
- }
+}
+function imk {
+  srv hrv-zotac2 || return
+  if mergerfs --version 2>$p03;then
+    swb 'mergerfs JA INSTALADO'
+  else
+    swb 'INSTALAR mergerfs';sex apt-get update;pex apt-get install mergerfs -y >> $p02/mergerfs.out
+  fi
+  local i;local s;local d;local l;local m;local c=1;local p="/mnt/bkp";local rsp
+  i='/dev/disk/by-id';s=()
+  s+=("$i/usb-SanDisk_SSD_PLUS_2000GB_092010302E16-0:0")
+  s+=("$i/usb-Samsung_SSD_870_QVO_1TB_012345678999-0:0")
+  cp $p37 $(basename $p37).sav
+  for d in "${s[@]}"; do
+    l="bk${c}";m="/mnt/${l}"
+    if [[ -b "$d" ]]; then
+      swn Drive found: $d
+      swn Quer formatar como $l em $m SIM/nao ?
+      rsp=nao;read rsp;[[ $rsp = SIM  ]] || continue
+    else
+      swn Drive not found: $d Skipping;continue
+    fi
+    echo
+    sex wipefs --all --force "$d"
+    sex mkfs.ext4 -F -L "$l" -m 0 "$d"
+    sex mkdir -p "$m";cmw "$m" 775 $meeu
+    sex sed -i "/LABEL=${l}/d" $p37;sex sed -i "\@${m}@d" $p37
+    echo "LABEL=$l $m ext4 defaults,nofail 0 0" | sudo tee -a $p37
+    ((c++))
+  done
+  sex mkdir -p "$p";cmw "$p" 775 $meeu
+  sex sed -i "\@${p}@d" $p37
+  echo "/mnt/bk[1-9] ${p} fuse.mergerfs defaults,nofail,nonempty,allow_other,use_ino,cache.files=partial,moveonenospc=true,dropcacheonclose=true,minfreespace=50G,fsname=mergerfs 0 0" | sudo tee -a $p37
+  swn systemctl daemon-reload
+  swn mount -a
+}
 [[ $1 = idk ]] && { idk; }
 [[ $1 = ick ]] && { ick; }
-[[ $1 = izk ]] && { izk; }
+# [[ $1 = izk ]] && { izk; }
+[[ $1 = imk ]] && { imk; }
 [[ $1 = rco ]] && { rco; }
 [[ $1 = rop ]] && { rop; }
 
@@ -1545,9 +1581,9 @@ if [[ $# -lt 1 ]];then
   m="$m\nei[c|o]\t\t\tset dynamic DNS [c]ron|[o]utput"
   m="$m\nulg [d]\t\t\tshow update logs d($(date +%F)) on $(basename $p69)"
   m="$m\nulr [d]\t\t\tshow restartings d($(date +%F)) on $(basename $p69)"
-  m="$m\ni{d|c|z}k\t\tinstalar $s80|containers|ZFS media center on $znm2"
+  m="$m\ni{d|c|m}k\t\tinstalar $s80|containers|MergerFS media center on $znm2"
   m="$m\nr{op|co}\t\topen/close ports ($n65/$n66) for torrent"
-  m="$m\nirv [v]\t\t\tinstalar rvm & ruby [$s83]"
+  m="$m\nirv [v]\t\t\tinstalar rvm & ruby [$s82]"
   m="$m\ncns\t\t\tinstalar cns ruby gem"
   swn "\n$m\n"
 fi

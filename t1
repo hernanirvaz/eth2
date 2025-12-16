@@ -577,8 +577,7 @@ s81="${s81}\n      - 'WATCHTOWER_SCHEDULE=8 9 5 * * *'" # At 05:09:08 every day
 s81="${s81}\n    volumes:"
 s81="${s81}\n      - /var/run/docker.sock:/var/run/docker.sock"
 s81="${s81}\n    restart: unless-stopped"
-s82='zpool'
-s83='ruby-3.4.7'
+s82='ruby-3.4.7'
 
 e01='PollIntervalMinSec'
 e02='PollIntervalMaxSec'
