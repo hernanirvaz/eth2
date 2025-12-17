@@ -1207,7 +1207,7 @@ function imk {
   done
   sex mkdir -p "$p";cmw "$p" 775 $meeu
   sex sed -i "\@${p}@d" $p37
-  echo "/mnt/bk[1-9] ${p} fuse.mergerfs defaults,nofail,nonempty,allow_other,use_ino,cache.files=partial,moveonenospc=true,dropcacheonclose=true,minfreespace=50G,fsname=mergerfs 0 0" | sudo tee -a $p37
+  echo "/mnt/bk[1-9] ${p} fuse.mergerfs defaults,nofail,nonempty,allow_other,use_ino,cache.files=partial,moveonenospc=true,dropcacheonclose=true,minfreespace=50G,category.create=mfs,fsname=mergerfs 0 0" | sudo tee -a $p37
   swn systemctl daemon-reload
   swn mount -a
 }

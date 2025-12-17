@@ -3,6 +3,7 @@
 source /home/eth/eth2/a0
 
 function ecm { echo -e "\n\e[5;32m${*^^}\e[0m";eval "$*"; }
+function ecn { echo -e "\n\n\e[32m$*\e[0m\n\n";eval "$*"; }
 function erq { local q=${*:-changelogs.ubuntu.com};ecm resolvectl query "$q"; }
 
 function rr { pcm PRB; }
