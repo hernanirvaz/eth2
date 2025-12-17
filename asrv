@@ -7,21 +7,18 @@ if [[ $cunm = hrv-zotac2 ]];then
   mt2() { id plex     &>>/dev/null; }
   mdi() { if mt2;then printf /var/lib/plexmediaserver/mp4;else printf /media/mp4;fi; }
   mus() { if mt2;then printf plex                        ;else printf eth       ;fi; }
-  rsy() { echo -e "\n\nrsync $4 -4p $3 $1 $2\n\n";rsync --delete --numeric-ids $4 -avhP -e "ssh -4p $3" $1 $2; }
-  rsl() { echo -e "\n\nrsync $3 local  $1 $2\n\n";rsync --delete --numeric-ids $3 -avhP                 $1 $2; }
- 
+  rsy() { echo -e "\n\nrsync $4 -4p $3 $1 $2\n\n";rsync --delete --numeric-ids $4 -avhe "ssh -4p $3" $1 $2; }
+  rsl() { echo -e "\n\nrsync $3 local  $1 $2\n\n";rsync --delete --numeric-ids $3 -avh               $1 $2; }
   smv() { rsy $2/movie $(sin $1): $(spn $1) $3;sleep 10; }
   stv() { rsy $2/tv2   $(sin $1): $(spn $1) $3;sleep 10;rsl $2/tv /mnt/bkp $3; }
   # stv() { rsy $2/tv2   $(sin $1): $(spn $1) $3;sleep 10;rsy $2/tv $(sin $1): $(spn $1) $3; }
   slt() { rsy $2/lust  $(sin $1): $(spn $1) $3;sleep 10; }
   sal() { local o=$(mdi);smv hrv-zotac4 $o;stv hrv-zotac3 $o;slt hrv-zotac4 $o; } # --size-only option to avoid timestamp backups
-
   pmv() { rsy $(sin $1):~/movie $2 $(spn $1) $3;sleep 10; }
   ptv() { rsy $(sin $1):~/tv2   $2 $(spn $1) $3;sleep 10;rsl /mnt/bkp/tv $2 $3; }
   # ptv() { rsy $(sin $1):~/tv2   $2 $(spn $1) $3;sleep 10;rsy $(sin $1):~/tv $2 $(spn $1) $3; }
   plt() { rsy $(sin $1):~/lust  $2 $(spn $1) $3;sleep 10; }
   pal() { local o=$(mdi);pmv hrv-zotac4 $o;ptv hrv-zotac3 $o;plt hrv-zotac4 $o; }
-
   fi0() { local d=$(mdi);echo findls $1 $d;find $d -name "*.$1" -print; }
   fi1() { local d=$(mdi);echo findrm $1 $d;find $d -name "*.$1" -exec sudo rm {} \;; }
   fll() { if [[ $1 ]];then fi0 $1;else fi0 txt;fi0 jpg;fi; }
