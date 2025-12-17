@@ -66,9 +66,9 @@ cc1 $p24 "$e04";cc2 $p24 "$s39";cmw $p24 755 root                               
 cc1 $p25 "$e04"                ;cmw $p25 755 root                                                                                                             # help-text delete
 cc1 $p27 "$e53";cc2 $p27 "$s38";lrs                                                                                                                           # new logrotate & permissions
 [[ -x $p28 ]] && sex chmod -x $p28                                                                                                                            # motd overlayroot unexecute
-t6 uur                                                                                                                                                        # unattended-upgrades
 swb FINAL reboot imperativo
-swn from server execute: sudo reboot
+swn terminal may freeze, from server execute: sudo reboot
+t6 uur                                                                                                                                                        # unattended-upgrades
 if sht;then
   swn from desktop execute: zo
 else

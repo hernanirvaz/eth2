@@ -1130,13 +1130,16 @@ function cns {
 
 function idk {
   srv hrv-zotac2 || return
-  local s;local a;local c
-  s="$p14/keyrings/$s80.gpg";[[ -a $s ]] && { swb "$s80 JA INSTALADO";return; }
+  local s="$p14/keyrings/$s80.gpg";local a;local c
+  if [[ -s $s ]];then
+    swb "$s80 JA INSTALADO";return
+  fi
   a=$(dpkg --print-architecture);c=$(snf "$e80" $p77)
   sex install -m 0755 -d $(dirname $s)
   curl -fsSL https://download.$s80.com/linux/ubuntu/gpg | sudo gpg --dearmor -o $s;sex chmod a+r $s
   echo "deb [arch=$a signed-by=$s] https://download.$s80.com/linux/ubuntu $c stable" | sudo tee $p14/sources.list.d/$s80.list >$p03
   sex apt-get update
+  swu install containerd.io
   sudo apt-get install --reinstall ca-certificates gnupg lsb-release -y 2>&1 | sudo tee -a $p02/$s80.out >$p03
   sudo update-ca-certificates                                           2>&1 | sudo tee -a $p02/$s80.out >$p03
   sex apt-get install $s80-ce $s80-ce-cli containerd.io $s80-buildx-plugin $s80-compose-plugin -y
@@ -1148,10 +1151,10 @@ function ick {
   pop $n58 $s64-http;pop $n59 $s64-https;pop $n60/udp $s64-discovery;pop $n61/udp $s64-DLNA
   pop $n62 sonarr;pop $n63 radarr;pop $n64 prowlarr;rop
   wsr
-  mkdir -p $p80/{tv,tv2,movie,lust}                                    ;sex chown -R $meui:$megi $p80;sex chmod -R 775 $p80
-  mkdir -p $p81/{prowlarr,sonarr,radarr,transmission,jellyfin}         ;sex chown -R $meui:$megi $p81
-  mkdir -p $p82/{complete,incomplete};mkdir -p $p82/complete/{tv,movie};sex chown -R $meui:$megi $p82;sex chmod -R 775 $p82
-  mkdir -p $p02/media-stack;cd $p02/media-stack;echo -e "$s81" > docker-compose.yml
+  sex mkdir -p $p80/{tv,tv2,movie,lust}                                    ;sex chown -R $meui:$megi $p80;sex chmod -R 775 $p80
+  sex mkdir -p $p81/{prowlarr,sonarr,radarr,transmission,jellyfin}         ;sex chown -R $meui:$megi $p81
+  sex mkdir -p $p82/{complete,incomplete};sex mkdir -p $p82/complete/{tv,movie};sex chown -R $meui:$megi $p82;sex chmod -R 775 $p82
+  sex mkdir -p $p02/media-stack;cd $p02/media-stack;echo -e "$s81" > docker-compose.yml
   rco
   docker compose up -d
  }
@@ -1178,11 +1181,22 @@ function izk {
 }
 function imk {
   srv hrv-zotac2 || return
-  if mergerfs --version 2>$p03;then
-    swb 'mergerfs JA INSTALADO'
+  if command -v parted &>$p03 && command -v mergerfs &>$p03; then
+    swb 'mergerfs & parted JA INSTALADOS'
   else
-    swb 'INSTALAR mergerfs';sex apt-get update;pex apt-get install mergerfs -y >> $p02/mergerfs.out
+    swb 'INSTALAR mergerfs & parted';sex apt-get update;pex apt-get install mergerfs fuse3 -y >> $p02/imk.out
   fi
+
+  # 3. Hardware Fix: ASMedia UAS Glitch (Auto-apply on fresh install)
+  if fft $p87; then
+    swn 'USB Hardware Fix already applied.'
+  else 
+      swb "Applying USB Hardware Fix (ASMedia)..."
+      echo "options usb-storage quirks=174c:55aa:u" | sudo tee -a $p87
+      cex update-initramfs -u
+  fi
+
+
   local i;local s;local d;local l;local m;local c=1;local p="/mnt/bkp";local rsp
   i='/dev/disk/by-id';s=()
   s+=("$i/usb-SanDisk_SSD_PLUS_2000GB_092010302E16-0:0")
@@ -1193,13 +1207,15 @@ function imk {
     if [[ -b "$d" ]]; then
       swn Drive found: $d
       swn Quer formatar como $l em $m SIM/nao ?
-      rsp=nao;read rsp;[[ $rsp = SIM  ]] || continue
+      rsp=nao;read rsp
+      if [[ $rsp = SIM  ]];then
+        sex wipefs --all --force "$d"
+        sex mkfs.ext4 -F -L "$l" -m 0 "$d"
+      fi
     else
       swn Drive not found: $d Skipping;continue
     fi
     echo
-    sex wipefs --all --force "$d"
-    sex mkfs.ext4 -F -L "$l" -m 0 "$d"
     sex mkdir -p "$m";cmw "$m" 775 $meeu
     sex sed -i "/LABEL=${l}/d" $p37;sex sed -i "\@${m}@d" $p37
     echo "LABEL=$l $m ext4 defaults,nofail 0 0" | sudo tee -a $p37
@@ -1208,9 +1224,67 @@ function imk {
   sex mkdir -p "$p";cmw "$p" 775 $meeu
   sex sed -i "\@${p}@d" $p37
   echo "/mnt/bk[1-9] ${p} fuse.mergerfs defaults,nofail,nonempty,allow_other,use_ino,cache.files=partial,moveonenospc=true,dropcacheonclose=true,minfreespace=50G,category.create=mfs,fsname=mergerfs 0 0" | sudo tee -a $p37
-  swn systemctl daemon-reload
-  swn mount -a
+  nex systemctl daemon-reload
+  nex mount -a
 }
+function imkn {
+   
+       local count=1
+
+    for disk in "${s[@]}"; do
+        if [ ! -b "$disk" ]; then echo "Skipping missing: $disk"; continue; fi
+
+        local label="bk${count}"
+        local mountpoint="/mnt/${label}"
+        local part_device="${disk}-part1"
+
+        echo "Processing $disk as $label..."
+
+        # A. Wipe & Partition (Standard GPT for survival)
+        umount -q "${disk}"* 2>/dev/null
+        wipefs --all --force "$disk"
+        parted -s "$disk" mklabel gpt
+        parted -s "$disk" mkpart primary ext4 0% 100%
+        
+        # Wait for kernel to register partition
+        udevadm settle
+        sleep 2
+
+        # Fallback: resolve real path if symlink part1 is delayed
+        if [ ! -b "$part_device" ]; then
+            local real=$(readlink -f "$disk")
+            part_device="${real}1"
+        fi
+
+        # B. Format Partition
+        mkfs.ext4 -F -L "$label" -m 0 "$part_device"
+
+        # C. Mount & Fstab
+        mkdir -p "$mountpoint"
+        sed -i "/LABEL=${label}/d" /etc/fstab
+        sed -i "\@${mountpoint}@d" /etc/fstab
+        echo "LABEL=$label $mountpoint ext4 defaults,nofail 0 0" >> /etc/fstab
+
+        ((count++))
+    done
+
+    # 4. Configure Pool
+    if [ "$count" -gt 1 ]; then
+        mkdir -p "$pool_mount"
+        sed -i "\@${pool_mount}@d" /etc/fstab
+        
+        # Using 'mfs' policy and standard options
+        echo "/mnt/bk* ${pool_mount} fuse.mergerfs defaults,nofail,nonempty,allow_other,use_ino,cache.files=partial,moveonenospc=true,dropcacheonclose=true,minfreespace=50G,category.create=mfs,fsname=mergerfs 0 0" >> /etc/fstab
+
+        systemctl daemon-reload
+        mount -a
+        echo "Done."
+        df -h | grep mergerfs
+    else
+        echo "No drives processed."
+    fi
+}
+
 [[ $1 = idk ]] && { idk; }
 [[ $1 = ick ]] && { ick; }
 # [[ $1 = izk ]] && { izk; }
