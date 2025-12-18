@@ -1038,7 +1038,7 @@ function jly {
   sudo apt-get install $s64                        -y 2>&1 | sudo tee -a $p02/$s64.out >$p03
   sex chown $meeu:$meeu $p02/$s64.out
   cex chown -R $s64:adm /etc/$s64;cex usermod -aG $s64 $meeu;sex usermod -aG render $s64
-  sex mkdir -p $p80;cmw $p80 750 $s64;sex chown -R $s64:$s64 $p80
+  sex mkdir -p $mdld;cmw $mdld 750 $s64;sex chown -R $s64:$s64 $mdld
   jp;jd;je;dmr;ja
   echo http://$zip2:$n58
 }
@@ -1048,7 +1048,7 @@ function tms {
   if [[ -d $p60 ]];then
     sex ln -s $p60/movie $p59/lmv;sex ln -s $p60/tv $p59/ltv;sex ln -s $p60/tv2 $p59/lt2;sex ln -s $p60/lust $p59/llt
   else
-    sex ln -s $p80/movie $p59/lmv;sex ln -s $p80/tv $p59/ltv;sex ln -s $p80/tv2 $p59/lt2;sex ln -s $p80/lust $p59/llt
+    sex ln -s $mdld/movie $p59/lmv;sex ln -s $mdld/tv $p59/ltv;sex ln -s $mdld/tv2 $p59/lt2;sex ln -s $mdld/lust $p59/llt
   fi
   rp;rd;re;dmr;ra
 }
@@ -1151,23 +1151,12 @@ function ick {
   pop $n58 $s64-http;pop $n59 $s64-https;pop $n60/udp $s64-discovery;pop $n61/udp $s64-DLNA
   pop $n62 sonarr;pop $n63 radarr;pop $n64 prowlarr;rop
   wsr
-  sex mkdir -p $p80/{tv,tv2,movie,lust}                                        ;sex chown -R $meui:$megi $p80;sex chmod -R 775 $p80
-  sex mkdir -p $p81/{prowlarr,sonarr,radarr,transmission,jellyfin}             ;sex chown -R $meui:$megi $p81
-  sex mkdir -p $p82/{complete,incomplete};sex mkdir -p $p82/complete/{tv,movie};sex chown -R $meui:$megi $p82;sex chmod -R 775 $p82
-  f=$(dirname $p88);sex mkdir -p $f;cd $f;echo -e "$s81" > $p88
+  sex mkdir -p $mdld/{tv,tv2,movie,lust}                                         ;sex chown -R $meui:$megi $mdld;sex chmod -R 775 $mdld
+  sex mkdir -p $dkcd/{prowlarr,sonarr,radarr,transmission,jellyfin}              ;sex chown -R $meui:$megi $dkcd
+  sex mkdir -p $trmd/{complete,incomplete};sex mkdir -p $trmd/complete/{tv,movie};sex chown -R $meui:$megi $trmd;sex chmod -R 775 $trmd
+  f=$(dirname $dkcc);sex mkdir -p $f;cd $f;echo -e "$s81" > $dkcc
   rco
   docker compose up -d
-}
-function isk {
-  srv hrv-zotac2 || return
-  local f;local s;local d
-  f="/mnt/bkp/docker_configs"
-  s="/opt/appdata"
-  d=$(date +%F)
-  dex mkdir -p $f
-  dex docker compose -f $p88 stop
-  dex tar -czvf $f/appdata_$d.tar.gz -C $(dirname "$s") $(basename "$s")
-  dex docker compose -f $p88 start
 }
 function imk {
   srv hrv-zotac2 || return
@@ -1177,20 +1166,21 @@ function imk {
   else
     swb 'INSTALAR mergerfs & parted';pex apt-get install mergerfs fuse3 -y >> $p02/imk.out
   fi
-  if fft $p87; then
+  if fft $p80; then
     swb 'USB Hardware Fix already applied.'
   else 
       swb "Applying USB Hardware Fix (ASMedia)...";aex
-      echo "options usb-storage quirks=174c:55aa:u" | sudo tee -a $p87
+      echo "options usb-storage quirks=174c:55aa:u" | sudo tee -a $p80
       nex update-initramfs -u
   fi
-  local i;local s;local f;local d;local l;local m;local c=1;local v;local p="/mnt/bkp";local rsp
+  local i;local s;local f;local d;local l;local m;local c=1;local v;local p=$(dirname $mrpd);local rsp
+  sex umount -q "$mrpd"
   i='/dev/disk/by-id';s=()
   s+=("$i/usb-SanDisk_SSD_PLUS_2000GB_092010302E16-0:0")
   s+=("$i/usb-Samsung_SSD_870_QVO_1TB_012345678999-0:0")
   f=$(basename $p37).sav;cp $p37 $f
   for d in "${s[@]}"; do
-    l="bk$c";m="/mnt/$l";v="$(readlink -f "$d")1"
+    l="bk$c";m="$p/$l";v="$(readlink -f "$d")1"
     if [[ -b "$d" ]]; then
       swn Drive found: $d
       swn Quer formatar como $l em $m SIM/nao ?
@@ -1221,16 +1211,17 @@ function imk {
     ((c++))
   done
   if [ $c -gt 1 ]; then
-    sex mkdir -p "$p";cmw "$p" 775 $meeu
-    sed -i "\@$p@d" $f
-    echo "/mnt/bk[1-9] $p fuse.mergerfs defaults,nofail,nonempty,allow_other,use_ino,cache.files=partial,moveonenospc=true,dropcacheonclose=true,minfreespace=50G,category.create=mfs,fsname=mergerfs 0 0" >> $f
+    sex mkdir -p "$mrpd";cmw "$mrpd" 775 $meeu
+    sed -i "\@$mrpd@d" $f
+    echo "$p/bk[1-9] $mrpd fuse.mergerfs defaults,nofail,nonempty,allow_other,use_ino,cache.files=partial,moveonenospc=true,dropcacheonclose=true,minfreespace=50G,category.create=mfs,fsname=mergerfs 0 0" >> $f
     sex cp $f $p37;cmw $f 644 root
     sex systemctl daemon-reload
-    sex mount -a
-    df -h
   else
     echo "No drives processed."
   fi
+  sex mount -a
+  sex chown -R $meeu:$meeu $p/bk*
+  df -h
 }
 [[ $1 = idk ]] && { idk; }
 [[ $1 = ick ]] && { ick; }
@@ -1281,7 +1272,7 @@ function bps {
 function iwg {
   local s
   sex apt update;sex apt-get install wireguard -y
-  cd $p86;umask 077;wg genkey | tee privatekey | wg pubkey > publickey
+  cd $p81;umask 077;wg genkey | tee privatekey | wg pubkey > publickey
   s='[Interface]'
   s="$s\nPrivateKey = $(cat privatekey)"
   s="$s\nAddress = 192.168.9.100/24"
@@ -1602,7 +1593,7 @@ if [[ $# -lt 1 ]];then
   m="$m\nei[c|o]\t\t\tset dynamic DNS [c]ron|[o]utput"
   m="$m\nulg [d]\t\t\tshow update logs d($(date +%F)) on $(basename $p69)"
   m="$m\nulr [d]\t\t\tshow restartings d($(date +%F)) on $(basename $p69)"
-  m="$m\ni{d|c|s|m}k\t\tinstalar $s80|containers|snapshot configuration|MergerFS media center on $znm2"
+  m="$m\ni{d|c|m}k\t\tinstalar $s80|containers|MergerFS media center on $znm2"
   m="$m\nr{op|co}\t\topen/close ports ($n65/$n66) for torrent"
   m="$m\nirv [v]\t\t\tinstalar rvm & ruby [$s82]"
   m="$m\ncns\t\t\tinstalar cns ruby gem"

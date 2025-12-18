@@ -113,15 +113,11 @@ p76='/etc/samba/smb.conf'
 p77='/etc/os-release'
 p78="$p14/trusted.gpg.d/jellyfin.gpg"
 p79="$p14/sources.list.d/jellyfin.list"
-p80=$mddi
-p81='/opt/appdata'
-p82=$trdi
+p80='/etc/modprobe.d/disable-uas.conf'
+p81='/etc/wireguard'
+p82='/etc/sysctl.d/10-ipv6-privacy.conf'
 p83='/etc/needrestart/needrestart.conf'
 p84='/proc/mdstat'
-p85='/etc/sysctl.d/10-ipv6-privacy.conf'
-p86='/etc/wireguard'
-p87='/etc/modprobe.d/disable-uas.conf'
-p88="$p02/media-stack/docker-compose.yml"
 
 g00='(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) +'
 g01='[0-9]{1,2} +'
@@ -428,7 +424,7 @@ s56='chrony'
 s57="server $(sin $cut1) iburst minpoll 3 maxpoll 6"
 stt && s57="${s57}\nserver $(sin $cut2) iburst minpoll 3 maxpoll 6"
 s58='nfs-kernel-server'
-if [[ -d $p60 ]];then s59="$p60 192.168.8.0/24(rw,sync,no_subtree_check)";else s59="$p80 192.168.8.0/24(rw,sync,no_subtree_check)";fi
+if [[ -d $p60 ]];then s59="$p60 192.168.8.0/24(rw,sync,no_subtree_check)";else s59="$mdld 192.168.8.0/24(rw,sync,no_subtree_check)";fi
 s60='plex'
 s61='[nfsd]'
 s61="${s61}\nmountd-port=$n35"
@@ -440,7 +436,7 @@ s63='nmbd'
 s64='jellyfin'
 s65='https://repo.jellyfin.org/ubuntu'
 s66='[mp4]'
-if [[ -d $p60 ]];then s66="${s66}\npath=$p60\nforce user=$s60";else s66="${s66}\npath=$p80\nforce user=$s60";fi
+if [[ -d $p60 ]];then s66="${s66}\npath=$p60\nforce user=$s60";else s66="${s66}\npath=$mdld\nforce user=$s60";fi
 s66="${s66}\nbrowsable=yes"
 s66="${s66}\nread only=no"
 s66="${s66}\nwritable=yes"
@@ -469,7 +465,7 @@ s81="${s81}\n      - PUID=$meui"
 s81="${s81}\n      - PGID=$megi"
 s81="${s81}\n      - TZ=Europe/Lisbon"
 s81="${s81}\n    volumes:"
-s81="${s81}\n      - $p81/prowlarr:/config"
+s81="${s81}\n      - $dkcd/prowlarr:/config"
 s81="${s81}\n    ports:"
 s81="${s81}\n      - $n64:$n64"
 s81="${s81}\n    restart: unless-stopped"
@@ -482,9 +478,9 @@ s81="${s81}\n      - PUID=$meui"
 s81="${s81}\n      - PGID=$megi"
 s81="${s81}\n      - TZ=Europe/Lisbon"
 s81="${s81}\n    volumes:"
-s81="${s81}\n      - $p81/sonarr:/config"
-s81="${s81}\n      - $p80:/media"
-s81="${s81}\n      - $p82:/downloads"
+s81="${s81}\n      - $dkcd/sonarr:/config"
+s81="${s81}\n      - $mdld:/media"
+s81="${s81}\n      - $trmd:/downloads"
 s81="${s81}\n    ports:"
 s81="${s81}\n      - $n62:$n62"
 s81="${s81}\n    restart: unless-stopped"
@@ -497,9 +493,9 @@ s81="${s81}\n      - PUID=$meui"
 s81="${s81}\n      - PGID=$megi"
 s81="${s81}\n      - TZ=Europe/Lisbon"
 s81="${s81}\n    volumes:"
-s81="${s81}\n      - $p81/radarr:/config"
-s81="${s81}\n      - $p80:/media"
-s81="${s81}\n      - $p82:/downloads"
+s81="${s81}\n      - $dkcd/radarr:/config"
+s81="${s81}\n      - $mdld:/media"
+s81="${s81}\n      - $trmd:/downloads"
 s81="${s81}\n    ports:"
 s81="${s81}\n      - $n63:$n63"
 s81="${s81}\n    restart: unless-stopped"
@@ -512,8 +508,8 @@ s81="${s81}\n      - PUID=$meui"
 s81="${s81}\n      - PGID=$megi"
 s81="${s81}\n      - TZ=Europe/Lisbon"
 s81="${s81}\n    volumes:"
-s81="${s81}\n      - $p81/bazarr:/config"
-s81="${s81}\n      - $p80:/media"
+s81="${s81}\n      - $dkcd/bazarr:/config"
+s81="${s81}\n      - $mdld:/media"
 s81="${s81}\n    ports:"
 s81="${s81}\n      - $n68:$n68"
 s81="${s81}\n    restart: unless-stopped"
@@ -526,8 +522,8 @@ s81="${s81}\n      - PUID=$meui"
 s81="${s81}\n      - PGID=$megi"
 s81="${s81}\n      - TZ=Europe/Lisbon"
 s81="${s81}\n    volumes:"
-s81="${s81}\n      - $p81/transmission:/config"
-s81="${s81}\n      - $p82:/downloads"
+s81="${s81}\n      - $dkcd/transmission:/config"
+s81="${s81}\n      - $trmd:/downloads"
 s81="${s81}\n    ports:"
 s81="${s81}\n      - $n66:$n66/tcp"
 s81="${s81}\n      - $n66:$n66/udp"
@@ -542,8 +538,8 @@ s81="${s81}\n      - PUID=$meui"
 s81="${s81}\n      - PGID=$megi"
 s81="${s81}\n      - TZ=Europe/Lisbon"
 s81="${s81}\n    volumes:"
-s81="${s81}\n      - $p81/jellyfin:/config"
-s81="${s81}\n      - $p80:/media"
+s81="${s81}\n      - $dkcd/jellyfin:/config"
+s81="${s81}\n      - $mdld:/media"
 s81="${s81}\n    devices:"
 s81="${s81}\n      - /dev/dri:/dev/dri"
 s81="${s81}\n    ports:"
@@ -559,8 +555,8 @@ s81="${s81}\n    container_name: nginx-proxy-manager"
 s81="${s81}\n    environment:"
 s81="${s81}\n      - TZ=Europe/Lisbon"
 s81="${s81}\n    volumes:"
-s81="${s81}\n      - $p81/nginx-proxy-manager/data:/data"
-s81="${s81}\n      - $p81/nginx-proxy-manager/letsencrypt:/etc/letsencrypt"
+s81="${s81}\n      - $dkcd/nginx-proxy-manager/data:/data"
+s81="${s81}\n      - $dkcd/nginx-proxy-manager/letsencrypt:/etc/letsencrypt"
 s81="${s81}\n    ports:"
 s81="${s81}\n      - 80:80"    # Standard HTTP
 s81="${s81}\n      - 443:443"  # Standard HTTPS

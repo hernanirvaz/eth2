@@ -6,8 +6,12 @@ cuip=$(hostname -I);cuip=${cuip%% *}
 vip1='51.89.64.77' ;vnd1='ns31198432.ip-51-89-64.eu'   ;vnm1=${vnd1%%.*};vis1='127.0.0.1'
 vip2='51.89.64.205';vnd2='ns3168040.ip-51-89-64.eu'    ;vnm2=${vnd2%%.*};vis2='127.0.0.1'
 vip3='161.97.85.32';vnd3='vmi1007895.contaboserver.net';vnm3=${vnd3%%.*};vis3='127.0.0.1'
-trdi='/mnt/data/downloads'
-mddi='/media/mp4'
+mrpd='/mnt/bkp'
+trmd='/mnt/data/downloads'
+mdld='/media/mp4'
+dkcn='appdata'
+dkcd="/opt/$dkcn"
+dkcc='/home/eth/media-stack/docker-compose.yml'
 
 function sit { ! [[ $1 =~ ^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$ ]]; }
 function sht { [[ ${1:-$cuip} = 192.168.8.* ]]; }
