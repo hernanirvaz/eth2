@@ -121,6 +121,7 @@ p84='/proc/mdstat'
 p85='/etc/sysctl.d/10-ipv6-privacy.conf'
 p86='/etc/wireguard'
 p87='/etc/modprobe.d/disable-uas.conf'
+p88="$p02/media-stack/docker-compose.yml"
 
 g00='(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) +'
 g01='[0-9]{1,2} +'

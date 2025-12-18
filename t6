@@ -1147,37 +1147,27 @@ function idk {
   swb "REQUIRES LOGOUT/LOGIN after execution"
 }
 function ick {
-  srv hrv-zotac2 || return
+  srv hrv-zotac2 || return;local s;local f
   pop $n58 $s64-http;pop $n59 $s64-https;pop $n60/udp $s64-discovery;pop $n61/udp $s64-DLNA
   pop $n62 sonarr;pop $n63 radarr;pop $n64 prowlarr;rop
   wsr
-  sex mkdir -p $p80/{tv,tv2,movie,lust}                                    ;sex chown -R $meui:$megi $p80;sex chmod -R 775 $p80
-  sex mkdir -p $p81/{prowlarr,sonarr,radarr,transmission,jellyfin}         ;sex chown -R $meui:$megi $p81
+  sex mkdir -p $p80/{tv,tv2,movie,lust}                                        ;sex chown -R $meui:$megi $p80;sex chmod -R 775 $p80
+  sex mkdir -p $p81/{prowlarr,sonarr,radarr,transmission,jellyfin}             ;sex chown -R $meui:$megi $p81
   sex mkdir -p $p82/{complete,incomplete};sex mkdir -p $p82/complete/{tv,movie};sex chown -R $meui:$megi $p82;sex chmod -R 775 $p82
-  sex mkdir -p $p02/media-stack;cd $p02/media-stack;echo -e "$s81" > docker-compose.yml
+  f=$(dirname $p88);sex mkdir -p $f;cd $f;echo -e "$s81" > $p88
   rco
   docker compose up -d
- }
-function izk {
+}
+function isk {
   srv hrv-zotac2 || return
-  if zpool version 2>$p03;then
-    swb 'ZFS JA INSTALADO'
-  else
-    swb 'INSTALAR ZFS';sex apt-get update;sudo apt-get install zfsutils-linux -y 2>&1 | sudo tee -a $p02/zpool.out >$p03
-  fi
-  local i='/dev/disk/by-id';local s="$i/scsi-SSanDisk_SSD_PLUS_2000GB_61E203010290 $i/scsi-SSamsung_SSD_870_QVO_1TB_E41703010290 $i/scsi-SSamsung_SSD_870_QVO_1TB_0000000000000000"
-  local f='/media/bk1';local e='bk1_pool'
-  if zpool status $e 2>$p03;then
-    swb "POOL $e JA EXISTE"
-  else 
-    nex zpool create -m $f $e $s
-    nex zfs set atime=off $e
-    nex zfs set aclmode=passthrough $e
-    nex zfs set mountpoint=$f $e
-    nex chown -R $meeu:$meeu $f
-    nex chmod -R 775 $f
-   fi
-  zpool list
+  local f;local s;local d
+  f="/mnt/bkp/docker_configs"
+  s="/opt/appdata"
+  d=$(date +%F)
+  dex mkdir -p $f
+  dex docker compose -f $p88 stop
+  dex tar -czvf $f/appdata_$d.tar.gz -C $(dirname "$s") $(basename "$s")
+  dex docker compose -f $p88 start
 }
 function imk {
   srv hrv-zotac2 || return
@@ -1244,7 +1234,7 @@ function imk {
 }
 [[ $1 = idk ]] && { idk; }
 [[ $1 = ick ]] && { ick; }
-# [[ $1 = izk ]] && { izk; }
+[[ $1 = isk ]] && { isk; }
 [[ $1 = imk ]] && { imk; }
 [[ $1 = rco ]] && { rco; }
 [[ $1 = rop ]] && { rop; }
@@ -1612,7 +1602,7 @@ if [[ $# -lt 1 ]];then
   m="$m\nei[c|o]\t\t\tset dynamic DNS [c]ron|[o]utput"
   m="$m\nulg [d]\t\t\tshow update logs d($(date +%F)) on $(basename $p69)"
   m="$m\nulr [d]\t\t\tshow restartings d($(date +%F)) on $(basename $p69)"
-  m="$m\ni{d|c|m}k\t\tinstalar $s80|containers|MergerFS media center on $znm2"
+  m="$m\ni{d|c|s|m}k\t\tinstalar $s80|containers|snapshot configuration|MergerFS media center on $znm2"
   m="$m\nr{op|co}\t\topen/close ports ($n65/$n66) for torrent"
   m="$m\nirv [v]\t\t\tinstalar rvm & ruby [$s82]"
   m="$m\ncns\t\t\tinstalar cns ruby gem"
