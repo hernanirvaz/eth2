@@ -1177,6 +1177,7 @@ function imk {
   local i;local s;local f;local d;local l;local m;local c=1;local v;local p=$(dirname $mrpd);local rsp
   sex umount -q "$mrpd"
   i='/dev/disk/by-id';s=()
+  s+=("$i/usb-Samsung_SSD_870_EVO_4TB_09201030714E-0:0")
   s+=("$i/usb-SanDisk_SSD_PLUS_2000GB_092010302E16-0:0")
   s+=("$i/usb-Samsung_SSD_870_QVO_1TB_012345678999-0:0")
   f=$(basename $p37).sav;cp $p37 $f
