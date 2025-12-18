@@ -1151,9 +1151,10 @@ function ick {
   pop $n58 $s64-http;pop $n59 $s64-https;pop $n60/udp $s64-discovery;pop $n61/udp $s64-DLNA
   pop $n62 sonarr;pop $n63 radarr;pop $n64 prowlarr;rop
   wsr
-  sex mkdir -p $mdld/{tv,tv2,movie,lust}                                         ;sex chown -R $meui:$megi $mdld;sex chmod -R 775 $mdld
-  sex mkdir -p $dkcd/{prowlarr,sonarr,radarr,transmission,jellyfin}              ;sex chown -R $meui:$megi $dkcd
-  sex mkdir -p $trmd/{complete,incomplete};sex mkdir -p $trmd/complete/{tv,movie};sex chown -R $meui:$megi $trmd;sex chmod -R 775 $trmd
+  nex mkdir -p $mdld/{tv,tv2,movie,lust}                                         ;nex chown -R $meui:$megi $mdld;nex chmod -R 775 $mdld
+  nex mkdir -p $dkcd/{prowlarr,sonarr,radarr,transmission,jellyfin,bazarr}       ;nex chown -R $meui:$megi $dkcd/{prowlarr,sonarr,radarr,transmission,jellyfin,bazarr}
+  nex mkdir -p $dkcd/nginx-proxy-manager                                         ;nex chown -R $meui:$megi $dkcd/nginx-proxy-manager
+  nex mkdir -p $trmd/{complete,incomplete};nex mkdir -p $trmd/complete/{tv,movie};nex chown -R $meui:$megi $trmd;nex chmod -R 775 $trmd
   f=$(dirname $dkcc);sex mkdir -p $f;cd $f;echo -e "$s81" > $dkcc
   rco
   docker compose up -d

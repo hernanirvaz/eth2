@@ -2,10 +2,6 @@
 
 source /home/eth/eth2/a1
 
-meeu=$(whoami)
-meui=$(id -u)
-megi=$(id -g)
-
 znm1='hrv-zotac1';zip1=$(sin $znm1)
 znm2='hrv-zotac2';zip2=$(sin $znm2)
 znm3='hrv-zotac3';zip3=$(sin $znm3)
@@ -553,6 +549,8 @@ s81="${s81}\n  nginx-proxy-manager:"
 s81="${s81}\n    image: jc21/nginx-proxy-manager:latest"
 s81="${s81}\n    container_name: nginx-proxy-manager"
 s81="${s81}\n    environment:"
+s81="${s81}\n      - PUID=$meui"
+s81="${s81}\n      - PGID=$megi"
 s81="${s81}\n      - TZ=Europe/Lisbon"
 s81="${s81}\n    volumes:"
 s81="${s81}\n      - $dkcd/nginx-proxy-manager/data:/data"

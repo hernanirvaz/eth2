@@ -1,5 +1,8 @@
 #!/usr/bin/bash
 
+meeu=$(whoami)
+meui=$(id -u)
+megi=$(id -g)
 pfpd='2001:8a0:fcef:9f00'
 cunm=$(hostname)
 cuip=$(hostname -I);cuip=${cuip%% *}
