@@ -58,6 +58,7 @@ function cex { swb $@;echo "$H"|sudo -S -p '' "$@" 2>$p03; }
 function nex { swn $@;echo "$H"|sudo -S -p '' "$@" 2>$p03; }
 function sex {        echo "$H"|sudo -S -p '' "$@" &>$p03; }
 function pex {        echo "$H"|sudo -S -p '' "$@" 2>$p03; }
+function oex { swn $@;echo "$H"|sudo -S -p '' "$@"; }
 function dex { [[ $@ ]] || return;swl $@;$@; }
 function svd { sex chown -R eth3:eth3 $p17;cmw $p17 700 eth3; }
 function wsr { sex ufw reload; }

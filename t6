@@ -1181,110 +1181,67 @@ function izk {
 }
 function imk {
   srv hrv-zotac2 || return
+  nex apt-get update
   if command -v parted &>$p03 && command -v mergerfs &>$p03; then
     swb 'mergerfs & parted JA INSTALADOS'
   else
-    swb 'INSTALAR mergerfs & parted';sex apt-get update;pex apt-get install mergerfs fuse3 -y >> $p02/imk.out
+    swb 'INSTALAR mergerfs & parted';pex apt-get install mergerfs fuse3 -y >> $p02/imk.out
   fi
-
-  # 3. Hardware Fix: ASMedia UAS Glitch (Auto-apply on fresh install)
   if fft $p87; then
-    swn 'USB Hardware Fix already applied.'
+    swb 'USB Hardware Fix already applied.'
   else 
-      swb "Applying USB Hardware Fix (ASMedia)..."
+      swb "Applying USB Hardware Fix (ASMedia)...";aex
       echo "options usb-storage quirks=174c:55aa:u" | sudo tee -a $p87
-      cex update-initramfs -u
+      nex update-initramfs -u
   fi
-
-
-  local i;local s;local d;local l;local m;local c=1;local p="/mnt/bkp";local rsp
+  local i;local s;local f;local d;local l;local m;local c=1;local v;local p="/mnt/bkp";local rsp
   i='/dev/disk/by-id';s=()
   s+=("$i/usb-SanDisk_SSD_PLUS_2000GB_092010302E16-0:0")
   s+=("$i/usb-Samsung_SSD_870_QVO_1TB_012345678999-0:0")
-  cp $p37 $(basename $p37).sav
+  f=$(basename $p37).sav;cp $p37 $f
   for d in "${s[@]}"; do
-    l="bk${c}";m="/mnt/${l}"
+    l="bk$c";m="/mnt/$l";v="$(readlink -f "$d")1"
     if [[ -b "$d" ]]; then
       swn Drive found: $d
       swn Quer formatar como $l em $m SIM/nao ?
       rsp=nao;read rsp
       if [[ $rsp = SIM  ]];then
+        swl Wipe and Partition Standard GPT for survival
+        sex umount -q "$d"*
         sex wipefs --all --force "$d"
-        sex mkfs.ext4 -F -L "$l" -m 0 "$d"
+        sex parted -s "$d" mklabel gpt
+        sex parted -s "$d" mkpart primary ext4 0% 100%
+        sex partprobe "$d"
+        sex udevadm settle
+        sleep 20
+        if [[ -b "$v" ]]; then
+          swn Partition detected $v.
+        else
+          swn FALLBACK: Formatting RAW disk $d. This is safe and robust.;v="$d"
+        fi
+        oex mkfs.ext4 -F -L "$l" -m 0 "$v"
       fi
     else
       swn Drive not found: $d Skipping;continue
     fi
     echo
     sex mkdir -p "$m";cmw "$m" 775 $meeu
-    sex sed -i "/LABEL=${l}/d" $p37;sex sed -i "\@${m}@d" $p37
-    echo "LABEL=$l $m ext4 defaults,nofail 0 0" | sudo tee -a $p37
+    sed -i "/LABEL=$l/d" $f;sed -i "\@$m@d" $f
+    echo "LABEL=$l $m ext4 defaults,nofail 0 0" >> $f
     ((c++))
   done
-  sex mkdir -p "$p";cmw "$p" 775 $meeu
-  sex sed -i "\@${p}@d" $p37
-  echo "/mnt/bk[1-9] ${p} fuse.mergerfs defaults,nofail,nonempty,allow_other,use_ino,cache.files=partial,moveonenospc=true,dropcacheonclose=true,minfreespace=50G,category.create=mfs,fsname=mergerfs 0 0" | sudo tee -a $p37
-  nex systemctl daemon-reload
-  nex mount -a
+  if [ $c -gt 1 ]; then
+    sex mkdir -p "$p";cmw "$p" 775 $meeu
+    sed -i "\@$p@d" $f
+    echo "/mnt/bk[1-9] $p fuse.mergerfs defaults,nofail,nonempty,allow_other,use_ino,cache.files=partial,moveonenospc=true,dropcacheonclose=true,minfreespace=50G,category.create=mfs,fsname=mergerfs 0 0" >> $f
+    sex cp $f $p37;cmw $f 644 root
+    sex systemctl daemon-reload
+    sex mount -a
+    df -h
+  else
+    echo "No drives processed."
+  fi
 }
-function imkn {
-   
-       local count=1
-
-    for disk in "${s[@]}"; do
-        if [ ! -b "$disk" ]; then echo "Skipping missing: $disk"; continue; fi
-
-        local label="bk${count}"
-        local mountpoint="/mnt/${label}"
-        local part_device="${disk}-part1"
-
-        echo "Processing $disk as $label..."
-
-        # A. Wipe & Partition (Standard GPT for survival)
-        umount -q "${disk}"* 2>/dev/null
-        wipefs --all --force "$disk"
-        parted -s "$disk" mklabel gpt
-        parted -s "$disk" mkpart primary ext4 0% 100%
-        
-        # Wait for kernel to register partition
-        udevadm settle
-        sleep 2
-
-        # Fallback: resolve real path if symlink part1 is delayed
-        if [ ! -b "$part_device" ]; then
-            local real=$(readlink -f "$disk")
-            part_device="${real}1"
-        fi
-
-        # B. Format Partition
-        mkfs.ext4 -F -L "$label" -m 0 "$part_device"
-
-        # C. Mount & Fstab
-        mkdir -p "$mountpoint"
-        sed -i "/LABEL=${label}/d" /etc/fstab
-        sed -i "\@${mountpoint}@d" /etc/fstab
-        echo "LABEL=$label $mountpoint ext4 defaults,nofail 0 0" >> /etc/fstab
-
-        ((count++))
-    done
-
-    # 4. Configure Pool
-    if [ "$count" -gt 1 ]; then
-        mkdir -p "$pool_mount"
-        sed -i "\@${pool_mount}@d" /etc/fstab
-        
-        # Using 'mfs' policy and standard options
-        echo "/mnt/bk* ${pool_mount} fuse.mergerfs defaults,nofail,nonempty,allow_other,use_ino,cache.files=partial,moveonenospc=true,dropcacheonclose=true,minfreespace=50G,category.create=mfs,fsname=mergerfs 0 0" >> /etc/fstab
-
-        systemctl daemon-reload
-        mount -a
-        echo "Done."
-        df -h | grep mergerfs
-    else
-        echo "No drives processed."
-    fi
-}
-
 [[ $1 = idk ]] && { idk; }
 [[ $1 = ick ]] && { ick; }
 # [[ $1 = izk ]] && { izk; }
