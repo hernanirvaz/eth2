@@ -1,19 +1,7 @@
 PATH=
 MAILTO=
 H=
-GEM_HOME=
-GEM_PATH=
-MY_RUBY_HOME=
-IRBRC=
-RUBY_VERSION=
-GOOGLE_APPLICATION_CREDENTIALS=
-ETHERSCAN_API_KEY=
-KRAKEN_API_KEY=
-KRAKEN_API_SECRET=
-BITCOINDE_API_KEY=
-BITCOINDE_API_SECRET=
 
  10  *     * * * t6 eic meo.fruga.pt <key>
  15  *     * * * t6 irb 3
- 55 11     * * * cns ceth -d=1 
 */5 1,9,17 * * * e9

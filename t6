@@ -1112,7 +1112,6 @@ function cns {
     swn CNS ENV VARS E .$p73 JA EXISTEM
   else
     [[ -s $p02/$p72.gpg && -s $p02/$p73.gpg ]] || swu Desktop run these and t6 cns again
-    local B;B=$(snf "$e85" $p77)
     if [[ -s $p02/$p72.gpg && -z $e ]];then
       gpg --batch --yes --passphrase "$B" -d $p02/$p72.gpg >> $p71;rm -f $p02/$p72.gpg
     elif [[ -z $e ]];then
