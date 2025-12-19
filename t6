@@ -1180,7 +1180,7 @@ function imk {
   s+=("$i/usb-Samsung_SSD_870_EVO_4TB_09201030714E-0:0")
   s+=("$i/usb-SanDisk_SSD_PLUS_2000GB_092010302E16-0:0")
   s+=("$i/usb-Samsung_SSD_870_QVO_1TB_012345678999-0:0")
-  f=$(basename $p37).sav;cp $p37 $f
+  f=$(basename $p37).sav;cp $p37 $f;cmw $f 644 eth
   for d in "${s[@]}"; do
     l="bk$c";m="$p/$l";v="$(readlink -f "$d")1"
     if [[ -b "$d" ]]; then
@@ -1216,7 +1216,7 @@ function imk {
     sex mkdir -p "$mrpd";cmw "$mrpd" 775 $meeu
     sed -i "\@$mrpd@d" $f
     echo "$p/bk[1-9] $mrpd fuse.mergerfs defaults,nofail,nonempty,allow_other,use_ino,cache.files=partial,moveonenospc=true,dropcacheonclose=true,minfreespace=50G,category.create=mfs,fsname=mergerfs 0 0" >> $f
-    sex cp $f $p37;cmw $f 644 root
+    sex cp $f $p37;cmw $p37 644 root
     sex systemctl daemon-reload
   else
     echo "No drives processed."

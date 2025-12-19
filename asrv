@@ -10,23 +10,23 @@ if [[ $cunm = hrv-zotac2 ]];then
   rsy() { ecn rsync --delete --numeric-ids $4 -avh -e \"ssh -4p $3\" "$1" "$2";}
   rsl() { ecn rsync --delete --numeric-ids $3 -avh                   "$1" "$2";}
   # remote sync functions
-  stv() { rsy       $mdld/tv    $(sin $1): $(spn $1) $2;sleep 9;rsy       $mdld/tv2 $(sin $1): $(spn $1) $2; }
-  ptv() { rsy $(sin $1):~/tv    $mdld      $(spn $1) $2;sleep 9;rsy $(sin $1):~/tv2 $mdld      $(spn $1) $2; }
-  smv() { rsy       $mdld/movie $(sin $1): $(spn $1) $2;sleep 9; }
-  pmv() { rsy $(sin $1):~/movie $mdld      $(spn $1) $2;sleep 9; }
-  slt() { rsy       $mdld/lust  $(sin $1): $(spn $1) $2;sleep 9; }
-  plt() { rsy $(sin $1):~/lust  $mdld      $(spn $1) $2;sleep 9; }
-  sdk() { rsy       $dkcd       $(sin $1): $(spn $1) $2;sleep 9; }
-  pdk() { rsy $(sin $1):~/$dkcn $dkcd      $(spn $1) $2;sleep 9; }
+  # stv() { rsy       $mdld/tv    $(sin $1): $(spn $1) $2;sleep 9;rsy       $mdld/tv2 $(sin $1): $(spn $1) $2; }
+  # ptv() { rsy $(sin $1):~/tv    $mdld      $(spn $1) $2;sleep 9;rsy $(sin $1):~/tv2 $mdld      $(spn $1) $2; }
+  # smv() { rsy       $mdld/movie $(sin $1): $(spn $1) $2;sleep 9; }
+  # pmv() { rsy $(sin $1):~/movie $mdld      $(spn $1) $2;sleep 9; }
+  # slt() { rsy       $mdld/lust  $(sin $1): $(spn $1) $2;sleep 9; }
+  # plt() { rsy $(sin $1):~/lust  $mdld      $(spn $1) $2;sleep 9; }
+  # sdk() { rsy       $dkcd       $(sin $1): $(spn $1) $2;sleep 9; }
+  # pdk() { rsy $(sin $1):~/$dkcn $dkcd      $(spn $1) $2;sleep 9; }
   # local sync functions
-  # stv() { rsl       $mdld/tv $mrpd                   $2;sleep 9;rsl       $mdld/tv2 $mrpd                   $2;sleep 9; }
-  # ptv() { rsl       $mrpd/tv $mdld                   $2;sleep 9;rsl       $mrpd/tv2 $mdld                   $2;sleep 9; }
-  # smv() { rsl       $mdld/movie $mrpd                $2;sleep 9; }
-  # pmv() { rsl       $mrpd/movie $mdld                $2;sleep 9; }
-  # slt() { rsl       $mdld/lust  $mrpd                $2;sleep 9; }
-  # plt() { rsl       $mrpd/lust  $mdld                $2;sleep 9; }
-  # sdk() { rsl       $dkcd       $mrpd                $2;sleep 9; }
-  # pdk() { rsl       $mrpd/$dkcn $dkcd                $2;sleep 9; }
+  stv() { rsl       $mdld/tv $mrpd                   $2;sleep 9;rsl       $mdld/tv2 $mrpd                   $2;sleep 9; }
+  ptv() { rsl       $mrpd/tv $mdld                   $2;sleep 9;rsl       $mrpd/tv2 $mdld                   $2;sleep 9; }
+  smv() { rsl       $mdld/movie $mrpd                $2;sleep 9; }
+  pmv() { rsl       $mrpd/movie $mdld                $2;sleep 9; }
+  slt() { rsl       $mdld/lust  $mrpd                $2;sleep 9; }
+  plt() { rsl       $mrpd/lust  $mdld                $2;sleep 9; }
+  sdk() { rsl       $dkcd       $mrpd                $2;sleep 9; }
+  pdk() { rsl       $mrpd/$dkcn $dkcd                $2;sleep 9; }
   sal() { local o="";stv hrv-zotac3 $o;smv hrv-zotac4 $o;slt hrv-zotac4 $o;sdk hrv-zotac3 $o; } # --size-only option to avoid timestamp backups
   pal() { local o="";ptv hrv-zotac3 $o;pmv hrv-zotac4 $o;plt hrv-zotac4 $o;pdk hrv-zotac3 $o; }
   fi0() { echo findls $1 $mdld;find $mdld -name "*.$1" -print; }
