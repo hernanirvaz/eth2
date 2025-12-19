@@ -190,7 +190,7 @@ g66='[^,]+,[123][1357]7' # Reach of last 8 pools NTP requests binary ?? ??1 111
 g67="^$g23$g03$g04[0-9]*\|INFO\|Consensus.Processing.ProcessingStats\|[0-9]+\| *Block.+ETH"
 g68='elapsed_ms:'
 g69='DEBU?G +Session established'
-g70='Model:|^ *(5|9|12|187|199|241) +[A-Z]'
+g70='Model:|^ *(5|9|187) +[A-Z]'
 
 # slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168,180,192,204,216,228,240,252,264,276,288,300
 n00=300
@@ -576,9 +576,9 @@ s81="${s81}\n      - /var/run/docker.sock:/var/run/docker.sock"
 s81="${s81}\n    restart: unless-stopped"
 s82='ruby-3.4.7'
 s83=() # SSDs on external USB enclosures
+s83+=("usb-Samsung_SSD_870_QVO_4TB_092010302E16-0:0") # 187 Uncorrectable Error   0
 s83+=("usb-Samsung_SSD_870_EVO_4TB_09201030714E-0:0") # 187 Uncorrectable Error 438
-s83+=("usb-SanDisk_SSD_PLUS_2000GB_092010302E16-0:0") # 187 Reported Uncorrecta   0
-s83+=("usb-Samsung_SSD_870_QVO_1TB_012345678999-0:0") # 187 Uncorrectable Error   0
+s83+=("usb-SanDisk_SSD_PLUS_2000GB_012345678999-0:0") # 187 Reported Uncorrecta   0
 
 e01='PollIntervalMinSec'
 e02='PollIntervalMaxSec'
