@@ -142,9 +142,9 @@ function rlv { local v=latest;local f="go/bin/ethereal";local l='/usr/local/go/b
 function rlt { gnv;[[ -x $p00/ethereal ]] || rlv;if [[ -x $p00/ethereal ]];then return 0;else swb 'TEM DE TER ETHEREAL';return 1;fi; }
 function rcm { local s="$1 $2 $s68";shift;shift;printf '%s %s %s\n' ethereal $s;printf '%s\n' $@;echo;$p00/ethereal $s $@; }
 function nnv {
-  local v=${2:-1.35.4}
+  local v=${2:-1.35.8}
   local s=nethermind
-  local f="$s-$v-${3:-5d4dc69d}-linux-x64.zip"
+  local f="$s-$v-${3:-c066aee2}-linux-x64.zip"
   local e=nada
   local rsp=nao
   if [[ $1 != S ]]; then
