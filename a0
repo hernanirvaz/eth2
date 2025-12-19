@@ -14,7 +14,7 @@ trmd='/mnt/data/downloads'
 mdld='/media/mp4'
 dkcn='appdata'
 dkcd="/opt/$dkcn"
-dkcc='/home/eth/media-stack/docker-compose.yml'
+dkcc="/home/$meeu/arr/docker-compose.yml"
 
 function sit { ! [[ $1 =~ ^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$ ]]; }
 function sht { [[ ${1:-$cuip} = 192.168.8.* ]]; }
