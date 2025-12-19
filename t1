@@ -114,6 +114,7 @@ p81='/etc/wireguard'
 p82='/etc/sysctl.d/10-ipv6-privacy.conf'
 p83='/etc/needrestart/needrestart.conf'
 p84='/proc/mdstat'
+p85='/dev/disk/by-id'
 
 g00='(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) +'
 g01='[0-9]{1,2} +'
@@ -189,6 +190,7 @@ g66='[^,]+,[123][1357]7' # Reach of last 8 pools NTP requests binary ?? ??1 111
 g67="^$g23$g03$g04[0-9]*\|INFO\|Consensus.Processing.ProcessingStats\|[0-9]+\| *Block.+ETH"
 g68='elapsed_ms:'
 g69='DEBU?G +Session established'
+g70='Model:|^ *(5|9|12|187|199|241) +[A-Z]'
 
 # slots = secounds 12,24,36,48,60,72,84,96,108,120,132,144,156,168,180,192,204,216,228,240,252,264,276,288,300
 n00=300
@@ -296,7 +298,6 @@ s24="$s24\n6 t6 vea\t\t\t\t\t\t[${nxvc%%.*}]"
 s24="$s24\n7 rm -fr $p17\t\t\t[${cuvc%%.*}]"
 s24="$s24\n8 rm -f  $p04/$s13.service\t[${cuvc%%.*}]"
 s24="$s24\n9 rm -f  $p05/{vc_keys,vc_slash}\t\t[${cuvc%%.*}]\n"
-
 s25='0x27C7f54e48956A906aF2CBFBC8684b437776403d'
 s26='0x534029B6371dc4453DD750Bc1198181F55C859fe'
 s27="--connection=http://$(sni $cun2):5052 --allow-insecure-connections"
@@ -574,6 +575,10 @@ s81="${s81}\n    volumes:"
 s81="${s81}\n      - /var/run/docker.sock:/var/run/docker.sock"
 s81="${s81}\n    restart: unless-stopped"
 s82='ruby-3.4.7'
+s83=() # SSDs on external USB enclosures
+s83+=("usb-Samsung_SSD_870_EVO_4TB_09201030714E-0:0") # 187 Uncorrectable Error 438
+s83+=("usb-SanDisk_SSD_PLUS_2000GB_092010302E16-0:0") # 187 Reported Uncorrecta   0
+s83+=("usb-Samsung_SSD_870_QVO_1TB_012345678999-0:0") # 187 Uncorrectable Error   0
 
 e01='PollIntervalMinSec'
 e02='PollIntervalMaxSec'

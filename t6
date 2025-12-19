@@ -1159,9 +1159,13 @@ function ick {
   rco
   docker compose up -d
 }
+function isk { 
+  srv hrv-zotac2 || return;local d
+  for d in "${s83[@]}";do nex smartctl -d sat -a $p85/$d;done|grep -E "$g70";
+}
 function imk {
   srv hrv-zotac2 || return
-  nex apt-get update
+  sex apt-get update
   if command -v parted &>$p03 && command -v mergerfs &>$p03; then
     swb 'mergerfs & parted JA INSTALADOS'
   else
@@ -1174,14 +1178,10 @@ function imk {
       echo "options usb-storage quirks=174c:55aa:u" | sudo tee -a $p80
       nex update-initramfs -u
   fi
-  local i;local s;local f;local d;local l;local m;local c=1;local v;local p=$(dirname $mrpd);local rsp
+  local s;local f;local d;local l;local m;local c=1;local v;local p=$(dirname $mrpd);local rsp
   sex umount -q "$mrpd"
-  i='/dev/disk/by-id';s=()
-  s+=("$i/usb-Samsung_SSD_870_EVO_4TB_09201030714E-0:0")
-  s+=("$i/usb-SanDisk_SSD_PLUS_2000GB_092010302E16-0:0")
-  s+=("$i/usb-Samsung_SSD_870_QVO_1TB_012345678999-0:0")
   f=$(basename $p37).sav;cp $p37 $f;cmw $f 644 eth
-  for d in "${s[@]}"; do
+  for d in "${s83[@]}";do d="$p85/$d"
     l="bk$c";m="$p/$l";v="$(readlink -f "$d")1"
     if [[ -b "$d" ]]; then
       swn Drive found: $d
@@ -1595,7 +1595,7 @@ if [[ $# -lt 1 ]];then
   m="$m\nei[c|o]\t\t\tset dynamic DNS [c]ron|[o]utput"
   m="$m\nulg [d]\t\t\tshow update logs d($(date +%F)) on $(basename $p69)"
   m="$m\nulr [d]\t\t\tshow restartings d($(date +%F)) on $(basename $p69)"
-  m="$m\ni{d|c|m}k\t\tinstalar $s80|containers|MergerFS media center on $znm2"
+  m="$m\ni{d|c|m|s}k\t\tinstalar $s80|containers|MergerFS|status media center on $znm2"
   m="$m\nr{op|co}\t\topen/close ports ($n65/$n66) for torrent"
   m="$m\nirv [v]\t\t\tinstalar rvm & ruby [$s82]"
   m="$m\ncns\t\t\tinstalar cns ruby gem"
