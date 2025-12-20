@@ -12,7 +12,7 @@ vip3='161.97.85.32';vnd3='vmi1007895.contaboserver.net';vnm3=${vnd3%%.*};vis3='1
 mrpd='/mnt/bkp'
 trmd='/mnt/data/downloads'
 mdld='/media/mp4'
-dkcn='appdata'
+dkcn='arrdata'
 dkcd="/opt/$dkcn"
 dkcc="/home/$meeu/arr/docker-compose.yml"
 
