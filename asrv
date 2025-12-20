@@ -29,8 +29,8 @@ if [[ $cunm = hrv-zotac2 ]];then
   plt() { rsl $mrpd/lust  $mdld $1;sleep 1; }
   sdk() { rsl $dkcd       $mrpd $1;sleep 1; }
   pdk() { rsl $mrpd/$dkcn $dkcd $1;sleep 1; }
-  sal() { local o="";stv $o;smv $o;slt $o;sdk $o; } # --size-only option to avoid timestamp backups
-  pal() { local o="";ptv $o;pmv $o;plt $o;pdk $o; }
+  sal() { local o="";sdk $o;stv $o;smv $o;slt $o; } # --size-only option to avoid timestamp backups
+  pal() { local o="";pdk $o;ptv $o;pmv $o;plt $o; }
   fi0() { echo findls $1 $mdld;find $mdld -name "*.$1" -print; }
   fi1() { echo findrm $1 $mdld;find $mdld -name "*.$1" -exec sudo rm {} \;; }
   fll() { if [[ $1 ]];then fi0 $1;else fi0 txt;fi0 jpg;fi; }

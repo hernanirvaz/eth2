@@ -1170,8 +1170,8 @@ function ick {
   nex mkdir -p $dkcd/nginx-proxy-manager                                         ;nex chown -R $meui:$megi $dkcd/nginx-proxy-manager
   nex mkdir -p $trmd/{complete,incomplete};nex mkdir -p $trmd/complete/{tv,movie};nex chown -R $meui:$megi $trmd;nex chmod -R 775 $trmd
   nex mkdir -p $f                                                                ;nex chown -R $meui:$megi $f   ;nex chmod -R 775 $f
-  cd $f;echo -e "$s81" > $dkcc
-  docker compose up -d;rco
+  cd $f;echo -e "$s81" > $dkcc;rco
+  swn mup start docker AND t6 rop open transmission
 }
 function isk { 
   srv hrv-zotac2 || return;local d
