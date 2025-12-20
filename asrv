@@ -16,8 +16,8 @@ if [[ $cunm = hrv-zotac2 ]];then
   # pmv() { rsy $(sin $1):~/movie $mdld      $(spn $1) $2;sleep 9; }
   # slt() { rsy       $mdld/lust  $(sin $1): $(spn $1) $2;sleep 9; }
   # plt() { rsy $(sin $1):~/lust  $mdld      $(spn $1) $2;sleep 9; }
-  # sdk() { rsy       $dkcd       $(sin $1): $(spn $1) $2;sleep 9; }
-  # pdk() { rsy $(sin $1):~/$dkcn $dkcd      $(spn $1) $2;sleep 9; }
+  # sdk() { rsy       $dkcr/$dkcn $(sin $1): $(spn $1) $2;sleep 9; }
+  # pdk() { rsy $(sin $1):~/$dkcn $dkcr      $(spn $1) $2;sleep 9; }
   # sal() { local o="";stv hrv-zotac3 $o;smv hrv-zotac4 $o;slt hrv-zotac4 $o;sdk hrv-zotac3 $o; }
   # pal() { local o="";ptv hrv-zotac3 $o;pmv hrv-zotac4 $o;plt hrv-zotac4 $o;pdk hrv-zotac3 $o; }
   # local sync functions
@@ -27,8 +27,8 @@ if [[ $cunm = hrv-zotac2 ]];then
   pmv() { rsl $mrpd/movie $mdld $1;sleep 1; }
   slt() { rsl $mdld/lust  $mrpd $1;sleep 1; }
   plt() { rsl $mrpd/lust  $mdld $1;sleep 1; }
-  sdk() { rsl $dkcd       $mrpd $1;sleep 1; }
-  pdk() { rsl $mrpd/$dkcn $dkcd $1;sleep 1; }
+  sdk() { rsl $dkcr/$dkcn $mrpd $1;sleep 1; }
+  pdk() { rsl $mrpd/$dkcn $dkcr $1;sleep 1; }
   sal() { local o="";sdk $o;stv $o;smv $o;slt $o; } # --size-only option to avoid timestamp backups
   pal() { local o="";pdk $o;ptv $o;pmv $o;plt $o; }
   fi0() { echo findls $1 $mdld;find $mdld -name "*.$1" -print; }

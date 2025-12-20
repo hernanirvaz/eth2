@@ -12,8 +12,9 @@ vip3='161.97.85.32';vnd3='vmi1007895.contaboserver.net';vnm3=${vnd3%%.*};vis3='1
 mrpd='/mnt/bkp'
 trmd='/mnt/data/downloads'
 mdld='/media/mp4'
+dkcr="/opt"
 dkcn='arrdata'
-dkcd="/opt/$dkcn"
+dkcd="$dkcr/$dkcn"
 dkcc="/home/$meeu/arr/docker-compose.yml"
 
 function sit { ! [[ $1 =~ ^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$ ]]; }
