@@ -575,10 +575,21 @@ s81="${s81}\n    volumes:"
 s81="${s81}\n      - /var/run/docker.sock:/var/run/docker.sock"
 s81="${s81}\n    restart: unless-stopped"
 s82='ruby-3.4.7'
-s83=() # SSDs on external USB enclosures
-s83+=("usb-Samsung_SSD_870_QVO_4TB_092010302E16-0:0") # 187 Uncorrectable Error   0
-s83+=("usb-Samsung_SSD_870_EVO_4TB_09201030714E-0:0") # 187 Uncorrectable Error 438
-s83+=("usb-SanDisk_SSD_PLUS_2000GB_012345678999-0:0") # 187 Reported Uncorrecta   0
+s83=()                                                      # SSDs on external USB enclosures
+s83+=("usb-Samsung_SSD_870_QVO_4TB_092010302E16-0:0")       # Uncorrectable Error   0
+s83+=("usb-Samsung_SSD_870_EVO_4TB_09201030714E-0:0")       # Uncorrectable Error 438
+s83+=("usb-SanDisk_SSD_PLUS_2000GB_012345678999-0:0")       # Reported Uncorrecta   0
+s84="$(dirname $mrpd)/bk[1-9] $mrpd fuse.mergerfs defaults" # Standard Linux settings
+s84="${s84},nofail"                                         # On USB unplugged, boots anyway and does not crash into Emergency Mode
+s84="${s84},nonempty"                                       # Allows mounting even if the /mnt/bkp folder isn't perfectly empty. Fixes "Folder not empty" errors.
+s84="${s84},allow_other"                                    # Lets Plex/Docker/Sonarr access the files. Without this, only root can see them.
+s84="${s84},use_ino"                                        # Preserves inode numbers for hardlinks (Radarr/Sonarr).
+s84="${s84},cache.files=partial"                            # Uses RAM to cache file attributes (size, date) but not the actual video data. Speeds up browsing folders in Plex/File Manager.
+s84="${s84},dropcacheonclose=true"                          # When a file stops being read/written, flush it from RAM immediately. Great for backups to prevent RAM bloat.
+s84="${s84},minfreespace=50G"                               # Keeps at least 50GB free on each drive to prevent full disks.
+s84="${s84},category.create=mfs"                            # New files are created on the drive with the most free space.
+s84="${s84},category.action=all"                            # Deleting a file via the pool deletes all copies on all drives.
+s84="${s84},fsname=mergerfs"                                # Names the filesystem "mergerfs" for easy identification.
 
 e01='PollIntervalMinSec'
 e02='PollIntervalMaxSec'
