@@ -10,7 +10,7 @@ vip1='51.89.64.77' ;vnd1='ns31198432.ip-51-89-64.eu'   ;vnm1=${vnd1%%.*};vis1='1
 vip2='51.89.64.205';vnd2='ns3168040.ip-51-89-64.eu'    ;vnm2=${vnd2%%.*};vis2='127.0.0.1'
 vip3='161.97.85.32';vnd3='vmi1007895.contaboserver.net';vnm3=${vnd3%%.*};vis3='127.0.0.1'
 mrpd='/mnt/bkp'
-trmd='/mnt/data/downloads'
+trmd='/mnt/downloads'
 mdld='/media/mp4'
 dkcr="/opt"
 dkcn='arrdata'
