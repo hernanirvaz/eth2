@@ -1166,8 +1166,8 @@ function ick {
   pop $n58 $s64-http;pop $n59 $s64-https;pop $n60/udp $s64-discovery;pop $n61/udp $s64-DLNA
   pop $n62 sonarr   ;pop $n63 radarr    ;pop $n64 prowlarr          ;rop;wsr;f=$(dirname $dkcc)
   nex mkdir -p $mdld/{tv,tv2,movie,lust}                                         ;nex chown -R $meui:$megi $mdld;nex chmod -R 775 $mdld
-  nex mkdir -p $dkcd/{prowlarr,sonarr,radarr,transmission,jellyfin,bazarr}       ;nex chown -R $meui:$megi $dkcd/{prowlarr,sonarr,radarr,transmission,jellyfin,bazarr}
-  nex mkdir -p $dkcd/nginx-proxy-manager                                         ;nex chown -R $meui:$megi $dkcd/nginx-proxy-manager
+  nex mkdir -p $dkcd/{prowlarr,sonarr,radarr,transmission,jellyfin,bazarr}
+  nex mkdir -p $dkcd/nginx-proxy-manager                                         ;nex chown -R $meui:$megi $dkcd;nex chmod -R 775 $dkcd
   nex mkdir -p $trmd/{complete,incomplete};nex mkdir -p $trmd/complete/{tv,movie};nex chown -R $meui:$megi $trmd;nex chmod -R 775 $trmd
   nex mkdir -p $f                                                                ;nex chown -R $meui:$megi $f   ;nex chmod -R 775 $f
   cd $f;echo -e "$s81" > $dkcc;rco
