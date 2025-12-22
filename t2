@@ -25,7 +25,7 @@ fi
 function lrs { local d=$(dirname $p01);local f="$d/mail";cmw $d 755;sex touch $f.log $f.err;cmw $f.log 640 syslog adm;cmw $f.err 640 syslog adm;cmw $p27 644 root;sex $s06 $(basename $p27); }
 
 sex apt-get install python3-pip net-tools apt-listchanges landscape-common software-properties-common smartmontools lm-sensors nvme-cli curl -y
-sex apt-get install unattended-upgrades update-notifier-common -y
+sex apt-get install unattended-upgrades update-notifier-common speedtest-cli -y
 t4 linux
 sex $s07 set-ntp false                                                                                                                                        # chrony (sophisticated)
 sex apt-get install $s56 -y
