@@ -4,7 +4,7 @@
 # Cron: */5 * * * * root /root/rt-pfsense-ipv6-rotate.sh
 
 # --- Configuration ---
-LAN="re0"       # Your LAN Interface (Check ifconfig)
+LAN="igc1"     # Your LAN Interface (Check ifconfig)
 DIR="/root"    # Where we write the text files for the URL Table to read
 FIL="$DIR/rt-pfsense-ipv6-rotate"
 
