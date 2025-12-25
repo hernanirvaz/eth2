@@ -54,12 +54,12 @@ function gcf {
 } 
 function gcr { 
   local f;local s
-  s='Downloads/config-hrv-zotac1.home.arpa';f=$(find ~/$s*.xml 2>/dev/null|sort -t. -k3n|tail -n1);gcf "$f" "$s" rt-pfsense.xml.gpg /media/eth/PFSENSE
-  s='Downloads/ArcherC6v220220613137n'     ;f=$(find ~/$s*.bin 2>/dev/null|tail -n1)              ;gcf "$f" "$s" rt-tplink.bin.gpg
-  s='rt-pfsense'                           ;f=$(find ~/$s*.txt 2>/dev/null|tail -n1)              ;gcf "$f" "$s"
-  s='rt-LEOX'                              ;f=$(find ~/$s*.txt 2>/dev/null|tail -n1)              ;gcf "$f" "$s"
-  s='rt-MEO'                               ;f=$(find ~/$s*.txt 2>/dev/null|tail -n1)              ;gcf "$f" "$s"
-  s='rt-protectli'                         ;f=$(find ~/$s*.txt 2>/dev/null|tail -n1)              ;gcf "$f" "$s"
+  s='Downloads/config-hrv-protectli.home.arpa';f=$(find ~/$s*.xml 2>/dev/null|sort -t. -k3n|tail -n1);gcf "$f" "$s" rt-pfsense.xml.gpg /media/eth/PFSENSE
+  s='Downloads/ArcherC6v220220613137n'        ;f=$(find ~/$s*.bin 2>/dev/null|tail -n1)              ;gcf "$f" "$s" rt-tplink.bin.gpg
+  s='rt-pfsense'                              ;f=$(find ~/$s*.txt 2>/dev/null|tail -n1)              ;gcf "$f" "$s"
+  s='rt-LEOX'                                 ;f=$(find ~/$s*.txt 2>/dev/null|tail -n1)              ;gcf "$f" "$s"
+  s='rt-MEO'                                  ;f=$(find ~/$s*.txt 2>/dev/null|tail -n1)              ;gcf "$f" "$s"
+  s='rt-protectli'                            ;f=$(find ~/$s*.txt 2>/dev/null|tail -n1)              ;gcf "$f" "$s"
 }
 function rfu {
   local s;cd $HOME
