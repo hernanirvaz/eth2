@@ -14,7 +14,7 @@ function rt {
   s=hrv-zotac3;echo -e "\n\e[32m$s chronyc\e[0m";msh $s "chronyc -n sources"
 }
 
-alias z1='msh hrv-zotac1'
+alias z1='msh hrv-protectli'
 alias z2="msh hrv-zotac2"
 alias z3="msh hrv-zotac3"
 alias z4="msh hrv-zotac4"

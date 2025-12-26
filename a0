@@ -3,7 +3,7 @@
 meeu=$(whoami)
 meui=$(id -u)
 megi=$(id -g)
-pfpd='2001:8a0:fcef:9f00'
+pfpd='2001:8a0:fcdd:d00'
 cunm=$(hostname)
 cuip=$(hostname -I);cuip=${cuip%% *}
 vip1='51.89.64.77' ;vnd1='ns31198432.ip-51-89-64.eu'   ;vnm1=${vnd1%%.*};vis1='127.0.0.1'
@@ -21,10 +21,11 @@ function sit { ! [[ $1 =~ ^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]
 function sht { [[ ${1:-$cuip} = 192.168.8.* ]]; }
 function snt { [[ $1 = hrv* ]]; }
 function smt { sht "$1" || snt "$1"; }
-function snu { local s=$1;[[ "$s" = "192.168.8.25" || "$s" = hrv-zotac1* ]] && s="admin@$s";printf %s "$s"; }
+function snu { local s=$1;[[ "$s" = "192.168.8.25" || "$s" = hrv-zotac1* || "$s" = hrv-protectli* ]] && s="admin@$s";printf %s "$s"; }
 function sin {
   local s=$1
   case $1 in
+  hrv-protectli*) s=192.168.8.25 ;;
   hrv-zotac1*) s=192.168.8.25 ;;
   hrv-zotac2*) s=192.168.8.28 ;;
   hrv-zotac3*) s=192.168.8.31 ;;
@@ -52,6 +53,7 @@ function snd {
 }
 function si6 {
   case $1 in
+  hrv-protectli*) printf %s $pfpd:6662:66ff:fe22:9688 ;;
   hrv-zotac1*) printf %s $pfpd:201:2eff:fea0:88d4 ;;
   hrv-zotac2*) printf %s $pfpd::1002 ;;
   hrv-zotac3*) printf %s $pfpd::1003 ;;
@@ -65,6 +67,7 @@ function si6 {
 }
 function sl6 {
   case $1 in
+  hrv-protectli*) printf %s fe80::6662:66ff:fe22:9688 ;;
   hrv-zotac1*) printf %s fe80::201:2eff:fea0:88d4 ;;
   hrv-zotac2*) printf %s fe80::201:2eff:fea0:e06f ;;
   hrv-zotac3*) printf %s fe80::201:2eff:fea0:88ea ;;
@@ -80,7 +83,13 @@ function spn {
   local s=${1##*@};sit $s && local s=${1%%.*}
   local n=2020
   case $s in
-  hrv*) n=$((n+${s##*[!0-9]})) ;;
+  hrv-protectli*) n=2021 ;;
+  hrv-zotac1*) n=2021 ;;
+  hrv-zotac2*) n=2022 ;;
+  hrv-zotac3*) n=2023 ;;
+  hrv-zotac4*) n=2024 ;;
+  hrv-intel5*) n=2025 ;;
+  hrv-intel6*) n=2026 ;;
   192.168.8.25) n=2021 ;;
   192.168.8.28) n=2022 ;;
   192.168.8.31) n=2023 ;;
@@ -167,7 +176,7 @@ function mcp {
   [[ $w ]] || echo scp -4rP $p ${a[@]};scp -4rP $p "${a[@]}"
 }
 function pcm { 
-  local e=${1^^};local s=hrv-zotac1;local m='eth2/rt-GR241AG'
+  local e=${1^^};local s=hrv-protectli;local m='eth2/rt-GR241AG'
   if   [[ $e = PRB ]];then msh -q $s "/etc/rc.reboot"
   elif [[ $e = NTP ]];then msh -q $s "ntpq -np"
   elif [[ $e = LRB ]];then echo;if [[ -f ~/$m ]]; then echo meo reboot log;tail -n5 ~/$m;fi;msh -q $s "/root/rt-pfsense-log-check.sh $2"

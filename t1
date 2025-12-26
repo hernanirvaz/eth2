@@ -2,7 +2,7 @@
 
 source /home/eth/eth2/a1
 
-znm1='hrv-zotac1';zip1=$(sin $znm1)
+znm1='hrv-protectli';zip1=$(sin $znm1)
 znm2='hrv-zotac2';zip2=$(sin $znm2)
 znm3='hrv-zotac3';zip3=$(sin $znm3)
 znm4='hrv-zotac4';zip4=$(sin $znm4)

@@ -84,7 +84,7 @@ function zls {
   [[ $# -eq 0 ]] && return;local s='';local c=1;local p=2020
   for s in $@;do 
     p=$(spn $s);c=${s/*[^0-9]/}
-    alias pz$c="ping $(sin $s)"
+    alias pz${c:-1}="ping $(sin $s)"
   done
 }
 function kz {
@@ -113,7 +113,7 @@ EOF
 }
 
 
-zls hrv-zotac1 hrv-zotac2 hrv-zotac3 hrv-zotac4 hrv-intel5 hrv-intel6
+zls hrv-protectli hrv-zotac2 hrv-zotac3 hrv-zotac4 hrv-intel5 hrv-intel6
 vls ns31198432.ip-51-89-64.eu
 
 alias wgp='sudo wg-quick down wg0'
@@ -124,7 +124,7 @@ alias wgs='sudo wg show'
 
 alias mr='echo 192.168.1.254:$V ;telnet 192.168.1.254'
 alias zp="ecv hrv-intel6 hrv-intel5 hrv-zotac4 hrv-zotac3 hrv-zotac2"
-alias zo="ocv hrv-intel6 hrv-intel5 hrv-zotac4 hrv-zotac3 hrv-zotac2;pcp hrv-zotac1"
+alias zo="ocv hrv-intel6 hrv-intel5 hrv-zotac4 hrv-zotac3 hrv-zotac2;pcp hrv-protectli"
 alias zk="ccp hrv-zotac3"
 
 alias gp='cd ~/eth2;git pull;cd'
