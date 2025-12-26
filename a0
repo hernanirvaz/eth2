@@ -177,13 +177,14 @@ function mcp {
 }
 function pcm { 
   local e=${1^^};local s=hrv-protectli;local m='eth2/rt-GR241AG'
-  if   [[ $e = PRB ]];then msh -q $s "/etc/rc.reboot"
-  elif [[ $e = NTP ]];then msh -q $s "ntpq -np"
-  elif [[ $e = LRB ]];then echo;if [[ -f ~/$m ]]; then echo meo reboot log;tail -n5 ~/$m;fi;msh -q $s "/root/rt-pfsense-log-check.sh $2"
-  elif [[ $e = IP4 ]];then msh -q $s "ifconfig igc0|grep inet |grep -v inet6|awk '{print \$2}'"
-  elif [[ $e = IP6 ]];then msh -q $s "ifconfig igc1|grep inet6|grep -v fe80 |awk '{print \$2}'"
-  elif [[ $e = SYL ]];then msh -q $s "/root/rt-pfsense-log-check.sh $(date +%H)"
-  else                     msh -q $s "cat /root/wan-check.log"
+  if   [[ $e = PRB  ]];then msh -q $s "/etc/rc.reboot"
+  elif [[ $e = NTP  ]];then msh -q $s "ntpq -np"
+  elif [[ $e = LOGS ]];then echo;if [[ -f ~/$m ]]; then echo meo reboot log;tail -n5 ~/$m;fi;msh -q $s "/root/rt-pfsense-log-check.sh $2"
+  elif [[ $e = IP4  ]];then msh -q $s "ifconfig igc0|grep inet |grep -v inet6|awk '{print \$2}'"
+  elif [[ $e = IP6  ]];then msh -q $s "ifconfig igc1|grep inet6|grep -v fe80 |awk '{print \$2}'"
+  elif [[ $e = SYL  ]];then msh -q $s "/root/rt-pfsense-log-check.sh $(date +%H)"
+  elif [[ $e = DHCP ]];then msh -q $s "/root/rt-pfsense-log-check.sh dhcpd $2"
+  else                      msh -q $s "cat /root/wan-check.log"
   fi
 }
 function san { local s=${1:-UP};ip -j addr|jq -r ".[]|select(.operstate==\"${s^^}\").ifname"|grep '^en'; }
