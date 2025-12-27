@@ -155,4 +155,11 @@
 |Sat Dec  6 02:27:41 2025      | Sat Dec  6 02:29:53 2025     |Watchdog-ssk                  |
 |Sun Dec 7 03:33:42 2025       | Sun Dec  7 03:36:20 2025     |Watchdog-mdmLock              |
 |                              | Wed Dec 10 02:25:55 2025     |Power down/up                 |
+|Sun Dec 14 06:29:57 2025      | Sun Dec 14 06:32:14 2025     |Watchdog-mdmLock              |
+|Tue Dec 16 21:06:06 2025      | Tue Dec 16 21:08:38 2025     |Watchdog-mdmLock              |
+|Wed Dec 17 09:42:29 2025      | Wed Dec 17 09:44:41 2025     |Watchdog-ssk                  |
+|                              | Thu Dec 25 18:42:03 2025     |Power down/up                 |
+|                              | Fri Dec 26 12:44:06 2025     |Power down/up                 |
+|                              | Fri Dec 26 13:39:50 2025     |Power down/up                 |
+|Sat Dec 27 02:13:47 2025      | Sat Dec 27 02:16:05 2025     |Watchdog-smd                  |
 +------------------------------+------------------------------+------------------------------+
