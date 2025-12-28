@@ -9,9 +9,9 @@ function ccp { echo "scp $1:"      ;mcp -q ~/eth2/cns.keys.gpg ~/eth2/hernanirva
 function pcp { echo "scp $1:/root" ;mcp -q ~/eth2/keth $1:/root/.ssh/authorized_keys;mcp -q ~/eth2/rt-pfsense-wan-check.sh ~/eth2/rt-pfsense-log-check.sh $1:/root; }
 function ecv { local s='';for s in "$@";do ecp $s;done; }
 function ocv { local s='';for s in "$@";do ocp $s;done; }
-function ei0 { echo -e "export H=\"$1\"\nexport E=\"$2\"\nexport R=\"$3\"\nexport V=\"$4\"\npr=$5"; }
-function ei1 { echo -e "echo>>~/.bashrc\necho \"export PATH=\\\"\\\$PATH:/home/eth/eth2\\\"\">>~/.bashrc\necho \"export H=\\\"$1\\\"\">>~/.bashrc\necho \"export V=\\\"$2\\\"\">>~/.bashrc\necho \"export K=\\\"$3\\\"\">>~/.bashrc\necho \"export E=\\\"$4\\\"\">>~/.bashrc\necho \"export B=\\\"$5\\\"\">>~/.bashrc\necho \"PS1=\\\"\\\$H:\\\h: \\\"\">>~/.bashrc\nchmod 755 ~/eth2/t[1-9] ~/eth2/e?"; }
-function cz0 {
+function ez0 { echo -e "export H=\"$1\"\nexport E=\"$2\"\nexport R=\"$3\"\nexport V=\"$4\"\npr=$5"; }
+function ez1 { echo -e "echo>>~/.bashrc\necho \"export PATH=\\\"\\\$PATH:/home/eth/eth2\\\"\">>~/.bashrc\necho \"export H=\\\"$1\\\"\">>~/.bashrc\necho \"export V=\\\"$2\\\"\">>~/.bashrc\necho \"export K=\\\"$3\\\"\">>~/.bashrc\necho \"export E=\\\"$4\\\"\">>~/.bashrc\necho \"export B=\\\"$5\\\"\">>~/.bashrc\necho \"PS1=\\\"\\\$H:\\\h: \\\"\">>~/.bashrc\nchmod 755 ~/eth2/t[1-9] ~/eth2/e?"; }
+function ez2 {
   local u;if smt $1;then u=eu;else u=ubuntu;fi;local s="$u@$1"
   mcp -q 22 ~/eth2/s? ~/eth2/keth ~/i0 $s:~
   echo -e "\n\n\n\nsudo -i\nbash /home/$u/s0\n\n\n\n"
@@ -74,7 +74,7 @@ function vls {
   for s in $@;do 
     alias v$c="msh $s"
     alias pv$c="ping $s"
-    alias kv$c="ei0 \$H \$E \$R \$V $p >~/i0;ei1 \$H \$V \$K \$E \$B >~/i1;cz0 $s $p"
+    alias kv$c="ez0 \$H \$E \$R \$V $p >~/i0;ez1 \$H \$V \$K \$E \$B >~/i1;ez2 $s $p"
     ((c++))
   done
   alias vp="ecv $@"
@@ -99,7 +99,7 @@ function kz {
     p=$1;s=${2:-111}
   fi
   s="192.168.8.$s";echo "Setup ubuntu server: $s:$p"
-  ei0 $H $E $R $V $p >~/i0;ei1 $H $V $K $E $B >~/i1;cz0 $s $p
+  ez0 $H $E $R $V $p >~/i0;ez1 $H $V $K $E $B >~/i1;ez2 $s $p
 } 
 hlp () {
   cat <<'EOF'
