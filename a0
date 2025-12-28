@@ -176,8 +176,8 @@ function mcp {
   [[ $w ]] || echo scp -4rP $p ${a[@]};scp -4rP $p "${a[@]}"
 }
 function pch {
-  echo "pcm [PRB|ntp|ip{46}|log] commands on pfsense status"
-  echo "pcm [logs|dhcp{46}] [h]  show meo & pfsense logs for last hour"
+  echo "pcm [PRB|ntp|ip{46}|log|ifc] commands on pfsense status"
+  echo "pcm [logs|dhcp{46}] [h]      show meo & pfsense logs for last hour"
 }
 function pcm { 
   local s=hrv-protectli m='eth2/rt-GR241AG'
@@ -189,6 +189,7 @@ function pcm {
   elif [[ $1 = logs  ]];then if [[ -f ~/$m ]]; then echo GR241AG reboot log;tail -n5 ~/$m;echo;fi;msh -q $s "/root/rt-pfsense-log-check.sh $2"
   elif [[ $1 = dhcp4 ]];then msh -q $s "/root/rt-pfsense-log-check.sh dhcpd $2|grep dhclient"
   elif [[ $1 = dhcp6 ]];then msh -q $s "/root/rt-pfsense-log-check.sh dhcpd $2|grep dhcp6"
+  elif [[ $1 = ifc   ]];then msh -q $s "ifconfig igc0;ifconfig igc1"
   else pch
   fi
 }
