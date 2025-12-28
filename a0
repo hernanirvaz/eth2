@@ -175,16 +175,21 @@ function mcp {
   done
   [[ $w ]] || echo scp -4rP $p ${a[@]};scp -4rP $p "${a[@]}"
 }
+function pch {
+  echo "pcm [PRB|ntp|ip{46}|log] commands on pfsense status"
+  echo "pcm [logs|dhcp{46}] [h]  show meo & pfsense logs for last hour"
+}
 function pcm { 
-  local e=${1^^};local s=hrv-protectli;local m='eth2/rt-GR241AG'
-  if   [[ $e = PRB  ]];then msh -q $s "/etc/rc.reboot"
-  elif [[ $e = NTP  ]];then msh -q $s "ntpq -np"
-  elif [[ $e = IP4  ]];then msh -q $s "ifconfig igc0|grep inet |grep -v inet6|awk '{print \$2}'"
-  elif [[ $e = IP6  ]];then msh -q $s "ifconfig igc1|grep inet6|grep -v fe80 |awk '{print \$2}'"
-  elif [[ $e = SYL  ]];then msh -q $s "/root/rt-pfsense-log-check.sh $(date +%H)"
-  elif [[ $e = LOGS ]];then echo;if [[ -f ~/$m ]]; then echo meo reboot log;tail -n5 ~/$m;fi;msh -q $s "/root/rt-pfsense-log-check.sh $2"
-  elif [[ $e = DHCP ]];then msh -q $s "/root/rt-pfsense-log-check.sh dhcpd $2"
-  else                      msh -q $s "cat /root/wan-check.log"
+  local s=hrv-protectli m='eth2/rt-GR241AG'
+  if   [[ $1 = PRB   ]];then msh -q $s "/etc/rc.reboot"
+  elif [[ $1 = ntp   ]];then msh -q $s "ntpq -np"
+  elif [[ $1 = ip4   ]];then msh -q $s "ifconfig igc0|grep inet |grep -v inet6|awk '{print \$2}'"
+  elif [[ $1 = ip6   ]];then msh -q $s "ifconfig igc1|grep inet6|grep -v fe80 |awk '{print \$2}'"
+  elif [[ $1 = log   ]];then msh -q $s "/root/rt-pfsense-log-check.sh $(date +%H)"
+  elif [[ $1 = logs  ]];then if [[ -f ~/$m ]]; then echo GR241AG reboot log;tail -n5 ~/$m;echo;fi;msh -q $s "/root/rt-pfsense-log-check.sh $2"
+  elif [[ $1 = dhcp4 ]];then msh -q $s "/root/rt-pfsense-log-check.sh dhcpd $2|grep dhclient"
+  elif [[ $1 = dhcp6 ]];then msh -q $s "/root/rt-pfsense-log-check.sh dhcpd $2|grep dhcp6"
+  else pch
   fi
 }
 function san { local s=${1:-UP};ip -j addr|jq -r ".[]|select(.operstate==\"${s^^}\").ifname"|grep '^en'; }

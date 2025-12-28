@@ -103,15 +103,14 @@ function kz {
 } 
 hlp () {
   cat <<'EOF'
-z7z [1|2]                  archive media cs1|cs2 encripted with 7z
-ufz file                   encrypt file
-zfu file                   decrypt file
-rfu                        decrypt router config files
-gcr                        git commit recent router config files
-kz  (port|ip) [ip|port]    setup server at ip last octet or port
-pcm [PRB|NTP|IP4|IP6|SYL]  commands on pfsense status
-pcm [LOGS|DHCP] [h]        show meo & pfsense logs for last hour
+z7z [1|2]                archive media cs1|cs2 encripted with 7z
+ufz file                 encrypt file
+zfu file                 decrypt file
+rfu                      decrypt router config files
+gcr                      git commit recent router config files
+kz  (port|ip) [ip|port]  setup server at ip last octet or port
 EOF
+pch
 }
 
 zls hrv-protectli hrv-zotac2 hrv-zotac3 hrv-zotac4 hrv-intel5 hrv-intel6

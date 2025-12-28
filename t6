@@ -1262,7 +1262,7 @@ function bps {
   echo $s75 nid v6 $dt $(echo "$s"|grep -i ip6)
   n=$(echo "$s"|snf "$e85"|cut -d: -f1-4)
   if sht;then
-    i=$(pcm IP6|cut -d: -f1-4)
+    i=$(pcm ip6|cut -d: -f1-4)
   else
     i=$(sa6    |cut -d: -f1-4)
   fi
