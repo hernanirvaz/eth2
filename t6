@@ -1313,7 +1313,7 @@ function iwg {
 [[ $1 = nsh ]] && { nsh; }
 [[ $1 = nrs ]] && { nrs; }
 [[ $1 = nns ]] && { echo -e "$s41"; }
-[[ $1 = nnc ]] && { cc4 $p22 "$s41";nex diff $(basename $p22).sav $p22 ;cmw $p22 600 root; }
+[[ $1 = nnc ]] && { cc4 $p22 "$s41";nex diff $(basename $p22).sav $p22 ;cmw $p22 600 root;swb also change pfSense ;swn Services DHCPv6 Server LAN Prefix Delegation Pool Delegated Prefix ${pfpd%00}10;swn Firewall Aliases IPv6z[23456] $pfpd::100[23456]; }
 [[ $1 = hsh ]] && { hhh;hsh;echo;if n1t;then hca;else hch;fi; }
 [[ $1 = hch ]] && { hch; }
 [[ $1 = hca ]] && { hca; }
