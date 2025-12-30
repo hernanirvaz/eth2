@@ -1313,7 +1313,21 @@ function iwg {
 [[ $1 = nsh ]] && { nsh; }
 [[ $1 = nrs ]] && { nrs; }
 [[ $1 = nns ]] && { echo -e "$s41"; }
-[[ $1 = nnc ]] && { cc4 $p22 "$s41";nex diff $(basename $p22).sav $p22 ;cmw $p22 600 root;swb also change pfSense ;swn Services DHCPv6 Server LAN Prefix Delegation Pool Delegated Prefix ${pfpd%00}10;swn Firewall Aliases IPv6z[23456] $pfpd::100[23456]; }
+function nnc {
+  local f=$(basename $p22)
+  sex cp $p22 $f.sav;cmw "$f.sav" 644 $meeu;echo -e "$s41" > $f.new
+  if cmp -s $f.sav $f.new; then
+    swn No Prefix Delegation changes detected.
+    rm -f $f.sav $f.new
+  else
+    sex cp $f.new $p22;cmw $p22 600 root;swb Prefix Delegation changed
+    swn t6 {nrs\|ngr} to apply new Prefix Delegation $pfpd
+    swb possible other changes needed on pfsense
+    swn Firewall Aliases IPv6z[23456] $pfpd::100[23456]
+    swn Services DHCPv6 Server LAN Delegated Prefix ${pfpd:0:${#pfpd}-2}10 
+  fi
+}
+[[ $1 = nnc ]] && { nnc; }
 [[ $1 = hsh ]] && { hhh;hsh;echo;if n1t;then hca;else hch;fi; }
 [[ $1 = hch ]] && { hch; }
 [[ $1 = hca ]] && { hca; }

@@ -174,7 +174,7 @@ function nnv {
 }
 function gtv { local f="geth-linux-amd64-${1:-1.13.14}-${2:-2bd6bd01}";rm -rf $f*;curl -LO https://gethstore.blob.core.windows.net/builds/$f.tar.gz;local s=$(md5sum "$f.tar.gz"|cut -d' ' -f1);swn "\nINSTALAR $f ($s)?";local rsp=nao;read rsp;if [[ $rsp = $s ]];then tar xf "$f.tar.gz";sex cp $f/geth $p00;cmw "$p00/geth" 755 eth;fi; }
 function i0k { local f="$p02/key.txt";echo "$K" > "$f";$p00/lighthouse --datadir "$p05" account validator import --network mainnet --reuse-password --password-file "$f" --directory $p19;rm -f "$f"; }
-function cc1 { local f=$(basename "$1");sex cp $1 $f.sav;cmw "$f.sav" 644 eth        ;sef "$2" "$f.sav" > "$f.new";sex cp $f.new $1; }                        # edit             file
+function cc1 { local f=$(basename "$1");sex cp $1 $f.sav;cmw "$f.sav" 644 $meeu      ;sef "$2" "$f.sav" > "$f.new";sex cp $f.new $1; }                        # edit             file
 function cc2 { local f=$(basename "$1");sex cp $1 $f.sav;cp  "$1" "$f.new"           ;echo -e "$2"     >> "$f.new";sex cp $f.new $1; }                        # add lines to end file
 function cc3 { local f=$(basename "$1");sex cp $1 $f.sav;sef "$2" "$f.sav" > "$f.new";echo -e "$3"     >> "$f.new";sex cp $f.new $1; }                        # add lines to pos file
-function cc4 { local f=$(basename "$1");sex cp $1 $f.sav                             ;echo -e "$2"      > "$f.new";sex cp $f.new $1; }                        # replace lines of file
+function cc4 { local f=$(basename "$1");sex cp $1 $f.sav;cmw "$f.sav" 644 $meeu      ;echo -e "$2"      > "$f.new";sex cp $f.new $1; }                        # replace lines of file
