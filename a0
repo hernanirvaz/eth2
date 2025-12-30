@@ -176,12 +176,12 @@ function mcp {
   [[ $w ]] || echo scp -4rP $p ${a[@]};scp -4rP $p "${a[@]}"
 }
 function pch {
-  echo "pcm [PRB|ip{46}|ifc]   pfsense reboot|show ip4|ip6|ifconfig"
+  echo "pcm [PFSRB|ip{46}|ifc] pfsense reboot|show ip4|ip6|ifconfig"
   echo "pcm [log|dhcp[46]] [h] pfsense logs [last hours]"
 }
 function pcm { 
   local s=hrv-protectli m='eth2/rt-GR241AG'
-  if   [[ $1 = PRB   ]];then msh -q $s "/etc/rc.reboot"
+  if   [[ $1 = PFSRB ]];then msh -q $s "/etc/rc.reboot"
   elif [[ $1 = ip4   ]];then msh -q $s "ifconfig igc0.12|grep inet |grep -v inet6|awk '{print \$2}'"
   elif [[ $1 = ip6   ]];then msh -q $s "ifconfig igc1   |grep inet6|grep -v fe80 |awk '{print \$2}'"
   elif [[ $1 = ifc   ]];then msh -q $s "ifconfig igc0;ifconfig igc0.12;ifconfig igc1"

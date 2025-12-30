@@ -457,9 +457,9 @@ function vro { dts;swn "$(printf 'VL%2s %6i %10s %5s' $1 $2 $dt 2>$p03)"        
 function bro { if fft $p12;then dts;bnn;bb0;swn "$(printf 'R%03i %2s %3i' $2 $1 $(bri) 2>$p03) $(npn $nr $nn)" >> $p12;else vro $1 $2;fi; }
 function cpr { snp $s12 $2 $n16 $n17 $nn;[[ $1 = VC || $1 = PV ]] && sex $s02 $s13; }
 function car { sex $s03 $s12            ;[[ $1 = VC            ]] && sex $s03 $s13; }
-function cfb { if [[ $1 = RB  ]];then bro $1 $3;cpr $1 $2;srb $p42 $1;elif [[ $1 = PR || $1 = PV ]];then bro $1 $3;cpr $1 $2;else cpr $1 $2;car $1;ssf $n26 $p42;bro $1 $3;fi; }
-function vfb { if [[ $1 = TR  ]];then sleep 24s;fi;sex $s02 $s13;touch $p05/vc_slash 2>$p03;dmr;vro $1 $2;if [[ $1 = RS ]];then sex $s03 $s13;rm -f $p05/vc_slash 2>$p03;elif [[ $1 = RB ]];then srb $p46 $1;fi; }
-function afb { if [[ $1 = PRB ]];then if fft $p50.print;then swr "pfsense reboot (gap $2)";fi;pcm $1;elif [[ $1 = NGR ]];then if fft $p50.print;then swr "netplan/DNS restart (gap $2)";fi;nrs;fi;rm -f $p35.* $p50.print 2>$p03; }
+function cfb { if [[ $1 = RB ]];then bro $1 $3;cpr $1 $2;srb $p42 $1;elif [[ $1 = PR || $1 = PV ]];then bro $1 $3;cpr $1 $2;else cpr $1 $2;car $1;ssf $n26 $p42;bro $1 $3;fi; }
+function vfb { if [[ $1 = TR ]];then sleep 24s;fi;sex $s02 $s13;touch $p05/vc_slash 2>$p03;dmr;vro $1 $2;if [[ $1 = RS ]];then sex $s03 $s13;rm -f $p05/vc_slash 2>$p03;elif [[ $1 = RB ]];then srb $p46 $1;fi; }
+function afb { if [[ $1 = PFSRB ]];then if fft $p50.print;then swr "pfsense reboot (gap $2)";fi;pcm $1;elif [[ $1 = NTWRS ]];then if fft $p50.print;then swr "netplan/DNS restart (gap $2)";fi;nrs;fi;rm -f $p35.* $p50.print 2>$p03; }
 # PV RB PR BN VC PE BK
 function brs {
   s3t $p42 && return;touch $p42.a$(stg);if g0t $3;then ssf $3 $p42;s4t $p42 && return;touch $p42.b$(stg);fi;bv0;ssw $4 $p42;s4t $p42 && return
@@ -470,7 +470,7 @@ function vrs {
   s3t $p46 && return;touch $p46.a$(stg);ssw $2 $p46;s4t $p46 && return
   local t=$(sng);local f=$p46.i$(stg);touch $f;local n=0;paf;while fft $f;do ((n+=$(sfn $t)));ssf $(sfn $t) $p46 $t;if ipt $t;then rm $f;vfb $1    $n;fi;done;srb $p46
 }
-# PRB NGR
+# PFSRB NTWRS
 function ars {
   s3t $p35 && return;touch $p35.a$(stg);ssw $2 $p35;s4t $p35 && return
   local t=$(sng);local f=$p35.i$(stg);touch $f;local n=0;paf;while fft $f;do ((n+=$(sfn $t)));ssf $(sfn $t) $p35 $t;if ipt $t;then rm $f;afb $1    $n;fi;done
@@ -1342,8 +1342,8 @@ function iwg {
 [[ $1 = vrb ]] && { touch $p50.print;vrs RB           ${2:-$n01}       ;rm -f $p50.print; }
 [[ $1 = ivk ]] && { touch $p50.print;ivk              ${2:-$n02}       ;rm -f $p50.print; }
 [[ $1 = tvc ]] && { touch $p50.print;tvc TR ${2:-d}   ${3:-$n00}       ;rm -f $p50.print; }
-[[ $1 = rrb ]] && { touch $p50.print;ars PRB          ${2:-$n01}       ;rm -f $p50.print; }
-[[ $1 = ngr ]] && { touch $p50.print;ars NGR          ${2:-$n01}       ;rm -f $p50.print; }
+[[ $1 = rrb ]] && { touch $p50.print;ars PFSRB        ${2:-$n01}       ;rm -f $p50.print; }
+[[ $1 = ngr ]] && { touch $p50.print;ars NTWRS        ${2:-$n01}       ;rm -f $p50.print; }
 [[ $1 = vcc ]] && { vcc; }
 [[ $1 = ep  ]] && { epf; }
 [[ $1 = cp  ]] && { cpf; }
@@ -1588,7 +1588,7 @@ if [[ $# -lt 1 ]];then
   m="$m\nd[sh [url]|rs]\t\tdns show [url]|reset"
   m="$m\nh[sh|rs|ch|ca|rc]\t$s45 show|restart|check|check all|restart conditional"
   m="$m\nhs[012ecvm]\t\tservices all|main|backup|execution|concensus|vc|mev"
-  m="$m\nr[sh|rs|pt|lk|ld|fr|rb]\trestart gap show|reset|print|lock {restart|delete}|force restart|router pfSense reboot"
+  m="$m\nr[sh|rs|pt|lk|ld|fr|rb]\trestart gap show|reset|print|lock {restart|delete}|force restart|router pfSense gap reboot"
   m="$m\ni[sh|ch]\t\texternal ip show|change"
   m="$m\nj[sh|rs]\t\tjournal logs show|reset"
   m="$m\nf[sh|rf|(ud|st) [d]]\tfirmware device show|refres|(hupdate|selftest-nvme) [id]"
