@@ -176,8 +176,8 @@ function mcp {
   [[ $w ]] || echo scp -4rP $p ${a[@]};scp -4rP $p "${a[@]}"
 }
 function pfh {
-  echo "pfs [PFSRB|ip{46}|ifc] pfsense reboot|show ip4|ip6|ifconfig"
-  echo "pfs [log|dhcp[46]] [h] pfsense logs [last hours]"
+  echo "pfs [PFSRB|ip{46}|ifc|dsk] pfsense reboot|show ip4|ip6|ifconfig|disk"
+  echo "pfs [log|dhcp[46]] [h]     pfsense logs [last hours]"
 }
 function pfs { 
   local s=hrv-protectli m='eth2/rt-GR241AG'
@@ -185,6 +185,7 @@ function pfs {
   elif [[ $1 = ip4   ]];then msh -q $s "ifconfig igc0.12|grep inet |grep -v inet6|awk '{print \$2}'"
   elif [[ $1 = ip6   ]];then msh -q $s "ifconfig igc1   |grep inet6|grep -v fe80 |awk '{print \$2}'"
   elif [[ $1 = ifc   ]];then msh -q $s "ifconfig igc0;ifconfig igc0.12;ifconfig igc1"
+  elif [[ $1 = dsk   ]];then msh -q $s "smartctl -a /dev/ada0|grep -E 'Model:|^ID#|^ *(5|9|187) +[A-Z]'"
   elif [[ $1 = log   ]];then msh -q $s "/root/rt-pfsense-log-check.sh       $2"
   elif [[ $1 = dhcp  ]];then msh -q $s "/root/rt-pfsense-log-check.sh dhcpd $2"
   elif [[ $1 = dhcp4 ]];then msh -q $s "/root/rt-pfsense-log-check.sh dhcpd $2|grep dhclient"
