@@ -175,11 +175,11 @@ function mcp {
   done
   [[ $w ]] || echo scp -4rP $p ${a[@]};scp -4rP $p "${a[@]}"
 }
-function pch {
-  echo "pcm [PFSRB|ip{46}|ifc] pfsense reboot|show ip4|ip6|ifconfig"
-  echo "pcm [log|dhcp[46]] [h] pfsense logs [last hours]"
+function pfh {
+  echo "pfs [PFSRB|ip{46}|ifc] pfsense reboot|show ip4|ip6|ifconfig"
+  echo "pfs [log|dhcp[46]] [h] pfsense logs [last hours]"
 }
-function pcm { 
+function pfs { 
   local s=hrv-protectli m='eth2/rt-GR241AG'
   if   [[ $1 = PFSRB ]];then msh -q $s "/etc/rc.reboot"
   elif [[ $1 = ip4   ]];then msh -q $s "ifconfig igc0.12|grep inet |grep -v inet6|awk '{print \$2}'"
@@ -189,7 +189,7 @@ function pcm {
   elif [[ $1 = dhcp  ]];then msh -q $s "/root/rt-pfsense-log-check.sh dhcpd $2"
   elif [[ $1 = dhcp4 ]];then msh -q $s "/root/rt-pfsense-log-check.sh dhcpd $2|grep dhclient"
   elif [[ $1 = dhcp6 ]];then msh -q $s "/root/rt-pfsense-log-check.sh dhcpd $2|grep dhcp6"
-  else pch
+  else pfh
   fi
 }
 function san { local s=${1:-UP};ip -j addr|jq -r ".[]|select(.operstate==\"${s^^}\").ifname"|grep '^en'; }

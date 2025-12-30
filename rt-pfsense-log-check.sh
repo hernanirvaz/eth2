@@ -7,7 +7,6 @@ case "$1" in
         f="$1"    ;i=${2:-0};g='' ;;               
     *)  f="system";i=${1:-0};g='logged|login|sshd' 
         echo pfSense uptime:      ;uptime;echo
-        echo pfSense wan check log;tail -n15 /root/wan-check.log;echo
         ;;
 esac
 
