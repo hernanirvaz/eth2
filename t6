@@ -1588,7 +1588,7 @@ if [[ $# -lt 1 ]];then
   m="$m\nd[sh [url]|rs]\t\tdns show [url]|reset"
   m="$m\nh[sh|rs|ch|ca|rc]\t$s45 show|restart|check|check all|restart conditional"
   m="$m\nhs[012ecvm]\t\tservices all|main|backup|execution|concensus|vc|mev"
-  m="$m\nr[sh|rs|pt|lk|ld|fr|rb]\trestart gap show|reset|print|lock {restart|delete}|force restart|router reboot"
+  m="$m\nr[sh|rs|pt|lk|ld|fr|rb]\trestart gap show|reset|print|lock {restart|delete}|force restart|router pfSense reboot"
   m="$m\ni[sh|ch]\t\texternal ip show|change"
   m="$m\nj[sh|rs]\t\tjournal logs show|reset"
   m="$m\nf[sh|rf|(ud|st) [d]]\tfirmware device show|refres|(hupdate|selftest-nvme) [id]"

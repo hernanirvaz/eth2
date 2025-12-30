@@ -1,12 +1,14 @@
 #!/bin/sh
 # pfSense v2.8.1-RELEASE (amd64) FreeBSD 15.0-CURRENT
 
-echo pfSense uptime:;uptime;echo
-echo pfSense wan check log;tail -n15 /root/wan-check.log
 
 case "$1" in
-    *[!0-9]*) f="$1"    ;i=${2:-0};g=''               ;;
-    *)        f="system";i=${1:-0};g='index.php|sshd' ;;
+    *[!0-9]*) 
+        f="$1"    ;i=${2:-0};g='' ;;               
+    *)  f="system";i=${1:-0};g='Successful +login|sshd' 
+        echo pfSense uptime:      ;uptime;echo
+        echo pfSense wan check log;tail -n15 /root/wan-check.log;echo
+        ;;
 esac
 
 echo $(date -v -${i}H '+%b %e %H'):??:?? init grep $f log

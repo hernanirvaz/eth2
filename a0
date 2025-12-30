@@ -176,20 +176,19 @@ function mcp {
   [[ $w ]] || echo scp -4rP $p ${a[@]};scp -4rP $p "${a[@]}"
 }
 function pch {
-  echo "pcm [PRB|ntp|ip{46}|log|ifc] commands on pfsense status"
-  echo "pcm [logs|dhcp{46}] [h]      show meo & pfsense logs for last hour"
+  echo "pcm [PRB|ip{46}|ifc]   pfsense reboot|show ip4|ip6|ifconfig"
+  echo "pcm [log|dhcp[46]] [h] pfsense logs [last hours]"
 }
 function pcm { 
   local s=hrv-protectli m='eth2/rt-GR241AG'
   if   [[ $1 = PRB   ]];then msh -q $s "/etc/rc.reboot"
-  elif [[ $1 = ntp   ]];then msh -q $s "ntpq -np"
-  elif [[ $1 = ip4   ]];then msh -q $s "ifconfig igc0|grep inet |grep -v inet6|awk '{print \$2}'"
-  elif [[ $1 = ip6   ]];then msh -q $s "ifconfig igc1|grep inet6|grep -v fe80 |awk '{print \$2}'"
-  elif [[ $1 = log   ]];then msh -q $s "/root/rt-pfsense-log-check.sh $(date +%H)"
-  elif [[ $1 = logs  ]];then msh -q $s "/root/rt-pfsense-log-check.sh $2"
+  elif [[ $1 = ip4   ]];then msh -q $s "ifconfig igc0.12|grep inet |grep -v inet6|awk '{print \$2}'"
+  elif [[ $1 = ip6   ]];then msh -q $s "ifconfig igc1   |grep inet6|grep -v fe80 |awk '{print \$2}'"
+  elif [[ $1 = ifc   ]];then msh -q $s "ifconfig igc0;ifconfig igc0.12;ifconfig igc1"
+  elif [[ $1 = log   ]];then msh -q $s "/root/rt-pfsense-log-check.sh       $2"
+  elif [[ $1 = dhcp  ]];then msh -q $s "/root/rt-pfsense-log-check.sh dhcpd $2"
   elif [[ $1 = dhcp4 ]];then msh -q $s "/root/rt-pfsense-log-check.sh dhcpd $2|grep dhclient"
   elif [[ $1 = dhcp6 ]];then msh -q $s "/root/rt-pfsense-log-check.sh dhcpd $2|grep dhcp6"
-  elif [[ $1 = ifc   ]];then msh -q $s "ifconfig igc0;ifconfig igc0.12;ifconfig igc1"
   else pch
   fi
 }

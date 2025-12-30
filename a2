@@ -7,7 +7,7 @@ function ecn { echo -e "\n\n\e[32m$*\e[0m\n\n";eval "$*"; }
 function erq { local q=${*:-changelogs.ubuntu.com};ecm resolvectl query "$q"; }
 
 function rr { pcm PRB; }
-function rl { pcm logs $1; }
+function rl { pcm log $1; }
 function rt {
   local s
   s=hrv-zotac2;echo -e "\n\e[32m$s chronyc\e[0m";msh $s "chronyc -n sources"
