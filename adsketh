@@ -101,16 +101,15 @@ function kz {
   s="192.168.8.$s";echo "Setup ubuntu server: $s:$p"
   ez0 $H $E $R $V $p >~/i0;ez1 $H $V $K $E $B >~/i1;ez2 $s $p
 } 
+
 hlp () {
-  cat <<'EOF'
-z7z [1|2]                archive media cs1|cs2 encripted with 7z
-ufz file                 encrypt file
-zfu file                 decrypt file
-rfu                      decrypt router config files
-gcr                      git commit recent router config files
-kz  (port|ip) [ip|port]  setup server at ip last octet or port
-EOF
-pfh
+  echo "z7z [1|2]                      archive media cs1|cs2 encripted with 7z"
+  echo "ufz file                       encrypt file"
+  echo "zfu file                       decrypt file"
+  echo "rfu                            decrypt router config files"
+  echo "gcr                            git commit recent router config files"
+  echo "kz  (port|ip) [ip|port]        setup server at ip last octet or port"
+  pfh
 }
 
 zls hrv-protectli hrv-zotac2 hrv-zotac3 hrv-zotac4 hrv-intel5 hrv-intel6
