@@ -1,6 +1,19 @@
 #!/bin/sh
 # pfSense v2.8.1-RELEASE (amd64) FreeBSD 15.0-CURRENT
 
+flg() {
+    local m d t r i
+    while read -r m d t r; do
+    # Use FreeBSD date -j (don't set) -f (input format) to parse and reformat
+    # If the input year is missing, BSD date assumes the current year.
+    i=$(date -j -f "%b %d %T" "$m $d $t" "+%Y-%m-%d %T" 2>/dev/null)
+    if [ $? -eq 0 ]; then
+        echo "$i $r"
+    else
+        echo "$m $d $t $r"
+    fi
+done
+}
 lsw() { 
     local n=$1 f="$2";shift 2;[ -s "$1" ] || return 0
     echo "$(date -v -${n}H "+$f %H")":00:00 $(basename $1) from $n hours ago
@@ -16,7 +29,7 @@ case "$1" in
 esac
 
 lsw $((i * 2)) '%Y-%m-%d' /root/wan-check.log
-lsw $((i + 0)) '%b %e'    /var/log/$f.log* | if [ -z "$g" ]; then cat;else grep -Ev "$g";fi
+lsw $((i + 0)) '%b %e'    /var/log/$f.log* | if [ -z "$g" ]; then cat;else grep -Ev "$g";fi | flg
 
 b=$(sysctl -n kern.boottime | cut -d" " -f4 | cut -d"," -f1)
 d=$(($(date +%s) - b))
