@@ -162,4 +162,11 @@
 |                              | Fri Dec 26 12:44:06 2025     |Power down/up                 |
 |                              | Fri Dec 26 13:39:50 2025     |Power down/up                 |
 |Sat Dec 27 02:13:47 2025      | Sat Dec 27 02:16:05 2025     |Watchdog-smd                  |
+|                              | Sun Dec 28 20:05:15 2025     |Power down/up                 |
+|                              |                              |Power down/up                 |
+|                              |                              |Power down/up                 |
+|                              | Thu Jan  1 00:03:11 1970     |Power down/up                 |
+|                              | Wed Dec 31 19:50:26 2025     |Power down/up                 |
+|                              | Wed Dec 31 20:19:31 2025     |Power down/up                 |
+|Fri Jan 2 09:53:23 2026       | Fri Jan  2 09:55:50 2026     |Watchdog-mdmLock              |
 +------------------------------+------------------------------+------------------------------+
