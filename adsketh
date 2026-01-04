@@ -121,7 +121,8 @@ alias wga='sudo wg-quick up   wg0'
 # alias wgd='sudo systemctl disable wg-quick@wg0'
 alias wgs='sudo wg show'
 
-alias mr='echo 192.168.1.254:$V ;telnet 192.168.1.254'
+alias mr='echo meo@192.168.1.254:$V ;telnet 192.168.1.254'
+alias lr='echo leox@192.168.100.1:leolabs_7 ;telnet 192.168.100.1'
 alias zp="ecv hrv-intel6 hrv-intel5 hrv-zotac4 hrv-zotac3 hrv-zotac2"
 alias zo="ocv hrv-intel6 hrv-intel5 hrv-zotac4 hrv-zotac3 hrv-zotac2;pcp hrv-protectli"
 alias zk="ccp hrv-zotac3"
