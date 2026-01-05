@@ -177,7 +177,7 @@ function mcp {
 }
 function pfh {
   echo "pfs [PFSRB|ip{46}|ifc|dsk]     pfSense reboot|show ip4/ip6|ifconfig|disk"
-  echo "pfs [log|dhcp]             [h] pfSense system/dhcp logs [last hours]"
+  echo "pfs [log|dhcp|dns|gw]      [h] pfSense system/dhcp/resolver/gateways logs [last hours]"
 }
 function pfs { 
   local s=hrv-protectli
@@ -186,8 +186,10 @@ function pfs {
   elif [[ $1 = ip6   ]];then msh -q $s "ifconfig igc1   |grep inet6|grep -v fe80 |awk '{print \$2}'"
   elif [[ $1 = ifc   ]];then msh -q $s "ifconfig igc0;ifconfig igc0.12;ifconfig igc1"
   elif [[ $1 = dsk   ]];then msh -q $s "smartctl -a /dev/ada0|grep -E 'Model:|^ID#|^ *(5|9|187) +[A-Z]'"
-  elif [[ $1 = log   ]];then msh -q $s "/root/rt-pfsense-log-check.sh       $2"
-  elif [[ $1 = dhcp  ]];then msh -q $s "/root/rt-pfsense-log-check.sh dhcpd $2"
+  elif [[ $1 = log   ]];then msh -q $s "/root/rt-pfsense-log-check.sh          $2"
+  elif [[ $1 = dns   ]];then msh -q $s "/root/rt-pfsense-log-check.sh resolver $2"
+  elif [[ $1 = gw    ]];then msh -q $s "/root/rt-pfsense-log-check.sh gateways $2"
+  elif [[ $1 = dhcp  ]];then msh -q $s "/root/rt-pfsense-log-check.sh dhcpd    $2"
   else pfh
   fi
 }
