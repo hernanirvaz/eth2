@@ -3,7 +3,7 @@
 meeu=$(whoami)
 meui=$(id -u)
 megi=$(id -g)
-pfpd='2001:8a0:fcf2:dc00'
+pfpd='2001:8a0:fce2:9400'
 cunm=$(hostname)
 cuip=$(hostname -I);cuip=${cuip%% *}
 vip1='51.89.64.77' ;vnd1='ns31198432.ip-51-89-64.eu'   ;vnm1=${vnd1%%.*};vis1='127.0.0.1'
