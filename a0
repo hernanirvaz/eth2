@@ -3,7 +3,7 @@
 meeu=$(whoami)
 meui=$(id -u)
 megi=$(id -g)
-pfpd='2001:8a0:fce3:9d00'
+pfpd='2001:8a0:fcef:ac00'
 cunm=$(hostname)
 cuip=$(hostname -I);cuip=${cuip%% *}
 vip1='51.89.64.77' ;vnd1='ns31198432.ip-51-89-64.eu'   ;vnm1=${vnd1%%.*};vis1='127.0.0.1'
@@ -176,8 +176,8 @@ function mcp {
   [[ $w ]] || echo scp -4rP $p ${a[@]};scp -4rP $p "${a[@]}"
 }
 function pfh {
-  echo "pfs [PFSRB|ip{46}|ifc|ndp|dsk]    pfSense reboot|show ip4/ip6|ifconfig|Neighbor Discovery Protocol|disk"
-  echo "pfs [log|dhcp|dns|gw]         [h] pfSense system/dhcp/resolver/gateways logs [last hours]"
+  echo "pfs [PFSRB|ip{46}|ifc|ndp|ip6r|dsk] pfSense reboot|show ip4/ip6|ifconfig|Neighbor Discovery Protocol|disk"
+  echo "pfs [log|dhcp|dns|gw] [h]           pfSense system/dhcp/resolver/gateways logs [last hours]"
 }
 function pfs { 
   local s=hrv-protectli
@@ -186,6 +186,7 @@ function pfs {
   elif [[ $1 = ip6   ]];then msh -q $s "ifconfig igc1   |grep inet6|grep -v fe80 |awk '{print \$2}'"
   elif [[ $1 = ifc   ]];then msh -q $s "ifconfig igc0;ifconfig igc0.12;ifconfig igc1"
   elif [[ $1 = ndp   ]];then msh -q $s "ndp -an"
+  elif [[ $1 = ip6r  ]];then msh -q $s "/usr/bin/netstat -6rn"
   elif [[ $1 = dsk   ]];then msh -q $s "smartctl -a /dev/ada0|grep -E 'Model:|^ID#|^ *(5|9|187) +[A-Z]'"
   elif [[ $1 = log   ]];then msh -q $s "/root/rt-pfsense-log-check.sh          $2"
   elif [[ $1 = dns   ]];then msh -q $s "/root/rt-pfsense-log-check.sh resolver $2"
