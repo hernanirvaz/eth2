@@ -5,7 +5,7 @@ source /home/eth/eth2/t1
 swu "INSTALAR $s74";sex apt-get install libsnappy-dev libc6-dev libc6 unzip -y;sex mkdir -p $p07;sau eth1;sjw;cmw $p07 755 eth1
 nnv N $1 $2
 if n1t;then maxp=50;else maxp=10;fi
-pp2p=30303;ndp || pp2p=30304
+pp2p=30303;bnt || pp2p=30304
 # abrb=11052984
 fptv=400  # Gb
 if [[ $cunm = $inm5 ]];then apip="$iip5";elif [[ $cunm = $inm6 ]];then apip="$iip6";else apip='127.0.0.1';fi

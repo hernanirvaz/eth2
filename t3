@@ -45,7 +45,7 @@ else
   # othe="$othe --checkpoint-sync-url https://mainnet.checkpoint.sigp.io"
   swu "CONFIGURE $s75";sex mkdir -p $p16;cmw $p05 755 $meeu;sau eth2;sjw
   cmw $p16 700 eth2;touch $p05/vc_lock;cd $p02 || exit                                                                                                        # IMPORTANTE LOCK vc
-  pp2p=9004;ndp || pp2p=9000
+  pp2p=9004;bnt || pp2p=9000
   cat <<-EOF > $s12.service
 	[Unit]
 	Description=Lighthouse Consensus Client BN

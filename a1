@@ -39,7 +39,7 @@ function n1t { [[ $cunm = $cun1 ]]; }
 function sbt { [[ $cunm = $cun1 || $cunm = $cun2 ]]; }
 function sct { [[ $cunm = $cuvc || $cunm = $cun1 || $cunm = $cun2 ]]; }
 function svt { [[ $cunm = $cuvc ]]; }
-function ndp { [[ $cunm = $inm5 || $cunm = $vnm2 ]]; }
+function bnt { [[ $cunm = $inm5 || $cunm = $vnm2 ]]; }
 function tsa { echo "$H"|sudo -S -p '' $s00 is-active  --quiet "$1" &>$p03; }
 function tse { echo "$H"|sudo -S -p '' $s00 is-enabled --quiet "$1" &>$p03; }
 function swb { echo -e "\n\e[5m${*^^}\e[0m\n"; }

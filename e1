@@ -5,7 +5,7 @@ source /home/eth/eth2/t1
 swu "INSTALAR $s72";sex mkdir -p $p08/geth;sau eth1;sjw;cmw $p08 755 eth1;cmw $p08/geth 700 eth1
 gtv $1 $2
 maxp=10
-pp2p=30303;ndp || pp2p=30304
+pp2p=30303;bnt || pp2p=30304
 othe="--http.corsdomain 'chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn' --http.vhosts '*'"                                                            # for metamask
 othe="$othe --cache 16384"                                                                                                                                  # after v1.30.0 NOT recomended
 othe="$othe --state.scheme=path"                                                                                                                            # after v1.14+ default
