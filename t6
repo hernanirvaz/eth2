@@ -1324,7 +1324,6 @@ function nnc {
     swn t6 {nrs\|ngr} to apply new Prefix Delegation $pfpd
     swb possible other changes needed on pfsense
     swn Firewall Aliases IPv6z[23456] $pfpd::100[23456]
-    swn Services DHCPv6 Server LAN Delegated Prefix ${pfpd:0:${#pfpd}-2}10 
   fi
 }
 [[ $1 = nnc ]] && { nnc; }
