@@ -1316,22 +1316,26 @@ function iwg {
 function nnc {
   local f=$(basename $p22);local p=$(pfs ip6|cut -d: -f1-4)
   if [[ $p = $pfpd ]]; then
-    swn No Prefix Delegation changes detected.
+    swn No Prefix Delegation changes detected from pfsense.
+    swn Current pfsense=$p pfpd=$pfpd
   else
-    sex cp $p22 $f.sav;cmw "$f.sav" 644 $meeu;echo -e "$s41" > $f.new
-    if cmp -s $f.sav $f.new; then
-      swn Correct Prefix Delegation.
-      swn Old pfpd=$pfpd
-      swn New pfpd=$p
-      swn Run this again to apply the new Prefix Delegation.
-      rm -f $f.sav $f.new
-      return
-    fi
-    sex cp $f.new $p22;cmw $p22 600 root;swb Prefix Delegation changed
-    swn t6 {nrs\|ngr} to apply new Prefix Delegation $pfpd
-    swb possible other changes needed on pfsense
-    swn Firewall Aliases IPv6z[23456] $pfpd::100[23456]
+    swb Correct Prefix Delegation.
+    swn Old pfpd=$pfpd
+    swn New pfpd=$p
+    swn Run this again to apply the new Prefix Delegation.
+    return
   fi
+  sex cp $p22 $f.sav;cmw "$f.sav" 644 $meeu;echo -e "$s41" > $f.new
+  if cmp -s $f.sav $f.new; then
+    swn No changes needed to $f
+    rm -f $f.new $f.sav
+    return
+  fi
+  sex cp $f.new $p22;cmw $p22 600 root
+  swb Prefix Delegation changed on $f
+  swn t6 {nrs\|ngr} to apply new Prefix Delegation $pfpd
+  swn Possible other changes needed on pfsense
+  swn Firewall Aliases IPv6z[23456] $pfpd::100[23456]
 }
 [[ $1 = nnc ]] && { nnc; }
 [[ $1 = hsh ]] && { hhh;hsh;echo;if n1t;then hca;else hch;fi; }
