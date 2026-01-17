@@ -182,7 +182,7 @@ function pfh {
 function pfs { 
   local s=hrv-protectli
   if   [[ $1 = PFSRB ]];then msh -q $s "/etc/rc.reboot"
-  elif [[ $1 = ip4   ]];then msh -q $s "ifconfig igc0.12|grep inet |grep -v inet6|awk '{print \$2}'"
+  elif [[ $1 = ip4   ]];then msh -q $s "/root/rt-pfsense-ip4.sh"
   elif [[ $1 = ip6   ]];then msh -q $s "ifconfig igc1   |grep inet6|grep -v fe80 |awk '{print \$2}'"
   elif [[ $1 = ifc   ]];then msh -q $s "ifconfig igc0;ifconfig igc0.12;ifconfig igc1"
   elif [[ $1 = ndp   ]];then msh -q $s "ndp -an"

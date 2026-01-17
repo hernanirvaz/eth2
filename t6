@@ -1315,11 +1315,10 @@ function iwg {
 [[ $1 = nns ]] && { echo -e "$s41"; }
 function nnc {
   local f=$(basename $p22)
-  sex cp $p22 $f.sav;cmw "$f.sav" 644 $meeu;echo -e "$s41" > $f.new
-  if cmp -s $f.sav $f.new; then
+  if [[ $(pfs ip6|cut -d: -f1-4) = $pfpd ]]; then
     swn No Prefix Delegation changes detected.
-    rm -f $f.sav $f.new
-  else
+  elif
+    sex cp $p22 $f.sav;cmw "$f.sav" 644 $meeu;echo -e "$s41" > $f.new
     sex cp $f.new $p22;cmw $p22 600 root;swb Prefix Delegation changed
     swn t6 {nrs\|ngr} to apply new Prefix Delegation $pfpd
     swb possible other changes needed on pfsense

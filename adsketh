@@ -6,7 +6,7 @@ function nrs { sudo netplan apply;sudo systemctl stop systemd-resolved;sleep 9;s
 function ecp { echo "scp $1:~/eth2";mcp -q ~/eth2/t[1-9] ~/eth2/e? ~/eth2/a? $1:~/eth2; }
 function ocp { echo "scp $1:"      ;mcp -q ~/eth2/asrv $1:~/.bash_aliases;mcp -q ~/eth2/keth $1:~/.ssh/authorized_keys; }
 function ccp { echo "scp $1:"      ;mcp -q ~/eth2/cns.keys.gpg ~/eth2/hernanirvaz-f2e8fb66dbc0.json.gpg $1:; }
-function pcp { echo "scp $1:/root" ;mcp -q ~/eth2/keth $1:/root/.ssh/authorized_keys;mcp -q ~/eth2/rt-pfsense-log-check.sh ~/eth2/rt-pfsense-wan-check.sh $1:/root; }
+function pcp { echo "scp $1:/root" ;mcp -q ~/eth2/keth $1:/root/.ssh/authorized_keys;mcp -q ~/eth2/rt-pfsense-log-check.sh ~/eth2/rt-pfsense-wan-check.sh ~/eth2/rt-pfsense-ip4.sh $1:/root; }
 function ecv { local s='';for s in "$@";do ecp $s;done; }
 function ocv { local s='';for s in "$@";do ocp $s;done; }
 function ez0 { echo -e "export H=\"$1\"\nexport E=\"$2\"\nexport R=\"$3\"\nexport V=\"$4\"\npr=$5"; }
