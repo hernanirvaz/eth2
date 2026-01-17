@@ -1314,13 +1314,16 @@ function iwg {
 [[ $1 = nrs ]] && { nrs; }
 [[ $1 = nns ]] && { echo -e "$s41"; }
 function nnc {
-  local f=$(basename $p22)
-  if [[ $(pfs ip6|cut -d: -f1-4) = $pfpd ]]; then
+  local f=$(basename $p22);local p=$(pfs ip6|cut -d: -f1-4)
+  if [[ $p = $pfpd ]]; then
     swn No Prefix Delegation changes detected.
   else
     sex cp $p22 $f.sav;cmw "$f.sav" 644 $meeu;echo -e "$s41" > $f.new
     if cmp -s $f.sav $f.new; then
-      swn Prefix Delegation changes detected but \$pfpd needs to be changed.
+      swn Correct Prefix Delegation.
+      swn Old pfpd=$pfpd
+      swn New pfpd=$p
+      swn Run this again to apply the new Prefix Delegation.
       rm -f $f.sav $f.new
       return
     fi
