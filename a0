@@ -176,8 +176,8 @@ function mcp {
   [[ $w ]] || echo scp -4rP $p ${a[@]};scp -4rP $p "${a[@]}"
 }
 function pfh {
-  echo "pfs [PFSRB|ip{46crd}|ndp|dsk] pfSense reboot|show ip4/ip6/config/route/discovery|disk"
-  echo "pfs [log|dhcp|dns|gw] [h]     pfSense system/dhcp/resolver/gateways logs [last hours]"
+  echo "pfs [PFSRB|ip{46crd}|dsk] pfSense reboot|show ip4/ip6/config/route/discovery|disk"
+  echo "pfs [log|dhcp|dns|gw] [h] pfSense system/dhcp/resolver/gateways logs [last hours]"
 }
 function pfs { 
   local s=hrv-protectli;local i=${1:0:2}
