@@ -29,13 +29,13 @@ case "$1" in
 esac
 
 lsw $((i * 2)) '%Y-%m-%d' /root/wan-check.log
-if [ "$1" = "logs" ]; then
+if [ "$1" = "logs" ] || [ "$1" = "lst" ]; then
     (
       lsw $((i + 0)) '%b %e' /var/log/dhcpd.log* 
       lsw $((i + 0)) '%b %e' /var/log/system.log*
-    ) | grep -Ev 'logged|login|sshd' | flg | sort
+    ) | grep -Ev 'logged|login|sshd|kea' | if [ "$1" = "logs" ]; then cat;else grep -E ':00:00|link state';fi | flg | sort
 else
-    lsw $((i + 0)) '%b %e'   /var/log/$f.log* | if [ -z "$g" ]; then cat;else grep -Ev "$g";fi | flg
+    lsw $((i + 0)) '%b %e'   /var/log/$f.log* | if [ -z "$g"  ]; then cat;else grep -Ev "$g"    ;fi | flg
 fi
 
 b=$(sysctl -n kern.boottime | cut -d" " -f4 | cut -d"," -f1)
