@@ -175,6 +175,24 @@ function mcp {
   done
   [[ $w ]] || echo scp -4rP $p ${a[@]};scp -4rP $p "${a[@]}"
 }
+function leh {
+  echo "leo [LEORB|log|xml|osp] LEOX reboot|dmesg|config|Optical Signal Power"
+}
+function ltl {
+(echo open "192.168.100.1";sleep 3
+ echo "leox"              ;sleep 2
+ echo "$V"                ;sleep 2
+ echo "$@"                ;sleep 2
+) | telnet 
+}
+function leo { 
+  if   [[ $1 = LEORB ]];then ltl reboot
+  elif [[ $1 = log   ]];then ltl dmesg
+  elif [[ $1 = xml   ]];then ltl flash all
+  elif [[ $1 = osp   ]];then ltl omcicli mib get 263
+  else leh
+  fi
+}
 function pfh {
   echo "pfs [PFSRB|ip{46crd}|dsk] pfSense reboot|show ip4/ip6/config/route/discovery|disk"
   echo "pfs [log|dhcp|dns|gw] [h] pfSense system/dhcp/resolver/gateways logs [last hours]"
