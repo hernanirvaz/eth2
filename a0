@@ -176,7 +176,7 @@ function mcp {
   [[ $w ]] || echo scp -4rP $p ${a[@]};scp -4rP $p "${a[@]}"
 }
 function leh {
-  echo "leo [LEORB|log|xml|osp] LEOX reboot|dmesg|config|Optical Signal Power"
+  echo "leo [LEORB|log|xml|os] LEOX reboot|dmesg|config|Optical Signal"
 }
 function ltl {
 (echo open "192.168.100.1";sleep 3
@@ -186,10 +186,16 @@ function ltl {
 ) | telnet 
 }
 function leo { 
+  local s
+  s='function par(h) {v=strtonum(h);if (v>32767) {v-=65536};return v*0.002}'
+  s="$s;\$1 == \"NumOfTcont:\" {printf \"%-28s                   MEO (Internet, VoIP, IPTV, Mgmt)\n\", \$0;next}"
+  s="$s;\$1 == \"OpticalSignalLevel:\" {printf \"%-35s %6.1f dBm MEO (-8.0/-27.0 dBm)\n\", \$0, par(\$2);next}"
+  s="$s;\$1 == \"TranOpticLevel:\" {printf \"%-31s     %6.1f dBm MEO (+0.5/ +5.0 dBm)\n\", \$0, par(\$2);next}"
+  s="$s;{print}"
   if   [[ $1 = LEORB ]];then ltl reboot
   elif [[ $1 = log   ]];then ltl dmesg
   elif [[ $1 = xml   ]];then ltl flash all
-  elif [[ $1 = osp   ]];then ltl omcicli mib get 263
+  elif [[ $1 = os    ]];then ltl omcicli mib get 263 | tr -d '\r' | awk "$s"
   else leh
   fi
 }
