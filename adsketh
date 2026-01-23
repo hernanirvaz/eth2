@@ -103,12 +103,12 @@ function kz {
 } 
 
 hlp () {
-  echo "z7z [1|2]                      archive media cs1|cs2 encripted with 7z"
-  echo "ufz file                       encrypt file"
-  echo "zfu file                       decrypt file"
-  echo "rfu                            decrypt router config files"
-  echo "gcr                            git commit recent router config files"
-  echo "kz  (port|ip) [ip|port]        setup server at ip last octet or port"
+  echo "z7z [1|2]                          archive media cs1|cs2 encripted with 7z"
+  echo "ufz file                           encrypt file"
+  echo "zfu file                           decrypt file"
+  echo "rfu                                decrypt router config files"
+  echo "gcr                                git commit recent router config files"
+  echo "kz  (port|ip) [ip|port]            setup server at ip last octet or port"
   pfh
 }
 
