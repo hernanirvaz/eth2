@@ -200,13 +200,13 @@ function leo {
   fi
 }
 function pfh {
-  echo "pfs [PFSRB|ipfw|ip{46crd}|dsk]     pfSense reboot|show queue|show ip4/ip6/config/route/discovery|disk"
+  echo "pfs [PFSRB|fwts|ip{46crd}|dsk]     pfSense reboot|Firewall Traffic Shaper show queue|show ip4/ip6/config/route/discovery|disk"
   echo "pfs [sys|dhcp|dns|gw|logs|lst] [h] pfSense system/dhcp/resolver/gateways/{system/dhcp}/link state logs [last hours]"
 }
 function pfs { 
   local s=hrv-protectli;local i=${1:0:2}
   if   [[ $1 = PFSRB ]];then msh -q $s "/etc/rc.reboot"
-  elif [[ $1 = ipfw  ]];then shift;i='ipfw queue show';[[ $# -gt 0 ]] && i="$i 0$(printf ',%i' $@)";echo "$i";msh -q $s "$i"
+  elif [[ $1 = fwts  ]];then shift;i='ipfw queue show';[[ $# -gt 0 ]] && i="$i 0$(printf ',%i' $@)";echo "$i";msh -q $s "$i"
   elif [[ $i = ip    ]];then msh -q $s "/root/rt-pfsense-ip.sh $1"
   elif [[ $1 = dsk   ]];then msh -q $s "smartctl -a /dev/ada0|grep -E 'Model:|^ID#|^ *(5|9|187) +[A-Z]'"
   elif [[ $1 = sys   ]];then msh -q $s "/root/rt-pfsense-log-check.sh          $2"
