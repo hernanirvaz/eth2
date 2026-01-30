@@ -109,7 +109,7 @@ p76='/etc/samba/smb.conf'
 p77='/etc/os-release'
 p78="$p14/trusted.gpg.d/jellyfin.gpg"
 p79="$p14/sources.list.d/jellyfin.list"
-# p80='/etc/modprobe.d/disable-uas.conf' # USB Hardware Fix removed
+p80='/etc/default/rkhunter'
 p81='/etc/wireguard'
 p82='/etc/sysctl.d/10-ipv6-privacy.conf'
 p83='/etc/needrestart/needrestart.conf'
@@ -758,6 +758,7 @@ e85='s%^/ip6/([^ ]+)/tcp/.*$%\1%p'
 e86='s%^pool +0.([a-z]{2}).*maxsources +[2-4]$%\1%p'
 e87='s%^(net.ipv6.conf.(all|default).use_tempaddr) *= *[0-9]+%\1 = 0%'
 e88="s%^.* +([0-9]{2}:[0-9]{2}):[0-9]{2}$g04 +(INFO +peers) +%\1 \2 %"
+e89='s%CRON_DAILY_RUN.*$%CRON_DAILY_RUN="yes"%;s%CRON_DB_UPDATE.*$%CRON_DB_UPDATE="yes"%;s%APT_AUTOGEN.*$%APT_AUTOGEN="yes"%'
 
 j0='.ata_sct_temperature_history.table|join(" ")'
 j1='.temperature.current'
