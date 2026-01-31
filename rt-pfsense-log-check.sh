@@ -23,21 +23,21 @@ lsw() {
     done;echo    
  }
 
-case "$1" in
-    *[!0-9]*) f="$1"    ;i=${2:-0};g='' ;;               
-    *)        f="system";i=${1:-0};g='logged|login|sshd' ;;
-esac
+i=${2:-0}
+g='logged|login|sshd'
 
 lsw $((i * 2)) '%Y-%m-%d' /root/wan-check.log
 if [ "$1" = "logs" ] || [ "$1" = "lst" ]; then
     (
       lsw $((i + 0)) '%b %e' /var/log/dhcpd.log* 
       lsw $((i + 0)) '%b %e' /var/log/system.log*
-    ) | grep -Ev 'logged|login|sshd|kea' | if [ "$1" = "logs" ]; then cat;else grep -E ':00:00|link state';fi | flg | sort
+    ) | grep -Ev "$g|kea" | if [ "$1" = "logs" ]; then grep -E 'hrv-protectli';else grep -E 'link state';fi | flg | sort
+elif [ "$1" = "log"   ]; then
+    lsw $((i + 0)) '%b %e' /var/log/system.log* | grep -Ev "$g"  | flg
 elif [ "$1" = "dhcpc" ]; then
-    lsw $((i + 0)) '%b %e' /var/log/dhcpd.log* | grep -Ev 'kea' | flg
+    lsw $((i + 0)) '%b %e' /var/log/dhcpd.log*  | grep -Ev 'kea' | flg
 else
-    lsw $((i + 0)) '%b %e' /var/log/$f.log* | if [ -z "$g"  ]; then cat;else grep -Ev "$g"    ;fi | flg
+    lsw $((i + 0)) '%b %e' /var/log/$1.log* | flg
 fi
 
 b=$(sysctl -n kern.boottime | cut -d" " -f4 | cut -d"," -f1)
