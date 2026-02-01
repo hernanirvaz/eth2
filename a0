@@ -200,13 +200,13 @@ function leo {
   fi
 }
 function pfh {
-  echo "pfs [PFSRB|fw{qsl}|ip{46crd}|dsk]   pfSense reboot|Firewall show Queues/Schedulers/Limiters|show ip4/ip6/config/route/discovery|disk"
+  echo "pfs [PFSRB|fw[qsl]|ip{46crd}|dsk]   pfSense reboot|Firewall show Queues/Schedulers/Limiters|show ip4/ip6/config/route/discovery|disk"
   echo "pfs {dhcp[c]|dns|gw|log[s]|lst} [h] pfSense logs dhcp[client]/resolver/gateways/system[dhcp]/link-state [last hours]"
 }
 function pfs { 
   local s=hrv-protectli;local i=${1:0:2};local r=${1:2}
   if   [[ $1 = PFSRB ]];then msh -q $s "/etc/rc.reboot"
-  elif [[ $i = fw    ]];then shift;if [[ $r = q ]];then i=queue;elif [[ $r = s ]];then i=sched;else i=pipe;fi;i="ipfw $i show";[[ $# -gt 0 ]] && i="$i 0$(printf ',%i' $@)";echo "$i";msh -q $s "$i"
+  elif [[ $i = fw    ]];then shift;if [[ $r = q ]];then i=queue;elif [[ $r = l ]];then i=pipe;else i=sched;fi;i="ipfw $i show";[[ $# -gt 0 ]] && i="$i 0$(printf ',%i' $@)";echo "$i";msh -q $s "$i"
   elif [[ $i = ip    ]];then msh -q $s "/root/rt-pfsense-ip.sh $1"
   elif [[ $1 = dsk   ]];then msh -q $s "smartctl -a /dev/ada0|grep -E 'Model:|^ID#|^ *(5|9|187) +[A-Z]'"
   elif [[ $1 = dhcp  ]];then msh -q $s "/root/rt-pfsense-log-check.sh dhcpd    $2"
