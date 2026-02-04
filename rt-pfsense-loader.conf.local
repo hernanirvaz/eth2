@@ -1,0 +1,4 @@
+kern.ipc.nmbclusters="8000000"
+net.link.ifqmaxlen="10000"
+net.inet.ip.intr_queue_maxlen="10000"
+kern.ipc.maxsockbuf="33554432"
