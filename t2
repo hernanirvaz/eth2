@@ -36,13 +36,13 @@ else
 fi
 cmw $p68 644 root;sex $s06 $s56
 sex apt-get install rkhunter -y                                                                                                                               # Rootkit Hunter install
-cc1 $p80 "$e89"              ;cmw $p80 644 root
-sex rkhunter --propupd
+cc1 $p80 "$e89"                ;cmw $p80 644 root
+t6 rkr;t6 rks                                                                                                                                                 # Rootkit Hunter check & update
 if sht;then
   if false;then                                                                                                                                               # use gateway not bind9
     sex apt-get install bind9 bind9utils -y                                                                                                                   # install bind
-    cc3 $p29 "$e07" "$s40"       ;cmw $p29 644 root bind                                                                                                      # named my options
-    cc1 $p30 "$e02"              ;cmw $p30 644 root                                                                                                           # use only ipv4
+    cc3 $p29 "$e07" "$s40"     ;cmw $p29 644 root bind                                                                                                        # named my options
+    cc1 $p30 "$e02"            ;cmw $p30 644 root                                                                                                             # use only ipv4
     t6 spd;t6 sea;sex $s02 systemd-resolved;sex $s03 systemd-resolved                                                                                         # DNS stop & start
   fi
   sex $s07 set-timezone Europe/Lisbon

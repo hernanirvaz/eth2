@@ -1337,6 +1337,9 @@ function nnc {
   swn Possible other changes needed on pfsense
   swn Firewall Aliases IPv6z[23456] $pfpd::100[23456]
 }
+
+[[ $1 = rkc ]] && { cex rkhunter --check --rwo; }
+[[ $1 = rkr ]] && { nex rkhunter --propupd; }
 [[ $1 = nnc ]] && { nnc; }
 [[ $1 = hsh ]] && { hhh;hsh;echo;if n1t;then hca;else hch;fi; }
 [[ $1 = hch ]] && { hch; }
@@ -1630,5 +1633,6 @@ if [[ $# -lt 1 ]];then
   m="$m\nr{op|co}\t\topen/close ports ($n65/$n66) for torrent"
   m="$m\nirv [v]\t\t\tinstalar rvm & ruby [$s82]"
   m="$m\ncns\t\t\tinstalar cns ruby gem"
+  m="$m\nrk{c|r}\t\t\trootkit hunter check|reset"
   swn "\n$m\n"
 fi
