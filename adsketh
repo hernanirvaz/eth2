@@ -59,6 +59,7 @@ function gcr {
   s='rt-pfsense'                              ;f=$(find ~/$s*.txt 2>/dev/null|tail -n1)              ;gcf "$f" "$s"
   s='rt-LEOX'                                 ;f=$(find ~/$s*.txt 2>/dev/null|tail -n1)              ;gcf "$f" "$s"
   s='rt-MEO'                                  ;f=$(find ~/$s*.txt 2>/dev/null|tail -n1)              ;gcf "$f" "$s"
+  s='rt-HG8010Hv6'                            ;f=$(find ~/$s*.txt 2>/dev/null|tail -n1)              ;gcf "$f" "$s"
   s='rt-protectli'                            ;f=$(find ~/$s*.txt 2>/dev/null|tail -n1)              ;gcf "$f" "$s"
 }
 function rfu {
@@ -66,6 +67,7 @@ function rfu {
   s='rt-pfsense'  ;[[ -s $s.txt ]] || { zfu eth2/$s.txt.gpg > $s.txt;[[ -s $s.txt ]] && echo Restored $s.txt; }
   s='rt-LEOX'     ;[[ -s $s.txt ]] || { zfu eth2/$s.txt.gpg > $s.txt;[[ -s $s.txt ]] && echo Restored $s.txt; }
   s='rt-MEO'      ;[[ -s $s.txt ]] || { zfu eth2/$s.txt.gpg > $s.txt;[[ -s $s.txt ]] && echo Restored $s.txt; }
+  s='rt-HG8010Hv6';[[ -s $s.txt ]] || { zfu eth2/$s.txt.gpg > $s.txt;[[ -s $s.txt ]] && echo Restored $s.txt; }
   s='rt-protectli';[[ -s $s.txt ]] || { zfu eth2/$s.txt.gpg > $s.txt;[[ -s $s.txt ]] && echo Restored $s.txt; }
 }
 
