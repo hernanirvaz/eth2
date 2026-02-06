@@ -1303,7 +1303,7 @@ function iwg {
 [[ $1 = mre ]] && { mre; }
 [[ $1 = jwt ]] && { sjw; }
 [[ $1 = lpi ]] && { lpi $p02/.cargo/bin/lighthouse; }
-[[ $1 = luc ]] && { luc $p02/.cargo/bin/lighthouse ${2:-v8.0.1}; }
+[[ $1 = luc ]] && { luc $p02/.cargo/bin/lighthouse ${2:-v8.1.0}; }
 [[ $1 = ruv ]] && { ruv $2; }
 [[ $1 = ccr ]] && { llt && ble "$e14"; }
 [[ $1 = cca ]] && { llt || ble "$e15"; }
@@ -1612,7 +1612,7 @@ if [[ $# -lt 1 ]];then
   m="$m\nd[sh [url]|rs]\t\tdns show [url]|reset"
   m="$m\nh[sh|rs|ch|ca|rc]\t$s45 show|restart|check|check all|restart conditional"
   m="$m\nhs[012ecvm]\t\tservices all|main|backup|execution|concensus|vc|mev"
-  m="$m\nr[sh|rs|pt|lk|ld|fr]\trestart gap show|reset|print|lock {restart|delete}|force restart"
+  m="$m\nr[sh|rs|pt|l{k|d}|fr]\trestart gap show|reset|print|lock {restart|delete}|force restart"
   m="$m\ni[sh|ch]\t\texternal ip show|change"
   m="$m\nj[sh|rs]\t\tjournal logs show|reset"
   m="$m\nf[sh|rf|(ud|st) [d]]\tfirmware device show|refres|(hupdate|selftest-nvme) [id]"

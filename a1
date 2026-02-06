@@ -93,7 +93,7 @@ function sjw {
 function svc { swb "$s76 $1 check slash,srv,dirs";pex ls -l $p17;pex cat $p04/$s13.service; }
 function unv { local v=${1:-23.1.0};curl -LO https://hyperledger.jfrog.io/artifactory/besu-binaries/besu/$v/besu-$v.tar.gz;shc besu-$v.tar.gz;swn "INSTALAR $s73 $v (SIM/nao)?";local rsp=nao;read rsp;if [[ $rsp = SIM ]];then tar xvf besu-$v.tar.gz;sex cp -a besu-$v $p00/besu;sex chown eth1:eth1 -R $p00/besu;cmw $p00/besu 755 eth1;fi; }
 function gnv {
-  local v=${1:-go1.25.5};local f="$v.linux-amd64.tar.gz";local l='/usr/local/go/bin';local s;s=$(dirname $l)
+  local v=${1:-go1.25.7};local f="$v.linux-amd64.tar.gz";local l='/usr/local/go/bin';local s;s=$(dirname $l)
   cd "$p02" || return
   if [[ $($l/go version 2>$p03|cut -d' ' -f3) = $v ]];then 
     return
@@ -110,7 +110,7 @@ function mn0 { cd "$p02" || return;sex rm -rf go;sex rm -rf $1; }
 function mn1 { CGO_CFLAGS="-O -D__BLST_PORTABLE__" /usr/local/go/bin/go install github.com/flashbots/$2@$1; }
 function mn2 { git clone https://github.com/flashbots/$2.git;cd $2;git checkout tags/$1;make build; }
 function mnv {
-  local v=${1:-v1.10.1}
+  local v=${1:-v1.11}
   local e='mev-boost';local f="$p02/$e/$e"
   if [[ $($p00/$e --version 2>&1|sef "$e73") = $v ]]; then
     swu "$e $v EXISTE"
