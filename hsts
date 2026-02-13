@@ -1,9 +1,15 @@
-25	hrv-protecli prtc
-25	hrv-zotac1 ztc1
-28	hrv-zotac2 ztc2
-31	hrv-zotac3 ztc3
-34	hrv-zotac4 ztc4
-37	hrv-intel5 int5
-40	hrv-intel6 int6
+25	hrv-protecli prtc z1
+28	hrv-zotac2 ztc2 z2 tv mv sw pw tr ng bz
+31	hrv-zotac3 ztc3 z3
+34	hrv-zotac4 ztc4 z4
+37	hrv-intel5 int5 z5
+40	hrv-intel6 int6 z6
 100	hrv-zen zen
-101	hrv-lenovo lnv1
+101	hrv-lenovo lnv
+102	pixel-9-pro-xl pixel
+103	lgwebostv lg1
+104	dreamevacuumr2364a lucifer
+105	lgwebostv0 lg0
+106	sp10027b914a ami
+107	sp10027af21a bike
+108	sp10027afd17 charges
