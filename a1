@@ -76,6 +76,7 @@ function bp  { if tsa "$s12";then cex $s02 $s12;else sex $s02 $s12;fi; }
 function vp  { if tsa "$s13";then cex $s02 $s13;else sex $s02 $s13;fi;touch $p05/vc_slash 2>$p03; }
 function mp  { if tsa "$s14";then cex $s02 $s14;else sex $s02 $s14;fi; }
 function fft { [[ -f $1 ]]; }
+function fzt { [[ -s $1 ]]; }
 function shc { sha256sum $1 2>$p03|cut -d' ' -f1; }
 function srb { rm -f $1.* 2>$p03;if [[ $2 = RB ]];then if fft $p50.print;then gp;up;tp;bp;vp;mp;rm -f $p05/vc_slash $p50.print 2>$p03;cex reboot;else gps;ups;tps;bps;vps;mps;rm -f $p05/vc_slash 2>$p03;sex reboot;fi;else rm -f $p50.print 2>$p03;fi; }
 function idi { local e="deny from $1 to $2"                       ;if [[ $4 ]];then nex ufw $4 $e;else nex ufw $e comment $3;fi; }
@@ -83,12 +84,12 @@ function pde { local e="deny $1"                                  ;if [[ $3 ]];t
 function pai { local e="allow from $2 to any port ${1/\// proto }";if [[ $4 ]];then nex ufw $4 $e;else nex ufw $e comment $3;fi; }
 function pae { local e="allow $1"                                 ;if [[ $3 ]];then nex ufw $3 $e;else nex ufw $e comment $2;fi; }
 function ple { local e="limit $1"                                 ;if [[ $3 ]];then nex ufw $3 $e;else nex ufw $e comment $2;fi; }
-function sis { local f=$(basename $1);if [[ -s $1 ]];then swg "NEW $f";sex mv $1 $p17;touch $p05/vc_slash 2>$p03;cmw $p18 600 eth3;else swr "NO $f";fi; }
+function sis { local f=$(basename $1);if fzt $1;then swg "NEW $f";sex mv $1 $p17;touch $p05/vc_slash 2>$p03;cmw $p18 600 eth3;else swr "NO $f";fi; }
 function sjw { 
   [[ $cunm = $inm5 || $cunm = $inm6 || $cunm = $vnm1 || $cunm = $vnm2 ]] || return;local s=${b[*]}
-  if [[ -d $p58 ]]        ;then swn "JA EXISTE $p58/"       ;else sex mkdir -p $p58;cmw "$p58" 755 eth                         ;fi
-  if [[ -s $p58/jwt ]]    ;then swn "JA EXISTE $p58/jwt"    ;else openssl rand -hex 32|tr -d '\n' > "$p58/jwt";cmw "$p58/jwt" 444;fi
-  if [[ -s $p58/pubkeys ]];then swn "JA EXISTE $p58/pubkeys";else echo "${s// /,}" > "$p58/pubkeys";cmw "$p58/pubkeys" 444 eth2  ;fi
+  if [[ -d $p58 ]]   ;then swn "JA EXISTE $p58/"       ;else sex mkdir -p $p58;cmw "$p58" 755 eth                           ;fi
+  if fzt $p58/jwt    ;then swn "JA EXISTE $p58/jwt"    ;else openssl rand -hex 32|tr -d '\n' > "$p58/jwt";cmw "$p58/jwt" 444;fi
+  if fzt $p58/pubkeys;then swn "JA EXISTE $p58/pubkeys";else echo "${s// /,}" > "$p58/pubkeys";cmw "$p58/pubkeys" 444 eth2  ;fi
 }
 function svc { swb "$s76 $1 check slash,srv,dirs";pex ls -l $p17;pex cat $p04/$s13.service; }
 function unv { local v=${1:-23.1.0};curl -LO https://hyperledger.jfrog.io/artifactory/besu-binaries/besu/$v/besu-$v.tar.gz;shc besu-$v.tar.gz;swn "INSTALAR $s73 $v (SIM/nao)?";local rsp=nao;read rsp;if [[ $rsp = SIM ]];then tar xvf besu-$v.tar.gz;sex cp -a besu-$v $p00/besu;sex chown eth1:eth1 -R $p00/besu;cmw $p00/besu 755 eth1;fi; }
@@ -153,7 +154,7 @@ function nnv {
     swn "\nsha256:$e\n"
   fi
   [[ $1 = D ]] && return
-  if [[ -s $f ]]; then
+  if fzt $f;then
     e=$(shc "$f")
     swn "INSTALAR $s?"
     read -r rsp

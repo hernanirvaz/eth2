@@ -111,7 +111,7 @@ function hat { fft $p50.force || [[ ${a[$nn]} -ge ${a[0]} ]]; }
 function bdt { ! fft $p61.lock && ( szt $nz || [[ $(b03 "$zk" "$zz" "$zx" "$zw") -gt $n20 ]] ); }
 function sft { [[ -f $p04/$1.service ]]; }
 function bpt { ! fft $p50.lock && [[ $(era $p12 $n12) -le 1 ]] && ( (pct && pmt "$nm" "$nr" && hat && ! bdt && ! fft $p45) || rbt $n06); }
-function llc { if [[ -s  ${1:-$p03} ]];then grep -Ec "$s72|$s73|$s74|$s75|$s76|$s77" $1 2>$p03;else printf %i 0;fi; }                                         # get normal log line count
+function llc { if fzt ${1:-$p03};then grep -Ec "$s72|$s73|$s74|$s75|$s76|$s77" $1 2>$p03;else printf %i 0;fi; }                                               # get normal log line count
 function jrn { local s;if [[ $2 ]];then s="-g $2";else s=;fi;cex journalctl --no-hostname --no-full -f $1 $s; }                                               # my journal   format
 function dmr { sex $s00 daemon-reload; }                                                                                                                      # daemon-reload
 function si1 { local n=${1:-0};printf %i $((20*n))   2>$p03; }
@@ -152,7 +152,7 @@ function sra { if fft $p45;then nu1 $(($(date +%s)-$(date -r $p45 +%s)));else pr
 function dts { read       d0 d1   <<< ${1:-$(date '+%F %H:%M')};dt="$d0 $d1"; }                                                                               # set date/time vars
 function dtl { read _ _ _ d0 d1 _ <<< $(bff|tail -n1)          ;dt="$d0 $d1"; }                                                                               # set date/time vars with last beacon log
 function tsy { if grep -q false <<< "$@";then printf SYC;else printf NSY;fi; }                                                                                # get el SYN/NSY text
-function era { if [[ -s $1 ]];then tail -n${2:-$n13} $1 2>$p03|cut -d' ' -f1|sort -u|wc -l;else printf 0;fi; }                                                # get el/cc restart ready
+function era { if fzt $1;then tail -n${2:-$n13} $1 2>$p03|cut -d' ' -f1|sort -u|wc -l;else printf 0;fi; }                                                     # get el/cc restart ready
 function eh0 {
   local n=${1:-$n13}
   local i=${1:-0}
@@ -431,10 +431,10 @@ function bof {
     nn=$g;nr=$g;bl1 0 1000 0 OK;bl2 0 0 $((${1:-1}*n)) $((${2:-0}*n));bl3 0 0 0 0 0 0 0;blo;swn "$m" >> $p12.r
     if [[ $o = a ]];then n=$((n+1));else n=$((n-1));fi;g=$((g+n18))
   done
-  [[ -s $p12.r ]] || return
+  fzt $p12.r || return
   cp $p12 $p12.o;cat $p12.r;cat $p12.o >> $p12.r
 }
-function bsm { brm;[[ -s $p13.r ]] && cp $p13.r $p13; }
+function bsm { brm;if fzt $p13.r;then cp $p13.r $p13;else rm -f $p13;fi; }
 function bdd {
   fft $p12 || return;local s;local e;l2=$(bff $s43);if [[ $1 = o ]];then s=$(bo1);else s=$(bo0);fi;e='';while read -a v;do
     if [[ ${v[9]} -ge $2 && $(grep -c ${v[5]} <<< "$l2") -gt $3 ]];then e="$e|${v[3]}";l2=$(grep -v ${v[3]} <<< "$l2");fi                                     # gather delete info
@@ -485,8 +485,8 @@ function brl {                                                                  
   done <<< $(cat $p12)
 }
 function brm { # recalculate cc-daily logs
-  fft $p12 && fft $p13 || return
-  rm -f $p13.r;bmi
+  rm -f $p13.r;touch $p13.r;bmi
+  fzt $p12 && fzt $p13 || return
   local d=0000-00-00;local l=0;local n=0;local h=0;local g=0;unset v
   while read -a v; do
     d=${v[3]}
@@ -514,7 +514,7 @@ function brm { # recalculate cc-daily logs
     swn "$m" >>$p13.r
   done <<<$(cat $p13)
 }
-function bdw { fft $1 || return;cp $1 $1.o;grep -Eahv "$2" $1.o > $1;grep -Eah "$2" $1.o > $1.d; }                                                            # work to delete cc log day
+function bdw { fzt $1 || return;cp $1 $1.o;grep -Eahv "$2" $1.o > $1;grep -Eah "$2" $1.o > $1.d; }                                                            # work to delete cc log day
 function bdl { local d=$(pt0 $1 sai);[[ $d = sai ]] && return;bdw $p12 $d;bdw $p13 $d;bsm; }                                                                  #         delete cc log day
 function wif { sef "$e17" <<< $@; }                                                                                                                           # get ufw info
 function sm0 { pex smartctl --json=c -x "$1"|jq -r "$j3" 2>$p03; }
@@ -1118,7 +1118,7 @@ function cns {
 function idk {
   srv hrv-zotac2 || return
   local s="$p14/keyrings/$s80.gpg";local a;local c
-  if [[ -s $s ]];then
+  if fzt $s;then
     swb "$s80 JA INSTALADO";return
   fi
   a=$(dpkg --print-architecture);c=$(snf "$e80" $p77)
