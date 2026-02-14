@@ -667,7 +667,7 @@ e29="s%^$g58 +$e35%$e31\5: \2\3 \8\t%"                                          
 e29="$e29;s%^$g58 +$e33\| +%$e30\5: \2\3\t%"                                                           # syslog nethermind
 e29="$e29;s%^$g23($g03$g04)[0-9]*\|$e34\|.+\|[0-9]{,5}\|%${e30}int: \1 \2 %"                           # internal nethermind logs
 e29="$e29;s%#033\[[0-9]+m%%g"                                                                          # mev-boost remove codes
-e29="$e29;s%^$g58 +$e32 +mev-boost$g05 +([A-Z]{4})[A-Z]*[^ ]+%m\5: \2\3 \6%"                           # mev-boost syslog
+e29="$e29;s%^$g58 +$e32 +mev-boost$g05 +time.+level *= *([A-Za-z]{4})[A-Za-z]* +%m\5: \2\3 \U\6 %"     # mev-boost syslog
 e30="s%.+$e32 +(.*)%\2%;s% +% %g"
 e31="s%.*$g03$g04[0-9]* *(.*)%\1%;s%\t\t*% %g;s% +% %g;s%[\"\/]%%g"
 e32="s%(https?://)?127\.0\.0\.1(:[0-9]+)/?%lh\2%g"
