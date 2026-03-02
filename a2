@@ -5,6 +5,7 @@ source /home/eth/eth2/a0
 function ecm { echo -e "\n\e[5;32m${*^^}\e[0m";eval "$*"; }
 function ecn { echo -e "\n\n\e[32m$*\e[0m\n\n";eval "$*"; }
 function erq { local q=${*:-changelogs.ubuntu.com};ecm resolvectl query "$q"; }
+function efs { local d;d=$(df -P|sed -En 's%^(/dev/md[0-9]+).*%\1%p');[[ -b "$d" ]] || d=$(df -P|sed -En 's%^(/dev/nvme[^ ]+).+/el.*%\1%p');if [[ -b "$d" ]];then df -m "$d"|sed -En "s%.+ +([0-9]+) +([0-9]+) +([0-9]+) +.+$%\1-\2%p"|bc;else printf %i 0;fi; }
 
 alias z1='msh hrv-protectli'
 alias z2="msh hrv-zotac2"
