@@ -5,13 +5,19 @@ source /home/eth/eth2/a0
 function ecm { echo -e "\n\e[5;32m${*^^}\e[0m";eval "$*"; }
 function ecn { echo -e "\n\n\e[32m$*\e[0m\n\n";eval "$*"; }
 function erq { local q=${*:-changelogs.ubuntu.com};ecm resolvectl query "$q"; }
-function efs {
-  local d
-  d=$(df -Pm | sed -En 's%^(/dev/md[0-9]+).+$%\1%p');[[ -b "$d" ]] || d=$(df -Pm | sed -En 's%^(/dev/nvme[^ ]+).+/el$%\1%p')
-  if [[ -b "$d" ]]; then
-    df -Pm "$d" | sed -En 's%^[^ ]+ +([0-9]+) +([0-9]+) +.+$%\1-\2%p' | bc
+function ef0 {
+  if [[ -b "$1" ]]; then
+    df -Pm "$1" | sed -En 's%^[^ ]+ +([0-9]+) +([0-9]+) +.+$%\1-\2%p' | bc
   else
-    printf %i 0
+    echo 0
+  fi
+}
+function efs {
+  local n;n=$(ef0 $(df -Pm | sed -En 's%^(/dev/md[0-9]+).+$%\1%p'))
+  if [[ $n -gt 0 ]];then
+    echo "$n"
+  else
+    ef0 $(df -Pm | sed -En 's%^(/dev/nvme[^ ]+).+/el$%\1%p')
   fi
 }
 
