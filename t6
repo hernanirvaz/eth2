@@ -1281,6 +1281,14 @@ function iwg {
 [[ $1 = bpl ]] && { ll5 "$g69.*$2"; }
 [[ $1 = mvr ]] && { mvr; }
 [[ $1 = mre ]] && { mre; }
+function mrp {
+  local s n
+  for s in $($s01 $s14 | snf "$e90");do
+    n=$(ping -q -c ${1:-5} $s | tail -1 | cut -d/ -f5)
+    printf '%5.1fms\t%s\n' ${n:-0} $s
+  done
+}
+[[ $1 = mrp ]] && { mrp $2; }
 [[ $1 = jwt ]] && { sjw; }
 [[ $1 = lpi ]] && { lpi $p02/.cargo/bin/lighthouse; }
 [[ $1 = luc ]] && { luc $p02/.cargo/bin/lighthouse ${2:-v8.1.1}; }
@@ -1588,7 +1596,7 @@ if [[ $# -lt 1 ]];then
   m="$m\n[ec]sp [m]\t\tel|cc show logged $g31 <= m(0)"
   m="$m\ncc[a|r|e]\t\tcc [a]dd/[r]emove long-lived parms|toggle what [e]l to connect to ($inm6|$inm5)"
   m="$m\ncpe [hp]\t\thours & temperature & errors status"
-  m="$m\nm[vr|re]\t\tmev validator registration|relay erros"
+  m="$m\nm[vr|re|rp [n]]\t\tmev validator registration|relay erros|relay ping -c n[=5]"
   m="$m\nw[a|pr|s|l [e]]\t\tfirewall arranca|para|status|logs [exclude]"
   m="$m\nn[sh|rs|gr|ns|nc]\tnetwork show|reset|gap reset|netplan {show|config}"
   m="$m\nd[sh [url]|rs]\t\tdns show [url]|reset"
