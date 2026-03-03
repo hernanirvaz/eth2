@@ -13,7 +13,7 @@ othe=''
 othe="$othe --network-maxactivepeers $maxp --network-discoveryport $pp2p --network-p2pport $pp2p"
 othe="$othe --jsonrpc-enabled true --jsonrpc-host $apip --jsonrpc-enginehost $apip --jsonrpc-engineport 8551 --jsonrpc-jwtsecretfile $p58/jwt"
 othe="$othe --sync-snapsync true"
-othe="$othe --pruning-mode Hybrid --pruning-fullpruningtrigger VolumeFreeSpace --pruning-fullpruningthresholdmb $((fptv*1024)) --pruning-fullpruningmemorybudgetmb $((fpmb*1024)) --Pruning.FullPruningMaxDegreeOfParallelism 2"
+othe="$othe --pruning-mode Hybrid --pruning-fullpruningtrigger VolumeFreeSpace --pruning-fullpruningthresholdmb $((fptv*1024)) --pruning-fullpruningmemorybudgetmb $((fpmb*1024))"
 othe="$othe --Blocks.TargetBlockGasLimit $((n56*10**6))"
 # first iteration of the Nethermind UI, providing an integrated interface to interact with and monitor the node
 # othe="$othe --healthchecks-enabled true --healthchecks-uienabled true"
