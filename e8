@@ -1,6 +1,6 @@
 #!/bin/bash
 
-f=e9.log
+f=${1:-e9.log}
 [[ -f $f ]] || { echo "$f nao existe"; exit 1; }
 l=$(grep -Ei '[0-9.]+ *ms.+[0-9.]+ *Mbit/s.+[0-9.]+*Mbit/s' $f)
 e=$(awk '{ps+=$4;ds+=$7;us+=$10;cn++} END {printf "Ping: %.0f ms Download: %.0f Mbit/s Upload: %.0f Mbit/s\n", ps/cn, ds/cn, us/cn}' <<< "$l")
