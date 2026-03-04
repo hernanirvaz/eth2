@@ -1281,9 +1281,10 @@ function iwg {
 [[ $1 = bpl ]] && { ll5 "$g69.*$2"; }
 [[ $1 = mvr ]] && { mvr; }
 [[ $1 = mre ]] && { mre; }
+function mrn { [[ -s $p04/$s14.service ]] || return;snf "$e90" $p04/$s14.service; }
 function mrp {
   local s n
-  for s in $($s01 $s14 | snf "$e90");do
+  for s in $(mrn);do
     n=$(ping -q -c ${1:-5} $s | tail -1 | cut -d/ -f5)
     printf '%5.1fms\t%s\n' ${n:-0} $s
   done
@@ -1296,7 +1297,8 @@ function mrp {
 [[ $1 = ccr ]] && { llt && ble "$e14"; }
 [[ $1 = cca ]] && { llt || ble "$e15"; }
 [[ $1 = cce ]] && { cce; }
-[[ $1 = dsh ]] && { $s09 query ${2:-smtp.gmail.com}; }
+function dsq { [[ $# -gt 0 ]] || return;$s09 query $@; }
+[[ $1 = dsh ]] && { dsq ${2:-smtp.gmail.com}; }
 [[ $1 = drs ]] && { dpa; }
 [[ $1 = nsh ]] && { nsh; }
 [[ $1 = nrs ]] && { nrs; }
@@ -1492,8 +1494,7 @@ function wa { if pex ufw status|grep -iq inactive;then cex ufw --force enable;el
 # [[ $1 = bpa ]] && { bp;dmr;ba;jrn "-u $s12" "$2"; } # use brs
 # [[ $1 = vpa ]] && { vp;dmr;va;jrn "-u $s13" "$2"; } # use vrs
 [[ $1 = spa ]] && { sp;sa; }
-function mdr { sed -E 's%^.+relays +%%' $p04/$s14.service|sed -En 's%http[^@]+@([^,]+),?% \1%gp'; }
-[[ $1 = mpa ]] && { mp;dmr;resolvectl query $(mdr);ma;jrn "-u $s14" "$2"; }
+[[ $1 = mpa ]] && { mp;dmr;dsq $(mrn);ma;jrn "-u $s14" "$2"; }
 [[ $1 = jpa ]] && { jp;dmr;ja; }
 [[ $1 = gpd ]] && { gp;gd; }
 [[ $1 = upd ]] && { up;ud; }
@@ -1516,7 +1517,7 @@ function mdr { sed -E 's%^.+relays +%%' $p04/$s14.service|sed -En 's%http[^@]+@(
 [[ $1 = sea ]] && { se;dmr;sa; }
 [[ $1 = xea ]] && { xe;dmr;xa; }
 [[ $1 = jea ]] && { je;dmr;ja; }
-[[ $1 = mea ]] && { me;dmr;resolvectl query $(mdr);ma; }
+[[ $1 = mea ]] && { me;dmr;dsq $(mrn);ma; }
 # enable
 [[ $1 = ge  ]] && { ge; }
 [[ $1 = ue  ]] && { ue; }
