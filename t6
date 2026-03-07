@@ -346,7 +346,7 @@ function bb0 { bs0;bs3;bl1;bl2;[[ ($(era $p12 $n12) -le 1 && $(bri) -ge 1) || ($
 function bfl { grep "$s75.*$1"      2>$p03; }                                                                                                                 # filter cc lines
 function bff { grep "$s75.*$1" $p12 2>$p03; }                                                                                                                 # filter cc log
 function bb1 { if [[ $(jq -r .data.is_syncing <<< $@ 2>$p03) = false ]];then printf 'synced ';else printf 's%06i' $(bsi $@);fi; }                             # get cl syncing distance remaining
-function bmp { printf '%3i %2s %4i %4i iearhp: %4i %3i %4i %2i %2i %2i %4i' ${a[0]} $b5 $b4 $(b03 $zk $zz $zx $zw) $i0 $i1 $i4 $b1 $i2 $i3 $(b01) 2>$p03; }
+function bmp { printf '%3i %2s %4i %4i iearhp: %4i %3i %4i %2i %3i %2i %4i' ${a[0]} $b5 $b4 $(b03 $zk $zz $zx $zw) $i0 $i1 $i4 $b1 $i2 $i3 $(b01) 2>$p03; }
 function bl0 { dts;ok=OK;if tsa $s12;then bl3;bv0;bnn;bb0;blo;else m="BSRV NOT ON $dt";fi; }                                                                  # cc report
 function bl1 { z1=${1:-$(grep -cv "$g27" <<< "$l0")};z2=${2:-$(grep -c "$g27" <<< "$l0")};z3=${3:-$(bl4 success)};ok=${4:-OK}; }                              # set info lines,success activities
 function bl2 { zk=${1:-$(bl4 missing)};zz=${2:-$(bl4 target)};zx=${3:-$(bl4 head)};zw=${4:-$(bl4 had)}; }                                                     # set missing/target/head/had activities
@@ -376,13 +376,13 @@ function blo {
 #    0    1   2          3     4       5  6   7     8    9   10   11   12   13   14   15  16  17   18      19   20   21   22 23    24  25   26
 # BEAC   50  22 2024-04-02 16:10 nod100: 110 mp:  679  874 1149  792  772 1341 1638 1043 p_: -60 2896 iearhp: 1281 3938 3593 17 50734  65 1632
 function bmo { m="$s75 $(printf '%2i %3i' $b2 $b3 2>$p03) $(npn $nr $nn) $(bma) $(bmp)"; }
-#    0  1   2          3     4       5  6   7   8   9  10  11   12      13   14  15  16  17 18 19   20   21  22   23 
-# BEAC 40  40 2026-02-13 10:13 np200: 216 mp:  30  31 p_  -20  111 iearhp:  790 144 4830  3 19 19 2532 pmd: 199 5508
+#    0  1   2          3     4       5  6   7   8   9  10  11   12      13   14  15  16  17  18 19   20    21  22 23   24
+# BEAC 49  22 2026-03-07 13:09 np200: 203 mp:  29  31 p_  -40   72 iearhp:  586  56 4494  6 110 16 2296 pm6d: 199  4 7126
 function bms {
   local e
-  if   [[ $1  -gt 0 || $2  -gt 0 ]];then e=$(printf 'pmd: %3i %4i' $1  $2  2>$p03) # saved   peer count minimum & std deviation
-  elif [[ $nm -gt 0 || $nd -gt 0 ]];then e=$(printf 'pmd: %3i %4i' $nm $nd 2>$p03) # current peer count minimum & std deviation
-  else e=                                                                          # no peer stats
+  if   [[ $1  -gt 0 || $3  -gt 0 ]];then e=$(printf 'pm6d: %3i %2i %4i' $1  $2               $3  2>$p03) # saved   peer minimum, ip6, std deviation
+  elif [[ $nm -gt 0 || $nd -gt 0 ]];then e=$(printf 'pm6d: %3i %2i %4i' $nm $(bnp|bpn|wc -l) $nd 2>$p03) # current peer minimum, ip6, std deviation
+  else e=                                                                                                # no peer stats
   fi
   [[ $e ]] && e=" $e"
   m="$s75 $(printf '%2i %3i' $b2 $b3 2>$p03) $(npn $nr $nn) mp: $(nu0 %3i ${a[$nn]}) $(bmp)$e"
@@ -510,7 +510,7 @@ function brm { # recalculate cc-daily logs
     b5=${v[10]}
     b4=${v[11]}
     svi
-    bms ${v[22]} ${v[23]}
+    bms ${v[22]} ${v[23]} ${v[24]}
     swn "$m" >>$p13.r
   done <<<$(cat $p13)
 }
@@ -1232,12 +1232,11 @@ function imk {
 function eis { [[ $1 && $2 ]] && curl -s4 "https://$1:$2@dyn.dns.he.net/nic/update?hostname=$1"; }
 [[ $1 = eic ]] && { eis $2 $3 &>$p03;pas ; }
 [[ $1 = eio ]] && { eis $2 $3       ;echo; }
-function bpn { bnp|jq -r "$s78"|grep -Ei "${1:-ip6}"; }
 function bps { 
   sbt || return
-  local s;local n;local i;local e;dts
+  local s n i e l;dts
   s=$(ll5 "$g69.*:[a-f0-9]{1,4}:")
-  e=$(bpn);n=0
+  l=$(bnp);e=$(echo $l|bpn);n=0
   [[ $e ]] && n=$(wc -l <<< "$e")
   echo "$s75 p2p v6 $dt sessions in/out: $(echo "$s"|grep -ic Incoming)/$(echo "$s"|grep -ic Outgoing) seen: $n"
   [[ $e ]] && echo "$s75 see v6 $dt ${e//$'\n'/$'\n'"$s75 see v6 $dt "}"
@@ -1252,11 +1251,11 @@ function bps {
   fi
   if [[ $n == $i ]];then e=$(swg OK);else e=$(swr NO);fi
   echo $s75 "$e  I6" $dt $n $i
-  if tsa $s12; then bv0;bnn;s=$(bnp)
+  if tsa $s12; then bv0;bnn
     n=$(b05 $nr)
     e=$(csp $n|sef "$e88")
     [[ $e ]] && echo "$s75 csp$(nu0 %3i $n) $d0 ${e//$'\n'/$'\n'"$s75        $d0 "}"
-    echo $s75 SUMARY $dt $(non $nn) $(sxl $nr $nm $nz $nd) limits:$(szl $nm $nr)$(szi $nz) peers in/out: $(echo $s|jq -r "$s48\"Incoming\"$s49"|wc -l)/$(echo $s|jq -r "$s48\"Outgoing\"$s49"|wc -l)
+    echo $s75 SUMARY $dt $(non $nn) $(sxl $nr $nm $nz $nd) limits:$(szl $nm $nr)$(szi $nz) peers in/out: $(echo $l|jq -r "$s48\"Incoming\"$s49"|wc -l)/$(echo $l|jq -r "$s48\"Outgoing\"$s49"|wc -l)
   else
     echo $s75 NOT ON $dt
   fi
@@ -1278,10 +1277,11 @@ function iwg {
   s="$s\nPersistentKeepalive = 25"
 }
 
+function bpn { jq -r "$s78"|grep -Ei "${1:-ip6}"; }
 [[ $1 = bps ]] && { bps; }
 [[ $1 = bpi ]] && { bnp|jq -r "$s48\"Incoming\"$s49"; }
 [[ $1 = bpo ]] && { bnp|jq -r "$s48\"Outgoing\"$s49"; }
-[[ $1 = bpn ]] && { bpn $2; }
+[[ $1 = bpn ]] && { bnp|bpn $2; }
 [[ $1 = bpl ]] && { ll5 "$g69.*$2"; }
 [[ $1 = mvr ]] && { mvr; }
 [[ $1 = mre ]] && { mre; }
