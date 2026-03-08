@@ -12,7 +12,7 @@ pnm1='hrv-zen'   ;pip1=$(sin $pnm1)
 pnm2='hrv-lenovo';pip2=$(sin $pnm2)
 
 if sht;then
-cuvc=$vnm1
+cuvc=$znm4
 nxvc=$znm4
 cun1=$inm6
 cun2=$inm6
@@ -21,7 +21,7 @@ cut1=$znm3
 cut2=$znm2
 else
 cuvc=$cunm
-nxvc=$znm4
+nxvc=$cunm
 cun1=$cunm
 cun2=$cunm
 cumv=$cunm
