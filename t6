@@ -785,6 +785,7 @@ function hs0 {
     hss $cunm
   fi
   if sxt;then hsh;echo;hch;fi
+  uptime -p;echo
 }
 function nsh { $s08 list;$s08 status;$s09 status|snf "$e26"; }                                                                                                # network/dns info
 function wlp { local e="$1";shift;until [[ $# -lt 1 ]];do e="$e|$1";shift;done;ll7|grep 'UFW BLOCK'|if [[ $e ]];then grep -Ev "$e";else cat;fi; }
