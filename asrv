@@ -76,7 +76,7 @@ elif [[ $cunm = hrv-zotac3 || $cunm = hrv-zotac4 ]];then
   alias aa='t6 ch'
 elif [[ $cunm = hrv-intel5 || $cunm = hrv-intel6 ]] || ! sht;then
   alias aa='t6 ah'
-  alias prune='t6 el .|grep -i pruning|grep -v memory|tail -n5;echo netfs $(efs);echo netcf $(sed -En "s%.+fullpruningthresholdmb +([0-9]+).*%\1%p" /etc/systemd/system/eth-nethermind.service)'
+  alias pn='t6 el .|grep -i pruning|grep -v memory|tail -n5;echo netfs $(efs);echo netcf $(sed -En "s%.+fullpruningthresholdmb +([0-9]+).*%\1%p" /etc/systemd/system/eth-nethermind.service)'
 fi
 
 alias pp='t6 bps'
