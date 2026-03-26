@@ -1297,7 +1297,7 @@ function mrp {
 [[ $1 = mrp ]] && { mrp $2; }
 [[ $1 = jwt ]] && { sjw; }
 [[ $1 = lpi ]] && { lpi $p02/.cargo/bin/lighthouse; }
-[[ $1 = luc ]] && { luc $p02/.cargo/bin/lighthouse ${2:-v8.1.2}; }
+[[ $1 = luc ]] && { luc $p02/.cargo/bin/lighthouse ${2:-v8.1.3}; }
 [[ $1 = ruv ]] && { ruv $2; }
 [[ $1 = ccr ]] && { llt && ble "$e14"; }
 [[ $1 = cca ]] && { llt || ble "$e15"; }
