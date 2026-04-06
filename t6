@@ -1419,7 +1419,7 @@ function bml { [[ $d1 = $s43 ]] || return;if bdt;then bdl $d0;elif [[ $(llc $p12
 [[ $1 = jrs ]] && { nex journalctl --vacuum-time=3days;nex journalctl --verify; }
 [[ $1 = uur ]] && { uur; }
 [[ $1 = lp  ]] && { pex ss -tunlp; }
-[[ $1 = lc  ]] && { pex lsof -i -P -n; }
+[[ $1 = lc  ]] && { pex lsof -i -Pn -s TCP:ESTABLISHED; }
 [[ $1 = ish ]] && { curl -s https://ipinfo.io/ip;echo; }
 [[ $1 = ich ]] && { ll6 "$g57"|sef "$e50"; }
 # outros journal system/lighthouse
