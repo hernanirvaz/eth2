@@ -26,7 +26,7 @@ else
   othe=''
   # [[ $cunm = $cun1 ]] && sht && othe="$othe --enr-address $(si6 $cunm)"  # advertise public IPv6 address (tests with pfSense DHCPv6 - works without this)
   othe="$othe --execution-endpoint http://$apip:8551 --execution-jwt $p58/jwt"
-  [[ $cunm = $cun1 ]] && othe="$othe --prune-payloads false"                                                                                                  # saves space but imposes load on EL default true
+  snt $cunm && othe="$othe --prune-payloads false"                                                                                                            # saves space but imposes load on EL default true
   othe="$othe --suggested-fee-recipient $s26"                                                                                                                 # EL fees
   othe="$othe --validator-monitor-file $p58/pubkeys"                                                                                                          # monitor validators
     if sht;then othe="$othe --builder http://$zip3:18550";else othe="$othe --builder http://$apip:18550";fi
