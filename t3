@@ -73,7 +73,7 @@ else
   othe=''
   othe="$othe --builder-proposals --builder-boost-factor 100"                                                                                                 # factor/100*mev > local ? mev : local
   if sht;then
-    othe="$othe --beacon-nodes http://$iip6:5052,http://$iip5:5052"
+    othe="$othe --beacon-nodes http://$iip6:5052"
   else
     othe="$othe --beacon-nodes http://$vis1:5052"
   fi
