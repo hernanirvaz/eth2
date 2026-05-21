@@ -12,7 +12,7 @@ pnm1='hrv-zen'   ;pip1=$(sin $pnm1)
 pnm2='hrv-lenovo';pip2=$(sin $pnm2)
 
 if sht;then
-cuvc=$vnd1
+cuvc=$znm4
 nxvc=$znm4
 cun1=$inm6
 cun2=$inm6
@@ -20,8 +20,8 @@ cumv=$znm3
 cut1=$znm3
 cut2=$znm2
 else
-cuvc=$cunm
-nxvc=$znm4
+cuvc=$vnm1
+nxvc=$vnm1
 cun1=$cunm
 cun2=$cunm
 cumv=$cunm
@@ -286,17 +286,17 @@ s20='named'
 s21='plexmediaserver'
 s22='nginx'
 s23="JAVA_HOME='/usr/lib/jvm/java-11-openjdk-amd64'"
-s24=""
-s24="$s24\n0 set $(basename $p19)\t\t\t\t\t[${nxvc%%.*}]"
-s24="$s24\n1 t6 tvc (vrs PR $n00;vd)\t\t\t\t[${cuvc%%.*}]"
-s24="$s24\n2 t6 tbd (scp ${cuvc%%.*}:slash_DB ${nxvc%%.*})\t\t[${nxvc%%.*}]"
-s24="$s24\n3 t3 (keys,slash,srv)\t\t\t\t\t[${nxvc%%.*}]"
-s24="$s24\n4 check slash,srv,dirs\t\t\t\t\t[${nxvc%%.*}]"
-s24="$s24\n5 rm vc_lock;cuvc=${nxvc%%.*}\t\t\t\t[${nxvc%%.*}]"
-s24="$s24\n6 t6 vea\t\t\t\t\t\t[${nxvc%%.*}]"
-s24="$s24\n7 rm -fr $p17\t\t\t[${cuvc%%.*}]"
-s24="$s24\n8 rm -f  $p04/$s13.service\t[${cuvc%%.*}]"
-s24="$s24\n9 rm -f  $p05/{vc_keys,vc_slash}\t\t[${cuvc%%.*}]\n"
+s24="";s25=0
+s24="$s24\n$s25 set $(basename $p19)\t\t\t\t\t[${nxvc%%.*}]";s25=$((s25+1))
+s24="$s24\n$s25 t6 tvc (vrs PR $n00;vd)\t\t\t\t[${cuvc%%.*}]";s25=$((s25+1))
+if ! sht;then s24="$s24\n$s25 t6 tbd (scp ${cuvc%%.*}:slash_DB ${nxvc%%.*})\t\t[${nxvc%%.*}]";s25=$((s25+1));fi
+s24="$s24\n$s25 t3 (keys,slash,srv)\t\t\t\t\t[${nxvc%%.*}]";s25=$((s25+1))
+s24="$s24\n$s25 check slash,srv,dirs\t\t\t\t\t[${nxvc%%.*}]";s25=$((s25+1))
+s24="$s24\n$s25 rm vc_lock;cuvc=${nxvc%%.*}\t\t\t\t[${nxvc%%.*}]";s25=$((s25+1))
+s24="$s24\n$s25 t6 vea\t\t\t\t\t\t[${nxvc%%.*}]";s25=$((s25+1))
+s24="$s24\n$s25 rm -fr $p17\t\t\t[${cuvc%%.*}]";s25=$((s25+1))
+s24="$s24\n$s25 rm -f  $p04/$s13.service\t[${cuvc%%.*}]";s25=$((s25+1))
+s24="$s24\n$s25 rm -f  $p05/{vc_keys,vc_slash}\t\t[${cuvc%%.*}]\n";s25=$((s25+1))
 s25='0x27C7f54e48956A906aF2CBFBC8684b437776403d'
 s26='0x534029B6371dc4453DD750Bc1198181F55C859fe'
 s27="--connection=http://$(sni $cun2):5052 --allow-insecure-connections"
