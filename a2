@@ -7,7 +7,7 @@ function ecn { echo -e "\n\n\e[32m$*\e[0m\n\n";eval "$*"; }
 function erq { local q=${*:-changelogs.ubuntu.com};ecm resolvectl query "$q"; }
 function ef0 {
   if [[ -b "$1" ]]; then
-    df -Pm "$1" | sed -En 's%^[^ ]+ +([0-9]+) +([0-9]+) +.+$%\1-\2%p' | bc
+    df -Pm "$1" | sed -En 's%^[^ ]+ +([0-9]+) +([0-9]+) +([0-9]+) +.+$%\3%p'
   else
     echo 0
   fi
