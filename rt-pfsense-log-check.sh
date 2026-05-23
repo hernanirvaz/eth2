@@ -40,8 +40,18 @@ else
     lsw $((i + 0)) '%b %e' /var/log/$1.log* | flg
 fi
 
+plg() { [ "$1" -eq 1 ] && printf "" || printf "s"; }
+vrg() { [ "$1" -eq 1 ] && printf "" || printf ", "; }
 b=$(sysctl -n kern.boottime | cut -d" " -f4 | cut -d"," -f1)
-d=$(($(date +%s) - b))
-h=$((d / 3600))
-m=$(((d % 3600) / 60))
-echo $(date +"%Y-%m-%d %H:%M:%S") uptime: $h hours $m minutes
+t=$(($(date +%s) - b))
+w=$(( t/604800))
+d=$(((t%604800)/86400))
+h=$(((t%86400)/3600))
+m=$(((t%3600)/60))
+f=1
+printf "%s uptime: " "$(date +'%Y-%m-%d %H:%M:%S')"
+[ $w -gt 0 ] && { printf "%d week%s" "$w" "$(plg $w)"; f=0; }
+[ $d -gt 0 ] && { printf "%s%d day%s" "$(vrg $f)" "$d" "$(plg $d)"; f=0; }
+[ $h -gt 0 ] && { printf "%s%d hour%s" "$(vrg $f)" "$h" "$(plg $h)"; f=0; }
+[ $m -gt 0 ] || [ $f -eq 1 ] && { printf "%s%d minute%s" "$(vrg $f)" "$m" "$(plg $m)"; }
+echo
