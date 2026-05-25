@@ -6,14 +6,18 @@ swu "INSTALAR $s74";sex apt-get install libsnappy-dev libc6-dev libc6 unzip -y;s
 nnv N $1 $2
 if n1t;then maxp=50;else maxp=10;fi
 pp2p=30303;bnt || pp2p=30304
-fptv=270  # do not to set below 270GB for stability reasons
-fpmb=8    # >16GB does not provide performance benefits (default 4GB)
+fptv=270         # do not to set below 270GB for stability reasons
+fpmb=10          # >16GB does not provide performance benefits (default 4GB)
+fpmc=3           # in-memory cache for state trie. (default is ~1024 MB)
+gchl=0x700000000 # ~28 GB .NET heap limit for 64 GB RAM, to prevent excessive GC thrashing and OOM crashes. Adjust as needed for different RAM sizes.
 if [[ $cunm = $inm5 ]];then apip="$iip5";elif [[ $cunm = $inm6 ]];then apip="$iip6";else apip='127.0.0.1';fi
 othe=''
 othe="$othe --network-maxactivepeers $maxp --network-discoveryport $pp2p --network-p2pport $pp2p"
 othe="$othe --jsonrpc-enabled true --jsonrpc-host $apip --jsonrpc-enginehost $apip --jsonrpc-engineport 8551 --jsonrpc-jwtsecretfile $p58/jwt"
 othe="$othe --sync-snapsync true"
-othe="$othe --pruning-mode Hybrid --pruning-fullpruningtrigger VolumeFreeSpace --pruning-fullpruningthresholdmb $((fptv*1024)) --pruning-fullpruningmemorybudgetmb $((fpmb*1024))"
+othe="$othe --pruning-mode Hybrid --pruning-fullpruningtrigger VolumeFreeSpace --pruning-fullpruningthresholdmb $((fptv*1024)) --pruning-fullpruningmemorybudgetmb $((fpmb*1024)) --pruning-cachemb $((fpmc*1024))"
+othe="$othe --History.Pruning=Rolling --History.RetentionEpochs=82125" # 82125 epochs ≈ 1 year, and pairs excellently with the HalfPath state db key scheme.
+othe="$othe --Init.StateDbKeyScheme=HalfPath" # better cache locality → faster block processing, lower disk usage (~20-25% smaller state).
 othe="$othe --Blocks.TargetBlockGasLimit $((n56*10**6))"
 # first iteration of the Nethermind UI, providing an integrated interface to interact with and monitor the node
 # othe="$othe --healthchecks-enabled true --healthchecks-uienabled true"
@@ -32,7 +36,10 @@ RestartSec=60
 TimeoutStopSec=400
 RuntimeMaxSec=infinity
 WorkingDirectory=$p07
+LimitNOFILE=1000000
+Nice=-5
 Environment="DOTNET_BUNDLE_EXTRACT_BASE_DIR=$p07"
+Environment="DOTNET_GCHeapHardLimit=$gchl"
 ExecStart=$p00/nethermind/nethermind --config mainnet --data-dir $p07$othe
 ExecStopPost=+$p02/eth2/t7 ${s74}STP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 
