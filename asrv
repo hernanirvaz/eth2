@@ -49,42 +49,26 @@ if [[ $cunm = hrv-zotac2 ]];then
   dqf() { echo "$H"|sudo -S -p '' sed -En 's%.+failed to query external DNS server.+question=";(.+)\..*"%\1%p' /var/log/syslog 2>/dev/null|sort -u; }
   dqy() { local q;for q in $(dqf);do resolvectl query $q;done; }
   i2v() {
-    local input_dir="$1"
-    local output_file="${2:-output.mp4}"
-
-    if [ ! -d "$input_dir" ]; then
-        echo "Error: Directory '$input_dir' not found!" >&2
+    local r o;r="${2:-10}";o=$(grep -Po '\.[0-9]{2}\.\K[a-zA-Z]+\.[a-zA-Z]+\.?[a-zA-Z]*\.?[a-zA-Z]*' <<< "$1");[ -z "$o" ] && o=i2v
+    rm -f i2v.txt
+    for f in $(find "$1" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \) | sort); do
+      [ -f "$f" ] && echo -e "file '$f'\nduration $r" >> i2v.txt
+    done
+    if [ ! -f i2v.txt ]; then
+        echo "Error: Directory $1 has no image files!" >&2
         return 1
     fi
-
-    cd "$input_dir"
-
-    # Create sorted list of images
-    find . -maxdepth 1 -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \) | sort | sed 's|^\./||' > /tmp/image_list.txt
-    if [ ! -s /tmp/image_list.txt ]; then
-        echo "Error: No images found!" >&2
-        rm -f /tmp/image_list.txt
-        return 1
-    fi
-    # Create proper concat file (more reliable method)
-    > /tmp/concat.txt
-    while IFS= read -r file; do
-        echo "file '$file'" >> /tmp/concat.txt
-    done < /tmp/image_list.txt
-
-    ffmpeg -f concat -safe 0 -r 30 \
-           -i /tmp/concat.txt \
+    ffmpeg -f concat -safe 0 \
+           -i i2v.txt \
+           -vf "fps=30,format=yuv420p,scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2" \
            -c:v libx264 \
-           -pix_fmt yuv420p \
            -crf 23 \
            -preset medium \
-           -vf "scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2" \
            -movflags +faststart \
            -y \
-           "../$output_file"
-
-    rm -f /tmp/image_list.txt
-    echo "✅ Video created: $output_file"
+           "${o,,}.mp4"
+    echo "✅ Video created: ${o,,}.mp4"
+    rm -f i2v.txt
 }
   hlp () {
     cat <<'EOF'
@@ -95,7 +79,7 @@ m{cd|up|dw|rs|st|ud|lg} media dir|up|down|restart|status|update|logs
 ft{12v} [o] [d]         ft[1|2] names [o]rigin|ftv mv [o]rigin [d]desino command
 dq{f|y}                 list failed|query daily DNS failed questions 
 {ufz|zfu} file          encrypt|decrypt file
-i2v dir [out_file]      create video from images in input_dir, default output.mp4 and 30fps
+i2v dir [seconds]       create video from images in dir, default 10s duration at 30fps
 EOF
   }
   alias rcd="cd $trmd;pwd;du -hs \$(ls)|sort -h"
