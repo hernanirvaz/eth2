@@ -18,7 +18,7 @@ othe="$othe --sync-snapsync true"
 othe="$othe --pruning-mode Hybrid --pruning-fullpruningtrigger VolumeFreeSpace --pruning-fullpruningthresholdmb $((fptv*1024)) --pruning-fullpruningmemorybudgetmb $((fpmb*1024)) --pruning-cachemb $((fpmc*1024))"
 othe="$othe --History.Pruning=Rolling --History.RetentionEpochs=82125" # 82125 epochs ≈ 1 year, and pairs excellently with the HalfPath state db key scheme.
 othe="$othe --Init.StateDbKeyScheme=HalfPath" # better cache locality → faster block processing, lower disk usage (~20-25% smaller state).
-othe="$othe --Blocks.TargetBlockGasLimit $((n56*10**6))"
+# othe="$othe --Blocks.TargetBlockGasLimit $((n56*10**6))"
 # first iteration of the Nethermind UI, providing an integrated interface to interact with and monitor the node
 # othe="$othe --healthchecks-enabled true --healthchecks-uienabled true"
 cd || exit
