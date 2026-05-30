@@ -114,8 +114,8 @@ function bpt { ! fft $p50.lock && [[ $(era $p12 $n12) -le 1 ]] && ( (pct && pmt 
 function llc { if fzt ${1:-$p03};then grep -Ec "$s72|$s73|$s74|$s75|$s76|$s77" $1 2>$p03;else printf %i 0;fi; }                                               # get normal log line count
 function jrn { local s;if [[ $2 ]];then s="-g $2";else s=;fi;cex journalctl --no-hostname --no-full -f $1 $s; }                                               # my journal   format
 function dmr { sex $s00 daemon-reload; }                                                                                                                      # daemon-reload
-function si1 { local n=${1:-0};printf %i $((20*n))   2>$p03; }
-function si2 { local n=${1:-0};printf %i $((1000*n)) 2>$p03; }
+function si1 { local n=${1:-0};printf %i $((15*n))  2>$p03; }
+function si2 { local n=${1:-0};printf %i $((777*n)) 2>$p03; }
 function svi {
   local n=${1:-0}
   if g0t $n;then
