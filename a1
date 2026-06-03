@@ -145,9 +145,9 @@ function rlt { gnv;[[ -x $p00/ethereal ]] || rlv;if [[ -x $p00/ethereal ]];then 
 function rcm { local s="$1 $2 $s68";shift;shift;printf '%s %s %s\n' ethereal $s;printf '%s\n' $@;echo;$p00/ethereal $s $@; }
 function ndd { sex mkdir -p $p07;sau eth1;sjw;cmw $p07 755 eth1; } 
 function nnv {
-  local v=${2:-1.37.2}
+  local v=${2:-1.38.0}
   local s=nethermind
-  local f="$s-$v-${3:-8e212be6}-linux-x64.zip"
+  local f="$s-$v-${3:-c07a4d65}-linux-x64.zip"
   local e=nada
   local rsp=nao
   if [[ $1 != S ]]; then
