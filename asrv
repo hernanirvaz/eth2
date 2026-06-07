@@ -44,7 +44,7 @@ if [[ $cunm = hrv-zotac2 ]];then
     local o=${1:-$trmd/complete}
     local d=${2:-$mdld/lust/ftv}
     ftr "$o" "$d"
-    ftf "$o" 'rm -rf "%h"'
+    ftf "$o" '[ "$1" ] && rm -rf "%h"'
   }
   dqf() { echo "$H"|sudo -S -p '' sed -En 's%.+failed to query external DNS server.+question=";(.+)\..*"%\1%p' /var/log/syslog 2>/dev/null|sort -u; }
   dqy() { local q;for q in $(dqf);do resolvectl query $q;done; }

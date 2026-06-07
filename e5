@@ -18,7 +18,7 @@ n=''
 [[ $n ]] || n=$(sed -En "s%^$d.*\$%\L\1$b%ip"                             <<< "$c")
 [[ $n ]] || n="$b"
 if [[ -s "$1/$n" ]]; then
-  echo "#mv \"$2\" \"$1/$n\""
+  echo "echo mv \"$2\" \"$1/$n\""
 else
-  echo "mv \"$2\" \"$1/$n\""
+  echo "mv -f \"$2\" \"$1/$n\""
 fi
