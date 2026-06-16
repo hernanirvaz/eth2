@@ -164,13 +164,14 @@ function nnv {
   fi
   if [[ $rsp = "sha256:$e" ]]; then
     tsa $s44 && t6 tgp
-    unzip "$f" -d "$s"
-    sex rm -fr $p00/$s.sav
+    unzip $f -d $s
+    sex rm -rf $p00/$s.sav
     cex mv $p00/$s $p00/$s.sav
     sex rm -rf $p00/$s
     sex cp -a $s $p00/$s
     sex chown eth1:eth1 -R $p00/$s
-    cmw "$p00/$s" 755 eth1
+    cmw $p00/$s 755 eth1
+    sex rm -rf $s $f
     t6 ta
   fi
 }
