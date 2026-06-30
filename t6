@@ -782,7 +782,7 @@ function hs0 {
     if mst;then if mct;then hsm;cpe;else echo -e "\n$cumv";msh -q $cumv "$p53 hsm";fi;fi
     echo;epf;cpf
   else
-    hss $cunm
+    hss $cunm;if n2t;then echo;epf;cpf;fi
   fi
   if sxt;then hsh;echo;hch;fi
   uptime -p;echo
