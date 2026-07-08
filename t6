@@ -1225,7 +1225,7 @@ function imk {
     sed -i "\@$mrpd@d" $f.new
     echo "$s84 0 0" >> $f.new
     sex cp $f.new $p37;cmw $p37 644 root
-    sex systemctl daemon-reload
+    sex $s00 daemon-reload
   else
     echo "No drives processed."
   fi

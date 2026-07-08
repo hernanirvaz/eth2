@@ -47,3 +47,5 @@ ExecStopPost=+$p02/eth2/t7 ${s74}STP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 WantedBy=multi-user.target
 EOF
 sex mv $s44.service $p04;cmw $p04/$s44.service 644
+sht && sbt && e7 # Ethereum Node Performance Optimization
+

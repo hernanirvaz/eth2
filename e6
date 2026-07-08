@@ -1,0 +1,16 @@
+#!/bin/bash
+
+### CPU Performance Settings
+# Set Governor to Performance
+echo "performance" | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+# Set Energy Performance Preference to Performance
+echo "performance" | tee /sys/devices/system/cpu/cpu*/cpufreq/energy_performance_preference
+
+### NVMe Performance Settings
+# Set Scheduler to none for all NVMe drives
+echo "none" | tee /sys/block/nvme*/queue/scheduler
+
+# Disable Interrupt Coalescing (Instant response) for all three drives
+/usr/sbin/nvme set-feature /dev/nvme0 --feature-id=0x08 --value=0
+/usr/sbin/nvme set-feature /dev/nvme1 --feature-id=0x08 --value=0
+/usr/sbin/nvme set-feature /dev/nvme2 --feature-id=0x08 --value=0

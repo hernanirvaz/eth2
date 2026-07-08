@@ -1,0 +1,20 @@
+#!/bin/bash
+
+source /home/eth/eth2/t1
+
+cat <<-EOF > $s85.service
+[Unit]
+Description=Ethereum Node Performance Optimization
+After=multi-user.target
+
+[Service]
+Type=oneshot
+ExecStart=$p02/eth2/e6
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+EOF
+sex mv $s85.service $p04;cmw $p04/$s85.service 644
+sex $s00 daemon-reload
+sex $s00 enable $s85.service
