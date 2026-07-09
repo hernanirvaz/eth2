@@ -966,7 +966,17 @@ function uur {
 }
 function fdv { [[ $1         ]] || return;printf "\nDevice\tUsed\tSerialNumber\tFirmware\tModel\n";local d;local u;local f;local n;local m;while IFS=$'\t' read d u m f n;do printf "%s\t%s\t%s\t%s\t%s\n" $(basename $d) $(nby $u) $n $f "$m";done <<< "$1"; }
 function fmd { [[ -b /dev/$1 ]] || return;printf "\n";pex mdadm --detail /dev/$1; }
-function fst { local s="nvme smart-log";if [[ $1 ]];then cex $s /dev/$1;else local f='';for f in $(find $p66 2>$p03|sort);do swl "$s $f";pex $s $f;done|grep -Eiv "$s54"|sef "$e08";fi;fdv "$(pex nvme list -o json|jq -r "$j6"|sort)";fmd $(cat $p84|snf "$e82"); }
+function fsc { pex ioping -D -c 10 $1;echo;pex nvme smart-log $1; }
+function fst {
+  if [[ $1 ]]; then
+    fsc /dev/$1
+  else
+    local f;for f in $(find $p66 2>$p03 | sort);do fsc $f;done
+  fi | grep -Eiv "$s54" | sef "$e08"
+  fdv "$(pex nvme list -o json | jq -r "$j6" | sort)"
+  fmd "$(cat $p84 | snf "$e82")"
+}
+
 
 function ulg { local d=${1:-$(date +%F)};nex cat $p69|snf "/$g60$d/,/$g61$d/p"; }
 function uls { local e=$(snf "/$1/,/^ *$/p" <<< "$2"|grep -Ev "$1|^ *$"|sort -u);if [[ $e ]];then echo -e "\n$1\n$e";fi; }
