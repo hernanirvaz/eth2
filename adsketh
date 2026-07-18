@@ -103,6 +103,61 @@ function kz {
   s="192.168.8.$s";echo "Setup ubuntu server: $s:$p"
   ez0 $H $E $R $V $p >~/i0;ez1 $H $V $K $E $B >~/i1;ez2 $s $p
 } 
+# View Markdown file with nicely wrapped tables in Chrome
+mdv() {
+    if [ -z "$1" ]; then
+        echo "Usage: mdv <file.txt>"
+        return 1
+    fi
+    
+    if [ ! -f "$1" ]; then
+        echo "Error: File '$1' not found!"
+        return 1
+    fi
+
+    local htmlfile="/tmp/$(basename "$1" .txt).html"
+
+    pandoc "$1" -o "$htmlfile" \
+        --standalone \
+        --from markdown \
+        --to html5 \
+        --toc \
+        --toc-depth=6 \
+-H <(cat << 'EOF'
+<style>
+    body, html {
+        background: #0d1117 !important;
+        color: #c9d1d9 !important;
+        padding: 40px 80px !important;
+        margin: 0 !important;
+        width: 100% !important;
+        max-width: none !important;
+    }
+    table {
+        border-collapse: collapse;
+        width: 100% !important;
+        margin: 25px 0;
+        border: 2px solid #555;
+    }
+    th, td {
+        border: 1px solid #777;
+        padding: 12px 14px;
+    }
+    th { background: #21262d; }
+    tr:nth-child(even) { background: #161b22; }
+    nav#TOC a { color: #ffffff !important; }
+    * { box-sizing: border-box; }
+</style>
+EOF
+)
+
+    if [ $? -eq 0 ]; then
+        google-chrome --force-dark-mode --start-maximized "$htmlfile" &> /dev/null &
+        echo "Opened '$1' in Chrome"
+    else
+        echo "Error: Failed to convert Markdown to HTML"
+    fi
+}
 
 hlp () {
   echo "z7z [1|2]                          archive media cs1|cs2 encripted with 7z"
@@ -111,6 +166,7 @@ hlp () {
   echo "rfu                                decrypt router config files"
   echo "gcr                                git commit recent router config files"
   echo "kz  (port|ip) [ip|port]            setup server at ip last octet or port"
+  echo "mdv file.txt                       view Markdown file in Chrome"
   pfh
 }
 
