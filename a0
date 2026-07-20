@@ -161,7 +161,7 @@ function msh {
       fi
       shift
   done
-  [[ $w ]] || echo ssh -4p $p $s $e;ssh -4p $p $s "$e"
+  [[ $w ]] || echo ssh -4p $p $s $e;ssh -4p $p $s "$e" 2>/dev/null
 }
 function mcp {
   if [[ $# -lt 1 ]];then 
@@ -182,7 +182,7 @@ function mcp {
       fi
       shift
   done
-  [[ $w ]] || echo scp -4rP $p ${a[@]};scp -4rP $p "${a[@]}"
+  [[ $w ]] || echo scp -4rP $p ${a[@]};scp -4rP $p "${a[@]}" 2>/dev/null
 }
 function leh {
   echo "leo [LEORB|log|xml|os] LEOX reboot|dmesg|config|Optical Signal"
