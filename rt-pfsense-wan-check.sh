@@ -3,14 +3,14 @@
 # */5 * * * * root /root/rt-pfsense-wan-check.sh
 # use only with GR241AG Fiber Gateway
 
-[ -d /root ] || exit 1
-
+CFG='/conf/config.xml'
+[ -f $CFG  ] || exit 1;[ -d /root ] || exit 1
 DNL='/dev/null'
-WAN=$(awk -F'[<>]' '/<wan>/{in_wan=1} in_wan && /<if>/{print $3; exit}' /conf/config.xml)
+WAN=$(awk -F'[<>]' '/<wan>/{in_wan=1} in_wan && /<if>/{print $3; exit}' $CFG 2>$DNL)
 FIL="/root/wan-check"
 DNS="8.8.8.8 8.8.4.4 1.1.1.1 1.0.0.1 9.9.9.9 149.112.112.112 208.67.222.222 208.67.220.220 64.6.64.6 209.244.0.3 209.244.0.4 84.200.69.80 84.200.70.40 94.140.14.140 94.140.14.141 8.26.56.26 8.20.247.20 185.228.168.9"
 
-grn() { set -- $DNS;n=$(date +%s%N);r=$(awk -v m=1 -v x=$# -v s=$n "BEGIN{srand(s);print int(m+rand()*(x-m+1))}");c=1;for s in $DNS;do if [ $c -eq $r ];then echo $s;return;fi;c=$((c+1));done;echo 8.8.8.8; }
+grn() { set -- $DNS;n=$(date +%s%N);r=$(awk -v m=1 -v x=$# -v s=$n "BEGIN{srand(s);print int(m+rand()*(x-m+1))}" 2>$DNL);c=1;for s in $DNS;do if [ $c -eq $r ];then echo $s;return;fi;c=$((c+1));done;echo 8.8.8.8; }
 lgm() { echo "$(date +'%Y-%m-%d %H:%M:%S') $1" >> $FIL.log 2>&1; }
 pig() { ping -c $2 -W 4 $1         > $DNL 2>&1;e=$?;[ $e -ne 0 ] && lgm "ping -c$2 -W2 $1 erro ($e)";return $e; }
 ifd() { ifconfig    $WAN down      > $DNL 2>&1;h=$?;[ $h -ne 0 ] && lgm "Failed to bring $WAN down.";return $h; }  
