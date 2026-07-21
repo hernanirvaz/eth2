@@ -16,8 +16,8 @@ dkcr="/opt"
 dkcn='arrdata'
 dkcd="$dkcr/$dkcn"
 dkcc="/home/$meeu/arr/docker-compose.yml"
-netv='1.39.1';netc='b7c51322'
-ligv='v8.2.0'
+netv='1.39.2';netc='65689105'
+ligv='v8.2.1'
 mevv='v1.12'
 golv='go1.26.4'
 sdcv='v2.8.0';sdcc='948d3fc'
