@@ -67,7 +67,7 @@ function rfu {
   local s;cd $HOME
   s='rt-pfsense'  ;[[ -s $s.txt ]] || { zfu eth2/$s.txt.gpg > $s.txt;[[ -s $s.txt ]] && echo Restored $s.txt; }
   s='rt-MEO'      ;[[ -s $s.txt ]] || { zfu eth2/$s.txt.gpg > $s.txt;[[ -s $s.txt ]] && echo Restored $s.txt; }
-  s='rt-HG8010Hv6';[[ -s $s.txt ]] || { zfu eth2/$s.txt.gpg > $s.txt;[[ -s $s.txt ]] && echo Restored $s.txt; }
+  s='rt-LEOX'     ;[[ -s $s.txt ]] || { zfu eth2/$s.txt.gpg > $s.txt;[[ -s $s.txt ]] && echo Restored $s.txt; }
   s='rt-protectli';[[ -s $s.txt ]] || { zfu eth2/$s.txt.gpg > $s.txt;[[ -s $s.txt ]] && echo Restored $s.txt; }
 }
 
