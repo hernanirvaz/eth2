@@ -31,7 +31,7 @@ if [ "$1" = "logs" ] || [ "$1" = "lst" ]; then
     (
       lsw $((i + 0)) '%b %e' /var/log/dhcpd.log* 
       lsw $((i + 0)) '%b %e' /var/log/system.log*
-    ) | grep -Ev "$g|kea" | if [ "$1" = "logs" ]; then grep -E 'hrv-protectli';else grep -E 'link state';fi | flg | sort
+    ) | grep -Ev "$g|kea|tun_wg0" | if [ "$1" = "logs" ]; then grep -E 'hrv-protectli';else grep -E 'link state';fi | flg | sort
 elif [ "$1" = "log"   ]; then
     lsw $((i + 0)) '%b %e' /var/log/system.log* | grep -Ev "$g"  | flg
 elif [ "$1" = "dhcpc" ]; then
