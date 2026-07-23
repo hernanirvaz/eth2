@@ -66,7 +66,6 @@ function gcr {
 function rfu {
   local s;cd $HOME
   s='rt-pfsense'  ;[[ -s $s.txt ]] || { zfu eth2/$s.txt.gpg > $s.txt;[[ -s $s.txt ]] && echo Restored $s.txt; }
-  s='rt-MEO'      ;[[ -s $s.txt ]] || { zfu eth2/$s.txt.gpg > $s.txt;[[ -s $s.txt ]] && echo Restored $s.txt; }
   s='rt-LEOX'     ;[[ -s $s.txt ]] || { zfu eth2/$s.txt.gpg > $s.txt;[[ -s $s.txt ]] && echo Restored $s.txt; }
   s='rt-protectli';[[ -s $s.txt ]] || { zfu eth2/$s.txt.gpg > $s.txt;[[ -s $s.txt ]] && echo Restored $s.txt; }
 }
@@ -160,13 +159,15 @@ EOF
 }
 
 hlp () {
-  echo "z7z [1|2]                          archive media cs1|cs2 encripted with 7z"
-  echo "ufz file                           encrypt file"
-  echo "zfu file                           decrypt file"
-  echo "rfu                                decrypt router config files"
-  echo "gcr                                git commit recent router config files"
-  echo "kz  (port|ip) [ip|port]            setup server at ip last octet or port"
-  echo "mdv file.txt                       view Markdown file in Chrome"
+  echo "z7z [1|2]                           archive media cs1|cs2 encripted with 7z"
+  echo "ufz file                            encrypt file"
+  echo "zfu file                            decrypt file"
+  echo "rfu                                 decrypt router config files"
+  echo "gcr                                 git commit recent router config files"
+  echo "mdv file.txt                        view Markdown file in Chrome"
+  echo "kz  (port|ip) [ip|port]             setup server at ip last octet or port"
+  echo "lr                                  telnet to leox ont"
+  echo "mr                                  telnet to meo ont/router"
   pfh
 }
 
