@@ -30,7 +30,7 @@ else
   othe="$othe --suggested-fee-recipient $s26"                                                                                                                 # EL fees
   othe="$othe --validator-monitor-file $p58/pubkeys"                                                                                                          # monitor validators
     if sht;then othe="$othe --builder http://$zip3:18550";else othe="$othe --builder http://$apip:18550";fi
-  [[ $cunm = $cun1 ]] && othe="$othe --subscribe-all-subnets --import-all-attestations"                                                                       # better income more bandwith
+  othe="$othe --subscribe-all-subnets --import-all-attestations"                                                                                              # better income more bandwith
   othe="$othe --disable-upnp"                                                                                                                                 # disable UPnP support
   if [[ $cunm = $inm5 ]];then othe="$othe --checkpoint-sync-url http://$iip6:5052";elif [[ $cunm = $inm6 ]];then othe="$othe --checkpoint-sync-url http://$iip5:5052"
   else

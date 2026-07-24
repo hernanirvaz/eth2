@@ -34,8 +34,14 @@ if [ "$1" = "logs" ] || [ "$1" = "lst" ]; then
     ) | grep -Ev "$g|kea|tun_wg0" | if [ "$1" = "logs" ]; then grep -E 'hrv-protectli';else grep -E 'link state';fi | flg | sort
 elif [ "$1" = "log"   ]; then
     lsw $((i + 0)) '%b %e' /var/log/system.log* | grep -Ev "$g"  | flg
+elif [ "$1" = "dhcp" ]; then
+    lsw $((i + 0)) '%b %e' /var/log/dhcpd.log*  | grep -Ev 'dhclient|dhcp6c?|unbound|fib6'      | flg
+elif [ "$1" = "dhcp6" ]; then
+    lsw $((i + 0)) '%b %e' /var/log/dhcpd.log*  | grep -Ev 'dhclient|dhcp4|dhcp6c|unbound|fib6' | flg
 elif [ "$1" = "dhcpc" ]; then
-    lsw $((i + 0)) '%b %e' /var/log/dhcpd.log*  | grep -Ev 'kea' | flg
+    lsw $((i + 0)) '%b %e' /var/log/dhcpd.log*  | grep -Ev 'dhcp6c' | flg
+elif [ "$1" = "dhcpc6" ]; then
+    lsw $((i + 0)) '%b %e' /var/log/dhcpd.log*  | grep -Ev 'dhclient|kea' | flg
 else
     lsw $((i + 0)) '%b %e' /var/log/$1.log* | flg
 fi
