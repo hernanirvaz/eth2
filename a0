@@ -244,9 +244,9 @@ function pfs {
   elif [[ $i = fw    ]];then shift;if [[ $r = q ]];then i=queue;elif [[ $r = l ]];then i=pipe;else i=sched;fi;i="ipfw $i show";[[ $# -gt 0 ]] && i="$i 0$(printf ',%i' $@)";echo "$i";msh -q $s "$i"
   elif [[ $i = ip    ]];then msh -q $s "/root/rt-pfsense-ip.sh $1"
   elif [[ $1 = dsk   ]];then msh -q $s "smartctl -a /dev/ada0|grep -E 'Model:|^ID#|^ *(5|9|187) +[A-Z]'"
-  elif [[ $1 = dns   ]];then msh -q $s "/root/rt-pfsense-log-check.sh resolver $2"
-  elif [[ $1 = gw    ]];then msh -q $s "/root/rt-pfsense-log-check.sh gateways $2"
-  elif [[ $1 = dhcp || $1 = dhcp6 || $1 = dhcpc || $1 = dhcpc6 || $1 = log || $1 = logs || $1 = lst ]];then msh -q $s "/root/rt-pfsense-log-check.sh $1 $2"
+  elif [[ $1 = dns   ]];then msh -q $s "/root/rt-pfsense-log-check.sh resolver ${2:-12}"
+  elif [[ $1 = gw    ]];then msh -q $s "/root/rt-pfsense-log-check.sh gateways ${2:-12}"
+  elif [[ $1 = dhcp || $1 = dhcp6 || $1 = dhcpc || $1 = dhcpc6 || $1 = log || $1 = logs || $1 = lst ]];then msh -q $s "/root/rt-pfsense-log-check.sh $1 ${2:-12}"
   else pfh
   fi
 }
