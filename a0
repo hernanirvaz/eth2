@@ -27,22 +27,32 @@ getv='1.13.14';getc='2bd6bd01'
 bsuv='23.1.0'
 om00='function par(h) {v=strtonum(h);if (v>32767) {v-=65536};return v*0.002}'
 om01="{print}"
-om02="$om00;\$1 == \"NumOfTcont:\"              {printf \"%-35s           MEO (Internet, VoIP, IPTV, Mgmt)\n\", \$0;next}"
-om02="$om02;\$1 == \"OpticalSignalLevel:\"      {printf \"%-35s %6.2f dBm MEO (-8.0/-27.0 dBm)\n\", \$0, par(\$2);next}"
-om02="$om02;\$1 == \"TranOpticLevel:\"          {printf \"%-35s %6.2f dBm MEO (+0.5/ +5.0 dBm)\n\", \$0, par(\$2);next}"
-om03="\$2 == \"0xffff\"                         {printf \"%-35s           MEO VEIP / Virtual Ethernet Interface Point\n\", \$0;next}"
-om03="$om03;\$5 == \"VID\" && \$6 == 12         {printf \"%-35s           MEO Internet\n\", \$0;next}"
-om03="$om03;\$5 == \"VID\" && \$6 == 528        {printf \"%-35s           MEO TR-069 Remote Management\n\", \$0;next}"
-om04="\$1 == \"Timestamp:\"                     {printf \"%-35s           MEO hardware-level Time of Day (ToD) synchronization\n\", \$0;next}"
-om04="$om04;\$1 == \"OltVendorId:\"             {printf \"%-35s           MEO %4s=PT Inovação, which is the former name of Altice Labs\n\", \$0, \$2;next}"
-om05="\$1 == \"Version:\"                       {printf \"%-35s           MEO GR241AG Software Version %s\n\", \$0, \$2;next}"
-om06="\$1 == \"Version:\"                       {printf \"%-35s           MEO Hardware Version %s\n\", \$0, \$2;next}"
-om06="$om06;\$1 == \"SerialNum:\"               {printf \"%-35s           MEO GPON Serial Number %s\n\", \$0, \$2;next}"
-om06="$om06;\$1 == \"VID:\"                     {printf \"%-35s           MEO Vendor ID %s\n\", \$0, \$2;next}"
-om06="$om06;\$1 == \"TraffMgtOpt:\" && \$2 == 0 {printf \"%-35s           MEO uses Priority-controlled multiplexing\n\", \$0;next}"
-om06="$om06;\$1 == \"TraffMgtOpt:\" && \$2 == 1 {printf \"%-35s           MEO uses Rate-controlled multiplexing\n\", \$0;next}"
-om06="$om06;\$1 == \"OntState:\" && \$2 == 1    {printf \"%-35s           MEO ONT state machine has achieved full synchronization with the OLT\n\", \$0;next}"
-
+om02="$om00;\$1 == \"NumOfTcont:\"                  {printf \"%-35s           MEO %i Upstream Bandwidth Containers (T-CONTs)\n\", \$0;next}"
+om02="$om02;\$1 == \"OpticalSignalLevel:\"          {printf \"%-35s %6.1f dBm MEO (-8.0/-27.0 dBm)\n\", \$0, par(\$2);next}"
+om02="$om02;\$1 == \"TranOpticLevel:\"              {printf \"%-35s %6.1f dBm MEO (+0.5/ +5.0 dBm)\n\", \$0, par(\$2);next}"
+om02="$om02;\$1 == \"OntRspTime:\"                  {printf \"%-35s           MEO Internal logical distance/ranging delay calculated by the OLT %i bits\n\", \$0, \$2;next}"
+om03="\$2 == \"0xffff\"                             {printf \"%-35s           MEO VEIP / Virtual Ethernet Interface Point\n\", \$0;next}"
+om03="$om03;\$5 == \"VID\" && \$6 == 12             {printf \"%-35s           MEO Internet\n\", \$0;next}"
+om03="$om03;\$5 == \"VID\" && \$6 == 528            {printf \"%-35s           MEO TR-069 Remote Management\n\", \$0;next}"
+om04="\$1 == \"Timestamp:\"                         {printf \"%-35s           MEO hardware-level Time of Day (ToD) synchronization\n\", \$0;next}"
+om04="$om04;\$1 == \"OltVendorId:\"                 {printf \"%-35s           MEO %4s=PT Inovação, which is the former name of Altice Labs\n\", \$0, \$2;next}"
+om05="\$1 == \"Version:\"                           {printf \"%-35s           MEO GR241AG Software Version %s\n\", \$0, \$2;next}"
+om06="\$1 == \"Version:\"                           {printf \"%-35s           MEO Hardware Version %s\n\", \$0, \$2;next}"
+om06="$om06;\$1 == \"SerialNum:\"                   {printf \"%-35s           MEO GPON Serial Number %s\n\", \$0, \$2;next}"
+om06="$om06;\$1 == \"VID:\"                         {printf \"%-35s           MEO Vendor ID %s\n\", \$0, \$2;next}"
+om06="$om06;\$1 == \"TraffMgtOpt:\" && \$2 == 0     {printf \"%-35s           MEO uses Priority-controlled multiplexing\n\", \$0;next}"
+om06="$om06;\$1 == \"TraffMgtOpt:\" && \$2 == 1     {printf \"%-35s           MEO uses Rate-controlled multiplexing\n\", \$0;next}"
+om06="$om06;\$1 == \"OntState:\" && \$2 == 1        {printf \"%-35s           MEO ONT state machine has achieved full synchronization with the OLT\n\", \$0;next}"
+om07="\$2 == \"0xffff\"                             {printf \"%-35s           MEO VEIP / Virtual Ethernet Interface Point\n\", \$0;next}"
+om07="$om07;\$1 == \"NumOfAllowedMac:\" && \$2 == 0 {printf \"%-35s           MEO MAC limit Unlimited / No Limit enforced\n\", \$0;next}"
+om07="$om07;\$1 == \"PortNum:\" && \$2 == 4         {printf \"%-35s           MEO (Internet, VoIP, IPTV, Mgmt)\n\", \$0;next}"
+om07="$om07;\$1 == \"PortNum:\" && \$2 == 4         {printf \"%-35s           MEO (Internet, VoIP, IPTV, Mgmt)\n\", \$0;next}"
+om07="$om07;\$1 == \"MaxLearningAddresses:\"        {printf \"%-35s           MEO %i MAC addresses behind the ONT\n\", \$0, \$2;next}"
+om08="\$1 == \"AdminState:\"                        {printf \"%-35s           MEO %i (0 Unlocked/Enabled) \n\", \$0, \$2;next}"
+om08="$om08;\$1 == \"OpState:\"                     {printf \"%-35s           MEO %i (0 Active) \n\", \$0, \$2;next}"
+om08="$om08;\$1 == \"PauseTime:\"                   {printf \"%-35s           MEO pause-frame timer of %i (0 disabled)\n\", \$0, \$2;next}"
+om09="\$1 == \"CIR:\"                               {printf \"%-35s           MEO Commited Information Rate %i upstream traffic hard limits\n\", \$0, \$2;next}"
+om09="$om09;\$1 == \"PIR:\"                         {printf \"%-35s           MEO Peak Information Rate %i upstream traffic hard limits\n\", \$0, \$2;next}"
 
 function sit { ! [[ $1 =~ ^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$ ]]; }
 function sht { [[ ${1:-$cuip} = 192.168.8.* ]]; }
@@ -203,7 +213,7 @@ function mcp {
   [[ $w ]] || echo scp -4rP $p ${a[@]};scp -4rP $p "${a[@]}" 2>/dev/null
 }
 function leh {
-  echo "leo [LEORB|log|xml|os|vl|mac|uni|olt|ver|ont|pon] LEOX reboot|dmesg|config|Optical Signal|VLANs|MAC Bridge Configuration Data|Physical Path Termination Point Ethernet UNI|OLT revealing its own identity|Software is currently running|ONT revealing its own identity|GPON State Machine"
+  echo "leo [LEORB|log|xml|os|vl|mac|uni|tc|olt|ver|ont|pon] LEOX reboot|dmesg|config|Optical Signal|VLANs|MAC Bridge Configuration Data|Physical Path Termination Point Ethernet UNI|Transmission Containers|Traffic Descriptor|OLT revealing its own identity|Software is currently running|ONT revealing its own identity|GPON State Machine"
 }
 function ltl { expect -c "spawn telnet 192.168.100.1;expect \"ogin:\";send \"leox\r\";expect \"assword:\";send \"$V\r\";expect \"#\";send \"$*\r\";expect \"$*\";expect \"#\";send \"exit\r\";expect eof"; }
 function leo { 
@@ -212,8 +222,10 @@ function leo {
   elif [[ $1 = xml   ]];then ltl flash all
   elif [[ $1 = os    ]];then ltl omcicli mib get 263 | tr -d '\r' | awk "$om02;$om01"
   elif [[ $1 = vl    ]];then ltl omcicli mib get 84  | tr -d '\r' | awk "$om03;$om01"
-  elif [[ $1 = mac   ]];then ltl omcicli mib get 47
-  elif [[ $1 = uni   ]];then ltl omcicli mib get 11
+  elif [[ $1 = mac   ]];then ltl omcicli mib get 47  | tr -d '\r' | awk "$om07;$om01"
+  elif [[ $1 = uni   ]];then ltl omcicli mib get 11  | tr -d '\r' | awk "$om08;$om01"
+  elif [[ $1 = tc    ]];then ltl omcicli mib get 20
+  elif [[ $1 = td    ]];then ltl omcicli mib get 280 | tr -d '\r' | awk "$om09;$om01"
   elif [[ $1 = olt   ]];then ltl omcicli mib get 131 | tr -d '\r' | awk "$om04;$om01"
   elif [[ $1 = ver   ]];then ltl omcicli mib get 7   | tr -d '\r' | awk "$om05;$om01"
   elif [[ $1 = ont   ]];then ltl omcicli mib get 256 | tr -d '\r' | awk "$om06;$om01"
