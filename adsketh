@@ -157,7 +157,6 @@ EOF
         echo "Error: Failed to convert Markdown to HTML"
     fi
 }
-
 hlp () {
   echo "z7z [1|2]                           archive media cs1|cs2 encripted with 7z"
   echo "ufz file                            encrypt file"
@@ -168,7 +167,8 @@ hlp () {
   echo "kz  (port|ip) [ip|port]             setup server at ip last octet or port"
   echo "lr                                  telnet to leox ont"
   echo "mr                                  telnet to meo ont/router"
-  pfh
+  echo;pfh
+  echo;leh
 }
 
 zls hrv-protectli hrv-zotac2 hrv-zotac3 hrv-zotac4 hrv-intel5 hrv-intel6

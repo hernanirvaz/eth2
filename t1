@@ -353,10 +353,10 @@ for m in $(san up);do
   s41="$s41\n      dhcp4: false"
   s41="$s41\n      dhcp6: false"
   s41="$s41\n      accept-ra: false"
-  s41="$s41\n      addresses: [$(sin $cunm)/24, $(si6 $cunm)/56]"
+  s41="$s41\n      addresses: [$(sin $cunm)/24, $(si6 $cunm)/64]"
   s41="$s41\n      routes: [{to: default, via: $(sin $znm1)}, {to: default, via: $(sl6 $znm1), scope: link}]"
   s41="$s41\n      nameservers:"
-  s41="$s41\n        addresses: [$zip1, $(si6 $znm1)]"
+  s41="$s41\n        addresses: [$zip1]"
   s41="$s41\n        search: [home.arpa]"
   s41="$s41\n      critical: true"
 done
