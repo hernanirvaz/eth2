@@ -235,13 +235,14 @@ function leo {
   else leh
   fi
 }
-function meh { echo -e "meo <param>\nMEORB\treboot\ndvi\tdevice info\nwan\twan info"; }
+function meh { echo -e "meo <param>\nMEORB\treboot\ndvi\tdevice info\nwan\twan info\nrbc\treboot cause"; }
 function mel { expect -c "spawn telnet 192.168.1.254;expect \"ogin:\";send \"meo\r\";expect \"assword:\";send \"$V\r\";expect \"/cli>\";send \"$*\r\";expect \"/cli>\";send \"quit\r\";expect eof"; }
 function mer { expect -c "spawn telnet 192.168.1.254;expect \"ogin:\";send \"meo\r\";expect \"assword:\";send \"$V\r\";expect \"/cli>\";send \"$*\r\";expect \"eboot system\";send \"Y\r\";expect \"/cli>\";send \"quit\r\";expect eof"; }
 function meo { 
   if   [[ $1 = MEORB ]];then mer management/reboot
   elif [[ $1 = dvi   ]];then mel device-info/show | tr -d '\r' | sed -E 's%  +% %g'
   elif [[ $1 = wan   ]];then mel wan/show         | tr -d '\r' | sed -E 's%^([^:]+): +(.+)$%| \1 | \2 |%'
+  elif [[ $1 = rbc   ]];then mel debug/reboot-cause
   else meh
   fi
 }
