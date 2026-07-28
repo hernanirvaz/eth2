@@ -167,6 +167,7 @@ hlp () {
   echo "kz  (port|ip) [ip|port]             setup server at ip last octet or port"
   echo "lr                                  telnet to leox ont"
   echo "mr                                  telnet to meo ont/router"
+  echo;meh
   echo;pfh
   echo;leh
 }

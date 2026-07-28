@@ -235,7 +235,7 @@ function leo {
   else leh
   fi
 }
-function meh { echo -e "meo <param>\nMEORB\treboot\ndvi\tdevice info"; }
+function meh { echo -e "meo <param>\nMEORB\treboot\ndvi\tdevice info\nwan\twan info"; }
 function mel { expect -c "spawn telnet 192.168.1.254;expect \"ogin:\";send \"meo\r\";expect \"assword:\";send \"$V\r\";expect \"/cli>\";send \"$*\r\";expect \"/cli>\";send \"quit\r\";expect eof"; }
 function mer { expect -c "spawn telnet 192.168.1.254;expect \"ogin:\";send \"meo\r\";expect \"assword:\";send \"$V\r\";expect \"/cli>\";send \"$*\r\";expect \"eboot system\";send \"Y\r\";expect \"/cli>\";send \"quit\r\";expect eof"; }
 function meo { 
