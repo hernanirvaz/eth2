@@ -235,6 +235,16 @@ function leo {
   else leh
   fi
 }
+function meh { echo -e "meo <param>\nMEORB\treboot\ndvi\tdevice info"; }
+function mel { expect -c "spawn telnet 192.168.1.254;expect \"ogin:\";send \"meo\r\";expect \"assword:\";send \"$V\r\";expect \"/cli>\";send \"$*\r\";expect \"/cli>\";send \"quit\r\";expect eof"; }
+function mer { expect -c "spawn telnet 192.168.1.254;expect \"ogin:\";send \"meo\r\";expect \"assword:\";send \"$V\r\";expect \"/cli>\";send \"$*\r\";expect \"eboot system\";send \"Y\r\";expect \"/cli>\";send \"quit\r\";expect eof"; }
+function meo { 
+  if   [[ $1 = MEORB ]];then mer management/reboot
+  elif [[ $1 = dvi   ]];then mel device-info/show | tr -d '\r' | sed -E 's%  +% %g'
+  elif [[ $1 = wan   ]];then mel wan/show         | tr -d '\r' | sed -E 's%^([^:]+): +(.+)$%| \1 | \2 |%'
+  else meh
+  fi
+}
 function pfh { echo -e "pfs <param> [hours]\nPFSRB\t\tpfSense reboot\nfw[qsl]\t\tFirewall show Queues/Schedulers/Limiters\nip{46crd}\tshow ip4/ip6/config/route/discovery\ndsk\t\tshow disk usage\ndhcpc?6?\tpfSense logs dhcp[client]\ndns\t\tresolver\ngw\t\tgateways\nlogs?\t\tsystem[dhcp]\nlst\t\tlink-state"; }
 function pfs { 
   local s=hrv-protectli;local i=${1:0:2};local r=${1:2}
