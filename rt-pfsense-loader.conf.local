@@ -1,5 +1,5 @@
 kern.ipc.nmbclusters="1000000"
 net.link.ifqmaxlen="10240"
-hw.igc.rx_process_limit="-1"
-hw.igc.tx_process_limit="-1"
+hw.igc.rx_process_limit="500"
+hw.igc.tx_process_limit="500"
 hw.igc.eee_setting="0"

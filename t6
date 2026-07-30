@@ -1624,7 +1624,7 @@ if [[ $# -lt 1 ]];then
   m="$m\n"
   m="$m\n[g|t|u|b|c]rs [n] [g]\tgeth|nethermind|besu|cc|cc & vc\t\trestart\t\tn peers, mim gap"
   m="$m\n          vrs     [g]\tvc\t\t\t\t\trestart\t\tmim gap"
-  m="$m\n[g|t|u|b|v|r|l]rb [g]\tgeth|nethermind|besu|vc|router|LEOX\t\treboot\t\tmim gap"
+  m="$m\n[g|t|u|b|v|r|l]rb [g]\tgeth|nethermind|besu|vc|router|LEOX\treboot\t\tmim gap"
   m="$m\n[g|t|u|b|v|m|a]pr\tgeth|nethermind|besu|cc|vc|mev|all\tpara\t\timidiatly stop"
   m="$m\nirb               [h]\tsys (if needed)\t\t\t\treboot\t\tafter h hours"
   m="$m\nivk               [g]\timport validator keys\t\t\t\t\tmim gap"
