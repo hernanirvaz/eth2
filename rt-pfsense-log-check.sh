@@ -21,7 +21,7 @@ lsw() {
         grep "$(date -v -${n}H "+$f %H")" -h $@ 
         n=$((n - 1))
     done;echo    
- }
+}
 
 i=${2:-0}
 g='logged|login|sshd'
@@ -32,6 +32,8 @@ if [ "$1" = "logs" ] || [ "$1" = "lst" ]; then
       lsw $((i + 0)) '%b %e' /var/log/dhcpd.log* 
       lsw $((i + 0)) '%b %e' /var/log/system.log*
     ) | grep -Ev "$g|kea|tun_wg0" | if [ "$1" = "logs" ]; then grep -E 'hrv-protectli';else grep -E 'link state';fi | flg | sort
+elif [ "$1" = "gateways"   ]; then
+    lsw $((i + 0)) '%b %e' /var/log/$1.log* | grep -Ev "exiting|send_interval"  | flg
 elif [ "$1" = "log"   ]; then
     lsw $((i + 0)) '%b %e' /var/log/system.log* | grep -Ev "$g"  | flg
 elif [ "$1" = "dhcp" ]; then
