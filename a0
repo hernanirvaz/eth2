@@ -216,7 +216,7 @@ function mcp {
   done
   [[ $w ]] || echo scp -4rP $p ${a[@]};scp -4rP $p "${a[@]}" 2>/dev/null
 }
-function leh { echo -e "leo <param>\nLEORB\treboot\nlog\tdmesg\nxml\tconfig\nos\tOptical Signal\nvl\tVLANs\nmac\tMAC Bridge Configuration Data\nuni\tPhysical Path Termination Point Ethernet UNI\ntd\tTraffic Descriptor\nolt\tOLT revealing its own identity\nver\tSoftware is currently running\nont\tONT revealing its own identity\npon\tGPON State Machine\nupt\tUptime"; }
+function leh { echo -e "leo <param>\nLEORB\treboot\nlog\tdmesg\nxml\tconfig\nos\tOptical Signal\nvl\tVLANs\nmac\tMAC Bridge Configuration Data\nuni\tPhysical Path Termination Point Ethernet UNI\ntd\tTraffic Descriptor\nolt\tOLT revealing its own identity\nver\tSoftware is currently running\nont\tONT revealing its own identity\nerr\tEthernet Performance Monitoring History Data\nmon\tEthernet Frame Extended Performance Monitoring\ngmd\tGEM Port Network CTP\ngmh\tGEM Port Network CTP Performance Monitoring History Data\npon\tGPON State Machine\nupt\tUptime"; }
 function ltl { expect -c "spawn telnet 192.168.100.1;expect \"ogin:\";send \"leox\r\";expect \"assword:\";send \"$V\r\";expect \"#\";send \"$*\r\";expect \"$*\";expect \"#\";send \"exit\r\";expect eof"; }
 function leo { 
   if   [[ $1 = LEORB ]];then ltl reboot
@@ -230,6 +230,10 @@ function leo {
   elif [[ $1 = olt   ]];then ltl omcicli mib get 131 | tr -d '\r' | awk "$om04;$om01"
   elif [[ $1 = ver   ]];then ltl omcicli mib get 7   | tr -d '\r' | awk "$om05;$om01"
   elif [[ $1 = ont   ]];then ltl omcicli mib get 256 | tr -d '\r' | awk "$om06;$om01"
+  elif [[ $1 = err   ]];then ltl omcicli mib get 24
+  elif [[ $1 = mon   ]];then ltl omcicli mib get 89
+  elif [[ $1 = gmd   ]];then ltl omcicli mib get 268
+  elif [[ $1 = gmh   ]];then ltl omcicli mib get 341
   elif [[ $1 = pon   ]];then ltl diag gpon get onu-state
   elif [[ $1 = upt   ]];then ltl uptime -p
   else leh
