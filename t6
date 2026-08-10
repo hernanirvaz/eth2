@@ -742,7 +742,7 @@ function vco { nfw 5064 vcapi delete;pde 5064 vcapi       ; }
 function ge  { eop;wsr;cex $s04 $s10; }                                                                                                                       # enable eth-geth
 function ue  { eop;wsr;cex $s04 $s11; }                                                                                                                       # enable eth-besu
 function te  { eop;wsr;cex $s04 $s44; }                                                                                                                       # enable eth-nethermind
-function be  { bop;wsr;cex $s04 $s12; }                                                                                                                       # enable eth-beacon
+function be  { bop;cex ufw logging off;wsr;cex $s04 $s12; }                                                                                                                       # enable eth-beacon
 function ve  {
   svt                   || return
   fft $p04/$s13.service || return
@@ -776,7 +776,7 @@ function fp  { cex $s02 $s18; }                                                 
 function gd  { cex $s05 $s10;eco;wsr; }                                                                                                                       # disable eth-geth
 function ud  { cex $s05 $s11;eco;wsr; }                                                                                                                       # disable eth-besu
 function td  { cex $s05 $s44;eco;wsr; }                                                                                                                       # disable eth-nethermind
-function bd  { cex $s05 $s12;bco;wsr; }                                                                                                                       # disable eth-beacon
+function bd  { cex $s05 $s12;bco;cex ufw logging on;wsr; }                                                                                                    # disable eth-beacon
 function vd  { cex $s05 $s13;vco;wsr;touch $p05/vc_lock 2>$p03; }                                                                                             # disable eth-validator
 function pd  { cex $s05 $s16;pai 9090/tcp 192.168.8.0/24 $s16 delete;wsr; }                                                                                   # disable prometheus
 function nd  { cex $s05 $s17; }                                                                                                                               # disable prometheus-node-exporter
