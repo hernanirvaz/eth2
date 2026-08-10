@@ -1,7 +1,6 @@
 #!/bin/sh
 # pfSense v2.8.1-RELEASE (amd64) FreeBSD 15.0-CURRENT
 # */5 * * * * root /root/rt-pfsense-wan-check.sh
-# use only with GR241AG Fiber Gateway
 
 CFG='/conf/config.xml'
 [ -f $CFG  ] || exit 1;[ -d /root ] || exit 1
