@@ -255,8 +255,9 @@ function pfs {
   local s=hrv-protectli;local i=${1:0:2};local r=${1:2}
   local p="ipfw pipe show|sed 'N;N;s%\n% %g;s%  *% %g'"
   local c="ipfw sched show|awk '/^[0-9]+:/{l=\$0;getline;l=l\" \"\$0;getline;l=l\" \"\$0;gsub(/ +/,\" \",l);print l;next} {print}'"
+  local a="sed 's/^/  * /'"
   if   [[ $1 = PFSRB ]];then msh -q $s "/etc/rc.reboot"
-  elif [[ $i = fw    ]];then shift;if [[ $r = q ]];then i="ipfw queue show";elif [[ $r = l ]];then i="$p";elif [[ $r = s ]];then i="$c";else i=;fi;[[ $i ]] || i="echo;echo Limiters:;$p;echo;echo Schedulers:;$c;echo;echo Queues:;ipfw queue show";msh -q $s "$i"
+  elif [[ $i = fw    ]];then shift;if [[ $r = q ]];then i="ipfw queue show";elif [[ $r = l ]];then i="$p";elif [[ $r = s ]];then i="$c";else i=;fi;[[ $i ]] || i="echo '* Limiters:';$p|$a;echo '* Schedulers:';$c|$a;echo '* Queues:';ipfw queue show|$a";msh -q $s "$i"
   elif [[ $i = ip    ]];then msh -q $s "/root/rt-pfsense-ip.sh $1"
   elif [[ $1 = dsk   ]];then msh -q $s "smartctl -a /dev/ada0|grep -E 'Model:|^ID#|^ *(5|9|187) +[A-Z]'"
   elif [[ $1 = dns   ]];then msh -q $s "/root/rt-pfsense-log-check.sh resolver ${2:-24}"
