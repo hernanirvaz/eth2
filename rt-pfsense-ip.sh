@@ -6,7 +6,7 @@ CFG='/conf/config.xml'
 DNL='/dev/null'
 WAN=$(awk -F'[<>]' '/<wan>/{in_wan=1} in_wan && /<if>/{print $3; exit}' $CFG 2>$DNL)
 
-ifo() { echo ifconfig $1;ifconfig $1;sleep 1;echo; }
+ifo() { ifconfig $1|sed -E 's/^[ \t]+/  * /;s/^i/* i/';sleep 1; }
 
 if   [ $1 = ip4 ];then ifconfig $WAN  |grep inet |grep -v inet6|awk '{print $2}'
 elif [ $1 = ip6 ];then ifconfig igc1  |grep inet6|grep -v fe80 |awk '{print $2}'
