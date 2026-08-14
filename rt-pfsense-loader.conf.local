@@ -1,5 +1,5 @@
+kern.ipc.maxsockbuf="33554432"
 kern.ipc.nmbclusters="1000000"
-net.link.ifqmaxlen="10240"
-hw.igc.rx_process_limit="500"
-hw.igc.tx_process_limit="500"
 hw.igc.eee_setting="1"
+hw.pci.enable_aspm="0"
+net.link.ifqmaxlen="10240"
