@@ -15,7 +15,7 @@ if sht;then
 cuvc=$znm4
 nxvc=$znm4
 cun1=$inm6
-cun2=$inm6
+cun2=$inm5
 cumv=$znm3
 cut1=$znm3
 cut2=$znm2
@@ -300,7 +300,8 @@ s26='0x534029B6371dc4453DD750Bc1198181F55C859fe'
 s27="--connection=http://$(sni $cun2):5052 --allow-insecure-connections"
 s28='Content-Type: application/json'
 s29='offline-preparation'
-case $cunm in $cun2) s34=$(sni $cun2);;$vnm1) s34=$vis1;;*) s34=$(sni $cun1);;esac
+# case $cunm in $cun2) s34=$(sni $cun2);;$vnm1) s34=$vis1;;*) s34=$(sni $cun1);;esac # now use 127.0.0.1
+s34='127.0.0.1'
 s30="http://$s34:8545"
 s31="http://$s34:5052/eth/v1/node"
 s32="http://$s34:5052/eth/v1/validator/duties"
@@ -653,7 +654,7 @@ e24="$e24;s%rpc-whitelist\":[^,]+,%rpc-whitelist\": \"127.0.0.1,192.168.8.*\",%"
 e24="$e24;s%rpc-username\":[^,]+,%rpc-username\": \"\",%"
 e24="$e24;s%rpc-password\":[^,]+,%rpc-password\": \"\",%"
 e25='s%Type=.*$%Type=simple%'
-e26='s%(Current DNS)[^:]+:%   \1:%ip'
+e26='s%(Current DNS)[^:]+:%* \1:%ip'
 e28='pcie_aspm=off';sht && sbt && e28="$e28 nvme_core.default_ps_max_latency_us=0 intel_idle.max_cstate=1" # Prevents 990 PRO controller & CPU enter sleep state
 e27="s%GRUB_CMDLINE_LINUX_DEFAULT *= *\"(.+)\"%GRUB_CMDLINE_LINUX_DEFAULT=\"\1 $e28\"%;s%GRUB_CMDLINE_LINUX_DEFAULT *= *\"\"%GRUB_CMDLINE_LINUX_DEFAULT=\"$e28\"%"
 e28="s%APT::Periodic::Update-Package-Lists.*$%APT::Periodic::Update-Package-Lists \"1\";%i"
@@ -760,6 +761,9 @@ e87='s%^(net.ipv6.conf.(all|default).use_tempaddr) *= *[0-9]+%\1 = 0%'
 e88="s%^.* +([0-9]{2}:[0-9]{2}):[0-9]{2}$g04 +(INFO +peers) +%\1 \2 %"
 e89='s%CRON_DAILY_RUN.*$%CRON_DAILY_RUN="yes"%;s%CRON_DB_UPDATE.*$%CRON_DB_UPDATE="yes"%;s%APT_AUTOGEN.*$%APT_AUTOGEN="yes"%'
 e90='s%^.+relays +%%;s%,?http[^@]+@% %gp'
+e91='s%^(.+) +([A-Z]+ IN) +(.+) +# ([^ ]+)%\1 | \2 | \3 | \4%;s% +% %g'
+e92='s%^ *([0-9]+) +([^ ]+) +([^ ]+) +([^ ]+) +([^ ]+)%\1 | \2 | \3 | \4 | \5%'
+e93='s%^ *([A-Z])%* \1%;s%^ *([a-z1-9])%  * \1%'
 
 j0='.ata_sct_temperature_history.table|join(" ")'
 j1='.temperature.current'

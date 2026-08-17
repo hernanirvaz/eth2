@@ -848,7 +848,7 @@ function hs0 {
   if sxt;then hsh;echo;hch;fi
   uptime -p;echo
 }
-function nsh { $s08 list;$s08 status;$s09 status|snf "$e26"; }                                                                                                # network/dns info
+function nsh { $s08 list|sef "$e92";$s08 status|sef "$e93";$s09 status|snf "$e26"; }                                                                          # network/dns info
 function wlp { local e="$1";shift;until [[ $# -lt 1 ]];do e="$e|$1";shift;done;ll7|grep 'UFW BLOCK'|if [[ $e ]];then grep -Ev "$e";else cat;fi; }
 function c0c { local e="$e11";[[ $(snf "$e12" $p04/$s12.service) = $iip6 ]] && e="$e10";sef "$e" $s12.sav > $p04/$s12.service; }                              # cc change el server
 function ble { sft $s12 || return;local s=$p04/$s12.service;cp $s $p02/$s12.sav;sef "$1" $p02/$s12.sav > $s;dmr; }                                            # cc service edit
@@ -1322,7 +1322,6 @@ function eis { [[ $1 && $2 ]] && curl -s4 "https://$1:$2@dyn.dns.he.net/nic/upda
 [[ $1 = eic ]] && { eis $2 $3 &>$p03;pas ; }
 [[ $1 = eio ]] && { eis $2 $3       ;echo; }
 function bps { 
-  sbt || return
   local s n i e l;dts
   s=$(ll5 "$g69.*:[a-f0-9]{1,4}:")
   l=$(bnp);e=$(echo $l|bpn);n=0
@@ -1548,7 +1547,7 @@ function wa { if pex ufw status|grep -iq inactive;then cex ufw --force enable;el
 [[ $1 = we  ]] && { cex ufw --force enable; }
 [[ $1 = wpr ]] && { cex ufw disable; }
 [[ $1 = wds ]] && { cex ufw disable; }
-[[ $1 = ws  ]] && { cex ufw status verbose|sed -E 's%^(.+) +([A-Z]+ IN) +(.+) +# ([^ ]+)%\1 | \2 | \3 | \4%;s% +% %g'; }
+[[ $1 = ws  ]] && { cex ufw status verbose|sef "$e91"; }
 [[ $1 = ipw ]] && { ipw;cex ufw status verbose; }
 [[ $1 = iaw ]] && { iaw;cex ufw status verbose; }
 [[ $1 = wl  ]] && { wlp ${@:2:$#}|sef "$e19"; }
