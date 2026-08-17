@@ -1548,7 +1548,7 @@ function wa { if pex ufw status|grep -iq inactive;then cex ufw --force enable;el
 [[ $1 = we  ]] && { cex ufw --force enable; }
 [[ $1 = wpr ]] && { cex ufw disable; }
 [[ $1 = wds ]] && { cex ufw disable; }
-[[ $1 = ws  ]] && { cex ufw status verbose; }
+[[ $1 = ws  ]] && { cex ufw status verbose|sed -E 's%^(.+) +([A-Z]+ IN) +(.+) +# ([^ ]+)%\1 | \2 | \3 | \4%;s% +% %g'; }
 [[ $1 = ipw ]] && { ipw;cex ufw status verbose; }
 [[ $1 = iaw ]] && { iaw;cex ufw status verbose; }
 [[ $1 = wl  ]] && { wlp ${@:2:$#}|sef "$e19"; }
