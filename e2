@@ -10,7 +10,8 @@ fptv=270         # do not to set below 270GB for stability reasons
 fpmb=9           # >16GB does not provide performance benefits (default 4GB)
 fpmc=2           # in-memory cache for state trie. (default is ~1024 MB)
 gchl=0x700000000 # ~28 GB .NET heap limit for 64 GB RAM, to prevent excessive GC thrashing and OOM crashes. Adjust as needed for different RAM sizes.
-if [[ $cunm = $inm5 ]];then apip="$iip5";elif [[ $cunm = $inm6 ]];then apip="$iip6";else apip='127.0.0.1';fi
+if [[ $cunm = $inm5 ]];then apip="$iip5";elif [[ $cunm = $inm6 ]];then apip="$iip6";else apip='127.0.0.1';fi # still allowing a cross-node failover architecture if needed
+apip='127.0.0.1'                                                                                             # provides significant advantages for latency, fault tolerance, and security
 othe=''
 othe="$othe --network-maxactivepeers $maxp --network-discoveryport $pp2p --network-p2pport $pp2p"
 othe="$othe --jsonrpc-enabled true --jsonrpc-host $apip --jsonrpc-enginehost $apip --jsonrpc-engineport 8551 --jsonrpc-jwtsecretfile $p58/jwt"

@@ -14,7 +14,7 @@ if pex ufw status|grep -qi inactive;then
   [[ $cunm = $znm4                                   ]] && ple 2024/tcp nssh
   [[ $cunm = $inm5                                   ]] && ple 2025/tcp nssh
   [[ $cunm = $inm6                                   ]] && ple 2026/tcp nssh
-  sht && sxt && { pai 123/udp 192.168.8.0/24 ntp;pai 323/udp 192.168.8.0/24 ptp; }
+  sht && sxt && { pai 123/udp 192.168.8.0/24 ntp;pai 323/udp 192.168.8.0/24 ptp;pai 123/udp $pfpd::/64 ntpv6;pai 323/udp $pfpd::/64 ptpv6; }
   wsr;nex ufw --force enable
 else
   swb 'script ja executou'
