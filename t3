@@ -23,10 +23,9 @@ if ! sbt || [[ -f $p04/$s12.service ]];then
   if [[ -f $p04/$s12.service ]];then swu "cc ja instalado";else swu 'cc NAO DEVE SER INSTALADO AQUI';fi
 else
   if [[ $cunm = $inm5 ]];then apip="$iip5";tarp=80;elif [[ $cunm = $inm6 ]];then apip="$iip6";tarp=80;else apip='127.0.0.1';tarp=80;fi                        # still allowing a cross-node failover architecture if needed
-  apip='127.0.0.1'                                                                                                                                            # provides significant advantages for latency, fault tolerance, and security
   othe=''
   # [[ $cunm = $cun1 ]] && sht && othe="$othe --enr-address $(si6 $cunm)"  # advertise public IPv6 address (tests with pfSense DHCPv6 - works without this)
-  othe="$othe --execution-endpoint http://$apip:8551 --execution-jwt $p58/jwt"
+  othe="$othe --execution-endpoint http://127.0.0.1:8551 --execution-jwt $p58/jwt"
   snt $cunm && othe="$othe --prune-payloads false"                                                                                                            # saves space but imposes load on EL default true
   othe="$othe --suggested-fee-recipient $s26"                                                                                                                 # EL fees
   othe="$othe --validator-monitor-file $p58/pubkeys"                                                                                                          # monitor validators

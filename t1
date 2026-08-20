@@ -15,7 +15,7 @@ if sht;then
 cuvc=$znm4
 nxvc=$znm4
 cun1=$inm6
-cun2=$inm6
+cun2=$inm5
 cumv=$znm3
 cut1=$znm3
 cut2=$znm2
@@ -300,9 +300,8 @@ s26='0x534029B6371dc4453DD750Bc1198181F55C859fe'
 s27="--connection=http://$(sni $cun2):5052 --allow-insecure-connections"
 s28='Content-Type: application/json'
 s29='offline-preparation'
-# case $cunm in $cun2) s34=$(sni $cun2);;$vnm1) s34=$vis1;;*) s34=$(sni $cun1);;esac # now use 127.0.0.1
-s34='127.0.0.1'
-s30="http://$s34:8545"
+case $cunm in $cun2) s34=$(sni $cun2);;$vnm1) s34=$vis1;;*) s34=$(sni $cun1);;esac
+s30="http://127.0.0.1:8545"
 s31="http://$s34:5052/eth/v1/node"
 s32="http://$s34:5052/eth/v1/validator/duties"
 s33="http://$s34:5052/lighthouse"

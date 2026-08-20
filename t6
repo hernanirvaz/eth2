@@ -87,7 +87,7 @@ function z3t { [[ $cunm = $cut1 && $cut1 != $cumv ]]; }                         
 function zdt { stt || [[ $cun1 != $cut1 ]]; }                                                                                                                 # 2 or external ntp       test
 function z4t { [[ $cunm = $znm4 ]]; }                                                                                                                         # best zotac              test
 function n2t { [[ $cunm = $cun2 ]]; }
-function n3t { [[ $cun1 != $cun2 ]]; }
+function n3t { false; }                                                                                                                                       # node API can comunicate across-servers 
 function n4t { [[ $cun1 != $cumv ]]; }
 function ndt { [[ $cun1 != $cun2 ]]; }
 function mct { [[ $cunm = $cumv ]]; }
@@ -768,13 +768,12 @@ function eco {
 function bop {
   local e=9004;bnt || e=9000
   pae $e clp2p
+  pde 5052 clapi delete
+  nfw 5052 clapi
   if n3t;then
-    pde 5052 clapi delete
     pde 8551 cljwt delete
-    nfw 5052 clapi
     nfw 8551 cljwt
   else
-    nfw 5052 clapi delete
     nfw 8551 cljwt delete
   fi
   pae "$((e+1))/udp" clquic
@@ -782,13 +781,12 @@ function bop {
 function bco {
   local e=9004;bnt || e=9000
   pde $e clp2p
+  pde 5052 clapi
+  nfw 5052 clapi delete
   if n3t;then
-    pde 5052 clapi
     pde 8551 cljwt
-    nfw 5052 clapi delete
     nfw 8551 cljwt delete
   else
-    pde 5052 clapi delete
     pde 8551 cljwt delete
   fi
   pde "$((e+1))/udp" clquic
