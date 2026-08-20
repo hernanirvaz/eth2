@@ -743,6 +743,10 @@ function eop {
     nfw 8545 elapi
     nfw 8551 eljwt
     nfw 80   elweb
+  else
+    nfw 8545 elapi delete
+    nfw 8551 eljwt delete
+    nfw 80   elweb delete
   fi
 }
 function eco {
@@ -755,6 +759,10 @@ function eco {
     nfw 8545 elapi delete
     nfw 8551 eljwt delete
     nfw 80   elweb delete
+  else
+    pde 8545 elapi delete
+    pde 8551 eljwt delete
+    pde 80   elweb delete
   fi
 }
 function bop {
@@ -765,6 +773,9 @@ function bop {
     pde 8551 cljwt delete
     nfw 5052 clapi
     nfw 8551 cljwt
+  else
+    nfw 5052 clapi delete
+    nfw 8551 cljwt delete
   fi
   pae "$((e+1))/udp" clquic
 }
@@ -776,6 +787,9 @@ function bco {
     pde 8551 cljwt
     nfw 5052 clapi delete
     nfw 8551 cljwt delete
+  else
+    pde 5052 clapi delete
+    pde 8551 cljwt delete
   fi
   pde "$((e+1))/udp" clquic
 }
