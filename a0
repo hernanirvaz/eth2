@@ -193,7 +193,7 @@ function msh {
       fi
       shift
   done
-  [[ $w ]] || echo ssh -4p $p $s $e;ssh -4p $p $s "$e" 2>/dev/null
+  [[ $w ]] || echo ssh -4p $p $s $e;ssh -4p $p $s "$e"
 }
 function mcp {
   if [[ $# -lt 1 ]];then 

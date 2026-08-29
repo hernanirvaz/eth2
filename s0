@@ -42,9 +42,9 @@ function ssp { echo -e "\n\e[5mchange passwd\e[25m ${2:-root}:\t$1\n";echo -e "$
 export DEBIAN_FRONTEND=noninteractive # no GUI questions
 echo "apt-get update"      ;apt-get update -y                               &>> apt.out
 echo "apt-get dist-upgrade";apt-get dist-upgrade -y                         &>> apt.out
-echo "apt-get autoremove"  ;apt-get autoremove                              &>> apt.out
-echo "apt-get autoclean"   ;apt-get autoclean                               &>> apt.out
-echo "apt-get msmtp"       ;apt-get install msmtp msmtp-mta bsd-mailx jq -y &>> apt.out
+echo "apt-get autoremove"  ;apt-get autoremove -y                           &>> apt.out
+echo "apt-get autoclean"   ;apt-get autoclean -y                            &>> apt.out
+echo "apt-get msmtp"       ;apt-get install -y msmtp msmtp-mta bsd-mailx jq &>> apt.out
 sse $sc "$s1" 644 root:root;if [[ ${ip%%.*} -ne 192 ]];then sse $ss "$s4" 644 root:root;ssp $V $iu;fi;systemctl daemon-reload;systemctl reload $sh;systemctl restart $sh
 ssa $m1 "$s2" 644 root:root;ssa $m2 "$s3" 644 root:root
 adduser --disabled-password --comment "" $un
