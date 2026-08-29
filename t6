@@ -1189,6 +1189,7 @@ function irv {
     sex apt-get update
     nex apt-get install rvm -y
     nex usermod -a -G rvm $USER
+    echo 'source /etc/profile.d/rvm.sh' >> ~/.bashrc
     swb logout/login and t6 irv again
     return
   fi
