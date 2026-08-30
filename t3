@@ -22,7 +22,7 @@ t6 lpi
 if ! sbt || [[ -f $p04/$s12.service ]];then
   if [[ -f $p04/$s12.service ]];then swu "cc ja instalado";else swu 'cc NAO DEVE SER INSTALADO AQUI';fi
 else
-  if [[ $cunm = $inm5 ]];then apip="$iip5";tarp=80;elif [[ $cunm = $inm6 ]];then apip="$iip6";tarp=80;else apip='127.0.0.1';tarp=80;fi                        # still allowing a cross-node failover architecture if needed
+  if [[ $cunm = $inm5 ]];then apip="$iip5";tarp=80;elif [[ $cunm = $inm6 ]];then apip="$iip6";tarp=200;else apip='127.0.0.1';tarp=200;fi                      # still allowing a cross-node failover architecture if needed
   othe=''
   # [[ $cunm = $cun1 ]] && sht && othe="$othe --enr-address $(si6 $cunm)"  # advertise public IPv6 address (tests with pfSense DHCPv6 - works without this)
   othe="$othe --execution-endpoint http://127.0.0.1:8551 --execution-jwt $p58/jwt"
@@ -41,10 +41,10 @@ else
   # othe="$othe --shuffling-cache-size 128"                                     # fusaka attestation queue full & missig attestations
   # othe="$othe --state-cache-size 128 --beacon-processor-work-queue-len 32768" # keep memory constrained during non-finality
   # othe="$othe --disable-duplicate-warn-logs"                                                                                                                # no logs on duplicate gossip messages
-  # othe="$othe --disable-backfill-rate-limiting"                                                                                                             # disable the backfill sync rate-limiting
+  othe="$othe --disable-backfill-rate-limiting"                                                                                                             # disable the backfill sync rate-limiting
   # othe="$othe --checkpoint-sync-url https://mainnet.checkpoint.sigp.io"
   swu "CONFIGURE $s75";sex mkdir -p $p16;cmw $p05 755 $meeu;sau eth2;sjw
-  cmw $p16 700 eth2;touch $p05/vc_lock;rsyslog.newcd $p02 || exit                                                                                                        # IMPORTANTE LOCK vc
+  cmw $p16 700 eth2;touch $p05/vc_lock;cd $p02 || exit                                                                                                        # IMPORTANTE LOCK vc
   pp2p=9004;bnt || pp2p=9000
   cat <<-EOF > $s12.service
 	[Unit]
