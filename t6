@@ -860,7 +860,7 @@ function hs0 {
   if sxt;then hsh;echo;hch;fi
   uptime -p;echo
 }
-function nsh { $s08 list|sef "$e92";$s08 status|sef "$e93";$s09 status|snf "$e26"; }                                                                          # network/dns info
+function nsh { $s08 list|sef "$e13";$s08 status|sef "$e00";$s09 status|snf "$e26"; }                                                                          # network/dns info
 function wlp { local e="$1";shift;until [[ $# -lt 1 ]];do e="$e|$1";shift;done;ll7|grep 'UFW BLOCK'|if [[ $e ]];then grep -Ev "$e";else cat;fi; }
 function c0c { local e="$e11";[[ $(snf "$e12" $p04/$s12.service) = $iip6 ]] && e="$e10";sef "$e" $s12.sav > $p04/$s12.service; }                              # cc change el server
 function ble { sft $s12 || return;local s=$p04/$s12.service;cp $s $p02/$s12.sav;sef "$1" $p02/$s12.sav > $s;dmr; }                                            # cc service edit
@@ -1252,7 +1252,7 @@ function ick {
 }
 function isk { 
   srv hrv-zotac2 || return;local d
-  for d in "${s83[@]}";do nex smartctl -d sat -a $p85/$d;done|grep -E "$g67";
+  for d in "${s83[@]}";do nex smartctl -d sat -a $p20/$d;done|grep -E "$g67";
 }
 function imk {
   srv hrv-zotac2 || return
@@ -1273,7 +1273,7 @@ function imk {
   local s;local f;local d;local l;local m;local c=1;local v;local p=$(dirname $mrpd);local rsp
   sex umount -q "$mrpd"
   f=$(basename $p37);cp $p37 $f.sav;cp $p37 $f.new;cmw $f.new 644 eth
-  for d in "${s83[@]}";do d="$p85/$d"
+  for d in "${s83[@]}";do d="$p20/$d"
     l="bk$c";m="$p/$l";v="$(readlink -f "$d")1"
     if [[ -b "$d" ]]; then
       swn Drive found: $d
