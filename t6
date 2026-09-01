@@ -1223,13 +1223,14 @@ function cns {
 
 function idk {
   srv hrv-zotac2 || return
-  local s="$p14/keyrings/$s80.gpg";local a;local c
+  local s="$p14/keyrings/$s80.asc";local a;local c
   if fzt $s;then
     swb "$s80 JA INSTALADO";return
   fi
   a=$(dpkg --print-architecture);c=$(snf "$e80" $p77)
+
   sex install -m 0755 -d $(dirname $s)
-  curl -fsSL https://download.$s80.com/linux/ubuntu/gpg | sudo gpg --dearmor -o $s;sex chmod a+r $s
+  sex curl -fsSL https://download.$s80.com/linux/ubuntu/gpg -o $s;sex chmod a+r $s
   echo "deb [arch=$a signed-by=$s] https://download.$s80.com/linux/ubuntu $c stable" | sudo tee $p14/sources.list.d/$s80.list >$p03
   sex apt-get update
   swu install containerd.io
@@ -1242,7 +1243,9 @@ function idk {
 function ick {
   srv hrv-zotac2 || return;local s;local f
   pop $n58 $s64-http;pop $n59 $s64-https;pop $n60/udp $s64-discovery;pop $n61/udp $s64-DLNA
-  pop $n62 sonarr   ;pop $n63 radarr    ;pop $n64 prowlarr          ;rop;wsr;f=$(dirname $dkcc)
+  pop $n62 sonarr   ;pop $n63 radarr    ;pop $n64 prowlarr          ;rop
+  pop 80 http; pop 443 https; pop 81 npm-admin
+  wsr;f=$(dirname $dkcc)
   nex mkdir -p $mdld/{tv,tv2,movie,lust}                                                                   ;nex chown -R $meui:$megi $mdld;nex chmod -R 775 $mdld
   nex mkdir -p $dkcd/{prowlarr,sonarr,radarr,bazarr,transmission,jellyfin,nginx-proxy-manager,flaresolverr};nex chown -R $meui:$megi $dkcd;nex chmod -R 775 $dkcd
   nex mkdir -p $trmd/{complete,incomplete};nex mkdir -p $trmd/complete/{tv,mv}                             ;nex chown -R $meui:$megi $trmd;nex chmod -R 775 $trmd
@@ -1262,14 +1265,6 @@ function imk {
   else
     swb 'INSTALAR mergerfs & parted';pex apt-get install mergerfs fuse3 -y >> $p02/imk.out
   fi
-  # fix added to solve missing LABEL but removed it becouse it was soved with creating Partition Table (GPT)
-  # if fft $p80; then
-  #   swb 'USB Hardware Fix already applied.'
-  # else 
-  #     swb "Applying USB Hardware Fix for ASMedia ASM1051E";aex
-  #     echo "options usb-storage quirks=174c:55aa:u" | sudo tee -a $p80
-  #     nex update-initramfs -u
-  # fi
   local s;local f;local d;local l;local m;local c=1;local v;local p=$(dirname $mrpd);local rsp
   sex umount -q "$mrpd"
   f=$(basename $p37);cp $p37 $f.sav;cp $p37 $f.new;cmw $f.new 644 eth
