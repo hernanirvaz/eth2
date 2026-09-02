@@ -54,7 +54,6 @@ function srv { if [[ $cunm = $1 ]];then cd $p02;return;else swb "TEM DE ESTAR $1
 function sau { id "$1" &>$p03 || sex useradd --no-create-home --shell /bin/false $1; }
 function cmw { [[ $2 ]] && sex chmod $2 $1;[[ $3 ]] && sex chown $3:${4:-$3} $1; }
 # unused function yex { swb $@;echo "$H"|sudo -S -p '' -v &>$p03;yes|sudo -n "$@" &>$p03; }
-function aex {        echo "$H"|sudo -S -p '' -v   &>$p03; } # keep sudo alive
 function cex { swb $@;echo "$H"|sudo -S -p '' "$@" 2>$p03; }
 function nex { swn $@;echo "$H"|sudo -S -p '' "$@" 2>$p03; }
 function sex {        echo "$H"|sudo -S -p '' "$@" &>$p03; }

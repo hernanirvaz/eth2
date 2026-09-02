@@ -1221,35 +1221,48 @@ function cns {
 [[ $1 = irv ]] && { irv $2; }
 [[ $1 = cns ]] && { cns; }
 
+function iik {
+  swn apt-get update;sex apt-get update
+  if command -v parted &>$p03 && command -v mergerfs &>$p03; then
+    swb 'mergerfs & parted JA INSTALADOS'
+  else
+    swb 'INSTALAR mergerfs & parted';pex apt-get install mergerfs fuse3 parted smartmontools curl -y >> $p02/imk.out
+  fi
+}
 function idk {
   srv hrv-zotac2 || return
-  local s="$p14/keyrings/$s80.asc";local a;local c
+  local s a c u
+  s="$p14/keyrings/$s80.asc"
   if fzt $s;then
     swb "$s80 JA INSTALADO";return
   fi
-  a=$(dpkg --print-architecture);c=$(snf "$e80" $p77)
-
+  source $p77
+  a=$(dpkg --print-architecture)
+  c="${UBUNTU_CODENAME:-noble}"
+  u="https://download.$s80.com/linux/ubuntu/dists/$c/Release"
+  if ! curl -fsSIL "$u" &>$p03;then
+    swn "Docker repo para '$c' indisponivel. A usar fallback 'noble'..."
+    c="noble"
+  fi
   sex install -m 0755 -d $(dirname $s)
   sex curl -fsSL https://download.$s80.com/linux/ubuntu/gpg -o $s;sex chmod a+r $s
   echo "deb [arch=$a signed-by=$s] https://download.$s80.com/linux/ubuntu $c stable" | sudo tee $p14/sources.list.d/$s80.list >$p03
   sex apt-get update
   swu install containerd.io
-  sudo apt-get install --reinstall ca-certificates gnupg lsb-release -y 2>&1 | sudo tee -a $p02/$s80.out >$p03
-  sudo update-ca-certificates                                           2>&1 | sudo tee -a $p02/$s80.out >$p03
-  sex apt-get install $s80-ce $s80-ce-cli containerd.io $s80-buildx-plugin $s80-compose-plugin -y
-  sex usermod -aG docker,render,video $USER
+  sudo apt-get install $s80-ce $s80-ce-cli containerd.io $s80-buildx-plugin $s80-compose-plugin -y 2>&1 | sudo tee -a $p02/$s80.out >$p03
+  sex usermod -aG docker,render,video "$meeu"
   swb "REQUIRES LOGOUT/LOGIN after execution"
 }
 function ick {
   srv hrv-zotac2 || return;local s;local f
   pop $n58 $s64-http;pop $n59 $s64-https;pop $n60/udp $s64-discovery;pop $n61/udp $s64-DLNA
-  pop $n62 sonarr   ;pop $n63 radarr    ;pop $n64 prowlarr          ;rop
+  pop $n62 sonarr   ;pop $n63 radarr    ;pop $n64 prowlarr          ;pop $n68 bazarr;rop
   pop 80 http; pop 443 https; pop 81 npm-admin
   wsr;f=$(dirname $dkcc)
-  nex mkdir -p $mdld/{tv,tv2,movie,lust}                                                                   ;nex chown -R $meui:$megi $mdld;nex chmod -R 775 $mdld
-  nex mkdir -p $dkcd/{prowlarr,sonarr,radarr,bazarr,transmission,jellyfin,nginx-proxy-manager,flaresolverr};nex chown -R $meui:$megi $dkcd;nex chmod -R 775 $dkcd
-  nex mkdir -p $trmd/{complete,incomplete};nex mkdir -p $trmd/complete/{tv,mv}                             ;nex chown -R $meui:$megi $trmd;nex chmod -R 775 $trmd
-  nex mkdir -p $f                                                                                          ;nex chown -R $meui:$megi $f   ;nex chmod -R 775 $f
+  nex mkdir -p $mdld/{tv,tv2,movie,lust}                                                      ;nex chown -R $meui:$megi $mdld;nex chmod -R 775 $mdld
+  nex mkdir -p $dkcd/{prowlarr,sonarr,radarr,bazarr,transmission,jellyfin,nginx-proxy-manager};nex chown -R $meui:$megi $dkcd;nex chmod -R 775 $dkcd
+  nex mkdir -p $trmd/{complete,incomplete};nex mkdir -p $trmd/complete/{tv,mv}                ;nex chown -R $meui:$megi $trmd;nex chmod -R 775 $trmd
+  nex mkdir -p $f                                                                             ;nex chown -R $meui:$megi $f   ;nex chmod -R 775 $f
   cd $f;echo -e "$s81" > $dkcc;rco
   swn mup start docker AND t6 rop open transmission
 }
@@ -1257,39 +1270,68 @@ function isk {
   srv hrv-zotac2 || return;local d
   for d in "${s83[@]}";do nex smartctl -d sat -a $p20/$d;done|grep -E "$g67";
 }
-function imk {
-  srv hrv-zotac2 || return
-  swn apt-get update;sex apt-get update
-  if command -v parted &>$p03 && command -v mergerfs &>$p03; then
-    swb 'mergerfs & parted JA INSTALADOS'
-  else
-    swb 'INSTALAR mergerfs & parted';pex apt-get install mergerfs fuse3 -y >> $p02/imk.out
-  fi
-  local s;local f;local d;local l;local m;local c=1;local v;local p=$(dirname $mrpd);local rsp
+function ifk {
+  srv hrv-zotac2 || return;iik
+  local rsp
+  swn Quer mesmo formatar os discos vai perder dados SIM/nao ?
+  rsp=nao;read rsp
+  [[ $rsp = SIM  ]] || return
+  local s f d l m c v p
+  p=$(dirname $mrpd)
   sex umount -q "$mrpd"
   f=$(basename $p37);cp $p37 $f.sav;cp $p37 $f.new;cmw $f.new 644 eth
+  c=1
   for d in "${s83[@]}";do d="$p20/$d"
     l="bk$c";m="$p/$l";v="$(readlink -f "$d")1"
     if [[ -b "$d" ]]; then
       swn Drive found: $d
-      swn Quer formatar como $l em $m SIM/nao ?
-      rsp=nao;read rsp
-      if [[ $rsp = SIM  ]];then
-        swl Wipe and Partition Standard GPT for survival
-        sex umount -q "$d"*
-        sex wipefs --all --force "$d"
-        sex parted -s "$d" mklabel gpt
-        sex parted -s "$d" mkpart primary ext4 0% 100%
-        sex partprobe "$d"
-        sex udevadm settle
-        sleep 20
-        if [[ -b "$v" ]]; then
-          swn Partition detected $v.
-        else
-          swn FALLBACK: Formatting RAW disk $d. This is safe and robust.;v="$d"
-        fi
-        oex mkfs.ext4 -F -L "$l" -m 0 "$v"
+      swl Wipe and Partition Standard GPT for survival
+      sex umount -q "$d"*
+      sex wipefs --all --force "$d"
+      sex parted -s "$d" mklabel gpt
+      sex parted -s "$d" mkpart primary ext4 0% 100%
+      sex partprobe "$d"
+      sex udevadm settle
+      sleep 20
+      if [[ -b "$v" ]]; then
+        swn Partition detected $v.
+      else
+        swn FALLBACK: Formatting RAW disk $d. This is safe and robust.;v="$d"
       fi
+      oex mkfs.ext4 -F -L "$l" -m 0 "$v"
+    else
+      swn Drive not found: $d Skipping;continue
+    fi
+    echo
+    sex mkdir -p "$m";cmw "$m" 775 $meeu
+    sed -i "/LABEL=$l/d" $f.new;sed -i "\@$m@d" $f.new
+    echo "LABEL=$l $m ext4 defaults,nofail 0 0" >> $f.new
+    ((c++))
+  done
+  if [ $c -gt 1 ]; then
+    sex mkdir -p "$mrpd";cmw "$mrpd" 775 $meeu
+    sed -i "\@$mrpd@d" $f.new
+    echo "$s84 0 0" >> $f.new
+    sex cp $f.new $p37;cmw $p37 644 root
+    sex $s00 daemon-reload
+  else
+    echo "No drives processed."
+  fi
+  sex mount -a
+  sex chown -R $meeu:$meeu $p/bk*
+  df -h
+}
+function imk {
+  srv hrv-zotac2 || return;iik
+  local s f d l m c v p
+  p=$(dirname $mrpd)
+  sex umount -q "$mrpd"
+  f=$(basename $p37);cp $p37 $f.sav;cp $p37 $f.new;cmw $f.new 644 eth
+  c=1
+  for d in "${s83[@]}";do d="$p20/$d"
+    l="bk$c";m="$p/$l";v="$(readlink -f "$d")1"
+    if [[ -b "$d" ]]; then
+      swn Drive found: $d
     else
       swn Drive not found: $d Skipping;continue
     fi
@@ -1315,6 +1357,7 @@ function imk {
 [[ $1 = idk ]] && { idk; }
 [[ $1 = ick ]] && { ick; }
 [[ $1 = isk ]] && { isk; }
+[[ $1 = ifk ]] && { ifk; }
 [[ $1 = imk ]] && { imk; }
 [[ $1 = rco ]] && { rco; }
 [[ $1 = rop ]] && { rop; }
@@ -1555,7 +1598,7 @@ function wa { if pex ufw status|grep -iq inactive;then cex ufw --force enable;el
 [[ $1 = we  ]] && { cex ufw --force enable; }
 [[ $1 = wpr ]] && { cex ufw disable; }
 [[ $1 = wds ]] && { cex ufw disable; }
-[[ $1 = ws  ]] && { cex ufw status verbose|sef "$e91"; }
+[[ $1 = ws  ]] && { cex ufw status verbose|sef "$e80"; }
 [[ $1 = ipw ]] && { ipw;cex ufw status verbose; }
 [[ $1 = iaw ]] && { iaw;cex ufw status verbose; }
 [[ $1 = wl  ]] && { wlp ${@:2:$#}|sef "$e19"; }
@@ -1717,7 +1760,7 @@ if [[ $# -lt 1 ]];then
   m="$m\nei[c|o]\t\t\tset dynamic DNS [c]ron|[o]utput"
   m="$m\nulg [d]\t\t\tshow update logs d($(date +%F)) on $(basename $p69)"
   m="$m\nulr [d]\t\t\tshow restartings d($(date +%F)) on $(basename $p69)"
-  m="$m\ni{d|c|m|s}k\t\tinstalar $s80|containers|MergerFS|status media center on $znm2"
+  m="$m\ni{d|c|m|f|s}k\t\tinstalar $s80|containers|MergerFS|MergerFS + formatar|status media center on $znm2"
   m="$m\nr{op|co}\t\topen/close ports ($n65/$n66) for torrent"
   m="$m\nirv [v]\t\t\tinstalar rvm & ruby [$s82]"
   m="$m\ncns\t\t\tinstalar cns ruby gem"

@@ -7,9 +7,8 @@ if [[ $cunm = hrv-zotac2 ]];then
   mt2() { id plex     &>>/dev/null; }
   mdi() { if mt2;then printf /var/lib/plexmediaserver/mp4;else printf $mdld;fi; }
   mus() { if mt2;then printf plex                        ;else printf eth  ;fi; }
-  rsy() { ecn rsync --delete --numeric-ids $4 -avh -e \"ssh -4p $3\" "$1" "$2";}
-  rsl() { ecn rsync --delete --numeric-ids $3 -avh                   "$1" "$2";}
   # remote sync functions
+  # rsy() { ecn rsync --delete --numeric-ids $4 -avh -e \"ssh -4p $3\" "$1" "$2";}
   # stv() { rsy       $mdld/tv    $(sin $1): $(spn $1) $2;sleep 9;rsy       $mdld/tv2 $(sin $1): $(spn $1) $2; }
   # ptv() { rsy $(sin $1):~/tv    $mdld      $(spn $1) $2;sleep 9;rsy $(sin $1):~/tv2 $mdld      $(spn $1) $2; }
   # smv() { rsy       $mdld/movie $(sin $1): $(spn $1) $2;sleep 9; }
@@ -21,6 +20,7 @@ if [[ $cunm = hrv-zotac2 ]];then
   # sal() { local o="";stv hrv-zotac3 $o;smv hrv-zotac4 $o;slt hrv-zotac4 $o;sdk hrv-zotac3 $o; }
   # pal() { local o="";ptv hrv-zotac3 $o;pmv hrv-zotac4 $o;plt hrv-zotac4 $o;pdk hrv-zotac3 $o; }
   # local sync functions
+  rsl() { aex;ecn sudo rsync --delete --numeric-ids $3 -avh "$1" "$2";}
   stv() { rsl $mdld/tv    $mrpd $1;sleep 1;rsl $mdld/tv2 $mrpd $1;sleep 1; }
   ptv() { rsl $mrpd/tv    $mdld $1;sleep 1;rsl $mrpd/tv2 $mdld $1;sleep 1; }
   smv() { rsl $mdld/movie $mrpd $1;sleep 1; }
@@ -29,8 +29,42 @@ if [[ $cunm = hrv-zotac2 ]];then
   plt() { rsl $mrpd/lust  $mdld $1;sleep 1; }
   sdk() { rsl $dkcr/$dkcn $mrpd $1;sleep 1; }
   pdk() { rsl $mrpd/$dkcn $dkcr $1;sleep 1; }
-  sal() { local o="";sdk $o;stv $o;smv $o;slt $o; } # --size-only option to avoid timestamp backups
-  pal() { local o="";pdk $o;ptv $o;pmv $o;plt $o; }
+  sal() {
+    if ! mountpoint -q "$mrpd"; then
+      swr "ABORT: $mrpd NAO ESTA MONTADO!"
+      return 1
+    fi
+    if ! fnt "$mdld" && ! fnt "$dkcd"; then
+      swr "ABORT: Origem ($mdld / $dkcd) vazia! Risco de apagar o backup."
+      return 1
+    fi
+    local o=""
+
+    [[ -f "$dkcc" ]] && docker compose -f $dkcc stop
+    sdk $o
+    stv $o
+    smv $o
+    slt $o
+    [[ -f "$dkcc" ]] && docker compose -f $dkcc start
+  } # --size-only option to avoid timestamp backups
+
+  pal() {
+    if ! mountpoint -q "$mrpd"; then
+      swr "ABORT: $mrpd NAO ESTA MONTADO!"
+      return 1
+    fi
+    if ! fnt "$mrpd"; then
+      swr "ABORT: Backup em $mrpd esta vazio! Nada a restaurar."
+      return 1
+    fi
+    local o=""
+
+    [[ -f "$dkcc" ]] && docker compose -f $dkcc stop
+    pdk $o
+    ptv $o
+    pmv $o
+    plt $o
+  }
   fi0() { echo findls $1 $mdld;find $mdld -name "*.$1" -print; }
   fi1() { echo findrm $1 $mdld;find $mdld -name "*.$1" -exec sudo rm {} \;; }
   fll() { if [[ $1 ]];then fi0 $1;else fi0 txt;fi0 jpg;fi; }

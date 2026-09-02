@@ -58,6 +58,8 @@ om09="$om09;\$1 == \"PIR:\"                         {printf \"%-35s           ME
 om09="$om09;\$1 == \"AllocId:\"                     {printf \"%-35s           MEO Allocation ID %i\n\", \$0, \$2;next}"
 om09="$om09;\$1 == \"TrafficDescriptor\"            {printf \"%-35s           MEO If CIR=0, PIR=0, the upload limit is managed at the OLT layer via DBA (Dynamic Bandwidth Allocation)\n\", \$0;next}"
 
+function fnt { [[ -d "$1" && -n "$(ls -A "$1" 2>/dev/null)" ]]; }
+function aex { echo "$H"|sudo -S -p '' -v   &>/dev/null; } # keep sudo alive
 function sit { ! [[ $1 =~ ^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$ ]]; }
 function sht { [[ ${1:-$cuip} = 192.168.8.* ]]; }
 function snt { [[ $1 = hrv* ]]; }

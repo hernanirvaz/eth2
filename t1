@@ -260,6 +260,7 @@ n65=9091  # Transmission default web port
 n66=51413 # Transmission default torrent port
 n67=9117  # Jackett Web UI port
 n68=6767  # Bazarr default port
+n69=8191  # Flaresolverr default port
 
 s00='systemctl'
 s01="$s00 status"
@@ -448,6 +449,7 @@ s77='MEVB'
 s78='.[].peer_info.seen_multiaddrs.[]'
 s79='.data.p2p_addresses.[]'
 s80='docker'
+s82=$(getent group render|cut -d: -f3 || echo 107)
 s81=''
 s81="${s81}\nservices:"
 s81="${s81}\n  prowlarr:"
@@ -533,6 +535,8 @@ s81="${s81}\n      - $dkcd/jellyfin:/config"
 s81="${s81}\n      - $mdld:/media"
 s81="${s81}\n    devices:"
 s81="${s81}\n      - /dev/dri:/dev/dri"
+s81="${s81}\n    group_add:"
+s81="${s81}\n      - \"$s82\""
 s81="${s81}\n    ports:"
 s81="${s81}\n      - $n58:$n58"
 s81="${s81}\n      - $n59:$n59"
@@ -564,10 +568,8 @@ s81="${s81}\n      - LOG_LEVEL=info"
 s81="${s81}\n      - LOG_HTML=false"
 s81="${s81}\n      - CAPTCHA_SOLVER=none"
 s81="${s81}\n      - TZ=Europe/Lisbon"
-s81="${s81}\n    volumes:"
-s81="${s81}\n      - $dkcd/flaresolverr:/config"
 s81="${s81}\n    ports:"
-s81="${s81}\n      - 8191:8191"
+s81="${s81}\n      - $n69:$n69"
 s81="${s81}\n    restart: unless-stopped"
 s81="${s81}\n"
 s81="${s81}\n  watchtower:"
@@ -590,14 +592,17 @@ s83+=("usb-Samsung_SSD_870_EVO_4TB_09201030714E-0:0")       # Uncorrectable Erro
 s83+=("usb-SanDisk_SSD_PLUS_2000GB_012345678999-0:0")       # Reported Uncorrecta   0
 s84="$(dirname $mrpd)/bk[1-9] $mrpd fuse.mergerfs defaults" # Standard Linux settings
 s84="${s84},nofail"                                         # On USB unplugged, boots anyway and does not crash into Emergency Mode
-s84="${s84},nonempty"                                       # Allows mounting even if the /mnt/bkp folder isn't perfectly empty. Fixes "Folder not empty" errors.
 s84="${s84},allow_other"                                    # Lets Plex/Docker/Sonarr access the files. Without this, only root can see them.
 s84="${s84},use_ino"                                        # Preserves inode numbers for hardlinks (Radarr/Sonarr).
-s84="${s84},cache.files=partial"                            # Uses RAM to cache file attributes (size, date) but not the actual video data. Speeds up browsing folders in Plex/File Manager.
+s84="${s84},cache.files=auto-full"                          # Use RAM to cache file attributes (size, date).
 s84="${s84},dropcacheonclose=true"                          # When a file stops being read/written, flush it from RAM immediately. Great for backups to prevent RAM bloat.
 s84="${s84},minfreespace=50G"                               # Keeps at least 50GB free on each drive to prevent full disks.
 s84="${s84},category.create=mfs"                            # New files are created on the drive with the most free space.
 s84="${s84},category.action=all"                            # Deleting a file via the pool deletes all copies on all drives.
+s84="${s84},x-systemd.requires-mounts-for=/mnt/bk1"         # At system boot, systemd mounts filesystems in parallel.
+s84="${s84},x-systemd.requires-mounts-for=/mnt/bk2" 
+s84="${s84},x-systemd.requires-mounts-for=/mnt/bk3"
+s84="${s84},x-systemd.after=local-fs.target"                # If /mnt/bkp attempts to mount before the external USB drives are mounted, MergerFS will pool empty directories or fail.
 s84="${s84},fsname=mergerfs"                                # Names the filesystem "mergerfs" for easy identification.
 s85='eth-optimize-node'
 
@@ -743,7 +748,7 @@ e76="$e29;s%$g30: *$e78%peers \1%i"
 e77="$e29;s%(\.[0-9]{1,}) *.*$g35 *$e78%\1 peers \2%i"
 e78="$e29;s%(\.[0-9]{1,} INFO) *.*$g31: *$e78%\1 peers \2%i"
 e79='s%disable-upnp%disable-upnp --checkpoint-sync-url';if [[ $cunm = $inm5 ]];then e79="$e79 http://$iip6:5052%";elif [[ $cunm = $inm6 ]];then e79="$e79 http://$iip5:5052%";else e79="$e79 https://mainnet.checkpoint.sigp.io%";fi
-e80='s%^ *VERSION_CODENAME *= *%%p'
+e80='s%^(.+) +([A-Z]+ IN) +(.+) +# ([^ ]+)%\1 | \2 | \3 | \4%;s% +% %g'
 e81='/^ *\$nrconf\{override_rc\}/a \    qr(^eth-.+\\.service$) => 0, # do not restart ethereum services'
 e82='s%^([a-z]+[0-9]+)[ :]+active +(raid[01564]).+$%\1 \2%p'
 e83='s%^.*version +([0-9]+\.[0-9]+\.[0-9]+).*$%v\1%p'
@@ -756,7 +761,6 @@ e87="${e87}\nnet.ipv6.conf.default.use_tempaddr=0"
 e88="s%^.* +([0-9]{2}:[0-9]{2}):[0-9]{2}$g04 +(INFO +peers) +%\1 \2 %"
 e89='s%CRON_DAILY_RUN.*$%CRON_DAILY_RUN="yes"%;s%CRON_DB_UPDATE.*$%CRON_DB_UPDATE="yes"%;s%APT_AUTOGEN.*$%APT_AUTOGEN="yes"%'
 e90='s%^.+relays +%%;s%,?http[^@]+@% %gp'
-e91='s%^(.+) +([A-Z]+ IN) +(.+) +# ([^ ]+)%\1 | \2 | \3 | \4%;s% +% %g'
 
 j0='.ata_sct_temperature_history.table|join(" ")'
 j1='.temperature.current'
