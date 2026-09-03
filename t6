@@ -1247,9 +1247,10 @@ function idk {
   sex install -m 0755 -d $(dirname $s)
   sex curl -fsSL https://download.$s80.com/linux/ubuntu/gpg -o $s;sex chmod a+r $s
   echo "deb [arch=$a signed-by=$s] https://download.$s80.com/linux/ubuntu $c stable" | sudo tee $p14/sources.list.d/$s80.list >$p03
+  sex add-apt-repository -y multiverse
   sex apt-get update
   swu install containerd.io
-  sudo apt-get install $s80-ce $s80-ce-cli containerd.io $s80-buildx-plugin $s80-compose-plugin -y 2>&1 | sudo tee -a $p02/$s80.out >$p03
+  sudo apt-get install $s80-ce $s80-ce-cli containerd.io $s80-buildx-plugin $s80-compose-plugin intel-media-va-driver-non-free vainfo -y 2>&1 | sudo tee -a $p02/$s80.out >$p03
   sex usermod -aG docker,render,video "$meeu"
   swb "REQUIRES LOGOUT/LOGIN after execution"
 }

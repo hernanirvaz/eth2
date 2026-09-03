@@ -34,32 +34,26 @@ if [[ $cunm = hrv-zotac2 ]];then
       swr "ABORT: $mrpd NAO ESTA MONTADO!"
       return 1
     fi
-    if ! fnt "$mdld" && ! fnt "$dkcd"; then
+    if fnt "$mdld" || fnt "$dkcd"; then
       swr "ABORT: Origem ($mdld / $dkcd) vazia! Risco de apagar o backup."
       return 1
     fi
-    local o=""
-
-    [[ -f "$dkcc" ]] && docker compose -f $dkcc stop
+    local o="" 
     sdk $o
     stv $o
     smv $o
     slt $o
-    [[ -f "$dkcc" ]] && docker compose -f $dkcc start
   } # --size-only option to avoid timestamp backups
-
   pal() {
     if ! mountpoint -q "$mrpd"; then
       swr "ABORT: $mrpd NAO ESTA MONTADO!"
       return 1
     fi
-    if ! fnt "$mrpd"; then
+    if fnt "$mrpd"; then
       swr "ABORT: Backup em $mrpd esta vazio! Nada a restaurar."
       return 1
     fi
     local o=""
-
-    [[ -f "$dkcc" ]] && docker compose -f $dkcc stop
     pdk $o
     ptv $o
     pmv $o
