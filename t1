@@ -576,11 +576,11 @@ s81="${s81}\n  watchtower:"
 s81="${s81}\n    image: containrrr/watchtower:latest"
 s81="${s81}\n    container_name: watchtower"
 s81="${s81}\n    environment:"
+s81="${s81}\n      - DOCKER_API_VERSION=1.44"           # Watchtower needs bumping on newer Docker API versions. See https://containrrr.dev/watchtower/faq/#i-get-an-error-about-docker-api-version-when-i-run-watchtower
 s81="${s81}\n      - TZ=Europe/Lisbon"
 s81="${s81}\n      - WATCHTOWER_CLEANUP=true"
 s81="${s81}\n      - WATCHTOWER_INCLUDE_STOPPED=true"
 s81="${s81}\n      - WATCHTOWER_REVIVE_STOPPED=false"
-# s81="${s81}\n      - DOCKER_API_VERSION=1.44"           # Watchtower may need bumping on newer Docker
 s81="${s81}\n      - 'WATCHTOWER_SCHEDULE=8 9 5 * * *'" # At 05:09:08 every day
 s81="${s81}\n    volumes:"
 s81="${s81}\n      - /var/run/docker.sock:/var/run/docker.sock"

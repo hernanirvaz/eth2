@@ -1252,18 +1252,18 @@ function idk {
   swb "REQUIRES LOGOUT/LOGIN after execution"
 }
 function ick {
-  srv hrv-zotac2 || return;local s;local f
+  srv hrv-zotac2 || return;local s f
   pop $n58 $s64-http;pop $n59 $s64-https;pop $n60/udp $s64-discovery;pop $n61/udp $s64-DLNA
-  pop $n62 sonarr   ;pop $n63 radarr    ;pop $n64 prowlarr          ;pop $n68 bazarr;rop
+  pop $n62 sonarr   ;pop $n63 radarr    ;pop $n64 prowlarr          ;pop $n68 bazarr
   pop 80 http; pop 443 https; pop 81 npm-admin
-  wsr;f=$(dirname $dkcc)
+  rop;wsr;f=$(dirname $dkcc)
   nex mkdir -p $mdld/{tv,tv2,movie,lust}                                                      ;nex chown -R $meui:$megi $mdld;nex chmod -R 775 $mdld
   nex mkdir -p $dkcd/{prowlarr,sonarr,radarr,bazarr,transmission,jellyfin,nginx-proxy-manager};nex chown -R $meui:$megi $dkcd;nex chmod -R 775 $dkcd
   nex mkdir -p $trmd/{complete,incomplete};nex mkdir -p $trmd/complete/{tv,mv}                ;nex chown -R $meui:$megi $trmd;nex chmod -R 775 $trmd
   nex mkdir -p $f                                                                             ;nex chown -R $meui:$megi $f   ;nex chmod -R 775 $f
-  cd $f;echo -e "$s81" > $dkcc;rco
-  swn mup start docker AND t6 rop open transmission
-}
+  echo -e "$s81" > $dkcc
+  docker compose -f $dkcc up -d
+ }
 function isk { 
   srv hrv-zotac2 || return;local d
   for d in "${s83[@]}";do nex smartctl -d sat -a $p20/$d;done|grep -E "$g67";
