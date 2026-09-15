@@ -38,6 +38,7 @@ function snf { sed -En "$1" $2 2>$p03; }
 function n1t { [[ $cunm = $cun1 ]]; }
 function sbt { [[ $cunm = $cun1 || $cunm = $cun2 ]]; }
 function sct { [[ $cunm = $cuvc || $cunm = $cun1 || $cunm = $cun2 ]]; }
+function sdt { ls /dev/nvme*n* &>$p03; }
 function svt { [[ $cunm = $cuvc ]]; }
 function sat { [[ $cunm != $cuvc && $cunm != $nxvc ]]; }
 function bnt { [[ $cunm = $inm5 || $cunm = $vnm2 ]]; }
