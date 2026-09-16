@@ -425,7 +425,7 @@ function bo4 { bo0|grep $(non $1); }                                            
 function bo5 { bo0|head -n$((b6>b2?b6:b2<5?5:b2))|tail -n$((b6>0?b6:b2>n12?n12:b2<5?5:b2)); }                                                                 # homologous report
 function boa { local g=${1:-$n16};local e=$(bo4 $g);printf 'BO%5i %3i\n' $(wc -l <<< "$e") $g 2>$p03;echo "$e";((g<n17)) && boa $((g+n18)); }                 # recursively show homologous nodes report
 function bof {
-  [[ -f $p12 ]] || return;rm -f $p12.r;local i;local d;local o=${3:-a};local n;if [[ $o = a ]];then n=0;else n=6;fi;local g=$n16
+  [[ -f $p12 ]] || return;rm -f $p12.r;local i d o n g;o=${3:-a};if [[ $o = a ]];then n=0;else n=6;fi;g=$n16
   i=$(echo $(head -n1 $p12 2>$p03)|cut -d' ' -f4);i=${i:-$(date '+%F')}                                        # start date
   d=$(printf %i $(((($(date '+%s')-$(date -d "$i" '+%s'))/86400)+1)));dts "$(date -d"$d days ago" '+%F') $s43" # date/time for fake logs
   while ((g<=n17));do
@@ -1542,7 +1542,7 @@ function bml { [[ $d1 = $s43 ]] || return;if bdt;then bdl $d0;elif [[ $(llc $p12
 [[ $1 = bo  && -f $p12 ]] && { boi $(pt1 $@ 00:00);if [[ $(pt3 $@ s) = n ]];then b6=$b2;else b6=$(pt2 $@ 0);fi;bo5; }
 [[ $1 = boc && -f $p12 ]] && { unset v;read -a v <<< $(bff|tail -n1);l2=$(bff $(pt1 $2 ${v[4]}));boa; }
 [[ $1 = bol && -f $p12 ]] && { l2=$(bff $s43);boa; }
-[[ $1 = bof ]] && { bof $2 $3; }
+[[ $1 = bof ]] && { bof $2 $3 $4; }
 [[ $1 = bod ]] && { bdd o ${2:-0} ${3:-5}; }
 [[ $1 = brd ]] && { bdd r ${2:-0} ${3:-5}; }
 [[ $1 = bdl ]] && { bdl $2; }
