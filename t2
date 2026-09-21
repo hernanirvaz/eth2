@@ -60,8 +60,9 @@ fi
 hrs                                                                                                                                                           # timesync restart
 cc1 $p23 "$e03"                ;cmw $p23 644 root                                                                                                             # unattended-upgrades base
 cc1 $p51 "$e28"                ;cmw $p51 644 root                                                                                                             # unattended-upgrades period
-[[ $cunm = $cun1 || $cunm = $inm5 || $cunm = $cuvc || $cunm = $cumv ]] && cc1 $p83 "$e81";cmw $p83 644 root                                                   # needrestart
-[[ $cunm = $cun1 || $cunm = $inm5 || $cunm = $znm2 ]] && sht           && cc4 $p82 "$e87";cmw $p82 644 root                                                   # ipv6 privacy extension
+[[ $cunm = $cun1 || $cunm = $cun2 || $cunm = $cuvc || $cunm = $cumv ]] && cc1 $p83 "$e81";cmw $p83 644 root                                                   # needrestart
+[[ $cunm = $inm5 || $cunm = $inm6 || $cunm = $znm2 ]]                  && cc4 $p82 "$e87";cmw $p82 644 root                                                   # ipv6 privacy extension
+[[ $cunm = $cun1 || $cunm = $cun2 ]] && cc2 $p85 "$s86";cmw $p85 644 root                                                                                     # adequate socket memory to eliminate packet loss
 cc1 $p24 "$e04";cc2 $p24 "$s39";cmw $p24 755 root                                                                                                             # header add my motd
 cc1 $p25 "$e04"                ;cmw $p25 755 root                                                                                                             # help-text delete
 cc1 $p27 "$e53";cc2 $p27 "$s38";lrs                                                                                                                           # new logrotate & permissions

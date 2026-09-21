@@ -114,6 +114,7 @@ p81='/etc/wireguard'
 p82='/etc/sysctl.d/99-ipv6-privacy.conf'
 p83='/etc/needrestart/needrestart.conf'
 p84='/proc/mdstat'
+p85='/etc/sysctl.d/99-ethereum-udp.conf'
 
 g00='(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) +'
 g01='[0-9]{1,2} +'
@@ -608,6 +609,13 @@ s84="${s84},x-systemd.requires-mounts-for=/mnt/bk3"
 s84="${s84},x-systemd.after=local-fs.target"                # If /mnt/bkp attempts to mount before the external USB drives are mounted, MergerFS will pool empty directories or fail.
 s84="${s84},fsname=mergerfs"                                # Names the filesystem "mergerfs" for easy identification.
 s85='eth-optimize-node'
+s86=''
+s86="${s86}net.core.rmem_max = 16777216\n"                  # Maximum socket receive and send buffer ceilings (16 MiB)
+s86="${s86}net.core.wmem_max = 16777216\n"
+s86="${s86}net.core.rmem_default = 4194304\n"               # Default socket receive and send buffer baseline for non-tuned sockets (4 MiB)
+s86="${s86}net.core.wmem_default = 4194304\n"               # Prevents Discv5 discovery and auxiliary UDP sockets from getting trapped at 208 KiB
+s86="${s86}net.ipv4.udp_rmem_min = 16384\n"                 # Ensure minimum UDP socket memory allocation under pressure is adequate
+s86="${s86}net.ipv4.udp_wmem_min = 16384\n"
 
 e00='s%^ *([A-Z])%* \1%;s%^ *([a-z1-9])%  * \1%'
 e01='s%^ *ENABLED=.*$%ENABLED=0%i'
