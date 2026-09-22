@@ -616,6 +616,7 @@ s86="${s86}net.core.rmem_default = 4194304\n"               # Default socket rec
 s86="${s86}net.core.wmem_default = 4194304\n"               # Prevents Discv5 discovery and auxiliary UDP sockets from getting trapped at 208 KiB
 s86="${s86}net.ipv4.udp_rmem_min = 16384\n"                 # Ensure minimum UDP socket memory allocation under pressure is adequate
 s86="${s86}net.ipv4.udp_wmem_min = 16384\n"
+s86="${s86}net.ipv4.tcp_ecn = 1\n"                          # Enable ECN (Explicit Congestion Notification) for TCP connections to reduce packet loss and improve throughput
 
 e00='s%^ *([A-Z])%* \1%;s%^ *([a-z1-9])%  * \1%'
 e01='s%^ *ENABLED=.*$%ENABLED=0%i'
