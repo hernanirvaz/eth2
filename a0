@@ -255,7 +255,7 @@ function meo {
   else meh
   fi
 }
-function pfh { echo -e "pfs <param> [hours]\nPFSRB\t\tpfSense reboot\nfw[qsla]\tFirewall show Queues/Schedulers/Limiters\ndib\t\tDirect Interface Binding Rules\nip{46crda}\tshow ip4/ip6/config/route/discovery/all\ndsk\t\tshow disk usage\ndhcpc?6?\tpfSense logs dhcp[client]\ndns\t\tresolver\ngw\t\tgateways\nlogs?\t\tsystem[dhcp]\nlst\t\tlink-state"; }
+function pfh { echo -e "pfs <param> [hours]\nPFSRB\t\tpfSense reboot\nfw[qsla]\tFirewall show Queues/Schedulers/Limiters\ndib\t\tDirect Interface Binding Rules\nepc\t\tExternal peer connections\nipc\t\tOutbound peer connections\nip{46crda}\tshow ip4/ip6/config/route/discovery/all\ndsk\t\tshow disk usage\ndhcpc?6?\tpfSense logs dhcp[client]\ndns\t\tresolver\ngw\t\tgateways\nlogs?\t\tsystem[dhcp]\nlst\t\tlink-state"; }
 function pfs { 
   local s=hrv-protectli;local i=${1:0:2};local r=${1:2}
   local p="ipfw pipe show|sed 'N;N;s%\n% %g;s%  *% %g'"
@@ -263,7 +263,9 @@ function pfs {
   local a="sed 's/^/  * /'"
   if   [[ $1 = PFSRB ]];then msh -q $s "/etc/rc.reboot"
   elif [[ $i = fw    ]];then shift;if [[ $r = q ]];then i="ipfw queue show";elif [[ $r = l ]];then i="$p";elif [[ $r = s ]];then i="$c";else i=;fi;[[ $i ]] || i="echo '* Limiters:';$p|$a;echo '* Schedulers:';$c|$a;echo '* Queues:';ipfw queue show|$a";msh -q $s "$i"
-  elif [[ $1 = dib   ]];then msh -q $s "pfctl -sr -vv | grep dnqueue | sed -E 's%label .* label% ... label%' | $a"
+  elif [[ $1 = dib   ]];then msh -q $s "pfctl -vvsr | grep dnqueue | sed -E 's%label .* label% ... label%' | $a"
+  elif [[ $1 = epc   ]];then msh -q $s "pfctl -vvss | grep -E '192.168.8.37:9004|192.168.8.40:9000' | grep '<-' | grep -v igc1 | $a"
+  elif [[ $1 = opc   ]];then msh -q $s "pfctl -vvss | grep -E '192.168.8.37:9004|192.168.8.40:9000' | grep '<-' | grep    igc1 | $a"
   elif [[ $i = ip    ]];then msh -q $s "/root/rt-pfsense-ip.sh $1"
   elif [[ $1 = dsk   ]];then msh -q $s "smartctl -a /dev/ada0|grep -E 'Model:|^ID#|^ *(5|9|187) +[A-Z]'"
   elif [[ $1 = dns   ]];then msh -q $s "/root/rt-pfsense-log-check.sh resolver ${2:-24}"
