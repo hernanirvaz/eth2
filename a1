@@ -172,7 +172,7 @@ function nnv {
     sex chown eth1:eth1 -R $p00/$s
     cmw $p00/$s 755 eth1
     sex rm -rf $s $f
-    t6 ta
+    t6 tea
   fi
 }
 function gtv { local f="geth-linux-amd64-${1:-$getv}-${2:-$getc}";rm -rf $f*;curl -LO https://gethstore.blob.core.windows.net/builds/$f.tar.gz;local s=$(md5sum "$f.tar.gz"|cut -d' ' -f1);swn "\nINSTALAR $f ($s)?";local rsp=nao;read rsp;if [[ $rsp = $s ]];then tar xf "$f.tar.gz";sex cp $f/geth $p00;cmw "$p00/geth" 755 eth;fi; }
