@@ -279,7 +279,7 @@ function pfs {
   local w="pfctl -vvss | grep -E 'igc1 udp .+\-> ' | tail -n 2 | $a"
   if   [[ $1 = PFSRB ]];then msh -q $s "/etc/rc.reboot"
   elif [[ $i = fw    ]];then shift;if [[ $r = q ]];then i="ipfw queue show";elif [[ $r = l ]];then i="$p";elif [[ $r = s ]];then i="$c";else i=;fi;[[ $i ]] || i="echo '* Limiters:';$p|$a;echo '* Schedulers:';$c|$a;echo '* Queues:';ipfw queue show|$a";msh -q $s "$i"
-  elif [[ $1 = dib   ]];then msh -q $s "pfctl -vvsr | grep dnqueue | sed -E 's%label .* label% ... label%' | $a"
+  elif [[ $1 = dib   ]];then msh -q $s "pfctl -vvsr | grep -E 'tag|dnqueue' | sed -E 's%label .* label% ... label%' | $a"
   #elif [[ $1 = epc   ]];then msh -q $s "pfctl -vvss | grep -E '192.168.8.37:9004|192.168.8.40:9000' | grep '<-'"
   elif [[ $1 = epc   ]];then msh -q $s "$d;$e;$f;$g;$h;$j;$k;$l"
   #elif [[ $1 = opc   ]];then msh -q $s "pfctl -vvss | grep -E '192.168.8.37:9004|192.168.8.40:9000' | grep '\->' | $a"
