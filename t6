@@ -630,7 +630,7 @@ function hca {
   if ndt;then if n2t;then hch;else msh -q $cun2 "$p53 hch";fi;fi
   if vst;then if svt;then hch;else msh -q $cuvc "$p53 hch";fi;fi
   if mst;then if mct;then hch;else msh -q $cumv "$p53 hch";fi;fi
-  if zdt;then z3t && if z1t;then hch;else msh -q $cut1 "$p53 hch";fi;stt && if z2t;then hch;else msh -q $cut2 "$p53 hch";fi;fi
+  if zdt;then z3t && if z1t;then hch;else msh -q $cut1 "$p53 hch";fi;stt && if z2t;then hch;fi;fi
 }
 function si0 { printf '%s: erro_cml %i,used %s,spare %s; ' $(basename $1) $(($2+$3+$4)) $5% $6% 2>$p03; }
 function sif {
