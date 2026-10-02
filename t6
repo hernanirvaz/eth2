@@ -715,12 +715,12 @@ function xa  { tse $s22 && cex $s03 $s22;tsa $s21 || cex $s03 $s21;tse $s58 && c
 function xp  { tse $s22 && cex $s02 $s22;tsa $s21 && cex $s02 $s21;tse $s58 && cex $s02 $s58;tse $s62 && cex $s02 $s62 $s63; }
 function xd  { cex $s05 $s21;cex $s05 $s22;cex $s05 $s58;cex $s05 $s62 $s63;xco;wsr; }
 # Transmission BitTorrent Daemon
-function rop { pae $n66 torrent;pop $n65 torrent; }
-function rco { pde $n66 torrent;pco $n65 torrent; }
-function re  { rop;wsr;cex $s04 $s15; }                                                                                                                       # enable  transmission-daemon
+function rop { pae $n66 torrent;pai $n65 192.168.8.0/24 torrentUI       ;pai $n65 $pfpd::/64 torrentUIv6;wsr; }
+function rco { pde $n66 torrent;pai $n65 192.168.8.0/24 torrentUI delete;pai $n65 $pfpd::/64 torrentUIv6 delete;wsr; }
+function re  { rop;cex $s04 $s15; }                                                                                                                           # enable  transmission-daemon
 function ra  { tsa $s15 || cex $s03 $s15; }                                                                                                                   # start   transmission-daemon
 function rp  { tsa $s15 && cex $s02 $s15; }                                                                                                                   # stop    transmission-daemon
-function rd  { cex $s05 $s15;rco;wsr; }                                                                                                                       # disable transmission-daemon
+function rd  { cex $s05 $s15;rco; }                                                                                                                       # disable transmission-daemon
 # Bind9
 function sop { pai 53 192.168.8.0/24 dns       ; }
 function sco { pai 53 192.168.8.0/24 dns delete; }
@@ -1251,12 +1251,23 @@ function idk {
   sex usermod -aG docker,render,video "$meeu"
   swb "REQUIRES LOGOUT/LOGIN after execution"
 }
+function iov { pai $1 192.168.8.0/24 $2 $3;pai $1 $pfpd::/64 $2v6 $3; }
+function iop {
+  iov $n58 $s64-http;iov $n59 $s64-https;iov $n60/udp $s64-discovery;iov $n61/udp $s64-DLNA
+  iov $n62 sonarr   ;iov $n63 radarr    ;iov $n64     prowlarr      ;iov $n68     bazarr
+  iov 80   http     ;iov 443  https     ;iov 81       npm-admin
+  wsr
+}
+function ico {
+  local d='delete'
+  iov $n58 $s64-http $d;iov $n59 $s64-https $d;iov $n60/udp $s64-discovery $d;iov $n61/udp $s64-DLNA $d
+  iov $n62 sonarr    $d;iov $n63 radarr     $d;iov $n64     prowlarr       $d;iov $n68     bazarr    $d
+  iov 80   http      $d;iov 443  https      $d;iov 81       npm-admin      $d
+  wsr
+}
 function ick {
   srv hrv-zotac2 || return;local s f
-  pop $n58 $s64-http;pop $n59 $s64-https;pop $n60/udp $s64-discovery;pop $n61/udp $s64-DLNA
-  pop $n62 sonarr   ;pop $n63 radarr    ;pop $n64 prowlarr          ;pop $n68 bazarr
-  pop 80 http; pop 443 https; pop 81 npm-admin
-  rop;wsr;f=$(dirname $dkcc)
+  iop;rop;f=$(dirname $dkcc)
   nex mkdir -p $mdld/{tv,tv2,movie,lust}                                                      ;nex chown -R $meui:$megi $mdld;nex chmod -R 775 $mdld
   nex mkdir -p $dkcd/{prowlarr,sonarr,radarr,bazarr,transmission,jellyfin,nginx-proxy-manager};nex chown -R $meui:$megi $dkcd;nex chmod -R 775 $dkcd
   nex mkdir -p $trmd/{complete,incomplete};nex mkdir -p $trmd/complete/{tv,mv}                ;nex chown -R $meui:$megi $trmd;nex chmod -R 775 $trmd
@@ -1359,6 +1370,8 @@ function imk {
 [[ $1 = imk ]] && { imk; }
 [[ $1 = rco ]] && { rco; }
 [[ $1 = rop ]] && { rop; }
+[[ $1 = ico ]] && { ico; }
+[[ $1 = iop ]] && { iop; }
 
 [[ $1 = bb  ]] && { wpe; }
 [[ $1 = bbz ]] && { wpf; }
@@ -1762,7 +1775,7 @@ if [[ $# -lt 1 ]];then
   m="$m\nulg [d]\t\t\tshow update logs d($(date +%F)) on $(basename $p69)"
   m="$m\nulr [d]\t\t\tshow restartings d($(date +%F)) on $(basename $p69)"
   m="$m\ni{d|c|m|f|s}k\t\tinstalar $s80|containers|MergerFS|MergerFS + formatar|status media center on $znm2"
-  m="$m\nr{op|co}\t\topen/close ports ($n65/$n66) for torrent"
+  m="$m\n[ir]{op|co}\t\tports for [Jellyfin, Sonarr, Radarr, Prowlarr, Bazarr|Transmission] {open/close} on $znm2"
   m="$m\nirv [v]\t\t\tinstalar rvm & ruby [$s82]"
   m="$m\ncns\t\t\tinstalar cns ruby gem"
   m="$m\nrk{c|r}\t\t\trootkit hunter check|reset"
