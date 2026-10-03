@@ -259,7 +259,7 @@ function pfh { echo -e "pfs <param> [hours]\nPFSRB\t\tpfSense reboot\nfw[qsla]\t
 function pfs { 
   local s=hrv-protectli;local i=${1:0:2};local r=${1:2}
   local p="ipfw pipe show|sed 'N;N;s%\n% %g;s%  *% %g'"
-  local c="ipfw sched show|awk '/^[0-9]+:/{l=\$0;getline;l=l\" \"\$0;getline;l=l\" \"\$0;gsub(/ +/,\" \",l);print l;next} {print}'"
+  local c="ipfw sched show|awk '/^[0-9]+:/{l=\$0;getline;l=l\" \"\$0;getline;l=l\" \"\$0;gsub(/ +/,\" \",l);print l;next} /^BKT/{print \$0, \"AVG_bytes/%\";next} \$1 ~ /^[0-9]+$/ && NF >= 9 {avg = (\$5 > 0) ? sprintf(\"%.0f\", \$6 / \$5) : 0; drp = (\$5 > 0) ? sprintf(\"%.6f%%\", \$9 / \$5 * 100) : 2; print \$0, avg, drp; next} {print}'"
   local a="sed 's/^/  * /'"
   local d="pfctl -vvss | grep -E 'igc0 tcp .+ <- .+:900[15]' | tail -n 4 | $a"
   local e="pfctl -vvss | grep -E 'igc0 udp .+ <- .+:900[15]' | tail -n 4 | $a"
