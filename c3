@@ -13,7 +13,6 @@ KRAKEN_API_SECRET=
 BITCOINDE_API_KEY=
 BITCOINDE_API_SECRET=
 
-13,33,53 * * * * t6 mpf
 30       * * * * t6 irb 6
 40       * * * * t6 eic meo.fruga.pt <key>
 55      11 * * * cns ceth -d=1 
