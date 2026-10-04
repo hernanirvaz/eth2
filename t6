@@ -88,7 +88,7 @@ function zdt { stt || [[ $cun1 != $cut1 ]]; }                                   
 function z4t { [[ $cunm = $znm4 ]]; }                                                                                                                         # best zotac              test
 function n2t { [[ $cunm = $cun2 ]]; }
 function n3t { false; }                                                                                                                                       # node API can comunicate across-servers 
-function n4t { [[ $cun1 != $cumv ]]; }
+function n4t { [[ $cun1 != $cumv || $cun2 != $cumv ]]; }
 function ndt { [[ $cun1 != $cun2 ]]; }
 function mct { [[ $cunm = $cumv ]]; }
 function i5t { [[ $cunm = $inm5 ]]; }

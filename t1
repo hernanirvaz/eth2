@@ -16,7 +16,7 @@ cuvc=$znm4
 nxvc=$znm4
 cun1=$inm5
 cun2=$inm6
-cumv=$znm3
+cumv=$inm5
 cut1=$znm4
 cut2=$znm3
 else

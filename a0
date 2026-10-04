@@ -19,7 +19,7 @@ dkcc="/home/$meeu/arr/docker-compose.yml"
 netv='2.1.0';netc='b3e7e84c'
 ligv='v8.2.3'
 mevv='v1.12.0'
-golv='go1.27.0'
+golv='go1.27.1'
 sdcv='v2.8.0';sdcc='948d3fc'
 edcv='v1.2.0';edcc='18b7608'
 edov='1.39.0'
