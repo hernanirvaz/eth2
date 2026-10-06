@@ -27,6 +27,7 @@ i=${2:-0}
 g='logged|login|sshd'
 
 lsw $((i * 2)) '%Y-%m-%d' /root/wan-check.log
+lsw $((i * 1)) '%Y-%m-%d' /root/linklayer-check.log
 if [ "$1" = "logs" ] || [ "$1" = "lst" ]; then
     (
       lsw $((i + 0)) '%b %e' /var/log/dhcpd.log* 

@@ -11,9 +11,9 @@ DNS="8.8.8.8 8.8.4.4 1.1.1.1 1.0.0.1 9.9.9.9 149.112.112.112 208.67.222.222 208.
 
 grn() { set -- $DNS;n=$(date +%s%N);r=$(awk -v m=1 -v x=$# -v s=$n "BEGIN{srand(s);print int(m+rand()*(x-m+1))}" 2>$DNL);c=1;for s in $DNS;do if [ $c -eq $r ];then echo $s;return;fi;c=$((c+1));done;echo 8.8.8.8; }
 lgm() { echo "$(date +'%Y-%m-%d %H:%M:%S') $1" >> $FIL.log 2>&1; }
-pig() { ping -c $2 -W 4 $1         > $DNL 2>&1;e=$?;[ $e -ne 0 ] && lgm "ping -c$2 -W4 $1 erro ($e)";return $e; }
-ifd() { ifconfig    $WAN down      > $DNL 2>&1;h=$?;[ $h -ne 0 ] && lgm "Failed to bring $WAN down.";return $h; }  
-ifu() { ifconfig    $WAN up        > $DNL 2>&1;i=$?;[ $i -ne 0 ] && lgm "Failed to bring $WAN up."  ;return $i; }
+pig() { ping -c $2 -W 4 $1         > $DNL 2>&1;local e=$?;[ $e -ne 0 ] && lgm "ping -c$2 -W4 $1 erro ($e)";return $e; }
+ifd() { ifconfig    $WAN down      > $DNL 2>&1;local h=$?;[ $h -ne 0 ] && lgm "Failed to bring $WAN down.";return $h; }  
+ifu() { ifconfig    $WAN up        > $DNL 2>&1;local i=$?;[ $i -ne 0 ] && lgm "Failed to bring $WAN up."  ;return $i; }
 rex() { lgm "$1";/etc/rc.reboot    > $DNL 2>&1;exit 1; }  
 pit() { pig $(grn) 5 || pig $(grn) 6 || pig $(grn) 7 || pig $(grn) 8 || pig $(grn) 9 || pig $(grn) 10; }
 
@@ -26,7 +26,7 @@ if [ -f $FIL.lck ];then
         rm -f $FIL.lck
     fi
 fi
-echo $$ > $FIL.lck;trap "rm -f $FIL.lck" EXIT
+echo $$ > $FIL.lck;trap "rm -f $FIL.lck" EXIT INT TERM
 
 if pit;then exit 0;fi
 ifd;sleep 5;ifu;sleep 45
