@@ -13,9 +13,9 @@ if [ -z "$WCL" ]; then export WCL=1;exec /usr/bin/lockf -s -k -t 0 "${FIL}.lck" 
 read -r MEP < /root/.meo 2>$DNL
 grn() { set -- $DNS; eval "echo \${$(jot -r 1 1 $#)}"; }
 lgm() { echo "$(date +'%Y-%m-%d %H:%M:%S') $1" >> "${FIL}.log" 2>&1; }
-pig() { ping -c $2 -W 4 $1         > $DNL 2>&1;local e=$?;[ $e -ne 0 ] && lgm "ping -c$2 -W4 $1 erro ($e)";return $e; }
-ifd() { ifconfig    $WAN down      > $DNL 2>&1;local h=$?;[ $h -ne 0 ] && lgm "Failed to bring $WAN down.";return $h; }  
-ifu() { ifconfig    $WAN up        > $DNL 2>&1;local i=$?;[ $i -ne 0 ] && lgm "Failed to bring $WAN up."  ;return $i; }
+pig() { ping -c $2 -W 1000 $1      > $DNL 2>&1;local e=$?;[ $e -ne 0 ] && lgm "ping -c$2 -W1000 $1 erro($e)";return $e; }
+ifd() { ifconfig    $WAN down      > $DNL 2>&1;local h=$?;[ $h -ne 0 ] && lgm "Failed to bring $WAN down."  ;return $h; }  
+ifu() { ifconfig    $WAN up        > $DNL 2>&1;local i=$?;[ $i -ne 0 ] && lgm "Failed to bring $WAN up."    ;return $i; }
 dtr() { killall -9 dhclient dhcp6c > $DNL 2>&1;arp -d -i $WAN -a > $DNL 2>&1;pfctl -i $WAN -F state > $DNL 2>&1;pfSctl -c "interface reload wan" > $DNL 2>&1;local j=$?;[ $j -ne 0 ] && lgm "Failed to reload $WAN interface.";return $j; }
 mer() { ( echo "meo";sleep 2;echo "$MEP";sleep 3;echo "management/reboot";sleep 3;echo "Y";sleep 6 ) | nc -N -w 15 $ONT 23 > $DNL 2>&1;local k=$?;[ $k -ne 0 ] && lgm "Failed to reboot GR241AG.";return $k; } 
 pit() { pig $(grn) 5 || pig $(grn) 6 || pig $(grn) 7; }
