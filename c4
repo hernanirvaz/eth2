@@ -2,5 +2,6 @@ PATH=
 MAILTO=
 H=
 
+10  *     * * * t6 eic meo.fruga.pt <key>
 14,34,54  * * * * t6 vpf
       59 11 * * * t6 irb 24
