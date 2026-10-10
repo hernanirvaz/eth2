@@ -12,19 +12,21 @@ DNS="8.8.8.8 8.8.4.4 1.1.1.1 1.0.0.1 9.9.9.9 149.112.112.112 208.67.222.222 208.
 
 if [ -z "$WCL" ]; then export WCL=1;exec /usr/bin/lockf -s -k -t 0 "${FIL}.lck" "$0" "$@";fi
 MPD=$(/root/rt-pfsense-ip.sh ip6) # 2001:8a0:fcef:ac00
+WIP=$(/root/rt-pfsense-ip.sh ip4) # 82.155.244.204
 read -r MEP < /root/.meo 2>$DNL
 grn() { set -- $DNS; eval "echo \${$(jot -r 1 1 $#)}"; }
 lgm() { echo "$(date +'%Y-%m-%d %H:%M:%S') $1" >> "${FIL}.log" 2>&1; }
 pig() { ping -c $2 -W 1000 $1       > $DNL 2>&1;local e=$?;[ $e -ne 0 ] && lgm "ping -c$2 -W1000 $1 erro($e)";return $e; }
 ifd() { ifconfig    $WAN down       > $DNL 2>&1;local h=$?;[ $h -ne 0 ] && lgm "Failed to bring $WAN down."  ;return $h; }  
 ifu() { ifconfig    $WAN up         > $DNL 2>&1;local i=$?;[ $i -ne 0 ] && lgm "Failed to bring $WAN up."    ;return $i; }
-#dto() { killall -15 dhclient dhcp6c > $DNL 2>&1;arp -d -i $WAN -a > $DNL 2>&1;pfctl -i $WAN -F state > $DNL 2>&1;pfSctl -c "interface reload wan" > $DNL 2>&1;local j=$?;[ $j -ne 0 ] && lgm "Failed to reload $WAN interface.";return $j; }
 dtn() { 
     local j w
     # 1. Gracefully stop current daemons
     killall -15 dhclient dhcp6c > $DNL 2>&1
     arp -d -i $WAN -a > $DNL 2>&1
-    pfctl -i $WAN -F state > $DNL 2>&1
+    if [ -n "$WIP" ]; then
+        pfctl -k "$WIP" > $DNL 2>&1;pfctl -k 0.0.0.0/0 -k "$WIP" > $DNL 2>&1
+    fi
     # 2. Patch the config file and lock it with the FreeBSD immutable flag
     chflags nouchg $P6C > $DNL 2>&1
     sed -i '' "s%prefix  *.*%prefix ${MPD}::/56 90000;%" $P6C > $DNL 2>&1
@@ -36,10 +38,10 @@ dtn() {
         sleep 1
         w=$((w + 1))
     done
+    if [ $w -ge 25 ]; then j=1;else j=0;fi
     # 4. Release the lock for future normal pfSense operations
     chflags nouchg $P6C > $DNL 2>&1
-    j=$?
-    [ $j -ne 0 ] && lgm "Failed to reload $WAN interface."
+    [ $j -ne 0 ] && lgm "Failed to reload $WAN interface: dhcp6c did not start within 25s."
     return $j
 }
 mer() { ( echo "meo";sleep 2;echo "$MEP";sleep 3;echo "management/reboot";sleep 3;echo "Y";sleep 6 ) | nc -N -w 15 $ONT 23 > $DNL 2>&1;local k=$?;[ $k -ne 0 ] && lgm "Failed to reboot GR241AG.";return $k; } 
