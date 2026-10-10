@@ -3,7 +3,8 @@
 meeu=$(whoami)
 meui=$(id -u)
 megi=$(id -g)
-pfpd='2001:8a0:fcd9:4500'
+#pfpd='2001:8a0:fcd9:4500'
+pfpd='2001:8a0:fcef:ac00'
 cunm=$(hostname)
 cuip=$(hostname -I);cuip=${cuip%% *}
 vip1='51.89.64.77' ;vnd1='ns31198432.ip-51-89-64.eu'   ;vnm1=${vnd1%%.*};vis1='127.0.0.1'
@@ -265,22 +266,22 @@ function pfs {
   local a="sed 's/^/  * /'"
   local x="grep -E '192\.168\.8\.(37|40):900'"
   local b="grep -E '192\.168\.8\.(37|40):3030'"
-  local d="pfctl -ss | $x | grep -E 'igc0 tcp .+ <- '  | tail -n 4 | $a"
-  local e="pfctl -ss | $x | grep -E 'igc0 udp .+ <- '  | tail -n 4 | $a"
-  local f="pfctl -ss | $x | grep -E 'igc1 tcp .+ <- '  | tail -n 4 | $a"
-  local g="pfctl -ss | $x | grep -E 'igc1 udp .+ <- '  | tail -n 4 | $a"
+  local d="pfctl -ss | $x | grep -E 'igc0 tcp .+ <- '  | tail -n 2 | $a"
+  local e="pfctl -ss | $x | grep -E 'igc0 udp .+ <- '  | tail -n 2 | $a"
+  local f="pfctl -ss | $x | grep -E 'igc1 tcp .+ \-> ' | tail -n 2 | $a"
+  local g="pfctl -ss | $x | grep -E 'igc1 udp .+ \-> ' | tail -n 2 | $a"
   local h="pfctl -ss | $b | grep -E 'igc0 tcp .+ <- '  | tail -n 2 | $a"
   local j="pfctl -ss | $b | grep -E 'igc0 udp .+ <- '  | tail -n 2 | $a"
-  local k="pfctl -ss | $b | grep -E 'igc1 tcp .+ <- '  | tail -n 2 | $a"
-  local l="pfctl -ss | $b | grep -E 'igc1 udp .+ <- '  | tail -n 2 | $a"
-  local m="pfctl -ss | $x | grep -E 'igc0 tcp .+ \-> ' | tail -n 4 | $a"
-  local n="pfctl -ss | $x | grep -E 'igc0 udp .+ \-> ' | tail -n 4 | $a"
-  local o="pfctl -ss | $x | grep -E 'igc1 tcp .+ \-> ' | tail -n 4 | $a"
-  local q="pfctl -ss | $x | grep -E 'igc1 udp .+ \-> ' | tail -n 4 | $a"
+  local k="pfctl -ss | $b | grep -E 'igc1 tcp .+ \-> ' | tail -n 2 | $a"
+  local l="pfctl -ss | $b | grep -E 'igc1 udp .+ \-> ' | tail -n 2 | $a"
+  local m="pfctl -ss | $x | grep -E 'igc0 tcp .+ \-> ' | tail -n 2 | $a"
+  local n="pfctl -ss | $x | grep -E 'igc0 udp .+ \-> ' | tail -n 2 | $a"
+  local o="pfctl -ss | $x | grep -E 'igc1 tcp .+ <- '  | tail -n 2 | $a"
+  local q="pfctl -ss | $x | grep -E 'igc1 udp .+ <- '  | tail -n 2 | $a"
   local t="pfctl -ss | $b | grep -E 'igc0 tcp .+ \-> ' | tail -n 2 | $a"
   local u="pfctl -ss | $b | grep -E 'igc0 udp .+ \-> ' | tail -n 2 | $a"
-  local v="pfctl -ss | $b | grep -E 'igc1 tcp .+ \-> ' | tail -n 2 | $a"
-  local w="pfctl -ss | $b | grep -E 'igc1 udp .+ \-> ' | tail -n 2 | $a"
+  local v="pfctl -ss | $b | grep -E 'igc1 tcp .+ <- '  | tail -n 2 | $a"
+  local w="pfctl -ss | $b | grep -E 'igc1 udp .+ <- '  | tail -n 2 | $a"
   if   [[ $1 = PFSRB ]];then msh -q $s "/etc/rc.reboot"
   elif [[ $i = fw    ]];then shift;if [[ $r = q ]];then i="ipfw queue show|$y";elif [[ $r = l ]];then i="$p";elif [[ $r = s ]];then i="$c";else i=;fi;[[ $i ]] || i="echo '* Limiters:';$p|$a;echo '* Schedulers:';$c|$a;echo '* Queues:';ipfw queue show|$y|$a";msh -q $s "$i"
   elif [[ $1 = dib   ]];then msh -q $s "pfctl -vvsr | grep -E 'tag|dnqueue' | sed -E 's%label .* label% ... label%' | $a"
