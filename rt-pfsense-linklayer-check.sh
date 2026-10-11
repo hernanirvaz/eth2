@@ -9,10 +9,12 @@ DNL='/dev/null'
 FIL="/root/linklayer-check"
 
 if [ -z "$LLL" ]; then export LLL=1;exec /usr/bin/lockf -s -k -t 0 "${FIL}.lck" "$0" "$@";fi
+# Under afterfilterchangeshellcmd early system boot, runs before dhcp6c on WAN completes
 MPD=$(/root/rt-pfsense-ip.sh ip6) # 2001:8a0:fcef:ac00
+[ -z "$MPD" ] && MPD="2001:8a0:fcef:ac00"
 lgm() { echo "$(date +'%Y-%m-%d %H:%M:%S') $1" >> "${FIL}.log" 2>&1; }
-far() { local i m h e;i="$1";m="$2";h="$3";e=$(arp -n "$i" 2>"$DNL");if ! echo "$e" | grep -q "permanent"; then arp -S "$i" "$m" > "$DNL" 2>&1 || lgm "[ERROR] Failed to set IPv4 ARP for ${h}: ${i} -> ${m}";fi; }
-fnd() { local i m h e;i="$1";m="$2";h="$3";e=$(ndp -n "$i" 2>"$DNL");if ! echo "$e" | grep -q "permanent"; then ndp -s "$i" "$m" > "$DNL" 2>&1 || lgm "[ERROR] Failed to set IPv6 NDP for ${h}: ${i} -> ${m}";fi; }
+far() { if ! arp -n "$1" 2>"$DNL" | grep -q "permanent"; then arp -S "$1" "$2" > "$DNL" 2>&1 || lgm "[ERROR] Failed to set IPv4 ARP for $3: $1 -> $2";fi; }
+fnd() { if ! ndp -n "$1" 2>"$DNL" | grep -q "permanent"; then ndp -s "$1" "$2" > "$DNL" 2>&1 || lgm "[ERROR] Failed to set IPv6 NDP for $3: $1 -> $2";fi; }
 
 far "192.168.8.37" "48:21:0b:55:40:76" "hrv-intel5"
 fnd "$MPD::1005"   "48:21:0b:55:40:76" "hrv-intel5"

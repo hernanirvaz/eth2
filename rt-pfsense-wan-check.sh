@@ -5,13 +5,13 @@
 
 DNL='/dev/null'
 FIL="/root/wan-check"
-P6C="/var/etc/dhcp6c.conf"
 WAN="igc0"
 ONT="192.168.1.254"
 DNS="8.8.8.8 8.8.4.4 1.1.1.1 1.0.0.1 9.9.9.9 149.112.112.112 208.67.222.222 208.67.220.220"
 
 if [ -z "$WCL" ]; then export WCL=1;exec /usr/bin/lockf -s -k -t 0 "${FIL}.lck" "$0" "$@";fi
 WIP=$(/root/rt-pfsense-ip.sh ip4) # 82.155.244.204
+[ -z "$WIP" ] && WIP="82.155.244.204"
 read -r MEP < /root/.meo 2>$DNL
 grn() { set -- $DNS; eval "echo \${$(jot -r 1 1 $#)}"; }
 lgm() { echo "$(date +'%Y-%m-%d %H:%M:%S') $1" >> "${FIL}.log" 2>&1; }
@@ -22,7 +22,8 @@ dtn() {
     local j w
     # 1. Gracefully stop current daemons and wait for exit
     killall -15 dhclient dhcp6c > "$DNL" 2>&1
-    w=0;while pgrep -q dhcp6c && [ "$w" -lt 10 ];do sleep 0.2;w=$((w + 1));done;rm -f /var/run/dhcp6c.pid > "$DNL" 2>&1
+    # ls /var/run/dhc* -> /var/run/dhclient.igc0.pid /var/run/dhcp6c.pid
+    w=0;while pgrep -q dhcp6c && [ "$w" -lt 10 ];do sleep 0.2;w=$((w + 1));done;rm -f /var/run/dhclient.igc0.pid /var/run/dhcp6c.pid > "$DNL" 2>&1
     arp -d -i "$WAN" -a > "$DNL" 2>&1
     if [ -n "$WIP" ]; then
         pfctl -k "$WIP"              > "$DNL" 2>&1
@@ -30,7 +31,7 @@ dtn() {
     fi
     # 2. Reload WAN for IPv4 (dhclient) via native pfSense IPC & Explicitly start dhcp6c daemon (required because LAN is Static IPv6, bypassing pfSense track6)
     pfSctl -c "interface reload wan" > "$DNL" 2>&1
-    dhcp6c -D -n -c /var/etc/dhcp6c.conf -p /var/run/dhcp6c.pid "$WAN" > "$DNL" 2>&1
+    if ! pgrep -q dhcp6c; then dhcp6c -D -n -c /var/etc/dhcp6c.conf -p /var/run/dhcp6c.pid "$WAN" > "$DNL" 2>&1;fi
     w=0;while { ! pgrep -q dhclient || ! pgrep -q dhcp6c; } && [ "$w" -lt 25 ];do sleep 1;w=$((w + 1));done
     if pgrep -q dhclient && pgrep -q dhcp6c;then j=0;else j=1;lgm "[ERROR] Failed to start WAN daemons (dhclient/dhcp6c) on $WAN within 25s.";fi
     return "$j"
