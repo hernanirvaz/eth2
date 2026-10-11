@@ -43,7 +43,6 @@ ifd;sleep 5;ifu;sleep 45
 if pit;then lgm "WAN recovered after physical bounce.";exit 0;fi
 dtn;sleep 45
 if pit;then lgm "WAN recovered after daemon/state reset.";exit 0;fi
-lgm "Start WAN recovered after GR241AG reboot."
 mer;sleep 180;dtn;sleep 45
 if pit;then lgm "WAN recovered after GR241AG reboot.";exit 0;fi
 lgm "[CRITICAL] Upstream MEO FTTH outage confirmed.";exit 1
