@@ -765,7 +765,7 @@ e81='/^ *\$nrconf\{override_rc\}/a \    qr(^eth-.+\\.service$) => 0, # do not re
 e82='s%^([a-z]+[0-9]+)[ :]+active +(raid[01564]).+$%\1 \2%p'
 e83='s%^.*version +([0-9]+\.[0-9]+\.[0-9]+).*$%v\1%p'
 e84='([0-9]+\.[0-9]+) *ETH.*%\1%p'
-e85='s%^/ip6/([^ ]+)/tcp/.*$%\1%p'
+e85='s%^/ip6/([^ ]+)/.*$%\1%p'
 e86='s%^pool +0.([a-z]{2}).*maxsources +[2-4]$%\1%p'
 e87='s%^(net.ipv6.conf.(all|default).use_tempaddr) *= *[0-9]+%\1 = 0%' # 24.04 Disables IPv6 Privacy Extensions
 e87='net.ipv6.conf.all.use_tempaddr=0'                                 # 26.04 Disables IPv6 Privacy Extensions
