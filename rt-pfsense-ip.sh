@@ -1,14 +1,17 @@
 #!/bin/sh
 # pfSense v2.8.1-RELEASE (amd64) FreeBSD 15.0-CURRENT
 
-ifo() { ifconfig $1|sed -E 's/^[ \t]+/  * /;s/^i/* i/';sleep 1; }
-nst() { netstat -rn | sed -E 's%^ *([^ ]+) +([^ ]+) +([^ ]+) +([^ ]+) *%\1 | \2 | \3 | \4%';sleep 1; }
+DNL='/dev/null'
+LOG="$(ls -tr /var/log/dhcpd.log* 2>$DNL)"
 
-if   [ $1 = ip4 ];then grep -E "bound +to"         /var/log/dhcpd.log* | cut -d: -f2- | sort -k1,1M -k2,2n -k3,3 | tail -1 | awk '{print $8}'
-elif [ $1 = ip6 ];then grep -E '(create|update) +a +prefix' /var/log/dhcpd.log* | cut -d: -f2- | sort -k1,1M -k2,2n -k3,3 | tail -1 | awk '{sub(/::.*/, "", $9); print $9}'
+ifo() { ifconfig $1|sed -E 's/^[ \t]+/  * /;s/^i/* i/'; }
+nst() { netstat -rn | sed -E 's%^ *([^ ]+) +([^ ]+) +([^ ]+) +([^ ]+) *%\1 | \2 | \3 | \4%'; }
+
+if   [ $1 = ip4 ];then grep -hE "bound +to"                  $LOG | tail -1 | awk '{print $8}'
+elif [ $1 = ip6 ];then grep -hE '(create|update) +a +prefix' $LOG | tail -1 | awk '{sub(/::.*/, "", $9); print $9}'
 elif [ $1 = ipc ];then ifo igc0;ifo igc1;ifo igc2
 elif [ $1 = ipr ];then nst
 elif [ $1 = ipa ];then ifo igc0;ifo igc1;ifo igc2;nst
 elif [ $1 = ipd ];then ndp -an
-else echo "Usage: rt-pfsense-ip.sh {ip4|ip6|ipc|ipr|ipd}"
+else echo "Usage: rt-pfsense-ip.sh {ip4|ip6|ipc|ipr|ipa|ipd}"
 fi
