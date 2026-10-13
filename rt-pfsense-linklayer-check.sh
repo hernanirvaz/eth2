@@ -11,7 +11,6 @@ FIL="/root/linklayer-check"
 if [ -z "$LLL" ]; then export LLL=1;exec /usr/bin/lockf -s -k -t 0 "${FIL}.lck" "$0" "$@";fi
 ARP="$(arp -an 2>$DNL)"
 NDP="$(ndp -an 2>$DNL)"
-# Under afterfilterchangeshellcmd early system boot, runs before dhcp6c on WAN completes
 MPD=$(/root/rt-pfsense-ip.sh ip6);[ -z "$MPD" ] && MPD="2001:8a0:fcef:ac00"
 
 lgm() { echo "$(date +'%Y-%m-%d %H:%M:%S') $1" >> "${FIL}.log" 2>&1; }
