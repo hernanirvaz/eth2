@@ -20,7 +20,7 @@ ipg() {
     c=$(grep -hiE 'New +Routers +\(igc0\):'      $LOG 2>$DNL | tail -1 | awk '{print $9}')
     d=$(grep -hiE 'receive +reply +from +.*igc0' $LOG 2>$DNL | tail -1 | awk '{print $9}')
     echo -e "From netstat:\tIPv4:\t$a IPv6:\t$b\nFrom logs:\tLOGv4:\t$c LOGv6:\t$d"
-    if [ "$a" = "$c" ] && [ "$b" = "$d" ]; then echo -e "${e}OK${g}"; else echo -e "${f}Mismatch found${g}"; fi
+    if [ "$a" = "$c" ] && [ "$b" = "$d" ]; then printf "%bOK%b\n" "$e" "$g"; else printf "%bMismatch found%b\n" "$f" "$g"; fi
 }
 
 p=${1:-nada}

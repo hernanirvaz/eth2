@@ -8,7 +8,7 @@
 DNL='/dev/null'
 FIL="/root/linklayer-check"
 
-if [ -z "$LLL" ]; then export LLL=1;exec /usr/bin/lockf -s -k -t 0 "${FIL}.lck" "$0" "$@";fi
+if [ -z "$LLL" ]; then export LLL=1;exec lockf -s -k -t 0 "${FIL}.lck" "$0" "$@";fi
 ARP="$(arp -an 2>$DNL)"
 NDP="$(ndp -an 2>$DNL)"
 MPD=$(/root/rt-pfsense-ip.sh ip6);[ -z "$MPD" ] && MPD="2001:8a0:fcef:ac00"
