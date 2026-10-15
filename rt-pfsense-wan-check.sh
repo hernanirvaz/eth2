@@ -18,11 +18,11 @@ pig() { ping -c $2 -o -W 1000 $1    > $DNL 2>&1;local e=$?;[ $e -ne 0 ] && lgm "
 ifd() { ifconfig    $WAN down       > $DNL 2>&1;local h=$?;[ $h -ne 0 ] && lgm "Failed to bring $WAN down."     ;return $h; }  
 ifu() { ifconfig    $WAN up         > $DNL 2>&1;local i=$?;[ $i -ne 0 ] && lgm "Failed to bring $WAN up."       ;return $i; }
 dtn() { 
-    local j w
+    local j w r
     # 1. Gracefully stop current daemons and wait for exit
     killall -15 dhclient dhcp6c > "$DNL" 2>&1
-    # ls /var/run/dhc* -> /var/run/dhclient.igc0.pid /var/run/dhcp6c.pid
-    w=0;while { pgrep -q dhclient || pgrep -q dhcp6c; } && [ "$w" -lt 10 ];do sleep 0.2;w=$((w + 1));done;rm -f /var/run/dhclient.igc0.pid /var/run/dhcp6c.pid > "$DNL" 2>&1
+    r=$(ls /var/run/dhc[lp][i6][ec]*.pid 2>$DNL)
+    w=0;while { pgrep -q dhclient || pgrep -q dhcp6c; } && [ "$w" -lt 10 ];do sleep 0.2;w=$((w + 1));done;rm -f $r > "$DNL" 2>&1
     arp -d -i "$WAN" -a > "$DNL" 2>&1
     if [ -n "$WIP" ]; then
         pfctl -k "$WIP"              > "$DNL" 2>&1
