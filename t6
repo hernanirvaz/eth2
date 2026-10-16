@@ -1408,9 +1408,9 @@ function bps {
   echo $s75 nid v6 $dt $(echo "$s"|grep -i ip6)
   n=$(echo "$s"|snf "$e85"|cut -d: -f1-4)
   if sht;then
-    i=$(pfs ip6|cut -d: -f1-4)
+    i=$(pfs ipd)
   else
-    i=$(sa6    |cut -d: -f1-4)
+    i=$(sa6|cut -d: -f1-4)
   fi
   if [[ $n == $i ]];then e=$(swg OK);else e=$(swr NO);fi
   echo $s75 "$e  I6" $dt $n $i
@@ -1471,7 +1471,7 @@ function dsq { [[ $# -gt 0 ]] || return;$s09 query $@; }
 [[ $1 = nrs ]] && { nrs; }
 [[ $1 = nns ]] && { echo -e "$s41"; }
 function nnc {
-  local f=$(basename $p22);local p=$(pfs ip6|cut -d: -f1-4)
+  local f=$(basename $p22);local p=$(pfs ipd)
   if [[ $p = $pfpd ]]; then
     swn No Prefix Delegation changes detected from pfsense.
     swn Current pfsense=$p pfpd=$pfpd
@@ -1494,10 +1494,10 @@ function nnc {
   swn Possible other changes needed on pfsense
   swn Firewall Aliases IPv6z[23456] $pfpd::100[23456]
 }
+[[ $1 = nnc ]] && { nnc; }
 
 [[ $1 = rkc ]] && { cex rkhunter --check --rwo; }
 [[ $1 = rkr ]] && { nex rkhunter --propupd; }
-[[ $1 = nnc ]] && { nnc; }
 [[ $1 = hsh ]] && { hhh;hsh;echo;if n1t;then hca;else hch;fi; }
 [[ $1 = hch ]] && { hch; }
 [[ $1 = hca ]] && { hca; }

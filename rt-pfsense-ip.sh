@@ -15,6 +15,7 @@ i6c() { ifconfig $LAN inet6 2>$DNL | awk '/inet6 +[^f]/ {print $2}'; }
 i6e() { ifconfig $LAN inet6 2>$DNL | awk '/inet6 +fe80/ {sub(/fe80::/,"",$2);sub(/%igc1/,"",$2);print $2}'; }
 i6l() { grep -hiE '(create|update) +a +prefix' $LOG 2>$DNL | tail -1 | awk '{sub(/::.*/,"",$9);print $9}'; }
 ip4() { local i;i=$(i4c);if [ -n "$i" ];then echo $i;else i4l;fi; }
+ip6() { echo $(i6l):$(i6e); }
 ipg() { 
     local n a b c d e f g
     e='\033[0;32m'
@@ -37,11 +38,12 @@ ipg() {
 
 p=${1:-nada}
 if   [ $p = ip4 ];then ip4
-elif [ $p = ip6 ];then i6l
+elif [ $p = ip6 ];then ip6
+elif [ $p = ipd ];then i6l
 elif [ $p = ipc ];then ifo igc0;ifo igc1;ifo igc2
 elif [ $p = ipr ];then nst
-elif [ $p = ipd ];then ndp -an
+elif [ $p = ipn ];then ndp -an
 elif [ $p = ipg ];then ipg
 elif [ $p = ipa ];then ifo igc0;ifo igc1;ifo igc2;nst
-else echo "Usage: rt-pfsense-ip.sh {ip4|ip6|ipc|ipr|ipd|ipg|ipa}";
+else echo "Usage: rt-pfsense-ip.sh {ip4|ip6|ipd|ipc|ipr|ipn|ipg|ipa}";
 fi
