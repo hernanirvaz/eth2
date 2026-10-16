@@ -32,6 +32,7 @@ dtn() {
     # 2. Reload WAN for IPv4 (dhclient) via native pfSense IPC & Explicitly start dhcp6c daemon (required because LAN is Static IPv6, bypassing pfSense track6)
     pfSctl -c "interface reload wan" > "$DNL" 2>&1
     w=0;while ! pgrep -q dhclient && [ "$w" -lt 10 ];do sleep 1;w=$((w + 1));done
+    [ -f /var/etc/dhcp6c.conf ] || cp /root/rt-pfsense-dhcp6c.conf /var/etc/dhcp6c.conf > "$DNL" 2>&1
     if ! pgrep -q dhcp6c; then dhcp6c -D -n -c /var/etc/dhcp6c.conf -p /var/run/dhcp6c.pid "$WAN" > "$DNL" 2>&1;fi
     w=0;while { ! pgrep -q dhclient || ! pgrep -q dhcp6c; } && [ "$w" -lt 15 ];do sleep 1;w=$((w + 1));done
     if pgrep -q dhclient && pgrep -q dhcp6c;then j=0;else j=1;lgm "[ERROR] Failed to start WAN daemons (dhclient/dhcp6c) on $WAN within 25s.";fi

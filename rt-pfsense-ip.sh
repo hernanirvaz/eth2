@@ -5,7 +5,7 @@
 DNL='/dev/null'
 WAN="igc0"
 LAN="igc1"
-LOG="$(ls -tr /var/log/dhcpd.log* 2>$DNL)"
+LOG="$DNL $(ls -tr /var/log/dhcpd.log* 2>$DNL)"
 
 ifo() { ifconfig $1 2>$DNL | sed -E 's/^[ \t]+/  * /;s/^i/* i/'; }
 nst() { netstat -rn 2>$DNL | sed -E 's%^ *([^ ]+) +([^ ]+) +([^ ]+) +([^ ]+) *%\1 | \2 | \3 | \4%'; }
