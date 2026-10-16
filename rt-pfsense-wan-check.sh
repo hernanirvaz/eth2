@@ -34,7 +34,7 @@ dtn() {
     w=0;while ! pgrep -q dhclient && [ "$w" -lt 10 ];do sleep 1;w=$((w + 1));done
     if ! pgrep -q dhcp6c; then dhcp6c -D -n -c /var/etc/dhcp6c.conf -p /var/run/dhcp6c.pid "$WAN" > "$DNL" 2>&1;fi
     w=0;while { ! pgrep -q dhclient || ! pgrep -q dhcp6c; } && [ "$w" -lt 15 ];do sleep 1;w=$((w + 1));done
-    if pgrep -q dhclient && pgrep -q dhcp6c;then j=0;else j=1;lgm "[ERROR] Failed to start WAN daemons (dhclient/dhcp6c) on $WAN within 28s.";fi
+    if pgrep -q dhclient && pgrep -q dhcp6c;then j=0;else j=1;lgm "[ERROR] Failed to start WAN daemons (dhclient/dhcp6c) on $WAN within 25s.";fi
     return "$j"
 }
 mer() { ( echo "meo";sleep 2;echo "$MEP";sleep 3;echo "management/reboot";sleep 3;echo "Y";sleep 6 ) | nc -N -w 15 $ONT 23 > $DNL 2>&1;local k=$?;[ $k -ne 0 ] && lgm "Failed to reboot GR241AG.";return $k; } 
