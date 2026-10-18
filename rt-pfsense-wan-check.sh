@@ -4,7 +4,7 @@
 # Schedule: */5 * * * * root /root/rt-pfsense-wan-check.sh
 
 DNL='/dev/null'
-FIL="/root/wan-check"
+FIL="/var/run/wan-check"
 WAN="igc0"
 ONT="192.168.1.254"
 DNS="8.8.8.8 8.8.4.4 1.1.1.1 1.0.0.1 9.9.9.9 149.112.112.112 208.67.222.222 208.67.220.220"

@@ -6,7 +6,7 @@
 #   - Services Cron: */30 * * * * root /root/rt-pfsense-linklayer-check.sh
 
 DNL='/dev/null'
-FIL="/root/linklayer-check"
+FIL="/var/run/linklayer-check"
 
 if [ -z "$LLL" ]; then export LLL=1;exec lockf -s -k -t 0 "${FIL}.lck" "$0" "$@";fi
 ARP="$(arp -an 2>$DNL)"
