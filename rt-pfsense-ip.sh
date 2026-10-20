@@ -5,6 +5,7 @@
 DNL='/dev/null'
 WAN="igc0"
 LAN="igc1"
+MPD="2001:8a0:fcef:ac00"
 LOG="$DNL $(ls -tr /var/log/dhcpd.log* 2>$DNL)"
 
 ifo() { ifconfig $1 2>$DNL | sed -E 's/^[ \t]+/  * /;s/^i/* i/'; }
@@ -13,7 +14,7 @@ i4c() { ifconfig $WAN inet 2>$DNL | awk '/inet +/ {print $2}'; }
 i4l() { grep -hiE 'bound +to' $LOG 2>$DNL | tail -1 | awk '{print $8}'; }
 i6c() { ifconfig $LAN inet6 2>$DNL | awk '/inet6 +[^f]/ {print $2}'; }
 i6e() { ifconfig $LAN inet6 2>$DNL | awk '/inet6 +fe80/ {sub(/fe80::/,"",$2);sub(/%igc1/,"",$2);print $2}'; }
-i6l() { grep -hiE '(create|update) +a +prefix' $LOG 2>$DNL | tail -1 | awk '{sub(/::.*/,"",$9);print $9}'; }
+i6l() { local i;i=$(grep -hiE '(create|update) +a +prefix' $LOG 2>$DNL | tail -1 | awk '{sub(/::.*/,"",$9);print $9}');[ -z "$i" ] && i=$MPD;echo $i; }
 ip4() { local i;i=$(i4c);if [ -n "$i" ];then echo $i;else i4l;fi; }
 ip6() { echo $(i6l):$(i6e); }
 ipg() { 
