@@ -21,7 +21,7 @@ pi4() { pig $(gr4) 5 || pig $(gr4) 6 || pig $(gr4) 7 || pig $(gr4) 8 || pig $(gr
 pi6() { pig $(gr6) 3 || pig $(gr6) 5 || pig $(gr6) 7; }
 sfc() { local i;sysctl dev.igc.0.fc=0 > $DNL 2>&1;i=$?;[ $i -ne 0 ] && lgm "Failed to reset flow control.";return $i; }
 ifu() { local i;ifconfig $WAN up      > $DNL 2>&1;i=$?;[ $i -ne 0 ] && lgm "Failed to bring $WAN up.";sfc;i=$((i + $?));return $i; }
-ifd() { local i;ifconfig $WAN down    > $DNL 2>&1;i=$?;[ $i -ne 0 ] && lgm "Failed to bring $WAN down."                                                                                               ;return $i; }  
+ifd() { local i;ifconfig $WAN down    > $DNL 2>&1;i=$?;[ $i -ne 0 ] && lgm "Failed to bring $WAN down."                ;return $i; }  
 sd6() { cp /root/rt-pfsense-dhcp6c.conf /var/etc/dhcp6c.conf > "$DNL" 2>&1;dhcp6c -D -n -c /var/etc/dhcp6c.conf -p /var/run/dhcp6c.pid "$WAN" > "$DNL" 2>&1; }
 dtn() { 
     local j w r
