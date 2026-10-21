@@ -6,12 +6,13 @@ DNL='/dev/null'
 WAN="igc0"
 LAN="igc1"
 MPD="2001:8a0:fcef:ac00"
-LOG="$DNL $(ls -tr /var/log/dhcpd.log* 2>$DNL)"
+WIP='82.155.244.204'
+LOG="$DNL $(ls -tr /var/log/dhcpd.log /var/log/dhcpd.log.[0-9] 2>$DNL)"
 
 ifo() { ifconfig $1 2>$DNL | sed -E 's/^[ \t]+/  * /;s/^i/* i/'; }
 nst() { netstat -rn 2>$DNL | sed -E 's%^ *([^ ]+) +([^ ]+) +([^ ]+) +([^ ]+) *%\1 | \2 | \3 | \4%'; }
 i4c() { ifconfig $WAN inet 2>$DNL | awk '/inet +/ {print $2}'; }
-i4l() { grep -hiE 'bound +to' $LOG 2>$DNL | tail -1 | awk '{print $8}'; }
+i4l() { local i;i=$(grep -hiE 'bound +to' $LOG 2>$DNL | tail -1 | awk '{print $8}');[ -z "$i" ] && i=$WIP;echo $i; }
 i6c() { ifconfig $LAN inet6 2>$DNL | awk '/inet6 +[^f]/ {print $2}'; }
 i6e() { ifconfig $LAN inet6 2>$DNL | awk '/inet6 +fe80/ {sub(/fe80::/,"",$2);sub(/%igc1/,"",$2);print $2}'; }
 i6l() { local i;i=$(grep -hiE '(create|update) +a +prefix' $LOG 2>$DNL | tail -1 | awk '{sub(/::.*/,"",$9);print $9}');[ -z "$i" ] && i=$MPD;echo $i; }

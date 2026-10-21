@@ -11,7 +11,7 @@ DN4="8.8.8.8 8.8.4.4 1.1.1.1 1.0.0.1 9.9.9.9 149.112.112.112 208.67.222.222 208.
 DN6="2001:4860:4860::8888 2606:4700:4700::1111"
 
 if [ -z "$WCL" ]; then export WCL=1;exec lockf -s -k -t 0 "${FIL}.lck" "$0" "$@";fi
-WIP=$(/root/rt-pfsense-ip.sh ip4);[ -z "$WIP" ] && WIP="82.155.244.204"
+WIP=$(/root/rt-pfsense-ip.sh ip4)
 read -r MEP < /root/.meo 2>$DNL
 lgm() { echo "$(date +'%Y-%m-%d %H:%M:%S') $1" >> "${FIL}.log" 2>&1; }
 pig() { ping -c $2 -o -W 1000 $1 > $DNL 2>&1; }
@@ -36,7 +36,8 @@ dtn() {
     fi
     pfSctl -c "interface reload wan" > "$DNL" 2>&1
     w=0;while ! pgrep -q dhclient && [ "$w" -lt 10 ];do sleep 1;w=$((w + 1));done
-    w=0;while   pgrep -q dhclient && [ "$w" -lt 15 ];do if pgrep -q dhcp6c;then break;else sd6;fi;sleep 1;w=$((w + 1));done
+    if pgrep -q dhclient && ! pgrep -q dhcp6c;then sd6;fi
+    w=0;while pgrep -q dhclient && ! pgrep -q dhcp6c && [ "$w" -lt 15 ];do sleep 1;w=$((w + 1));done
     if pgrep -q dhclient && pgrep -q dhcp6c;then sfc;j=$?;else j=1;lgm "[ERROR] Failed to start WAN daemons (dhclient/dhcp6c) on $WAN within 25s.";fi
     return "$j"
 }
