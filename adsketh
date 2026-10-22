@@ -58,6 +58,7 @@ function gcr {
   s='Downloads/hw_ctree'                      ;f=$(find ~/$s*.xml 2>/dev/null|tail -n1)              ;gcf "$f" "$s" rt-HG8010Hv6.xml.gpg
   s='Downloads/ArcherC6v220220613137n'        ;f=$(find ~/$s*.bin 2>/dev/null|tail -n1)              ;gcf "$f" "$s" rt-tplink.bin.gpg
   s='rt-pfsense'                              ;f=$(find ~/$s*.txt 2>/dev/null|tail -n1)              ;gcf "$f" "$s"
+  s='rt-ufw'                                  ;f=$(find ~/$s*.txt 2>/dev/null|tail -n1)              ;gcf "$f" "$s"
   s='rt-LEOX'                                 ;f=$(find ~/$s*.txt 2>/dev/null|tail -n1)              ;gcf "$f" "$s"
   s='rt-MEO'                                  ;f=$(find ~/$s*.txt 2>/dev/null|tail -n1)              ;gcf "$f" "$s"
   s='rt-HG8010Hv6'                            ;f=$(find ~/$s*.txt 2>/dev/null|tail -n1)              ;gcf "$f" "$s"
@@ -69,12 +70,15 @@ function rfu {
     s='rt-MEO'    ;[[ -s $s.txt ]] || { zfu eth2/$s.txt.gpg > $s.txt;[[ -s $s.txt ]] && echo Restored $s.txt; }
   elif [[ $1 == 'l' ]];then
     s='rt-LEOX'   ;[[ -s $s.txt ]] || { zfu eth2/$s.txt.gpg > $s.txt;[[ -s $s.txt ]] && echo Restored $s.txt; }
+  elif [[ $1 == 'u' ]];then
+    s='rt-ufw'    ;[[ -s $s.txt ]] || { zfu eth2/$s.txt.gpg > $s.txt;[[ -s $s.txt ]] && echo Restored $s.txt; }
   else
-    s='rt-MEO'    ;[[ -s $s.txt ]] || { zfu eth2/$s.txt.gpg > $s.txt;[[ -s $s.txt ]] && echo Restored $s.txt; }
-    s='rt-LEOX'   ;[[ -s $s.txt ]] || { zfu eth2/$s.txt.gpg > $s.txt;[[ -s $s.txt ]] && echo Restored $s.txt; }
+    #s='rt-MEO'    ;[[ -s $s.txt ]] || { zfu eth2/$s.txt.gpg > $s.txt;[[ -s $s.txt ]] && echo Restored $s.txt; }
+    #s='rt-LEOX'   ;[[ -s $s.txt ]] || { zfu eth2/$s.txt.gpg > $s.txt;[[ -s $s.txt ]] && echo Restored $s.txt; }
+    s='rt-ufw'    ;[[ -s $s.txt ]] || { zfu eth2/$s.txt.gpg > $s.txt;[[ -s $s.txt ]] && echo Restored $s.txt; }
+    s='rt-pfsense'  ;[[ -s $s.txt ]] || { zfu eth2/$s.txt.gpg > $s.txt;[[ -s $s.txt ]] && echo Restored $s.txt; }
+    #s='rt-protectli';[[ -s $s.txt ]] || { zfu eth2/$s.txt.gpg > $s.txt;[[ -s $s.txt ]] && echo Restored $s.txt; }
   fi
-  s='rt-pfsense'  ;[[ -s $s.txt ]] || { zfu eth2/$s.txt.gpg > $s.txt;[[ -s $s.txt ]] && echo Restored $s.txt; }
-  # s='rt-protectli';[[ -s $s.txt ]] || { zfu eth2/$s.txt.gpg > $s.txt;[[ -s $s.txt ]] && echo Restored $s.txt; }
 }
 
 function vls {
@@ -168,7 +172,7 @@ hlp () {
   echo "z7z [1|2]                           archive media cs1|cs2 encripted with 7z"
   echo "ufz file                            encrypt file"
   echo "zfu file                            decrypt file"
-  echo "rfu [m|l]                           decrypt MEO|LEOX router config files"
+  echo "rfu [m|l|u]                         decrypt MEO|LEOX|UFW router config files"
   echo "gcr                                 git commit recent router config files"
   echo "mdv file.txt                        view Markdown file in Chrome"
   echo "kz  (port|ip) [ip|port]             setup server at ip last octet or port"
