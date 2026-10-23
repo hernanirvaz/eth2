@@ -41,7 +41,7 @@ dtn() {
     if pgrep -q dhclient && pgrep -q dhcp6c;then sfc;j=$?;else j=1;lgm "[ERROR] Failed to start WAN daemons (dhclient/dhcp6c) on $WAN within 25s.";fi
     return "$j"
 }
-mer() { ( echo "meo";sleep 2;echo "$MEP";sleep 3;echo "management/reboot";sleep 3;echo "Y";sleep 6 ) | nc -N -w 15 $ONT 23 > $DNL 2>&1;local k=$?;[ $k -ne 0 ] && lgm "Failed to reboot GR241AG.";return $k; } 
+mer() { ( echo "meo";sleep 2;echo "$MEP";sleep 3;echo "management/reboot";sleep 3;echo "Y";sleep 2 ) | nc -N -w 20 $ONT 23 > $DNL 2>&1;local k=$?;[ $k -ne 0 ] && lgm "Failed to reboot GR241AG.";return $k; }
 pit() { pi4 && pi6; }
 
 if pit;then exit 0;else lgm "[ERROR] Probing failed across all 6 stages. Initiating Layer 1 recovery.";fi
