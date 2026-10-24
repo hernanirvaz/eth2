@@ -1,7 +1,7 @@
 #!/bin/sh
 # pfSense v2.8.1-RELEASE (amd64) FreeBSD 15.0
-# Target: WAN interface health & recovery (igc0) - Disaster Recovery Watchdog
-# Schedule: */5 * * * * root /root/rt-pfsense-wan-check.sh
+# WAN interface health & recovery (igc0) - Disaster Recovery Watchdog
+# Trigger: Services Cron: */5 * * * * root /root/rt-pfsense-wan-check.sh
 
 DNL='/dev/null'
 FIL="/var/run/wan-check"
@@ -11,7 +11,7 @@ DN4="8.8.8.8 8.8.4.4 1.1.1.1 1.0.0.1 9.9.9.9 149.112.112.112 208.67.222.222 208.
 DN6="2001:4860:4860::8888 2606:4700:4700::1111"
 
 if [ -z "$WCL" ]; then export WCL=1;exec lockf -s -k -t 0 "${FIL}.lck" "$0" "$@";fi
-WIP=$(/root/rt-pfsense-ip.sh ip4)
+WIP=$(/root/rt-pfsense-ip.sh ip4) # 82.155.244.204
 read -r MEP < /root/.meo 2>$DNL
 lgm() { echo "$(date +'%Y-%m-%d %H:%M:%S') $1" >> "${FIL}.log" 2>&1; }
 pig() { ping -c $2 -o -W 1000 $1 > $DNL 2>&1; }

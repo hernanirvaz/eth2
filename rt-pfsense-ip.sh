@@ -1,5 +1,5 @@
 #!/bin/sh
-# pfSense v2.8.1-RELEASE (amd64) FreeBSD 15.0-CURRENT
+# pfSense v2.8.1-RELEASE (amd64) FreeBSD 15.0
 # Auxiliary script to obtain pfSense network information 
 
 DNL='/dev/null'
