@@ -2,6 +2,7 @@
 # pfSense v2.8.1-RELEASE (amd64) FreeBSD 15.0
 # OpenSSH Post-Quantum KEX Enabler
 # Trigger: shellcmd /root/rt-pfsense-patch-sshd.sh
+# Note: The OpenSSH binary compiled within this version of pfSense base userland does not support the mlkem768x25519-sha256 key exchange identifier
 
 DNL='/dev/null'
 SRC='sshd'
