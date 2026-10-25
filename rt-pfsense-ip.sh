@@ -1,6 +1,7 @@
 #!/bin/sh
 # pfSense v2.8.1-RELEASE (amd64) FreeBSD 15.0
-# Auxiliary script to obtain pfSense network information 
+# Auxiliary script to obtain pfSense network information
+# Note: netstat -rn formats default routes with numeric CIDR notation
 
 DNL='/dev/null'
 WAN="igc0"
@@ -24,8 +25,8 @@ ipg() {
     f='\033[1;5;31m'
     g='\033[0m'
     n=$(netstat -rn 2>$DNL)
-    a=$(echo "$n" | awk '/0\.0\.0\.0  *.*igc0/ {print $2}')
-    b=$(echo "$n" | awk '/::\/0  *.*igc0/      {sub(/%igc0/, "", $2);print $2}')
+    a=$(echo "$n" | awk '/^0\.0\.0\.0  *.* igc0/                      {print $2}')
+    b=$(echo "$n" | awk '/^::\/0  *.* igc0/      {sub(/%igc0/, "", $2);print $2}')
     c=$(grep -hiE 'New +Routers +\(igc0\):'      $LOG 2>$DNL | tail -1 | awk '{print $9}')
     d=$(grep -hiE 'receive +reply +from +.*igc0' $LOG 2>$DNL | tail -1 | awk '{sub(/%igc0/,"",$9);print $9}')
     printf 'Gateways netstat\tIPv4:\t%s\tIPv6:\t%s\nGateways logs\t\tLGv4:\t%s\tLGv6:\t%s ' "$a" "$b" "$c" "$d"
