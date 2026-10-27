@@ -14,8 +14,8 @@ NDP="$(ndp -an 2>$DNL)"
 MPD=$(/root/rt-pfsense-ip.sh ipd) # 2001:8a0:fcef:ac00
 
 lgm() { echo "$(date +'%Y-%m-%d %H:%M:%S') $1" >> "${FIL}.log" 2>&1; }
-far() { if ! echo "$ARP" | grep -q "($1).*permanent";          then arp -S "$1" "$2" > $DNL 2>&1 || lgm "[ERROR] Failed to set IPv4 ARP for $3: $1 -> $2";fi; }
-fnd() { if ! echo "$NDP" | grep -q "$1[[:space:]].*permanent"; then ndp -s "$1" "$2" > $DNL 2>&1 || lgm "[ERROR] Failed to set IPv6 NDP for $3: $1 -> $2";fi; }
+far() { if ! echo "$ARP" | grep -q "^?[[:space:]]($1)[[:space:]].*igc1[[:space:]][[:space:]]*permanent";then arp -S "$1" "$2" > $DNL 2>&1 || lgm "[ERROR] Failed to set IPv4 ARP for $3: $1 -> $2";fi; }
+fnd() { if ! echo "$NDP" | grep -q "^$1[[:space:]].*igc1[[:space:]][[:space:]]*permanent"              ;then ndp -s "$1" "$2" > $DNL 2>&1 || lgm "[ERROR] Failed to set IPv6 NDP for $3: $1 -> $2";fi; }
 
 far "192.168.8.37" "48:21:0b:55:40:76" "hrv-intel5"
 fnd "$MPD::1005"   "48:21:0b:55:40:76" "hrv-intel5"
