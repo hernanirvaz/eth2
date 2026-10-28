@@ -307,7 +307,7 @@ function pfs {
           ;$(pc1 "$b1" "$b2" "$i6" "$a")"
   if   [[ $1 = PFSRB ]];then msh -q $s "/etc/rc.reboot"
   elif [[ $i = fw    ]];then shift;if [[ $r = q ]];then i="ipfw queue show|$y";elif [[ $r = l ]];then i="$p";elif [[ $r = s ]];then i="$c";else i=;fi;[[ $i ]] || i="echo '* Limiters:';$p|$a;echo '* Schedulers:';$c|$a;echo '* Queues:';ipfw queue show|$y|$a";msh -q $s "$i"
-  elif [[ $1 = dib   ]];then msh -q $s "pfctl -vvsr | grep -E 'dnqueue' | sed -E 's%label .* label% ... label%' | $a"
+  elif [[ $1 = dib   ]];then msh -q $s "pfctl -vvsr | grep -E 'tag|dnqueue' | sed -E 's%label .* label% ... label%' | $a"
   elif [[ $1 = epc   ]];then msh -q $s "$d"
   elif [[ $1 = opc   ]];then msh -q $s "$m"
   elif [[ $i = ip    ]];then msh -q $s "/root/rt-pfsense-ip.sh $1"
