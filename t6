@@ -733,7 +733,7 @@ function rco { pde $n66 torrent;pai $n65 192.168.8.0/24 torrentUI delete;pai $n6
 function re  { rop;cex $s04 $s15; }                                                                                                                           # enable  transmission-daemon
 function ra  { tsa $s15 || cex $s03 $s15; }                                                                                                                   # start   transmission-daemon
 function rp  { tsa $s15 && cex $s02 $s15; }                                                                                                                   # stop    transmission-daemon
-function rd  { cex $s05 $s15;rco; }                                                                                                                       # disable transmission-daemon
+function rd  { cex $s05 $s15;rco; }                                                                                                                           # disable transmission-daemon
 # Bind9
 function sop { pai 53 192.168.8.0/24 dns       ; }
 function sco { pai 53 192.168.8.0/24 dns delete; }
