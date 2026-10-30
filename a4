@@ -1,8 +1,13 @@
 #!/bin/bash
 # Remove temporary protections for CVE-2026-98432
 
-set -e;function cex { echo "$H"|sudo -S -p '' "$@" 2>/dev/null; }
+function cex { echo "$H"|sudo -S -p '' "$@" &>/dev/null; }
 
 cex nft delete table ip cve_2026_98432 || true
 
-echo "$(date +"%Y-%m-%d %H:%M:%S") All temporary protections removed."
+if cex nft list table ip cve_2026_98432; then
+    echo "$(date +"%Y-%m-%d %H:%M:%S") [ERROR] Table 'cve_2026_98432' still present in kernel!"
+    exit 1
+else
+    echo "$(date +"%Y-%m-%d %H:%M:%S") All temporary protections REMOVED."
+fi
