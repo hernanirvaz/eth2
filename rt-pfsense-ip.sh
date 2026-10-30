@@ -1,7 +1,8 @@
 #!/bin/sh
 # pfSense v2.8.1-RELEASE (amd64) FreeBSD 15.0
 # Auxiliary script to obtain pfSense network information
-# Note: netstat -rn formats default routes with numeric CIDR notation
+# netstat -rn formats default routes with numeric CIDR notation
+# Log Compression none, Log Retention Count 7
 
 DNL='/dev/null'
 WAN="igc0"
