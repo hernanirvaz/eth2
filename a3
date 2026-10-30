@@ -1,0 +1,12 @@
+#!/bin/bash
+# Temporary protections for CVE-2026-98432
+# Safe to use with UFW (does NOT touch nftables.service)
+
+set -e;function cex { echo "$H"|sudo -S -p '' "$@" 2>/dev/null; }
+
+cex nft delete table ip cve_2026_98432 || true
+cex nft add table ip cve_2026_98432
+cex nft add chain ip cve_2026_98432 pre '{ type filter hook prerouting priority -300; }'
+cex nft add rule ip cve_2026_98432 pre meta l4proto tcp ip hdrlength gt 5 counter drop
+
+echo "$(date +"%Y-%m-%d %H:%M:%S") Protections ACTIVE."
