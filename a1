@@ -86,7 +86,7 @@ function pai { local e="allow from $2 to any port ${1/\// proto }";if [[ $4 ]];t
 function pae { local e="allow $1"                                 ;if [[ $3 ]];then nex ufw $3 $e;else nex ufw $e comment $2;fi; }
 function ple { local e="limit $1"                                 ;if [[ $3 ]];then nex ufw $3 $e;else nex ufw $e comment $2;fi; }
 function iov { pai $1 192.168.8.0/24 $2 $3;pai $1 $pfpd::/64 $2v6 $3; }
-function wov { pai $1 192.168.8.0/24 $2-lan $3;pai $1 192.168.9.0/24 $2-wg $3; }
+function wov { pai $1 192.168.8.0/24 $2-lan $3;pai $1 192.168.9.0/24 $2-wg $3;pai $1 192.168.7.100 $2-zen $3;pai $1 192.168.7.101 $2-lenovo $3;pai $1 192.168.7.102 $2-pixel $3; }
 function sis { local f=$(basename $1);if fzt $1;then swg "NEW $f";sex mv $1 $p17;touch $p05/vc_slash 2>$p03;cmw $p18 600 eth3;else swr "NO $f";fi; }
 function sjw { 
   [[ $cunm = $inm5 || $cunm = $inm6 || $cunm = $vnm1 || $cunm = $vnm2 ]] || return;local s=${b[*]}
