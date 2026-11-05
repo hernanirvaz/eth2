@@ -1264,8 +1264,8 @@ function idk {
 }
 function rop { pae $n66 torrent; }
 function rco { pde $n66 torrent; }
-function iop { io1 "80,81,443,$n62,$n63,$n64,$n65,$n67/tcp" arr-mgmt       ;io2 "$n58,$n59/tcp" arr-jlly       ; }
-function ico { io1 "80,81,443,$n62,$n63,$n64,$n65,$n67/tcp" arr-mgmt delete;io2 "$n58,$n59/tcp" arr-jlly delete; }
+function iop { io1 "80,81,443,$n62,$n63,$n64,$n65,$n67/tcp" arr-mgmt       ;io1 "$n58,$n59/tcp" arr-jlly       ;io2 "$n58,$n59/tcp" arr-jlly       ; }
+function ico { io1 "80,81,443,$n62,$n63,$n64,$n65,$n67/tcp" arr-mgmt delete;io1 "$n58,$n59/tcp" arr-jlly delete;io2 "$n58,$n59/tcp" arr-jlly delete; }
 function ick {
   srv hrv-zotac2 || return;local s f
   iop;rop;wsr;f=$(dirname $dkcc)
