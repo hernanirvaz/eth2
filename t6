@@ -728,12 +728,10 @@ function xa  { tse $s22 && cex $s03 $s22;tsa $s21 || cex $s03 $s21;tse $s58 && c
 function xp  { tse $s22 && cex $s02 $s22;tsa $s21 && cex $s02 $s21;tse $s58 && cex $s02 $s58;tse $s62 && cex $s02 $s62 $s63; }
 function xd  { cex $s05 $s21;cex $s05 $s22;cex $s05 $s58;cex $s05 $s62 $s63;xco;wsr; }
 # Transmission BitTorrent Daemon
-function rop { pae $n66 torrent;pai $n65 192.168.8.0/24 torrentUI       ;pai $n65 $pfpd::/64 torrentUIv6;wsr; }
-function rco { pde $n66 torrent;pai $n65 192.168.8.0/24 torrentUI delete;pai $n65 $pfpd::/64 torrentUIv6 delete;wsr; }
-function re  { rop;cex $s04 $s15; }                                                                                                                           # enable  transmission-daemon
+function re  { rop;wsr;cex $s04 $s15; }                                                                                                                       # enable  transmission-daemon
 function ra  { tsa $s15 || cex $s03 $s15; }                                                                                                                   # start   transmission-daemon
 function rp  { tsa $s15 && cex $s02 $s15; }                                                                                                                   # stop    transmission-daemon
-function rd  { cex $s05 $s15;rco; }                                                                                                                           # disable transmission-daemon
+function rd  { cex $s05 $s15;rco;wsr; }                                                                                                                       # disable transmission-daemon
 # Bind9
 function sop { pai 53 192.168.8.0/24 dns       ; }
 function sco { pai 53 192.168.8.0/24 dns delete; }
@@ -818,7 +816,7 @@ function ve  {
 function pe  { pai 9090/tcp 192.168.8.0/24 $s16;wsr;cex $s04 $s16; }                                                                                          # enable prometheus
 function ne  { wsr;cex $s04 $s17; }                                                                                                                           # enable prometheus-node-exporter
 function fe  { pai 3000/tcp 192.168.8.0/24 grafana;wsr;cex $s04 $s18; }                                                                                       # enable grafana-server
-function me  { if n4t;then nfw 18550 mev;pai 18550 $pfpd::/64 mevv6;fi;wsr;cex $s04 $s14; }                                                                   # enable mev-boost
+function me  { if n4t;then nfw 18550 mev;fi;wsr;cex $s04 $s14; }                                                                                              # enable mev-boost
 function ga  { tsa $s10 || cex $s03 $s10; }                                                                                                                   # start eth-geth
 function ua  { tsa $s11 || cex $s03 $s11; }                                                                                                                   # start eth-besu
 function ta  { tsa $s44 || cex $s03 $s44; }                                                                                                                   # start eth-nethermind
@@ -846,7 +844,7 @@ function vd  { cex $s05 $s13;vco;wsr;touch $p05/vc_lock 2>$p03; }               
 function pd  { cex $s05 $s16;pai 9090/tcp 192.168.8.0/24 $s16 delete;wsr; }                                                                                   # disable prometheus
 function nd  { cex $s05 $s17; }                                                                                                                               # disable prometheus-node-exporter
 function fd  { cex $s05 $s18;pai 3000/tcp 192.168.8.0/24 grafana delete;wsr; }                                                                                # disable grafana-server
-function md  { cex $s05 $s14;if n4t;then nfw 18550 mev delete;pai 18550 $pfpd::/64 mevv6 delete;fi;wsr; }                                                     # disable mev-boost
+function md  { cex $s05 $s14;if n4t;then nfw 18550 mev delete;fi;wsr; }                                                                                       # disable mev-boost
 function pas { t2t && sex $p54 usbstop;t1t && sex $p54 cputurbo;t0t && sex $p54 cpunoturbo; }                                                                 # set usb/cpu parameters
 function paf { t3t && sex $p54 cputurbo; }                                                                                                                    # set turbo   parameter
 function hsg { sso $s72 $s10; }
@@ -1264,22 +1262,13 @@ function idk {
   sex usermod -aG docker,render,video "$meeu"
   swb "REQUIRES LOGOUT/LOGIN after execution"
 }
-function iop {
-  iov $n58 $s64-http;iov $n59 $s64-https;iov $n60/udp $s64-discovery;iov $n61/udp $s64-DLNA
-  iov $n62 sonarr   ;iov $n63 radarr    ;iov $n64     prowlarr      ;iov $n68     bazarr
-  iov 80   http     ;iov 443  https     ;iov 81       npm-admin
-  wsr
-}
-function ico {
-  local d='delete'
-  iov $n58 $s64-http $d;iov $n59 $s64-https $d;iov $n60/udp $s64-discovery $d;iov $n61/udp $s64-DLNA $d
-  iov $n62 sonarr    $d;iov $n63 radarr     $d;iov $n64     prowlarr       $d;iov $n68     bazarr    $d
-  iov 80   http      $d;iov 443  https      $d;iov 81       npm-admin      $d
-  wsr
-}
+function rop { pae $n66 torrent; }
+function rco { pde $n66 torrent; }
+function iop { iov "80,81,443,$n62,$n63,$n64,$n65,$n67/tcp" arr-mgmt       ; }
+function ico { iov "80,81,443,$n62,$n63,$n64,$n65,$n67/tcp" arr-mgmt delete; }
 function ick {
   srv hrv-zotac2 || return;local s f
-  iop;rop;f=$(dirname $dkcc)
+  iop;rop;wsr;f=$(dirname $dkcc)
   nex mkdir -p $mdld/{tv,tv2,movie,lust}                                                      ;nex chown -R $meui:$megi $mdld;nex chmod -R 775 $mdld
   nex mkdir -p $dkcd/{prowlarr,sonarr,radarr,bazarr,transmission,jellyfin,nginx-proxy-manager};nex chown -R $meui:$megi $dkcd;nex chmod -R 775 $dkcd
   nex mkdir -p $trmd/{complete,incomplete};nex mkdir -p $trmd/complete/{tv,mv}                ;nex chown -R $meui:$megi $trmd;nex chmod -R 775 $trmd
@@ -1380,10 +1369,10 @@ function imk {
 [[ $1 = isk ]] && { isk; }
 [[ $1 = ifk ]] && { ifk; }
 [[ $1 = imk ]] && { imk; }
-[[ $1 = rco ]] && { rco; }
-[[ $1 = rop ]] && { rop; }
-[[ $1 = ico ]] && { ico; }
-[[ $1 = iop ]] && { iop; }
+[[ $1 = rco ]] && { rco;wsr; }
+[[ $1 = rop ]] && { rop;wsr; }
+[[ $1 = ico ]] && { ico;wsr; }
+[[ $1 = iop ]] && { iop;wsr; }
 
 [[ $1 = bb  ]] && { wpe; }
 [[ $1 = bbz ]] && { wpf; }
