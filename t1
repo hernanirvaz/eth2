@@ -8,8 +8,8 @@ znm3='hrv-zotac3';zip3=$(sin $znm3)
 znm4='hrv-zotac4';zip4=$(sin $znm4)
 inm5='hrv-intel5';iip5=$(sin $inm5)
 inm6='hrv-intel6';iip6=$(sin $inm6)
-pnm1='hrv-zen'   ;pip1=$(sin $pnm1)
-pnm2='hrv-lenovo';pip2=$(sin $pnm2)
+#pnm1='hrv-zen'   ;pip1=$(sin $pnm1)
+#pnm2='hrv-lenovo';pip2=$(sin $pnm2)
 
 if sht;then
 cuvc=$znm4
