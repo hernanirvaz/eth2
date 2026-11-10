@@ -17,14 +17,16 @@ lgm() { echo "$(date +'%Y-%m-%d %H:%M:%S') $1" >> "${FIL}.log" 2>&1; }
 far() { if ! echo "$ARP" | grep -q "^?[[:space:]]($1)[[:space:]].*igc1[[:space:]][[:space:]]*permanent";then arp -S "$1" "$2" > $DNL 2>&1 || lgm "[ERROR] Failed to set IPv4 ARP for $3: $1 -> $2";fi; }
 fnd() { if ! echo "$NDP" | grep -q "^$1[[:space:]].*igc1[[:space:]][[:space:]]*permanent"              ;then ndp -s "$1" "$2" > $DNL 2>&1 || lgm "[ERROR] Failed to set IPv6 NDP for $3: $1 -> $2";fi; }
 
-far "192.168.8.37" "48:21:0b:55:40:76" "hrv-intel5"
-fnd "$MPD::1005"   "48:21:0b:55:40:76" "hrv-intel5"
-far "192.168.8.40" "48:21:0b:52:6c:5e" "hrv-intel6"
-fnd "$MPD::1006"   "48:21:0b:52:6c:5e" "hrv-intel6"
-far "192.168.8.34" "00:01:2e:a4:f0:4c" "hrv-zotac4"
-fnd "$MPD::1004"   "00:01:2e:a4:f0:4c" "hrv-zotac4"
-far "192.168.8.31" "00:01:2e:a0:88:ea" "hrv-zotac3"
-fnd "$MPD::1003"   "00:01:2e:a0:88:ea" "hrv-zotac3"
-far "192.168.8.28" "00:01:2e:a0:e0:6f" "hrv-zotac2"
-fnd "$MPD::1002"   "00:01:2e:a0:e0:6f" "hrv-zotac2"
+far "192.168.8.25"             "64:62:66:22:96:88" # hrv-protectli
+fnd "$MPD:6662:66ff:fe22:9688" "64:62:66:22:96:88" # hrv-protectli
+far "192.168.8.37"             "48:21:0b:55:40:76" # hrv-intel5"
+fnd "$MPD::1005"               "48:21:0b:55:40:76" # hrv-intel5"
+far "192.168.8.40"             "48:21:0b:52:6c:5e" # hrv-intel6"
+fnd "$MPD::1006"               "48:21:0b:52:6c:5e" # hrv-intel6"
+far "192.168.8.34"             "00:01:2e:a4:f0:4c" # hrv-zotac4"
+fnd "$MPD::1004"               "00:01:2e:a4:f0:4c" # hrv-zotac4"
+far "192.168.8.31"             "00:01:2e:a0:88:ea" # hrv-zotac3"
+fnd "$MPD::1003"               "00:01:2e:a0:88:ea" # hrv-zotac3"
+far "192.168.8.28"             "00:01:2e:a0:e0:6f" # hrv-zotac2"
+fnd "$MPD::1002"               "00:01:2e:a0:e0:6f" # hrv-zotac2"
 exit 0
