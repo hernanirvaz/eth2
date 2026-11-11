@@ -406,21 +406,23 @@ s48='.[].peer_info|select(.connection_direction=='
 s49=').client.agent_string'
 s50=
 s51='debian-transmission'
-s52='';sht && sxt && s52='allow 192.168.8.0/24'
+s52='';sct && s52="${s52}\nmaxslewrate 500";sht && sxt && s52="${s52}\nallow 192.168.8.0/24\nallow $pfpd::/64"
 if [[ $cunm = $cut1 ]];then
   s52="${s52}\npool 0.europe.pool.ntp.org iburst maxsources 4" # OVH 0.[de|ca|us].pool.ntp.org
   s52="${s52}\npool 1.europe.pool.ntp.org iburst maxsources 4" # OVH 1.[de|ca|us].pool.ntp.org
  else
-  s52="${s52}\npool 0.pt.pool.ntp.org iburst maxsources 4"
-  s52="${s52}\npool 1.pt.pool.ntp.org iburst maxsources 4"
-  s52="${s52}\npool 2.pt.pool.ntp.org iburst maxsources 4"
+  s52="${s52}\npool 0.pt.pool.ntp.org iburst maxsources 3"
+  s52="${s52}\npool 1.pt.pool.ntp.org iburst maxsources 3"
+  s52="${s52}\npool 2.pt.pool.ntp.org iburst maxsources 3"
 fi
 s53='sgms:'
 s54='threshold|read|write|written|namespace|temperature (time|sensor)|thermal|power|shutdowns|controller|endurance|kib'
 s55='net_peerCount'
 s56='chrony'
-s57="server $(sin $cut1) iburst minpoll 3 maxpoll 6"
-stt && s57="${s57}\nserver $(sin $cut2) iburst minpoll 3 maxpoll 6"
+s57='';sct && s57="${s57}\nmaxslewrate 500"
+s57="${s57}\nserver $(sin $cut1) iburst"
+stt && s57="${s57}\nserver $(sin $cut2) iburst"
+s57="${s57}\nserver $zip1 iburst"
 s58='nfs-kernel-server'
 if [[ -d $p60 ]];then s59="$p60 192.168.8.0/24(rw,sync,no_subtree_check)";else s59="$mdld 192.168.8.0/24(rw,sync,no_subtree_check)";fi
 s60='plex'
