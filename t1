@@ -17,8 +17,8 @@ nxvc=$znm4
 cun1=$inm5
 cun2=$inm6
 cumv=$inm5
-cut1=$znm4
-cut2=$znm3
+cut1=$znm3
+cut2=$znm4
 else
 cuvc=$vnm1
 nxvc=$vnm1
@@ -407,13 +407,12 @@ s49=').client.agent_string'
 s50=
 s51='debian-transmission'
 s52='';sct && s52="${s52}\nmaxslewrate 500";sht && sxt && s52="${s52}\nallow 192.168.8.0/24\nallow $pfpd::/64"
-if [[ $cunm = $cut1 ]];then
-  s52="${s52}\npool 0.europe.pool.ntp.org iburst maxsources 4" # OVH 0.[de|ca|us].pool.ntp.org
-  s52="${s52}\npool 1.europe.pool.ntp.org iburst maxsources 4" # OVH 1.[de|ca|us].pool.ntp.org
- else
-  s52="${s52}\npool 0.pt.pool.ntp.org iburst maxsources 3"
-  s52="${s52}\npool 1.pt.pool.ntp.org iburst maxsources 3"
-  s52="${s52}\npool 2.pt.pool.ntp.org iburst maxsources 3"
+if [[ $cunm = $cut1 ]];then                                    # pool 2.* gives IPV4+6
+  s52="${s52}\npool 0.pt.pool.ntp.org iburst maxsources 3"     # [02].pt IPv4+6 most probably points to the same server, because pt has small pool of servers
+  s52="${s52}\npool 1.pt.pool.ntp.org iburst maxsources 3"     # [01].pt gives different servers for IPv4
+else
+  s52="${s52}\npool 0.europe.pool.ntp.org iburst maxsources 3" # OVH 0.[de|ca|us].pool.ntp.org
+  s52="${s52}\npool 2.europe.pool.ntp.org iburst maxsources 3" # OVH 2.[de|ca|us].pool.ntp.org
 fi
 s53='sgms:'
 s54='threshold|read|write|written|namespace|temperature (time|sensor)|thermal|power|shutdowns|controller|endurance|kib'
