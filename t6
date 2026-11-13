@@ -425,7 +425,7 @@ function bo4 { bo0|grep $(non $1); }                                            
 function bo5 { bo0|head -n$((b6>b2?b6:b2<5?5:b2))|tail -n$((b6>0?b6:b2>n12?n12:b2<5?5:b2)); }                                                                 # homologous report
 function boa { local g=${1:-$n16};local e=$(bo4 $g);printf 'BO%5i %3i\n' $(wc -l <<< "$e") $g 2>$p03;echo "$e";((g<n17)) && boa $((g+n18)); }                 # recursively show homologous nodes report
 function bof {
-  [[ -f $p12 ]] || return;rm -f $p12.r;local i d o n g;o=${3:-a};if [[ $o = a ]];then n=0;else n=6;fi;g=$n16
+  [[ -f $p12 ]] || return;rm -f $p12.r;local i d o n g;o=${3:-d};if [[ $o = a ]];then n=0;else n=6;fi;g=$n16
   i=$(echo $(head -n1 $p12 2>$p03)|cut -d' ' -f4);i=${i:-$(date '+%F')}                                        # start date
   d=$(printf %i $(((($(date '+%s')-$(date -d "$i" '+%s'))/86400)+1)));dts "$(date -d"$d days ago" '+%F') $s43" # date/time for fake logs
   while ((g<=n17));do
@@ -531,7 +531,7 @@ function brm { # recalculate cc-daily logs
   done <<<$(cat $p13)
 }
 function bdw { fzt $1 || return;cp $1 $1.o;grep -Eahv "$2" $1.o > $1;grep -Eah "$2" $1.o > $1.d; }                                                            # work to delete cc log day
-function bdl { local d=$(pt0 $1 sai);[[ $d = sai ]] && return;bdw $p12 $d;bdw $p13 $d;bsm; }                                                                  #         delete cc log day
+function bdl { local d;for d;do d=$(pt0 $d sai);[[ $d = sai ]] && continue;bdw $p12 $d;bdw $p13 $d;done;bsm; }                                                #         delete cc log day
 function wif { sef "$e17" <<< $@; }                                                                                                                           # get ufw info
 function sm0 { pex smartctl --json=c -x "$1"|jq -r "$j3" 2>$p03; }
 function sm1 { pex smartctl --json=c -x "$1"|jq -r "$j4" 2>$p03; }
@@ -1559,7 +1559,7 @@ function bml { [[ $d1 = $s43 ]] || return;if bdt;then bdl $d0;elif [[ $(llc $p12
 [[ $1 = bof ]] && { bof $2 $3 $4; }
 [[ $1 = bod ]] && { bdd o ${2:-0} ${3:-5}; }
 [[ $1 = brd ]] && { bdd r ${2:-0} ${3:-5}; }
-[[ $1 = bdl ]] && { bdl $2; }
+[[ $1 = bdl ]] && { shift;bdl $@; }
 [[ $1 = brl ]] && { brl; }
 [[ $1 = brm ]] && { brm; }
 [[ $1 = rsh ]] && { rsf Gg;echo -e "\n$(sf1) $(sng)"; }
@@ -1745,11 +1745,11 @@ if [[ $# -lt 1 ]];then
   m="$m\n[secrla]l [hh:mm]\tsys/el/cc/relay/all/attestation\tmain\t\tlog lines"
   m="$m\n[ecv]i[iurhp12c]\tel/cc/vc\t\t\tmeasure\t\tlog lines"
   m="$m\nbr[l|m]\t\t\trecalculate cc minute|daily logs"
-  m="$m\nbdl yyyy-mm-dd\t\tdelete cc log day"
+  m="$m\nbdl yyyy-mm-dd ...\tdelete cc log day"
   m="$m\nbo  [lines]\t\thomologous\tlogs [with max lines]"
   m="$m\nbo[cl]\t\t\thomologous\tlogs report at [current|last($s43)] time"
   m="$m\nb[or]d [p] [n]\t\tdelete\t\tlogs for last penalty >= p(0) && node days > n(5) in [o]rder or [r]everse"
-  m="$m\nbof [h] [d] [a|d]\tfake\t\tlogs with head h(1) & delay d(0) penalties multipliar in (a)scending|descending order for peers $n16 until $n17, date=first-1"
+  m="$m\nbof [h] [d] [a|d]\tfake\t\tlogs with head h(1) & delay d(0) penalties multipliar in ascending|(d)escending order for peers $n16 until $n17, date=first-1"
   m="$m\nbp[fsionl]\t\tcc-minutes\treport [file|peers {summary|incoming|outgoing|network|logs}]"
   m="$m\nbm[f]\t\t\tcc-daily\treport [file & $s12 nodes change/restart]"
   m="$m\nhs[012ecgubvm]\t\thistoric summary report [0-both|1-main|2-backup|el|cc|geth|besu|beacon|vc|mev]"
