@@ -35,8 +35,9 @@ dtn() {
         pfctl -k 0.0.0.0/0 -k "$IP4"   > $DNL 2>&1
     fi
     if [ -n "$IP6" ]; then
-        pfctl -i "$WAN" -k "$IP6::/56" > $DNL 2>&1
-    fi    
+        pfctl -i "$WAN" -k "$IP6::/56"          > $DNL 2>&1
+        pfctl -i "$WAN" -k ::/0 -k "$IP6::/56"  > $DNL 2>&1
+    fi
     pfSctl -c "interface reload wan"   > $DNL 2>&1
     w=0;while ! pgrep -q dhclient && [ "$w" -lt 10 ];do sleep 1;w=$((w + 1));done
     if pgrep -q dhclient && ! pgrep -q dhcp6c;then sd6;fi
