@@ -22,18 +22,15 @@ t6 lpi
 if ! sbt || [[ -f $p04/$s12.service ]];then
   if [[ -f $p04/$s12.service ]];then swu "cc ja instalado";else swu 'cc NAO DEVE SER INSTALADO AQUI';fi
 else
-  if [[ $cunm = $inm5 ]];then apip="$iip5";tarp=200;elif [[ $cunm = $inm6 ]];then apip="$iip6";tarp=80;else apip='127.0.0.1';tarp=200;fi                      # still allowing a cross-node failover architecture if needed
+  if [[ $cunm = $cun2 && $cun1 != $cun2 ]];then tarp=80;else tarp=200;fi
+  if [[ $cun1 = $cun2 ]];then bnip='127.0.0.1';else bnip=$(sni $cunm);fi
+  if [[ $cun1 = $cumv && $cun2 = $cumv  ]];then biip='127.0.0.1';elif [[ $cunm = $cun1 && $cun1 != $cun2 ]];then biip='127.0.0.1';else biip=$(sni $cumv);fi
   othe=''
-  # [[ $cunm = $cun1 ]] && sht && othe="$othe --enr-address $(si6 $cunm)"  # advertise public IPv6 address (tests with pfSense DHCPv6 - works without this)
   othe="$othe --execution-endpoint http://127.0.0.1:8551 --execution-jwt $p58/jwt"
   othe="$othe --prune-payloads false"                                                                                                                         # default true is buggy - saves space but imposes load on EL
   othe="$othe --suggested-fee-recipient $s26"                                                                                                                 # EL fees
   othe="$othe --validator-monitor-file $p58/pubkeys"                                                                                                          # monitor validators
-  if sht;then
-    othe="$othe --builder http://$(sni $cunm):18550"
-  else
-    othe="$othe --builder http://$apip:18550"
-  fi
+  othe="$othe --builder http://$biip:18550"
   othe="$othe --subscribe-all-subnets --import-all-attestations"                                                                                              # better income more bandwith
   othe="$othe --disable-upnp"                                                                                                                                 # disable UPnP support
   if [[ $cunm = $inm5 ]];then othe="$othe --checkpoint-sync-url http://$iip6:5052";elif [[ $cunm = $inm6 ]];then othe="$othe --checkpoint-sync-url http://$iip5:5052"
@@ -63,7 +60,7 @@ else
 	RestartSec=60
 	TimeoutStopSec=600
 	RuntimeMaxSec=infinity
-	ExecStart=$p00/lighthouse --datadir $p05 bn --network mainnet --port $pp2p --target-peers $tarp --http-address $apip --staking$othe
+	ExecStart=$p00/lighthouse --datadir $p05 bn --network mainnet --port $pp2p --target-peers $tarp --http-address $bnip --staking$othe
 	ExecStopPost=+$p02/eth2/t7 ${s75}STP \$SERVICE_RESULT \$EXIT_CODE \$EXIT_STATUS
 	
 	[Install]

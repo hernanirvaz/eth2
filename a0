@@ -261,6 +261,7 @@ PFSRB\t\tpfSense reboot
 fw[qsla]\tFirewall show Queues/Schedulers/Limiters
 dib\t\tDirect Interface Binding Rules
 {eo}pc\t\tExternal/Outbound peer connections
+fcs\t\tShow igc[0-3] flow control
 ip{46crdga}\tshow ip4/ip6/config/route/discovery/gateway validation/all
 dsk\t\tshow disk usage
 dhcpc?6?\tpfSense logs dhcp[client]
@@ -277,6 +278,7 @@ function pfs {
   local z="awk '/^[0-9]+:/{l=\$0;getline;l=l\" \"\$0;getline;l=l\" \"\$0;gsub(/ +/,\" \",l);print l;next} /^BKT/{print \$0, \"avg_bulk/Drp%\";next} \$1 ~ /^[0-9]+$/ && NF >= 9 {avg = (\$5 > 0) ? sprintf(\"%.0f\", \$6 / \$5) : 0; drp = (\$5 > 0) ? sprintf(\"%.6f%%\", \$9 / \$5 * 100) : 0; print \$0, avg, drp; next} {print}'"
   local c="ipfw sched show|$z"
   local a="sed 's/^/  * /'"
+  local b="sed 's/^/  /'"
   local x1="grep -E '(37|40):(9000|9001|9004|9005)'"
   local b1="grep -E '(37|40):(30303|30304)'"
   local x2="grep -E '(1005|1006)\[(9000|9001|9004|9005)'"
@@ -306,10 +308,11 @@ function pfs {
           ;$(pc1 "$b1" "$b2" "$i5" "$a")\
           ;$(pc1 "$b1" "$b2" "$i6" "$a")"
   if   [[ $1 = PFSRB ]];then msh -q $s "/etc/rc.reboot"
-  elif [[ $i = fw    ]];then shift;if [[ $r = q ]];then i="ipfw queue show|$y";elif [[ $r = l ]];then i="$p";elif [[ $r = s ]];then i="$c";else i=;fi;[[ $i ]] || i="echo '* Limiters:';$p|$a;echo '* Schedulers:';$c|$a;echo '* Queues:';ipfw queue show|$y|$a";msh -q $s "$i"
+  elif [[ $i = fw    ]];then shift;if [[ $r = q ]];then i="ipfw queue show|$y";elif [[ $r = l ]];then i="$p";elif [[ $r = s ]];then i="$c";else i=;fi;[[ $i ]] || i="echo 'Limiters:';$p|$b;echo 'Schedulers:';$c|$b;echo 'Queues:';ipfw queue show|$y|$b";msh -q $s "$i"
   elif [[ $1 = dib   ]];then msh -q $s "pfctl -vvsr | grep -E 'tag|dnqueue' | sed -E 's%label .* label% ... label%;s%^%  %'"
   elif [[ $1 = epc   ]];then msh -q $s "$d"
   elif [[ $1 = opc   ]];then msh -q $s "$m"
+  elif [[ $1 = fcs   ]];then msh -q $s "/root/rt-pfsense-igc-fc-show.sh"
   elif [[ $i = ip    ]];then msh -q $s "/root/rt-pfsense-ip.sh $1"
   elif [[ $1 = dsk   ]];then msh -q $s "smartctl -a /dev/ada0|grep -E 'Model:|^ID#|^ *(5|9|187) +[A-Z]'"
   elif [[ $1 = dns   ]];then msh -q $s "/root/rt-pfsense-log-check.sh resolver ${2:-24}"
