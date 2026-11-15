@@ -19,9 +19,9 @@ gr6() { set -- $DN6; eval "echo \${$(jot -r 1 1 $#)}"; }
 pi4() { pig $(gr4) 5 || pig $(gr4) 6 || pig $(gr4) 7 || pig $(gr4) 8 || pig $(gr4) 9 || pig $(gr4) 10; }
 pi6() { pig $(gr6) 3 || pig $(gr6) 5 || pig $(gr6) 7; }
 pit() { pi4 && pi6; }
-sfc() { local i;sysctl dev.igc.0.fc=0 > $DNL 2>&1;i=$?;[ $i -ne 0 ] && lgm "Failed to reset flow control."             ;return $i; }
-ifu() { local i;ifconfig $WAN up      > $DNL 2>&1;i=$?;[ $i -ne 0 ] && lgm "Failed to bring $WAN up.";sfc;i=$((i + $?));return $i; }
-ifd() { local i;ifconfig $WAN down    > $DNL 2>&1;i=$?;[ $i -ne 0 ] && lgm "Failed to bring $WAN down."                ;return $i; }  
+sfc() { local i;/root/rt-pfsense-igc-fc.sh 0 > $DNL 2>&1;i=$?;[ $i -ne 0 ] && lgm "Failed to reset flow control."             ;return $i; }
+ifu() { local i;ifconfig $WAN up             > $DNL 2>&1;i=$?;[ $i -ne 0 ] && lgm "Failed to bring $WAN up.";sfc;i=$((i + $?));return $i; }
+ifd() { local i;ifconfig $WAN down           > $DNL 2>&1;i=$?;[ $i -ne 0 ] && lgm "Failed to bring $WAN down."                ;return $i; }  
 sd6() { local f d;f='/root/rt-pfsense-dhcp6c.conf';d='/var/etc/dhcp6c.conf';[ -f "$f" ] && cp "$f" "$d" > $DNL 2>&1;dhcp6c -D -n -c "$d" -p /var/run/dhcp6c.pid "$WAN" > $DNL 2>&1; }
 dtn() { 
     local j w r a b
