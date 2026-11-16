@@ -23,38 +23,30 @@ sfc() { local i;/root/rt-pfsense-igc-fc.sh 0 > $DNL 2>&1;i=$?;[ $i -ne 0 ] && lg
 ifu() { local i;ifconfig $WAN up             > $DNL 2>&1;i=$?;[ $i -ne 0 ] && lgm "Failed to bring $WAN up.";sfc;i=$((i + $?));return $i; }
 ifd() { local i;ifconfig $WAN down           > $DNL 2>&1;i=$?;[ $i -ne 0 ] && lgm "Failed to bring $WAN down."                ;return $i; }  
 sd6() { local f d;f='/root/rt-pfsense-dhcp6c.conf';d='/var/etc/dhcp6c.conf';[ -f "$f" ] && cp "$f" "$d" > $DNL 2>&1;dhcp6c -D -n -c "$d" -p /var/run/dhcp6c.pid "$WAN" > $DNL 2>&1; }
-r6o() {
-    local w
-    killall -15 dhcp6c > $DNL 2>&1
-    w=0; while pgrep -qx dhcp6c && [ "$w" -lt 15 ]; do sleep 0.2; w=$((w + 1)); done
-    pgrep -qx dhcp6c && killall -9 dhcp6c > $DNL 2>&1
-    rm -f /var/run/dhcp6c*.pid > $DNL 2>&1
-    if [ -n "$IP6" ]; then
-        pfctl -i "$WAN" -k "$IP6::/56"         > $DNL 2>&1
-        pfctl -i "$WAN" -k ::/0 -k "$IP6::/56" > $DNL 2>&1
-    fi
-    sd6
-}
+qd4() { pgrep -qx dhclient; }
+qd6() { pgrep -qx dhcp6c  ; }
+q46() { qd4 ||   qd6; }
+qn6() { qd4 && ! qd6; }
+t46() { qd4 &&   qd6; }
+kd6() { local w=0;while   qd6 && [ "$w" -lt $1 ];do sleep 0.2;w=$((w + 1));done; }
+k46() { local w=0;while   q46 && [ "$w" -lt $1 ];do sleep 0.2;w=$((w + 1));done; }
+wd4() { local w=0;while ! qd4 && [ "$w" -lt $1 ];do sleep 1  ;w=$((w + 1));done; }
+wd6() { local w=0;while   qn6 && [ "$w" -lt $1 ];do sleep 1  ;w=$((w + 1));done; }
+ks6() { [ -n "$IP6" ] || return 0;pfctl -i "$WAN" -k "$IP6::/56" > $DNL 2>&1;pfctl -i "$WAN" -k ::/0 -k "$IP6::/56" > $DNL 2>&1; }
+r6o() { killall -15 dhcp6c > $DNL 2>&1;kd6 15;qd6 && killall -9 dhcp6c > $DNL 2>&1;rm -f /var/run/dhcp6c*.pid > $DNL 2>&1;ks6;sd6; }
 dtn() {
-    local j w
-    killall -15 dhclient dhcp6c > $DNL 2>&1
-    w=0; while { pgrep -qx dhclient || pgrep -qx dhcp6c; } && [ "$w" -lt 15 ]; do sleep 0.2; w=$((w + 1)); done
-    { pgrep -qx dhclient || pgrep -qx dhcp6c; } && killall -9 dhclient dhcp6c > $DNL 2>&1
+    local j
+    killall -15 dhclient dhcp6c > $DNL 2>&1;k46 20;q46 && killall -9 dhclient dhcp6c > $DNL 2>&1
     rm -f /var/run/dhclient*.pid /var/run/dhcp6c*.pid > $DNL 2>&1
     arp -d -i "$WAN" -a > $DNL 2>&1
     if [ -n "$IP4" ]; then
         pfctl -i "$WAN"              -k "$IP4" > $DNL 2>&1
         pfctl -i "$WAN" -k 0.0.0.0/0 -k "$IP4" > $DNL 2>&1
     fi
-    if [ -n "$IP6" ]; then
-        pfctl -i "$WAN"         -k "$IP6::/56" > $DNL 2>&1
-        pfctl -i "$WAN" -k ::/0 -k "$IP6::/56" > $DNL 2>&1
-    fi
+    ks6
     pfSctl -c "interface reload wan" > $DNL 2>&1
-    w=0; while ! pgrep -qx dhclient && [ "$w" -lt 10 ]; do sleep 1; w=$((w + 1)); done
-    w=0; while pgrep -qx dhclient && ! pgrep -qx dhcp6c && [ "$w" -lt 15 ]; do sleep 1; w=$((w + 1)); done
-    if pgrep -qx dhclient && ! pgrep -qx dhcp6c; then sd6; sleep 2; fi
-    if pgrep -qx dhclient && pgrep -qx dhcp6c; then sfc; j=$?; else j=1; lgm "[ERROR] Failed to start WAN daemons (dhclient/dhcp6c) on $WAN within 25s."; fi
+    wd4 10;wd6 5;if qn6;then sd6;fi
+    if t46;then sfc;j=$?;else j=1;lgm "[ERROR] Failed to start WAN daemons (dhclient/dhcp6c) on $WAN within 15s.";fi
     return "$j"
 }
 mer() {
@@ -70,11 +62,11 @@ mer() {
     return "$k"
 }
 
-if pi4; then pi6 && exit 0;r6o;sleep 45;if pi6;then lgm "WAN IPv6 recovered after dhcp6c reset.";exit 0;fi;fi
+if pi4;then pi6 && exit 0;r6o;sleep 30;if pit;then lgm "WAN IPv6 recovered after dhcp6c reset.";exit 0;fi;fi
 ifd;sleep 5;ifu;sleep 45
 if pit;then lgm "WAN recovered after physical bounce.";exit 0;fi
-dtn; sleep 45
-if pit; then lgm "WAN recovered after daemon/state reset.";exit 0;fi
-mer;sleep 180;dtn;sleep 45
-if pit; then lgm "WAN recovered after GR241AG reboot.";exit 0;fi
-lgm "[CRITICAL] Upstream MEO FTTH outage confirmed.";exit 1
+dtn;sleep 35
+if pit;then lgm "WAN recovered after daemon reset."   ;exit 0;fi
+mer;sleep 180;dtn;sleep 35
+if pit;then lgm "WAN recovered after GR241AG reboot." ;exit 0;fi
+lgm "[CRITICAL] Upstream MEO FTTH outage confirmed."  ;exit 1
