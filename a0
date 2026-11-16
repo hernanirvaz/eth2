@@ -262,7 +262,7 @@ fw[qsla]\tFirewall show Queues/Schedulers/Limiters
 dib\t\tDirect Interface Binding Rules
 {eo}pc\t\tExternal/Outbound peer connections
 fcs\t\tShow igc[0-3] flow control
-ip{46crdga}\tshow ip4/ip6/config/route/discovery/gateway validation/all
+ip{46crdga}\tshow LAN {ip4,ip6}/config/route/MEO delegated prefix/gateway validation/all
 dsk\t\tshow disk usage
 dhcpc?6?\tpfSense logs dhcp[client]
 dns\t\tresolver
