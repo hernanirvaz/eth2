@@ -978,11 +978,13 @@ function epf { if tsa $s10;then gl0;swn "$m";fi;if tsa $s11;then ul0;swn "$m";fi
 function cpf { if tsa $s12;then bl0;swn "$m";fi;if tsa $s13;then vl0;swn "$m";fi;if tsa $s14;then ml0;swn "$m";fi; }
 function uur {
   swb 'UNATTENDED UPGRADE RESTART >> ~/apt-uur.out'
+  aex;sex touch $p02/apt-uur.out;sex chown eth:eth $p02/apt-uur.out
   sex $s00 daemon-reload
   echo 'unattended-upgrades unattended-upgrades/enable_auto_updates boolean true' | sudo debconf-set-selections
-  sudo DEBIAN_FRONTEND=noninteractive dpkg-reconfigure -plow unattended-upgrades
-  sudo $s06 unattended-upgrades 2>&1 | sudo tee -a $p02/apt-uur.out >$p03
-  sudo unattended-upgrade -d    2>&1 | sudo tee -a $p02/apt-uur.out >$p03
+  sudo DEBIAN_FRONTEND=noninteractive UCF_FORCE_CONFFOLD=1 dpkg-reconfigure -f noninteractive -plow unattended-upgrades
+  sudo $s06 unattended-upgrades 2>&1 | tee -a $p02/apt-uur.out >$p03
+  swn unattended-upgrade -d
+  sudo DEBIAN_FRONTEND=noninteractive UCF_FORCE_CONFFOLD=1 unattended-upgrade -d < $p03 2>&1 | tee -a $p02/apt-uur.out >$p03
   sex chown $meeu:$meeu $p02/apt-uur.out
 }
 function fdv { [[ $1         ]] || return;printf "\nDevice\tUsed\tSerialNumber\tFirmware\tModel\n";local d;local u;local f;local n;local m;while IFS=$'\t' read d u m f n;do printf "%s\t%s\t%s\t%s\t%s\n" $(basename $d) $(nby $u) $n $f "$m";done <<< "$1"; }

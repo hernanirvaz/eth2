@@ -216,7 +216,7 @@ function mcp {
       fi
       shift
   done
-  [[ $w ]] || echo scp -4rP $p ${a[@]};scp -4rP $p "${a[@]}" 2>/dev/null
+  [[ $w ]] || echo scp -4rP $p ${a[@]};scp -4rP $p "${a[@]}"
 }
 function leh { echo -e "leo <param>\nLEORB\treboot\nlog\tdmesg\nxml\tconfig\nos\tOptical Signal\nvl\tVLANs\nmac\tMAC Bridge Configuration Data\nuni\tPhysical Path Termination Point Ethernet UNI\ntd\tTraffic Descriptor\nolt\tOLT revealing its own identity\nver\tSoftware is currently running\nont\tONT revealing its own identity\nerr\tEthernet Performance Monitoring History Data\nmon\tEthernet Frame Extended Performance Monitoring\ngmd\tGEM Port Network CTP\ngmh\tGEM Port Network CTP Performance Monitoring History Data\npon\tGPON State Machine\nupt\tUptime"; }
 function ltl { expect -c "spawn telnet 192.168.100.1;expect \"ogin:\";send \"leox\r\";expect \"assword:\";send \"$V\r\";expect \"#\";send \"$*\r\";expect \"$*\";expect \"#\";send \"exit\r\";expect eof"; }
