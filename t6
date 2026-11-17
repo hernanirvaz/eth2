@@ -867,11 +867,7 @@ function tbd {
 [[ $1 = tbd ]] && { tbd; }
 function tvd {
   local rsp
-  if svt && [[ $cuvc != $nxvc ]]; then
-    swn "PERMANENTEMENTLY DELETE VC FROM $cuvc (SIM/nao)?"
-  else
-    return
-  fi
+  swn "PERMANENTEMENTLY DELETE VC FROM $cuvc (SIM/nao)?"
   rsp=nao;read rsp
   if [[ $rsp = SIM ]]; then
     oex rm -fr $p17
