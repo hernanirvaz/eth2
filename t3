@@ -24,7 +24,7 @@ if ! sbt || [[ -f $p04/$s12.service ]];then
 else
   if [[ $cunm = $cun2 && $cun1 != $cun2 ]];then tarp=80;else tarp=200;fi
   if [[ $cun1 = $cun2 ]];then bnip='127.0.0.1';else bnip=$(sni $cunm);fi
-  if [[ $cun1 = $cumv && $cun2 = $cumv  ]];then biip='127.0.0.1';elif [[ $cunm = $cun1 && $cun1 != $cun2 ]];then biip='127.0.0.1';else biip=$(sni $cumv);fi
+  biip='127.0.0.1'
   othe=''
   othe="$othe --execution-endpoint http://127.0.0.1:8551 --execution-jwt $p58/jwt"
   othe="$othe --prune-payloads false"                                                                                                                         # default true is buggy - saves space but imposes load on EL

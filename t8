@@ -19,7 +19,7 @@ rlys="$rlys,https://0xb0b07cd0abef743db4260b0ed50619cf6ad4d82064cb4fbec9d3ec530f
 rlys="$rlys,https://0x8c4ed5e24fe5c6ae21018437bde147693f68cda427cd1122cf20819c30eda7ed74f72dece09bb313f2a1855595ab677d@titanrelay.xyz"
 rlys="$rlys,https://0xa15b52576bcbf1072f4a011c0f99f9fb6c66f3e1ff321f11f461d15e31b1cb359caa092c71bbded0bae5b5ea401aab7e@aestus.live"
 
-if [[ $cun1 = $cumv && $cun2 = $cumv ]];then epmv="-addr 127.0.0.1:18550";elif [[ $cun1 != $cumv && $cun2 != $cumv ]];then epmv="-addr $(sni $cunm):18550";else epmv="-addr 0.0.0.0:18550";fi
+epmv="-addr 127.0.0.1:18550"
 epmv="$epmv -request-timeout-getheader 950"                                                                                                                   # timeout getHeader         default 950
 epmv="$epmv -request-timeout-getpayload 4000"                                                                                                                 # timeout getPayload        default 4000
 epmv="$epmv -request-timeout-regval 6000"                                                                                                                     # timeout registerValidator default 3000

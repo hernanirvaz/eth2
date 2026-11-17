@@ -59,7 +59,7 @@ fi
 hrs                                                                                                                                                           # timesync restart
 cc1 $p23 "$e03"                ;cmw $p23 644 root                                                                                                             # unattended-upgrades base
 cc1 $p51 "$e28"                ;cmw $p51 644 root                                                                                                             # unattended-upgrades period
-if [[ $cunm = $cun1 || $cunm = $cun2 || $cunm = $cuvc || $cunm = $cumv ]];then
+if [[ $cunm = $cun1 || $cunm = $cun2 || $cunm = $cuvc ]];then
   cc1 $p83 "$e81";cmw $p83 644 root                                                                                                                           # needrestart
   cc2 $p85 "$s86";cmw $p85 644 root                                                                                                                           # ethereum sysctl tweaks
 fi

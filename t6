@@ -85,17 +85,12 @@ function z1t { [[ $cunm = $cut1 ]]; }                                           
 function z2t { [[ $cunm = $cut2 ]]; }                                                                                                                         # auxi ntp                test
 function z4t { [[ $cunm = $znm4 ]]; }                                                                                                                         # best zotac              test
 function n2t { [[ $cunm = $cun2 ]]; }
-function n3t { false; }                                                                                                                                       # node API can comunicate across-servers 
-function n4t { [[ $cun1 != $cumv || $cun2 != $cumv ]]; }
 function ndt { [[ $cun1 != $cun2 ]]; }
-function mct { [[ $cunm = $cumv ]]; }
 function i5t { [[ $cunm = $inm5 ]]; }
 function i6t { [[ $cunm = $inm6 ]]; }
-function irt { [[ $cunm = $cumv || $cunm = $vnm1 || $cunm = $vnm2 ]]; }
 function v1t { [[ $cunm = $vnm1 ]]; }
 function v2t { [[ $cunm = $vnm2 ]]; }
 function vst { [[ $cun1 != $cuvc && $cun2 != $cuvc ]]; }
-function mst { [[ $cun1 != $cumv && $cun2 != $cumv ]]; }
 function s1t {                  e0t $(find $1.* 2>$p03|wc -l); }
 function s2t { fft $p50.lock || g0t $(find $1.* 2>$p03|wc -l); }
 function s3t { s2t "$1" || g0t $(bwc); }
@@ -353,9 +348,9 @@ function bl3 { b0=${1:-$(ll6 "$g08.*$g53"|wc -l)};if [[ $2$3$4$5$6$7 ]];then i0=
 function bl4 { snf "s%.*$1.*validators: *\[(.*)\].*%\1%p" <<< "$l3"|wc -w; }                                                                                  # get number of paid activities
 function ml0 { dts;if tsa $s14;then smm $n32;mlo;else m="MSRV NOT ON $dt";fi; }
 function vl0 { dts;if tsa $s13;then svv $n22;vlo;else m="VSRV NOT ON $dt";fi; }
-#    0  1              2     3     4   5         6  7
-# MEVB      0 2025-10-06 12:02 havg:   0 error_rv:  0
-function mlo { m="$s77 $(printf '%6i' $(rll|wc -l) 2>$p03) $dt $(printf 'havg: %4i error_rv: %2i' $m0 $m1 2>$p03)"; }
+#    0  1              2     3      4   5         6  7
+# MEVB      0 2025-10-06 12:02 duavg:   0 error_rv:  0
+function mlo { m="$s77 $(printf '%6i' $(rll|wc -l) 2>$p03) $dt $(printf 'duavg: %3i error_rv: %2i' $m0 $m1 2>$p03)"; }
 #    0      1          2     3       4  5         6  7         8  9
 # VALI      0 2025-10-06 06:08 coasp: 20 bnintel6:  7 bnintel5:  9
 # VALI      0 2025-10-06 06:59 coasp: 20 ns570623:  6
@@ -659,7 +654,7 @@ function cpe {
   m=$(sll "$e74"|sef "$e30");if [[ $m ]];then i=$(wc -l <<< "$m");e=$(tail -n1 <<< "$m");else i=0;e=;fi;m=;n=0;d=;l=ou
   if [[ ! $m ]];then if sct;then m=$(cll "$e50;$e31");l=cl;fi;fi
   if [[ ! $m ]];then if sbt;then m=$(ell "$e50;$e31");l=el;fi;fi
-  if [[ ! $m ]];then if irt;then m=$(rll "$e51;$e31");l=rl;fi;fi
+  if [[ ! $m ]];then if sbt;then m=$(rll "$e51;$e31");l=rl;fi;fi
   if [[ ! $m ]];then n=0;d=;else n=$(lll|wc -l);d=$(tail -n1 <<< "$m");fi
   m="ERRO$(printf '%3i%4i %10s %5s' $i $n $dt 2>$p03)"
   if g0t $i;then 
@@ -730,46 +725,16 @@ function nfw { sht && pai $1 192.168.8.0/24 $2 $3; }
 function eop {
   local e=30303;bnt || e=30304
   pae $e elp2p
-  if n3t;then
-    pde 8545 elapi delete
-    pde 8551 eljwt delete
-    pde 80   elweb delete
-    nfw 8545 elapi
-    nfw 8551 eljwt
-    nfw 80   elweb
-  else
-    nfw 8545 elapi delete
-    nfw 8551 eljwt delete
-    nfw 80   elweb delete
-  fi
 }
 function eco {
   local e=30303;bnt || e=30304
   pde $e elp2p
-  if n3t;then
-    pde 8545 elapi
-    pde 8551 eljwt
-    pde 80   eljwt
-    nfw 8545 elapi delete
-    nfw 8551 eljwt delete
-    nfw 80   elweb delete
-  else
-    pde 8545 elapi delete
-    pde 8551 eljwt delete
-    pde 80   elweb delete
-  fi
 }
 function bop {
   local e=9004;bnt || e=9000
   pae $e clp2p
   pde 5052 clapi delete
   nfw 5052 clapi
-  if n3t;then
-    pde 8551 cljwt delete
-    nfw 8551 cljwt
-  else
-    nfw 8551 cljwt delete
-  fi
   pae "$((e+1))/udp" clquic
 }
 function bco {
@@ -777,12 +742,6 @@ function bco {
   pde $e clp2p
   pde 5052 clapi
   nfw 5052 clapi delete
-  if n3t;then
-    pde 8551 cljwt
-    nfw 8551 cljwt delete
-  else
-    pde 8551 cljwt delete
-  fi
   pde "$((e+1))/udp" clquic
 }
 function vop { nfw 5064 vcapi       ;pde 5064 vcapi delete; }
@@ -802,7 +761,7 @@ function ve  {
 function pe  { pai 9090/tcp 192.168.8.0/24 $s16;wsr;cex $s04 $s16; }                                                                                          # enable prometheus
 function ne  { wsr;cex $s04 $s17; }                                                                                                                           # enable prometheus-node-exporter
 function fe  { pai 3000/tcp 192.168.8.0/24 grafana;wsr;cex $s04 $s18; }                                                                                       # enable grafana-server
-function me  { if n4t;then nfw 18550 mev;fi;wsr;cex $s04 $s14; }                                                                                              # enable mev-boost
+function me  { cex $s04 $s14; }                                                                                                                               # enable mev-boost
 function ga  { tsa $s10 || cex $s03 $s10; }                                                                                                                   # start eth-geth
 function ua  { tsa $s11 || cex $s03 $s11; }                                                                                                                   # start eth-besu
 function ta  { tsa $s44 || cex $s03 $s44; }                                                                                                                   # start eth-nethermind
@@ -830,7 +789,7 @@ function vd  { cex $s05 $s13;vco;wsr;touch $p05/vc_lock 2>$p03; }               
 function pd  { cex $s05 $s16;pai 9090/tcp 192.168.8.0/24 $s16 delete;wsr; }                                                                                   # disable prometheus
 function nd  { cex $s05 $s17; }                                                                                                                               # disable prometheus-node-exporter
 function fd  { cex $s05 $s18;pai 3000/tcp 192.168.8.0/24 grafana delete;wsr; }                                                                                # disable grafana-server
-function md  { cex $s05 $s14;if n4t;then nfw 18550 mev delete;fi;wsr; }                                                                                       # disable mev-boost
+function md  { cex $s05 $s14; }                                                                                                                               # disable mev-boost
 function pas { t2t && sex $p54 usbstop;t1t && sex $p54 cputurbo;t0t && sex $p54 cpunoturbo; }                                                                 # set usb/cpu parameters
 function paf { t3t && sex $p54 cputurbo; }                                                                                                                    # set turbo   parameter
 function hsg { sso $s72 $s10; }
@@ -846,7 +805,6 @@ function hs0 {
   if n1t;then
     hss $cun1;if ndt;then hss $cun2;fi
     if vst;then if svt;then hsv;cpe;else echo -e "\n$cuvc";msh -q $cuvc "$p53 hsv";fi;fi
-    if mst;then if mct;then hsm;cpe;else echo -e "\n$cumv";msh -q $cumv "$p53 hsm";fi;fi
     echo;epf;cpf
   else
     hss $cunm;if n2t;then echo;epf;cpf;fi
@@ -1008,15 +966,15 @@ function hsh {
 function lsr { sort -t: -k2n -k3n -k4n; }
 function wpf { if tsa $s44;then ll4 "$g43";fi;ll6 "$g42"|fln "$g39"; }
 function wpe { wpf|sef "$e52"|lsr; }
-function bba { if n1t;then wpe          ;else msh $cun1 "$p53 bb"   ;fi;if ndt;then if n2t;then wpe          ;else msh $cun2 "$p53 bb"   ;fi;fi;if vst;then if svt;then wpe          ;else msh $cuvc "$p53 bb"   ;fi;fi;if mst;then if mct;then wpe          ;else msh $cumv "$p53 bb"   ;fi;fi; }
-function caa { if n1t;then cll "$e50" $1;else msh $cun1 "$p53 cl $1";fi;if ndt;then if n2t;then cll "$e50" $1;else msh $cun2 "$p53 cl $1";fi;fi;if vst;then if svt;then cll "$e50" $1;else msh $cuvc "$p53 cl $1";fi;fi;if mst;then if mct;then rll "$e51" $1;else msh $cumv "$p53 rl $1";fi;fi; }
+function bba { if n1t;then wpe          ;else msh $cun1 "$p53 bb"   ;fi;if ndt;then if n2t;then wpe          ;else msh $cun2 "$p53 bb"   ;fi;fi;if vst;then if svt;then wpe          ;else msh $cuvc "$p53 bb"   ;fi;fi; }
+function caa { if n1t;then cll "$e50" $1;else msh $cun1 "$p53 cl $1";fi;if ndt;then if n2t;then cll "$e50" $1;else msh $cun2 "$p53 cl $1";fi;fi;if vst;then if svt;then cll "$e50" $1;else msh $cuvc "$p53 cl $1";fi;fi; }
 function eaa { if n1t;then ell "$e50" $1;else msh $cun1 "$p53 el $1";fi;if ndt;then if n2t;then ell "$e50" $1;else msh $cun2 "$p53 el $1";fi;fi; }
 function laa { caa $1;eaa $1; }
 function fsp { awk -v l="${1:-0}" -v f="$g31" '$4 ~ f && $5 <= l'|sort -k2n; }
 function esp { sbt || return;local e;if tsa $s44;then e=$(ll4 "$g36.*$g30:"|sef "$e76");else e=$(ll6 "$g11.*$g35"|sef "$e77");fi;e=$(fsp $1 <<< "$e");[[ $1 ]] || e="\n$(tail -n$n55 <<< "$e")";[[ ${e:2} ]] && echo -e "$e"; }
 function csp { sbt || return;local e;e=$(ll6 "$g50:"|sef "$e78"|fsp $1)                                                                              ;[[ $1 ]] || e="\n$(tail -n$n55 <<< "$e")";[[ ${e:2} ]] && echo -e "$e"; }
 function mre { 
-  mct || return;local s l e;l=$(rlr);[[ $l ]] || return
+  sbt || return;local s l e;l=$(rlr);[[ $l ]] || return
   e=$(for s in $(echo "$l"|snf "$e09"|sort -u);do printf '%3i %s\n' $(echo "$l"|grep -co $s) $s;done|sort -n)
   [[ $e ]] && echo -e "\n$e"
 }
