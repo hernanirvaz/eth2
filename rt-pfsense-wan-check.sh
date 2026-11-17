@@ -4,15 +4,16 @@
 # Trigger: Services Cron: */5 * * * * root /root/rt-pfsense-wan-check.sh
 
 DNL='/dev/null'
-FIL="/var/run/wan-check"
+LCK="/var/run/wan-check.lck"
+LOG="/root/wan-check.log"
 WAN="igc0"
 DN4="8.8.8.8 8.8.4.4 1.1.1.1 1.0.0.1 9.9.9.9 149.112.112.112 208.67.222.222 208.67.220.220"
 DN6="2001:4860:4860::8888 2001:4860:4860::8844 2606:4700:4700::1111 2606:4700:4700::1001 2620:fe::fe 2620:fe::9 2a13:1001::86:54:11:1 2a13:1001::86:54:11:201"
 
-if [ -z "$WCL" ]; then export WCL=1;exec lockf -s -k -t 0 "${FIL}.lck" "$0" "$@";fi
+if [ -z "$WCL" ]; then export WCL=1;exec lockf -s -k -t 0 "$LCK" "$0" "$@";fi
 IP4=$(/root/rt-pfsense-ip.sh ip4) # 82.155.244.204
 IP6=$(/root/rt-pfsense-ip.sh ipd) # 2001:8a0:fcef:ac00
-lgm() { echo "$(date +'%Y-%m-%d %H:%M:%S') $1" >> "${FIL}.log" 2>&1; }
+lgm() { echo "$(date +'%Y-%m-%d %H:%M:%S') $1" >> "$LOG" 2>&1; }
 pig() { ping -c $2 -o -W 1000 $1 > $DNL 2>&1; }
 gr4() { set -- $DN4; eval "echo \${$(jot -r 1 1 $#)}"; }
 gr6() { set -- $DN6; eval "echo \${$(jot -r 1 1 $#)}"; }

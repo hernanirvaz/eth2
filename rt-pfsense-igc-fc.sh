@@ -7,9 +7,9 @@
 #   - inside                     /root/rt-pfsense-wan-check.sh
 
 DNL='/dev/null'
-FIL="/var/run/igc-fc"
+LCK="/var/run/igc-fc.lck"
 
-if [ -z "$IFL" ]; then export IFL=1;exec lockf -s -k -t 30 "${FIL}.lck" "$0" "$@";fi
+if [ -z "$IFL" ]; then export IFL=1;exec lockf -s -k -t 30 "$LCK" "$0" "$@";fi
 [ "$#" -gt 0 ] && PTS="$@" || PTS="0 1 2 3"
 e=0
 for n in $PTS; do

@@ -6,14 +6,15 @@
 #   - Services Cron: */30 * * * * root /root/rt-pfsense-linklayer-check.sh
 
 DNL='/dev/null'
-FIL="/var/run/linklayer-check"
+LCK="/var/run/linklayer-check.lck"
+LOG="/root/linklayer-check.log"
 
-if [ -z "$LLL" ]; then export LLL=1;exec lockf -s -k -t 0 "${FIL}.lck" "$0" "$@";fi
+if [ -z "$LLL" ]; then export LLL=1;exec lockf -s -k -t 0 "$LCK" "$0" "$@";fi
 ARP="$(arp -an 2>$DNL)"
 NDP="$(ndp -an 2>$DNL)"
 MPD=$(/root/rt-pfsense-ip.sh ipd) # 2001:8a0:fcef:ac00
 
-lgm() { echo "$(date +'%Y-%m-%d %H:%M:%S') $1" >> "${FIL}.log" 2>&1; }
+lgm() { echo "$(date +'%Y-%m-%d %H:%M:%S') $1" >> "$LOG" 2>&1; }
 far() { if ! echo "$ARP" | grep -q "^?  *($1)  *at  *$2  *on  *igc1  *permanent";then arp -S "$1" "$2" > $DNL 2>&1 || lgm "[ERROR] Failed to set IPv4 ARP for $3: $1 -> $2";fi; }
 fnd() { if ! echo "$NDP" | grep -q "^$1  *$2  *igc1  *permanent"                ;then ndp -s "$1" "$2" > $DNL 2>&1 || lgm "[ERROR] Failed to set IPv6 NDP for $3: $1 -> $2";fi; }
 
