@@ -130,6 +130,7 @@ elif [[ $cunm = hrv-intel5 || $cunm = hrv-intel6 ]] || ! sht;then
   alias pn='t6 el .|grep -i pruning|grep -Ev "reorg|memory"|tail -n5;echo netfs $(efs);echo netcf $(sed -En "s%.+fullpruningthresholdmb +([0-9]+).*%\1%p" /etc/systemd/system/eth-nethermind.service)'
 fi
 
+alias mr='echo meo@192.168.1.254:$V ;telnet 192.168.1.254'
 alias pp='t6 bps'
 alias hh='t6 hs0'
 alias tt='t6 hsh'
