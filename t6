@@ -962,9 +962,9 @@ function hsh {
 function lsr { sort -t: -k2n -k3n -k4n; }
 function wpf { if tsa $s44;then ll4 "$g43";fi;ll6 "$g42"|fln "$g39"; }
 function wpe { wpf|sef "$e52"|lsr; }
-function bba { if n1t;then wpe          ;else msh $cun1 "$p53 bb"   ;fi;if ndt;then if n2t;then wpe          ;else msh $cun2 "$p53 bb"   ;fi;fi;if vst;then if svt;then wpe          ;else msh $cuvc "$p53 bb"   ;fi;fi; }
-function caa { if n1t;then cll "$e50" $1;else msh $cun1 "$p53 cl $1";fi;if ndt;then if n2t;then cll "$e50" $1;else msh $cun2 "$p53 cl $1";fi;fi;if vst;then if svt;then cll "$e50" $1;else msh $cuvc "$p53 cl $1";fi;fi; }
-function eaa { if n1t;then ell "$e50" $1;else msh $cun1 "$p53 el $1";fi;if ndt;then if n2t;then ell "$e50" $1;else msh $cun2 "$p53 el $1";fi;fi; }
+function bba { if n1t;then wpe          ;else msh -q $cun1 "$p53 bb"   ;fi;if ndt;then if n2t;then wpe          ;else msh -q $cun2 "$p53 bb"   ;fi;fi;if vst;then if svt;then wpe          ;else msh -q $cuvc "$p53 bb"   ;fi;fi; }
+function caa { if n1t;then cll "$e50" $1;else msh -q $cun1 "$p53 cl $1";fi;if ndt;then if n2t;then cll "$e50" $1;else msh -q $cun2 "$p53 cl $1";fi;fi;if vst;then if svt;then cll "$e50" $1;else msh -q $cuvc "$p53 cl $1";fi;fi; }
+function eaa { if n1t;then ell "$e50" $1;else msh -q $cun1 "$p53 el $1";fi;if ndt;then if n2t;then ell "$e50" $1;else msh -q $cun2 "$p53 el $1";fi;fi; }
 function laa { caa $1;eaa $1; }
 function fsp { awk -v l="${1:-0}" -v f="$g31" '$4 ~ f && $5 <= l'|sort -k2n; }
 function esp { sbt || return;local e;if tsa $s44;then e=$(ll4 "$g36.*$g30:"|sef "$e76");else e=$(ll6 "$g11.*$g35"|sef "$e77");fi;e=$(fsp $1 <<< "$e");[[ $1 ]] || e="\n$(tail -n$n55 <<< "$e")";[[ ${e:2} ]] && echo -e "$e"; }
