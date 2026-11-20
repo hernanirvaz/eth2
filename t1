@@ -360,6 +360,7 @@ for m in $(san down);do
   s41="$s41\n    $m:"
   s41="$s41\n      dhcp4: false"
   s41="$s41\n      dhcp6: false"
+  s41="$s41\n      accept-ra: false"
   s41="$s41\n      link-local: []"
   s41="$s41\n      optional: true"
   s41="$s41\n      activation-mode: off"
