@@ -40,6 +40,8 @@ ipg() {
     if [ "$a" = "$c" ] && [ "$b" = "$d" ]; then printf "%bOK%b\n" "$e" "$g"; else printf "%bMismatch found%b\n" "$f" "$g"; fi
 }
 ipi() { ifo igc0;ifo igc1;ifo igc2;ifo igc3; }
+ifs() { local i;for i;do ifconfig "$i" 2>$DNL | tr -s '\n\t' ' ' | sed -En "s%^.+media: Ethernet autoselect \((.+)\) status: (.+) nd6.*$%PFS\t$i\t\2\t\1\n%p";done; }
+iph() { echo -e "Usage: rt-pfsense-ip.sh ip{46crdgsa} show LAN {ip4,ip6}/config/route/Prefix Delegation/Gateways & IPs Validation/tInterface Speed/all"; }
 
 p=${1:-nada}
 if   [ $p = ip4 ];then ip4
@@ -49,6 +51,7 @@ elif [ $p = ipc ];then ipi
 elif [ $p = ipr ];then nst
 elif [ $p = ipn ];then ndp -an
 elif [ $p = ipg ];then ipg
+elif [ $p = ips ];then ifs igc0 igc1
 elif [ $p = ipa ];then ipi;nst
-else echo "Usage: rt-pfsense-ip.sh {ip4|ip6|ipd|ipc|ipr|ipn|ipg|ipa}";
+else iph
 fi

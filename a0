@@ -241,7 +241,17 @@ function leo {
   else leh
   fi
 }
-function meh { echo -e "meo <param>\nMEORB\treboot\ndvi\tdevice info\nwan\twan info\nrbc\treboot cause\nupt\tUptime\ndig\tDiagnostics\nvip\tvoip"; }
+function meh {
+  echo -e "meo <param>
+MEORB	reboot
+dvi	device info
+wan	wan info
+rbc	reboot cause
+upt	Uptime
+ipg	Prefix Delegation & Gateway
+ips	Interface Speed
+vip	voip"
+}
 function mel { expect -c "spawn telnet 192.168.1.254;expect \"ogin:\";send \"meo\r\";expect \"assword:\";send \"$V\r\";expect \"/cli>\";send \"$*\r\";expect \"/cli>\";send \"quit\r\";expect eof"; }
 function mer { expect -c "spawn telnet 192.168.1.254;expect \"ogin:\";send \"meo\r\";expect \"assword:\";send \"$V\r\";expect \"/cli>\";send \"$*\r\";expect \"eboot system\";send \"Y\r\";expect \"/cli>\";send \"quit\r\";expect eof"; }
 function meo { 
@@ -250,7 +260,8 @@ function meo {
   elif [[ $1 = upt   ]];then mel device-info/show | tr -d '\r' | sed -E 's%\|%%g;s% +% %g'|grep Uptime
   elif [[ $1 = wan   ]];then mel wan/show         | tr -d '\r' | sed -E 's%^([^:]+): +(.+)$%| \1 | \2 |%'
   elif [[ $1 = rbc   ]];then mel debug/reboot-cause
-  elif [[ $1 = dig   ]];then mel debug/show-diagnostics
+  elif [[ $1 = ipg   ]];then mel wan/ipoe/show | tr -s '\n\t\r' ' ' | sed -En 's%^.+Prefix: +([^ ]+).+Default gateway: +([^ ]+) .*%Prefix Delegation\tMEO6:\t\1\nDefault Gateway\t\tMEO6:\t\2\n%p'
+  elif [[ $1 = ips   ]];then mel debug/show-diagnostics | sed -En 's%^.+eth3.+\|([A-Z]+).+\|([A-Za-z]+).+\|([0-9]+) +([A-Za-z]+).*$%MEO\tWAN\t\1\t\3 \4\t\2%p'
   elif [[ $1 = vip   ]];then mel voice/show
   else meh
   fi
@@ -262,7 +273,7 @@ fw[qsla]\tFirewall show Queues/Schedulers/Limiters
 dib\t\tDirect Interface Binding Rules
 {eo}pc\t\tExternal/Outbound peer connections
 fcs\t\tShow igc[0-3] flow control
-ip{46crdga}\tshow LAN {ip4,ip6}/config/route/MEO delegated prefix/gateway validation/all
+ip{46crdgsa}\tshow LAN {ip4,ip6}/config/route/Prefix Delegation/Gateways & IPs Validation/tInterface Speed/all
 dsk\t\tshow disk usage
 dhcpc?6?\tpfSense logs dhcp[client]
 dns\t\tresolver
