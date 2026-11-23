@@ -31,7 +31,7 @@ sex apt-get install $s56 -y                                                     
 if sxt;then
   cc3 $p68 "$e72" "$s52"
 else
-  cc3 $p68 "$e72" "$s57"
+  [[ $cunm = $znm2 ]] || cc3 $p68 "$e72" "$s57"
 fi
 cmw $p68 644 root;sex $s06 $s56
 sex apt-get install rkhunter -y                                                                                                                               # Rootkit Hunter install

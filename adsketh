@@ -30,7 +30,7 @@ function nfc {
     sudo apt-get install nfs-common -y &>> nfc.out
   fi
   [[ -d $d        ]] || sudo mkdir -p $d
-  [[ -d $d/movie/ ]] || sudo mount 192.168.8.28:$1 $d
+  [[ -d $d/movie/ ]] || sudo mount 192.168.7.28:$1 $d
   ll $d
 }
 function nfj { nfc '/media/mp4'; }

@@ -27,7 +27,5 @@ far "192.168.8.34" "00:01:2e:a4:f0:4c" "hrv-zotac4"
 fnd "$MPD::1004"   "00:01:2e:a4:f0:4c" "hrv-zotac4"
 far "192.168.8.31" "00:01:2e:a0:88:ea" "hrv-zotac3"
 fnd "$MPD::1003"   "00:01:2e:a0:88:ea" "hrv-zotac3"
-far "192.168.8.28" "00:01:2e:a0:e0:6f" "hrv-zotac2"
-fnd "$MPD::1002"   "00:01:2e:a0:e0:6f" "hrv-zotac2"
 fmd igc0 igc1
 exit 0

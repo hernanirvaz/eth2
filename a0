@@ -61,7 +61,7 @@ om09="$om09;\$1 == \"TrafficDescriptor\"            {printf \"%-35s           ME
 function fnt { [[ ! -d "$1" || -z "$(ls -A "$1" 2>/dev/null)" ]]; }
 function aex { echo "$H"|sudo -S -p '' -v   &>/dev/null; } # keep sudo alive
 function sit { ! [[ $1 =~ ^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$ ]]; }
-function sht { [[ ${1:-$cuip} = 192.168.8.* ]]; }
+function sht { [[ ${1:-$cuip} = 192.168.[78].* ]]; }
 function snt { [[ $1 = hrv* ]]; }
 function smt { sht "$1" || snt "$1"; }
 function snu { local s=$1;[[ "$s" = "192.168.8.25" || "$s" = hrv-zotac1* || "$s" = hrv-protectli* ]] && s="admin@$s";printf %s "$s"; }
@@ -69,14 +69,13 @@ function sin {
   local s=$1
   case $1 in
   hrv-protectli*) s=192.168.8.25 ;;
+  hrv-z1-iot*) s=192.168.7.25 ;;
   hrv-zotac1*) s=192.168.8.25 ;;
-  hrv-zotac2*) s=192.168.8.28 ;;
+  hrv-zotac2*) s=192.168.7.28 ;;
   hrv-zotac3*) s=192.168.8.31 ;;
   hrv-zotac4*) s=192.168.8.34 ;;
   hrv-intel5*) s=192.168.8.37 ;;
   hrv-intel6*) s=192.168.8.40 ;;
-  #hrv-zen*   ) s=192.168.8.100 ;;
-  #hrv-lenovo*) s=192.168.8.101 ;;
   $vnm1*) s=$vip1 ;;
   $vnm2*) s=$vip2 ;;
   $vnm3*) s=$vip3 ;;
@@ -97,28 +96,24 @@ function snd {
 function si6 {
   case $1 in
   hrv-protectli*) printf %s $pfpd:6662:66ff:fe22:9688 ;;
-  hrv-zotac1*) printf %s $pfpd:201:2eff:fea0:88d4 ;;
-  hrv-zotac2*) printf %s $pfpd::1002 ;;
+  hrv-zotac1*) printf %s $pfpd:6662:66ff:fe22:9688 ;;
+  hrv-zotac2*) printf %s ${pfpd:0:-1}1::1002 ;;
   hrv-zotac3*) printf %s $pfpd::1003 ;;
   hrv-zotac4*) printf %s $pfpd::1004 ;;
   hrv-intel5*) printf %s $pfpd::1005 ;;
   hrv-intel6*) printf %s $pfpd::1006 ;;
-  #hrv-zen*   ) printf %s $pfpd::1100 ;;
-  #hrv-lenovo*) printf %s $pfpd::1101 ;;
   *) printf %s "$1" ;;
   esac
 }
 function sl6 {
   case $1 in
   hrv-protectli*) printf %s fe80::6662:66ff:fe22:9688 ;;
-  hrv-zotac1*) printf %s fe80::201:2eff:fea0:88d4 ;;
+  hrv-zotac1*) printf %s fe80::6662:66ff:fe22:9688 ;;
   hrv-zotac2*) printf %s fe80::201:2eff:fea0:e06f ;;
   hrv-zotac3*) printf %s fe80::201:2eff:fea0:88ea ;;
   hrv-zotac4*) printf %s fe80::201:2eff:fea4:f04c ;;
   hrv-intel5*) printf %s fe80::4a21:bff:fe55:4076 ;;
   hrv-intel6*) printf %s fe80::4a21:bff:fe52:6c5e ;;
-  #hrv-zen*   ) printf %s fe80::9fa6:2019:3db8:d1b6 ;;
-  #hrv-lenovo*) printf %s fe80::c988:b438:1645:2e90 ;;
   *) printf %s "$1" ;;
   esac
 }
@@ -134,7 +129,7 @@ function spn {
   hrv-intel5*) n=2025 ;;
   hrv-intel6*) n=2026 ;;
   192.168.8.25) n=2021 ;;
-  192.168.8.28) n=2022 ;;
+  192.168.7.28) n=2022 ;;
   192.168.8.31) n=2023 ;;
   192.168.8.34) n=2024 ;;
   192.168.8.37) n=2025 ;;
