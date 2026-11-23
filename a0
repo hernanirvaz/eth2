@@ -261,7 +261,7 @@ function meo {
   elif [[ $1 = wan   ]];then mel wan/show         | tr -d '\r' | sed -E 's%^([^:]+): +(.+)$%| \1 | \2 |%'
   elif [[ $1 = rbc   ]];then mel debug/reboot-cause
   elif [[ $1 = ipg   ]];then mel wan/ipoe/show | tr -s '\n\t\r' ' ' | sed -En 's%^.+Prefix: +([^ ]+).+Default gateway: +([^ ]+) .*%Prefix Delegation\tMEO6:\t\1\nDefault Gateway\t\tMEO6:\t\2\n%p'
-  elif [[ $1 = ips   ]];then mel debug/show-diagnostics | sed -En 's%^.+eth3.+\|([A-Z]+).+\|([A-Za-z]+).+\|([0-9]+) +([A-Za-z]+).*$%MEO\tWAN\t\1\t\3 \4\t\2%p'
+  elif [[ $1 = ips   ]];then mel debug/show-diagnostics | sed -En 's%^.+(eth[23]).+\|([A-Z]+).+\|([A-Za-z]+).+\|([0-9]+) +([A-Za-z]+).*$%MEO\t\1\t\2\t\4 \5\t\3%p'
   elif [[ $1 = vip   ]];then mel voice/show
   else meh
   fi
