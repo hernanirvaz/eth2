@@ -1334,14 +1334,13 @@ function bps {
   s=$(bcl identity|jq -r "$s79")
   echo $s75 nid v4 $dt $(echo "$s"|grep -i ip4)
   echo $s75 nid v6 $dt $(echo "$s"|grep -i ip6)
-  n=$(echo "$s"|snf "$e85"|cut -d: -f1-4)
   if sht;then
     i=$(pfs ipd)
   else
     i=$(sa6|cut -d: -f1-4)
   fi
-  if [[ $n == $i ]];then e=$(swg OK);else e=$(swr NO);fi
-  echo $s75 "$e  I6" $dt $n $i
+  if [[ $pfpd == $i ]];then e=$(swg OK);else e=$(swr NO);fi
+  echo $s75 "$e  I6" $dt $pfpd=$i
   if tsa $s12; then bv0;bnn
     n=$(b05 $nr)
     e=$(csp $n|sef "$e88")
