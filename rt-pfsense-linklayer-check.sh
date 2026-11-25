@@ -7,7 +7,7 @@
 
 DNL='/dev/null'
 LCK="/var/run/linklayer-check.lck"
-LOG="/root/linklayer-check.log"
+LOG="/root/lkl-check.log"
 
 if [ -z "$LLL" ]; then export LLL=1;exec lockf -s -k -t 0 "$LCK" "$0" "$@";fi
 ARP="$(arp -an 2>$DNL)"

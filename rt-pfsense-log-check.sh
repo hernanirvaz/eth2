@@ -15,7 +15,12 @@ flg() {
 done
 }
 lsw() { 
-    local n=$1 f="$2";shift 2;[ -s "$1" ] || return 0
+    local n=$1 f="$2";shift 2
+    if [ $# -eq 1 ] && [ ! -s "$1" ]; then
+        printf '%s %s \033[32m%s\033[0m\n' "$(date -v -${n}H "+$f %H")":00:00 "$(basename $1) from $n hours ago" "OK"
+        return 0
+    fi
+    [ -s "$1" ] || return 0
     echo "$(date -v -${n}H "+$f %H")":00:00 $(basename $1) from $n hours ago
     while [ "$n" -ge 0 ]; do
         grep "$(date -v -${n}H "+$f %H")" -h $@ 
@@ -27,7 +32,7 @@ i=${2:-0}
 g='logged|login|sshd'
 
 lsw $((i * 2)) '%Y-%m-%d' /root/wan-check.log
-lsw $((i * 2)) '%Y-%m-%d' /root/linklayer-check.log
+lsw $((i * 2)) '%Y-%m-%d' /root/lkl-check.log
 if [ "$1" = "logs" ] || [ "$1" = "lst" ]; then
     (
       lsw $((i + 0)) '%b %e' /var/log/dhcpd.log* 
