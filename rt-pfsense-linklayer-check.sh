@@ -17,7 +17,17 @@ MPD=$(/root/rt-pfsense-ip.sh ipd) # 2001:8a0:fcef:ac00
 lgm() { echo "$(date +'%Y-%m-%d %H:%M:%S') $1" >> "$LOG" 2>&1; }
 far() { echo "$ARP" | grep -q "^?  *($1)  *at  *$2  *on  *igc1  *permanent" || { arp -S "$1" "$2" > $DNL 2>&1 || lgm "[ERROR] Failed to set IPv4 ARP for $3: $1 -> $2"; }; }
 fnd() { echo "$NDP" | grep -q "^$1  *$2  *igc1  *permanent"                 || { ndp -s "$1" "$2" > $DNL 2>&1 || lgm "[ERROR] Failed to set IPv6 NDP for $3: $1 -> $2"; }; }
-fmd() { local i;for i;do ifconfig "$i" 2>$DNL | tr -s '\n\t' ' ' | grep -q "1000baseT <full-duplex.*status: active" || lgm "[ERROR] Interface $i is not active at 1000baseT <full-duplex>";done; }
+fmd() {
+  local i r
+  for i; do
+    r=$(ifconfig "$i" 2>"$DNL" | tr -s '\n\t' ' ')
+    if echo "$r" | grep -q "status: active"; then
+       echo "$r" | grep -q "1000baseT <full-duplex" || lgm "[ERROR] Interface $i is not at 1000baseT <full-duplex>"
+    else
+       lgm "[ERROR] Interface $i is not active"
+    fi
+  done
+}
 
 far "192.168.8.37" "48:21:0b:55:40:76" "hrv-intel5"
 fnd "$MPD::1005"   "48:21:0b:55:40:76" "hrv-intel5"
