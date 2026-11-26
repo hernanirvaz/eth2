@@ -63,7 +63,7 @@ mer() {
     return "$k"
 }
 
-if pi4;then pi6 && exit 0;r6o;sleep 30;if pit;then lgm "WAN IPv6 recovered after dhcp6c reset.";exit 0;fi;fi
+if pi4;then pi6 && exit 0;r6o;sleep 30;if pit;then lgm "WAN IPv6 recovered after dhcp6c reset.";exit 0;elif pi4;then lgm "[WARN] WAN IPv6 unreachable (IPv4 OK).";exit 1;fi;fi
 ifd;sleep 5;ifu;sleep 45
 if pit;then lgm "WAN recovered after physical bounce.";exit 0;fi
 dtn;sleep 35
