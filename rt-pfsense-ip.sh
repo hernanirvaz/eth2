@@ -41,7 +41,7 @@ ipg() {
 }
 ipi() { ifo igc0;ifo igc1;ifo igc2;ifo igc3; }
 ifs() { local i;for i;do ifconfig "$i" 2>$DNL | tr -s '\n\t' ' ' | sed -En "s%^.+media: Ethernet autoselect \((.+)\) status: (.+) nd6.*$%PFS\t$i\t\2\t\1\n%p";done; }
-iph() { echo -e "Usage: rt-pfsense-ip.sh ip{46crdgsa} show LAN {ip4,ip6}/config/route/Prefix Delegation/Gateways & IPs Validation/tInterface Speed/all"; }
+iph() { echo -e "Usage: rt-pfsense-ip.sh ip{46dcrngsa} show LAN {ip4,ip6}/config/route/Prefix Delegation/Gateways & IPs Validation/tInterface Speed/all"; }
 
 p=${1:-nada}
 if   [ $p = ip4 ];then ip4
