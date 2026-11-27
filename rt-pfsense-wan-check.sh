@@ -65,9 +65,9 @@ mer() {
 
 if pi4;then pi6 && exit 0;r6o;sleep 30;if pit;then lgm "WAN IPv6 recovered after dhcp6c reset.";exit 0;elif pi4;then lgm "[WARN] WAN IPv6 unreachable (IPv4 OK).";exit 1;fi;fi
 ifd;sleep 5;ifu;sleep 45
-if pit;then lgm "WAN recovered after physical bounce.";exit 0;fi
+if pit;then lgm "WAN recovered after physical bounce.";exit 0;elif pi4;then r6o;sleep 30;if pit;then lgm "WAN recovered after physical bounce."     ;exit 0;elif pi4;then lgm "[WARN] WAN IPv4 recovered after physical bounce (IPv6 unreachable).";exit 1;fi;fi
 dtn;sleep 35
-if pit;then lgm "WAN recovered after daemon reset."   ;exit 0;fi
+if pit;then lgm "WAN recovered after daemon reset."   ;exit 0;elif pi4;then lgm "[WARN] WAN IPv4 recovered after daemon reset (IPv6 unreachable)."  ;exit 1;fi
 mer;sleep 180;dtn;sleep 35
-if pit;then lgm "WAN recovered after GR241AG reboot." ;exit 0;fi
+if pit;then lgm "WAN recovered after GR241AG reboot." ;exit 0;elif pi4;then lgm "[WARN] WAN IPv4 recovered after GR241AG reboot (IPv6 unreachable).";exit 1;fi
 lgm "[CRITICAL] Upstream MEO FTTH outage confirmed."  ;exit 1
